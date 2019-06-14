@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 
-namespace BCLabManagerV2
+namespace BCLabManager
 {
     /// <summary>
     /// Interaction logic for App.xaml

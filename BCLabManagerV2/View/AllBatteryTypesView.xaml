@@ -1,0 +1,119 @@
+﻿<UserControl x:Class="BCLabManager.View.AllBatteryTypesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+
+        <LinearGradientBrush x:Key="Brush_HeaderBackground" StartPoint="0.5,0" EndPoint="0.5,1">
+            <GradientStop Color="#66000088" Offset="0" />
+            <GradientStop Color="#BB000088" Offset="1" />
+        </LinearGradientBrush>
+        <CollectionViewSource
+      x:Key="BatteryModelCS" 
+      Source="{Binding Path=AllBatteryModels}"
+      >
+        </CollectionViewSource>
+        <CollectionViewSource
+      x:Key="BatteryCS" 
+      Source="{Binding Path=AllBatteries}"
+      >
+        </CollectionViewSource>
+
+        <Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}">
+            <!-- 
+      Stretch the content of each cell so that we can 
+      right-align text in the Total Sales column. 
+      -->
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40*"></RowDefinition>
+            <RowDefinition Height="4"></RowDefinition>
+            <RowDefinition Height="40*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Row="0" LastChildFill="False">
+                <Label>Battery Type</Label>
+                <Button DockPanel.Dock="Right">_Create</Button>
+            </DockPanel>
+            <ListView Grid.Row="1"
+      AlternationCount="2" 
+      DataContext="{StaticResource BatteryModelCS}" 
+      ItemContainerStyle="{StaticResource ListViewItemStyle}"
+      ItemsSource="{Binding}"
+      >
+
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn 
+            Header="Name" 
+            DisplayMemberBinding="{Binding Path=Name}" 
+            />
+                        <GridViewColumn 
+            Header="Manufactor" 
+            DisplayMemberBinding="{Binding Path=Manufactor}" 
+            />
+                        <GridViewColumn 
+            Header="Material" 
+            DisplayMemberBinding="{Binding Path=Material}" 
+            />
+                        <GridViewColumn 
+            Header="Operation" 
+            >
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Content="_Edit" Command="{Binding Path=EditCommand}"></Button>
+                                        <Button Content="Save _As" Command="{Binding Path=SaveAsCommand}"></Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Row="0" LastChildFill="False">
+                <Label>Battery</Label>
+            </DockPanel>
+            <ListView Grid.Row="1"
+      AlternationCount="2" 
+      DataContext="{StaticResource BatteryCS}" 
+      ItemContainerStyle="{StaticResource ListViewItemStyle}"
+      ItemsSource="{Binding}"
+      >
+
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn 
+            Header="Name" 
+            DisplayMemberBinding="{Binding Path=Name}" 
+            />
+                        <GridViewColumn 
+            Header="Cycle" 
+            DisplayMemberBinding="{Binding Path=Cycle}" 
+            />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+    </Grid>
+</UserControl>
