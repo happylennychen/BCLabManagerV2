@@ -57,9 +57,9 @@
     </ApplicationDefinition>
     <Compile Include="DataAccess\Repositories.cs" />
     <Compile Include="Model\ModelBase.cs" />
-    <None Include="Resources\resources.designer.cs" />
     <Compile Include="ViewModel\AllBatteryTypesViewModel.cs" />
     <Compile Include="ViewModel\BatteryTypeViewModel.cs" />
+    <Compile Include="ViewModel\BatteryViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
@@ -114,7 +114,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Resources\resources.resx" />
     <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

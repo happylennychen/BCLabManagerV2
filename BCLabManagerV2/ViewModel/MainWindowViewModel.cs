@@ -29,8 +29,13 @@ namespace BCLabManager.ViewModel
         {
             base.DisplayName = Resources.MainWindowViewModel_DisplayName;
             _repositories = new Repositories();
+            allBatteryTypesViewModel = new AllBatteryTypesViewModel(_repositories._batterytypeRepository, _repositories._batteryRepository);
         }
 
         #endregion // Constructor
+
+        #region Public Interface
+        public AllBatteryTypesViewModel allBatteryTypesViewModel { get; set; }
+        #endregion //Public Interface
     }
 }

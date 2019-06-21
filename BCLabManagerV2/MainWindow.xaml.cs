@@ -32,7 +32,8 @@ namespace BCLabManager
             // bind to the ViewModel by setting the 
             // DataContext, which propagates down 
             // the element tree.
-            DataContext = viewModel;
+            //DataContext = viewModel;
+            this.AllBatteryTypesViewInstance.DataContext = viewModel.allBatteryTypesViewModel;
         }
     }
 }

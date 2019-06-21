@@ -256,6 +256,8 @@ namespace BCLabManager.DataAccess
             BatteryTypes = new List<BatteryTypeClass>();
             BatteryTypeClass bm = new BatteryTypeClass("Oppo", "BLP663", "Li-on", 4400, 3350, 3700, 3450, 3200);
             BatteryTypes.Add(bm);
+            bm = new BatteryTypeClass("Apple", "NxT3", "Li-on", 4400, 3350, 3700, 3450, 3200);
+            BatteryTypes.Add(bm);
 
             Batteries = new List<BatteryClass>();
             BatteryClass bat = new BatteryClass("pack1", BatteryTypes[0]);
@@ -264,9 +266,9 @@ namespace BCLabManager.DataAccess
             Batteries.Add(bat);
             bat = new BatteryClass("pack3", BatteryTypes[0]);
             Batteries.Add(bat);
-            bat = new BatteryClass("pack4", BatteryTypes[0]);
+            bat = new BatteryClass("pack4", BatteryTypes[1]);
             Batteries.Add(bat);
-            bat = new BatteryClass("pack5", BatteryTypes[0]);
+            bat = new BatteryClass("pack5", BatteryTypes[1]);
             Batteries.Add(bat);
 
             Chambers = new List<ChamberClass>();

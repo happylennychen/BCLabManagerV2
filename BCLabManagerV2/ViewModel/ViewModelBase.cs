@@ -24,7 +24,7 @@ namespace BCLabManager.ViewModel
         /// Child classes can set this property to a new value,
         /// or override it to determine the value on-demand.
         /// </summary>
-        public virtual string DisplayName { get; protected set; }
+        public virtual string DisplayName { get; set; }
 
         #endregion // DisplayName
 

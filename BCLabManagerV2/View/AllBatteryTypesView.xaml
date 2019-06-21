@@ -12,13 +12,13 @@
             <GradientStop Color="#BB000088" Offset="1" />
         </LinearGradientBrush>
         <CollectionViewSource
-      x:Key="BatteryModelCS" 
-      Source="{Binding Path=AllBatteryModels}"
+      x:Key="BatteryTypeCS" 
+      Source="{Binding Path=AllBatteryTypes}"
       >
         </CollectionViewSource>
         <CollectionViewSource
       x:Key="BatteryCS" 
-      Source="{Binding Path=AllBatteries}"
+      Source="{Binding Path=Batteries}"
       >
         </CollectionViewSource>
 
@@ -43,13 +43,14 @@
             </Grid.RowDefinitions>
             <DockPanel Grid.Row="0" LastChildFill="False">
                 <Label>Battery Type</Label>
-                <Button DockPanel.Dock="Right">_Create</Button>
+                <Button DockPanel.Dock="Right" Content="_Create" Command="{Binding Path=CreateCommand}"></Button>
             </DockPanel>
             <ListView Grid.Row="1"
+                      x:Name="BatteryTypelist"
       AlternationCount="2" 
-      DataContext="{StaticResource BatteryModelCS}" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding}"
+      ItemsSource="{Binding Path=AllBatteryTypes}"
+                      SelectedItem="{Binding Path=SelectedType, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 
                 <ListView.View>
@@ -76,8 +77,8 @@
                                             <ColumnDefinition></ColumnDefinition>
                                             <ColumnDefinition></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
-                                        <Button Content="_Edit" Command="{Binding Path=EditCommand}"></Button>
-                                        <Button Content="Save _As" Command="{Binding Path=SaveAsCommand}"></Button>
+                                        <Button Content="_Edit" Command="{Binding Path=EditCommand}" Grid.Column="0"></Button>
+                                        <Button Content="Save _As" Command="{Binding Path=SaveAsCommand}" Grid.Column="1"></Button>
                                     </Grid>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -96,9 +97,8 @@
             </DockPanel>
             <ListView Grid.Row="1"
       AlternationCount="2" 
-      DataContext="{StaticResource BatteryCS}" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding}"
+      ItemsSource="{Binding Path=Batteries}"
       >
 
                 <ListView.View>
@@ -109,7 +109,7 @@
             />
                         <GridViewColumn 
             Header="Cycle" 
-            DisplayMemberBinding="{Binding Path=Cycle}" 
+            DisplayMemberBinding="{Binding Path=CycleCount}" 
             />
                     </GridView>
                 </ListView.View>

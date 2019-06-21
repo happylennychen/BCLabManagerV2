@@ -69,6 +69,9 @@ namespace BCLabManager.Model
         public Int32 TypicalCapacity { get; set; }
         public Int32 CutoffDischargeVoltage { get; set; }
 
+        public BatteryTypeClass()
+        { }
+
         public BatteryTypeClass(String Manufactor, String Name, String Material, Int32 LimitedChargeVoltage, Int32 RatedCapacity, Int32 NominalVoltage, Int32 TypicalCapacity, Int32 CutoffDischargeVoltage)
         {
             this.Manufactor = Manufactor;

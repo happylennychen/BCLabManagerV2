@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BCLabManager.Model;
+using BCLabManager.View;
 using BCLabManager.DataAccess;
 using System.Windows.Input;
 using BCLabManager.Properties;
@@ -18,21 +19,22 @@ namespace BCLabManager.ViewModel
         //bool _isSelected;
         RelayCommand _saveCommand;
         RelayCommand _saveAsCommand;
+        RelayCommand _editCommand;
 
         #endregion // Fields
 
         #region Constructor
 
-        public BatteryTypeViewModel(BatteryTypeClass batterytype, BatteryTypeRepository batteryModelRepository)
+        public BatteryTypeViewModel(BatteryTypeClass batterytype, BatteryTypeRepository batteryTypeRepository)
         {
             if (batterytype == null)
                 throw new ArgumentNullException("batterytype");
 
-            if (batteryModelRepository == null)
-                throw new ArgumentNullException("batteryModelRepository");
+            if (batteryTypeRepository == null)
+                throw new ArgumentNullException("batteryTypeRepository");
 
             _batterytype = batterytype;
-            _batterytypeRepository = batteryModelRepository;
+            _batterytypeRepository = batteryTypeRepository;
         }
 
         #endregion // Constructor
@@ -85,22 +87,6 @@ namespace BCLabManager.ViewModel
 
         #region Presentation Properties
 
-
-        public override string DisplayName
-        {
-            get
-            {
-                if (this.IsNewBatteryType)
-                {
-                    return Resources.BatteryTypeViewModel_DisplayName;
-                }
-                else
-                {
-                    return _batterytype.Name;
-                }
-            }
-        }
-
         /// <summary>
         /// Returns a command that saves the customer.
         /// </summary>
@@ -129,6 +115,19 @@ namespace BCLabManager.ViewModel
                         );
                 }
                 return _saveAsCommand;
+            }
+        }
+        public ICommand EditCommand
+        {
+            get
+            {
+                if (_editCommand == null)
+                {
+                    _editCommand = new RelayCommand(
+                        param => { this.Edit(); }
+                        );
+                }
+                return _editCommand;
             }
         }
 
@@ -165,7 +164,19 @@ namespace BCLabManager.ViewModel
                     this._batterytype.NominalVoltage,
                     this._batterytype.TypicalCapacity,
                     this._batterytype.CutoffDischargeVoltage);
-            BatteryTypeViewModel workspace = new BatteryTypeViewModel(newBatteryType, this._batterytypeRepository);
+            BatteryTypeViewModel newbtvm = new BatteryTypeViewModel(newBatteryType, this._batterytypeRepository);
+            newbtvm.DisplayName = "Battery Type-Save As";
+            var BatteryTypeViewInstance = new BatteryTypeView();
+            BatteryTypeViewInstance.DataContext = newbtvm;
+            BatteryTypeViewInstance.Show();
+        }
+        public void Edit()
+        {
+            BatteryTypeViewModel newbtvm = new BatteryTypeViewModel(_batterytype, this._batterytypeRepository);
+            newbtvm.DisplayName = "Battery Type-Edit";
+            var BatteryTypeViewInstance = new BatteryTypeView();
+            BatteryTypeViewInstance.DataContext = newbtvm;
+            BatteryTypeViewInstance.Show();
         }
 
         #endregion // Public Methods
