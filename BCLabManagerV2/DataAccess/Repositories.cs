@@ -89,7 +89,7 @@ namespace BCLabManager.DataAccess
         }
 
         /// <summary>
-        /// Returns a shallow-copied list of all customers in the repository.
+        /// Returns a shallow-copied list of all items in the repository.
         /// </summary>
         public List<T> GetItems()
         {
@@ -179,7 +179,7 @@ namespace BCLabManager.DataAccess
         //public RequestRepository _requestRepository;// = new RequestRepository();
         //public ExecutorRepository _executorRepository;
 
-
+        //下面这些属性，会在Init的时候用到。对于外部来说，只要上面两个属性就可以了。而且下面这些以后应该删掉
         private List<BatteryTypeClass> BatteryTypes;// { get; set; }
         private List<BatteryClass> Batteries;// { get; set; }
         private List<TesterClass> Testers;// { get; set; }

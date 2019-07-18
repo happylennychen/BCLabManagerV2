@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using BCLabManager.ViewModel;
+using BCLabManager.DataAccess;
 
 namespace BCLabManager
 {
@@ -20,20 +21,15 @@ namespace BCLabManager
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Repositories _repositories = new Repositories();    //model实例全部放在这里。viewmodel和database的source
+
+        public AllBatteryTypesViewModel allBatteryTypesViewModel { get; set; }  //其中需要显示BatteryTypes和Batteries
         public MainWindow()
         {
             InitializeComponent();
-            //AllBatteryTypesViewModel allBatteryTypesVM = new AllBatteryTypesViewModel();
-            //AllBatteryTypesViewInstance.DataContext = 
-            var viewModel = new MainWindowViewModel();
 
-
-            // Allow all controls in the window to 
-            // bind to the ViewModel by setting the 
-            // DataContext, which propagates down 
-            // the element tree.
-            //DataContext = viewModel;
-            this.AllBatteryTypesViewInstance.DataContext = viewModel.allBatteryTypesViewModel;
+            allBatteryTypesViewModel = new AllBatteryTypesViewModel(_repositories._batterytypeRepository, _repositories._batteryRepository);    //ViewModel初始化
+            this.AllBatteryTypesViewInstance.DataContext = allBatteryTypesViewModel;                                                            //ViewModel跟View绑定
         }
     }
 }

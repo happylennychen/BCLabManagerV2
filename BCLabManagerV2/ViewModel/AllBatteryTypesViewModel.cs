@@ -46,12 +46,12 @@ namespace BCLabManager.ViewModel
         {
             List<BatteryTypeViewModel> all =
                 (from batT in _batterytypeRepository.GetItems()
-                 select new BatteryTypeViewModel(batT, _batterytypeRepository)).ToList();
+                 select new BatteryTypeViewModel(batT, _batterytypeRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             //foreach (BatteryModelViewModel batmod in all)
             //batmod.PropertyChanged += this.OnBatteryModelViewModelPropertyChanged;
 
-            this.AllBatteryTypes = new ObservableCollection<BatteryTypeViewModel>(all);
+            this.AllBatteryTypes = new ObservableCollection<BatteryTypeViewModel>(all);     //再转换成Observable
             //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
         }
 
@@ -63,7 +63,8 @@ namespace BCLabManager.ViewModel
         /// Returns a collection of all the BatteryModelViewModel objects.
         /// </summary>
         public ObservableCollection<BatteryTypeViewModel> AllBatteryTypes { get; private set; }
-        public BatteryTypeViewModel SelectedType 
+
+        public BatteryTypeViewModel SelectedType    //绑定选中项，从而改变batteries
         {
             get
             {
@@ -71,12 +72,16 @@ namespace BCLabManager.ViewModel
             }
             set
             {
-                _selectedType = value;
-                OnPropertyChanged("SelectedType");
-                OnPropertyChanged("Batteries");
+                if (_selectedType != value)
+                {
+                    _selectedType = value;
+                    //OnPropertyChanged("SelectedType");
+                    OnPropertyChanged("Batteries"); //通知Batteries改变
+                }
             }
         }
-        public ObservableCollection<BatteryViewModel> Batteries 
+        public List<BatteryViewModel> Batteries //绑定选中type的batteries。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
+        //如果不是用查询，那么需要维护一个二维List。每一个BatteryType，对应一个List。用空间换时间。
         {
             get
             {
@@ -86,7 +91,7 @@ namespace BCLabManager.ViewModel
                   (from bat in _batteryRepository.GetItems()
                    where bat.BatteryType.Name == SelectedType.Name
                    select new BatteryViewModel(bat, _batteryRepository)).ToList();
-                return new ObservableCollection<BatteryViewModel>(all);
+                return all;
             }
         }
 
@@ -109,12 +114,12 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            BatteryTypeClass btc = new BatteryTypeClass();
-            BatteryTypeViewModel btvm = new BatteryTypeViewModel(btc, _batterytypeRepository);
+            BatteryTypeClass btc = new BatteryTypeClass();      //实例化一个新的model
+            BatteryTypeViewModel btvm = new BatteryTypeViewModel(btc, _batterytypeRepository);      //实例化一个新的view model
             btvm.DisplayName = "Battery Type-Create";
-            var BatteryTypeViewInstance = new BatteryTypeView();
+            var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
             BatteryTypeViewInstance.DataContext = btvm;
-            BatteryTypeViewInstance.Show();
+            BatteryTypeViewInstance.ShowDialog();
         }
         #endregion //Private Helper
         #region  Base Class Overrides

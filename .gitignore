@@ -1,4 +1,5 @@
 # ignore files in all directories
+~*
 *.7z
 **/obj/
 **/bin/
