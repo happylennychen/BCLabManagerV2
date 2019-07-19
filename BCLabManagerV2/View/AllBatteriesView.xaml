@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BCLabManager.View.AllBatteryTypesView"
+﻿<UserControl x:Class="BCLabManager.View.AllBatteriesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -13,12 +13,12 @@
         </LinearGradientBrush>
         <CollectionViewSource
       x:Key="BatteryTypeCS" 
-      Source="{Binding Path=AllBatteryTypes}"
+      Source="{Binding Path=AllBatteries}"
       >
         </CollectionViewSource>
         <CollectionViewSource
-      x:Key="BatteryCS" 
-      Source="{Binding Path=Batteries}"
+      x:Key="RecordsCS" 
+      Source="{Binding Path=Records}"
       >
         </CollectionViewSource>
 
@@ -36,7 +36,7 @@
             <RowDefinition Height="4"></RowDefinition>
             <RowDefinition Height="40*"></RowDefinition>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="Battery Type">
+        <GroupBox Grid.Row="0" Header="Battery">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Right">
                     <Button Content="_Create" Command="{Binding Path=CreateCommand}"></Button>
@@ -44,10 +44,10 @@
                     <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}"></Button>
                 </StackPanel>
                 <ListView Grid.Row="1"
-                      x:Name="BatteryTypelist"
+                      x:Name="Batterylist"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=AllBatteryTypes}"
+      ItemsSource="{Binding Path=AllBatteries}"
                       SelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 
@@ -58,35 +58,39 @@
             DisplayMemberBinding="{Binding Path=Name}" 
             />
                             <GridViewColumn 
-            Header="Manufactor" 
-            DisplayMemberBinding="{Binding Path=Manufactor}" 
+            Header="Type" 
+            DisplayMemberBinding="{Binding Path=Type}" 
             />
                             <GridViewColumn 
-            Header="Material" 
-            DisplayMemberBinding="{Binding Path=Material}" 
+            Header="Cycle" 
+            DisplayMemberBinding="{Binding Path=Cycle}" 
+            />
+                            <GridViewColumn 
+            Header="Status" 
+            DisplayMemberBinding="{Binding Path=Status}" 
             />
                         </GridView>
                     </ListView.View>
                 </ListView>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="2" Header="Battery">
+        <GroupBox Grid.Row="2" Header="Record">
 
             <ListView Grid.Row="1"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=Batteries}"
+      ItemsSource="{Binding Path=Records}"
       >
 
                 <ListView.View>
                     <GridView>
                         <GridViewColumn 
-            Header="Name" 
-            DisplayMemberBinding="{Binding Path=Name}" 
+            Header="Status" 
+            DisplayMemberBinding="{Binding Path=Status}" 
             />
                         <GridViewColumn 
-            Header="Cycle" 
-            DisplayMemberBinding="{Binding Path=CycleCount}" 
+            Header="Time" 
+            DisplayMemberBinding="{Binding Path=Time}" 
             />
                     </GridView>
                 </ListView.View>

@@ -9,23 +9,21 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BCLabManager.Model;
+using BCLabManager.ViewModel;
 
 namespace BCLabManager.View
 {
     /// <summary>
-    /// Interaction logic for BatteryTypeView.xaml
+    /// Interaction logic for AllBatteryType.xaml
     /// </summary>
-    public partial class BatteryTypeView : Window
+    public partial class AllBatteriesView : UserControl
     {
-        public BatteryTypeView()
+        public AllBatteriesView()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
         }
     }
 }

@@ -17,9 +17,8 @@ namespace BCLabManager.ViewModel
         readonly BatteryTypeClass _batterytype;
         readonly BatteryTypeRepository _batterytypeRepository;
         //bool _isSelected;
-        RelayCommand _saveCommand;
-        RelayCommand _saveAsCommand;
-        RelayCommand _editCommand;
+        RelayCommand _okCommand;
+        bool _isOK;
 
         #endregion // Fields
 
@@ -35,6 +34,7 @@ namespace BCLabManager.ViewModel
 
             _batterytype = batterytype;
             _batterytypeRepository = batteryTypeRepository;
+            _isOK = false;
         }
 
         #endregion // Constructor
@@ -90,45 +90,25 @@ namespace BCLabManager.ViewModel
         /// <summary>
         /// Returns a command that saves the customer.
         /// </summary>
-        public ICommand SaveCommand
+        public ICommand OKCommand
         {
             get
             {
-                if (_saveCommand == null)
+                if (_okCommand == null)
                 {
-                    _saveCommand = new RelayCommand(
-                        param => { this.Save(); },
-                        param => this.CanSave
+                    _okCommand = new RelayCommand(
+                        param => { this.OK(); },
+                        param => this.CanOK
                         );
                 }
-                return _saveCommand;
+                return _okCommand;
             }
         }
-        public ICommand SaveAsCommand
+
+        public bool IsOK
         {
-            get
-            {
-                if (_saveAsCommand == null)
-                {
-                    _saveAsCommand = new RelayCommand(
-                        param => { this.SaveAs(); }
-                        );
-                }
-                return _saveAsCommand;
-            }
-        }
-        public ICommand EditCommand
-        {
-            get
-            {
-                if (_editCommand == null)
-                {
-                    _editCommand = new RelayCommand(
-                        param => { this.Edit(); }
-                        );
-                }
-                return _editCommand;
-            }
+            get { return _isOK; }
+            set { _isOK = value; }
         }
 
         #endregion // Presentation Properties
@@ -138,15 +118,16 @@ namespace BCLabManager.ViewModel
         /// <summary>
         /// Saves the customer to the repository.  This method is invoked by the SaveCommand.
         /// </summary>
-        public void Save()
+        public void OK()
         {
             //if (!_batterytype.IsValid)
             //throw new InvalidOperationException(Resources.BatteryTypeViewModel_Exception_CannotSave);
 
-            if (this.IsNewBatteryType)
-                _batterytypeRepository.AddItem(_batterytype);
+            //if (this.IsNewBatteryType)
+                //_batterytypeRepository.AddItem(_batterytype);
 
-            base.OnPropertyChanged("DisplayName");
+            //base.OnPropertyChanged("DisplayName");
+            IsOK = true;
         }
 
         /// <summary>
@@ -204,7 +185,7 @@ namespace BCLabManager.ViewModel
         /// <summary>
         /// Returns true if the customer is valid and can be saved.
         /// </summary>
-        bool CanSave
+        bool CanOK
         {
             get { return IsNewBatteryType; }
         }

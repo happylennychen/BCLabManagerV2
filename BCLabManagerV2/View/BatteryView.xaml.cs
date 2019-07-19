@@ -16,9 +16,9 @@ namespace BCLabManager.View
     /// <summary>
     /// Interaction logic for BatteryTypeView.xaml
     /// </summary>
-    public partial class BatteryTypeView : Window
+    public partial class BatteryView : Window
     {
-        public BatteryTypeView()
+        public BatteryView()
         {
             InitializeComponent();
         }
