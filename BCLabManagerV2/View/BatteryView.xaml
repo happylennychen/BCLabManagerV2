@@ -43,12 +43,15 @@
       HorizontalAlignment="Right"
       Target="{Binding ElementName=TypeTxt}"
       />
-            <TextBox 
-      x:Name="TypeTxt"
+            <ComboBox 
+      x:Name="TypeCmb"
       Grid.Row="2" Grid.Column="2" 
-      Text="{Binding Path=Type, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+      ItemsSource="{Binding Path=AllBatteryTypes, Mode=OneTime}"
+      SelectedItem="{Binding Path=BatteryType, ValidatesOnDataErrors=True}"
       Validation.ErrorTemplate="{x:Null}"
-      />
+      >
+
+            </ComboBox>
 
             <!-- LAST NAME-->
             <Label 
@@ -61,19 +64,6 @@
       x:Name="CycleTxt"
       Grid.Row="4" Grid.Column="2" 
       Text="{Binding Path=Cycle, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-      Validation.ErrorTemplate="{x:Null}"
-      />
-            <!-- LAST NAME-->
-            <Label 
-      Grid.Row="6" Grid.Column="0" 
-      Content="_Status:" 
-      HorizontalAlignment="Right"
-      Target="{Binding ElementName=StatusTxt}" 
-      />
-            <TextBox 
-      x:Name="StatusTxt"
-      Grid.Row="6" Grid.Column="2" 
-      Text="{Binding Path=Status, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
       Validation.ErrorTemplate="{x:Null}"
       />
 

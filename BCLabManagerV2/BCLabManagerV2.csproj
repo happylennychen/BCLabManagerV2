@@ -57,17 +57,32 @@
     </ApplicationDefinition>
     <Compile Include="DataAccess\Repositories.cs" />
     <Compile Include="Model\ModelBase.cs" />
+    <Compile Include="ViewModel\AllBatteriesViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ViewModel\AllBatteryTypesViewModel.cs" />
-    <Compile Include="ViewModel\BatteryTypeViewModel.cs" />
-    <Compile Include="ViewModel\BatteryViewModel.cs" />
-    <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\BatteryTypeDispViewModel.cs" />
+    <Compile Include="ViewModel\BatteryDispViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ViewModel\BatteryTypeEditViewModel.cs" />
+    <Compile Include="ViewModel\BatteryEditViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="View\AllBatteriesView.xaml.cs">
+      <DependentUpon>AllBatteriesView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="View\AllBatteryTypesView.xaml.cs">
       <DependentUpon>AllBatteryTypesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\BatteryTypeView.xaml.cs">
       <DependentUpon>BatteryTypeView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="View\BatteryView.xaml.cs">
+      <DependentUpon>BatteryView.xaml</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -83,11 +98,19 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\AllBatteriesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\AllBatteryTypesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\BatteryTypeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\BatteryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -113,6 +136,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">

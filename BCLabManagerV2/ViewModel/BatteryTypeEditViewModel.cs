@@ -10,7 +10,7 @@ using BCLabManager.Properties;
 
 namespace BCLabManager.ViewModel
 {
-    public class BatteryTypeViewModel : ViewModelBase//, IDataErrorInfo
+    public class BatteryTypeEditViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
 
@@ -24,7 +24,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public BatteryTypeViewModel(BatteryTypeClass batterytype, BatteryTypeRepository batteryTypeRepository)
+        public BatteryTypeEditViewModel(BatteryTypeClass batterytype, BatteryTypeRepository batteryTypeRepository)  //构造函数里面之所以要batterytyperepository,是因为IsNewBattery需要用此进行判断
         {
             if (batterytype == null)
                 throw new ArgumentNullException("batterytype");
@@ -115,49 +115,9 @@ namespace BCLabManager.ViewModel
 
         #region Public Methods
 
-        /// <summary>
-        /// Saves the customer to the repository.  This method is invoked by the SaveCommand.
-        /// </summary>
-        public void OK()
+        public void OK()        //就是将属性IsOK设置成true，从而在外层进行下一步动作
         {
-            //if (!_batterytype.IsValid)
-            //throw new InvalidOperationException(Resources.BatteryTypeViewModel_Exception_CannotSave);
-
-            //if (this.IsNewBatteryType)
-                //_batterytypeRepository.AddItem(_batterytype);
-
-            //base.OnPropertyChanged("DisplayName");
             IsOK = true;
-        }
-
-        /// <summary>
-        /// Create a new battery type, based on the given value.  This method is invoked by the SaveAsCommand.
-        /// </summary>
-        public void SaveAs()
-        {
-            BatteryTypeClass newBatteryType =
-                new BatteryTypeClass(
-                    this._batterytype.Manufactor,
-                    this._batterytype.Name,
-                    this._batterytype.Material,
-                    this._batterytype.LimitedChargeVoltage,
-                    this._batterytype.RatedCapacity,
-                    this._batterytype.NominalVoltage,
-                    this._batterytype.TypicalCapacity,
-                    this._batterytype.CutoffDischargeVoltage);
-            BatteryTypeViewModel newbtvm = new BatteryTypeViewModel(newBatteryType, this._batterytypeRepository);
-            newbtvm.DisplayName = "Battery Type-Save As";
-            var BatteryTypeViewInstance = new BatteryTypeView();
-            BatteryTypeViewInstance.DataContext = newbtvm;
-            BatteryTypeViewInstance.Show();
-        }
-        public void Edit()
-        {
-            BatteryTypeViewModel newbtvm = new BatteryTypeViewModel(_batterytype, this._batterytypeRepository);
-            newbtvm.DisplayName = "Battery Type-Edit";
-            var BatteryTypeViewInstance = new BatteryTypeView();
-            BatteryTypeViewInstance.DataContext = newbtvm;
-            BatteryTypeViewInstance.Show();
         }
 
         #endregion // Public Methods

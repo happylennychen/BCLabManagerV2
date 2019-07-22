@@ -16,7 +16,7 @@ namespace BCLabManager.ViewModel
 
         readonly BatteryTypeRepository _batterytypeRepository;
         readonly BatteryRepository _batteryRepository;
-        BatteryTypeViewModel _selectedType;
+        BatteryTypeDispViewModel _selectedType;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
@@ -46,14 +46,14 @@ namespace BCLabManager.ViewModel
 
         void CreateAllBatteryTypes()
         {
-            List<BatteryTypeViewModel> all =
+            List<BatteryTypeDispViewModel> all =
                 (from batT in _batterytypeRepository.GetItems()
-                 select new BatteryTypeViewModel(batT, _batterytypeRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+                 select new BatteryTypeDispViewModel(batT)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             //foreach (BatteryModelViewModel batmod in all)
             //batmod.PropertyChanged += this.OnBatteryModelViewModelPropertyChanged;
 
-            this.AllBatteryTypes = new ObservableCollection<BatteryTypeViewModel>(all);     //再转换成Observable
+            this.AllBatteryTypes = new ObservableCollection<BatteryTypeDispViewModel>(all);     //再转换成Observable
             //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
         }
 
@@ -64,9 +64,9 @@ namespace BCLabManager.ViewModel
         /// <summary>
         /// Returns a collection of all the BatteryModelViewModel objects.
         /// </summary>
-        public ObservableCollection<BatteryTypeViewModel> AllBatteryTypes { get; private set; }
+        public ObservableCollection<BatteryTypeDispViewModel> AllBatteryTypes { get; private set; }
 
-        public BatteryTypeViewModel SelectedType    //绑定选中项，从而改变batteries
+        public BatteryTypeDispViewModel SelectedItem    //绑定选中项，从而改变batteries
         {
             get
             {
@@ -82,17 +82,17 @@ namespace BCLabManager.ViewModel
                 }
             }
         }
-        public List<BatteryViewModel> Batteries //绑定选中type的batteries。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
+        public List<BatteryDispViewModel> Batteries //绑定选中type的batteries。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
         //如果不是用查询，那么需要维护一个二维List。每一个BatteryType，对应一个List。用空间换时间。
         {
             get
             {
-                if (SelectedType == null)
+                if (SelectedItem == null)
                     return null;
-                List<BatteryViewModel> all =
+                List<BatteryDispViewModel> all =
                   (from bat in _batteryRepository.GetItems()
-                   where bat.BatteryType.Name == SelectedType.Name
-                   select new BatteryViewModel(bat, _batteryRepository)).ToList();
+                   where bat.BatteryType.Name == SelectedItem.Name
+                   select new BatteryDispViewModel(bat)).ToList();
                 return all;
             }
         }
@@ -145,7 +145,7 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             BatteryTypeClass btc = new BatteryTypeClass();      //实例化一个新的model
-            BatteryTypeViewModel btvm = new BatteryTypeViewModel(btc, _batterytypeRepository);      //实例化一个新的view model
+            BatteryTypeEditViewModel btvm = new BatteryTypeEditViewModel(btc, _batterytypeRepository);      //实例化一个新的view model
             btvm.DisplayName = "Battery Type-Create";
             var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
             BatteryTypeViewInstance.DataContext = btvm;
@@ -158,7 +158,7 @@ namespace BCLabManager.ViewModel
         private void Edit()
         {
             BatteryTypeClass btc = new BatteryTypeClass();      //实例化一个新的model
-            BatteryTypeViewModel btvm = new BatteryTypeViewModel(btc, _batterytypeRepository);      //实例化一个新的view model
+            BatteryTypeEditViewModel btvm = new BatteryTypeEditViewModel(btc, _batterytypeRepository);      //实例化一个新的view model
             btvm.Manufactor = _selectedType.Manufactor;
             btvm.Material = _selectedType.Material;
             btvm.Name = _selectedType.Name;
@@ -180,7 +180,7 @@ namespace BCLabManager.ViewModel
         private void SaveAs()
         {
             BatteryTypeClass btc = new BatteryTypeClass();      //实例化一个新的model
-            BatteryTypeViewModel btvm = new BatteryTypeViewModel(btc, _batterytypeRepository);      //实例化一个新的view model
+            BatteryTypeEditViewModel btvm = new BatteryTypeEditViewModel(btc, _batterytypeRepository);      //实例化一个新的view model
             btvm.Manufactor = _selectedType.Manufactor;
             btvm.Material = _selectedType.Material;
             btvm.Name = _selectedType.Name;
@@ -202,7 +202,7 @@ namespace BCLabManager.ViewModel
 
         protected override void OnDispose()
         {
-            foreach (BatteryTypeViewModel custVM in this.AllBatteryTypes)
+            foreach (BatteryTypeDispViewModel custVM in this.AllBatteryTypes)
                 custVM.Dispose();
 
             this.AllBatteryTypes.Clear();
@@ -217,7 +217,7 @@ namespace BCLabManager.ViewModel
 
         void OnBatteryModelAddedToRepository(object sender, ItemAddedEventArgs<BatteryTypeClass> e)
         {
-            var viewModel = new BatteryTypeViewModel(e.NewItem, _batterytypeRepository);
+            var viewModel = new BatteryTypeDispViewModel(e.NewItem);
             this.AllBatteryTypes.Add(viewModel);
         }
 

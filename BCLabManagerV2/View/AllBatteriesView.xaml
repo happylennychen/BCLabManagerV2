@@ -11,16 +11,6 @@
             <GradientStop Color="#66000088" Offset="0" />
             <GradientStop Color="#BB000088" Offset="1" />
         </LinearGradientBrush>
-        <CollectionViewSource
-      x:Key="BatteryTypeCS" 
-      Source="{Binding Path=AllBatteries}"
-      >
-        </CollectionViewSource>
-        <CollectionViewSource
-      x:Key="RecordsCS" 
-      Source="{Binding Path=Records}"
-      >
-        </CollectionViewSource>
 
         <Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}">
             <!-- 
@@ -59,11 +49,11 @@
             />
                             <GridViewColumn 
             Header="Type" 
-            DisplayMemberBinding="{Binding Path=Type}" 
+            DisplayMemberBinding="{Binding Path=BatteryType}" 
             />
                             <GridViewColumn 
             Header="Cycle" 
-            DisplayMemberBinding="{Binding Path=Cycle}" 
+            DisplayMemberBinding="{Binding Path=CycleCount}" 
             />
                             <GridViewColumn 
             Header="Status" 

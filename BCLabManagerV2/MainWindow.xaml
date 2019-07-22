@@ -20,7 +20,9 @@
                     <TabItem Header="Battery Types">
                         <v:AllBatteryTypesView x:Name="AllBatteryTypesViewInstance"></v:AllBatteryTypesView>
                     </TabItem>
-                    <TabItem Header="Batteries"></TabItem>
+                    <TabItem Header="Batteries">
+                        <v:AllBatteriesView x:Name="AllBatteriesViewInstance"></v:AllBatteriesView>
+                    </TabItem>
                     <TabItem Header="Testers"></TabItem>
                     <TabItem Header="TesterChannels"></TabItem>
                     <TabItem Header="Chambers"></TabItem>

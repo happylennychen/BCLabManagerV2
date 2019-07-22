@@ -11,16 +11,6 @@
             <GradientStop Color="#66000088" Offset="0" />
             <GradientStop Color="#BB000088" Offset="1" />
         </LinearGradientBrush>
-        <CollectionViewSource
-      x:Key="BatteryTypeCS" 
-      Source="{Binding Path=AllBatteryTypes}"
-      >
-        </CollectionViewSource>
-        <CollectionViewSource
-      x:Key="BatteryCS" 
-      Source="{Binding Path=Batteries}"
-      >
-        </CollectionViewSource>
 
         <Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}">
             <!-- 

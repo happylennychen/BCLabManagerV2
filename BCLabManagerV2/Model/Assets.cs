@@ -10,6 +10,21 @@ namespace BCLabManager.Model
         IDLE,
         USING,
     }
+    public class RecordClass
+    {
+        public DateTime Timestamp;
+        public AssetStatusEnum Status;
+        public String ProgramName;
+        public String SubProgramName;
+
+        public RecordClass(DateTime Timestamp, AssetStatusEnum Status, String ProgramName, String SubProgramName)
+        {
+            this.Timestamp = Timestamp;
+            this.Status = Status;
+            this.ProgramName = ProgramName;
+            this.SubProgramName = SubProgramName;
+        }
+    }
     public class AssetClass
     {
         private AssetStatusEnum status = new AssetStatusEnum();
@@ -30,32 +45,17 @@ namespace BCLabManager.Model
             }
         }
 
-        public class Record
-        {
-            DateTime Timestamp;
-            AssetStatusEnum Status;
-            String ProgramName;
-            String SubProgramName;
-
-            public Record(DateTime Timestamp, AssetStatusEnum Status, String ProgramName, String SubProgramName)
-            {
-                this.Timestamp = Timestamp;
-                this.Status = Status;
-                this.ProgramName = ProgramName;
-                this.SubProgramName = SubProgramName;
-            }
-        }
-        public List<Record> Records { get; set; }
+        public List<RecordClass> Records { get; set; }
 
         public AssetClass()
         {
             this.Status = AssetStatusEnum.IDLE;
-            Records = new List<Record>();
+            Records = new List<RecordClass>();
         }
 
         public void UpdateRecords(DateTime Timestamp, AssetStatusEnum Status, String ProgramName, String SubProgramName)
         {
-            Records.Add(new Record(Timestamp, Status, ProgramName, SubProgramName));
+            Records.Add(new RecordClass(Timestamp, Status, ProgramName, SubProgramName));
         }
     }
     public class BatteryTypeClass
@@ -101,6 +101,9 @@ namespace BCLabManager.Model
         public String Name { get; set; }
         public BatteryTypeClass BatteryType { get; set; }
         public Double CycleCount { get; set; }
+
+        public BatteryClass()
+        { }
 
         public BatteryClass(String Name, BatteryTypeClass BatteryType, Double CycleCount = 0)
         {
