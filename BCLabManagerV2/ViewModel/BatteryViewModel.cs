@@ -13,7 +13,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class BatteryEditViewModel : ViewModelBase//, IDataErrorInfo
+    public class BatteryViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
 
@@ -29,7 +29,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public BatteryEditViewModel(BatteryClass batterymodel, BatteryRepository batteryRepository, BatteryTypeRepository batterytypeRepository)
+        public BatteryViewModel(BatteryClass batterymodel, BatteryRepository batteryRepository, BatteryTypeRepository batterytypeRepository)
         {
             if (batterymodel == null)
                 throw new ArgumentNullException("batterymodel");
@@ -87,9 +87,18 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public string Status
+        public AssetStatusEnum Status
         {
-            get { return _battery.Status.ToString(); }
+            get { return _battery.Status; }
+            set
+            {
+                if (value == _battery.Status)
+                    return;
+
+                _battery.Status = value;
+
+                base.OnPropertyChanged("Status");
+            }
         }
 
         #endregion // Customer Properties
@@ -189,7 +198,16 @@ namespace BCLabManager.ViewModel
         /// </summary>
         bool IsNewBattery
         {
-            get { return !_batteryRepository.ContainsItem(_battery); }
+            get
+            {
+                int number = (
+                    from bat in _batteryRepository.GetItems()
+                    where bat.Name == _battery.Name     //名字（某一个属性）一样就认为是一样的
+                    select bat).Count();
+                if (number != 0)
+                    return false; 
+                return !_batteryRepository.ContainsItem(_battery);
+            }
         }
 
         /// <summary>

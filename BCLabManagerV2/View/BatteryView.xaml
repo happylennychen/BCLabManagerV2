@@ -63,7 +63,7 @@
             <TextBox 
       x:Name="CycleTxt"
       Grid.Row="4" Grid.Column="2" 
-      Text="{Binding Path=Cycle, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+      Text="{Binding Path=CycleCount, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
       Validation.ErrorTemplate="{x:Null}"
       />
 

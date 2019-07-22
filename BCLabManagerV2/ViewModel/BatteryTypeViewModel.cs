@@ -10,7 +10,7 @@ using BCLabManager.Properties;
 
 namespace BCLabManager.ViewModel
 {
-    public class BatteryTypeEditViewModel : ViewModelBase//, IDataErrorInfo
+    public class BatteryTypeViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
 
@@ -24,7 +24,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public BatteryTypeEditViewModel(BatteryTypeClass batterytype, BatteryTypeRepository batteryTypeRepository)  //构造函数里面之所以要batterytyperepository,是因为IsNewBattery需要用此进行判断
+        public BatteryTypeViewModel(BatteryTypeClass batterytype, BatteryTypeRepository batteryTypeRepository)  //构造函数里面之所以要batterytyperepository,是因为IsNewBattery需要用此进行判断
         {
             if (batterytype == null)
                 throw new ArgumentNullException("batterytype");

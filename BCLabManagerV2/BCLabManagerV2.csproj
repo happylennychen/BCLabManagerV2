@@ -61,12 +61,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ViewModel\AllBatteryTypesViewModel.cs" />
-    <Compile Include="ViewModel\BatteryTypeDispViewModel.cs" />
-    <Compile Include="ViewModel\BatteryDispViewModel.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ViewModel\BatteryTypeEditViewModel.cs" />
-    <Compile Include="ViewModel\BatteryEditViewModel.cs" />
+    <Compile Include="ViewModel\BatteryTypeViewModel.cs" />
+    <Compile Include="ViewModel\BatteryViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\AllBatteriesView.xaml.cs">
