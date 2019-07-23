@@ -16,7 +16,7 @@ namespace BCLabManager.ViewModel
 
         readonly BatteryTypeRepository _batterytypeRepository;
         readonly BatteryRepository _batteryRepository;
-        BatteryTypeViewModel _selectedType;
+        BatteryTypeViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
@@ -70,13 +70,13 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                return _selectedType;
+                return _selectedItem;
             }
             set
             {
-                if (_selectedType != value)
+                if (_selectedItem != value)
                 {
-                    _selectedType = value;
+                    _selectedItem = value;
                     //OnPropertyChanged("SelectedType");
                     OnPropertyChanged("Batteries"); //通知Batteries改变
                 }
@@ -159,31 +159,31 @@ namespace BCLabManager.ViewModel
         {
             BatteryTypeClass btc = new BatteryTypeClass();      //实例化一个新的model
             BatteryTypeViewModel btvm = new BatteryTypeViewModel(btc, _batterytypeRepository);      //实例化一个新的view model
-            btvm.Manufactor = _selectedType.Manufactor;
-            btvm.Material = _selectedType.Material;
-            btvm.Name = _selectedType.Name;
+            btvm.Manufactor = _selectedItem.Manufactor;
+            btvm.Material = _selectedItem.Material;
+            btvm.Name = _selectedItem.Name;
             btvm.DisplayName = "Battery Type-Edit";
             var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
             BatteryTypeViewInstance.DataContext = btvm;
             BatteryTypeViewInstance.ShowDialog();
             if (btvm.IsOK == true)
             {
-                _selectedType.Manufactor = btvm.Manufactor;
-                _selectedType.Material = btvm.Material;
-                _selectedType.Name = btvm.Name;
+                _selectedItem.Manufactor = btvm.Manufactor;
+                _selectedItem.Material = btvm.Material;
+                _selectedItem.Name = btvm.Name;
             }
         }
         private bool CanEdit
         {
-            get { return _selectedType != null; }
+            get { return _selectedItem != null; }
         }
         private void SaveAs()
         {
             BatteryTypeClass btc = new BatteryTypeClass();      //实例化一个新的model
             BatteryTypeViewModel btvm = new BatteryTypeViewModel(btc, _batterytypeRepository);      //实例化一个新的view model
-            btvm.Manufactor = _selectedType.Manufactor;
-            btvm.Material = _selectedType.Material;
-            btvm.Name = _selectedType.Name;
+            btvm.Manufactor = _selectedItem.Manufactor;
+            btvm.Material = _selectedItem.Material;
+            btvm.Name = _selectedItem.Name;
             btvm.DisplayName = "Battery Type-Save As";
             var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
             BatteryTypeViewInstance.DataContext = btvm;
@@ -195,7 +195,7 @@ namespace BCLabManager.ViewModel
         }
         private bool CanSaveAs
         {
-            get { return _selectedType != null; }
+            get { return _selectedItem != null; }
         }
         #endregion //Private Helper
         #region  Base Class Overrides

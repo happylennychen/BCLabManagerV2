@@ -57,20 +57,27 @@
     </ApplicationDefinition>
     <Compile Include="DataAccess\Repositories.cs" />
     <Compile Include="Model\ModelBase.cs" />
-    <Compile Include="ViewModel\AllBatteriesViewModel.cs">
+    <Compile Include="ViewModel\AllChannelsViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ViewModel\AllBatteryTypesViewModel.cs" />
-    <Compile Include="ViewModel\BatteryTypeViewModel.cs" />
+    <Compile Include="ViewModel\AllTestersViewModel.cs" />
+    <Compile Include="ViewModel\ChannelViewModel.cs" />
     <Compile Include="ViewModel\BatteryViewModel.cs" />
+    <Compile Include="ViewModel\AllBatteryTypesViewModel.cs" />
+    <Compile Include="ViewModel\AllBatteriesViewModel.cs" />
+    <Compile Include="ViewModel\AllChambersViewModel.cs" />
+    <Compile Include="ViewModel\ChamberViewModel.cs" />
+    <Compile Include="ViewModel\RecordViewModel.cs" />
+    <Compile Include="ViewModel\TesterViewModel.cs" />
+    <Compile Include="ViewModel\BatteryTypeViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\AllBatteriesView.xaml.cs">
       <DependentUpon>AllBatteriesView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="View\AllBatteryTypesView.xaml.cs">
-      <DependentUpon>AllBatteryTypesView.xaml</DependentUpon>
+    <Compile Include="View\AllTestersView.xaml.cs">
+      <DependentUpon>AllTestersView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\BatteryTypeView.xaml.cs">
       <DependentUpon>BatteryTypeView.xaml</DependentUpon>
@@ -79,6 +86,24 @@
     <Compile Include="View\BatteryView.xaml.cs">
       <DependentUpon>BatteryView.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="View\AllBatteryTypesView.xaml.cs">
+      <DependentUpon>AllBatteryTypesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AllChannelsView.xaml.cs">
+      <DependentUpon>AllChannelsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ChannelView.xaml.cs">
+      <DependentUpon>ChannelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AllChambersView.xaml.cs">
+      <DependentUpon>AllChambersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ChamberView.xaml.cs">
+      <DependentUpon>ChamberView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TesterView.xaml.cs">
+      <DependentUpon>TesterView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -98,7 +123,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\AllBatteryTypesView.xaml">
+    <Page Include="View\AllTestersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -109,6 +134,30 @@
     <Page Include="View\BatteryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AllBatteryTypesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AllChannelsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ChannelView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AllChambersView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ChamberView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\TesterView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Resource Include="MainWindowResources.xaml">
       <SubType>Designer</SubType>

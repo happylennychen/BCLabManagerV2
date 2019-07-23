@@ -10,24 +10,18 @@ using BCLabManager.Properties;
 
 namespace BCLabManager.ViewModel
 {
-    public enum CommandType
-    {
-        Create,
-        Edit,
-        SaveAs
-    }
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class BatteryViewModel : ViewModelBase//, IDataErrorInfo
+    public class ChannelViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
 
-        readonly BatteryClass _battery;
-        readonly BatteryRepository _batteryRepository;
-        readonly BatteryTypeRepository _batterytypeRepository;
+        readonly ChannelClass _channel;
+        readonly ChannelRepository _channelRepository;
+        readonly TesterRepository _testerRepository;
         //bool _isSelected;
-        string _batteryType;
+        string _tester;
         RelayCommand _okCommand;
         bool _isOK;
 
@@ -35,73 +29,59 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public BatteryViewModel(BatteryClass batterymodel, BatteryRepository batteryRepository, BatteryTypeRepository batterytypeRepository)
+        public ChannelViewModel(ChannelClass channelmodel, ChannelRepository channelRepository, TesterRepository testerRepository)
         {
-            if (batterymodel == null)
-                throw new ArgumentNullException("batterymodel");
+            if (channelmodel == null)
+                throw new ArgumentNullException("channelmodel");
 
-            if (batteryRepository == null)
-                throw new ArgumentNullException("batteryRepository");
+            if (channelRepository == null)
+                throw new ArgumentNullException("channelRepository");
 
-            if (batterytypeRepository == null)
-                throw new ArgumentNullException("batterymodelRepository");
+            if (testerRepository == null)
+                throw new ArgumentNullException("channelmodelRepository");
 
-            _battery = batterymodel;
-            _batteryRepository = batteryRepository;
-            _batterytypeRepository = batterytypeRepository;
+            _channel = channelmodel;
+            _channelRepository = channelRepository;
+            _testerRepository = testerRepository;
 
-            // Populate the AllCustomers collection with BatteryTypeViewModels.
-            //this.CreateAllBatteryTypes();      
+            // Populate the AllCustomers collection with TesterViewModels.
+            //this.CreateAllTesters();      
         }
 
-        /*void CreateAllBatteryTypes()
+        /*void CreateAllTesters()
         {
-            List<BatteryTypeClass> all = _batterytypeRepository.GetItems();
+            List<TesterClass> all = _testerRepository.GetItems();
 
-            this.AllBatteryTypes = new ObservableCollection<BatteryTypeClass>(all);
+            this.AllTesters = new ObservableCollection<TesterClass>(all);
         }*/
 
         #endregion // Constructor
 
-        #region BatteryClass Properties
+        #region ChannelClass Properties
 
         public string Name
         {
-            get { return _battery.Name; }
+            get { return _channel.Name; }
             set
             {
-                if (value == _battery.Name)
+                if (value == _channel.Name)
                     return;
 
-                _battery.Name = value;
+                _channel.Name = value;
 
                 base.OnPropertyChanged("Name");
             }
         }
 
-        public double CycleCount
-        {
-            get { return _battery.CycleCount; }
-            set
-            {
-                if (value == _battery.CycleCount)
-                    return;
-
-                _battery.CycleCount = value;
-
-                base.OnPropertyChanged("CycleCount");
-            }
-        }
-
         public AssetStatusEnum Status
         {
-            get { return _battery.Status; }
+            get { return _channel.Status; }
             set
             {
-                if (value == _battery.Status)
+                if (value == _channel.Status)
                     return;
 
-                _battery.Status = value;
+                _channel.Status = value;
 
                 base.OnPropertyChanged("Status");
             }
@@ -112,37 +92,37 @@ namespace BCLabManager.ViewModel
         #region Presentation Properties
 
 
-        public String BatteryType
+        public String Tester
         {
             get
             {
-                if (_batteryType == null)
+                if (_tester == null)
                 {
-                    if (_battery.BatteryType == null)
-                        _batteryType = string.Empty;
+                    if (_channel.Tester == null)
+                        _tester = string.Empty;
                     else
-                        _batteryType = _battery.BatteryType.Name;
+                        _tester = _channel.Tester.Name;
                 }
-                return _batteryType;
+                return _tester;
             }
             set
             {
-                if (value == _batteryType || String.IsNullOrEmpty(value))
+                if (value == _tester || String.IsNullOrEmpty(value))
                     return;
 
-                _batteryType = value;
+                _tester = value;
 
-                _battery.BatteryType = _batterytypeRepository.GetItems().First(i => i.Name == _batteryType);
+                _channel.Tester = _testerRepository.GetItems().First(i => i.Name == _tester);
 
-                base.OnPropertyChanged("BatteryType");
+                base.OnPropertyChanged("Tester");
             }
         }
 
-        public ObservableCollection<string> AllBatteryTypes
+        public ObservableCollection<string> AllTesters
         {
             get
             {
-                List<BatteryTypeClass> all = _batterytypeRepository.GetItems();
+                List<TesterClass> all = _testerRepository.GetItems();
                 List<string> allstring = (
                     from i in all
                     select i.Name).ToList();
@@ -203,11 +183,11 @@ namespace BCLabManager.ViewModel
         /// </summary>
         public void OK()
         {
-            //if (!_batterytype.IsValid)
-            //throw new InvalidOperationException(Resources.BatteryTypeViewModel_Exception_CannotSave);
+            //if (!_tester.IsValid)
+            //throw new InvalidOperationException(Resources.TesterViewModel_Exception_CannotSave);
 
-            //if (this.IsNewBatteryType)
-            //_batterytypeRepository.AddItem(_batterytype);
+            //if (this.IsNewTester)
+            //_testerRepository.AddItem(_tester);
 
             //base.OnPropertyChanged("DisplayName");
             IsOK = true;
@@ -221,17 +201,17 @@ namespace BCLabManager.ViewModel
         /// Returns true if this customer was created by the user and it has not yet
         /// been saved to the customer repository.
         /// </summary>
-        bool IsNewBattery
+        bool IsNewChannel
         {
             get
             {
                 int number = (
-                    from bat in _batteryRepository.GetItems()
-                    where bat.Name == _battery.Name     //名字（某一个属性）一样就认为是一样的
+                    from bat in _channelRepository.GetItems()
+                    where bat.Name == _channel.Name     //名字（某一个属性）一样就认为是一样的
                     select bat).Count();
                 if (number != 0)
-                    return false; 
-                return !_batteryRepository.ContainsItem(_battery);
+                    return false;
+                return !_channelRepository.ContainsItem(_channel);
             }
         }
 
@@ -240,7 +220,7 @@ namespace BCLabManager.ViewModel
         /// </summary>
         bool CanCreate
         {
-            get { return IsNewBattery; }
+            get { return IsNewChannel; }
         }
 
         /// <summary>
@@ -248,7 +228,7 @@ namespace BCLabManager.ViewModel
         /// </summary>
         bool CanSaveAs
         {
-            get { return IsNewBattery; }
+            get { return IsNewChannel; }
         }
 
         #endregion // Private Helpers

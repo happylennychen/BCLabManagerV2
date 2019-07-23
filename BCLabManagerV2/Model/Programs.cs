@@ -39,7 +39,7 @@ namespace BCLabManager.Model
             }
         }
         public BatteryClass Battery { get; set; }
-        public TesterChannelClass TesterChannel { get; set; }
+        public ChannelClass TesterChannel { get; set; }
         public String Steps { get; set; }
         public ChamberClass Chamber { get; set; }
         public DateTime StartTime { get; set; }
@@ -71,7 +71,7 @@ namespace BCLabManager.Model
             this.Chamber = null;
         }
 
-        public void Execute(BatteryClass Battery, ChamberClass Chamber, TesterChannelClass TesterChannel, String Steps, DateTime StartTime)
+        public void Execute(BatteryClass Battery, ChamberClass Chamber, ChannelClass TesterChannel, String Steps, DateTime StartTime)
         {
         }
 

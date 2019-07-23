@@ -164,14 +164,80 @@ namespace BCLabManager.DataAccess
             throw new NotImplementedException();
         }
     }
+
+    public class TesterRepository : RepositoryBase<TesterClass>
+    {
+        public TesterRepository(List<TesterClass> items)
+            : base(items)
+        {
+        }
+        public override void SerializeToDatabase()
+        {
+            throw new NotImplementedException();
+        }
+        public override void DeserializeFromDatabase()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ChannelRepository : RepositoryBase<ChannelClass>
+    {
+        public ChannelRepository(List<ChannelClass> items)
+            : base(items)
+        {
+        }
+        public override void SerializeToDatabase()
+        {
+            throw new NotImplementedException();
+        }
+        public override void DeserializeFromDatabase()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ChamberRepository : RepositoryBase<ChamberClass>
+    {
+        public ChamberRepository(List<ChamberClass> items)
+            : base(items)
+        {
+        }
+        public override void SerializeToDatabase()
+        {
+            throw new NotImplementedException();
+        }
+        public override void DeserializeFromDatabase()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class SubProgramRepository : RepositoryBase<SubProgramClass>
+    {
+        public SubProgramRepository(List<SubProgramClass> items)
+            : base(items)
+        {
+        }
+        public override void SerializeToDatabase()
+        {
+            throw new NotImplementedException();
+        }
+        public override void DeserializeFromDatabase()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class Repositories
     {
         public BatteryTypeRepository _batterytypeRepository;
         public BatteryRepository _batteryRepository;
-        //public ChamberRepository _chamberRepository;
-        //public TesterRepository _testerRepository;
+        public TesterRepository _testerRepository;
+        public ChannelRepository _channelRepository;
+        public ChamberRepository _chamberRepository;
 
-        //public SubProgramRepository _subprogramRepository;
+        public SubProgramRepository _subprogramRepository;
         //public RecipeRepository _recipeRepository;
         //public ChamberRecipeRepository _chamberrecipeRepository;
         //public TesterRecipeRepository _testerrecipeRepository;
@@ -183,7 +249,7 @@ namespace BCLabManager.DataAccess
         private List<BatteryTypeClass> BatteryTypes;// { get; set; }
         private List<BatteryClass> Batteries;// { get; set; }
         private List<TesterClass> Testers;// { get; set; }
-        private List<TesterChannelClass> TesterChannels;// { get; set; }
+        private List<ChannelClass> Channels;// { get; set; }
         private List<ChamberClass> Chambers;// { get; set; }
         private List<ProgramClass> Programs;// { get; set; }
         private List<SubProgramClass> SubPrograms;// { get; set; }
@@ -246,7 +312,7 @@ namespace BCLabManager.DataAccess
         private void HistoricRegistration()
         {
             InitAssets();
-            //InitPrograms();
+            InitPrograms();
             //InitRequests();
             //InitExecutors();  //用Requests就够了，如非必要勿增实体
         }
@@ -277,18 +343,35 @@ namespace BCLabManager.DataAccess
 
             Testers = new List<TesterClass>();
             TesterClass Tester = new TesterClass("Chroma", "17200");
-            TesterChannels = new List<TesterChannelClass> { 
-                new TesterChannelClass("1",Tester),
-                new TesterChannelClass("2",Tester),
-                new TesterChannelClass("3",Tester),
-                new TesterChannelClass("4",Tester)};
+            Channels = new List<ChannelClass> { 
+                new ChannelClass("1",Tester),
+                new ChannelClass("2",Tester),
+                new ChannelClass("3",Tester),
+                new ChannelClass("4",Tester)};
             Testers.Add(Tester);
 
             _batterytypeRepository = new BatteryTypeRepository(BatteryTypes);
             _batteryRepository = new BatteryRepository(Batteries);
-            //_chamberRepository = new ChamberRepository(Chambers);
-            //_testerRepository = new TesterRepository(Testers);
+            _testerRepository = new TesterRepository(Testers);
+            _channelRepository = new ChannelRepository(Channels);
+            _chamberRepository = new ChamberRepository(Chambers);
 
+        }
+        private void InitPrograms()
+        {
+            SubPrograms = new List<SubProgramClass>();
+            SubProgramClass sub = new SubProgramClass("Room 1C charge, -20 deg 0.5C discharge", TestCountEnum.Two);
+            SubPrograms.Add(sub);
+            sub = new SubProgramClass("Room 1C charge, -10 deg 0.5C discharge", TestCountEnum.Two);
+            SubPrograms.Add(sub);
+            sub = new SubProgramClass("Room 1C charge, 0 deg 0.5C discharge", TestCountEnum.One);
+            SubPrograms.Add(sub);
+            sub = new SubProgramClass("Room 1C charge, 10 deg 0.5C discharge", TestCountEnum.One);
+            SubPrograms.Add(sub);
+            sub = new SubProgramClass("Room 1C charge, 20 deg 0.5C discharge", TestCountEnum.One);
+            SubPrograms.Add(sub);
+
+            _subprogramRepository = new SubProgramRepository(SubPrograms);
         }
         #endregion //debugger
     }

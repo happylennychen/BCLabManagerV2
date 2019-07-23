@@ -127,6 +127,9 @@ namespace BCLabManager.Model
         public String Manufactor { get; set; }
         public String Name { get; set; }
 
+        public TesterClass()
+        { }
+
         public TesterClass(String Manufactor, String Name)
         {
             //this.TesterID = NextID;
@@ -140,12 +143,15 @@ namespace BCLabManager.Model
             this.Name = Name;
         }
     }
-    public class TesterChannelClass : AssetClass
+    public class ChannelClass : AssetClass
     {
         public TesterClass Tester { get; set; }
         public String Name { get; set; }
 
-        public TesterChannelClass(String Name, TesterClass Tester)
+        public ChannelClass()
+        { }
+
+        public ChannelClass(String Name, TesterClass Tester)
         {
             this.Tester = Tester;
             this.Name = Name;
@@ -164,6 +170,9 @@ namespace BCLabManager.Model
         public String Name { get; set; }
         public Double LowestTemperature { get; set; }
         public Double HighestTemperature { get; set; }
+
+        public ChamberClass()
+        { }
         
         public ChamberClass(String Manufactor, String Name, String TemperatureRange)
         {

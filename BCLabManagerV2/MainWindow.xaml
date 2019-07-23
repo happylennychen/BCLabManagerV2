@@ -23,9 +23,15 @@
                     <TabItem Header="Batteries">
                         <v:AllBatteriesView x:Name="AllBatteriesViewInstance"></v:AllBatteriesView>
                     </TabItem>
-                    <TabItem Header="Testers"></TabItem>
-                    <TabItem Header="TesterChannels"></TabItem>
-                    <TabItem Header="Chambers"></TabItem>
+                    <TabItem Header="Testers">
+                        <v:AllTestersView x:Name="AllTestersViewInstance"></v:AllTestersView>
+                    </TabItem>
+                    <TabItem Header="Channels">
+                        <v:AllChannelsView x:Name="AllChannelsViewInstance"></v:AllChannelsView>
+                    </TabItem>
+                    <TabItem Header="Chambers">
+                        <v:AllChambersView x:Name="AllChambersViewInstance"></v:AllChambersView>
+                    </TabItem>
                 </TabControl>
             </TabItem>
             <TabItem Header="Sub Programs"></TabItem>

@@ -25,6 +25,12 @@ namespace BCLabManager
 
         public AllBatteryTypesViewModel allBatteryTypesViewModel { get; set; }  //其中需要显示BatteryTypes和Batteries
         public AllBatteriesViewModel allBatteriesViewModel { get; set; }  //其中需要显示Batteries和Records
+
+        public AllTestersViewModel allTestersViewModel { get; set; }  //其中需要显示Testers和Channels
+        public AllChannelsViewModel allChannelsViewModel { get; set; }  //其中需要显示Channels和Records
+
+        public AllChambersViewModel allChambersViewModel { get; set; }  //其中需要显示Chambers和Records
+
         public MainWindow()
         {
             InitializeComponent();
@@ -34,6 +40,15 @@ namespace BCLabManager
 
             allBatteriesViewModel = new AllBatteriesViewModel(_repositories._batteryRepository, _repositories._batterytypeRepository);    //ViewModel初始化
             this.AllBatteriesViewInstance.DataContext = allBatteriesViewModel;                                                            //ViewModel跟View绑定
+
+            allTestersViewModel = new AllTestersViewModel(_repositories._testerRepository, _repositories._channelRepository);    //ViewModel初始化
+            this.AllTestersViewInstance.DataContext = allTestersViewModel;                                                            //ViewModel跟View绑定
+
+            allChannelsViewModel = new AllChannelsViewModel(_repositories._channelRepository, _repositories._testerRepository);    //ViewModel初始化
+            this.AllChannelsViewInstance.DataContext = allChannelsViewModel;                                                            //ViewModel跟View绑定
+
+            allChambersViewModel = new AllChambersViewModel(_repositories._chamberRepository);    //ViewModel初始化
+            this.AllChambersViewInstance.DataContext = allChambersViewModel;                                                            //ViewModel跟View绑定
         }
     }
 }
