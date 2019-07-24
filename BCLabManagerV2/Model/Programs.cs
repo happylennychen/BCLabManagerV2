@@ -96,6 +96,9 @@ namespace BCLabManager.Model
         public List<TestRecordClass> FirstTest { get; set; }
         public List<TestRecordClass> SecondTest { get; set; }
 
+        public SubProgramClass()
+        { }
+
         public SubProgramClass(String Name, TestCountEnum TestCount)
         {
             this.Name = Name;

@@ -31,8 +31,6 @@ namespace BCLabManager.ViewModel
 
             _chamberRepository = chamberRepository;
 
-            _chamberRepository = chamberRepository;
-
             // Subscribe for notifications of when a new customer is saved.
             _chamberRepository.ItemAdded += this.OnChamberAddedToRepository;
 
@@ -187,7 +185,7 @@ namespace BCLabManager.ViewModel
             bvm.Manufactor = _selectedItem.Manufactor;
             bvm.LowTemp = _selectedItem.LowTemp;
             bvm.HighTemp = _selectedItem.HighTemp;
-            bvm.DisplayName = "Chamber-Edit";
+            bvm.DisplayName = "Chamber-Save As";
             bvm.commandType = CommandType.SaveAs;
             var ChamberViewInstance = new ChamberView();      //实例化一个新的view
             ChamberViewInstance.DataContext = bvm;

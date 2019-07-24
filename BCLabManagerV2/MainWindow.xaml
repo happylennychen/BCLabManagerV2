@@ -34,7 +34,9 @@
                     </TabItem>
                 </TabControl>
             </TabItem>
-            <TabItem Header="Sub Programs"></TabItem>
+            <TabItem Header="Sub Programs">
+                <v:AllSubProgramsView x:Name="AllSubProgramsViewInstance"></v:AllSubProgramsView>
+            </TabItem>
             <TabItem Header="Programs"></TabItem>
         </TabControl>
     </Grid>

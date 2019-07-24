@@ -36,7 +36,6 @@ namespace BCLabManager.ViewModel
             if (testerRepository == null)
                 throw new ArgumentNullException("testerRepository");
 
-            _channelRepository = channelRepository;
             _testerRepository = testerRepository;
 
             // Subscribe for notifications of when a new customer is saved.
@@ -148,35 +147,35 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            ChannelClass bc = new ChannelClass();      //实例化一个新的model
-            ChannelViewModel bvm = new ChannelViewModel(bc, _channelRepository, _testerRepository);      //实例化一个新的view model
-            bvm.DisplayName = "Channel-Create";
-            bvm.commandType = CommandType.Create;
+            ChannelClass model = new ChannelClass();      //实例化一个新的model
+            ChannelViewModel viewmodel = new ChannelViewModel(model, _channelRepository, _testerRepository);      //实例化一个新的view model
+            viewmodel.DisplayName = "Channel-Create";
+            viewmodel.commandType = CommandType.Create;
             var ChannelViewInstance = new ChannelView();      //实例化一个新的view
-            ChannelViewInstance.DataContext = bvm;
+            ChannelViewInstance.DataContext = viewmodel;
             ChannelViewInstance.ShowDialog();                   //设置viewmodel属性
-            if (bvm.IsOK == true)
+            if (viewmodel.IsOK == true)
             {
-                _channelRepository.AddItem(bc);
+                _channelRepository.AddItem(model);
             }
         }
         private void Edit()
         {
-            ChannelClass bc = new ChannelClass();      //实例化一个新的model
-            ChannelViewModel bvm = new ChannelViewModel(bc, _channelRepository, _testerRepository);      //实例化一个新的view model
-            bvm.Name = _selectedItem.Name;
-            bvm.Tester = _selectedItem.Tester;
-            bvm.Status = _selectedItem.Status;
-            bvm.DisplayName = "Channel-Edit";
-            bvm.commandType = CommandType.Edit;
+            ChannelClass model = new ChannelClass();      //实例化一个新的model
+            ChannelViewModel viewmodel = new ChannelViewModel(model, _channelRepository, _testerRepository);      //实例化一个新的view model
+            viewmodel.Name = _selectedItem.Name;
+            viewmodel.Tester = _selectedItem.Tester;
+            viewmodel.Status = _selectedItem.Status;
+            viewmodel.DisplayName = "Channel-Edit";
+            viewmodel.commandType = CommandType.Edit;
             var ChannelViewInstance = new ChannelView();      //实例化一个新的view
-            ChannelViewInstance.DataContext = bvm;
+            ChannelViewInstance.DataContext = viewmodel;
             ChannelViewInstance.ShowDialog();
-            if (bvm.IsOK == true)
+            if (viewmodel.IsOK == true)
             {
-                _selectedItem.Name = bvm.Name;
-                _selectedItem.Tester = bvm.Tester;
-                _selectedItem.Status = bvm.Status;
+                _selectedItem.Name = viewmodel.Name;
+                _selectedItem.Tester = viewmodel.Tester;
+                _selectedItem.Status = viewmodel.Status;
             }
         }
         private bool CanEdit
@@ -185,19 +184,19 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            ChannelClass bc = new ChannelClass();      //实例化一个新的model
-            ChannelViewModel bvm = new ChannelViewModel(bc, _channelRepository, _testerRepository);      //实例化一个新的view model
-            bvm.Name = _selectedItem.Name;
-            bvm.Tester = _selectedItem.Tester;
-            bvm.Status = _selectedItem.Status;
-            bvm.DisplayName = "Channel-Edit";
-            bvm.commandType = CommandType.SaveAs;
+            ChannelClass model = new ChannelClass();      //实例化一个新的model
+            ChannelViewModel viewmodel = new ChannelViewModel(model, _channelRepository, _testerRepository);      //实例化一个新的view model
+            viewmodel.Name = _selectedItem.Name;
+            viewmodel.Tester = _selectedItem.Tester;
+            viewmodel.Status = _selectedItem.Status;
+            viewmodel.DisplayName = "Channel-Save As";
+            viewmodel.commandType = CommandType.SaveAs;
             var ChannelViewInstance = new ChannelView();      //实例化一个新的view
-            ChannelViewInstance.DataContext = bvm;
+            ChannelViewInstance.DataContext = viewmodel;
             ChannelViewInstance.ShowDialog();
-            if (bvm.IsOK == true)
+            if (viewmodel.IsOK == true)
             {
-                _channelRepository.AddItem(bc);
+                _channelRepository.AddItem(model);
             }
         }
         private bool CanSaveAs
@@ -209,8 +208,8 @@ namespace BCLabManager.ViewModel
 
         protected override void OnDispose()
         {
-            foreach (ChannelViewModel custVM in this.AllChannels)
-                custVM.Dispose();
+            foreach (ChannelViewModel viewmodel in this.AllChannels)
+                viewmodel.Dispose();
 
             this.AllChannels.Clear();
             //this.AllChannelModels.CollectionChanged -= this.OnCollectionChanged;

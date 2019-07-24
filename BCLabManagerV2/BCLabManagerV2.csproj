@@ -67,6 +67,8 @@
     <Compile Include="ViewModel\AllBatteriesViewModel.cs" />
     <Compile Include="ViewModel\AllChambersViewModel.cs" />
     <Compile Include="ViewModel\ChamberViewModel.cs" />
+    <Compile Include="ViewModel\AllSubProgramsViewModel.cs" />
+    <Compile Include="ViewModel\SubProgramViewModel.cs" />
     <Compile Include="ViewModel\RecordViewModel.cs" />
     <Compile Include="ViewModel\TesterViewModel.cs" />
     <Compile Include="ViewModel\BatteryTypeViewModel.cs" />
@@ -101,6 +103,12 @@
     </Compile>
     <Compile Include="View\ChamberView.xaml.cs">
       <DependentUpon>ChamberView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AllSubProgramsView.xaml.cs">
+      <DependentUpon>AllSubProgramsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SubProgramView.xaml.cs">
+      <DependentUpon>SubProgramView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TesterView.xaml.cs">
       <DependentUpon>TesterView.xaml</DependentUpon>
@@ -152,6 +160,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\ChamberView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AllSubProgramsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SubProgramView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

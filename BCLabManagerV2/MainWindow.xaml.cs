@@ -31,6 +31,8 @@ namespace BCLabManager
 
         public AllChambersViewModel allChambersViewModel { get; set; }  //其中需要显示Chambers和Records
 
+        public AllSubProgramsViewModel allSubProgramsViewModel { get; set; }  //其中需要显示SubPrograms
+
         public MainWindow()
         {
             InitializeComponent();
@@ -49,6 +51,9 @@ namespace BCLabManager
 
             allChambersViewModel = new AllChambersViewModel(_repositories._chamberRepository);    //ViewModel初始化
             this.AllChambersViewInstance.DataContext = allChambersViewModel;                                                            //ViewModel跟View绑定
+
+            allSubProgramsViewModel = new AllSubProgramsViewModel(_repositories._subprogramRepository);    //ViewModel初始化
+            this.AllSubProgramsViewInstance.DataContext = allSubProgramsViewModel;                                                            //ViewModel跟View绑定
         }
     }
 }
