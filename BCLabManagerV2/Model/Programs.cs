@@ -110,9 +110,9 @@ namespace BCLabManager.Model
             this.Name = Name;
             this.TestCount = TestCount;
         }
-        public SubProgramClass Clone(SubProgramClass sub)
+        public SubProgramClass Clone()
         {
-            return new SubProgramClass(sub.Name, sub.TestCount);
+            return new SubProgramClass(this.Name, this.TestCount);
         }
         public void Abandon(String Description = "")
         { }
@@ -126,6 +126,11 @@ namespace BCLabManager.Model
         public String Description { get; set; }
         public DateTime CompleteDate { get; set; }
         public List<SubProgramClass> SubPrograms { get; set; }
+
+        public ProgramClass()
+        {
+            SubPrograms = new List<SubProgramClass>();
+        }
 
         public ProgramClass(String Name, String Requester, DateTime RequestDate, List<SubProgramClass> SubPrograms)
         {
@@ -141,6 +146,14 @@ namespace BCLabManager.Model
             this.Requester = Requester;
             this.RequestDate = RequestDate;
             this.SubPrograms = SubPrograms;
+        }
+
+        public ProgramClass Clone()
+        {
+            List<SubProgramClass> clonelist = 
+                (from sub in SubPrograms
+                     select sub.Clone()).ToList();
+            return new ProgramClass(this.Name, this.Requester, this.RequestDate, clonelist);
         }
     }
 }

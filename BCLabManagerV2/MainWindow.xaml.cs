@@ -33,6 +33,8 @@ namespace BCLabManager
 
         public AllSubProgramsViewModel allSubProgramsViewModel { get; set; }  //其中需要显示SubPrograms
 
+        public AllProgramsViewModel allProgramsViewModel { get; set; }  //其中需要显示Programs, SubPrograms, Test1, Test2, TestSteps
+
         public MainWindow()
         {
             InitializeComponent();
@@ -54,6 +56,9 @@ namespace BCLabManager
 
             allSubProgramsViewModel = new AllSubProgramsViewModel(_repositories._subprogramRepository);    //ViewModel初始化
             this.AllSubProgramsViewInstance.DataContext = allSubProgramsViewModel;                                                            //ViewModel跟View绑定
+
+            allProgramsViewModel = new AllProgramsViewModel(_repositories._programRepository, _repositories._subprogramRepository);    //ViewModel初始化
+            this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定
         }
     }
 }

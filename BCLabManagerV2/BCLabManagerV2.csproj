@@ -68,6 +68,8 @@
     <Compile Include="ViewModel\AllChambersViewModel.cs" />
     <Compile Include="ViewModel\ChamberViewModel.cs" />
     <Compile Include="ViewModel\AllSubProgramsViewModel.cs" />
+    <Compile Include="ViewModel\AllProgramsViewModel.cs" />
+    <Compile Include="ViewModel\ProgramViewModel.cs" />
     <Compile Include="ViewModel\SubProgramViewModel.cs" />
     <Compile Include="ViewModel\RecordViewModel.cs" />
     <Compile Include="ViewModel\TesterViewModel.cs" />
@@ -106,6 +108,12 @@
     </Compile>
     <Compile Include="View\AllSubProgramsView.xaml.cs">
       <DependentUpon>AllSubProgramsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AllProgramsView.xaml.cs">
+      <DependentUpon>AllProgramsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ProgramView.xaml.cs">
+      <DependentUpon>ProgramView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SubProgramView.xaml.cs">
       <DependentUpon>SubProgramView.xaml</DependentUpon>
@@ -164,6 +172,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\AllSubProgramsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AllProgramsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ProgramView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

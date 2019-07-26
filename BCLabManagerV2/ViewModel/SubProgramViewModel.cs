@@ -19,7 +19,6 @@ namespace BCLabManager.ViewModel
 
         readonly SubProgramClass _subprogram;
         readonly SubProgramRepository _subprogramRepository;
-        string _testCountStr;
         RelayCommand _okCommand;
         bool _isOK;
 

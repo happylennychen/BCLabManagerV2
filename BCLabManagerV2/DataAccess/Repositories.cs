@@ -229,6 +229,22 @@ namespace BCLabManager.DataAccess
         }
     }
 
+    public class ProgramRepository : RepositoryBase<ProgramClass>
+    {
+        public ProgramRepository(List<ProgramClass> items)
+            : base(items)
+        {
+        }
+        public override void SerializeToDatabase()
+        {
+            throw new NotImplementedException();
+        }
+        public override void DeserializeFromDatabase()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class Repositories
     {
         public BatteryTypeRepository _batterytypeRepository;
@@ -241,7 +257,7 @@ namespace BCLabManager.DataAccess
         //public RecipeRepository _recipeRepository;
         //public ChamberRecipeRepository _chamberrecipeRepository;
         //public TesterRecipeRepository _testerrecipeRepository;
-        //public ProgramRepository _programRepository;
+        public ProgramRepository _programRepository;
         //public RequestRepository _requestRepository;// = new RequestRepository();
         //public ExecutorRepository _executorRepository;
 
@@ -372,6 +388,15 @@ namespace BCLabManager.DataAccess
             SubPrograms.Add(sub);
 
             _subprogramRepository = new SubProgramRepository(SubPrograms);
+
+            var newsubs = new List<SubProgramClass>();
+            newsubs.Add(SubPrograms[0].Clone());
+            newsubs.Add(SubPrograms[2].Clone());
+            newsubs.Add(SubPrograms[4].Clone());
+            ProgramClass pro = new ProgramClass("Name", "Requester", DateTime.Now, newsubs);
+            Programs = new List<ProgramClass>();
+            Programs.Add(pro);
+            _programRepository = new ProgramRepository(Programs);
         }
         #endregion //debugger
     }
