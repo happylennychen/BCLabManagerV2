@@ -254,11 +254,7 @@ namespace BCLabManager.DataAccess
         public ChamberRepository _chamberRepository;
 
         public SubProgramRepository _subprogramRepository;
-        //public RecipeRepository _recipeRepository;
-        //public ChamberRecipeRepository _chamberrecipeRepository;
-        //public TesterRecipeRepository _testerrecipeRepository;
         public ProgramRepository _programRepository;
-        //public RequestRepository _requestRepository;// = new RequestRepository();
         //public ExecutorRepository _executorRepository;
 
         //下面这些属性，会在Init的时候用到。对于外部来说，只要上面两个属性就可以了。而且下面这些以后应该删掉
@@ -329,8 +325,7 @@ namespace BCLabManager.DataAccess
         {
             InitAssets();
             InitPrograms();
-            //InitRequests();
-            //InitExecutors();  //用Requests就够了，如非必要勿增实体
+            InitTestRecords();
         }
 
         private void InitAssets()
@@ -393,10 +388,16 @@ namespace BCLabManager.DataAccess
             newsubs.Add(SubPrograms[0].Clone());
             newsubs.Add(SubPrograms[2].Clone());
             newsubs.Add(SubPrograms[4].Clone());
-            ProgramClass pro = new ProgramClass("Name", "Requester", DateTime.Now, newsubs);
+            ProgramClass pro = new ProgramClass("Name", "Requester", DateTime.Now, "Test Program", newsubs);
             Programs = new List<ProgramClass>();
             Programs.Add(pro);
             _programRepository = new ProgramRepository(Programs);
+        }
+
+        private void InitTestRecords()
+        {
+            _programRepository.GetItems()[0].SubPrograms[0].FirstTestRecords = new List<TestRecordClass>();
+            _programRepository.GetItems()[0].SubPrograms[0].FirstTestRecords.Add(new TestRecordClass());
         }
         #endregion //debugger
     }

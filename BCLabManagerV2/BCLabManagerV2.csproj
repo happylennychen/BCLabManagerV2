@@ -69,9 +69,10 @@
     <Compile Include="ViewModel\ChamberViewModel.cs" />
     <Compile Include="ViewModel\AllSubProgramsViewModel.cs" />
     <Compile Include="ViewModel\AllProgramsViewModel.cs" />
+    <Compile Include="ViewModel\TestRecordViewModel.cs" />
     <Compile Include="ViewModel\ProgramViewModel.cs" />
     <Compile Include="ViewModel\SubProgramViewModel.cs" />
-    <Compile Include="ViewModel\RecordViewModel.cs" />
+    <Compile Include="ViewModel\AssetUsageRecordViewModel.cs" />
     <Compile Include="ViewModel\TesterViewModel.cs" />
     <Compile Include="ViewModel\BatteryTypeViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />

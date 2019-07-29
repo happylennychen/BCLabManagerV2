@@ -44,7 +44,7 @@ namespace BCLabManager.Model
         public ChamberClass Chamber { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public String Description { get; set; }
+        public String Comment { get; set; }
         public RawDataClass RawData { get; set; }
         public Double NewCycle { get; set; }
         public SubProgramClass SubProgram { get; set; }
@@ -61,11 +61,11 @@ namespace BCLabManager.Model
             }
         }
 
-        public TestRecordClass(SubProgramClass SubProgram)
+        public TestRecordClass(/*SubProgramClass SubProgram*/)
         {
-            this.SubProgram = SubProgram;
+            //this.SubProgram = SubProgram;
             this.Status = TestStatus.Waiting;
-            this.Description = String.Empty;
+            this.Comment = String.Empty;
             this.Battery = null;
             this.TesterChannel = null;
             this.Chamber = null;
@@ -93,14 +93,19 @@ namespace BCLabManager.Model
     {
         public String Name { get; set; }
         public TestCountEnum TestCount { get; set; }
-        public List<TestRecordClass> FirstTest { get; set; }
-        public List<TestRecordClass> SecondTest { get; set; }
+        public List<TestRecordClass> FirstTestRecords { get; set; }
+        public List<TestRecordClass> SecondTestRecords { get; set; }
 
         public SubProgramClass()
-        { }
+        {
+            FirstTestRecords = new List<TestRecordClass>();
+            SecondTestRecords = new List<TestRecordClass>();
+        }
 
         public SubProgramClass(String Name, TestCountEnum TestCount)
         {
+            FirstTestRecords = new List<TestRecordClass>();
+            SecondTestRecords = new List<TestRecordClass>();
             this.Name = Name;
             this.TestCount = TestCount;
         }
@@ -110,7 +115,7 @@ namespace BCLabManager.Model
             this.Name = Name;
             this.TestCount = TestCount;
         }
-        public SubProgramClass Clone()
+        public SubProgramClass Clone()  //only clone Name and Test Count.
         {
             return new SubProgramClass(this.Name, this.TestCount);
         }
@@ -132,20 +137,31 @@ namespace BCLabManager.Model
             SubPrograms = new List<SubProgramClass>();
         }
 
-        public ProgramClass(String Name, String Requester, DateTime RequestDate, List<SubProgramClass> SubPrograms)
+        public ProgramClass(String Name, String Requester, DateTime RequestDate, String Description, List<SubProgramClass> SubPrograms)
         {
             this.Name = Name;
             this.Requester = Requester;
             this.RequestDate = RequestDate;
+            this.Description = Description;
             this.SubPrograms = SubPrograms;
         }
 
-        public void Update(String Name, String Requester, DateTime RequestDate, List<SubProgramClass> SubPrograms)
+        public void Update(String Name, String Requester, DateTime RequestDate, String Description, List<SubProgramClass> SubPrograms)
         {
             this.Name = Name;
             this.Requester = Requester;
             this.RequestDate = RequestDate;
+            this.Description = Description;
             this.SubPrograms = SubPrograms;
+        }
+
+        public void Update(ProgramClass model)
+        {
+            this.Name = model.Name;
+            this.Requester = model.Requester;
+            this.RequestDate = model.RequestDate;
+            this.Description = model.Description;
+            this.SubPrograms = model.SubPrograms;
         }
 
         public ProgramClass Clone()
@@ -153,7 +169,7 @@ namespace BCLabManager.Model
             List<SubProgramClass> clonelist = 
                 (from sub in SubPrograms
                      select sub.Clone()).ToList();
-            return new ProgramClass(this.Name, this.Requester, this.RequestDate, clonelist);
+            return new ProgramClass(this.Name, this.Requester, this.RequestDate, this.Description, clonelist);
         }
     }
 }

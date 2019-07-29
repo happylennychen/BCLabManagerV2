@@ -81,7 +81,6 @@ namespace BCLabManager.ViewModel
                 if (_selectedProgram != value)
                 {
                     _selectedProgram = value;
-                    //OnPropertyChanged("SelectedType");
                     OnPropertyChanged("SubPrograms"); //通知SubPrograms改变
                 }
             }
@@ -113,9 +112,31 @@ namespace BCLabManager.ViewModel
                 {
                     _selectedSubProgram = value;
                     //OnPropertyChanged("SelectedType");
-                    //OnPropertyChanged("Test1"); //通知Test1改变
-                    //OnPropertyChanged("Test2"); //通知Test2改变
+                    OnPropertyChanged("Test1Records"); //通知Test1改变
+                    OnPropertyChanged("Test2Records"); //通知Test2改变
                 }
+            }
+        }
+
+        public ObservableCollection<TestRecordViewModel> Test1Records
+        {
+            get
+            {
+                if (_selectedSubProgram != null)
+                    return _selectedSubProgram.Test1Records;
+                else
+                    return null;
+            }
+        }
+
+        public ObservableCollection<TestRecordViewModel> Test2Records
+        {
+            get
+            {
+                if (_selectedSubProgram != null)
+                    return _selectedSubProgram.Test2Records;
+                else
+                    return null;
             }
         }
         
@@ -180,13 +201,26 @@ namespace BCLabManager.ViewModel
         }
         private void Edit()
         {
-            ProgramClass model = new ProgramClass();      //实例化一个新的model
+            ProgramClass model = _selectedProgram._program.Clone();
             ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _subprogramRepository);      //实例化一个新的view model
+            viewmodel.DisplayName = "Program-Edit";
+            viewmodel.commandType = CommandType.Edit;
+            var ProgramViewInstance = new ProgramView();      //实例化一个新的view
+            ProgramViewInstance.DataContext = viewmodel;
+            ProgramViewInstance.ShowDialog();
+            if (viewmodel.IsOK == true)
+            {
+                SelectedProgram._program.Update(model);
+                SelectedProgram.UpdateSubPrograms();
+                OnPropertyChanged("SubPrograms");
+                //this.SubPrograms
+            }
+            /*ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _subprogramRepository);      //实例化一个新的view model
             viewmodel.Name = _selectedProgram.Name;
             viewmodel.Requester = _selectedProgram.Requester;   //给viewmodel的属性赋值，实际上是对model进行赋值
             viewmodel.RequestDate = _selectedProgram.RequestDate;
             viewmodel.Description = _selectedProgram.Description;   //虽然string也是引用类型，但是string比较特殊，编译器有特殊处理
-            viewmodel.SubPrograms = _selectedProgram.SubPrograms;   //这是引用类型，不应该这样赋值过去
+            //viewmodel.SubPrograms = _selectedProgram.SubPrograms;   //这是引用类型，不应该这样赋值过去
             viewmodel.DisplayName = "Program-Edit";
             viewmodel.commandType = CommandType.Edit;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -198,7 +232,7 @@ namespace BCLabManager.ViewModel
                 _selectedProgram.Requester = viewmodel.Requester;
                 _selectedProgram.RequestDate = viewmodel.RequestDate;
                 _selectedProgram.Description = viewmodel.Description;
-            }
+            }*/
         }
         private bool CanEdit
         {
@@ -206,6 +240,17 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
+            ProgramClass model = _selectedProgram._program.Clone();
+            ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _subprogramRepository);      //实例化一个新的view model
+            viewmodel.DisplayName = "Program-Save As";
+            viewmodel.commandType = CommandType.SaveAs;
+            var ProgramViewInstance = new ProgramView();      //实例化一个新的view
+            ProgramViewInstance.DataContext = viewmodel;
+            ProgramViewInstance.ShowDialog();
+            if (viewmodel.IsOK == true)
+            {
+                _programRepository.AddItem(model);
+            }
             /*ProgramClass model = new ProgramClass();      //实例化一个新的model
             ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _subprogramRepository);      //实例化一个新的view model
             viewmodel.Name = _selectedProgram.Name;

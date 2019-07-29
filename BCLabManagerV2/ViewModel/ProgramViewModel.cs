@@ -11,13 +11,13 @@ using BCLabManager.Properties;
 namespace BCLabManager.ViewModel
 {
     /// <summary>
-    /// A UI-friendly wrapper for a Customer object.
+    /// A UI-friendly wrapper for a Program object.
     /// </summary>
     public class ProgramViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
 
-        readonly ProgramClass _program;
+        public readonly ProgramClass _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
         readonly ProgramRepository _programRepository;
         readonly SubProgramRepository _subprogramRepository;
         SubProgramViewModel _leftselectedSubProgram;
@@ -46,19 +46,48 @@ namespace BCLabManager.ViewModel
             _programRepository = programRepository;
             _subprogramRepository = subprogramRepository;
             this.CreateAllSubPrograms();
+            this.CreateSubPrograms();
         }
 
 
         void CreateAllSubPrograms()
         {
             List<SubProgramViewModel> all =
-                (from bat in _subprogramRepository.GetItems()
-                 select new SubProgramViewModel(bat, _subprogramRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+                (from sub in _subprogramRepository.GetItems()
+                 select new SubProgramViewModel(sub, _subprogramRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             //foreach (SubProgramModelViewModel batmod in all)
             //batmod.PropertyChanged += this.OnSubProgramModelViewModelPropertyChanged;
 
             this.AllSubPrograms = new ObservableCollection<SubProgramViewModel>(all);     //再转换成Observable
+            //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
+        }
+
+
+        void CreateSubPrograms()
+        {
+            List<SubProgramViewModel> all =
+                (from sub in _program.SubPrograms
+                 select new SubProgramViewModel(sub, _subprogramRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+
+            //foreach (SubProgramModelViewModel batmod in all)
+            //batmod.PropertyChanged += this.OnSubProgramModelViewModelPropertyChanged;
+
+            this.SubPrograms = new ObservableCollection<SubProgramViewModel>(all);     //再转换成Observable
+            //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
+        }
+
+
+        public void UpdateSubPrograms()
+        {
+            List<SubProgramViewModel> all =
+                (from sub in _program.SubPrograms
+                 select new SubProgramViewModel(sub, _subprogramRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+
+            //foreach (SubProgramModelViewModel batmod in all)
+            //batmod.PropertyChanged += this.OnSubProgramModelViewModelPropertyChanged;
+
+            this.SubPrograms = new ObservableCollection<SubProgramViewModel>(all);     //再转换成Observable
             //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
         }
         #endregion // Constructor
@@ -121,8 +150,8 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ObservableCollection<SubProgramViewModel> SubPrograms        //这个是当前program所拥有的subprograms
-        {
+        public ObservableCollection<SubProgramViewModel> SubPrograms { get; private set; }        //这个是当前program所拥有的subprograms
+        /*{
             get
             {
                 if (_program.SubPrograms == null)
@@ -136,13 +165,7 @@ namespace BCLabManager.ViewModel
 
                 return new ObservableCollection<SubProgramViewModel>(all);     //再转换成Observable
             }
-            set
-            {
-                _program.SubPrograms =
-                    (from subvm in value
-                     select subvm._subprogram).ToList();
-            }
-        }
+        }*/
 
         #endregion // Customer Properties
 
@@ -237,6 +260,21 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public ICommand RemoveCommand
+        {
+            get
+            {
+                if (_removeCommand == null)
+                {
+                    _removeCommand = new RelayCommand(
+                        param => { this.Remove(); },
+                        param => this.CanRemove
+                            );
+                }
+                return _removeCommand;
+            }
+        }
+
         #endregion // Presentation Properties
 
         #region Public Methods
@@ -256,16 +294,24 @@ namespace BCLabManager.ViewModel
             IsOK = true;
         }
 
-        public void Add()
+        public void Add()       //对于model来说，需要将选中的sub copy到_program.SubPrograms来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.SubPrograms里面去
         {
-            SubPrograms.Add(LeftSelectedSubProgram);
-            _program.SubPrograms.Add(LeftSelectedSubProgram._subprogram);
+            var newsubmodel = LeftSelectedSubProgram._subprogram.Clone();
+            var newsubviewmodel = new SubProgramViewModel(newsubmodel, _subprogramRepository);
+            _program.SubPrograms.Add(newsubmodel);
+            this.SubPrograms.Add(newsubviewmodel);
         }
 
-        public ProgramViewModel Clone()
+        public void Remove()       //对于model来说，需要将选中的sub 从_program.SubPrograms中移除。对于viewmodel来说，需要将这个viewmodel从this.SubPrograms中移除
         {
-            return new ProgramViewModel(_program.Clone(), _programRepository, _subprogramRepository);
+            _program.SubPrograms.Remove(RightSelectedSubProgram._subprogram);
+            this.SubPrograms.Remove(RightSelectedSubProgram);
         }
+
+        //public ProgramViewModel Clone()
+        //{
+        //    return new ProgramViewModel(_program.Clone(), _programRepository, _subprogramRepository);
+        //}
 
         #endregion // Public Methods
 
@@ -308,6 +354,11 @@ namespace BCLabManager.ViewModel
         bool CanAdd
         {
             get { return LeftSelectedSubProgram!=null; }
+        }
+
+        bool CanRemove
+        {
+            get { return RightSelectedSubProgram != null; }
         }
 
         #endregion // Private Helpers

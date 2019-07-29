@@ -77,18 +77,18 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public List<RecordViewModel> Records //绑定选中chamber的Records。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
+        public List<AssetUsageRecordViewModel> Records //绑定选中chamber的Records。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
         //如果不是用查询，那么需要维护一个二维List。每一个Chamber，对应一个List。用空间换时间。
         {
             get
             {
                 if (SelectedItem == null)
                     return null;
-                List<RecordViewModel> all =
+                List<AssetUsageRecordViewModel> all =
                   (from bat in _chamberRepository.GetItems()
                    where bat.Name == SelectedItem.Name
                    from record in bat.Records
-                   select new RecordViewModel(record)).ToList();
+                   select new AssetUsageRecordViewModel(record)).ToList();
                 return all;
             }
         }

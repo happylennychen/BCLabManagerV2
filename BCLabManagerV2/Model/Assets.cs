@@ -10,14 +10,14 @@ namespace BCLabManager.Model
         IDLE,
         USING,
     }
-    public class RecordClass
+    public class AssetUsageRecordClass
     {
         public DateTime Timestamp;
         public AssetStatusEnum Status;
         public String ProgramName;
         public String SubProgramName;
 
-        public RecordClass(DateTime Timestamp, AssetStatusEnum Status, String ProgramName, String SubProgramName)
+        public AssetUsageRecordClass(DateTime Timestamp, AssetStatusEnum Status, String ProgramName, String SubProgramName)
         {
             this.Timestamp = Timestamp;
             this.Status = Status;
@@ -45,17 +45,17 @@ namespace BCLabManager.Model
             }
         }
 
-        public List<RecordClass> Records { get; set; }
+        public List<AssetUsageRecordClass> Records { get; set; }
 
         public AssetClass()
         {
             this.Status = AssetStatusEnum.IDLE;
-            Records = new List<RecordClass>();
+            Records = new List<AssetUsageRecordClass>();
         }
 
         public void UpdateRecords(DateTime Timestamp, AssetStatusEnum Status, String ProgramName, String SubProgramName)
         {
-            Records.Add(new RecordClass(Timestamp, Status, ProgramName, SubProgramName));
+            Records.Add(new AssetUsageRecordClass(Timestamp, Status, ProgramName, SubProgramName));
         }
     }
     public class BatteryTypeClass

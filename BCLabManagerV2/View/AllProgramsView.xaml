@@ -96,7 +96,23 @@
                 </ListView.View>
             </ListView>
         </GroupBox>
-        <GroupBox Grid.Row="2" Grid.Column="2" Header="Test1"></GroupBox>
+        <GroupBox Grid.Row="2" Grid.Column="2" Header="Test1 Records">
+            <ListView
+                      x:Name="Test1recordlist"
+      AlternationCount="2" 
+      ItemContainerStyle="{StaticResource ListViewItemStyle}"
+      ItemsSource="{Binding Path=Test1Records}"
+      >
+
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn 
+            Header="Status" 
+            DisplayMemberBinding="{Binding Path=Status}" 
+            />
+                    </GridView>
+                </ListView.View>
+            </ListView></GroupBox>
         <GroupBox Grid.Row="4" Grid.Column="2" Header="Test2"></GroupBox>
         <GroupBox Grid.Row="6" Grid.Column="2" Header="Steps Description"></GroupBox>
     </Grid>

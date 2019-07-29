@@ -17,7 +17,7 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        readonly SubProgramClass _subprogram;
+        public readonly SubProgramClass _subprogram;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
         readonly SubProgramRepository _subprogramRepository;
         RelayCommand _okCommand;
         bool _isOK;
@@ -35,7 +35,25 @@ namespace BCLabManager.ViewModel
                 throw new ArgumentNullException("subprogramRepository");
 
             _subprogram = subprogrammodel;
-            _subprogramRepository = subprogramRepository;   
+            _subprogramRepository = subprogramRepository;
+            this.CreateTestRecords();
+        }
+
+
+        void CreateTestRecords()
+        {
+            List<TestRecordViewModel> all1 =
+                (from ft in _subprogram.FirstTestRecords
+                 select new TestRecordViewModel(ft)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+
+            this.Test1Records = new ObservableCollection<TestRecordViewModel>(all1);     //再转换成Observable
+
+
+            List<TestRecordViewModel> all2 =
+                (from ft in _subprogram.SecondTestRecords
+                 select new TestRecordViewModel(ft)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+
+            this.Test2Records = new ObservableCollection<TestRecordViewModel>(all2);     //再转换成Observable
         }
 
         #endregion // Constructor
@@ -69,6 +87,10 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("TestCount");
             }
         }
+
+        public ObservableCollection<TestRecordViewModel> Test1Records { get; private set; }        //这个是当前sub program所拥有的test1
+
+        public ObservableCollection<TestRecordViewModel> Test2Records { get; private set; }        //这个是当前sub program所拥有的test2
 
         #endregion // Customer Properties
 
@@ -146,6 +168,11 @@ namespace BCLabManager.ViewModel
 
             //base.OnPropertyChanged("DisplayName");
             IsOK = true;
+        }
+
+        public SubProgramViewModel Clone()
+        {
+            return new SubProgramViewModel(_subprogram.Clone(), _subprogramRepository);
         }
 
         #endregion // Public Methods
