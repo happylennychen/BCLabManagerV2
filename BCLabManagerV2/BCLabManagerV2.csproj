@@ -113,6 +113,12 @@
     <Compile Include="View\AllProgramsView.xaml.cs">
       <DependentUpon>AllProgramsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\CommitView.xaml.cs">
+      <DependentUpon>CommitView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ExecuteView.xaml.cs">
+      <DependentUpon>ExecuteView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ProgramView.xaml.cs">
       <DependentUpon>ProgramView.xaml</DependentUpon>
     </Compile>
@@ -177,6 +183,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\AllProgramsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\CommitView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ExecuteView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

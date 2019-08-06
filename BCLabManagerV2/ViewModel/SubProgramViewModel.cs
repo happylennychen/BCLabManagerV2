@@ -16,7 +16,7 @@ namespace BCLabManager.ViewModel
     public class SubProgramViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-
+        string _programName;
         public readonly SubProgramClass _subprogram;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
         readonly SubProgramRepository _subprogramRepository;
         RelayCommand _okCommand;
@@ -26,7 +26,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public SubProgramViewModel(SubProgramClass subprogrammodel, SubProgramRepository subprogramRepository)
+        public SubProgramViewModel(SubProgramClass subprogrammodel, SubProgramRepository subprogramRepository, string programName)
         {
             if (subprogrammodel == null)
                 throw new ArgumentNullException("subprogrammodel");
@@ -36,6 +36,7 @@ namespace BCLabManager.ViewModel
 
             _subprogram = subprogrammodel;
             _subprogramRepository = subprogramRepository;
+            this.ProgramName = programName;
             this.CreateTestRecords();
         }
 
@@ -44,14 +45,14 @@ namespace BCLabManager.ViewModel
         {
             List<TestRecordViewModel> all1 =
                 (from ft in _subprogram.FirstTestRecords
-                 select new TestRecordViewModel(ft)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+                 select new TestRecordViewModel(ft, this.ProgramName, this.Name)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.Test1Records = new ObservableCollection<TestRecordViewModel>(all1);     //再转换成Observable
 
 
             List<TestRecordViewModel> all2 =
                 (from ft in _subprogram.SecondTestRecords
-                 select new TestRecordViewModel(ft)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+                 select new TestRecordViewModel(ft, this.ProgramName, this.Name)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.Test2Records = new ObservableCollection<TestRecordViewModel>(all2);     //再转换成Observable
         }
@@ -60,6 +61,17 @@ namespace BCLabManager.ViewModel
 
         #region SubProgramClass Properties
 
+        public string ProgramName
+        {
+            get { return _programName; }
+            set
+            {
+                if (value == _programName)
+                    return;
+
+                _programName = value;
+            }
+        }
         public string Name
         {
             get { return _subprogram.Name; }
@@ -172,7 +184,7 @@ namespace BCLabManager.ViewModel
 
         public SubProgramViewModel Clone()
         {
-            return new SubProgramViewModel(_subprogram.Clone(), _subprogramRepository);
+            return new SubProgramViewModel(_subprogram.Clone(), _subprogramRepository, this.ProgramName);
         }
 
         #endregion // Public Methods

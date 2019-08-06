@@ -94,6 +94,11 @@ namespace BCLabManager.Model
             this.TypicalCapacity = TypicalCapacity;
             this.CutoffDischargeVoltage = CutoffDischargeVoltage;
         }
+
+        public override string ToString()
+        {
+            return this.Name;
+        }
     }
 
     public class BatteryClass : AssetClass
@@ -119,6 +124,11 @@ namespace BCLabManager.Model
             this.BatteryType = BatteryType;
             this.CycleCount = CycleCount;
         }
+
+        public override string ToString()
+        {
+            return this.Name;
+        }
     }
 
 
@@ -142,6 +152,11 @@ namespace BCLabManager.Model
             this.Manufactor = Manufactor;
             this.Name = Name;
         }
+
+        public override string ToString()
+        {
+            return this.Name;
+        }
     }
     public class ChannelClass : AssetClass
     {
@@ -161,6 +176,11 @@ namespace BCLabManager.Model
         {
             this.Tester = Tester;
             this.Name = Name;
+        }
+
+        public override string ToString()
+        {
+            return this.Name;
         }
     }
 
@@ -188,6 +208,11 @@ namespace BCLabManager.Model
             this.Name = Name;
             this.LowestTemperature = LowestTemperature;
             this.HighestTemperature = HighestTemperature;
+        }
+
+        public override string ToString()
+        {
+            return this.Name;
         }
     }
 }

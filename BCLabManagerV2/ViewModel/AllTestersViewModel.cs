@@ -25,17 +25,12 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllTestersViewModel(TesterRepository testerRepository, ChannelRepository channelRepository)
+        public AllTestersViewModel()
         {
-            if (testerRepository == null)
-                throw new ArgumentNullException("testerRepository");
 
-            if (channelRepository == null)
-                throw new ArgumentNullException("channelRepository");
+            _testerRepository = Repositories._testerRepository;
 
-            _testerRepository = testerRepository;
-
-            _channelRepository = channelRepository;
+            _channelRepository = Repositories._channelRepository;
 
             // Subscribe for notifications of when a new customer is saved.
             _testerRepository.ItemAdded += this.OnTesterAddedToRepository;
@@ -146,7 +141,7 @@ namespace BCLabManager.ViewModel
         {
             TesterClass btc = new TesterClass();      //实例化一个新的model
             TesterViewModel btvm = new TesterViewModel(btc, _testerRepository);      //实例化一个新的view model
-            btvm.DisplayName = "Channel Type-Create";
+            btvm.DisplayName = "Tester-Create";
             var TesterViewInstance = new TesterView();      //实例化一个新的view
             TesterViewInstance.DataContext = btvm;
             TesterViewInstance.ShowDialog();                   //设置viewmodel属性
@@ -161,7 +156,7 @@ namespace BCLabManager.ViewModel
             TesterViewModel btvm = new TesterViewModel(btc, _testerRepository);      //实例化一个新的view model
             btvm.Manufactor = _selectedItem.Manufactor;
             btvm.Name = _selectedItem.Name;
-            btvm.DisplayName = "Channel Type-Edit";
+            btvm.DisplayName = "Tester-Edit";
             var TesterViewInstance = new TesterView();      //实例化一个新的view
             TesterViewInstance.DataContext = btvm;
             TesterViewInstance.ShowDialog();
@@ -181,7 +176,7 @@ namespace BCLabManager.ViewModel
             TesterViewModel btvm = new TesterViewModel(btc, _testerRepository);      //实例化一个新的view model
             btvm.Manufactor = _selectedItem.Manufactor;
             btvm.Name = _selectedItem.Name;
-            btvm.DisplayName = "Channel Type-Save As";
+            btvm.DisplayName = "Tester-Save As";
             var TesterViewInstance = new TesterView();      //实例化一个新的view
             TesterViewInstance.DataContext = btvm;
             TesterViewInstance.ShowDialog();

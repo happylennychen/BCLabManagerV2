@@ -21,7 +21,7 @@ namespace BCLabManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Repositories _repositories = new Repositories();    //model实例全部放在这里。viewmodel和database的source
+        //private Repositories _repositories = new Repositories();    //model实例全部放在这里。viewmodel和database的source
 
         public AllBatteryTypesViewModel allBatteryTypesViewModel { get; set; }  //其中需要显示BatteryTypes和Batteries
         public AllBatteriesViewModel allBatteriesViewModel { get; set; }  //其中需要显示Batteries和Records
@@ -38,26 +38,27 @@ namespace BCLabManager
         public MainWindow()
         {
             InitializeComponent();
+            Repositories.HistoricRegistration();
 
-            allBatteryTypesViewModel = new AllBatteryTypesViewModel(_repositories._batterytypeRepository, _repositories._batteryRepository);    //ViewModel初始化
+            allBatteryTypesViewModel = new AllBatteryTypesViewModel();    //ViewModel初始化
             this.AllBatteryTypesViewInstance.DataContext = allBatteryTypesViewModel;                                                            //ViewModel跟View绑定
 
-            allBatteriesViewModel = new AllBatteriesViewModel(_repositories._batteryRepository, _repositories._batterytypeRepository);    //ViewModel初始化
+            allBatteriesViewModel = new AllBatteriesViewModel();    //ViewModel初始化
             this.AllBatteriesViewInstance.DataContext = allBatteriesViewModel;                                                            //ViewModel跟View绑定
 
-            allTestersViewModel = new AllTestersViewModel(_repositories._testerRepository, _repositories._channelRepository);    //ViewModel初始化
+            allTestersViewModel = new AllTestersViewModel();    //ViewModel初始化
             this.AllTestersViewInstance.DataContext = allTestersViewModel;                                                            //ViewModel跟View绑定
 
-            allChannelsViewModel = new AllChannelsViewModel(_repositories._channelRepository, _repositories._testerRepository);    //ViewModel初始化
+            allChannelsViewModel = new AllChannelsViewModel();    //ViewModel初始化
             this.AllChannelsViewInstance.DataContext = allChannelsViewModel;                                                            //ViewModel跟View绑定
 
-            allChambersViewModel = new AllChambersViewModel(_repositories._chamberRepository);    //ViewModel初始化
+            allChambersViewModel = new AllChambersViewModel();    //ViewModel初始化
             this.AllChambersViewInstance.DataContext = allChambersViewModel;                                                            //ViewModel跟View绑定
 
-            allSubProgramsViewModel = new AllSubProgramsViewModel(_repositories._subprogramRepository);    //ViewModel初始化
+            allSubProgramsViewModel = new AllSubProgramsViewModel();    //ViewModel初始化
             this.AllSubProgramsViewInstance.DataContext = allSubProgramsViewModel;                                                            //ViewModel跟View绑定
 
-            allProgramsViewModel = new AllProgramsViewModel(_repositories._programRepository, _repositories._subprogramRepository);    //ViewModel初始化
+            allProgramsViewModel = new AllProgramsViewModel();    //ViewModel初始化
             this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定
         }
     }

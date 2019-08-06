@@ -26,17 +26,12 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllChannelsViewModel(ChannelRepository channelRepository, TesterRepository testerRepository)
+        public AllChannelsViewModel()
         {
-            if (channelRepository == null)
-                throw new ArgumentNullException("channelRepository");
 
-            _channelRepository = channelRepository;
+            _channelRepository = Repositories._channelRepository;
 
-            if (testerRepository == null)
-                throw new ArgumentNullException("testerRepository");
-
-            _testerRepository = testerRepository;
+            _testerRepository = Repositories._testerRepository;
 
             // Subscribe for notifications of when a new customer is saved.
             _channelRepository.ItemAdded += this.OnChannelAddedToRepository;

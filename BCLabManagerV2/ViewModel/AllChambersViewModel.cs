@@ -24,12 +24,10 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllChambersViewModel(ChamberRepository chamberRepository)
+        public AllChambersViewModel()
         {
-            if (chamberRepository == null)
-                throw new ArgumentNullException("chamberRepository");
 
-            _chamberRepository = chamberRepository;
+            _chamberRepository = Repositories._chamberRepository;
 
             // Subscribe for notifications of when a new customer is saved.
             _chamberRepository.ItemAdded += this.OnChamberAddedToRepository;

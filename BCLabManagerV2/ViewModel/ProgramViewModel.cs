@@ -54,7 +54,7 @@ namespace BCLabManager.ViewModel
         {
             List<SubProgramViewModel> all =
                 (from sub in _subprogramRepository.GetItems()
-                 select new SubProgramViewModel(sub, _subprogramRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+                 select new SubProgramViewModel(sub, _subprogramRepository, "")).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             //foreach (SubProgramModelViewModel batmod in all)
             //batmod.PropertyChanged += this.OnSubProgramModelViewModelPropertyChanged;
@@ -68,7 +68,7 @@ namespace BCLabManager.ViewModel
         {
             List<SubProgramViewModel> all =
                 (from sub in _program.SubPrograms
-                 select new SubProgramViewModel(sub, _subprogramRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+                 select new SubProgramViewModel(sub, _subprogramRepository, "")).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             //foreach (SubProgramModelViewModel batmod in all)
             //batmod.PropertyChanged += this.OnSubProgramModelViewModelPropertyChanged;
@@ -82,7 +82,7 @@ namespace BCLabManager.ViewModel
         {
             List<SubProgramViewModel> all =
                 (from sub in _program.SubPrograms
-                 select new SubProgramViewModel(sub, _subprogramRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+                 select new SubProgramViewModel(sub, _subprogramRepository, "")).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             //foreach (SubProgramModelViewModel batmod in all)
             //batmod.PropertyChanged += this.OnSubProgramModelViewModelPropertyChanged;
@@ -297,7 +297,7 @@ namespace BCLabManager.ViewModel
         public void Add()       //对于model来说，需要将选中的sub copy到_program.SubPrograms来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.SubPrograms里面去
         {
             var newsubmodel = LeftSelectedSubProgram._subprogram.Clone();
-            var newsubviewmodel = new SubProgramViewModel(newsubmodel, _subprogramRepository);
+            var newsubviewmodel = new SubProgramViewModel(newsubmodel, _subprogramRepository, this.Name);
             _program.SubPrograms.Add(newsubmodel);
             this.SubPrograms.Add(newsubviewmodel);
         }

@@ -245,33 +245,33 @@ namespace BCLabManager.DataAccess
         }
     }
 
-    public class Repositories
+    public static class Repositories
     {
-        public BatteryTypeRepository _batterytypeRepository;
-        public BatteryRepository _batteryRepository;
-        public TesterRepository _testerRepository;
-        public ChannelRepository _channelRepository;
-        public ChamberRepository _chamberRepository;
+        public static BatteryTypeRepository _batterytypeRepository;
+        public static BatteryRepository _batteryRepository;
+        public static TesterRepository _testerRepository;
+        public static ChannelRepository _channelRepository;
+        public static ChamberRepository _chamberRepository;
 
-        public SubProgramRepository _subprogramRepository;
-        public ProgramRepository _programRepository;
+        public static SubProgramRepository _subprogramRepository;
+        public static ProgramRepository _programRepository;
         //public ExecutorRepository _executorRepository;
 
         //下面这些属性，会在Init的时候用到。对于外部来说，只要上面两个属性就可以了。而且下面这些以后应该删掉
-        private List<BatteryTypeClass> BatteryTypes;// { get; set; }
-        private List<BatteryClass> Batteries;// { get; set; }
-        private List<TesterClass> Testers;// { get; set; }
-        private List<ChannelClass> Channels;// { get; set; }
-        private List<ChamberClass> Chambers;// { get; set; }
-        private List<ProgramClass> Programs;// { get; set; }
-        private List<SubProgramClass> SubPrograms;// { get; set; }
+        private static List<BatteryTypeClass> BatteryTypes;// { get; set; }
+        private static List<BatteryClass> Batteries;// { get; set; }
+        private static List<TesterClass> Testers;// { get; set; }
+        private static List<ChannelClass> Channels;// { get; set; }
+        private static List<ChamberClass> Chambers;// { get; set; }
+        private static List<ProgramClass> Programs;// { get; set; }
+        private static List<SubProgramClass> SubPrograms;// { get; set; }
         //private List<RecipeClass> Recipes;// { get; set; }
         //private List<ChamberRecipeClass> ChamberRecipes;// { get; set; }
         //private List<TesterRecipeClass> TesterRecipes;// { get; set; }
         //private List<RequestClass> Requests;// { get; set; }
         //private List<ExecutorClass> Executors;
 
-        public Repositories()
+        /*public Repositories()
         {
             //string folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BCLabManager Documents\\");
             //dbmanager.DBInit(folder);
@@ -295,7 +295,7 @@ namespace BCLabManager.DataAccess
 
             // Subscribe for notifications of when a new customer is saved.
             //_requestRepository.ItemAdded += this.OnRequestAddedToRepository;    //对于添加新Request的事件，应该由_executorRepository来订阅
-        }
+        }*/
 
         #region Event Handler
 
@@ -314,21 +314,21 @@ namespace BCLabManager.DataAccess
         #endregion  // Event Handler
         #region debugger
         [Conditional("DEBUG")]
-        private void HistoricData()
+        private static void HistoricData()
         {
             HistoricRegistration();
             //HistoricOperation();
             //FakeView();
         }
 
-        private void HistoricRegistration()
+        public static void HistoricRegistration()
         {
             InitAssets();
             InitPrograms();
-            InitTestRecords();
+            //InitTestRecords();
         }
 
-        private void InitAssets()
+        private static void InitAssets()
         {
             BatteryTypes = new List<BatteryTypeClass>();
             BatteryTypeClass bm = new BatteryTypeClass("Oppo", "BLP663", "Li-on", 4400, 3350, 3700, 3450, 3200);
@@ -368,7 +368,7 @@ namespace BCLabManager.DataAccess
             _chamberRepository = new ChamberRepository(Chambers);
 
         }
-        private void InitPrograms()
+        private static void InitPrograms()
         {
             SubPrograms = new List<SubProgramClass>();
             SubProgramClass sub = new SubProgramClass("Room 1C charge, -20 deg 0.5C discharge", TestCountEnum.Two);
@@ -394,11 +394,11 @@ namespace BCLabManager.DataAccess
             _programRepository = new ProgramRepository(Programs);
         }
 
-        private void InitTestRecords()
+        /*private static void InitTestRecords()
         {
             _programRepository.GetItems()[0].SubPrograms[0].FirstTestRecords = new List<TestRecordClass>();
             _programRepository.GetItems()[0].SubPrograms[0].FirstTestRecords.Add(new TestRecordClass());
-        }
+        }*/
         #endregion //debugger
     }
 }

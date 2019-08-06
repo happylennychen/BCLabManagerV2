@@ -18,28 +18,29 @@ namespace BCLabManager.ViewModel
         readonly SubProgramRepository _subprogramRepository;
         ProgramViewModel _selectedProgram;
         SubProgramViewModel _selectedSubProgram;
+        TestRecordViewModel _selectedFirstTestRecord;
+        TestRecordViewModel _selectedSecondTestRecord;
         //TestViewModel _selectedTest1;     //Test1区域选中项
         //TestViewModel _selectedTest2;     //Test2区域选中项
         //TestViewModel _selectedTest;      //Test1,Test2选中项中，拥有焦点的那一个
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
+        RelayCommand _executeCommand;
+        RelayCommand _commitCommand;
+        RelayCommand _invalidateCommand;
+        RelayCommand _abandonCommand;
 
         #endregion // Fields
 
         #region Constructor
 
-        public AllProgramsViewModel(ProgramRepository programRepository, SubProgramRepository subprogramRepository)
+        public AllProgramsViewModel()
         {
-            if (programRepository == null)
-                throw new ArgumentNullException("programRepository");
 
-            _programRepository = programRepository;
+            _programRepository = Repositories._programRepository;
 
-            if (subprogramRepository == null)
-                throw new ArgumentNullException("subprogramRepository");
-
-            _subprogramRepository = subprogramRepository;
+            _subprogramRepository = Repositories._subprogramRepository;
 
             // Subscribe for notifications of when a new customer is saved.
             _programRepository.ItemAdded += this.OnProgramAddedToRepository;
@@ -112,13 +113,13 @@ namespace BCLabManager.ViewModel
                 {
                     _selectedSubProgram = value;
                     //OnPropertyChanged("SelectedType");
-                    OnPropertyChanged("Test1Records"); //通知Test1改变
-                    OnPropertyChanged("Test2Records"); //通知Test2改变
+                    OnPropertyChanged("FirstTestRecords"); //通知Test1改变
+                    OnPropertyChanged("SecondTestRecords"); //通知Test2改变
                 }
             }
         }
 
-        public ObservableCollection<TestRecordViewModel> Test1Records
+        public ObservableCollection<TestRecordViewModel> FirstTestRecords
         {
             get
             {
@@ -129,7 +130,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ObservableCollection<TestRecordViewModel> Test2Records
+        public ObservableCollection<TestRecordViewModel> SecondTestRecords
         {
             get
             {
@@ -137,6 +138,36 @@ namespace BCLabManager.ViewModel
                     return _selectedSubProgram.Test2Records;
                 else
                     return null;
+            }
+        }
+
+        public TestRecordViewModel SelectedFirstTestRecord
+        {
+            get
+            {
+                return _selectedFirstTestRecord;
+            }
+            set
+            {
+                if (_selectedFirstTestRecord != value)
+                {
+                    _selectedFirstTestRecord = value;
+                }
+            }
+        }
+
+        public TestRecordViewModel SelectedSecondTestRecord
+        {
+            get
+            {
+                return _selectedSecondTestRecord;
+            }
+            set
+            {
+                if (_selectedSecondTestRecord != value)
+                {
+                    _selectedSecondTestRecord = value;
+                }
             }
         }
         
@@ -179,6 +210,34 @@ namespace BCLabManager.ViewModel
                         );
                 }
                 return _saveAsCommand;
+            }
+        }
+        public ICommand ExecuteCommand
+        {
+            get
+            {
+                if (_executeCommand == null)
+                {
+                    _executeCommand = new RelayCommand(
+                        param => { this.Execute(); },
+                        param => this.CanExecute
+                        );
+                }
+                return _executeCommand;
+            }
+        }
+        public ICommand CommitCommand
+        {
+            get
+            {
+                if (_commitCommand == null)
+                {
+                    _commitCommand = new RelayCommand(
+                        param => { this.Commit(); },
+                        param => this.CanCommit
+                        );
+                }
+                return _commitCommand;
             }
         }
 
@@ -268,6 +327,62 @@ namespace BCLabManager.ViewModel
         private bool CanSaveAs
         {
             get { return _selectedProgram != null; }
+        }
+        private void Execute()
+        {
+            /*ProgramClass model = _selectedProgram._program.Clone();
+            ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _subprogramRepository);      //实例化一个新的view model
+            viewmodel.DisplayName = "Program-Save As";
+            viewmodel.commandType = CommandType.SaveAs;
+            var ProgramViewInstance = new ProgramView();      //实例化一个新的view
+            ProgramViewInstance.DataContext = viewmodel;
+            ProgramViewInstance.ShowDialog();
+            if (viewmodel.IsOK == true)
+            {
+                _programRepository.AddItem(model);
+            }*/
+
+            TestRecordClass model = new TestRecordClass();
+            TestRecordViewModel viewmodel = new TestRecordViewModel(model,SelectedProgram.Name, SelectedSubProgram.Name);
+            viewmodel.DisplayName = "Test-Execute";
+            var TestRecordViewInstance = new ExecuteView();
+            TestRecordViewInstance.DataContext = viewmodel;
+            TestRecordViewInstance.ShowDialog();
+            if (viewmodel.IsOK == true)
+            {
+                SelectedFirstTestRecord.BatteryType = viewmodel.BatteryType;
+                SelectedFirstTestRecord.Battery = viewmodel.Battery;
+                SelectedFirstTestRecord.Chamber = viewmodel.Chamber;
+                SelectedFirstTestRecord.Tester = viewmodel.Tester;
+                SelectedFirstTestRecord.Channel = viewmodel.Channel;
+                SelectedFirstTestRecord.StartTime = viewmodel.StartTime;
+                SelectedFirstTestRecord.Steps = viewmodel.Steps;
+                SelectedFirstTestRecord.Execute();
+            }
+        }
+        private bool CanExecute
+        {
+            get { return _selectedFirstTestRecord != null && _selectedFirstTestRecord.Status == TestStatus.Waiting; }
+        }
+        private void Commit()
+        {
+            TestRecordClass model = new TestRecordClass();
+            TestRecordViewModel viewmodel = new TestRecordViewModel(model, SelectedProgram.Name, SelectedSubProgram.Name);
+            viewmodel.DisplayName = "Test-Commit";
+            var TestRecordCommitViewInstance = new CommitView();
+            TestRecordCommitViewInstance.DataContext = viewmodel;
+            TestRecordCommitViewInstance.ShowDialog();
+            if (viewmodel.IsOK == true)
+            {
+                SelectedFirstTestRecord.EndTime = viewmodel.EndTime;
+                SelectedFirstTestRecord.NewCycle = viewmodel.NewCycle;
+                SelectedFirstTestRecord.Comment = viewmodel.Comment;
+                SelectedFirstTestRecord.Commit();
+            }
+        }
+        private bool CanCommit
+        {
+            get { return _selectedFirstTestRecord != null && _selectedFirstTestRecord.Status == TestStatus.Executing; }
         }
         #endregion //Private Helper
         #region  Base Class Overrides

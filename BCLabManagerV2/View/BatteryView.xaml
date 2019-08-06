@@ -46,7 +46,7 @@
             <ComboBox 
       x:Name="TypeCmb"
       Grid.Row="2" Grid.Column="2" 
-      ItemsSource="{Binding Path=AllBatteryTypes, Mode=OneTime}"
+      ItemsSource="{Binding Path=AllBatteryTypes, Mode=OneWay}"
       SelectedItem="{Binding Path=BatteryType, ValidatesOnDataErrors=True}"
       Validation.ErrorTemplate="{x:Null}"
       >

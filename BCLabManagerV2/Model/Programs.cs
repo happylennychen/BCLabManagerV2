@@ -38,16 +38,19 @@ namespace BCLabManager.Model
                 }
             }
         }
-        public BatteryClass Battery { get; set; }
-        public ChannelClass TesterChannel { get; set; }
-        public String Steps { get; set; }
-        public ChamberClass Chamber { get; set; }
+        public String BatteryTypeStr { get; set; }
+        public String BatteryStr { get; set; }
+        public String TesterStr { get; set; }
+        public String ChannelStr { get; set; }
+        public String ChamberStr { get; set; }
+        public String SubProgramStr { get; set; }
+        public String ProgramStr { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+        public String Steps { get; set; }
         public String Comment { get; set; }
         public RawDataClass RawData { get; set; }
         public Double NewCycle { get; set; }
-        public SubProgramClass SubProgram { get; set; }
 
         public event EventHandler StatusChanged;
 
@@ -61,22 +64,64 @@ namespace BCLabManager.Model
             }
         }
 
-        public TestRecordClass(/*SubProgramClass SubProgram*/)
+        public TestRecordClass(/*SubProgramClass SubProgramStr*/)
         {
-            //this.SubProgram = SubProgram;
             this.Status = TestStatus.Waiting;
+            this.BatteryTypeStr = String.Empty;
+            this.BatteryStr = String.Empty;
+            this.TesterStr = String.Empty;
+            this.ChannelStr = String.Empty;
+            this.ChamberStr = String.Empty;
+            this.ProgramStr = String.Empty;
+            this.SubProgramStr = String.Empty;
+            //this.StartTime = ??;
+            this.Steps = String.Empty;
             this.Comment = String.Empty;
-            this.Battery = null;
-            this.TesterChannel = null;
-            this.Chamber = null;
+            //this.RawData = ??
+            //this.NewCycle = ??
         }
 
-        public void Execute(BatteryClass Battery, ChamberClass Chamber, ChannelClass TesterChannel, String Steps, DateTime StartTime)
+        public void Execute(BatteryClass battery, ChamberClass chamber, ChannelClass channel, String steps, DateTime startTime, string programName, string subProgramName)
         {
+            battery.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
+            battery.Status = AssetStatusEnum.USING;
+            if (chamber != null)
+            {
+                chamber.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
+                chamber.Status = AssetStatusEnum.USING;
+            }
+            channel.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
+            channel.Status = AssetStatusEnum.USING;
+
+            this.Status = TestStatus.Executing;
+            this.BatteryTypeStr = battery.BatteryType.Name;
+            this.BatteryStr = battery.Name;
+            this.TesterStr = channel.Tester.Name;
+            this.ChannelStr = channel.Name;
+            this.ChamberStr = chamber.Name;
+            this.StartTime = startTime;
+            this.Steps = steps;
+            this.ProgramStr = programName;
+            this.SubProgramStr = subProgramName;
         }
 
-        public void Commit(TestStatus Status, DateTime EndTime, RawDataClass RawData, Double NewCycle, String Description = "")  //Need to check the Executor Status to make sure it is executing
+        public void Commit(BatteryClass battery, ChamberClass chamber, ChannelClass channel, DateTime endTime, RawDataClass rawData, Double newCycle, String comment = "")  //Need to check the Executor Status to make sure it is executing
         {
+            battery.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+            battery.Status = AssetStatusEnum.IDLE;
+            if (chamber != null)
+            {
+                chamber.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+                chamber.Status = AssetStatusEnum.IDLE;
+            }
+            channel.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+            channel.Status = AssetStatusEnum.IDLE;
+
+            this.Status = TestStatus.Completed;
+            this.EndTime = endTime;
+            this.RawData = rawData;
+            this.NewCycle = newCycle;
+            this.Comment = comment;
         }
 
         public void Abandon(String Description = "")
@@ -115,9 +160,22 @@ namespace BCLabManager.Model
             this.Name = Name;
             this.TestCount = TestCount;
         }
-        public SubProgramClass Clone()  //only clone Name and Test Count.
+        public SubProgramClass Clone()  //Clone Name and Test Count, and create testrecords list
         {
-            return new SubProgramClass(this.Name, this.TestCount);
+            var newsub = new SubProgramClass(this.Name, this.TestCount);
+            if (this.TestCount == TestCountEnum.One)
+            {
+                newsub.FirstTestRecords = new List<TestRecordClass>();
+                newsub.FirstTestRecords.Add(new TestRecordClass());
+            }
+            else if (this.TestCount == TestCountEnum.Two)
+            {
+                newsub.FirstTestRecords = new List<TestRecordClass>();
+                newsub.FirstTestRecords.Add(new TestRecordClass());
+                newsub.SecondTestRecords = new List<TestRecordClass>();
+                newsub.SecondTestRecords.Add(new TestRecordClass());
+            }
+            return newsub;
         }
         public void Abandon(String Description = "")
         { }
@@ -132,12 +190,12 @@ namespace BCLabManager.Model
         public DateTime CompleteDate { get; set; }
         public List<SubProgramClass> SubPrograms { get; set; }
 
-        public ProgramClass()
+        public ProgramClass()           //Create用到
         {
             SubPrograms = new List<SubProgramClass>();
         }
 
-        public ProgramClass(String Name, String Requester, DateTime RequestDate, String Description, List<SubProgramClass> SubPrograms)
+        public ProgramClass(String Name, String Requester, DateTime RequestDate, String Description, List<SubProgramClass> SubPrograms) //Clone用到
         {
             this.Name = Name;
             this.Requester = Requester;
@@ -146,16 +204,16 @@ namespace BCLabManager.Model
             this.SubPrograms = SubPrograms;
         }
 
-        public void Update(String Name, String Requester, DateTime RequestDate, String Description, List<SubProgramClass> SubPrograms)
+        /*public void Update(String Name, String Requester, DateTime RequestDate, String Description, List<SubProgramClass> SubPrograms)  //没用？
         {
             this.Name = Name;
             this.Requester = Requester;
             this.RequestDate = RequestDate;
             this.Description = Description;
             this.SubPrograms = SubPrograms;
-        }
+        }*/
 
-        public void Update(ProgramClass model)
+        public void Update(ProgramClass model)  //Edit用到
         {
             this.Name = model.Name;
             this.Requester = model.Requester;
@@ -164,7 +222,7 @@ namespace BCLabManager.Model
             this.SubPrograms = model.SubPrograms;
         }
 
-        public ProgramClass Clone()
+        public ProgramClass Clone() //Edit Save As用到
         {
             List<SubProgramClass> clonelist = 
                 (from sub in SubPrograms

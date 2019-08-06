@@ -24,12 +24,10 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllSubProgramsViewModel(SubProgramRepository subprogramRepository)
+        public AllSubProgramsViewModel()
         {
-            if (subprogramRepository == null)
-                throw new ArgumentNullException("subprogramRepository");
 
-            _subprogramRepository = subprogramRepository;
+            _subprogramRepository = Repositories._subprogramRepository;
 
             // Subscribe for notifications of when a new customer is saved.
             _subprogramRepository.ItemAdded += this.OnSubProgramAddedToRepository;
@@ -42,7 +40,7 @@ namespace BCLabManager.ViewModel
         {
             List<SubProgramViewModel> all =
                 (from bat in _subprogramRepository.GetItems()
-                 select new SubProgramViewModel(bat,_subprogramRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+                 select new SubProgramViewModel(bat,_subprogramRepository, "")).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             //foreach (SubProgramModelViewModel batmod in all)
             //batmod.PropertyChanged += this.OnSubProgramModelViewModelPropertyChanged;
@@ -125,7 +123,7 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             SubProgramClass model = new SubProgramClass();      //实例化一个新的model
-            SubProgramViewModel viewmodel = new SubProgramViewModel(model, _subprogramRepository);      //实例化一个新的view model
+            SubProgramViewModel viewmodel = new SubProgramViewModel(model, _subprogramRepository, "");      //实例化一个新的view model
             viewmodel.DisplayName = "SubProgram-Create";
             viewmodel.commandType = CommandType.Create;
             var SubProgramViewInstance = new SubProgramView();      //实例化一个新的view
@@ -139,7 +137,7 @@ namespace BCLabManager.ViewModel
         private void Edit()
         {
             SubProgramClass model = new SubProgramClass();      //实例化一个新的model
-            SubProgramViewModel viewmodel = new SubProgramViewModel(model, _subprogramRepository);      //实例化一个新的view model
+            SubProgramViewModel viewmodel = new SubProgramViewModel(model, _subprogramRepository, "");      //实例化一个新的view model
             viewmodel.Name = _selectedItem.Name;
             viewmodel.TestCount = _selectedItem.TestCount;
             viewmodel.DisplayName = "SubProgram-Edit";
@@ -160,7 +158,7 @@ namespace BCLabManager.ViewModel
         private void SaveAs()
         {
             SubProgramClass model = new SubProgramClass();      //实例化一个新的model
-            SubProgramViewModel viewmodel = new SubProgramViewModel(model, _subprogramRepository);      //实例化一个新的view model
+            SubProgramViewModel viewmodel = new SubProgramViewModel(model, _subprogramRepository, "");      //实例化一个新的view model
             viewmodel.Name = _selectedItem.Name;
             viewmodel.TestCount = _selectedItem.TestCount;
             viewmodel.DisplayName = "SubProgram-Save As";
@@ -197,7 +195,7 @@ namespace BCLabManager.ViewModel
 
         void OnSubProgramAddedToRepository(object sender, ItemAddedEventArgs<SubProgramClass> e)
         {
-            var viewModel = new SubProgramViewModel(e.NewItem, _subprogramRepository);
+            var viewModel = new SubProgramViewModel(e.NewItem, _subprogramRepository, "");
             this.AllSubPrograms.Add(viewModel);
         }
 

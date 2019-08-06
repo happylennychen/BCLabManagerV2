@@ -25,17 +25,12 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllBatteryTypesViewModel(BatteryTypeRepository batterytypeRepository, BatteryRepository batteryRepository)
+        public AllBatteryTypesViewModel()
         {
-            if (batterytypeRepository == null)
-                throw new ArgumentNullException("batterytypeRepository");
 
-            if (batteryRepository == null)
-                throw new ArgumentNullException("batteryRepository");
+            _batterytypeRepository = Repositories._batterytypeRepository;
 
-            _batterytypeRepository = batterytypeRepository;
-
-            _batteryRepository = batteryRepository;
+            _batteryRepository = Repositories._batteryRepository;
 
             // Subscribe for notifications of when a new customer is saved.
             _batterytypeRepository.ItemAdded += this.OnBatteryModelAddedToRepository;
