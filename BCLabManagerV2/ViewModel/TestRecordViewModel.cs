@@ -63,6 +63,12 @@ namespace BCLabManager.ViewModel
             _chamberRepository = Repositories._chamberRepository;
             _testerRepository = Repositories._testerRepository;
             _channelRepository = Repositories._channelRepository;
+            _record.PropertyChanged += _record_PropertyChanged;
+        }
+
+        private void _record_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion // Constructor
@@ -411,6 +417,11 @@ namespace BCLabManager.ViewModel
         public void Commit()
         {
             _record.Commit(this.Battery, this.Chamber, this.Channel, this.EndTime, null, this.NewCycle, this.Comment);
+            OnPropertyChanged("Status");
+        }
+        public void Invalidate()
+        {
+            _record.Invalidate(this.Comment);
             OnPropertyChanged("Status");
         }
         #endregion

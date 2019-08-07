@@ -38,8 +38,20 @@ namespace BCLabManager.ViewModel
             _subprogramRepository = subprogramRepository;
             this.ProgramName = programName;
             this.CreateTestRecords();
+            _subprogram.TestRecordAdded += _subprogram_TestRecordAdded;
         }
 
+        private void _subprogram_TestRecordAdded(object sender, TestRecordAddedEventArgs e)
+        {
+            if(e.IsFirst)
+            {
+                Test1Records.Add(new TestRecordViewModel(e.NewTestRecord, this.ProgramName, this.Name));
+            }
+            else
+            {
+                Test2Records.Add(new TestRecordViewModel(e.NewTestRecord, this.ProgramName, this.Name));
+            }
+        }
 
         void CreateTestRecords()
         {

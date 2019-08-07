@@ -50,8 +50,13 @@ namespace BCLabManager.ViewModel
             _batteryRepository = batteryRepository;
             _batterytypeRepository = batterytypeRepository;
 
-            // Populate the AllCustomers collection with BatteryTypeViewModels.
-            //this.CreateAllBatteryTypes();      
+            _battery.PropertyChanged += _battery_PropertyChanged;
+        }
+
+        private void _battery_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            //throw new NotImplementedException();
+            OnPropertyChanged(e.PropertyName);
         }
 
         /*void CreateAllBatteryTypes()

@@ -18,9 +18,18 @@ namespace BCLabManager.Model
         Invalid,
         Abandoned,
     }
-    public class RawDataClass
+    public class RawDataClass : ModelBase
     { }
-    public class TestRecordClass
+    public class StatusChangedEventArgs : EventArgs
+    {
+        public StatusChangedEventArgs(TestStatus newStatus)
+        {
+            this.Status = newStatus;
+        }
+
+        public TestStatus Status { get; private set; }
+    }
+    public class TestRecordClass : ModelBase
     {
         private TestStatus status = TestStatus.Waiting;
         public TestStatus Status
@@ -34,7 +43,7 @@ namespace BCLabManager.Model
                 if (value != status)
                 {
                     status = value;
-                    OnRasieStatusChangedEvent();
+                    OnRasieStatusChangedEvent(new StatusChangedEventArgs(status));
                 }
             }
         }
@@ -52,15 +61,16 @@ namespace BCLabManager.Model
         public RawDataClass RawData { get; set; }
         public Double NewCycle { get; set; }
 
-        public event EventHandler StatusChanged;
+        public event EventHandler<StatusChangedEventArgs> StatusChanged;
 
-        protected virtual void OnRasieStatusChangedEvent()
+        protected virtual void OnRasieStatusChangedEvent(StatusChangedEventArgs e)
         {
-            EventHandler handler = StatusChanged;
+            EventHandler<StatusChangedEventArgs> handler = StatusChanged;
 
             if (handler != null)
             {
-                handler(this, EventArgs.Empty);
+                e = new StatusChangedEventArgs(this.Status);
+                handler(this, e);
             }
         }
 
@@ -98,7 +108,8 @@ namespace BCLabManager.Model
             this.BatteryStr = battery.Name;
             this.TesterStr = channel.Tester.Name;
             this.ChannelStr = channel.Name;
-            this.ChamberStr = chamber.Name;
+            if(chamber!=null)
+                this.ChamberStr = chamber.Name;
             this.StartTime = startTime;
             this.Steps = steps;
             this.ProgramStr = programName;
@@ -124,17 +135,30 @@ namespace BCLabManager.Model
             this.Comment = comment;
         }
 
-        public void Abandon(String Description = "")
+        public void Abandon(String comment = "")
         {
         }
 
-        public void Invalidate(String Description = "")
+        public void Invalidate(String comment = "")
         {
+            this.Status = TestStatus.Invalid;
+            this.Comment += "\n" + comment;
         }
+    }
+    public class TestRecordAddedEventArgs : EventArgs
+    {
+        public TestRecordAddedEventArgs(TestRecordClass newTestRecord, bool isFirst)
+        {
+            this.NewTestRecord = newTestRecord;
+            this.IsFirst = isFirst;
+        }
+
+        public TestRecordClass NewTestRecord { get; private set; }
+        public bool IsFirst { get; private set; }
     }
     // Summary:
     //     Represents a sub program which can be united to form a program
-    public class SubProgramClass
+    public class SubProgramClass : ModelBase
     {
         public String Name { get; set; }
         public TestCountEnum TestCount { get; set; }
@@ -147,10 +171,8 @@ namespace BCLabManager.Model
             SecondTestRecords = new List<TestRecordClass>();
         }
 
-        public SubProgramClass(String Name, TestCountEnum TestCount)
+        public SubProgramClass(String Name, TestCountEnum TestCount):this()
         {
-            FirstTestRecords = new List<TestRecordClass>();
-            SecondTestRecords = new List<TestRecordClass>();
             this.Name = Name;
             this.TestCount = TestCount;
         }
@@ -166,22 +188,63 @@ namespace BCLabManager.Model
             if (this.TestCount == TestCountEnum.One)
             {
                 newsub.FirstTestRecords = new List<TestRecordClass>();
-                newsub.FirstTestRecords.Add(new TestRecordClass());
+                var tr = new TestRecordClass();
+                tr.StatusChanged += newsub.TestRecord_StatusChanged;
+                newsub.FirstTestRecords.Add(tr);
             }
             else if (this.TestCount == TestCountEnum.Two)
             {
                 newsub.FirstTestRecords = new List<TestRecordClass>();
-                newsub.FirstTestRecords.Add(new TestRecordClass());
+                var tr = new TestRecordClass();
+                tr.StatusChanged += newsub.TestRecord_StatusChanged;
+                newsub.FirstTestRecords.Add(tr);
                 newsub.SecondTestRecords = new List<TestRecordClass>();
-                newsub.SecondTestRecords.Add(new TestRecordClass());
+                tr = new TestRecordClass();
+                tr.StatusChanged += newsub.TestRecord_StatusChanged;
+                newsub.SecondTestRecords.Add(tr);
             }
             return newsub;
         }
+
+        private void TestRecord_StatusChanged(object sender, StatusChangedEventArgs e)
+        {
+            TestRecordClass tr = sender as TestRecordClass; //被改变的Test Record
+            if (e.Status == TestStatus.Invalid)
+            {
+                if (FirstTestRecords.Contains(tr))
+                {
+                    var newTestRecord = new TestRecordClass();
+                    FirstTestRecords.Add(newTestRecord);
+                    OnRasieTestRecordAddedEvent(newTestRecord, true);
+                }
+                else if (SecondTestRecords.Contains(tr))
+                {
+                    var newTestRecord = new TestRecordClass();
+                    SecondTestRecords.Add(newTestRecord);
+                    OnRasieTestRecordAddedEvent(newTestRecord, false);
+                }
+            }
+        }
+        #region event   //Used by viewmodel
+        public event EventHandler<TestRecordAddedEventArgs> TestRecordAdded;
+
+        protected virtual void OnRasieTestRecordAddedEvent(TestRecordClass tr, bool isFirst)
+        {
+            EventHandler<TestRecordAddedEventArgs> handler = TestRecordAdded;
+            TestRecordAddedEventArgs arg = new TestRecordAddedEventArgs(tr, isFirst);
+
+            if (handler != null)
+            {
+                handler(this, arg);
+            }
+        }
+        #endregion //event
+
         public void Abandon(String Description = "")
         { }
     }
 
-    public class ProgramClass
+    public class ProgramClass : ModelBase
     {
         public String Name { get; set; }
         public String Requester { get; set; }

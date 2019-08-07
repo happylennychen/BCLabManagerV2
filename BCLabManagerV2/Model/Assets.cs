@@ -10,7 +10,7 @@ namespace BCLabManager.Model
         IDLE,
         USING,
     }
-    public class AssetUsageRecordClass
+    public class AssetUsageRecordClass : ModelBase
     {
         public DateTime Timestamp;
         public AssetStatusEnum Status;
@@ -25,7 +25,7 @@ namespace BCLabManager.Model
             this.SubProgramName = SubProgramName;
         }
     }
-    public class AssetClass
+    public class AssetClass : ModelBase
     {
         private AssetStatusEnum status = new AssetStatusEnum();
         public AssetStatusEnum Status
@@ -37,7 +37,10 @@ namespace BCLabManager.Model
             set
             {
                 if (value != status)
+                {
                     status = value;
+                    OnPropertyChanged("Status");
+                }
                 else
                 {
                     //Todo: throw exception here
@@ -53,12 +56,12 @@ namespace BCLabManager.Model
             Records = new List<AssetUsageRecordClass>();
         }
 
-        public void UpdateRecords(DateTime Timestamp, AssetStatusEnum Status, String ProgramName, String SubProgramName)
+        public void AddRecord(DateTime Timestamp, AssetStatusEnum Status, String ProgramName, String SubProgramName)
         {
             Records.Add(new AssetUsageRecordClass(Timestamp, Status, ProgramName, SubProgramName));
         }
     }
-    public class BatteryTypeClass
+    public class BatteryTypeClass : ModelBase
     {
         public String Manufactor { get; set; }
         public String Name { get; set; }
@@ -132,7 +135,7 @@ namespace BCLabManager.Model
     }
 
 
-    public class TesterClass
+    public class TesterClass : ModelBase
     {
         public String Manufactor { get; set; }
         public String Name { get; set; }

@@ -7,6 +7,7 @@ using BCLabManager.Model;
 using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.ComponentModel;
 
 namespace BCLabManager.ViewModel
 {
@@ -39,6 +40,12 @@ namespace BCLabManager.ViewModel
             //_battery = batterymodel;
             //_batteryRepository = batteryRepository;
             _record = record;
+            _record.PropertyChanged += _record_PropertyChanged;
+        }
+
+        private void _record_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         /*public BatteryViewModel(BatteryClass batterymodel, BatteryRepository batteryRepository, BatteryTypeRepository batterytypeRepository)  //BatteryView需要

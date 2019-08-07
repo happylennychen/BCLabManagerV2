@@ -241,6 +241,20 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public ICommand InvalidateCommand
+        {
+            get
+            {
+                if (_invalidateCommand == null)
+                {
+                    _invalidateCommand = new RelayCommand(
+                        param => { this.Invalidate(); },
+                        param => this.CanInvalidate
+                        );
+                }
+                return _invalidateCommand;
+            }
+        }
         #endregion // Public Interface
 
         #region Private Helper
@@ -383,6 +397,24 @@ namespace BCLabManager.ViewModel
         private bool CanCommit
         {
             get { return _selectedFirstTestRecord != null && _selectedFirstTestRecord.Status == TestStatus.Executing; }
+        }
+        private void Invalidate()
+        {
+            TestRecordClass model = new TestRecordClass();
+            TestRecordViewModel viewmodel = new TestRecordViewModel(model, SelectedProgram.Name, SelectedSubProgram.Name);
+            viewmodel.DisplayName = "Test-Invalidate";
+            var TestRecordInvalidateViewInstance = new InvalidateView();
+            TestRecordInvalidateViewInstance.DataContext = viewmodel;
+            TestRecordInvalidateViewInstance.ShowDialog();
+            if (viewmodel.IsOK == true)
+            {
+                SelectedFirstTestRecord.Comment = viewmodel.Comment;
+                SelectedFirstTestRecord.Invalidate();
+            }
+        }
+        private bool CanInvalidate
+        {
+            get { return _selectedFirstTestRecord != null && _selectedFirstTestRecord.Status == TestStatus.Completed; }
         }
         #endregion //Private Helper
         #region  Base Class Overrides

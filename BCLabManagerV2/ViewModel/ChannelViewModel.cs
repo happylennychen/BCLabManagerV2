@@ -43,9 +43,14 @@ namespace BCLabManager.ViewModel
             _channel = channelmodel;
             _channelRepository = channelRepository;
             _testerRepository = testerRepository;
-
+            _channel.PropertyChanged += _channel_PropertyChanged;
             // Populate the AllCustomers collection with TesterViewModels.
             //this.CreateAllTesters();      
+        }
+
+        private void _channel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(e.PropertyName);
         }
 
         /*void CreateAllTesters()

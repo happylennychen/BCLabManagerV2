@@ -113,6 +113,9 @@
     <Compile Include="View\AllProgramsView.xaml.cs">
       <DependentUpon>AllProgramsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\InvalidateView.xaml.cs">
+      <DependentUpon>InvalidateView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\CommitView.xaml.cs">
       <DependentUpon>CommitView.xaml</DependentUpon>
     </Compile>
@@ -183,6 +186,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\AllProgramsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\InvalidateView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
