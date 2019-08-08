@@ -30,6 +30,10 @@ namespace BCLabManager.ViewModel
         RelayCommand _commitCommand;
         RelayCommand _invalidateCommand;
         RelayCommand _viewCommand;
+        RelayCommand _executeCommand2;
+        RelayCommand _commitCommand2;
+        RelayCommand _invalidateCommand2;
+        RelayCommand _viewCommand2;
 
         #endregion // Fields
 
@@ -270,6 +274,66 @@ namespace BCLabManager.ViewModel
                 return _viewCommand;
             }
         }
+
+
+        public ICommand ExecuteCommand2
+        {
+            get
+            {
+                if (_executeCommand2 == null)
+                {
+                    _executeCommand2 = new RelayCommand(
+                        param => { this.Execute2(); },
+                        param => this.CanExecute2
+                        );
+                }
+                return _executeCommand2;
+            }
+        }
+        public ICommand CommitCommand2
+        {
+            get
+            {
+                if (_commitCommand2 == null)
+                {
+                    _commitCommand2 = new RelayCommand(
+                        param => { this.Commit2(); },
+                        param => this.CanCommit2
+                        );
+                }
+                return _commitCommand2;
+            }
+        }
+
+        public ICommand InvalidateCommand2
+        {
+            get
+            {
+                if (_invalidateCommand2 == null)
+                {
+                    _invalidateCommand2 = new RelayCommand(
+                        param => { this.Invalidate2(); },
+                        param => this.CanInvalidate2
+                        );
+                }
+                return _invalidateCommand2;
+            }
+        }
+
+        public ICommand ViewCommand2
+        {
+            get
+            {
+                if (_viewCommand2 == null)
+                {
+                    _viewCommand2 = new RelayCommand(
+                        param => { this.View2(); },
+                        param => this.CanView2
+                        );
+                }
+                return _viewCommand2;
+            }
+        }
         #endregion // Public Interface
 
         #region Private Helper
@@ -448,6 +512,86 @@ namespace BCLabManager.ViewModel
         private bool CanView
         {
             get { return _selectedFirstTestRecord != null && (_selectedFirstTestRecord.Status == TestStatus.Completed || _selectedFirstTestRecord.Status == TestStatus.Invalid); }
+        }
+        private void Execute2()
+        {
+            TestRecordClass model = new TestRecordClass();
+            TestRecordViewModel viewmodel = new TestRecordViewModel(model, SelectedProgram.Name, SelectedSubProgram.Name);
+            viewmodel.DisplayName = "Test-Execute";
+            var TestRecordViewInstance = new ExecuteView();
+            TestRecordViewInstance.DataContext = viewmodel;
+            TestRecordViewInstance.ShowDialog();
+            if (viewmodel.IsOK == true)
+            {
+                SelectedSecondTestRecord.BatteryType = viewmodel.BatteryType;
+                SelectedSecondTestRecord.Battery = viewmodel.Battery;
+                SelectedSecondTestRecord.Chamber = viewmodel.Chamber;
+                SelectedSecondTestRecord.Tester = viewmodel.Tester;
+                SelectedSecondTestRecord.Channel = viewmodel.Channel;
+                SelectedSecondTestRecord.StartTime = viewmodel.StartTime;
+                SelectedSecondTestRecord.Steps = viewmodel.Steps;
+                SelectedSecondTestRecord.Execute();
+            }
+        }
+        private bool CanExecute2
+        {
+            get { return _selectedSecondTestRecord != null && _selectedSecondTestRecord.Status == TestStatus.Waiting; }
+        }
+        private void Commit2()
+        {
+            TestRecordClass model = new TestRecordClass();
+            TestRecordViewModel viewmodel = new TestRecordViewModel(model, SelectedProgram.Name, SelectedSubProgram.Name);
+            viewmodel.DisplayName = "Test-Commit";
+            var TestRecordCommitViewInstance = new CommitView();
+            TestRecordCommitViewInstance.DataContext = viewmodel;
+            TestRecordCommitViewInstance.ShowDialog();
+            if (viewmodel.IsOK == true)
+            {
+                SelectedSecondTestRecord.EndTime = viewmodel.EndTime;
+                SelectedSecondTestRecord.NewCycle = viewmodel.NewCycle;
+                SelectedSecondTestRecord.Comment = viewmodel.Comment;
+                SelectedSecondTestRecord.Commit();
+            }
+        }
+        private bool CanCommit2
+        {
+            get { return _selectedSecondTestRecord != null && _selectedSecondTestRecord.Status == TestStatus.Executing; }
+        }
+        private void Invalidate2()
+        {
+            TestRecordClass model = new TestRecordClass();
+            TestRecordViewModel viewmodel = new TestRecordViewModel(model, SelectedProgram.Name, SelectedSubProgram.Name);
+            viewmodel.DisplayName = "Test-Invalidate";
+            var TestRecordInvalidateViewInstance = new InvalidateView();
+            TestRecordInvalidateViewInstance.DataContext = viewmodel;
+            TestRecordInvalidateViewInstance.ShowDialog();
+            if (viewmodel.IsOK == true)
+            {
+                SelectedSecondTestRecord.Comment = viewmodel.Comment;
+                SelectedSecondTestRecord.Invalidate();
+            }
+        }
+        private bool CanInvalidate2
+        {
+            get { return _selectedSecondTestRecord != null && _selectedSecondTestRecord.Status == TestStatus.Completed; }
+        }
+        private void View2()
+        {
+            /*TestRecordClass model = new TestRecordClass();
+            TestRecordViewModel viewmodel = new TestRecordViewModel(model, SelectedProgram.Name, SelectedSubProgram.Name);
+            viewmodel.DisplayName = "Test-Invalidate";
+            var TestRecordInvalidateViewInstance = new InvalidateView();
+            TestRecordInvalidateViewInstance.DataContext = viewmodel;
+            TestRecordInvalidateViewInstance.ShowDialog();
+            if (viewmodel.IsOK == true)
+            {
+                SelectedSecondTestRecord.Comment = viewmodel.Comment;
+                SelectedSecondTestRecord.Invalidate();
+            }*/
+        }
+        private bool CanView2
+        {
+            get { return _selectedSecondTestRecord != null && (_selectedSecondTestRecord.Status == TestStatus.Completed || _selectedSecondTestRecord.Status == TestStatus.Invalid); }
         }
         #endregion //Private Helper
         #region  Base Class Overrides

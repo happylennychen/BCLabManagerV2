@@ -156,10 +156,10 @@
         <GroupBox Grid.Row="4" Grid.Column="2" Header="Second Test Record">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Right">
-                    <Button Content="_Execute" Command="{Binding Path=ExecuteCommand}"></Button>
-                    <Button Content="_Commit" Command="{Binding Path=CommitCommand}"></Button>
-                    <Button Content="_Invalidate" Command="{Binding Path=InvalidateCommand}"></Button>
-                    <Button Content="_View Data" Command="{Binding Path=ViewCommand}"></Button>
+                    <Button Content="_Execute" Command="{Binding Path=ExecuteCommand2}"></Button>
+                    <Button Content="_Commit" Command="{Binding Path=CommitCommand2}"></Button>
+                    <Button Content="_Invalidate" Command="{Binding Path=InvalidateCommand2}"></Button>
+                    <Button Content="_View Data" Command="{Binding Path=ViewCommand2}"></Button>
                 </StackPanel>
                 <ListView
                       x:Name="Test2recordlist"
