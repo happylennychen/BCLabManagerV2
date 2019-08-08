@@ -358,7 +358,7 @@ namespace BCLabManager.ViewModel
 
         bool CanRemove
         {
-            get { return RightSelectedSubProgram != null; }
+            get { return RightSelectedSubProgram != null; }     //如果已经有数据，可否删除？
         }
 
         #endregion // Private Helpers

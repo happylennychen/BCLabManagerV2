@@ -29,7 +29,7 @@ namespace BCLabManager.ViewModel
         RelayCommand _executeCommand;
         RelayCommand _commitCommand;
         RelayCommand _invalidateCommand;
-        RelayCommand _abandonCommand;
+        RelayCommand _viewCommand;
 
         #endregion // Fields
 
@@ -255,6 +255,21 @@ namespace BCLabManager.ViewModel
                 return _invalidateCommand;
             }
         }
+
+        public ICommand ViewCommand
+        {
+            get
+            {
+                if (_viewCommand == null)
+                {
+                    _viewCommand = new RelayCommand(
+                        param => { this.View(); },
+                        param => this.CanView
+                        );
+                }
+                return _viewCommand;
+            }
+        }
         #endregion // Public Interface
 
         #region Private Helper
@@ -415,6 +430,24 @@ namespace BCLabManager.ViewModel
         private bool CanInvalidate
         {
             get { return _selectedFirstTestRecord != null && _selectedFirstTestRecord.Status == TestStatus.Completed; }
+        }
+        private void View()
+        {
+            /*TestRecordClass model = new TestRecordClass();
+            TestRecordViewModel viewmodel = new TestRecordViewModel(model, SelectedProgram.Name, SelectedSubProgram.Name);
+            viewmodel.DisplayName = "Test-Invalidate";
+            var TestRecordInvalidateViewInstance = new InvalidateView();
+            TestRecordInvalidateViewInstance.DataContext = viewmodel;
+            TestRecordInvalidateViewInstance.ShowDialog();
+            if (viewmodel.IsOK == true)
+            {
+                SelectedFirstTestRecord.Comment = viewmodel.Comment;
+                SelectedFirstTestRecord.Invalidate();
+            }*/
+        }
+        private bool CanView
+        {
+            get { return _selectedFirstTestRecord != null && (_selectedFirstTestRecord.Status == TestStatus.Completed || _selectedFirstTestRecord.Status == TestStatus.Invalid); }
         }
         #endregion //Private Helper
         #region  Base Class Overrides

@@ -102,7 +102,7 @@
                     <Button Content="_Execute" Command="{Binding Path=ExecuteCommand}"></Button>
                     <Button Content="_Commit" Command="{Binding Path=CommitCommand}"></Button>
                     <Button Content="_Invalidate" Command="{Binding Path=InvalidateCommand}"></Button>
-                    <Button Content="_Abandon" Command="{Binding Path=AbandonCommand}"></Button>
+                    <Button Content="_View Data" Command="{Binding Path=ViewCommand}"></Button>
                 </StackPanel>
                 <ListView
                       x:Name="Test1recordlist"

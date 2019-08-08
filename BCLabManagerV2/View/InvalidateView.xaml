@@ -25,40 +25,6 @@
             </Grid.RowDefinitions>
 
             <Label 
-      Grid.Row="0" Grid.Column="0" 
-      Content="_End Time:" 
-      HorizontalAlignment="Right"
-      Target="{Binding ElementName=EndTimeDat}" 
-      />
-            <DatePicker 
-      x:Name="EndTimeDat"
-      Grid.Row="0" Grid.Column="2" 
-      Text="{Binding Path=EndTime, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
-      Validation.ErrorTemplate="{x:Null}"
-      />
-
-            <Label 
-      Grid.Row="2" Grid.Column="0" 
-      Content="_RawData:" 
-      HorizontalAlignment="Right"
-      />
-            <TextBox 
-      Grid.Row="2" Grid.Column="2" 
-      Validation.ErrorTemplate="{x:Null}"
-      />
-            <Label 
-      Grid.Row="4" Grid.Column="0" 
-      Content="_New Cycle:" 
-      HorizontalAlignment="Right"
-      Target="{Binding ElementName=NewCycleTxt}" 
-      />
-            <TextBox 
-      x:Name="NewCycleTxt"
-      Grid.Row="4" Grid.Column="2" 
-      Text="{Binding Path=NewCycle, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
-      Validation.ErrorTemplate="{x:Null}"
-      />
-            <Label 
       Grid.Row="6" Grid.Column="0" 
       Content="_Comment:" 
       HorizontalAlignment="Right"
