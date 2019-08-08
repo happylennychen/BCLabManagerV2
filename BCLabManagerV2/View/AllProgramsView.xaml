@@ -24,11 +24,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="60*"></RowDefinition>
             <RowDefinition Height="4"></RowDefinition>
-            <RowDefinition Height="20*"></RowDefinition>
+            <RowDefinition Height="30*"></RowDefinition>
             <RowDefinition Height="4"></RowDefinition>
-            <RowDefinition Height="20*"></RowDefinition>
-            <RowDefinition Height="4"></RowDefinition>
-            <RowDefinition Height="20*"></RowDefinition>
+            <RowDefinition Height="30*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="30*"></ColumnDefinition>
@@ -77,7 +75,7 @@
                 </ListView>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="2" Grid.RowSpan="5" Header="Sub Program">
+        <GroupBox Grid.Row="2" Grid.RowSpan="3" Header="Sub Program">
             <ListView
                       x:Name="SubProgramlist"
       AlternationCount="2" 
@@ -96,7 +94,7 @@
                 </ListView.View>
             </ListView>
         </GroupBox>
-        <GroupBox Grid.Row="2" Grid.Column="2" Header="First Test Records">
+        <GroupBox Grid.Row="2" Grid.Column="2" Header="First Test Record">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Right">
                     <Button Content="_Execute" Command="{Binding Path=ExecuteCommand}"></Button>
@@ -155,7 +153,63 @@
                 </ListView>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="4" Grid.Column="2" Header="Second Test Records"></GroupBox>
-        <GroupBox Grid.Row="6" Grid.Column="2" Header="Steps Description"></GroupBox>
+        <GroupBox Grid.Row="4" Grid.Column="2" Header="Second Test Record">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right">
+                    <Button Content="_Execute" Command="{Binding Path=ExecuteCommand}"></Button>
+                    <Button Content="_Commit" Command="{Binding Path=CommitCommand}"></Button>
+                    <Button Content="_Invalidate" Command="{Binding Path=InvalidateCommand}"></Button>
+                    <Button Content="_View Data" Command="{Binding Path=ViewCommand}"></Button>
+                </StackPanel>
+                <ListView
+                      x:Name="Test2recordlist"
+      AlternationCount="2" 
+      ItemContainerStyle="{StaticResource ListViewItemStyle}"
+      ItemsSource="{Binding Path=SecondTestRecords}"
+                      SelectedItem="{Binding Path=SelectedSecondTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+      >
+
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn 
+            Header="Status" 
+            DisplayMemberBinding="{Binding Path=Status}" 
+            />
+                            <GridViewColumn 
+            Header="BatteryType" 
+            DisplayMemberBinding="{Binding Path=BatteryType}" 
+            />
+                            <GridViewColumn 
+            Header="Battery" 
+            DisplayMemberBinding="{Binding Path=Battery}" 
+            />
+                            <GridViewColumn 
+            Header="Chamber" 
+            DisplayMemberBinding="{Binding Path=Chamber}" 
+            />
+                            <GridViewColumn 
+            Header="Tester" 
+            DisplayMemberBinding="{Binding Path=Tester}" 
+            />
+                            <GridViewColumn 
+            Header="Channel" 
+            DisplayMemberBinding="{Binding Path=Channel}" 
+            />
+                            <GridViewColumn 
+            Header="StartTime" 
+            DisplayMemberBinding="{Binding Path=StartTime}" 
+            />
+                            <GridViewColumn 
+            Header="EndTime" 
+            DisplayMemberBinding="{Binding Path=EndTime}" 
+            />
+                            <GridViewColumn 
+            Header="Comment" 
+            DisplayMemberBinding="{Binding Path=Comment}" 
+            />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </DockPanel></GroupBox>
     </Grid>
 </UserControl>
