@@ -4,13 +4,6 @@
         xmlns:v="clr-namespace:BCLabManager.View"
         Title="MainWindow" Height="655" Width="825">
     <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary 
-                  Source="MainWindowResources.xaml">
-                </ResourceDictionary>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
     </Window.Resources>
     <Grid>
         <TabControl TabStripPlacement="Left">

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Prism.Ioc;
+using Prism.Unity;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -10,14 +12,15 @@ namespace BCLabManager
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : PrismApplication
     {
-        protected override void OnStartup(StartupEventArgs e)
+        protected override Window CreateShell()
         {
-            base.OnStartup(e);
+            return Container.Resolve<MainWindow>();
+        }
 
-            Bootstrapper bs = new Bootstrapper();
-            bs.Run();
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
         }
     }
 }
