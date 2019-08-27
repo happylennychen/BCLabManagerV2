@@ -1,7 +1,7 @@
 ﻿<Window x:Class="BCLabManager.View.ChamberView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="{Binding Path=DisplayName}" Height="300" Width="300">
+        Title="{Binding Path=DisplayName}" Height="300" Width="300" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid Margin="4">
             <Grid.ColumnDefinitions>
