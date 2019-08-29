@@ -12,11 +12,15 @@ namespace BCLabManager.Model
     }
     public class AssetUsageRecordClass : ModelBase
     {
-        public DateTime Timestamp;
-        public AssetStatusEnum Status;
-        public String ProgramName;
-        public String SubProgramName;
+        public int Id { get; set; }
+        public DateTime Timestamp { get; set; }
+        public AssetStatusEnum Status { get; set; }
+        public String ProgramName { get; set; }
+        public String SubProgramName { get; set; }
+        //public AssetUsageRecordClass()
+        //{
 
+        //}
         public AssetUsageRecordClass(DateTime Timestamp, AssetStatusEnum Status, String ProgramName, String SubProgramName)
         {
             this.Timestamp = Timestamp;
@@ -63,6 +67,7 @@ namespace BCLabManager.Model
     }
     public class BatteryTypeClass : ModelBase
     {
+        public int Id { get; set; }
         public String Manufactor { get; set; }
         public String Name { get; set; }
         public String Material { get; set; }
@@ -106,6 +111,7 @@ namespace BCLabManager.Model
 
     public class BatteryClass : AssetClass
     {
+        public int Id { get; set; }
         public String Name { get; set; }
         public BatteryTypeClass BatteryType { get; set; }
         public Double CycleCount { get; set; }

@@ -12,4 +12,5 @@
 *.config
 
 output/
+packages/
 Doc/~$UI Design.pptx

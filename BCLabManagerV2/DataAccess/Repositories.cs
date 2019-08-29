@@ -316,7 +316,7 @@ namespace BCLabManager.DataAccess
         [Conditional("DEBUG")]
         private static void HistoricData()
         {
-            HistoricRegistration();
+            //HistoricRegistration();
             //HistoricOperation();
             //FakeView();
         }

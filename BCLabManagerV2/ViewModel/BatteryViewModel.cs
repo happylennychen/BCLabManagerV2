@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using BCLabManager.Properties;
+using Microsoft.EntityFrameworkCore;
 
 namespace BCLabManager.ViewModel
 {
@@ -137,22 +138,27 @@ namespace BCLabManager.ViewModel
 
                 _batteryType = value;
 
-                _battery.BatteryType = _batterytypeRepository.GetItems().First(i => i.Name == _batteryType);
+                //_battery.BatteryType = _batterytypeRepository.GetItems().First(i => i.Name == _batteryType);
+                using (var dbContext = new AppDbContext())
+                {
+                    _battery.BatteryType = dbContext.BatteryTypes.SingleOrDefault(bt => bt.Name == _batteryType);
+                }
 
                 base.OnPropertyChanged("BatteryType");
             }
         }
 
-        public ObservableCollection<string> AllBatteryTypes
+        public List<string> AllBatteryTypes
         {
             get
             {
-                List<BatteryTypeClass> all = _batterytypeRepository.GetItems();
+                var dbContext = new AppDbContext();
+                //DbSet<BatteryTypeClass> all = dbContext.BatteryTypes;//_batterytypeRepository.GetItems();
                 List<string> allstring = (
-                    from i in all
+                    from i in dbContext.BatteryTypes
                     select i.Name).ToList();
 
-                return new ObservableCollection<string>(allstring);
+                return (allstring);
             }
         }
 

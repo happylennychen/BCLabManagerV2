@@ -41,6 +41,19 @@ namespace BCLabManager.ViewModel
 
         #region BatteryTypeClass Properties
 
+        public int Id
+        {
+            get { return _batterytype.Id; }
+            set
+            {
+                if (value == _batterytype.Id)
+                    return;
+
+                _batterytype.Id = value;
+
+                base.OnPropertyChanged("Id");
+            }
+        }
         public string Manufactor
         {
             get { return _batterytype.Manufactor; }

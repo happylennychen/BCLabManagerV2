@@ -7,6 +7,7 @@ using BCLabManager.Model;
 using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Microsoft.EntityFrameworkCore;
 
 namespace BCLabManager.ViewModel
 {
@@ -33,13 +34,13 @@ namespace BCLabManager.ViewModel
             _batteryRepository = Repositories._batteryRepository;
 
             // Subscribe for notifications of when a new customer is saved.
-            _batterytypeRepository.ItemAdded += this.OnBatteryModelAddedToRepository;
+            //_batterytypeRepository.ItemAdded += this.OnBatteryModelAddedToRepository;
 
             // Populate the AllBatteryTypes collection with _batterytypeRepository.
             this.CreateAllBatteryTypes();
         }
 
-        void CreateAllBatteryTypes()
+        /*void CreateAllBatteryTypes()
         {
             List<BatteryTypeViewModel> all =
                 (from batT in _batterytypeRepository.GetItems()
@@ -50,6 +51,16 @@ namespace BCLabManager.ViewModel
 
             this.AllBatteryTypes = new ObservableCollection<BatteryTypeViewModel>(all);     //再转换成Observable
             //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
+        }*/
+        void CreateAllBatteryTypes()
+        {
+            var dbContext = new AppDbContext();
+            //DbSet<BatteryTypeClass>
+            List<BatteryTypeViewModel> all =
+                (from batT in dbContext.BatteryTypes
+                 select new BatteryTypeViewModel(batT, _batterytypeRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+
+            this.AllBatteryTypes = new ObservableCollection<BatteryTypeViewModel>(all);     //再转换成Observable
         }
 
         #endregion // Constructor
@@ -147,7 +158,11 @@ namespace BCLabManager.ViewModel
             BatteryTypeViewInstance.ShowDialog();                   //设置viewmodel属性
             if (btvm.IsOK == true)
             {
-                _batterytypeRepository.AddItem(btc);
+                //_batterytypeRepository.AddItem(btc);
+                var dbContext = new AppDbContext();
+                dbContext.BatteryTypes.Add(btc);
+                dbContext.SaveChanges();
+                this.AllBatteryTypes.Add(btvm);
             }
         }
         private void Edit()
@@ -163,9 +178,15 @@ namespace BCLabManager.ViewModel
             BatteryTypeViewInstance.ShowDialog();
             if (btvm.IsOK == true)
             {
+                var dbContext = new AppDbContext();
+                var batT = dbContext.BatteryTypes.SingleOrDefault(b => b.Name == _selectedItem.Name);
                 _selectedItem.Manufactor = btvm.Manufactor;
                 _selectedItem.Material = btvm.Material;
                 _selectedItem.Name = btvm.Name;
+                batT.Manufactor = btc.Manufactor;
+                batT.Material = btc.Material;
+                batT.Name = btc.Name;
+                dbContext.SaveChanges();
             }
         }
         private bool CanEdit
@@ -185,7 +206,11 @@ namespace BCLabManager.ViewModel
             BatteryTypeViewInstance.ShowDialog();
             if (btvm.IsOK == true)
             {
-                _batterytypeRepository.AddItem(btc);
+                //_batterytypeRepository.AddItem(btc);
+                var dbContext = new AppDbContext();
+                dbContext.BatteryTypes.Add(btc);
+                dbContext.SaveChanges();
+                this.AllBatteryTypes.Add(btvm);
             }
         }
         private bool CanSaveAs
@@ -203,18 +228,18 @@ namespace BCLabManager.ViewModel
             this.AllBatteryTypes.Clear();
             //this.AllBatteryModels.CollectionChanged -= this.OnCollectionChanged;
 
-            _batterytypeRepository.ItemAdded -= this.OnBatteryModelAddedToRepository;
+            //_batterytypeRepository.ItemAdded -= this.OnBatteryModelAddedToRepository;
         }
 
         #endregion // Base Class Overrides
 
         #region Event Handling Methods
 
-        void OnBatteryModelAddedToRepository(object sender, ItemAddedEventArgs<BatteryTypeClass> e)
-        {
-            var viewModel = new BatteryTypeViewModel(e.NewItem, _batterytypeRepository);
-            this.AllBatteryTypes.Add(viewModel);
-        }
+        //void OnBatteryModelAddedToRepository(object sender, ItemAddedEventArgs<BatteryTypeClass> e)
+        //{
+        //    var viewModel = new BatteryTypeViewModel(e.NewItem, _batterytypeRepository);
+        //    this.AllBatteryTypes.Add(viewModel);
+        //}
 
         #endregion // Event Handling Methods
     }
