@@ -3,14 +3,16 @@ using System;
 using BCLabManager.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190829073321_AddPrograms")]
+    partial class AddPrograms
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -130,20 +132,6 @@ namespace BCLabManager.Migrations
                     b.HasIndex("ProgramClassId");
 
                     b.ToTable("SubPrograms");
-                });
-
-            modelBuilder.Entity("BCLabManager.Model.SubProgramTemplate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.Property<int>("TestCount");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SubProgramTemplates");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>

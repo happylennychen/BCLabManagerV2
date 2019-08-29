@@ -31,7 +31,7 @@ namespace BCLabManager
 
         public AllChambersViewModel allChambersViewModel { get; set; }  //其中需要显示Chambers和Records
 
-        public AllSubProgramsViewModel allSubProgramsViewModel { get; set; }  //其中需要显示SubPrograms
+        public AllSubProgramTemplatesViewModel allSubProgramTemplatesViewModel { get; set; }  //其中需要显示SubPrograms
 
         public AllProgramsViewModel allProgramsViewModel { get; set; }  //其中需要显示Programs, SubPrograms, Test1, Test2, TestSteps
 
@@ -55,8 +55,8 @@ namespace BCLabManager
             allChambersViewModel = new AllChambersViewModel();    //ViewModel初始化
             this.AllChambersViewInstance.DataContext = allChambersViewModel;                                                            //ViewModel跟View绑定
 
-            allSubProgramsViewModel = new AllSubProgramsViewModel();    //ViewModel初始化
-            this.AllSubProgramsViewInstance.DataContext = allSubProgramsViewModel;                                                            //ViewModel跟View绑定
+            allSubProgramTemplatesViewModel = new AllSubProgramTemplatesViewModel();    //ViewModel初始化
+            this.AllSubProgramTemplatesViewInstance.DataContext = allSubProgramTemplatesViewModel;                                                            //ViewModel跟View绑定
 
             allProgramsViewModel = new AllProgramsViewModel();    //ViewModel初始化
             this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定

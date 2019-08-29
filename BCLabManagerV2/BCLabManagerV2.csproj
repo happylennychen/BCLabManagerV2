@@ -206,11 +206,16 @@
     <Compile Include="Migrations\20190829073321_AddPrograms.designer.cs">
       <DependentUpon>20190829073321_AddPrograms.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20190829093754_AddTemplate.cs" />
+    <Compile Include="Migrations\20190829093754_AddTemplate.designer.cs">
+      <DependentUpon>20190829093754_AddTemplate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Model\Assets\BatteryClass.cs" />
     <Compile Include="Model\Assets\BatteryTypeClass.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\Programs\ProgramClass.cs" />
+    <Compile Include="Model\Programs\SubProgramTemplate.cs" />
     <Compile Include="Model\Programs\SubProgramClass.cs" />
     <Compile Include="ViewModel\Assets\AllChannelsViewModel.cs">
       <SubType>Code</SubType>
@@ -222,8 +227,10 @@
     <Compile Include="ViewModel\Assets\AllBatteriesViewModel.cs" />
     <Compile Include="ViewModel\Assets\AllChambersViewModel.cs" />
     <Compile Include="ViewModel\Assets\ChamberViewModel.cs" />
+    <Compile Include="ViewModel\Programs\AllSubProgramTemplatesViewModel.cs" />
     <Compile Include="ViewModel\Programs\AllSubProgramsViewModel.cs" />
     <Compile Include="ViewModel\Programs\AllProgramsViewModel.cs" />
+    <Compile Include="ViewModel\Programs\SubProgramTemplateViewModel.cs" />
     <Compile Include="ViewModel\Programs\TestRecordViewModel.cs" />
     <Compile Include="ViewModel\Programs\ProgramViewModel.cs" />
     <Compile Include="ViewModel\Programs\SubProgramViewModel.cs" />
@@ -262,8 +269,8 @@
     <Compile Include="View\Assets\ChamberView.xaml.cs">
       <DependentUpon>ChamberView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Programs\AllSubProgramsView.xaml.cs">
-      <DependentUpon>AllSubProgramsView.xaml</DependentUpon>
+    <Compile Include="View\Programs\AllSubProgramTemplatesView.xaml.cs">
+      <DependentUpon>AllSubProgramTemplatesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Programs\AllProgramsView.xaml.cs">
       <DependentUpon>AllProgramsView.xaml</DependentUpon>
@@ -280,8 +287,8 @@
     <Compile Include="View\Programs\ProgramView.xaml.cs">
       <DependentUpon>ProgramView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Programs\SubProgramView.xaml.cs">
-      <DependentUpon>SubProgramView.xaml</DependentUpon>
+    <Compile Include="View\Programs\SubProgramTemplateView.xaml.cs">
+      <DependentUpon>SubProgramTemplateView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Assets\TesterView.xaml.cs">
       <DependentUpon>TesterView.xaml</DependentUpon>
@@ -336,7 +343,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Programs\AllSubProgramsView.xaml">
+    <Page Include="View\Programs\AllSubProgramTemplatesView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -360,7 +367,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Programs\SubProgramView.xaml">
+    <Page Include="View\Programs\SubProgramTemplateView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
