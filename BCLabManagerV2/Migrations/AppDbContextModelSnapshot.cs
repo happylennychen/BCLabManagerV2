@@ -84,6 +84,102 @@ namespace BCLabManager.Migrations
                     b.ToTable("BatteryTypes");
                 });
 
+            modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CompleteDate");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Name");
+
+                    b.Property<DateTime>("RequestDate");
+
+                    b.Property<string>("Requester");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Programs");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.RawDataClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RawDataClass");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.SubProgramClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.Property<int?>("ProgramClassId");
+
+                    b.Property<int>("TestCount");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProgramClassId");
+
+                    b.ToTable("SubPrograms");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("BatteryStr");
+
+                    b.Property<string>("BatteryTypeStr");
+
+                    b.Property<string>("ChamberStr");
+
+                    b.Property<string>("ChannelStr");
+
+                    b.Property<string>("Comment");
+
+                    b.Property<DateTime>("EndTime");
+
+                    b.Property<double>("NewCycle");
+
+                    b.Property<string>("ProgramStr");
+
+                    b.Property<int?>("RawDataId");
+
+                    b.Property<DateTime>("StartTime");
+
+                    b.Property<int>("Status");
+
+                    b.Property<string>("Steps");
+
+                    b.Property<int?>("SubProgramClassId");
+
+                    b.Property<int?>("SubProgramClassId1");
+
+                    b.Property<string>("SubProgramStr");
+
+                    b.Property<string>("TesterStr");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RawDataId");
+
+                    b.HasIndex("SubProgramClassId");
+
+                    b.HasIndex("SubProgramClassId1");
+
+                    b.ToTable("TestRecords");
+                });
+
             modelBuilder.Entity("BCLabManager.Model.AssetUsageRecordClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.BatteryClass")
@@ -96,6 +192,28 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
                         .WithMany()
                         .HasForeignKey("BatteryTypeId");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.SubProgramClass", b =>
+                {
+                    b.HasOne("BCLabManager.Model.ProgramClass")
+                        .WithMany("SubPrograms")
+                        .HasForeignKey("ProgramClassId");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>
+                {
+                    b.HasOne("BCLabManager.Model.RawDataClass", "RawData")
+                        .WithMany()
+                        .HasForeignKey("RawDataId");
+
+                    b.HasOne("BCLabManager.Model.SubProgramClass")
+                        .WithMany("FirstTestRecords")
+                        .HasForeignKey("SubProgramClassId");
+
+                    b.HasOne("BCLabManager.Model.SubProgramClass")
+                        .WithMany("SecondTestRecords")
+                        .HasForeignKey("SubProgramClassId1");
                 });
 #pragma warning restore 612, 618
         }

@@ -202,80 +202,88 @@
     <Compile Include="Migrations\20190829001849_AddBatteries.designer.cs">
       <DependentUpon>20190829001849_AddBatteries.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20190829073321_AddPrograms.cs" />
+    <Compile Include="Migrations\20190829073321_AddPrograms.designer.cs">
+      <DependentUpon>20190829073321_AddPrograms.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
+    <Compile Include="Model\Assets\BatteryClass.cs" />
+    <Compile Include="Model\Assets\BatteryTypeClass.cs" />
     <Compile Include="Model\ModelBase.cs" />
-    <Compile Include="ViewModel\AllChannelsViewModel.cs">
+    <Compile Include="Model\Programs\ProgramClass.cs" />
+    <Compile Include="Model\Programs\SubProgramClass.cs" />
+    <Compile Include="ViewModel\Assets\AllChannelsViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ViewModel\AllTestersViewModel.cs" />
-    <Compile Include="ViewModel\ChannelViewModel.cs" />
-    <Compile Include="ViewModel\BatteryViewModel.cs" />
-    <Compile Include="ViewModel\AllBatteryTypesViewModel.cs" />
-    <Compile Include="ViewModel\AllBatteriesViewModel.cs" />
-    <Compile Include="ViewModel\AllChambersViewModel.cs" />
-    <Compile Include="ViewModel\ChamberViewModel.cs" />
-    <Compile Include="ViewModel\AllSubProgramsViewModel.cs" />
-    <Compile Include="ViewModel\AllProgramsViewModel.cs" />
-    <Compile Include="ViewModel\TestRecordViewModel.cs" />
-    <Compile Include="ViewModel\ProgramViewModel.cs" />
-    <Compile Include="ViewModel\SubProgramViewModel.cs" />
-    <Compile Include="ViewModel\AssetUsageRecordViewModel.cs" />
-    <Compile Include="ViewModel\TesterViewModel.cs" />
-    <Compile Include="ViewModel\BatteryTypeViewModel.cs" />
+    <Compile Include="ViewModel\Assets\AllTestersViewModel.cs" />
+    <Compile Include="ViewModel\Assets\ChannelViewModel.cs" />
+    <Compile Include="ViewModel\Assets\BatteryViewModel.cs" />
+    <Compile Include="ViewModel\Assets\AllBatteryTypesViewModel.cs" />
+    <Compile Include="ViewModel\Assets\AllBatteriesViewModel.cs" />
+    <Compile Include="ViewModel\Assets\AllChambersViewModel.cs" />
+    <Compile Include="ViewModel\Assets\ChamberViewModel.cs" />
+    <Compile Include="ViewModel\Programs\AllSubProgramsViewModel.cs" />
+    <Compile Include="ViewModel\Programs\AllProgramsViewModel.cs" />
+    <Compile Include="ViewModel\Programs\TestRecordViewModel.cs" />
+    <Compile Include="ViewModel\Programs\ProgramViewModel.cs" />
+    <Compile Include="ViewModel\Programs\SubProgramViewModel.cs" />
+    <Compile Include="ViewModel\Assets\AssetUsageRecordViewModel.cs" />
+    <Compile Include="ViewModel\Assets\TesterViewModel.cs" />
+    <Compile Include="ViewModel\Assets\BatteryTypeViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
-    <Compile Include="View\AllBatteriesView.xaml.cs">
+    <Compile Include="View\Assets\AllBatteriesView.xaml.cs">
       <DependentUpon>AllBatteriesView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="View\AllTestersView.xaml.cs">
+    <Compile Include="View\Assets\AllTestersView.xaml.cs">
       <DependentUpon>AllTestersView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\BatteryTypeView.xaml.cs">
+    <Compile Include="View\Assets\BatteryTypeView.xaml.cs">
       <DependentUpon>BatteryTypeView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="View\BatteryView.xaml.cs">
+    <Compile Include="View\Assets\BatteryView.xaml.cs">
       <DependentUpon>BatteryView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="View\AllBatteryTypesView.xaml.cs">
+    <Compile Include="View\Assets\AllBatteryTypesView.xaml.cs">
       <DependentUpon>AllBatteryTypesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\AllChannelsView.xaml.cs">
+    <Compile Include="View\Assets\AllChannelsView.xaml.cs">
       <DependentUpon>AllChannelsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ChannelView.xaml.cs">
+    <Compile Include="View\Assets\ChannelView.xaml.cs">
       <DependentUpon>ChannelView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\AllChambersView.xaml.cs">
+    <Compile Include="View\Assets\AllChambersView.xaml.cs">
       <DependentUpon>AllChambersView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ChamberView.xaml.cs">
+    <Compile Include="View\Assets\ChamberView.xaml.cs">
       <DependentUpon>ChamberView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\AllSubProgramsView.xaml.cs">
+    <Compile Include="View\Programs\AllSubProgramsView.xaml.cs">
       <DependentUpon>AllSubProgramsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\AllProgramsView.xaml.cs">
+    <Compile Include="View\Programs\AllProgramsView.xaml.cs">
       <DependentUpon>AllProgramsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\InvalidateView.xaml.cs">
+    <Compile Include="View\Programs\InvalidateView.xaml.cs">
       <DependentUpon>InvalidateView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\CommitView.xaml.cs">
+    <Compile Include="View\Programs\CommitView.xaml.cs">
       <DependentUpon>CommitView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ExecuteView.xaml.cs">
+    <Compile Include="View\Programs\ExecuteView.xaml.cs">
       <DependentUpon>ExecuteView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ProgramView.xaml.cs">
+    <Compile Include="View\Programs\ProgramView.xaml.cs">
       <DependentUpon>ProgramView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SubProgramView.xaml.cs">
+    <Compile Include="View\Programs\SubProgramView.xaml.cs">
       <DependentUpon>SubProgramView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\TesterView.xaml.cs">
+    <Compile Include="View\Assets\TesterView.xaml.cs">
       <DependentUpon>TesterView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
@@ -287,76 +295,76 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\Assets.cs" />
-    <Compile Include="Model\Programs.cs" />
+    <Compile Include="Model\Programs\TestRecoredClass.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\AllBatteriesView.xaml">
+    <Page Include="View\Assets\AllBatteriesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\AllTestersView.xaml">
+    <Page Include="View\Assets\AllTestersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\BatteryTypeView.xaml">
+    <Page Include="View\Assets\BatteryTypeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\BatteryView.xaml">
+    <Page Include="View\Assets\BatteryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\AllBatteryTypesView.xaml">
+    <Page Include="View\Assets\AllBatteryTypesView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\AllChannelsView.xaml">
+    <Page Include="View\Assets\AllChannelsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ChannelView.xaml">
+    <Page Include="View\Assets\ChannelView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\AllChambersView.xaml">
+    <Page Include="View\Assets\AllChambersView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ChamberView.xaml">
+    <Page Include="View\Assets\ChamberView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\AllSubProgramsView.xaml">
+    <Page Include="View\Programs\AllSubProgramsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\AllProgramsView.xaml">
+    <Page Include="View\Programs\AllProgramsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\InvalidateView.xaml">
+    <Page Include="View\Programs\InvalidateView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\CommitView.xaml">
+    <Page Include="View\Programs\CommitView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ExecuteView.xaml">
+    <Page Include="View\Programs\ExecuteView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ProgramView.xaml">
+    <Page Include="View\Programs\ProgramView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\SubProgramView.xaml">
+    <Page Include="View\Programs\SubProgramView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\TesterView.xaml">
+    <Page Include="View\Assets\TesterView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
