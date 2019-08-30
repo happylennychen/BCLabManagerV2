@@ -17,7 +17,7 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        public readonly ProgramClass _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
+        public ProgramClass _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
         readonly ProgramRepository _programRepository;
         readonly SubProgramRepository _subprogramRepository;
         SubProgramTemplateViewModel _leftselectedSubProgram;

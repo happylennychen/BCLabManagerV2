@@ -429,6 +429,8 @@ namespace BCLabManager.ViewModel
                     {
                         program.SubPrograms.Add(sub);
                     }
+                    dbContext.SaveChanges();
+                    SelectedProgram._program = program;
 
                     //SelectedProgram.UpdateSubPrograms();        //修改viewmodel中的子项
 
@@ -441,7 +443,6 @@ namespace BCLabManager.ViewModel
 
                     SelectedProgram.SubPrograms = new ObservableCollection<SubProgramViewModel>(all);     //再转换成Observable
                     OnPropertyChanged("SubPrograms");
-                    dbContext.SaveChanges();
                 }
             }
         }
@@ -460,21 +461,14 @@ namespace BCLabManager.ViewModel
             ProgramViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)
             {
-                _programRepository.AddItem(model);
+                //_programRepository.AddItem(model);
+                using (var dbContext = new AppDbContext())
+                {
+                    dbContext.Programs.Add(model);
+                    dbContext.SaveChanges();
+                    this.AllPrograms.Add(viewmodel);
+                }
             }
-            /*ProgramClass model = new ProgramClass();      //实例化一个新的model
-            ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _subprogramRepository);      //实例化一个新的view model
-            viewmodel.Name = _selectedProgram.Name;
-            viewmodel.TestCount = _selectedProgram.TestCount;
-            viewmodel.DisplayName = "Program-Save As";
-            viewmodel.commandType = CommandType.SaveAs;
-            var ProgramViewInstance = new ProgramView();      //实例化一个新的view
-            ProgramViewInstance.DataContext = viewmodel;
-            ProgramViewInstance.ShowDialog();
-            if (viewmodel.IsOK == true)
-            {
-                _programRepository.AddItem(model);
-            }*/
         }
         private bool CanSaveAs
         {
