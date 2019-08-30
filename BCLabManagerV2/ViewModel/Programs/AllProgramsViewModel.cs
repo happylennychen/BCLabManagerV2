@@ -376,29 +376,74 @@ namespace BCLabManager.ViewModel
             ProgramViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)
             {
-                SelectedProgram._program.Update(model);
-                SelectedProgram.UpdateSubPrograms();
-                OnPropertyChanged("SubPrograms");
-                //this.SubPrograms
+                /*SelectedProgram._program.Update(model);   //修改model中的主项
+
+                SelectedProgram.UpdateSubPrograms();        //修改viewmodel中的子项
+                OnPropertyChanged("SubPrograms");*/
+                using (var dbContext = new AppDbContext())
+                {
+                    var program = dbContext.Programs.SingleOrDefault(i => i.Id == SelectedProgram.Id);  //没有完全取出
+                    dbContext.Entry(program)
+                        .Collection(p => p.SubPrograms)
+                        .Load();
+                    //program.Update(model);
+                    bool isTgtNotContainSrc = false;    //Add to target
+                    bool isSrcNotContainTgt = false;    //Remove from target
+                    List<SubProgramClass> TobeRemoved = new List<SubProgramClass>();
+                    List<SubProgramClass> TobeAdded = new List<SubProgramClass>();
+                    foreach (var sub_target in program.SubPrograms)     //看看在不在source中，不在则删掉
+                    {
+                        isSrcNotContainTgt = true;
+                        foreach (var sub_source in model.SubPrograms)
+                        {
+                            if (sub_target.Id == sub_source.Id)
+                            {
+                                isSrcNotContainTgt = false;
+                                break;
+                            }
+                        }
+                        if (isSrcNotContainTgt == true)
+                            TobeRemoved.Add(sub_target);
+                    }
+                    foreach (var sub_source in model.SubPrograms)
+                    {
+                        isTgtNotContainSrc = true;
+                        foreach (var sub_target in program.SubPrograms)
+                        {
+                            if (sub_target.Id == sub_source.Id)
+                            {
+                                isTgtNotContainSrc = false;
+                                break;
+                            }
+                        }
+                        if (isTgtNotContainSrc == true)
+                            TobeAdded.Add(sub_source);
+                    }
+                    foreach (var sub in TobeRemoved)
+                    {
+                        program.SubPrograms.Remove(sub);
+                        //var subs = dbContext.SubPrograms;       //手动递归删除
+                        //subs.Remove(sub);
+                    }
+                    foreach (var sub in TobeAdded)
+                    {
+                        program.SubPrograms.Add(sub);
+                    }
+
+                    //SelectedProgram.UpdateSubPrograms();        //修改viewmodel中的子项
+
+                    List<SubProgramViewModel> all =
+                        (from sub in program.SubPrograms
+                         select new SubProgramViewModel(sub, _subprogramRepository, "")).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+
+                    //foreach (SubProgramModelViewModel batmod in all)
+                    //batmod.PropertyChanged += this.OnSubProgramModelViewModelPropertyChanged;
+
+                    SelectedProgram.SubPrograms = new ObservableCollection<SubProgramViewModel>(all);     //再转换成Observable
+                    OnPropertyChanged("SubPrograms");
+                    dbContext.SaveChanges();
+                }
             }
-            /*ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _subprogramRepository);      //实例化一个新的view model
-            viewmodel.Name = _selectedProgram.Name;
-            viewmodel.Requester = _selectedProgram.Requester;   //给viewmodel的属性赋值，实际上是对model进行赋值
-            viewmodel.RequestDate = _selectedProgram.RequestDate;
-            viewmodel.Description = _selectedProgram.Description;   //虽然string也是引用类型，但是string比较特殊，编译器有特殊处理
-            //viewmodel.SubPrograms = _selectedProgram.SubPrograms;   //这是引用类型，不应该这样赋值过去
-            viewmodel.DisplayName = "Program-Edit";
-            viewmodel.commandType = CommandType.Edit;
-            var ProgramViewInstance = new ProgramView();      //实例化一个新的view
-            ProgramViewInstance.DataContext = viewmodel;
-            ProgramViewInstance.ShowDialog();
-            if (viewmodel.IsOK == true)
-            {
-                _selectedProgram.Name = viewmodel.Name;
-                _selectedProgram.Requester = viewmodel.Requester;
-                _selectedProgram.RequestDate = viewmodel.RequestDate;
-                _selectedProgram.Description = viewmodel.Description;
-            }*/
         }
         private bool CanEdit
         {

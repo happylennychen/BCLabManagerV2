@@ -20,7 +20,7 @@ namespace BCLabManager.ViewModel
         public readonly ProgramClass _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
         readonly ProgramRepository _programRepository;
         readonly SubProgramRepository _subprogramRepository;
-        SubProgramViewModel _leftselectedSubProgram;
+        SubProgramTemplateViewModel _leftselectedSubProgram;
         SubProgramViewModel _rightselectedSubProgram;
         RelayCommand _okCommand;
         RelayCommand _addCommand;
@@ -167,7 +167,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ObservableCollection<SubProgramViewModel> SubPrograms { get; private set; }        //这个是当前program所拥有的subprograms
+        public ObservableCollection<SubProgramViewModel> SubPrograms { get; set; }        //这个是当前program所拥有的subprograms
         /*{
             get
             {
@@ -190,7 +190,7 @@ namespace BCLabManager.ViewModel
 
         public ObservableCollection<SubProgramTemplateViewModel> AllSubProgramTemplates { get; private set; }   //展示所有SubProgramTemplate以便选用,跟SubPrograms是不一样的
 
-        public SubProgramViewModel LeftSelectedSubProgram    
+        public SubProgramTemplateViewModel LeftSelectedSubProgramTemplate
         {
             get
             {
@@ -313,7 +313,7 @@ namespace BCLabManager.ViewModel
 
         public void Add()       //对于model来说，需要将选中的sub copy到_program.SubPrograms来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.SubPrograms里面去
         {
-            var newsubmodel = LeftSelectedSubProgram._subprogram.Clone();
+            var newsubmodel = new SubProgramClass(LeftSelectedSubProgramTemplate._subProgramTemplate);
             var newsubviewmodel = new SubProgramViewModel(newsubmodel, _subprogramRepository, this.Name);
             _program.SubPrograms.Add(newsubmodel);
             this.SubPrograms.Add(newsubviewmodel);
@@ -342,13 +342,15 @@ namespace BCLabManager.ViewModel
         {
             get
             {
+                var dbContext = new AppDbContext();
                 int number = (
-                    from bat in _programRepository.GetItems()
+                    from bat in dbContext.Programs
                     where bat.Name == _program.Name     //名字（某一个属性）一样就认为是一样的
                     select bat).Count();
                 if (number != 0)
-                    return false; 
-                return !_programRepository.ContainsItem(_program);
+                    return false;
+                else
+                    return true;
             }
         }
 
@@ -370,7 +372,7 @@ namespace BCLabManager.ViewModel
 
         bool CanAdd
         {
-            get { return LeftSelectedSubProgram!=null; }
+            get { return LeftSelectedSubProgramTemplate!=null; }
         }
 
         bool CanRemove

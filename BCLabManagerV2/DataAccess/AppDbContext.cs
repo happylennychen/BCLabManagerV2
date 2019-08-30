@@ -20,5 +20,12 @@ namespace BCLabManager.DataAccess
         {
             optionsBuilder.UseSqlite("Data Source=D://BCLabDB.db3");
         }
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<ProgramClass>()
+        //        .HasMany(p=>p.SubPrograms)
+        //        .WithOne()
+        //        .IsRequired();
+        //}
     }
 }

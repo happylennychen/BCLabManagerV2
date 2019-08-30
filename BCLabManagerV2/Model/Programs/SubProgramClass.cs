@@ -25,6 +25,24 @@ namespace BCLabManager.Model
             SecondTestRecords = new List<TestRecordClass>();
         }
 
+        public SubProgramClass(SubProgramTemplate template)
+        {
+            this.Name = template.Name;
+            this.TestCount = template.TestCount;
+            this.FirstTestRecords = new List<TestRecordClass>();
+            this.SecondTestRecords = new List<TestRecordClass>();
+
+            var tr = new TestRecordClass();
+            tr.StatusChanged += this.TestRecord_StatusChanged;
+            this.FirstTestRecords.Add(tr);
+            if (this.TestCount == TestCountEnum.Two)
+            {
+                var tr1 = new TestRecordClass();
+                tr1.StatusChanged += this.TestRecord_StatusChanged;
+                this.SecondTestRecords.Add(tr1);
+            }
+        }
+
         public SubProgramClass(String Name, TestCountEnum TestCount) : this()
         {
             this.Name = Name;
