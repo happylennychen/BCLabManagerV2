@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BCLabManager.DataAccess;
 
 namespace BCLabManager.Model
 {
@@ -83,19 +84,31 @@ namespace BCLabManager.Model
             TestRecordClass tr = sender as TestRecordClass; //被改变的Test Record
             if (e.Status == TestStatus.Invalid)
             {
+                var dbContext = new AppDbContext();
+                var sub = dbContext.SubPrograms.SingleOrDefault(i => i.Id == this.Id);
+                dbContext.Entry(sub)
+                    .Collection(i => i.FirstTestRecords)
+                    .Load();
+                dbContext.Entry(sub)
+                    .Collection(i => i.SecondTestRecords)
+                    .Load();
                 if (FirstTestRecords.Contains(tr))
                 {
                     var newTestRecord = new TestRecordClass();
                     FirstTestRecords.Add(newTestRecord);
                     OnRasieTestRecordAddedEvent(newTestRecord, true);
+                    sub.FirstTestRecords.Add(newTestRecord);
                 }
                 else if (SecondTestRecords.Contains(tr))
                 {
                     var newTestRecord = new TestRecordClass();
                     SecondTestRecords.Add(newTestRecord);
                     OnRasieTestRecordAddedEvent(newTestRecord, false);
+                    sub.SecondTestRecords.Add(newTestRecord);
                 }
+                dbContext.SaveChanges();
             }
+
         }
         #region event   //Used by viewmodel
         public event EventHandler<TestRecordAddedEventArgs> TestRecordAdded;

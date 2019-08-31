@@ -18,7 +18,7 @@ namespace BCLabManager.DataAccess
         public DbSet<ProgramClass> Programs { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=D://BCLabDB.db3");
+            optionsBuilder.UseSqlite("Data Source=F://BCLabDB.db3");
         }
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{

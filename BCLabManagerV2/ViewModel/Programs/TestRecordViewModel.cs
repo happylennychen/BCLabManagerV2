@@ -506,6 +506,15 @@ namespace BCLabManager.ViewModel
         {
             _record.Invalidate(this.Comment);
             OnPropertyChanged("Status");
+
+
+            var dbContext = new AppDbContext();
+
+            var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == this.Id);
+            tr.Status = TestStatus.Invalid;
+            tr.Comment += "\n" + Comment;
+
+            dbContext.SaveChanges();
         }
         #endregion
     }
