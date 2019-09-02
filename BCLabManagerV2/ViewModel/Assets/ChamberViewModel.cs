@@ -26,28 +26,40 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public ChamberViewModel(ChamberClass chambermodel, ChamberRepository chamberRepository)
+        public ChamberViewModel(ChamberClass chambermodel)
         {
             if (chambermodel == null)
                 throw new ArgumentNullException("chambermodel");
 
-            if (chamberRepository == null)
-                throw new ArgumentNullException("chamberRepository");
+            //if (chamberRepository == null)
+            //    throw new ArgumentNullException("chamberRepository");
 
             _chamber = chambermodel;
-            _chamberRepository = chamberRepository;
-            _chamber.PropertyChanged += _chamber_PropertyChanged;
+            //_chamber.PropertyChanged += _chamber_PropertyChanged;
         }
 
-        private void _chamber_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            OnPropertyChanged(e.PropertyName);
-        }
+        //private void _chamber_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        //{
+        //    OnPropertyChanged(e.PropertyName);
+        //}
 
         #endregion // Constructor
 
         #region ChamberClass Properties
 
+        public int Id
+        {
+            get { return _chamber.Id; }
+            set
+            {
+                if (value == _chamber.Id)
+                    return;
+
+                _chamber.Id = value;
+
+                base.OnPropertyChanged("Id");
+            }
+        }
         public string Name
         {
             get { return _chamber.Name; }
@@ -196,13 +208,23 @@ namespace BCLabManager.ViewModel
         {
             get
             {
+                //int number = (
+                //    from bat in _chamberRepository.GetItems()
+                //    where bat.Name == _chamber.Name     //名字（某一个属性）一样就认为是一样的
+                //    select bat).Count();
+                //if (number != 0)
+                //    return false; 
+                //return !_chamberRepository.ContainsItem(_chamber);
+
+                var dbContext = new AppDbContext();
                 int number = (
-                    from bat in _chamberRepository.GetItems()
-                    where bat.Name == _chamber.Name     //名字（某一个属性）一样就认为是一样的
-                    select bat).Count();
+                    from cmb in dbContext.Chambers
+                    where cmb.Name == _chamber.Name
+                    select cmb).Count();
                 if (number != 0)
-                    return false; 
-                return !_chamberRepository.ContainsItem(_chamber);
+                    return false;
+                else
+                    return true;
             }
         }
 

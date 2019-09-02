@@ -14,7 +14,7 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        readonly ChamberRepository _chamberRepository;
+        //readonly ChamberRepository _chamberRepository;
         ChamberViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
@@ -27,10 +27,10 @@ namespace BCLabManager.ViewModel
         public AllChambersViewModel()
         {
 
-            _chamberRepository = Repositories._chamberRepository;
+            //_chamberRepository = Repositories._chamberRepository;
 
             // Subscribe for notifications of when a new customer is saved.
-            _chamberRepository.ItemAdded += this.OnChamberAddedToRepository;
+            //_chamberRepository.ItemAdded += this.OnChamberAddedToRepository;
 
             // Populate the AllChamberTypes collection with _chambertypeRepository.
             this.CreateAllChambers();
@@ -38,15 +38,17 @@ namespace BCLabManager.ViewModel
 
         void CreateAllChambers()
         {
-            List<ChamberViewModel> all =
-                (from bat in _chamberRepository.GetItems()
-                 select new ChamberViewModel(bat,_chamberRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+            //List<ChamberViewModel> all =
+            //    (from bat in _chamberRepository.GetItems()
+            //     select new ChamberViewModel(bat,_chamberRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-            //foreach (ChamberModelViewModel batmod in all)
-            //batmod.PropertyChanged += this.OnChamberModelViewModelPropertyChanged;
+            //this.AllChambers = new ObservableCollection<ChamberViewModel>(all);     //再转换成Observable
+            var dbContext = new AppDbContext();
+            List<ChamberViewModel> all =
+                (from cmb in dbContext.Chambers
+                 select new ChamberViewModel(cmb)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.AllChambers = new ObservableCollection<ChamberViewModel>(all);     //再转换成Observable
-            //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
         }
 
         #endregion // Constructor
@@ -80,12 +82,22 @@ namespace BCLabManager.ViewModel
         {
             get
             {
+                //if (SelectedItem == null)
+                //    return null;
+                //List<AssetUsageRecordViewModel> all =
+                //  (from bat in _chamberRepository.GetItems()
+                //   where bat.Name == SelectedItem.Name
+                //   from record in bat.Records
+                //   select new AssetUsageRecordViewModel(record)).ToList();
+                //return all;
+
+                var dbContext = new AppDbContext();
                 if (SelectedItem == null)
                     return null;
                 List<AssetUsageRecordViewModel> all =
-                  (from bat in _chamberRepository.GetItems()
-                   where bat.Name == SelectedItem.Name
-                   from record in bat.Records
+                  (from cmb in dbContext.Chambers
+                   where cmb.Name == SelectedItem.Name
+                   from record in cmb.Records
                    select new AssetUsageRecordViewModel(record)).ToList();
                 return all;
             }
@@ -139,7 +151,7 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             ChamberClass bc = new ChamberClass();      //实例化一个新的model
-            ChamberViewModel bvm = new ChamberViewModel(bc, _chamberRepository);      //实例化一个新的view model
+            ChamberViewModel bvm = new ChamberViewModel(bc);      //实例化一个新的view model
             bvm.DisplayName = "Chamber-Create";
             bvm.commandType = CommandType.Create;
             var ChamberViewInstance = new ChamberView();      //实例化一个新的view
@@ -147,13 +159,16 @@ namespace BCLabManager.ViewModel
             ChamberViewInstance.ShowDialog();                   //设置viewmodel属性
             if (bvm.IsOK == true)
             {
-                _chamberRepository.AddItem(bc);
+                var dbContext = new AppDbContext();
+                dbContext.Chambers.Add(bc);
+                dbContext.SaveChanges();
+                this.AllChambers.Add(bvm);
             }
         }
         private void Edit()
         {
             ChamberClass bc = new ChamberClass();      //实例化一个新的model
-            ChamberViewModel bvm = new ChamberViewModel(bc, _chamberRepository);      //实例化一个新的view model
+            ChamberViewModel bvm = new ChamberViewModel(bc);      //实例化一个新的view model
             bvm.Name = _selectedItem.Name;
             bvm.Manufactor = _selectedItem.Manufactor;
             bvm.LowTemp = _selectedItem.LowTemp;
@@ -169,6 +184,18 @@ namespace BCLabManager.ViewModel
                 _selectedItem.Manufactor = bvm.Manufactor;
                 _selectedItem.LowTemp = bvm.LowTemp;
                 _selectedItem.HighTemp = bvm.HighTemp;
+
+                var dbContext = new AppDbContext();
+                var cmb = dbContext.Chambers.SingleOrDefault(b => b.Id == _selectedItem.Id);
+                _selectedItem.Name = bvm.Name;
+                _selectedItem.Manufactor = bvm.Manufactor;
+                _selectedItem.LowTemp = bvm.LowTemp;
+                _selectedItem.HighTemp = bvm.HighTemp;
+                cmb.Name = bvm.Name;
+                cmb.Manufactor = bvm.Manufactor;
+                cmb.LowestTemperature = bvm.LowTemp;
+                cmb.HighestTemperature = bvm.HighTemp;
+                dbContext.SaveChanges();
             }
         }
         private bool CanEdit
@@ -178,7 +205,7 @@ namespace BCLabManager.ViewModel
         private void SaveAs()
         {
             ChamberClass bc = new ChamberClass();      //实例化一个新的model
-            ChamberViewModel bvm = new ChamberViewModel(bc, _chamberRepository);      //实例化一个新的view model
+            ChamberViewModel bvm = new ChamberViewModel(bc);      //实例化一个新的view model
             bvm.Name = _selectedItem.Name;
             bvm.Manufactor = _selectedItem.Manufactor;
             bvm.LowTemp = _selectedItem.LowTemp;
@@ -190,7 +217,10 @@ namespace BCLabManager.ViewModel
             ChamberViewInstance.ShowDialog();
             if (bvm.IsOK == true)
             {
-                _chamberRepository.AddItem(bc);
+                var dbContext = new AppDbContext();
+                dbContext.Chambers.Add(bc);
+                dbContext.SaveChanges();
+                this.AllChambers.Add(bvm);
             }
         }
         private bool CanSaveAs
@@ -208,18 +238,18 @@ namespace BCLabManager.ViewModel
             this.AllChambers.Clear();
             //this.AllChamberModels.CollectionChanged -= this.OnCollectionChanged;
 
-            _chamberRepository.ItemAdded -= this.OnChamberAddedToRepository;
+            //_chamberRepository.ItemAdded -= this.OnChamberAddedToRepository;
         }
 
         #endregion // Base Class Overrides
 
         #region Event Handling Methods
 
-        void OnChamberAddedToRepository(object sender, ItemAddedEventArgs<ChamberClass> e)
-        {
-            var viewModel = new ChamberViewModel(e.NewItem, _chamberRepository);
-            this.AllChambers.Add(viewModel);
-        }
+        //void OnChamberAddedToRepository(object sender, ItemAddedEventArgs<ChamberClass> e)
+        //{
+        //    var viewModel = new ChamberViewModel(e.NewItem, _chamberRepository);
+        //    this.AllChambers.Add(viewModel);
+        //}
 
         #endregion // Event Handling Methods
     }

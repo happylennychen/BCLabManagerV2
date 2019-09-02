@@ -23,6 +23,8 @@ namespace BCLabManager.Migrations
 
                     b.Property<int?>("BatteryClassId");
 
+                    b.Property<int?>("ChamberClassId");
+
                     b.Property<string>("ProgramName");
 
                     b.Property<int>("Status");
@@ -34,6 +36,8 @@ namespace BCLabManager.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BatteryClassId");
+
+                    b.HasIndex("ChamberClassId");
 
                     b.ToTable("AssetUsageRecordClass");
                 });
@@ -82,6 +86,26 @@ namespace BCLabManager.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BatteryTypes");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.ChamberClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<double>("HighestTemperature");
+
+                    b.Property<double>("LowestTemperature");
+
+                    b.Property<string>("Manufactor");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("Status");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Chambers");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
@@ -199,6 +223,10 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.BatteryClass")
                         .WithMany("Records")
                         .HasForeignKey("BatteryClassId");
+
+                    b.HasOne("BCLabManager.Model.ChamberClass")
+                        .WithMany("Records")
+                        .HasForeignKey("ChamberClassId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.BatteryClass", b =>

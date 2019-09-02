@@ -12,13 +12,14 @@ namespace BCLabManager.DataAccess
     {
         public DbSet<BatteryTypeClass> BatteryTypes { get; set; }
         public DbSet<BatteryClass> Batteries { get; set; }
+        public DbSet<ChamberClass> Chambers { get; set; }
         public DbSet<TestRecordClass> TestRecords { get; set; }
         public DbSet<SubProgramTemplate> SubProgramTemplates { get; set; }
         public DbSet<SubProgramClass> SubPrograms { get; set; }
         public DbSet<ProgramClass> Programs { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=F://BCLabDB.db3");
+            optionsBuilder.UseSqlite("Data Source=E://BCLab.db3");
         }
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
