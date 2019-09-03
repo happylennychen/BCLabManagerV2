@@ -56,7 +56,7 @@ namespace BCLabManager.ViewModel
             {
                 List<SubProgramTemplateViewModel> all =
                     (from sub in dbContext.SubProgramTemplates
-                     select new SubProgramTemplateViewModel(sub, _subprogramRepository, "")).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+                     select new SubProgramTemplateViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
                 //foreach (SubProgramModelViewModel batmod in all)
                 //batmod.PropertyChanged += this.OnSubProgramModelViewModelPropertyChanged;

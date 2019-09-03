@@ -14,7 +14,6 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        readonly SubProgramRepository _subprogramRepository;
         SubProgramTemplateViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
@@ -24,29 +23,18 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllSubProgramTemplatesViewModel()
+        public AllSubProgramTemplatesViewModel(List<SubProgramTemplate> subProgramTemplates)
         {
-
-            _subprogramRepository = Repositories._subprogramRepository;
-
-            // Populate the AllSubProgramTypes collection with _subprogramtypeRepository.
-            this.CreateAllSubProgramTemplates();
+            this.CreateAllSubProgramTemplates(subProgramTemplates);
         }
 
-        void CreateAllSubProgramTemplates()
+        void CreateAllSubProgramTemplates(List<SubProgramTemplate> subProgramTemplates)
         {
-            using (var dbContext = new AppDbContext())
-            {
-                List<SubProgramTemplateViewModel> all =
-                    (from spt in dbContext.SubProgramTemplates
-                     select new SubProgramTemplateViewModel(spt, _subprogramRepository, "")).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+            List<SubProgramTemplateViewModel> all =
+                (from subt in subProgramTemplates
+                 select new SubProgramTemplateViewModel(subt)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-                //foreach (SubProgramModelViewModel batmod in all)
-                //batmod.PropertyChanged += this.OnSubProgramModelViewModelPropertyChanged;
-
-                this.AllSubProgramTemplates = new ObservableCollection<SubProgramTemplateViewModel>(all);     //再转换成Observable
-                                                                                              //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
-            }
+            this.AllSubProgramTemplates = new ObservableCollection<SubProgramTemplateViewModel>(all);     //再转换成Observable
         }
 
         #endregion // Constructor
@@ -70,7 +58,6 @@ namespace BCLabManager.ViewModel
                 {
                     _selectedItem = value;
                     //OnPropertyChanged("SelectedType");
-                    //OnPropertyChanged("Records"); //通知Records改变
                 }
             }
         }
@@ -123,7 +110,7 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             SubProgramTemplate model = new SubProgramTemplate();      //实例化一个新的model
-            SubProgramTemplateViewModel viewmodel = new SubProgramTemplateViewModel(model, _subprogramRepository, "");      //实例化一个新的view model
+            SubProgramTemplateEditViewModel viewmodel = new SubProgramTemplateEditViewModel(model);      //实例化一个新的view model
             viewmodel.DisplayName = "SubProgramTemplate-Create";
             viewmodel.commandType = CommandType.Create;
             var SubProgramViewInstance = new SubProgramTemplateView();      //实例化一个新的view
@@ -131,19 +118,18 @@ namespace BCLabManager.ViewModel
             SubProgramViewInstance.ShowDialog();                   //设置viewmodel属性
             if (viewmodel.IsOK == true)
             {
-                //_subprogramRepository.AddItem(model);
                 using (var dbContext = new AppDbContext())
                 {
                     dbContext.SubProgramTemplates.Add(model);
                     dbContext.SaveChanges();
-                    this.AllSubProgramTemplates.Add(viewmodel);
+                    this.AllSubProgramTemplates.Add(new SubProgramTemplateViewModel(model));
                 }
             }
         }
         private void Edit()
         {
             SubProgramTemplate model = new SubProgramTemplate();      //实例化一个新的model
-            SubProgramTemplateViewModel viewmodel = new SubProgramTemplateViewModel(model, _subprogramRepository, "");      //实例化一个新的view model
+            SubProgramTemplateEditViewModel viewmodel = new SubProgramTemplateEditViewModel(model);      //实例化一个新的view model
             viewmodel.Name = _selectedItem.Name;
             viewmodel.TestCount = _selectedItem.TestCount;
             viewmodel.DisplayName = "SubProgram-Edit";
@@ -171,7 +157,7 @@ namespace BCLabManager.ViewModel
         private void SaveAs()
         {
             SubProgramTemplate model = new SubProgramTemplate();      //实例化一个新的model
-            SubProgramTemplateViewModel viewmodel = new SubProgramTemplateViewModel(model, _subprogramRepository, "");      //实例化一个新的view model
+            SubProgramTemplateEditViewModel viewmodel = new SubProgramTemplateEditViewModel(model);      //实例化一个新的view model
             viewmodel.Name = _selectedItem.Name;
             viewmodel.TestCount = _selectedItem.TestCount;
             viewmodel.DisplayName = "SubProgram-Save As";
@@ -185,7 +171,7 @@ namespace BCLabManager.ViewModel
                 {
                     dbContext.SubProgramTemplates.Add(model);
                     dbContext.SaveChanges();
-                    this.AllSubProgramTemplates.Add(viewmodel);
+                    this.AllSubProgramTemplates.Add(new SubProgramTemplateViewModel(model));
                 }
             }
         }

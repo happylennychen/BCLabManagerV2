@@ -40,8 +40,6 @@ namespace BCLabManager
         public MainWindow()
         {
             InitializeComponent();
-            //Repositories.HistoricRegistration();
-            //Repositories.InitByDB();
             List<BatteryTypeClass> batteryTypes;
             using (var dbContext = new AppDbContext())
             {
@@ -70,8 +68,14 @@ namespace BCLabManager
             //allChambersViewModel = new AllChambersViewModel();    //ViewModel初始化
             //this.AllChambersViewInstance.DataContext = allChambersViewModel;                                                            //ViewModel跟View绑定
 
-            //allSubProgramTemplatesViewModel = new AllSubProgramTemplatesViewModel();    //ViewModel初始化
-            //this.AllSubProgramTemplatesViewInstance.DataContext = allSubProgramTemplatesViewModel;                                                            //ViewModel跟View绑定
+
+            List<SubProgramTemplate> subProgramTemplates;
+            using (var dbContext = new AppDbContext())
+            {
+                subProgramTemplates = new List<SubProgramTemplate>(dbContext.SubProgramTemplates.ToList());
+            }
+            allSubProgramTemplatesViewModel = new AllSubProgramTemplatesViewModel(subProgramTemplates);    //ViewModel初始化
+            this.AllSubProgramTemplatesViewInstance.DataContext = allSubProgramTemplatesViewModel;                                                            //ViewModel跟View绑定
 
             //allProgramsViewModel = new AllProgramsViewModel();    //ViewModel初始化
             //this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定
