@@ -25,8 +25,6 @@ namespace BCLabManager.ViewModel
         #region Fields
 
         readonly BatteryClass _battery;
-        //bool _isSelected;
-        string _batteryType;
         RelayCommand _okCommand;
         bool _isOK;
 

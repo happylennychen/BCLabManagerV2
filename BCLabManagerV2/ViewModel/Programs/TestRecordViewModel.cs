@@ -51,14 +51,12 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public TestRecordViewModel(TestRecordClass record, string programName, string subProgramName)     //
+        public TestRecordViewModel(TestRecordClass record)     //
         {
             if (record == null)
                 throw new ArgumentNullException("record");
 
             _record = record;
-            _programName = programName;
-            _subProgramName = subProgramName;
             _batteryRepository = Repositories._batteryRepository;
             _batterytypeRepository = Repositories._batterytypeRepository;
             _chamberRepository = Repositories._chamberRepository;

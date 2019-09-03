@@ -14,9 +14,7 @@ namespace BCLabManager.ViewModel
     public class AllProgramsViewModel : ViewModelBase
     {
         #region Fields
-
-        readonly ProgramRepository _programRepository;
-        readonly SubProgramRepository _subprogramRepository;
+        List<SubProgramTemplate> _subProgramTemplates;
         ProgramViewModel _selectedProgram;
         SubProgramViewModel _selectedSubProgram;
         TestRecordViewModel _selectedFirstTestRecord;
@@ -40,38 +38,19 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllProgramsViewModel()
+        public AllProgramsViewModel(List<ProgramClass> programClasses, List<SubProgramTemplate> subProgramTemplates)
         {
-
-            _programRepository = Repositories._programRepository;
-
-            _subprogramRepository = Repositories._subprogramRepository;
-
-            // Subscribe for notifications of when a new customer is saved.
-            _programRepository.ItemAdded += this.OnProgramAddedToRepository;
-
-            // Populate the AllProgramTypes collection with _programtypeRepository.
-            this.CreateAllPrograms();
+            _subProgramTemplates = subProgramTemplates;
+            this.CreateAllPrograms(programClasses);
         }
 
-        void CreateAllPrograms()
+        void CreateAllPrograms(List<ProgramClass> programClasses)
         {
-            using (var dbContext = new AppDbContext())
-            {
                 List<ProgramViewModel> all =
-                    (from program in dbContext.Programs
-                     .Include(pro=>pro.SubPrograms)
-                        .ThenInclude(sub=>sub.FirstTestRecords)
-                     .Include(pro => pro.SubPrograms)
-                        .ThenInclude(sub=> sub.SecondTestRecords)
-                     select new ProgramViewModel(program, _programRepository, _subprogramRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
-
-                //foreach (ProgramModelViewModel batmod in all)
-                //batmod.PropertyChanged += this.OnProgramModelViewModelPropertyChanged;
+                    (from program in programClasses
+                     select new ProgramViewModel(program)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
                 this.AllPrograms = new ObservableCollection<ProgramViewModel>(all);     //再转换成Observable
-                                                                                        //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
-            }
         }
 
         #endregion // Constructor
@@ -347,28 +326,28 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            ProgramClass model = new ProgramClass();      //实例化一个新的model
-            ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _subprogramRepository);      //实例化一个新的view model
-            viewmodel.DisplayName = "Program-Create";
-            viewmodel.commandType = CommandType.Create;
+            ProgramClass m = new ProgramClass();      //实例化一个新的model
+            ProgramEditViewModel evm = new ProgramEditViewModel(m, _subProgramTemplates);      //实例化一个新的view model
+            evm.DisplayName = "Program-Create";
+            evm.commandType = CommandType.Create;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
-            ProgramViewInstance.DataContext = viewmodel;
+            ProgramViewInstance.DataContext = evm;
             ProgramViewInstance.ShowDialog();                   //设置viewmodel属性
-            if (viewmodel.IsOK == true)
+            if (evm.IsOK == true)
             {
                 //_programRepository.AddItem(model);
                 using (var dbContext = new AppDbContext())
                 {
-                    dbContext.Programs.Add(model);
+                    dbContext.Programs.Add(m);
                     dbContext.SaveChanges();
-                    this.AllPrograms.Add(viewmodel);
+                    this.AllPrograms.Add(new ProgramViewModel(m));
                 }
             }
         }
         private void Edit()
         {
             ProgramClass model = _selectedProgram._program.Clone();
-            ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _subprogramRepository);      //实例化一个新的view model
+            ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _subProgramTemplates);      //实例化一个新的view model
             viewmodel.DisplayName = "Program-Edit";
             viewmodel.commandType = CommandType.Edit;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -436,7 +415,7 @@ namespace BCLabManager.ViewModel
 
                     List<SubProgramViewModel> all =
                         (from sub in program.SubPrograms
-                         select new SubProgramViewModel(sub, _subprogramRepository, "")).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+                         select new SubProgramViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
                     //foreach (SubProgramModelViewModel batmod in all)
                     //batmod.PropertyChanged += this.OnSubProgramModelViewModelPropertyChanged;
@@ -452,21 +431,21 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            ProgramClass model = _selectedProgram._program.Clone();
-            ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _subprogramRepository);      //实例化一个新的view model
-            viewmodel.DisplayName = "Program-Save As";
-            viewmodel.commandType = CommandType.SaveAs;
+            ProgramClass m = _selectedProgram._program.Clone();
+            ProgramEditViewModel evm = new ProgramEditViewModel(m, _subProgramTemplates);      //实例化一个新的view model
+            evm.DisplayName = "Program-Save As";
+            evm.commandType = CommandType.SaveAs;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
-            ProgramViewInstance.DataContext = viewmodel;
+            ProgramViewInstance.DataContext = evm;
             ProgramViewInstance.ShowDialog();
-            if (viewmodel.IsOK == true)
+            if (evm.IsOK == true)
             {
                 //_programRepository.AddItem(model);
                 using (var dbContext = new AppDbContext())
                 {
-                    dbContext.Programs.Add(model);
+                    dbContext.Programs.Add(m);
                     dbContext.SaveChanges();
-                    this.AllPrograms.Add(viewmodel);
+                    this.AllPrograms.Add(new ProgramViewModel(m));
                 }
             }
         }
@@ -489,7 +468,7 @@ namespace BCLabManager.ViewModel
             }*/
 
             TestRecordClass model = new TestRecordClass();
-            TestRecordViewModel viewmodel = new TestRecordViewModel(model,SelectedProgram.Name, SelectedSubProgram.Name);
+            TestRecordViewModel viewmodel = new TestRecordViewModel(model);
             viewmodel.DisplayName = "Test-Execute";
             var TestRecordViewInstance = new ExecuteView();
             TestRecordViewInstance.DataContext = viewmodel;
@@ -513,7 +492,7 @@ namespace BCLabManager.ViewModel
         private void Commit()
         {
             TestRecordClass model = new TestRecordClass();
-            TestRecordViewModel viewmodel = new TestRecordViewModel(model, SelectedProgram.Name, SelectedSubProgram.Name);
+            TestRecordViewModel viewmodel = new TestRecordViewModel(model);
             viewmodel.DisplayName = "Test-Commit";
             var TestRecordCommitViewInstance = new CommitView();
             TestRecordCommitViewInstance.DataContext = viewmodel;
@@ -533,7 +512,7 @@ namespace BCLabManager.ViewModel
         private void Invalidate()
         {
             TestRecordClass model = new TestRecordClass();
-            TestRecordViewModel viewmodel = new TestRecordViewModel(model, SelectedProgram.Name, SelectedSubProgram.Name);
+            TestRecordViewModel viewmodel = new TestRecordViewModel(model);
             viewmodel.DisplayName = "Test-Invalidate";
             var TestRecordInvalidateViewInstance = new InvalidateView();
             TestRecordInvalidateViewInstance.DataContext = viewmodel;
@@ -569,7 +548,7 @@ namespace BCLabManager.ViewModel
         private void Execute2()
         {
             TestRecordClass model = new TestRecordClass();
-            TestRecordViewModel viewmodel = new TestRecordViewModel(model, SelectedProgram.Name, SelectedSubProgram.Name);
+            TestRecordViewModel viewmodel = new TestRecordViewModel(model);
             viewmodel.DisplayName = "Test-Execute";
             var TestRecordViewInstance = new ExecuteView();
             TestRecordViewInstance.DataContext = viewmodel;
@@ -593,7 +572,7 @@ namespace BCLabManager.ViewModel
         private void Commit2()
         {
             TestRecordClass model = new TestRecordClass();
-            TestRecordViewModel viewmodel = new TestRecordViewModel(model, SelectedProgram.Name, SelectedSubProgram.Name);
+            TestRecordViewModel viewmodel = new TestRecordViewModel(model);
             viewmodel.DisplayName = "Test-Commit";
             var TestRecordCommitViewInstance = new CommitView();
             TestRecordCommitViewInstance.DataContext = viewmodel;
@@ -613,7 +592,7 @@ namespace BCLabManager.ViewModel
         private void Invalidate2()
         {
             TestRecordClass model = new TestRecordClass();
-            TestRecordViewModel viewmodel = new TestRecordViewModel(model, SelectedProgram.Name, SelectedSubProgram.Name);
+            TestRecordViewModel viewmodel = new TestRecordViewModel(model);
             viewmodel.DisplayName = "Test-Invalidate";
             var TestRecordInvalidateViewInstance = new InvalidateView();
             TestRecordInvalidateViewInstance.DataContext = viewmodel;
@@ -655,9 +634,6 @@ namespace BCLabManager.ViewModel
                 viewmodel.Dispose();
 
             this.AllPrograms.Clear();
-            //this.AllProgramModels.CollectionChanged -= this.OnCollectionChanged;
-
-            _programRepository.ItemAdded -= this.OnProgramAddedToRepository;
         }
 
         #endregion // Base Class Overrides
@@ -666,7 +642,7 @@ namespace BCLabManager.ViewModel
 
         void OnProgramAddedToRepository(object sender, ItemAddedEventArgs<ProgramClass> e)
         {
-            var viewModel = new ProgramViewModel(e.NewItem, _programRepository, _subprogramRepository);
+            var viewModel = new ProgramViewModel(e.NewItem);
             this.AllPrograms.Add(viewModel);
         }
 

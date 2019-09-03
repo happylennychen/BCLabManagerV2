@@ -77,8 +77,22 @@ namespace BCLabManager
             allSubProgramTemplatesViewModel = new AllSubProgramTemplatesViewModel(subProgramTemplates);    //ViewModel初始化
             this.AllSubProgramTemplatesViewInstance.DataContext = allSubProgramTemplatesViewModel;                                                            //ViewModel跟View绑定
 
-            //allProgramsViewModel = new AllProgramsViewModel();    //ViewModel初始化
-            //this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定
+
+            List<ProgramClass> programClasses;
+            using (var dbContext = new AppDbContext())
+            {
+                programClasses = new List<ProgramClass>(dbContext.Programs
+                     .Include(pro => pro.SubPrograms)
+                        .ThenInclude(sub => sub.FirstTestRecords)
+                            .ThenInclude(tr=>tr.RawData)
+                     .Include(pro => pro.SubPrograms)
+                        .ThenInclude(sub => sub.SecondTestRecords)
+                            .ThenInclude(tr => tr.RawData)
+                    .ToList());
+            }
+
+            allProgramsViewModel = new AllProgramsViewModel(programClasses, subProgramTemplates);    //ViewModel初始化
+            this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定
         }
     }
 }

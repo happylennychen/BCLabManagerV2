@@ -17,7 +17,6 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
         public readonly SubProgramTemplate _subProgramTemplate;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
-        readonly SubProgramRepository _subprogramRepository;
         RelayCommand _okCommand;
         bool _isOK;
 

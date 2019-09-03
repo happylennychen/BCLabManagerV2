@@ -116,7 +116,7 @@
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
       ItemsSource="{Binding Path=AllSubProgramTemplates}"
-                      SelectedItem="{Binding Path=LeftSelectedSubProgramTemplate, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedItem="{Binding Path=SelectedSubProgramTemplate, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 
                     <ListView.View>
@@ -133,7 +133,7 @@
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
       ItemsSource="{Binding Path=SubPrograms}"
-                      SelectedItem="{Binding Path=RightSelectedSubProgram, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedItem="{Binding Path=SelectedSubProgram, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 
                     <ListView.View>

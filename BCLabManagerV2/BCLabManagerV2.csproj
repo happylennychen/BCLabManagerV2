@@ -219,8 +219,8 @@
     <Compile Include="ViewModel\Assets\AllChambersViewModel.cs" />
     <Compile Include="ViewModel\Assets\ChamberViewModel.cs" />
     <Compile Include="ViewModel\Programs\AllSubProgramTemplatesViewModel.cs" />
-    <Compile Include="ViewModel\Programs\AllSubProgramsViewModel.cs" />
     <Compile Include="ViewModel\Programs\AllProgramsViewModel.cs" />
+    <Compile Include="ViewModel\Programs\ProgramEditViewModel.cs" />
     <Compile Include="ViewModel\Programs\SubProgramTemplateEditViewModel.cs" />
     <Compile Include="ViewModel\Programs\SubProgramTemplateViewModel.cs" />
     <Compile Include="ViewModel\Programs\TestRecordViewModel.cs" />
