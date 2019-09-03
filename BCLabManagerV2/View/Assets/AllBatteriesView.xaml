@@ -53,7 +53,7 @@
             />
                             <GridViewColumn 
             Header="Type" 
-            DisplayMemberBinding="{Binding Path=BatteryType}" 
+            DisplayMemberBinding="{Binding Path=BatteryType.Name}" 
             />
                             <GridViewColumn 
             Header="Cycle" 

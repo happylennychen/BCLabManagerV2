@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using BCLabManager.ViewModel;
 using BCLabManager.DataAccess;
 using BCLabManager.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace BCLabManager
 {
@@ -50,7 +51,14 @@ namespace BCLabManager
             allBatteryTypesViewModel = new AllBatteryTypesViewModel(batteryTypes);    //ViewModel初始化
             this.AllBatteryTypesViewInstance.DataContext = allBatteryTypesViewModel;                                                            //ViewModel跟View绑定
 
-            allBatteriesViewModel = new AllBatteriesViewModel();    //ViewModel初始化
+
+            List<BatteryClass> batteries;
+            using (var dbContext = new AppDbContext())
+            {
+                batteries = new List<BatteryClass>(dbContext.Batteries.Include(i=>i.BatteryType).ToList());
+            }
+
+            allBatteriesViewModel = new AllBatteriesViewModel(batteries, batteryTypes);    //ViewModel初始化
             this.AllBatteriesViewInstance.DataContext = allBatteriesViewModel;                                                            //ViewModel跟View绑定
 
             //allTestersViewModel = new AllTestersViewModel();    //ViewModel初始化

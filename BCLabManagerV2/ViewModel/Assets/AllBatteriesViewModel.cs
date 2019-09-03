@@ -14,8 +14,7 @@ namespace BCLabManager.ViewModel
     public class AllBatteriesViewModel : ViewModelBase
     {
         #region Fields
-
-        //readonly BatteryTypeRepository _batterytypeRepository;
+        List<BatteryTypeClass> _batteryTypes;
         BatteryViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
@@ -25,39 +24,18 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllBatteriesViewModel()
+        public AllBatteriesViewModel(List<BatteryClass> batteries, List<BatteryTypeClass> batteryTypes)
         {
-
-            // Subscribe for notifications of when a new customer is saved.
-            //_batteryRepository.ItemAdded += this.OnBatteryAddedToRepository;
-
-            // Populate the AllBatteryTypes collection with _batterytypeRepository.
-            this.CreateAllBatteries();
+            _batteryTypes = batteryTypes;
+            this.CreateAllBatteries(batteries);
         }
-
-        /*void CreateAllBatteries()
+        void CreateAllBatteries(List<BatteryClass> batteries)
         {
-            List<BatteryViewModel> all =
-                (from bat in _batteryRepository.GetItems()
-                 select new BatteryViewModel(bat,_batteryRepository, _batteryTypeRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
-
-            //foreach (BatteryModelViewModel batmod in all)
-            //batmod.PropertyChanged += this.OnBatteryModelViewModelPropertyChanged;
-
-            this.AllBatteries = new ObservableCollection<BatteryViewModel>(all);     //再转换成Observable
-            //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
-        }*/
-        void CreateAllBatteries()
-        {
-            var dbContext = new AppDbContext();
-
             List<BatteryClass> allbatteries =
-                (from bat in dbContext.Batteries.Include(i=>i.BatteryType)
-                 select bat).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+                (from bat in batteries
+                 select bat).ToList();
 
-            var all = allbatteries.Select(i=>new BatteryViewModel(i)).ToList();
-            //var all = dbContext.Batteries
-            //    .Include(i=>i.BatteryType)
+            var all = allbatteries.Select(i=>new BatteryViewModel(i)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.AllBatteries = new ObservableCollection<BatteryViewModel>(all);     //再转换成Observable
         }
@@ -83,27 +61,27 @@ namespace BCLabManager.ViewModel
                 {
                     _selectedItem = value;
                     //OnPropertyChanged("SelectedType");
-                    OnPropertyChanged("Records"); //通知Records改变
+                    //OnPropertyChanged("Records"); //通知Records改变
                 }
             }
         }
 
-        public List<AssetUsageRecordViewModel> Records //绑定选中battery的Records。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
-        //如果不是用查询，那么需要维护一个二维List。每一个Battery，对应一个List。用空间换时间。
-        {
-            get
-            {
-                var dbContext = new AppDbContext();
-                if (SelectedItem == null)
-                    return null;
-                List<AssetUsageRecordViewModel> all =
-                  (from bat in dbContext.Batteries
-                   where bat.Name == SelectedItem.Name
-                   from record in bat.Records
-                   select new AssetUsageRecordViewModel(record)).ToList();
-                return all;
-            }
-        }
+        //public List<AssetUsageRecordViewModel> Records //绑定选中battery的Records。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
+        ////如果不是用查询，那么需要维护一个二维List。每一个Battery，对应一个List。用空间换时间。
+        //{
+        //    get
+        //    {
+        //        var dbContext = new AppDbContext();
+        //        if (SelectedItem == null)
+        //            return null;
+        //        List<AssetUsageRecordViewModel> all =
+        //          (from bat in dbContext.Batteries
+        //           where bat.Name == SelectedItem.Name
+        //           from record in bat.Records
+        //           select new AssetUsageRecordViewModel(record)).ToList();
+        //        return all;
+        //    }
+        //}
 
         public ICommand CreateCommand
         {
@@ -153,59 +131,60 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             BatteryClass bc = new BatteryClass();      //实例化一个新的model
-            BatteryViewModel bvm = new BatteryViewModel(bc);      //实例化一个新的view model
-            bvm.DisplayName = "Battery-Create";
-            bvm.commandType = CommandType.Create;
+            BatteryEditViewModel bevm = new BatteryEditViewModel(bc, _batteryTypes);      //实例化一个新的view model
+            bevm.DisplayName = "Battery-Create";
+            bevm.commandType = CommandType.Create;
             var BatteryViewInstance = new BatteryView();      //实例化一个新的view
-            BatteryViewInstance.DataContext = bvm;
+            BatteryViewInstance.DataContext = bevm;
             BatteryViewInstance.ShowDialog();                   //设置viewmodel属性
-            if (bvm.IsOK == true)
+            if (bevm.IsOK == true)
             {
                 using (var dbContext = new AppDbContext())
                 {
-                    //dbContext.Batteries.Add(bc);
-                    BatteryClass newBc = new BatteryClass();
-                    newBc.Name = bvm.Name;
-                    newBc.CycleCount = bvm.CycleCount;
-                    newBc.Status = AssetStatusEnum.IDLE;
-                    newBc.BatteryType = dbContext.BatteryTypes.SingleOrDefault(bT=>bT.Name == bvm.BatteryType);
-                    dbContext.Batteries.Add(newBc);
-                    dbContext.SaveChanges();
-                    bvm = new BatteryViewModel(newBc);
+                    //dbContext.Batteries.Add(bc);    //不能直接这样写，不然会报错。这里不是添加一个全新的graph，而是添加一个新的bc，然后修改关系
+                    var newb = new BatteryClass()
+                    {
+                        Name = bc.Name,
+                        CycleCount = bc.CycleCount
+                    };
+                    newb.BatteryType = dbContext.BatteryTypes.SingleOrDefault(i => i.Id == bc.BatteryType.Id);
+                    dbContext.Batteries.Add(newb);
+                    dbContext.SaveChanges();    //side effect是会更新newb的id
+                    bc = newb;                  //所以把newb存到using语句外面的bc里
                 }
-                this.AllBatteries.Add(bvm);
-                //_batteryRepository.AddItem(bc);
+                this.AllBatteries.Add(new BatteryViewModel(bc));    //然后用bc生成vm，这样ID就会更新
             }
         }
         private void Edit()
         {
             BatteryClass bc = new BatteryClass();      //实例化一个新的model
-            BatteryViewModel bvm = new BatteryViewModel(bc);      //实例化一个新的view model
-            bvm.Id = _selectedItem.Id;
-            bvm.Name = _selectedItem.Name;
-            bvm.BatteryType = _selectedItem.BatteryType;
-            bvm.CycleCount = _selectedItem.CycleCount;
-            bvm.Status = _selectedItem.Status;
-            bvm.DisplayName = "Battery-Edit";
-            bvm.commandType = CommandType.Edit;
+            BatteryEditViewModel bevm = new BatteryEditViewModel(bc, _batteryTypes);      //实例化一个新的view model
+            bevm.Id = _selectedItem.Id;
+            bevm.Name = _selectedItem.Name;
+            //bevm.BatteryType = _selectedItem.BatteryType;     //不能用这种方式，猜是因为传来传去之后，_selectedItem.BatteryType已经不是bevm.AllBatteryTypes的一员了
+            bevm.BatteryType = bevm.AllBatteryTypes.SingleOrDefault(i=>i.Id == _selectedItem.BatteryType.Id);   //所以改用Id来找到List里的item
+            bevm.CycleCount = _selectedItem.CycleCount;
+            bevm.Status = _selectedItem.Status;
+            bevm.DisplayName = "Battery-Edit";
+            bevm.commandType = CommandType.Edit;
             var BatteryViewInstance = new BatteryView();      //实例化一个新的view
-            BatteryViewInstance.DataContext = bvm;
+            BatteryViewInstance.DataContext = bevm;
             BatteryViewInstance.ShowDialog();
-            if (bvm.IsOK == true)
+            if (bevm.IsOK == true)
             {
-                var dbContext = new AppDbContext();
-                var bat = dbContext.Batteries.SingleOrDefault(b => b.Id == _selectedItem.Id);
-                _selectedItem.Name = bvm.Name;
-                _selectedItem.BatteryType = bvm.BatteryType;
-                _selectedItem.CycleCount = bvm.CycleCount;
-                _selectedItem.Status = bvm.Status;
+                using (var dbContext = new AppDbContext())
+                {
+                    _selectedItem.Name = bevm.Name;
+                    _selectedItem.BatteryType = bevm.BatteryType;
+                    _selectedItem.CycleCount = bevm.CycleCount;
 
-                bat.Name = bc.Name;
-                bat.BatteryType = dbContext.BatteryTypes.SingleOrDefault(bt=>bt.Id == bc.BatteryType.Id);
-                bat.CycleCount = bc.CycleCount;
-                bat.Status = bc.Status;
+                    var bat = dbContext.Batteries.SingleOrDefault(b => b.Id == _selectedItem.Id);
+                    bat.Name = bc.Name;
+                    bat.BatteryType = dbContext.BatteryTypes.SingleOrDefault(bt => bt.Id == bc.BatteryType.Id);
+                    bat.CycleCount = bc.CycleCount;
 
-                dbContext.SaveChanges();
+                    dbContext.SaveChanges();
+                }
             }
         }
         private bool CanEdit
@@ -215,31 +194,32 @@ namespace BCLabManager.ViewModel
         private void SaveAs()
         {
             BatteryClass bc = new BatteryClass();      //实例化一个新的model
-            BatteryViewModel bvm = new BatteryViewModel(bc);      //实例化一个新的view model
-            bvm.Name = _selectedItem.Name;
-            bvm.BatteryType = _selectedItem.BatteryType;
-            bvm.CycleCount = _selectedItem.CycleCount;
-            bvm.Status = _selectedItem.Status;
-            bvm.DisplayName = "Battery-Edit";
-            bvm.commandType = CommandType.SaveAs;
+            BatteryEditViewModel bevm = new BatteryEditViewModel(bc, _batteryTypes);      //实例化一个新的view model
+            bevm.Name = _selectedItem.Name;
+            bevm.BatteryType = bevm.AllBatteryTypes.SingleOrDefault(i => i.Id == _selectedItem.BatteryType.Id);
+            bevm.CycleCount = _selectedItem.CycleCount;
+            bevm.Status = _selectedItem.Status;
+            bevm.DisplayName = "Battery-Edit";
+            bevm.commandType = CommandType.SaveAs;
             var BatteryViewInstance = new BatteryView();      //实例化一个新的view
-            BatteryViewInstance.DataContext = bvm;
+            BatteryViewInstance.DataContext = bevm;
             BatteryViewInstance.ShowDialog();
-            if (bvm.IsOK == true)
+            if (bevm.IsOK == true)
             {
                 using (var dbContext = new AppDbContext())
                 {
-                    //dbContext.Batteries.Add(bc);
-                    BatteryClass newBc = new BatteryClass();
-                    newBc.Name = bvm.Name;
-                    newBc.CycleCount = bvm.CycleCount;
-                    newBc.Status = AssetStatusEnum.IDLE;
-                    newBc.BatteryType = dbContext.BatteryTypes.SingleOrDefault(bT => bT.Name == bvm.BatteryType);
-                    dbContext.Batteries.Add(newBc);
-                    dbContext.SaveChanges();
+                    //dbContext.Batteries.Add(bc);    //不能直接这样写，不然会报错。这里不是添加一个全新的graph，而是添加一个新的bc，然后修改关系
+                    var newb = new BatteryClass()
+                    {
+                        Name = bc.Name,
+                        CycleCount = bc.CycleCount
+                    };
+                    newb.BatteryType = dbContext.BatteryTypes.SingleOrDefault(i => i.Id == bc.BatteryType.Id);
+                    dbContext.Batteries.Add(newb);
+                    dbContext.SaveChanges();    //side effect是会更新newb的id
+                    bc = newb;                  //所以把newb存到using语句外面的bc里
                 }
-                this.AllBatteries.Add(bvm);
-                //_batteryRepository.AddItem(bc);
+                this.AllBatteries.Add(new BatteryViewModel(bc));    //然后用bc生成vm，这样ID就会更新
             }
         }
         private bool CanSaveAs

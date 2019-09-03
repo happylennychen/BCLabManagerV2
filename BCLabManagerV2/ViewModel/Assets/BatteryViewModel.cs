@@ -11,12 +11,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BCLabManager.ViewModel
 {
-    public enum CommandType
-    {
-        Create,
-        Edit,
-        SaveAs
-    }
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
@@ -27,8 +21,6 @@ namespace BCLabManager.ViewModel
         readonly BatteryClass _battery;
         //bool _isSelected;
         string _batteryType;
-        RelayCommand _okCommand;
-        bool _isOK;
 
         #endregion // Fields
 
@@ -121,152 +113,49 @@ namespace BCLabManager.ViewModel
         #region Presentation Properties
 
 
-        public String BatteryType
+        //public String BatteryType
+        //{
+        //    get
+        //    {
+        //        if (_batteryType == null)
+        //        {
+        //            if (_battery.BatteryType == null)
+        //                _batteryType = string.Empty;
+        //            else
+        //                _batteryType = _battery.BatteryType.Name;
+        //        }
+        //        return _batteryType;
+        //    }
+        //    set
+        //    {
+        //        if (value == _batteryType || String.IsNullOrEmpty(value))
+        //            return;
+
+        //        _batteryType = value;
+
+        //        //_battery.BatteryType = _batterytypeRepository.GetItems().First(i => i.Name == _batteryType);
+        //        using (var dbContext = new AppDbContext())
+        //        {
+        //            _battery.BatteryType = dbContext.BatteryTypes.SingleOrDefault(bt => bt.Name == _batteryType);
+        //        }
+
+        //        base.OnPropertyChanged("BatteryType");
+        //    }
+        //}
+
+        public BatteryTypeClass BatteryType
         {
-            get
-            {
-                if (_batteryType == null)
-                {
-                    if (_battery.BatteryType == null)
-                        _batteryType = string.Empty;
-                    else
-                        _batteryType = _battery.BatteryType.Name;
-                }
-                return _batteryType;
-            }
+            get { return _battery.BatteryType; }
             set
             {
-                if (value == _batteryType || String.IsNullOrEmpty(value))
+                if (value == _battery.BatteryType)
                     return;
 
-                _batteryType = value;
-
-                //_battery.BatteryType = _batterytypeRepository.GetItems().First(i => i.Name == _batteryType);
-                using (var dbContext = new AppDbContext())
-                {
-                    _battery.BatteryType = dbContext.BatteryTypes.SingleOrDefault(bt => bt.Name == _batteryType);
-                }
+                _battery.BatteryType = value;
 
                 base.OnPropertyChanged("BatteryType");
             }
         }
-
-        public List<string> AllBatteryTypes
-        {
-            get
-            {
-                var dbContext = new AppDbContext();
-                //DbSet<BatteryTypeClass> all = dbContext.BatteryTypes;//_batterytypeRepository.GetItems();
-                List<string> allstring = (
-                    from i in dbContext.BatteryTypes
-                    select i.Name).ToList();
-
-                return (allstring);
-            }
-        }
-
-        /// <summary>
-        /// Returns a command that saves the customer.
-        /// </summary>
-        public ICommand OKCommand
-        {
-            get
-            {
-                if (_okCommand == null)
-                {
-                    switch (commandType)
-                    {
-                        case CommandType.Create:
-                            _okCommand = new RelayCommand(
-                                param => { this.OK(); },
-                                param => this.CanCreate
-                                );
-                            break;
-                        case CommandType.Edit:
-                            _okCommand = new RelayCommand(
-                                param => { this.OK(); }
-                                );
-                            break;
-                        case CommandType.SaveAs:
-                            _okCommand = new RelayCommand(
-                                param => { this.OK(); },
-                                param => this.CanSaveAs
-                                );
-                            break;
-                    }
-                }
-                return _okCommand;
-            }
-        }
-
-        public CommandType commandType
-        { get; set; }
-
-        public bool IsOK
-        {
-            get { return _isOK; }
-            set { _isOK = value; }
-        }
-
-        #endregion // Presentation Properties
-
-        #region Public Methods
-
-        /// <summary>
-        /// Saves the customer to the repository.  This method is invoked by the SaveCommand.
-        /// </summary>
-        public void OK()
-        {
-            //if (!_batterytype.IsValid)
-            //throw new InvalidOperationException(Resources.BatteryTypeViewModel_Exception_CannotSave);
-
-            //if (this.IsNewBatteryType)
-            //_batterytypeRepository.AddItem(_batterytype);
-
-            //base.OnPropertyChanged("DisplayName");
-            IsOK = true;
-        }
-
-        #endregion // Public Methods
-
-        #region Private Helpers
-
-        /// <summary>
-        /// Returns true if this customer was created by the user and it has not yet
-        /// been saved to the customer repository.
-        /// </summary>
-        bool IsNewBattery
-        {
-            get
-            {
-                var dbContext = new AppDbContext();
-                int number = (
-                    from bat in dbContext.Batteries
-                    where bat.Name == _battery.Name     //名字（某一个属性）一样就认为是一样的
-                    select bat).Count();
-                if (number != 0)
-                    return false;
-                else
-                    return true;
-            }
-        }
-
-        /// <summary>
-        /// Returns true if the customer is valid and can be saved.
-        /// </summary>
-        bool CanCreate
-        {
-            get { return IsNewBattery; }
-        }
-
-        /// <summary>
-        /// Returns true if the customer is valid and can be saved.
-        /// </summary>
-        bool CanSaveAs
-        {
-            get { return IsNewBattery; }
-        }
-
-        #endregion // Private Helpers
+        #endregion
     }
 }
