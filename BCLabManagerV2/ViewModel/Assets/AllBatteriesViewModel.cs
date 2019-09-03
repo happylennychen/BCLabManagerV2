@@ -51,9 +51,11 @@ namespace BCLabManager.ViewModel
         {
             var dbContext = new AppDbContext();
 
-            List<BatteryViewModel> all =
+            List<BatteryClass> allbatteries =
                 (from bat in dbContext.Batteries.Include(i=>i.BatteryType)
-                 select new BatteryViewModel(bat)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+                 select bat).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+
+            var all = allbatteries.Select(i=>new BatteryViewModel(i)).ToList();
             //var all = dbContext.Batteries
             //    .Include(i=>i.BatteryType)
 

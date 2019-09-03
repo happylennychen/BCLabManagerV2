@@ -41,14 +41,14 @@ namespace BCLabManager.ViewModel
 
             _battery = batterymodel;
 
-            //_battery.PropertyChanged += _battery_PropertyChanged;
+            _battery.PropertyChanged += _battery_PropertyChanged;
         }
 
-        //private void _battery_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        //{
-        //    //throw new NotImplementedException();
-        //    OnPropertyChanged(e.PropertyName);
-        //}
+        private void _battery_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            //throw new NotImplementedException();
+            OnPropertyChanged(e.PropertyName);
+        }
 
         /*void CreateAllBatteryTypes()
         {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using BCLabManager.Model;
 using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 
 namespace BCLabManager.DataAccess
 {
@@ -95,9 +96,6 @@ namespace BCLabManager.DataAccess
         {
             return new List<T>(_items);
         }
-
-        public abstract void SerializeToDatabase();
-        public abstract void DeserializeFromDatabase();
         #endregion // Public Interface
 
         #region Private Helpers
@@ -135,33 +133,77 @@ namespace BCLabManager.DataAccess
 
     public class BatteryTypeRepository : RepositoryBase<BatteryTypeClass>
     {
+        public BatteryTypeRepository() : base() { }
         public BatteryTypeRepository(List<BatteryTypeClass> items)
             : base(items)
         {
         }
-        public override void SerializeToDatabase()
+        public void LoadAllFromDB()
         {
-            throw new NotImplementedException();
+            using(var dbContext = new AppDbContext())
+            {
+                foreach (var bt in dbContext.BatteryTypes)
+                {
+                    AddItem(bt);
+                }
+            }
         }
-        public override void DeserializeFromDatabase()
+
+        public void SaveOneToDB(BatteryTypeClass batteryType)
         {
-            throw new NotImplementedException();
+            using (var dbContext = new AppDbContext())
+            {
+                var bt = dbContext.BatteryTypes.Find(batteryType.Id);
+                bt.Name = batteryType.Name;
+                bt.Manufactor = batteryType.Manufactor;
+                bt.Material = batteryType.Material;
+                dbContext.SaveChanges();
+            }
         }
     }
 
     public class BatteryRepository : RepositoryBase<BatteryClass>
     {
+        public BatteryRepository() : base()
+        { }
         public BatteryRepository(List<BatteryClass> items)
             : base(items)
         {
         }
-        public override void SerializeToDatabase()
+        public void LoadAllFromDB()
         {
-            throw new NotImplementedException();
+            using (var dbContext = new AppDbContext())
+            {
+                var batteries = dbContext.Batteries
+                    .Include(i => i.BatteryType)
+                    .Include(i => i.Records).ToList();
+
+                foreach (var b in batteries)
+                {
+                    AddItem(b);
+                }
+            }
         }
-        public override void DeserializeFromDatabase()
+
+        public void SaveOneToDB(BatteryClass battery)
         {
-            throw new NotImplementedException();
+            using (var dbContext = new AppDbContext())
+            {
+                var b = dbContext.Batteries.Find(battery.Id);
+                dbContext.Entry(b)
+                    .Reference(i => i.BatteryType)
+                    .Load();
+                dbContext.Entry(b)
+                    .Collection(i => i.Records)
+                    .Load();
+                b.Name = battery.Name;
+                var bt = dbContext.BatteryTypes.Find(battery.BatteryType.Id);
+                b.BatteryType = bt;
+                b.CycleCount = battery.CycleCount;
+                b.Status = battery.Status;
+                //b.Records??
+                dbContext.SaveChanges();
+            }
         }
     }
 
@@ -171,14 +213,6 @@ namespace BCLabManager.DataAccess
             : base(items)
         {
         }
-        public override void SerializeToDatabase()
-        {
-            throw new NotImplementedException();
-        }
-        public override void DeserializeFromDatabase()
-        {
-            throw new NotImplementedException();
-        }
     }
 
     public class ChannelRepository : RepositoryBase<ChannelClass>
@@ -186,14 +220,6 @@ namespace BCLabManager.DataAccess
         public ChannelRepository(List<ChannelClass> items)
             : base(items)
         {
-        }
-        public override void SerializeToDatabase()
-        {
-            throw new NotImplementedException();
-        }
-        public override void DeserializeFromDatabase()
-        {
-            throw new NotImplementedException();
         }
     }
 
@@ -203,14 +229,6 @@ namespace BCLabManager.DataAccess
             : base(items)
         {
         }
-        public override void SerializeToDatabase()
-        {
-            throw new NotImplementedException();
-        }
-        public override void DeserializeFromDatabase()
-        {
-            throw new NotImplementedException();
-        }
     }
 
     public class SubProgramRepository : RepositoryBase<SubProgramClass>
@@ -219,14 +237,6 @@ namespace BCLabManager.DataAccess
             : base(items)
         {
         }
-        public override void SerializeToDatabase()
-        {
-            throw new NotImplementedException();
-        }
-        public override void DeserializeFromDatabase()
-        {
-            throw new NotImplementedException();
-        }
     }
 
     public class ProgramRepository : RepositoryBase<ProgramClass>
@@ -234,14 +244,6 @@ namespace BCLabManager.DataAccess
         public ProgramRepository(List<ProgramClass> items)
             : base(items)
         {
-        }
-        public override void SerializeToDatabase()
-        {
-            throw new NotImplementedException();
-        }
-        public override void DeserializeFromDatabase()
-        {
-            throw new NotImplementedException();
         }
     }
 
@@ -326,6 +328,17 @@ namespace BCLabManager.DataAccess
             InitAssets();
             InitPrograms();
             //InitTestRecords();
+        }
+
+        public static void InitByDB()
+        {
+            //using (var dbContext = new AppDbContext())
+            {
+                _batteryRepository = new BatteryRepository();
+                _batterytypeRepository = new BatteryTypeRepository();
+                _batterytypeRepository.LoadAllFromDB();
+                _batteryRepository.LoadAllFromDB();
+            }
         }
 
         private static void InitAssets()

@@ -23,34 +23,15 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllBatteryTypesViewModel()
+        public AllBatteryTypesViewModel(List<BatteryTypeClass> batteryTypes)
         {
-
-            // Subscribe for notifications of when a new customer is saved.
-            //_batterytypeRepository.ItemAdded += this.OnBatteryModelAddedToRepository;
-
-            // Populate the AllBatteryTypes collection with _batterytypeRepository.
-            this.CreateAllBatteryTypes();
+            this.CreateAllBatteryTypes(batteryTypes);
         }
 
-        /*void CreateAllBatteryTypes()
+        void CreateAllBatteryTypes(List<BatteryTypeClass> batteryTypes)
         {
             List<BatteryTypeViewModel> all =
-                (from batT in _batterytypeRepository.GetItems()
-                 select new BatteryTypeViewModel(batT, _batterytypeRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
-
-            //foreach (BatteryModelViewModel batmod in all)
-            //batmod.PropertyChanged += this.OnBatteryModelViewModelPropertyChanged;
-
-            this.AllBatteryTypes = new ObservableCollection<BatteryTypeViewModel>(all);     //再转换成Observable
-            //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
-        }*/
-        void CreateAllBatteryTypes()
-        {
-            var dbContext = new AppDbContext();
-            //DbSet<BatteryTypeClass>
-            List<BatteryTypeViewModel> all =
-                (from batT in dbContext.BatteryTypes
+                (from batT in batteryTypes
                  select new BatteryTypeViewModel(batT)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.AllBatteryTypes = new ObservableCollection<BatteryTypeViewModel>(all);     //再转换成Observable
@@ -86,14 +67,15 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                var dbContext = new AppDbContext();
-                if (SelectedItem == null)
-                    return null;
-                List<BatteryViewModel> all =
-                  (from bat in dbContext.Batteries
-                   where bat.BatteryType.Name == SelectedItem.Name
-                   select new BatteryViewModel(bat)).ToList();
-                return all;
+                //var dbContext = new AppDbContext();
+                //if (SelectedItem == null)
+                //    return null;
+                //List<BatteryViewModel> all =
+                //  (from bat in dbContext.Batteries
+                //   where bat.BatteryType.Name == SelectedItem.Name
+                //   select new BatteryViewModel(bat)).ToList();
+                //return all;
+                return null;
             }
         }
 
