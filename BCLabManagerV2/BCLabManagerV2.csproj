@@ -210,6 +210,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ViewModel\Assets\AllTestersViewModel.cs" />
+    <Compile Include="ViewModel\Assets\BatteryTypeEditViewModel.cs" />
     <Compile Include="ViewModel\Assets\ChannelViewModel.cs" />
     <Compile Include="ViewModel\Assets\BatteryViewModel.cs" />
     <Compile Include="ViewModel\Assets\AllBatteryTypesViewModel.cs" />

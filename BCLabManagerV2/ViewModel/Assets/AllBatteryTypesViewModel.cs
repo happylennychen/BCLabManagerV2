@@ -127,38 +127,38 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             BatteryTypeClass btc = new BatteryTypeClass();      //实例化一个新的model
-            BatteryTypeViewModel btvm = new BatteryTypeViewModel(btc);      //实例化一个新的view model
-            btvm.DisplayName = "Battery Type-Create";
+            BatteryTypeEditViewModel btevm = new BatteryTypeEditViewModel(btc);      //实例化一个新的view model
+            btevm.DisplayName = "Battery Type-Create";
             var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
-            BatteryTypeViewInstance.DataContext = btvm;
+            BatteryTypeViewInstance.DataContext = btevm;
             BatteryTypeViewInstance.ShowDialog();                   //设置viewmodel属性
-            if (btvm.IsOK == true)
+            if (btevm.IsOK == true)
             {
                 //_batterytypeRepository.AddItem(btc);
                 var dbContext = new AppDbContext();
                 dbContext.BatteryTypes.Add(btc);
                 dbContext.SaveChanges();
-                this.AllBatteryTypes.Add(btvm);
+                this.AllBatteryTypes.Add(new BatteryTypeViewModel(btc));
             }
         }
         private void Edit()
         {
             BatteryTypeClass btc = new BatteryTypeClass();      //实例化一个新的model
-            BatteryTypeViewModel btvm = new BatteryTypeViewModel(btc);      //实例化一个新的view model
-            btvm.Manufactor = _selectedItem.Manufactor;
-            btvm.Material = _selectedItem.Material;
-            btvm.Name = _selectedItem.Name;
-            btvm.DisplayName = "Battery Type-Edit";
+            BatteryTypeEditViewModel btevm = new BatteryTypeEditViewModel(btc);      //实例化一个新的view model
+            btevm.Manufactor = _selectedItem.Manufactor;
+            btevm.Material = _selectedItem.Material;
+            btevm.Name = _selectedItem.Name;
+            btevm.DisplayName = "Battery Type-Edit";
             var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
-            BatteryTypeViewInstance.DataContext = btvm;
+            BatteryTypeViewInstance.DataContext = btevm;
             BatteryTypeViewInstance.ShowDialog();
-            if (btvm.IsOK == true)
+            if (btevm.IsOK == true)
             {
                 var dbContext = new AppDbContext();
                 var batT = dbContext.BatteryTypes.SingleOrDefault(b => b.Id == _selectedItem.Id);
-                _selectedItem.Manufactor = btvm.Manufactor;
-                _selectedItem.Material = btvm.Material;
-                _selectedItem.Name = btvm.Name;
+                _selectedItem.Manufactor = btevm.Manufactor;
+                _selectedItem.Material = btevm.Material;
+                _selectedItem.Name = btevm.Name;
                 batT.Manufactor = btc.Manufactor;
                 batT.Material = btc.Material;
                 batT.Name = btc.Name;
@@ -172,21 +172,21 @@ namespace BCLabManager.ViewModel
         private void SaveAs()
         {
             BatteryTypeClass btc = new BatteryTypeClass();      //实例化一个新的model
-            BatteryTypeViewModel btvm = new BatteryTypeViewModel(btc);      //实例化一个新的view model
-            btvm.Manufactor = _selectedItem.Manufactor;
-            btvm.Material = _selectedItem.Material;
-            btvm.Name = _selectedItem.Name;
-            btvm.DisplayName = "Battery Type-Save As";
+            BatteryTypeEditViewModel btevm = new BatteryTypeEditViewModel(btc);      //实例化一个新的view model
+            btevm.Manufactor = _selectedItem.Manufactor;
+            btevm.Material = _selectedItem.Material;
+            btevm.Name = _selectedItem.Name;
+            btevm.DisplayName = "Battery Type-Save As";
             var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
-            BatteryTypeViewInstance.DataContext = btvm;
+            BatteryTypeViewInstance.DataContext = btevm;
             BatteryTypeViewInstance.ShowDialog();
-            if (btvm.IsOK == true)
+            if (btevm.IsOK == true)
             {
                 //_batterytypeRepository.AddItem(btc);
                 var dbContext = new AppDbContext();
                 dbContext.BatteryTypes.Add(btc);
                 dbContext.SaveChanges();
-                this.AllBatteryTypes.Add(btvm);
+                this.AllBatteryTypes.Add(new BatteryTypeViewModel(btc));
             }
         }
         private bool CanSaveAs

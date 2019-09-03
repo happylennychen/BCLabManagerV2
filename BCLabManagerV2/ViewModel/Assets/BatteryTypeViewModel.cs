@@ -16,8 +16,6 @@ namespace BCLabManager.ViewModel
 
         readonly BatteryTypeClass _batterytype;
         //bool _isSelected;
-        RelayCommand _okCommand;
-        bool _isOK;
 
         #endregion // Fields
 
@@ -29,7 +27,6 @@ namespace BCLabManager.ViewModel
                 throw new ArgumentNullException("batterytype");
 
             _batterytype = batterytype;
-            _isOK = false;
         }
 
         #endregion // Constructor
@@ -92,74 +89,5 @@ namespace BCLabManager.ViewModel
         }
 
         #endregion // Customer Properties
-
-        #region Presentation Properties
-
-        /// <summary>
-        /// Returns a command that saves the customer.
-        /// </summary>
-        public ICommand OKCommand
-        {
-            get
-            {
-                if (_okCommand == null)
-                {
-                    _okCommand = new RelayCommand(
-                        param => { this.OK(); },
-                        param => this.CanOK
-                        );
-                }
-                return _okCommand;
-            }
-        }
-
-        public bool IsOK
-        {
-            get { return _isOK; }
-            set { _isOK = value; }
-        }
-
-        #endregion // Presentation Properties
-
-        #region Public Methods
-
-        public void OK()        //就是将属性IsOK设置成true，从而在外层进行下一步动作
-        {
-            IsOK = true;
-        }
-
-        #endregion // Public Methods
-
-        #region Private Helpers
-
-        /// <summary>
-        /// Returns true if this customer was created by the user and it has not yet
-        /// been saved to the customer repository.
-        /// </summary>
-        bool IsNewBatteryType
-        {
-            get
-            {
-                var dbContext = new AppDbContext();
-                int number = (
-                    from bat in dbContext.BatteryTypes
-                    where bat.Name == _batterytype.Name
-                    select bat).Count();
-                if (number != 0)
-                    return false;
-                else
-                    return true;
-            }
-        }
-
-        /// <summary>
-        /// Returns true if the customer is valid and can be saved.
-        /// </summary>
-        bool CanOK
-        {
-            get { return IsNewBatteryType; }
-        }
-
-        #endregion // Private Helpers
     }
 }
