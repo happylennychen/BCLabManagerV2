@@ -140,15 +140,16 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                var dbContext = new AppDbContext();
-                int number = (
-                    from bat in dbContext.BatteryTypes
-                    where bat.Name == _batterytype.Name
-                    select bat).Count();
-                if (number != 0)
-                    return false;
-                else
-                    return true;
+                //var dbContext = new AppDbContext();
+                //int number = (
+                //    from bat in dbContext.BatteryTypes
+                //    where bat.Name == _batterytype.Name
+                //    select bat).Count();
+                //if (number != 0)
+                //    return false;
+                //else
+                //    return true;
+                return true;
             }
         }
 

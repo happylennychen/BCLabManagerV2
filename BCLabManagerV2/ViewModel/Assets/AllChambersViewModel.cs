@@ -24,28 +24,15 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllChambersViewModel()
+        public AllChambersViewModel(List<ChamberClass> chambers)
         {
-
-            //_chamberRepository = Repositories._chamberRepository;
-
-            // Subscribe for notifications of when a new customer is saved.
-            //_chamberRepository.ItemAdded += this.OnChamberAddedToRepository;
-
-            // Populate the AllChamberTypes collection with _chambertypeRepository.
-            this.CreateAllChambers();
+            this.CreateAllChambers(chambers);
         }
 
-        void CreateAllChambers()
+        void CreateAllChambers(List<ChamberClass> chambers)
         {
-            //List<ChamberViewModel> all =
-            //    (from bat in _chamberRepository.GetItems()
-            //     select new ChamberViewModel(bat,_chamberRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
-
-            //this.AllChambers = new ObservableCollection<ChamberViewModel>(all);     //再转换成Observable
-            var dbContext = new AppDbContext();
             List<ChamberViewModel> all =
-                (from cmb in dbContext.Chambers
+                (from cmb in chambers
                  select new ChamberViewModel(cmb)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.AllChambers = new ObservableCollection<ChamberViewModel>(all);     //再转换成Observable
@@ -72,36 +59,36 @@ namespace BCLabManager.ViewModel
                 {
                     _selectedItem = value;
                     //OnPropertyChanged("SelectedType");
-                    OnPropertyChanged("Records"); //通知Records改变
+                    //OnPropertyChanged("Records"); //通知Records改变
                 }
             }
         }
 
-        public List<AssetUsageRecordViewModel> Records //绑定选中chamber的Records。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
-        //如果不是用查询，那么需要维护一个二维List。每一个Chamber，对应一个List。用空间换时间。
-        {
-            get
-            {
-                //if (SelectedItem == null)
-                //    return null;
-                //List<AssetUsageRecordViewModel> all =
-                //  (from bat in _chamberRepository.GetItems()
-                //   where bat.Name == SelectedItem.Name
-                //   from record in bat.Records
-                //   select new AssetUsageRecordViewModel(record)).ToList();
-                //return all;
+        //public List<AssetUsageRecordViewModel> Records //绑定选中chamber的Records。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
+        ////如果不是用查询，那么需要维护一个二维List。每一个Chamber，对应一个List。用空间换时间。
+        //{
+        //    get
+        //    {
+        //        //if (SelectedItem == null)
+        //        //    return null;
+        //        //List<AssetUsageRecordViewModel> all =
+        //        //  (from bat in _chamberRepository.GetItems()
+        //        //   where bat.Name == SelectedItem.Name
+        //        //   from record in bat.Records
+        //        //   select new AssetUsageRecordViewModel(record)).ToList();
+        //        //return all;
 
-                var dbContext = new AppDbContext();
-                if (SelectedItem == null)
-                    return null;
-                List<AssetUsageRecordViewModel> all =
-                  (from cmb in dbContext.Chambers
-                   where cmb.Name == SelectedItem.Name
-                   from record in cmb.Records
-                   select new AssetUsageRecordViewModel(record)).ToList();
-                return all;
-            }
-        }
+        //        var dbContext = new AppDbContext();
+        //        if (SelectedItem == null)
+        //            return null;
+        //        List<AssetUsageRecordViewModel> all =
+        //          (from cmb in dbContext.Chambers
+        //           where cmb.Name == SelectedItem.Name
+        //           from record in cmb.Records
+        //           select new AssetUsageRecordViewModel(record)).ToList();
+        //        return all;
+        //    }
+        //}
 
         public ICommand CreateCommand
         {
@@ -150,52 +137,52 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            ChamberClass bc = new ChamberClass();      //实例化一个新的model
-            ChamberViewModel bvm = new ChamberViewModel(bc);      //实例化一个新的view model
-            bvm.DisplayName = "Chamber-Create";
-            bvm.commandType = CommandType.Create;
+            ChamberClass m = new ChamberClass();      //实例化一个新的model
+            ChamberEditViewModel evm = new ChamberEditViewModel(m);      //实例化一个新的view model
+            evm.DisplayName = "Chamber-Create";
+            evm.commandType = CommandType.Create;
             var ChamberViewInstance = new ChamberView();      //实例化一个新的view
-            ChamberViewInstance.DataContext = bvm;
+            ChamberViewInstance.DataContext = evm;
             ChamberViewInstance.ShowDialog();                   //设置viewmodel属性
-            if (bvm.IsOK == true)
+            if (evm.IsOK == true)
             {
-                var dbContext = new AppDbContext();
-                dbContext.Chambers.Add(bc);
-                dbContext.SaveChanges();
-                this.AllChambers.Add(bvm);
+                using (var dbContext = new AppDbContext())
+                {
+                    dbContext.Chambers.Add(m);
+                    dbContext.SaveChanges();
+                    this.AllChambers.Add(new ChamberViewModel(m)); 
+                }
             }
         }
         private void Edit()
         {
-            ChamberClass bc = new ChamberClass();      //实例化一个新的model
-            ChamberViewModel bvm = new ChamberViewModel(bc);      //实例化一个新的view model
-            bvm.Name = _selectedItem.Name;
-            bvm.Manufactor = _selectedItem.Manufactor;
-            bvm.LowTemp = _selectedItem.LowTemp;
-            bvm.HighTemp = _selectedItem.HighTemp;
-            bvm.DisplayName = "Chamber-Edit";
-            bvm.commandType = CommandType.Edit;
+            ChamberClass m = new ChamberClass();      //实例化一个新的model
+            ChamberEditViewModel evm = new ChamberEditViewModel(m);      //实例化一个新的view model
+            evm.Name = _selectedItem.Name;
+            evm.Manufactor = _selectedItem.Manufactor;
+            evm.LowTemp = _selectedItem.LowTemp;
+            evm.HighTemp = _selectedItem.HighTemp;
+            evm.DisplayName = "Chamber-Edit";
+            evm.commandType = CommandType.Edit;
             var ChamberViewInstance = new ChamberView();      //实例化一个新的view
-            ChamberViewInstance.DataContext = bvm;
+            ChamberViewInstance.DataContext = evm;
             ChamberViewInstance.ShowDialog();
-            if (bvm.IsOK == true)
+            if (evm.IsOK == true)
             {
-                _selectedItem.Name = bvm.Name;
-                _selectedItem.Manufactor = bvm.Manufactor;
-                _selectedItem.LowTemp = bvm.LowTemp;
-                _selectedItem.HighTemp = bvm.HighTemp;
+                _selectedItem.Name = evm.Name;
+                _selectedItem.Manufactor = evm.Manufactor;
+                _selectedItem.LowTemp = evm.LowTemp;
+                _selectedItem.HighTemp = evm.HighTemp;
 
-                var dbContext = new AppDbContext();
-                var cmb = dbContext.Chambers.SingleOrDefault(b => b.Id == _selectedItem.Id);
-                _selectedItem.Name = bvm.Name;
-                _selectedItem.Manufactor = bvm.Manufactor;
-                _selectedItem.LowTemp = bvm.LowTemp;
-                _selectedItem.HighTemp = bvm.HighTemp;
-                cmb.Name = bvm.Name;
-                cmb.Manufactor = bvm.Manufactor;
-                cmb.LowestTemperature = bvm.LowTemp;
-                cmb.HighestTemperature = bvm.HighTemp;
-                dbContext.SaveChanges();
+                using (var dbContext = new AppDbContext())
+                {
+                    var cmb = dbContext.Chambers.SingleOrDefault(b => b.Id == _selectedItem.Id);
+                    cmb.Name = evm.Name;
+                    cmb.Manufactor = evm.Manufactor;
+                    cmb.LowestTemperature = evm.LowTemp;
+                    cmb.HighestTemperature = evm.HighTemp;
+                    dbContext.SaveChanges(); 
+                }
             }
         }
         private bool CanEdit
@@ -204,23 +191,25 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            ChamberClass bc = new ChamberClass();      //实例化一个新的model
-            ChamberViewModel bvm = new ChamberViewModel(bc);      //实例化一个新的view model
-            bvm.Name = _selectedItem.Name;
-            bvm.Manufactor = _selectedItem.Manufactor;
-            bvm.LowTemp = _selectedItem.LowTemp;
-            bvm.HighTemp = _selectedItem.HighTemp;
-            bvm.DisplayName = "Chamber-Save As";
-            bvm.commandType = CommandType.SaveAs;
+            ChamberClass m = new ChamberClass();      //实例化一个新的model
+            ChamberEditViewModel evm = new ChamberEditViewModel(m);      //实例化一个新的view model
+            evm.Name = _selectedItem.Name;
+            evm.Manufactor = _selectedItem.Manufactor;
+            evm.LowTemp = _selectedItem.LowTemp;
+            evm.HighTemp = _selectedItem.HighTemp;
+            evm.DisplayName = "Chamber-Save As";
+            evm.commandType = CommandType.SaveAs;
             var ChamberViewInstance = new ChamberView();      //实例化一个新的view
-            ChamberViewInstance.DataContext = bvm;
+            ChamberViewInstance.DataContext = evm;
             ChamberViewInstance.ShowDialog();
-            if (bvm.IsOK == true)
+            if (evm.IsOK == true)
             {
-                var dbContext = new AppDbContext();
-                dbContext.Chambers.Add(bc);
-                dbContext.SaveChanges();
-                this.AllChambers.Add(bvm);
+                using (var dbContext = new AppDbContext())
+                {
+                    dbContext.Chambers.Add(m);
+                    dbContext.SaveChanges();
+                    this.AllChambers.Add(new ChamberViewModel(m));
+                }
             }
         }
         private bool CanSaveAs
