@@ -20,7 +20,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class TestRecordEditViewModel : ViewModelBase//, IDataErrorInfo
+    public class TestRecordCommitViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
         //string _programName;
@@ -55,7 +55,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public TestRecordEditViewModel(
+        public TestRecordCommitViewModel(
             TestRecordClass record, 
             List<BatteryTypeClass> batteryTypes,
             List<BatteryClass> batteries,

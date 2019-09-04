@@ -45,7 +45,7 @@ namespace BCLabManager.ViewModel
 
         public AllProgramsViewModel
             (
-            List<ProgramClass> programClasses, 
+            List<ProgramClass> programClasses,
             List<SubProgramTemplate> subProgramTemplates,
             List<BatteryTypeClass> batteryTypes,
             List<BatteryClass> batteries,
@@ -66,11 +66,11 @@ namespace BCLabManager.ViewModel
 
         void CreateAllPrograms(List<ProgramClass> programClasses)
         {
-                List<ProgramViewModel> all =
-                    (from program in programClasses
-                     select new ProgramViewModel(program)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+            List<ProgramViewModel> all =
+                (from program in programClasses
+                 select new ProgramViewModel(program)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-                this.AllPrograms = new ObservableCollection<ProgramViewModel>(all);     //再转换成Observable
+            this.AllPrograms = new ObservableCollection<ProgramViewModel>(all);     //再转换成Observable
         }
 
         #endregion // Constructor
@@ -97,7 +97,7 @@ namespace BCLabManager.ViewModel
                 }
             }
         }
-        
+
         /// <summary>
         /// Returns a collection of all the ProgramModelViewModel objects.
         /// </summary>
@@ -181,7 +181,7 @@ namespace BCLabManager.ViewModel
                 }
             }
         }
-        
+
         public ICommand CreateCommand
         {
             get
@@ -189,7 +189,7 @@ namespace BCLabManager.ViewModel
                 if (_createCommand == null)
                 {
                     _createCommand = new RelayCommand(
-                        param => { this.Create();}
+                        param => { this.Create(); }
                         );
                 }
                 return _createCommand;
@@ -473,60 +473,9 @@ namespace BCLabManager.ViewModel
         {
             get { return _selectedProgram != null; }
         }
-        private void Execute()                                      //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
+        private void Execute()
         {
-            /*ProgramClass model = _selectedProgram._program.Clone();
-            ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _subprogramRepository);      //实例化一个新的view model
-            viewmodel.DisplayName = "Program-Save As";
-            viewmodel.commandType = CommandType.SaveAs;
-            var ProgramViewInstance = new ProgramView();      //实例化一个新的view
-            ProgramViewInstance.DataContext = viewmodel;
-            ProgramViewInstance.ShowDialog();
-            if (viewmodel.IsOK == true)
-            {
-                _programRepository.AddItem(model);
-            }*/
-
-            TestRecordClass m = new TestRecordClass();
-            TestRecordEditViewModel evm = new TestRecordEditViewModel
-                (
-                m,
-                _batteryTypes,
-                _batteries,
-                _testers,
-                _channels,
-                _chambers
-                );
-            evm.DisplayName = "Test-Execute";
-            var TestRecordViewInstance = new ExecuteView();
-            TestRecordViewInstance.DataContext = evm;
-            TestRecordViewInstance.ShowDialog();
-            if (evm.IsOK == true)
-            {
-                SelectedFirstTestRecord.BatteryTypeStr = evm.BatteryType.Name;
-                SelectedFirstTestRecord.BatteryStr = evm.Battery.Name;
-                SelectedFirstTestRecord.ChamberStr = evm.Chamber.Name;
-                SelectedFirstTestRecord.TesterStr = evm.Tester.Name;
-                SelectedFirstTestRecord.ChannelStr = evm.Channel.Name;
-                SelectedFirstTestRecord.StartTime = evm.StartTime;
-                SelectedFirstTestRecord.Steps = evm.Steps;
-                SelectedFirstTestRecord.Status = TestStatus.Executing;
-
-                using(var dbContext = new AppDbContext())
-                {
-                    var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == SelectedFirstTestRecord.Id);
-                    tr.BatteryTypeStr = SelectedFirstTestRecord.BatteryTypeStr;
-                    tr.BatteryStr = SelectedFirstTestRecord.BatteryStr;
-                    tr.ChamberStr = SelectedFirstTestRecord.ChamberStr;
-                    tr.TesterStr = SelectedFirstTestRecord.TesterStr;
-                    tr.ChannelStr = SelectedFirstTestRecord.ChannelStr;
-                    tr.StartTime = SelectedFirstTestRecord.StartTime;
-                    tr.Steps = SelectedFirstTestRecord.Steps;
-                    tr.Status = SelectedFirstTestRecord.Status;
-                    dbContext.SaveChanges();
-                }
-                evm.Execute();
-            }
+            Execute(SelectedFirstTestRecord);
         }
         private bool CanExecute
         {
@@ -534,19 +483,7 @@ namespace BCLabManager.ViewModel
         }
         private void Commit()
         {
-            //TestRecordClass model = new TestRecordClass();
-            //TestRecordEditViewModel viewmodel = new TestRecordEditViewModel(model);
-            //viewmodel.DisplayName = "Test-Commit";
-            //var TestRecordCommitViewInstance = new CommitView();
-            //TestRecordCommitViewInstance.DataContext = viewmodel;
-            //TestRecordCommitViewInstance.ShowDialog();
-            //if (viewmodel.IsOK == true)
-            //{
-            //    SelectedFirstTestRecord.EndTime = viewmodel.EndTime;
-            //    SelectedFirstTestRecord.NewCycle = viewmodel.NewCycle;
-            //    SelectedFirstTestRecord.Comment = viewmodel.Comment;
-            //    SelectedFirstTestRecord.Commit();
-            //}
+            Commit(SelectedFirstTestRecord);
         }
         private bool CanCommit
         {
@@ -554,17 +491,7 @@ namespace BCLabManager.ViewModel
         }
         private void Invalidate()
         {
-            //TestRecordClass model = new TestRecordClass();
-            //TestRecordEditViewModel viewmodel = new TestRecordEditViewModel(model);
-            //viewmodel.DisplayName = "Test-Invalidate";
-            //var TestRecordInvalidateViewInstance = new InvalidateView();
-            //TestRecordInvalidateViewInstance.DataContext = viewmodel;
-            //TestRecordInvalidateViewInstance.ShowDialog();
-            //if (viewmodel.IsOK == true)
-            //{
-            //    SelectedFirstTestRecord.Comment = viewmodel.Comment;
-            //    SelectedFirstTestRecord.Invalidate();
-            //}
+            Invalidate(SelectedFirstTestRecord);
         }
         private bool CanInvalidate
         {
@@ -590,23 +517,7 @@ namespace BCLabManager.ViewModel
         }
         private void Execute2()
         {
-            //TestRecordClass model = new TestRecordClass();
-            //TestRecordEditViewModel viewmodel = new TestRecordEditViewModel(model);
-            //viewmodel.DisplayName = "Test-Execute";
-            //var TestRecordViewInstance = new ExecuteView();
-            //TestRecordViewInstance.DataContext = viewmodel;
-            //TestRecordViewInstance.ShowDialog();
-            //if (viewmodel.IsOK == true)
-            //{
-            //    //SelectedSecondTestRecord.BatteryType = viewmodel.BatteryType;
-            //    //SelectedSecondTestRecord.Battery = viewmodel.Battery;
-            //    //SelectedSecondTestRecord.Chamber = viewmodel.Chamber;
-            //    //SelectedSecondTestRecord.Tester = viewmodel.Tester;
-            //    //SelectedSecondTestRecord.Channel = viewmodel.Channel;
-            //    //SelectedSecondTestRecord.StartTime = viewmodel.StartTime;
-            //    //SelectedSecondTestRecord.Steps = viewmodel.Steps;
-            //    //SelectedSecondTestRecord.Execute();
-            //}
+            Execute(SelectedSecondTestRecord);
         }
         private bool CanExecute2
         {
@@ -614,19 +525,7 @@ namespace BCLabManager.ViewModel
         }
         private void Commit2()
         {
-            //TestRecordClass model = new TestRecordClass();
-            //TestRecordEditViewModel viewmodel = new TestRecordEditViewModel(model);
-            //viewmodel.DisplayName = "Test-Commit";
-            //var TestRecordCommitViewInstance = new CommitView();
-            //TestRecordCommitViewInstance.DataContext = viewmodel;
-            //TestRecordCommitViewInstance.ShowDialog();
-            //if (viewmodel.IsOK == true)
-            //{
-            //    SelectedSecondTestRecord.EndTime = viewmodel.EndTime;
-            //    SelectedSecondTestRecord.NewCycle = viewmodel.NewCycle;
-            //    SelectedSecondTestRecord.Comment = viewmodel.Comment;
-            //    SelectedSecondTestRecord.Commit();
-            //}
+            Commit(SelectedSecondTestRecord);
         }
         private bool CanCommit2
         {
@@ -634,17 +533,7 @@ namespace BCLabManager.ViewModel
         }
         private void Invalidate2()
         {
-            //TestRecordClass model = new TestRecordClass();
-            //TestRecordEditViewModel viewmodel = new TestRecordEditViewModel(model);
-            //viewmodel.DisplayName = "Test-Invalidate";
-            //var TestRecordInvalidateViewInstance = new InvalidateView();
-            //TestRecordInvalidateViewInstance.DataContext = viewmodel;
-            //TestRecordInvalidateViewInstance.ShowDialog();
-            //if (viewmodel.IsOK == true)
-            //{
-            //    SelectedSecondTestRecord.Comment = viewmodel.Comment;
-            //    SelectedSecondTestRecord.Invalidate();
-            //}
+            Invalidate(SelectedSecondTestRecord);
         }
         private bool CanInvalidate2
         {
@@ -680,5 +569,164 @@ namespace BCLabManager.ViewModel
         }
 
         #endregion // Base Class Overrides
+
+
+        private void Execute(TestRecordViewModel testRecord)                                      
+            //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
+        {
+            /*ProgramClass model = _selectedProgram._program.Clone();
+            ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _subprogramRepository);      //实例化一个新的view model
+            viewmodel.DisplayName = "Program-Save As";
+            viewmodel.commandType = CommandType.SaveAs;
+            var ProgramViewInstance = new ProgramView();      //实例化一个新的view
+            ProgramViewInstance.DataContext = viewmodel;
+            ProgramViewInstance.ShowDialog();
+            if (viewmodel.IsOK == true)
+            {
+                _programRepository.AddItem(model);
+            }*/
+
+            TestRecordClass m = new TestRecordClass();
+            TestRecordExecuteViewModel evm = new TestRecordExecuteViewModel
+                (
+                m,
+                _batteryTypes,
+                _batteries,
+                _testers,
+                _channels,
+                _chambers
+                );
+            evm.DisplayName = "Test-Execute";
+            var TestRecordViewInstance = new ExecuteView();
+            TestRecordViewInstance.DataContext = evm;
+            TestRecordViewInstance.ShowDialog();
+            if (evm.IsOK == true)
+            {
+                testRecord.BatteryTypeStr = evm.BatteryType.Name;
+                testRecord.BatteryStr = evm.Battery.Name;
+                testRecord.ChamberStr = evm.Chamber.Name;
+                testRecord.TesterStr = evm.Tester.Name;
+                testRecord.ChannelStr = evm.Channel.Name;
+                testRecord.StartTime = evm.StartTime;
+                testRecord.Steps = evm.Steps;
+                testRecord.Status = TestStatus.Executing;
+
+                using (var dbContext = new AppDbContext())
+                {
+                    var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == testRecord.Id);
+                    tr.BatteryTypeStr = testRecord.BatteryTypeStr;
+                    tr.BatteryStr = testRecord.BatteryStr;
+                    tr.ChamberStr = testRecord.ChamberStr;
+                    tr.TesterStr = testRecord.TesterStr;
+                    tr.ChannelStr = testRecord.ChannelStr;
+                    tr.StartTime = testRecord.StartTime;
+                    tr.Steps = testRecord.Steps;
+                    tr.Status = testRecord.Status;
+                    dbContext.SaveChanges();
+                }
+                evm.Execute();
+            }
+        }
+        private void Commit(TestRecordViewModel testRecord)
+        {
+            //viewmodel.DisplayName = "Test-Commit";
+            //var TestRecordCommitViewInstance = new CommitView();
+            //TestRecordCommitViewInstance.DataContext = viewmodel;
+            //TestRecordCommitViewInstance.ShowDialog();
+            //if (viewmodel.IsOK == true)
+            //{
+            //    SelectedFirstTestRecord.EndTime = viewmodel.EndTime;
+            //    SelectedFirstTestRecord.NewCycle = viewmodel.NewCycle;
+            //    SelectedFirstTestRecord.Comment = viewmodel.Comment;
+            //    SelectedFirstTestRecord.Commit();
+            //}
+
+            TestRecordClass m = new TestRecordClass();
+            TestRecordExecuteViewModel evm = new TestRecordExecuteViewModel
+                (
+                m,
+                _batteryTypes,
+                _batteries,
+                _testers,
+                _channels,
+                _chambers
+                );
+            evm.DisplayName = "Test-Commit";
+            var TestRecordCommitViewInstance = new CommitView();
+            TestRecordCommitViewInstance.DataContext = evm;
+            TestRecordCommitViewInstance.ShowDialog();
+            if (evm.IsOK == true)
+            {
+                testRecord.EndTime = evm.EndTime;
+                testRecord.NewCycle = evm.NewCycle;
+                testRecord.Comment = evm.Comment;
+                testRecord.Status = TestStatus.Completed;
+                using (var dbContext = new AppDbContext())
+                {
+                    var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == testRecord.Id);
+                    tr.EndTime = testRecord.EndTime;
+                    tr.NewCycle = testRecord.NewCycle;
+                    tr.Comment = testRecord.Comment;
+                    tr.Status = testRecord.Status;
+                    dbContext.SaveChanges();
+                }
+                evm.Commit();
+            }
+        }
+        private void Invalidate(TestRecordViewModel testRecord)
+        {
+            /*ProgramClass model = _selectedProgram._program.Clone();
+            ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _subprogramRepository);      //实例化一个新的view model
+            viewmodel.DisplayName = "Program-Save As";
+            viewmodel.commandType = CommandType.SaveAs;
+            var ProgramViewInstance = new ProgramView();      //实例化一个新的view
+            ProgramViewInstance.DataContext = viewmodel;
+            ProgramViewInstance.ShowDialog();
+            if (viewmodel.IsOK == true)
+            {
+                _programRepository.AddItem(model);
+            }*/
+
+            TestRecordClass m = new TestRecordClass();
+            TestRecordExecuteViewModel evm = new TestRecordExecuteViewModel
+                (
+                m,
+                _batteryTypes,
+                _batteries,
+                _testers,
+                _channels,
+                _chambers
+                );
+            evm.DisplayName = "Test-Execute";
+            var TestRecordViewInstance = new ExecuteView();
+            TestRecordViewInstance.DataContext = evm;
+            TestRecordViewInstance.ShowDialog();
+            if (evm.IsOK == true)
+            {
+                testRecord.BatteryTypeStr = evm.BatteryType.Name;
+                testRecord.BatteryStr = evm.Battery.Name;
+                testRecord.ChamberStr = evm.Chamber.Name;
+                testRecord.TesterStr = evm.Tester.Name;
+                testRecord.ChannelStr = evm.Channel.Name;
+                testRecord.StartTime = evm.StartTime;
+                testRecord.Steps = evm.Steps;
+                testRecord.Status = TestStatus.Executing;
+
+                using (var dbContext = new AppDbContext())
+                {
+                    var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == testRecord.Id);
+                    tr.BatteryTypeStr = testRecord.BatteryTypeStr;
+                    tr.BatteryStr = testRecord.BatteryStr;
+                    tr.ChamberStr = testRecord.ChamberStr;
+                    tr.TesterStr = testRecord.TesterStr;
+                    tr.ChannelStr = testRecord.ChannelStr;
+                    tr.StartTime = testRecord.StartTime;
+                    tr.Steps = testRecord.Steps;
+                    tr.Status = testRecord.Status;
+                    dbContext.SaveChanges();
+                }
+                evm.Execute();
+            }
+        }
     }
 }

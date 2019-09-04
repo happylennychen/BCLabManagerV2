@@ -157,11 +157,35 @@ namespace BCLabManager.Model
             channel.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
             channel.Status = AssetStatusEnum.IDLE;
 
-            this.Status = TestStatus.Completed;
-            this.EndTime = endTime;
-            this.RawData = rawData;
-            this.NewCycle = newCycle;
-            this.Comment = comment;
+            using (var dbContext = new AppDbContext())
+            {
+                var db_battery = dbContext.Batteries.SingleOrDefault(o => o.Id == battery.Id);
+                dbContext.Entry(db_battery)
+                    .Collection(o => o.Records)
+                    .Load();
+
+                db_battery.Status = AssetStatusEnum.IDLE;
+                db_battery.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+
+                if (chamber != null)
+                {
+                    var db_chamber = dbContext.Chambers.SingleOrDefault(o => o.Id == chamber.Id);
+                    dbContext.Entry(db_chamber)
+                        .Collection(o => o.Records)
+                        .Load();
+                    db_chamber.Status = AssetStatusEnum.IDLE;
+                    db_chamber.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+                }
+                var db_channel = dbContext.Channels.SingleOrDefault(o => o.Id == channel.Id);
+                dbContext.Entry(db_channel)
+                    .Collection(o => o.Records)
+                    .Load();
+
+                db_channel.Status = AssetStatusEnum.IDLE;
+                db_channel.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+
+                dbContext.SaveChanges();
+            }
         }
 
         public void Abandon(String comment = "")
