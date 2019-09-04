@@ -430,16 +430,6 @@ namespace BCLabManager.ViewModel
             _record.Execute(this.Battery, this.Chamber, this.Channel, this.Steps, this.StartTime, "", "");
             OnPropertyChanged("Status");
         }
-        public void Commit()
-        {
-            _record.Commit(this.Battery, this.Chamber, this.Channel, this.EndTime, null, this.NewCycle, this.Comment);
-            OnPropertyChanged("Status");
-        }
-        public void Invalidate()
-        {
-            _record.Invalidate(this.Comment);
-            OnPropertyChanged("Status");
-        }
         #endregion
     }
 }

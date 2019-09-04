@@ -586,10 +586,9 @@ namespace BCLabManager.ViewModel
                 _programRepository.AddItem(model);
             }*/
 
-            TestRecordClass m = new TestRecordClass();
             TestRecordExecuteViewModel evm = new TestRecordExecuteViewModel
                 (
-                m,
+                testRecord.Record,      //将model传给ExecuteViewModel
                 _batteryTypes,
                 _batteries,
                 _testers,
@@ -624,7 +623,7 @@ namespace BCLabManager.ViewModel
                     tr.Status = testRecord.Status;
                     dbContext.SaveChanges();
                 }
-                evm.Execute();
+                evm.Execute();      //evm的Record就是testRecord的Record. Record中的Assets会被赋值
             }
         }
         private void Commit(TestRecordViewModel testRecord)
@@ -641,15 +640,10 @@ namespace BCLabManager.ViewModel
             //    SelectedFirstTestRecord.Commit();
             //}
 
-            TestRecordClass m = new TestRecordClass();
-            TestRecordExecuteViewModel evm = new TestRecordExecuteViewModel
+            //TestRecordClass m = new TestRecordClass();
+            TestRecordCommitViewModel evm = new TestRecordCommitViewModel
                 (
-                m,
-                _batteryTypes,
-                _batteries,
-                _testers,
-                _channels,
-                _chambers
+                testRecord.Record
                 );
             evm.DisplayName = "Test-Commit";
             var TestRecordCommitViewInstance = new CommitView();

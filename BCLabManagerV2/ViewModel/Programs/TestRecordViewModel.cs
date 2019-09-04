@@ -17,7 +17,14 @@ namespace BCLabManager.ViewModel
     public class TestRecordViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-        readonly TestRecordClass _record;
+        private TestRecordClass _record;
+
+        public TestRecordClass Record
+        {
+            get { return _record; }
+            set { _record = value; }
+        }
+
 
         #endregion // Fields
 

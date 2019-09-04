@@ -60,6 +60,12 @@ namespace BCLabManager.Model
         public RawDataClass RawData { get; set; }
         public Double NewCycle { get; set; }
 
+        #region Store the assets in use
+        private BatteryClass _battery;
+        private ChamberClass _chamber;
+        private ChannelClass _channel;
+        #endregion
+
         public event EventHandler<StatusChangedEventArgs> StatusChanged;
 
         protected virtual void OnRasieStatusChangedEvent(StatusChangedEventArgs e)
@@ -92,6 +98,11 @@ namespace BCLabManager.Model
 
         public void Execute(BatteryClass battery, ChamberClass chamber, ChannelClass channel, String steps, DateTime startTime, string programName, string subProgramName)
         {
+            //分配Assets
+            _battery = battery;
+            _chamber = chamber;
+            _channel = channel;
+
             battery.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
             battery.Status = AssetStatusEnum.USING;
             if (chamber != null)
@@ -131,7 +142,6 @@ namespace BCLabManager.Model
 
                 dbContext.SaveChanges();
             }
-
             //this.Status = TestStatus.Executing;
             //this.BatteryTypeStr = battery.BatteryType.Name;
             //this.BatteryStr = battery.Name;
@@ -145,21 +155,21 @@ namespace BCLabManager.Model
             //this.SubProgramStr = subProgramName;
         }
 
-        public void Commit(BatteryClass battery, ChamberClass chamber, ChannelClass channel, DateTime endTime, RawDataClass rawData, Double newCycle, String comment = "")  //Need to check the Executor Status to make sure it is executing
+        public void Commit(DateTime endTime, RawDataClass rawData, Double newCycle, String comment = "")  //Need to check the Executor Status to make sure it is executing
         {
-            battery.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
-            battery.Status = AssetStatusEnum.IDLE;
-            if (chamber != null)
+            _battery.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+            _battery.Status = AssetStatusEnum.IDLE;
+            if (_chamber != null)
             {
-                chamber.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
-                chamber.Status = AssetStatusEnum.IDLE;
+                _chamber.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+                _chamber.Status = AssetStatusEnum.IDLE;
             }
-            channel.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
-            channel.Status = AssetStatusEnum.IDLE;
+            _channel.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+            _channel.Status = AssetStatusEnum.IDLE;
 
             using (var dbContext = new AppDbContext())
             {
-                var db_battery = dbContext.Batteries.SingleOrDefault(o => o.Id == battery.Id);
+                var db_battery = dbContext.Batteries.SingleOrDefault(o => o.Id == _battery.Id);
                 dbContext.Entry(db_battery)
                     .Collection(o => o.Records)
                     .Load();
@@ -167,16 +177,16 @@ namespace BCLabManager.Model
                 db_battery.Status = AssetStatusEnum.IDLE;
                 db_battery.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
 
-                if (chamber != null)
+                if (_chamber != null)
                 {
-                    var db_chamber = dbContext.Chambers.SingleOrDefault(o => o.Id == chamber.Id);
+                    var db_chamber = dbContext.Chambers.SingleOrDefault(o => o.Id == _chamber.Id);
                     dbContext.Entry(db_chamber)
                         .Collection(o => o.Records)
                         .Load();
                     db_chamber.Status = AssetStatusEnum.IDLE;
                     db_chamber.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
                 }
-                var db_channel = dbContext.Channels.SingleOrDefault(o => o.Id == channel.Id);
+                var db_channel = dbContext.Channels.SingleOrDefault(o => o.Id == _channel.Id);
                 dbContext.Entry(db_channel)
                     .Collection(o => o.Records)
                     .Load();
@@ -186,6 +196,10 @@ namespace BCLabManager.Model
 
                 dbContext.SaveChanges();
             }
+            //释放Assets
+            _battery = null;
+            _chamber = null;
+            _channel = null;
         }
 
         public void Abandon(String comment = "")

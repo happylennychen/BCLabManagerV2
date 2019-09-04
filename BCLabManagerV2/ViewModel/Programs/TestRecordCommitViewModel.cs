@@ -10,13 +10,6 @@ using System.Windows.Input;
 
 namespace BCLabManager.ViewModel
 {
-    public enum OperationType
-    {
-        Execute,
-        Commit,
-        Invalidate,
-        Abandon
-    }
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
@@ -26,16 +19,11 @@ namespace BCLabManager.ViewModel
         //string _programName;
         //string _subProgramName;
         readonly TestRecordClass _record;
-        //readonly BatteryTypeRepository _batterytypeRepository;
-        //readonly BatteryRepository _batteryRepository;
-        //readonly ChamberRepository _chamberRepository;
-        //readonly TesterRepository _testerRepository;
-        //readonly ChannelRepository _channelRepository;
-        List<BatteryTypeClass> _batteryTypes;
-        List<BatteryClass> _batteries;
-        List<TesterClass> _testers;
-        List<ChannelClass> _channels;
-        List<ChamberClass> _chambers;
+        //List<BatteryTypeClass> _batteryTypes;
+        //List<BatteryClass> _batteries;
+        //List<TesterClass> _testers;
+        //List<ChannelClass> _channels;
+        //List<ChamberClass> _chambers;
 
         //ObservableCollection<BatteryTypeClass> _allBatteryTypes;
         BatteryTypeClass _batteryType;
@@ -56,28 +44,18 @@ namespace BCLabManager.ViewModel
         #region Constructor
 
         public TestRecordCommitViewModel(
-            TestRecordClass record, 
-            List<BatteryTypeClass> batteryTypes,
-            List<BatteryClass> batteries,
-            List<TesterClass> testers,
-            List<ChannelClass> channels,
-            List<ChamberClass> chambers
+            TestRecordClass record
             )     //
         {
             if (record == null)
                 throw new ArgumentNullException("record");
 
             _record = record;
-            //_batteryRepository = Repositories._batteryRepository;
-            //_batterytypeRepository = Repositories._batterytypeRepository;
-            //_chamberRepository = Repositories._chamberRepository;
-            //_testerRepository = Repositories._testerRepository;
-            //_channelRepository = Repositories._channelRepository;
-            _batteryTypes = batteryTypes;
-            _batteries = batteries;
-            _testers = testers;
-            _channels = channels;
-            _chambers = chambers;
+            //_batteryTypes = batteryTypes;
+            //_batteries = batteries;
+            //_testers = testers;
+            //_channels = channels;
+            //_chambers = chambers;
 
             _record.PropertyChanged += _record_PropertyChanged;
         }
@@ -105,44 +83,6 @@ namespace BCLabManager.ViewModel
                 _record.Status = value;
 
                 base.OnPropertyChanged("Status");
-            }
-        }
-
-        public BatteryTypeClass BatteryType       //选中项
-        {
-            get
-            {
-                //if (_batteryType == null)
-                //return null;
-                return _batteryType;
-            }
-            set
-            {
-                if (value == _batteryType)
-                    return;
-
-                _batteryType = value;
-
-                base.OnPropertyChanged("BatteryType");
-
-
-                List<BatteryClass> all = _batteries;
-                List<BatteryClass> allstring = (
-                    from i in all
-                    where (i.BatteryType.Id == BatteryType.Id) && i.Status == AssetStatusEnum.IDLE
-                    select i).ToList();
-
-                AllBatteries = new ObservableCollection<BatteryClass>(allstring);
-            }
-        }
-
-        public ObservableCollection<BatteryTypeClass> AllBatteryTypes //供选项
-        {
-            get
-            {
-                List<BatteryTypeClass> all = _batteryTypes;
-
-                return new ObservableCollection<BatteryTypeClass>(all);
             }
         }
 
@@ -199,58 +139,6 @@ namespace BCLabManager.ViewModel
                 _chamber = value;
 
                 base.OnPropertyChanged("Chamber");
-            }
-        }
-
-        public ObservableCollection<ChamberClass> AllChambers    //供选项
-        {
-            get
-            {
-                List<ChamberClass> all = _chambers;
-                List<ChamberClass> allstring = (
-                    from i in all
-                    where i.Status == AssetStatusEnum.IDLE
-                    select i).ToList();
-
-                return new ObservableCollection<ChamberClass>(allstring);
-            }
-        }
-
-        public TesterClass Tester
-        {
-            get
-            {
-                //if (_record.ChannelStr == null)
-                //return "/";
-                return _tester;
-            }
-            set
-            {
-                if (value == _tester)
-                    return;
-
-                _tester = value;
-
-                base.OnPropertyChanged("Tester");
-
-
-                List<ChannelClass> all = _channels;
-                List<ChannelClass> allstring = (
-                    from i in all
-                    where (i.Tester.Id == Tester.Id) && i.Status == AssetStatusEnum.IDLE
-                    select i).ToList();
-
-                AllChannels = new ObservableCollection<ChannelClass>(allstring);
-            }
-        }
-
-        public ObservableCollection<TesterClass> AllTesters    //供选项
-        {
-            get
-            {
-                List<TesterClass> all = _testers;
-
-                return new ObservableCollection<TesterClass>(all);
             }
         }
 
@@ -425,19 +313,9 @@ namespace BCLabManager.ViewModel
         }
 
         #region Public Interface
-        public void Execute()
-        {
-            _record.Execute(this.Battery, this.Chamber, this.Channel, this.Steps, this.StartTime, "", "");
-            OnPropertyChanged("Status");
-        }
         public void Commit()
         {
-            _record.Commit(this.Battery, this.Chamber, this.Channel, this.EndTime, null, this.NewCycle, this.Comment);
-            OnPropertyChanged("Status");
-        }
-        public void Invalidate()
-        {
-            _record.Invalidate(this.Comment);
+            _record.Commit(this.EndTime, null, this.NewCycle, this.Comment);
             OnPropertyChanged("Status");
         }
         #endregion
