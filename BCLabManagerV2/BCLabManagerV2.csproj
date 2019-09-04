@@ -228,6 +228,7 @@
     <Compile Include="ViewModel\Programs\ProgramEditViewModel.cs" />
     <Compile Include="ViewModel\Programs\SubProgramTemplateEditViewModel.cs" />
     <Compile Include="ViewModel\Programs\SubProgramTemplateViewModel.cs" />
+    <Compile Include="ViewModel\Programs\TestRecordInvalidateViewModel.cs" />
     <Compile Include="ViewModel\Programs\TestRecordCommitViewModel.cs" />
     <Compile Include="ViewModel\Programs\TestRecordExecuteViewModel.cs" />
     <Compile Include="ViewModel\Programs\TestRecordViewModel.cs" />

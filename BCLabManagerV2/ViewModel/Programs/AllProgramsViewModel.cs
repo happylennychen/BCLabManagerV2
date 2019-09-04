@@ -669,57 +669,27 @@ namespace BCLabManager.ViewModel
         }
         private void Invalidate(TestRecordViewModel testRecord)
         {
-            /*ProgramClass model = _selectedProgram._program.Clone();
-            ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _subprogramRepository);      //实例化一个新的view model
-            viewmodel.DisplayName = "Program-Save As";
-            viewmodel.commandType = CommandType.SaveAs;
-            var ProgramViewInstance = new ProgramView();      //实例化一个新的view
-            ProgramViewInstance.DataContext = viewmodel;
-            ProgramViewInstance.ShowDialog();
-            if (viewmodel.IsOK == true)
-            {
-                _programRepository.AddItem(model);
-            }*/
-
-            TestRecordClass m = new TestRecordClass();
-            TestRecordExecuteViewModel evm = new TestRecordExecuteViewModel
+            TestRecordInvalidateViewModel evm = new TestRecordInvalidateViewModel
                 (
-                m,
-                _batteryTypes,
-                _batteries,
-                _testers,
-                _channels,
-                _chambers
+                testRecord.Record
                 );
-            evm.DisplayName = "Test-Execute";
-            var TestRecordViewInstance = new ExecuteView();
-            TestRecordViewInstance.DataContext = evm;
-            TestRecordViewInstance.ShowDialog();
+            evm.DisplayName = "Test-Invalidate";
+            var TestRecordInvalidateViewInstance = new InvalidateView();
+            TestRecordInvalidateViewInstance.DataContext = evm;
+            TestRecordInvalidateViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                testRecord.BatteryTypeStr = evm.BatteryType.Name;
-                testRecord.BatteryStr = evm.Battery.Name;
-                testRecord.ChamberStr = evm.Chamber.Name;
-                testRecord.TesterStr = evm.Tester.Name;
-                testRecord.ChannelStr = evm.Channel.Name;
-                testRecord.StartTime = evm.StartTime;
-                testRecord.Steps = evm.Steps;
-                testRecord.Status = TestStatus.Executing;
+                testRecord.Comment = evm.Comment;
+                testRecord.Status = TestStatus.Invalid;
 
                 using (var dbContext = new AppDbContext())
                 {
                     var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == testRecord.Id);
-                    tr.BatteryTypeStr = testRecord.BatteryTypeStr;
-                    tr.BatteryStr = testRecord.BatteryStr;
-                    tr.ChamberStr = testRecord.ChamberStr;
-                    tr.TesterStr = testRecord.TesterStr;
-                    tr.ChannelStr = testRecord.ChannelStr;
-                    tr.StartTime = testRecord.StartTime;
-                    tr.Steps = testRecord.Steps;
+                    tr.Comment = testRecord.Comment;
                     tr.Status = testRecord.Status;
                     dbContext.SaveChanges();
                 }
-                evm.Execute();
+                evm.Invalidate();
             }
         }
     }
