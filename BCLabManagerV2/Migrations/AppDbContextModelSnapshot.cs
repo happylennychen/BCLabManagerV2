@@ -25,6 +25,8 @@ namespace BCLabManager.Migrations
 
                     b.Property<int?>("ChamberClassId");
 
+                    b.Property<int?>("ChannelClassId");
+
                     b.Property<string>("ProgramName");
 
                     b.Property<int>("Status");
@@ -38,6 +40,8 @@ namespace BCLabManager.Migrations
                     b.HasIndex("BatteryClassId");
 
                     b.HasIndex("ChamberClassId");
+
+                    b.HasIndex("ChannelClassId");
 
                     b.ToTable("AssetUsageRecordClass");
                 });
@@ -106,6 +110,24 @@ namespace BCLabManager.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Chambers");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.ChannelClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("Status");
+
+                    b.Property<int?>("TesterId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TesterId");
+
+                    b.ToTable("Channels");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
@@ -241,6 +263,10 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.ChamberClass")
                         .WithMany("Records")
                         .HasForeignKey("ChamberClassId");
+
+                    b.HasOne("BCLabManager.Model.ChannelClass")
+                        .WithMany("Records")
+                        .HasForeignKey("ChannelClassId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.BatteryClass", b =>
@@ -248,6 +274,13 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
                         .WithMany()
                         .HasForeignKey("BatteryTypeId");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.ChannelClass", b =>
+                {
+                    b.HasOne("BCLabManager.Model.TesterClass", "Tester")
+                        .WithMany()
+                        .HasForeignKey("TesterId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.SubProgramClass", b =>

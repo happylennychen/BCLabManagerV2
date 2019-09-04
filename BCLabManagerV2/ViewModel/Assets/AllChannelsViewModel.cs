@@ -14,9 +14,7 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        //readonly TesterRepository _testerRepository;
-        readonly ChannelRepository _channelRepository;
-        readonly TesterRepository _testerRepository;
+        List<TesterClass> _testers;
         ChannelViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
@@ -26,31 +24,20 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllChannelsViewModel()
+        public AllChannelsViewModel(List<ChannelClass> channels, List<TesterClass> testers)
         {
-
-            _channelRepository = Repositories._channelRepository;
-
-            _testerRepository = Repositories._testerRepository;
-
-            // Subscribe for notifications of when a new customer is saved.
-            _channelRepository.ItemAdded += this.OnChannelAddedToRepository;
-
+            _testers = testers;
             // Populate the AllTesters collection with _testerRepository.
-            this.CreateAllChannels();
+            this.CreateAllChannels(channels);
         }
 
-        void CreateAllChannels()
+        void CreateAllChannels(List<ChannelClass> channels)
         {
             List<ChannelViewModel> all =
-                (from bat in _channelRepository.GetItems()
-                 select new ChannelViewModel(bat,_channelRepository, _testerRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
-
-            //foreach (ChannelModelViewModel batmod in all)
-            //batmod.PropertyChanged += this.OnChannelModelViewModelPropertyChanged;
+                (from c in channels
+                 select new ChannelViewModel(c)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.AllChannels = new ObservableCollection<ChannelViewModel>(all);     //再转换成Observable
-            //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
         }
 
         #endregion // Constructor
@@ -74,26 +61,26 @@ namespace BCLabManager.ViewModel
                 {
                     _selectedItem = value;
                     //OnPropertyChanged("SelectedType");
-                    OnPropertyChanged("Records"); //通知Records改变
+                    //OnPropertyChanged("Records"); //通知Records改变
                 }
             }
         }
 
-        public List<AssetUsageRecordViewModel> Records //绑定选中channel的Records。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
-        //如果不是用查询，那么需要维护一个二维List。每一个Channel，对应一个List。用空间换时间。
-        {
-            get
-            {
-                if (SelectedItem == null)
-                    return null;
-                List<AssetUsageRecordViewModel> all =
-                  (from bat in _channelRepository.GetItems()
-                   where bat.Name == SelectedItem.Name
-                   from record in bat.Records
-                   select new AssetUsageRecordViewModel(record)).ToList();
-                return all;
-            }
-        }
+        //public List<AssetUsageRecordViewModel> Records //绑定选中channel的Records。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
+        ////如果不是用查询，那么需要维护一个二维List。每一个Channel，对应一个List。用空间换时间。
+        //{
+        //    get
+        //    {
+        //        if (SelectedItem == null)
+        //            return null;
+        //        List<AssetUsageRecordViewModel> all =
+        //          (from bat in _channelRepository.GetItems()
+        //           where bat.Name == SelectedItem.Name
+        //           from record in bat.Records
+        //           select new AssetUsageRecordViewModel(record)).ToList();
+        //        return all;
+        //    }
+        //}
 
         public ICommand CreateCommand
         {
@@ -142,35 +129,54 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            ChannelClass model = new ChannelClass();      //实例化一个新的model
-            ChannelViewModel viewmodel = new ChannelViewModel(model, _channelRepository, _testerRepository);      //实例化一个新的view model
-            viewmodel.DisplayName = "Channel-Create";
-            viewmodel.commandType = CommandType.Create;
+            ChannelClass m = new ChannelClass();      //实例化一个新的model
+            ChannelEditViewModel evm = new ChannelEditViewModel(m, _testers);      //实例化一个新的view model
+            evm.DisplayName = "Channel-Create";
+            evm.commandType = CommandType.Create;
             var ChannelViewInstance = new ChannelView();      //实例化一个新的view
-            ChannelViewInstance.DataContext = viewmodel;
+            ChannelViewInstance.DataContext = evm;
             ChannelViewInstance.ShowDialog();                   //设置viewmodel属性
-            if (viewmodel.IsOK == true)
+            if (evm.IsOK == true)
             {
-                _channelRepository.AddItem(model);
+                using (var dbContext = new AppDbContext())
+                {
+                    //dbContext.Channels.Add(bc);    //不能直接这样写，不然会报错。这里不是添加一个全新的graph，而是添加一个新的m，然后修改关系
+                    var newc = new ChannelClass()
+                    {
+                        Name = m.Name,
+                    };
+                    newc.Tester = dbContext.Testers.SingleOrDefault(i => i.Id == m.Tester.Id);
+                    dbContext.Channels.Add(newc);
+                    dbContext.SaveChanges();    //side effect是会更新newc的id
+                    m = newc;                  //所以把newc存到using语句外面的bc里
+                }
+                this.AllChannels.Add(new ChannelViewModel(m));    //然后用m生成vm，这样ID就会更新
             }
         }
         private void Edit()
         {
-            ChannelClass model = new ChannelClass();      //实例化一个新的model
-            ChannelViewModel viewmodel = new ChannelViewModel(model, _channelRepository, _testerRepository);      //实例化一个新的view model
-            viewmodel.Name = _selectedItem.Name;
-            viewmodel.Tester = _selectedItem.Tester;
-            viewmodel.Status = _selectedItem.Status;
-            viewmodel.DisplayName = "Channel-Edit";
-            viewmodel.commandType = CommandType.Edit;
+            ChannelClass m = new ChannelClass();      //实例化一个新的model
+            ChannelEditViewModel evm = new ChannelEditViewModel(m, _testers);      //实例化一个新的view model
+            evm.Name = _selectedItem.Name;
+            evm.Tester = evm.AllTesters.SingleOrDefault(i => i.Id == _selectedItem.Tester.Id);   //所以改用Id来找到List里的item
+            evm.Status = _selectedItem.Status;
+            evm.DisplayName = "Channel-Edit";
+            evm.commandType = CommandType.Edit;
             var ChannelViewInstance = new ChannelView();      //实例化一个新的view
-            ChannelViewInstance.DataContext = viewmodel;
+            ChannelViewInstance.DataContext = evm;
             ChannelViewInstance.ShowDialog();
-            if (viewmodel.IsOK == true)
+            if (evm.IsOK == true)
             {
-                _selectedItem.Name = viewmodel.Name;
-                _selectedItem.Tester = viewmodel.Tester;
-                _selectedItem.Status = viewmodel.Status;
+                _selectedItem.Name = evm.Name;
+                _selectedItem.Tester = evm.Tester;
+                using (var dbContext = new AppDbContext())
+                {
+                    var c = dbContext.Channels.SingleOrDefault(i => i.Id == _selectedItem.Id);
+                    c.Name = m.Name;
+                    c.Tester = dbContext.Testers.SingleOrDefault(i => i.Id == m.Tester.Id);
+
+                    dbContext.SaveChanges();
+                }
             }
         }
         private bool CanEdit
@@ -179,19 +185,32 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            ChannelClass model = new ChannelClass();      //实例化一个新的model
-            ChannelViewModel viewmodel = new ChannelViewModel(model, _channelRepository, _testerRepository);      //实例化一个新的view model
-            viewmodel.Name = _selectedItem.Name;
-            viewmodel.Tester = _selectedItem.Tester;
-            viewmodel.Status = _selectedItem.Status;
-            viewmodel.DisplayName = "Channel-Save As";
-            viewmodel.commandType = CommandType.SaveAs;
+            ChannelClass m = new ChannelClass();      //实例化一个新的model
+            ChannelEditViewModel evm = new ChannelEditViewModel(m, _testers);      //实例化一个新的view model
+            evm.Name = _selectedItem.Name;
+            //evm.Tester = _selectedItem.Tester;
+            evm.Tester = evm.AllTesters.SingleOrDefault(i => i.Id == _selectedItem.Tester.Id);   //所以改用Id来找到List里的item
+            evm.Status = _selectedItem.Status;
+            evm.DisplayName = "Channel-Save As";
+            evm.commandType = CommandType.SaveAs;
             var ChannelViewInstance = new ChannelView();      //实例化一个新的view
-            ChannelViewInstance.DataContext = viewmodel;
+            ChannelViewInstance.DataContext = evm;
             ChannelViewInstance.ShowDialog();
-            if (viewmodel.IsOK == true)
+            if (evm.IsOK == true)
             {
-                _channelRepository.AddItem(model);
+                using (var dbContext = new AppDbContext())
+                {
+                    //dbContext.Channels.Add(bc);    //不能直接这样写，不然会报错。这里不是添加一个全新的graph，而是添加一个新的m，然后修改关系
+                    var newc = new ChannelClass()
+                    {
+                        Name = m.Name,
+                    };
+                    newc.Tester = dbContext.Testers.SingleOrDefault(i => i.Id == m.Tester.Id);
+                    dbContext.Channels.Add(newc);
+                    dbContext.SaveChanges();    //side effect是会更新newc的id
+                    m = newc;                  //所以把newc存到using语句外面的bc里
+                }
+                this.AllChannels.Add(new ChannelViewModel(m));    //然后用m生成vm，这样ID就会更新
             }
         }
         private bool CanSaveAs
@@ -209,18 +228,18 @@ namespace BCLabManager.ViewModel
             this.AllChannels.Clear();
             //this.AllChannelModels.CollectionChanged -= this.OnCollectionChanged;
 
-            _channelRepository.ItemAdded -= this.OnChannelAddedToRepository;
+            //_channelRepository.ItemAdded -= this.OnChannelAddedToRepository;
         }
 
         #endregion // Base Class Overrides
 
         #region Event Handling Methods
 
-        void OnChannelAddedToRepository(object sender, ItemAddedEventArgs<ChannelClass> e)
-        {
-            var viewModel = new ChannelViewModel(e.NewItem, _channelRepository, _testerRepository);
-            this.AllChannels.Add(viewModel);
-        }
+        //void OnChannelAddedToRepository(object sender, ItemAddedEventArgs<ChannelClass> e)
+        //{
+        //    var viewModel = new ChannelViewModel(e.NewItem, _channelRepository, _testerRepository);
+        //    this.AllChannels.Add(viewModel);
+        //}
 
         #endregion // Event Handling Methods
     }

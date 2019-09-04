@@ -172,12 +172,11 @@ namespace BCLabManager.ViewModel
             BatteryViewInstance.ShowDialog();
             if (bevm.IsOK == true)
             {
+                _selectedItem.Name = bevm.Name;
+                _selectedItem.BatteryType = bevm.BatteryType;
+                _selectedItem.CycleCount = bevm.CycleCount;
                 using (var dbContext = new AppDbContext())
                 {
-                    _selectedItem.Name = bevm.Name;
-                    _selectedItem.BatteryType = bevm.BatteryType;
-                    _selectedItem.CycleCount = bevm.CycleCount;
-
                     var bat = dbContext.Batteries.SingleOrDefault(b => b.Id == _selectedItem.Id);
                     bat.Name = bc.Name;
                     bat.BatteryType = dbContext.BatteryTypes.SingleOrDefault(bt => bt.Id == bc.BatteryType.Id);

@@ -69,8 +69,15 @@ namespace BCLabManager
             allTestersViewModel = new AllTestersViewModel(testers);    //ViewModel初始化
             this.AllTestersViewInstance.DataContext = allTestersViewModel;                                                            //ViewModel跟View绑定
 
-            //allChannelsViewModel = new AllChannelsViewModel();    //ViewModel初始化
-            //this.AllChannelsViewInstance.DataContext = allChannelsViewModel;                                                            //ViewModel跟View绑定
+
+            List<ChannelClass> channels;
+            using (var dbContext = new AppDbContext())
+            {
+                channels = new List<ChannelClass>(dbContext.Channels.Include(i=>i.Tester).ToList());
+            }
+
+            allChannelsViewModel = new AllChannelsViewModel(channels, testers);    //ViewModel初始化
+            this.AllChannelsViewInstance.DataContext = allChannelsViewModel;                                                            //ViewModel跟View绑定
 
             //allChambersViewModel = new AllChambersViewModel();    //ViewModel初始化
             //this.AllChambersViewInstance.DataContext = allChambersViewModel;                                                            //ViewModel跟View绑定

@@ -13,6 +13,7 @@ namespace BCLabManager.DataAccess
         public DbSet<BatteryTypeClass> BatteryTypes { get; set; }
         public DbSet<BatteryClass> Batteries { get; set; }
         public DbSet<TesterClass> Testers { get; set; }
+        public DbSet<ChannelClass> Channels { get; set; }
         public DbSet<ChamberClass> Chambers { get; set; }
         public DbSet<TestRecordClass> TestRecords { get; set; }
         public DbSet<SubProgramTemplate> SubProgramTemplates { get; set; }

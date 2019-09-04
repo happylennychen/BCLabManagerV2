@@ -65,30 +65,5 @@ namespace BCLabManager.Model
             Records.Add(new AssetUsageRecordClass(Timestamp, Status, ProgramName, SubProgramName));
         }
     }
-    public class ChannelClass : AssetClass
-    {
-        public TesterClass Tester { get; set; }
-        public String Name { get; set; }
-
-        public ChannelClass()
-        { }
-
-        public ChannelClass(String Name, TesterClass Tester)
-        {
-            this.Tester = Tester;
-            this.Name = Name;
-        }
-
-        public void Update(String Name, TesterClass Tester)
-        {
-            this.Tester = Tester;
-            this.Name = Name;
-        }
-
-        public override string ToString()
-        {
-            return this.Name;
-        }
-    }
 }
 

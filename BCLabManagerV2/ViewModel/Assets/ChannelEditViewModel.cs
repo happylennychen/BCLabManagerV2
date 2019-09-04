@@ -7,24 +7,17 @@ using System.Collections.ObjectModel;
 using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using BCLabManager.Properties;
-using Microsoft.EntityFrameworkCore;
 
 namespace BCLabManager.ViewModel
 {
-    public enum CommandType
-    {
-        Create,
-        Edit,
-        SaveAs
-    }
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class BatteryEditViewModel : ViewModelBase//, IDataErrorInfo
+    public class ChannelEditViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
 
-        readonly BatteryClass _battery;
+        readonly ChannelClass _channel;
         RelayCommand _okCommand;
         bool _isOK;
 
@@ -32,84 +25,64 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public BatteryEditViewModel(BatteryClass battery, List<BatteryTypeClass> batteryTypes)
+        public ChannelEditViewModel(ChannelClass channel, List<TesterClass> testers)
         {
-            if (battery == null)
-                throw new ArgumentNullException("batterymodel");
-
-            _battery = battery;
-
-            _battery.PropertyChanged += _battery_PropertyChanged;
-            CreateAllBatteryTypes(batteryTypes);
+            _channel = channel;
+            _channel.PropertyChanged += _channel_PropertyChanged;
+            CreateAllTesters(testers);
         }
 
-        private void _battery_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void _channel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            //throw new NotImplementedException();
             OnPropertyChanged(e.PropertyName);
         }
 
-        void CreateAllBatteryTypes(List<BatteryTypeClass> batteryTypes)
+        void CreateAllTesters(List<TesterClass> testers)
         {
-            //List<BatteryTypeClass> all = _batterytypeRepository.GetItems();
-
-            this.AllBatteryTypes = batteryTypes;
+            this.AllTesters = testers;
         }
 
         #endregion // Constructor
 
-        #region BatteryClass Properties
+        #region ChannelClass Properties
 
         public int Id
         {
-            get { return _battery.Id; }
+            get { return _channel.Id; }
             set
             {
-                if (value == _battery.Id)
+                if (value == _channel.Id)
                     return;
 
-                _battery.Id = value;
+                _channel.Id = value;
 
                 base.OnPropertyChanged("Id");
             }
         }
+
         public string Name
         {
-            get { return _battery.Name; }
+            get { return _channel.Name; }
             set
             {
-                if (value == _battery.Name)
+                if (value == _channel.Name)
                     return;
 
-                _battery.Name = value;
+                _channel.Name = value;
 
                 base.OnPropertyChanged("Name");
             }
         }
 
-        public double CycleCount
-        {
-            get { return _battery.CycleCount; }
-            set
-            {
-                if (value == _battery.CycleCount)
-                    return;
-
-                _battery.CycleCount = value;
-
-                base.OnPropertyChanged("CycleCount");
-            }
-        }
-
         public AssetStatusEnum Status
         {
-            get { return _battery.Status; }
+            get { return _channel.Status; }
             set
             {
-                if (value == _battery.Status)
+                if (value == _channel.Status)
                     return;
 
-                _battery.Status = value;
+                _channel.Status = value;
 
                 base.OnPropertyChanged("Status");
             }
@@ -120,54 +93,21 @@ namespace BCLabManager.ViewModel
         #region Presentation Properties
 
 
-        //public String BatteryType
-        //{
-        //    get
-        //    {
-        //        if (_batteryType == null)
-        //        {
-        //            if (_battery.BatteryType == null)
-        //                _batteryType = string.Empty;
-        //            else
-        //                _batteryType = _battery.BatteryType.Name;
-        //        }
-        //        return _batteryType;
-        //    }
-        //    set
-        //    {
-        //        if (value == _batteryType || String.IsNullOrEmpty(value))
-        //            return;
-
-        //        _batteryType = value;
-
-        //        //_battery.BatteryType = _batterytypeRepository.GetItems().First(i => i.Name == _batteryType);
-        //        using (var dbContext = new AppDbContext())
-        //        {
-        //            _battery.BatteryType = dbContext.BatteryTypes.SingleOrDefault(bt => bt.Name == _batteryType);
-        //        }
-
-        //        base.OnPropertyChanged("BatteryType");
-        //    }
-        //}
-
-        public BatteryTypeClass BatteryType
+        public TesterClass Tester
         {
-            get { return _battery.BatteryType; }
+            get { return _channel.Tester; }
             set
             {
-                if (value == _battery.BatteryType)
+                if (value == _channel.Tester)
                     return;
 
-                _battery.BatteryType = value;
+                _channel.Tester = value;
 
-                base.OnPropertyChanged("BatteryType");
+                base.OnPropertyChanged("Tester");
             }
         }
 
-        public List<BatteryTypeClass> AllBatteryTypes
-        {
-            get;set;
-        }
+        public List<TesterClass> AllTesters { get; set; }
 
         /// <summary>
         /// Returns a command that saves the customer.
@@ -221,13 +161,6 @@ namespace BCLabManager.ViewModel
         /// </summary>
         public void OK()
         {
-            //if (!_batterytype.IsValid)
-            //throw new InvalidOperationException(Resources.BatteryTypeViewModel_Exception_CannotSave);
-
-            //if (this.IsNewBatteryType)
-            //_batterytypeRepository.AddItem(_batterytype);
-
-            //base.OnPropertyChanged("DisplayName");
             IsOK = true;
         }
 
@@ -239,19 +172,17 @@ namespace BCLabManager.ViewModel
         /// Returns true if this customer was created by the user and it has not yet
         /// been saved to the customer repository.
         /// </summary>
-        bool IsNewBattery
+        bool IsNewChannel
         {
             get
             {
-                //var dbContext = new AppDbContext();
                 //int number = (
-                //    from bat in dbContext.Batteries
-                //    where bat.Name == _battery.Name     //名字（某一个属性）一样就认为是一样的
+                //    from bat in _channelRepository.GetItems()
+                //    where bat.Name == _channel.Name     //名字（某一个属性）一样就认为是一样的
                 //    select bat).Count();
                 //if (number != 0)
                 //    return false;
-                //else
-                //    return true;
+                //return !_channelRepository.ContainsItem(_channel);
                 return true;
             }
         }
@@ -261,7 +192,7 @@ namespace BCLabManager.ViewModel
         /// </summary>
         bool CanCreate
         {
-            get { return IsNewBattery; }
+            get { return IsNewChannel; }
         }
 
         /// <summary>
@@ -269,7 +200,7 @@ namespace BCLabManager.ViewModel
         /// </summary>
         bool CanSaveAs
         {
-            get { return IsNewBattery; }
+            get { return IsNewChannel; }
         }
 
         #endregion // Private Helpers
