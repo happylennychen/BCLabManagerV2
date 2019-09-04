@@ -19,19 +19,17 @@ namespace BCLabManager.ViewModel
         #region Fields
 
         readonly BatteryClass _battery;
-        //bool _isSelected;
-        string _batteryType;
 
         #endregion // Fields
 
         #region Constructor
 
-        public BatteryViewModel(BatteryClass batterymodel)
+        public BatteryViewModel(BatteryClass battery)
         {
-            if (batterymodel == null)
+            if (battery == null)
                 throw new ArgumentNullException("batterymodel");
 
-            _battery = batterymodel;
+            _battery = battery;
 
             _battery.PropertyChanged += _battery_PropertyChanged;
         }

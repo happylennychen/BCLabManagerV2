@@ -59,8 +59,15 @@ namespace BCLabManager
             allBatteriesViewModel = new AllBatteriesViewModel(batteries, batteryTypes);    //ViewModel初始化
             this.AllBatteriesViewInstance.DataContext = allBatteriesViewModel;                                                            //ViewModel跟View绑定
 
-            //allTestersViewModel = new AllTestersViewModel();    //ViewModel初始化
-            //this.AllTestersViewInstance.DataContext = allTestersViewModel;                                                            //ViewModel跟View绑定
+
+            List<TesterClass> testers;
+            using (var dbContext = new AppDbContext())
+            {
+                testers = new List<TesterClass>(dbContext.Testers.ToList());
+            }
+
+            allTestersViewModel = new AllTestersViewModel(testers);    //ViewModel初始化
+            this.AllTestersViewInstance.DataContext = allTestersViewModel;                                                            //ViewModel跟View绑定
 
             //allChannelsViewModel = new AllChannelsViewModel();    //ViewModel初始化
             //this.AllChannelsViewInstance.DataContext = allChannelsViewModel;                                                            //ViewModel跟View绑定

@@ -25,31 +25,22 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllTestersViewModel()
+        public AllTestersViewModel(List<TesterClass> testers)
         {
-
-            _testerRepository = Repositories._testerRepository;
-
-            _channelRepository = Repositories._channelRepository;
-
             // Subscribe for notifications of when a new customer is saved.
-            _testerRepository.ItemAdded += this.OnTesterAddedToRepository;
+            //_testerRepository.ItemAdded += this.OnTesterAddedToRepository;
 
             // Populate the AllTesters collection with _testerRepository.
-            this.CreateAllTesters();
+            this.CreateAllTesters(testers);
         }
 
-        void CreateAllTesters()
+        void CreateAllTesters(List<TesterClass> testers)
         {
             List<TesterViewModel> all =
-                (from tster in _testerRepository.GetItems()
-                 select new TesterViewModel(tster, _testerRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
-
-            //foreach (ChannelModelViewModel batmod in all)
-            //batmod.PropertyChanged += this.OnChannelModelViewModelPropertyChanged;
+                (from tster in testers
+                 select new TesterViewModel(tster)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.AllTesters = new ObservableCollection<TesterViewModel>(all);     //再转换成Observable
-            //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
         }
 
         #endregion // Constructor
@@ -72,7 +63,6 @@ namespace BCLabManager.ViewModel
                 if (_selectedItem != value)
                 {
                     _selectedItem = value;
-                    //OnPropertyChanged("SelectedType");
                     OnPropertyChanged("Channels"); //通知Channels改变
                 }
             }
@@ -82,13 +72,14 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                if (SelectedItem == null)
-                    return null;
-                List<ChannelViewModel> all =
-                  (from bat in _channelRepository.GetItems()
-                   where bat.Tester.Name == SelectedItem.Name
-                   select new ChannelViewModel(bat, _channelRepository, _testerRepository)).ToList();
-                return all;
+                //if (SelectedItem == null)
+                //    return null;
+                //List<ChannelViewModel> all =
+                //  (from bat in _channelRepository.GetItems()
+                //   where bat.Tester.Name == SelectedItem.Name
+                //   select new ChannelViewModel(bat, _channelRepository, _testerRepository)).ToList();
+                //return all;
+                return null;
             }
         }
 
@@ -139,31 +130,43 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            TesterClass btc = new TesterClass();      //实例化一个新的model
-            TesterViewModel btvm = new TesterViewModel(btc, _testerRepository);      //实例化一个新的view model
-            btvm.DisplayName = "Tester-Create";
+            TesterClass m = new TesterClass();      //实例化一个新的model
+            TesterEditViewModel evm = new TesterEditViewModel(m);      //实例化一个新的view model
+            evm.DisplayName = "Tester-Create";
             var TesterViewInstance = new TesterView();      //实例化一个新的view
-            TesterViewInstance.DataContext = btvm;
+            TesterViewInstance.DataContext = evm;
             TesterViewInstance.ShowDialog();                   //设置viewmodel属性
-            if (btvm.IsOK == true)
+            if (evm.IsOK == true)
             {
-                _testerRepository.AddItem(btc);
+                using (var dbContext = new AppDbContext())
+                {
+                    dbContext.Testers.Add(m);
+                    dbContext.SaveChanges();
+                }
+                this.AllTesters.Add(new TesterViewModel(m));
             }
         }
         private void Edit()
         {
-            TesterClass btc = new TesterClass();      //实例化一个新的model
-            TesterViewModel btvm = new TesterViewModel(btc, _testerRepository);      //实例化一个新的view model
-            btvm.Manufactor = _selectedItem.Manufactor;
-            btvm.Name = _selectedItem.Name;
-            btvm.DisplayName = "Tester-Edit";
+            TesterClass m = new TesterClass();      //实例化一个新的model
+            TesterEditViewModel evm = new TesterEditViewModel(m);      //实例化一个新的view model
+            evm.Manufactor = _selectedItem.Manufactor;
+            evm.Name = _selectedItem.Name;
+            evm.DisplayName = "Tester-Edit";
             var TesterViewInstance = new TesterView();      //实例化一个新的view
-            TesterViewInstance.DataContext = btvm;
+            TesterViewInstance.DataContext = evm;
             TesterViewInstance.ShowDialog();
-            if (btvm.IsOK == true)
+            if (evm.IsOK == true)
             {
-                _selectedItem.Manufactor = btvm.Manufactor;
-                _selectedItem.Name = btvm.Name;
+                _selectedItem.Manufactor = evm.Manufactor;
+                _selectedItem.Name = evm.Name;
+                using (var dbContext = new AppDbContext())
+                {
+                    var tst = dbContext.Testers.SingleOrDefault(t => t.Id == _selectedItem.Id);
+                    tst.Manufactor = m.Manufactor;
+                    tst.Name = m.Name;
+                    dbContext.SaveChanges();
+                }
             }
         }
         private bool CanEdit
@@ -172,17 +175,22 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            TesterClass btc = new TesterClass();      //实例化一个新的model
-            TesterViewModel btvm = new TesterViewModel(btc, _testerRepository);      //实例化一个新的view model
-            btvm.Manufactor = _selectedItem.Manufactor;
-            btvm.Name = _selectedItem.Name;
-            btvm.DisplayName = "Tester-Save As";
+            TesterClass m = new TesterClass();      //实例化一个新的model
+            TesterEditViewModel evm = new TesterEditViewModel(m);      //实例化一个新的view model
+            evm.Manufactor = _selectedItem.Manufactor;
+            evm.Name = _selectedItem.Name;
+            evm.DisplayName = "Tester-Save As";
             var TesterViewInstance = new TesterView();      //实例化一个新的view
-            TesterViewInstance.DataContext = btvm;
+            TesterViewInstance.DataContext = evm;
             TesterViewInstance.ShowDialog();
-            if (btvm.IsOK == true)
+            if (evm.IsOK == true)
             {
-                _testerRepository.AddItem(btc);
+                using (var dbContext = new AppDbContext())
+                {
+                    dbContext.Testers.Add(m);
+                    dbContext.SaveChanges();
+                }
+                this.AllTesters.Add(new TesterViewModel(m));
             }
         }
         private bool CanSaveAs
@@ -198,21 +206,8 @@ namespace BCLabManager.ViewModel
                 custVM.Dispose();
 
             this.AllTesters.Clear();
-            //this.AllChannelModels.CollectionChanged -= this.OnCollectionChanged;
-
-            _testerRepository.ItemAdded -= this.OnTesterAddedToRepository;
         }
 
         #endregion // Base Class Overrides
-
-        #region Event Handling Methods
-
-        void OnTesterAddedToRepository(object sender, ItemAddedEventArgs<TesterClass> e)
-        {
-            var viewModel = new TesterViewModel(e.NewItem, _testerRepository);
-            this.AllTesters.Add(viewModel);
-        }
-
-        #endregion // Event Handling Methods
     }
 }

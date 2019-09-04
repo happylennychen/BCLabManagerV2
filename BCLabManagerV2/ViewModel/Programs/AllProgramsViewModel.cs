@@ -468,21 +468,21 @@ namespace BCLabManager.ViewModel
             }*/
 
             TestRecordClass model = new TestRecordClass();
-            TestRecordViewModel viewmodel = new TestRecordViewModel(model);
+            TestRecordEditViewModel viewmodel = new TestRecordEditViewModel(model);
             viewmodel.DisplayName = "Test-Execute";
             var TestRecordViewInstance = new ExecuteView();
             TestRecordViewInstance.DataContext = viewmodel;
             TestRecordViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)
             {
-                SelectedFirstTestRecord.BatteryType = viewmodel.BatteryType;
-                SelectedFirstTestRecord.Battery = viewmodel.Battery;
-                SelectedFirstTestRecord.Chamber = viewmodel.Chamber;
-                SelectedFirstTestRecord.Tester = viewmodel.Tester;
-                SelectedFirstTestRecord.Channel = viewmodel.Channel;
-                SelectedFirstTestRecord.StartTime = viewmodel.StartTime;
-                SelectedFirstTestRecord.Steps = viewmodel.Steps;
-                SelectedFirstTestRecord.Execute();
+                //SelectedFirstTestRecord.BatteryType = viewmodel.BatteryType;
+                //SelectedFirstTestRecord.Battery = viewmodel.Battery;
+                //SelectedFirstTestRecord.Chamber = viewmodel.Chamber;
+                //SelectedFirstTestRecord.Tester = viewmodel.Tester;
+                //SelectedFirstTestRecord.Channel = viewmodel.Channel;
+                //SelectedFirstTestRecord.StartTime = viewmodel.StartTime;
+                //SelectedFirstTestRecord.Steps = viewmodel.Steps;
+                //SelectedFirstTestRecord.Execute();
             }
         }
         private bool CanExecute
@@ -492,7 +492,7 @@ namespace BCLabManager.ViewModel
         private void Commit()
         {
             TestRecordClass model = new TestRecordClass();
-            TestRecordViewModel viewmodel = new TestRecordViewModel(model);
+            TestRecordEditViewModel viewmodel = new TestRecordEditViewModel(model);
             viewmodel.DisplayName = "Test-Commit";
             var TestRecordCommitViewInstance = new CommitView();
             TestRecordCommitViewInstance.DataContext = viewmodel;
@@ -512,7 +512,7 @@ namespace BCLabManager.ViewModel
         private void Invalidate()
         {
             TestRecordClass model = new TestRecordClass();
-            TestRecordViewModel viewmodel = new TestRecordViewModel(model);
+            TestRecordEditViewModel viewmodel = new TestRecordEditViewModel(model);
             viewmodel.DisplayName = "Test-Invalidate";
             var TestRecordInvalidateViewInstance = new InvalidateView();
             TestRecordInvalidateViewInstance.DataContext = viewmodel;
@@ -548,21 +548,21 @@ namespace BCLabManager.ViewModel
         private void Execute2()
         {
             TestRecordClass model = new TestRecordClass();
-            TestRecordViewModel viewmodel = new TestRecordViewModel(model);
+            TestRecordEditViewModel viewmodel = new TestRecordEditViewModel(model);
             viewmodel.DisplayName = "Test-Execute";
             var TestRecordViewInstance = new ExecuteView();
             TestRecordViewInstance.DataContext = viewmodel;
             TestRecordViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)
             {
-                SelectedSecondTestRecord.BatteryType = viewmodel.BatteryType;
-                SelectedSecondTestRecord.Battery = viewmodel.Battery;
-                SelectedSecondTestRecord.Chamber = viewmodel.Chamber;
-                SelectedSecondTestRecord.Tester = viewmodel.Tester;
-                SelectedSecondTestRecord.Channel = viewmodel.Channel;
-                SelectedSecondTestRecord.StartTime = viewmodel.StartTime;
-                SelectedSecondTestRecord.Steps = viewmodel.Steps;
-                SelectedSecondTestRecord.Execute();
+                //SelectedSecondTestRecord.BatteryType = viewmodel.BatteryType;
+                //SelectedSecondTestRecord.Battery = viewmodel.Battery;
+                //SelectedSecondTestRecord.Chamber = viewmodel.Chamber;
+                //SelectedSecondTestRecord.Tester = viewmodel.Tester;
+                //SelectedSecondTestRecord.Channel = viewmodel.Channel;
+                //SelectedSecondTestRecord.StartTime = viewmodel.StartTime;
+                //SelectedSecondTestRecord.Steps = viewmodel.Steps;
+                //SelectedSecondTestRecord.Execute();
             }
         }
         private bool CanExecute2
@@ -572,7 +572,7 @@ namespace BCLabManager.ViewModel
         private void Commit2()
         {
             TestRecordClass model = new TestRecordClass();
-            TestRecordViewModel viewmodel = new TestRecordViewModel(model);
+            TestRecordEditViewModel viewmodel = new TestRecordEditViewModel(model);
             viewmodel.DisplayName = "Test-Commit";
             var TestRecordCommitViewInstance = new CommitView();
             TestRecordCommitViewInstance.DataContext = viewmodel;
@@ -592,7 +592,7 @@ namespace BCLabManager.ViewModel
         private void Invalidate2()
         {
             TestRecordClass model = new TestRecordClass();
-            TestRecordViewModel viewmodel = new TestRecordViewModel(model);
+            TestRecordEditViewModel viewmodel = new TestRecordEditViewModel(model);
             viewmodel.DisplayName = "Test-Invalidate";
             var TestRecordInvalidateViewInstance = new InvalidateView();
             TestRecordInvalidateViewInstance.DataContext = viewmodel;
@@ -637,15 +637,5 @@ namespace BCLabManager.ViewModel
         }
 
         #endregion // Base Class Overrides
-
-        #region Event Handling Methods
-
-        void OnProgramAddedToRepository(object sender, ItemAddedEventArgs<ProgramClass> e)
-        {
-            var viewModel = new ProgramViewModel(e.NewItem);
-            this.AllPrograms.Add(viewModel);
-        }
-
-        #endregion // Event Handling Methods
     }
 }

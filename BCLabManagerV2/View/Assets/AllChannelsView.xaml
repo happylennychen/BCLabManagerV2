@@ -44,6 +44,10 @@
                     <ListView.View>
                         <GridView>
                             <GridViewColumn 
+            Header="Id" 
+            DisplayMemberBinding="{Binding Path=Id}" 
+            />
+                            <GridViewColumn 
             Header="Name" 
             DisplayMemberBinding="{Binding Path=Name}" 
             />

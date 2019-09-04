@@ -57,7 +57,6 @@ namespace BCLabManager.ViewModel
                 if (_selectedItem != value)
                 {
                     _selectedItem = value;
-                    //OnPropertyChanged("SelectedType");
                     OnPropertyChanged("Batteries"); //通知Batteries改变
                 }
             }
@@ -135,9 +134,11 @@ namespace BCLabManager.ViewModel
             if (btevm.IsOK == true)
             {
                 //_batterytypeRepository.AddItem(btc);
-                var dbContext = new AppDbContext();
-                dbContext.BatteryTypes.Add(btc);
-                dbContext.SaveChanges();
+                using (var dbContext = new AppDbContext())
+                {
+                    dbContext.BatteryTypes.Add(btc);
+                    dbContext.SaveChanges();
+                }
                 this.AllBatteryTypes.Add(new BatteryTypeViewModel(btc));
             }
         }
@@ -154,15 +155,17 @@ namespace BCLabManager.ViewModel
             BatteryTypeViewInstance.ShowDialog();
             if (btevm.IsOK == true)
             {
-                var dbContext = new AppDbContext();
-                var batT = dbContext.BatteryTypes.SingleOrDefault(b => b.Id == _selectedItem.Id);
                 _selectedItem.Manufactor = btevm.Manufactor;
                 _selectedItem.Material = btevm.Material;
                 _selectedItem.Name = btevm.Name;
-                batT.Manufactor = btc.Manufactor;
-                batT.Material = btc.Material;
-                batT.Name = btc.Name;
-                dbContext.SaveChanges();
+                using (var dbContext = new AppDbContext())
+                {
+                    var batT = dbContext.BatteryTypes.SingleOrDefault(b => b.Id == _selectedItem.Id);
+                    batT.Manufactor = btc.Manufactor;
+                    batT.Material = btc.Material;
+                    batT.Name = btc.Name;
+                    dbContext.SaveChanges();
+                }
             }
         }
         private bool CanEdit
@@ -183,9 +186,11 @@ namespace BCLabManager.ViewModel
             if (btevm.IsOK == true)
             {
                 //_batterytypeRepository.AddItem(btc);
-                var dbContext = new AppDbContext();
-                dbContext.BatteryTypes.Add(btc);
-                dbContext.SaveChanges();
+                using (var dbContext = new AppDbContext())
+                {
+                    dbContext.BatteryTypes.Add(btc);
+                    dbContext.SaveChanges();
+                }
                 this.AllBatteryTypes.Add(new BatteryTypeViewModel(btc));
             }
         }
