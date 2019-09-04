@@ -7,7 +7,6 @@ using BCLabManager.Model;
 using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using Microsoft.EntityFrameworkCore;
 
 namespace BCLabManager.ViewModel
 {
@@ -27,11 +26,16 @@ namespace BCLabManager.ViewModel
         string _programName;
         string _subProgramName;
         readonly TestRecordClass _record;
-        readonly BatteryTypeRepository _batterytypeRepository;
-        readonly BatteryRepository _batteryRepository;
-        readonly ChamberRepository _chamberRepository;
-        readonly TesterRepository _testerRepository;
-        readonly ChannelRepository _channelRepository;
+        //readonly BatteryTypeRepository _batterytypeRepository;
+        //readonly BatteryRepository _batteryRepository;
+        //readonly ChamberRepository _chamberRepository;
+        //readonly TesterRepository _testerRepository;
+        //readonly ChannelRepository _channelRepository;
+        List<BatteryTypeClass> _batteryTypes;
+        List<BatteryClass> _batteries;
+        List<TesterClass> _testers;
+        List<ChannelClass> _channels;
+        List<ChamberClass> _chambers;
 
         //ObservableCollection<BatteryTypeClass> _allBatteryTypes;
         BatteryTypeClass _batteryType;
@@ -51,17 +55,30 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public TestRecordEditViewModel(TestRecordClass record)     //
+        public TestRecordEditViewModel(
+            TestRecordClass record, 
+            List<BatteryTypeClass> batteryTypes,
+            List<BatteryClass> batteries,
+            List<TesterClass> testers,
+            List<ChannelClass> channels,
+            List<ChamberClass> chambers
+            )     //
         {
             if (record == null)
                 throw new ArgumentNullException("record");
 
             _record = record;
-            _batteryRepository = Repositories._batteryRepository;
-            _batterytypeRepository = Repositories._batterytypeRepository;
-            _chamberRepository = Repositories._chamberRepository;
-            _testerRepository = Repositories._testerRepository;
-            _channelRepository = Repositories._channelRepository;
+            //_batteryRepository = Repositories._batteryRepository;
+            //_batterytypeRepository = Repositories._batterytypeRepository;
+            //_chamberRepository = Repositories._chamberRepository;
+            //_testerRepository = Repositories._testerRepository;
+            //_channelRepository = Repositories._channelRepository;
+            _batteryTypes = batteryTypes;
+            _batteries = batteries;
+            _testers = testers;
+            _channels = channels;
+            _chambers = chambers;
+
             _record.PropertyChanged += _record_PropertyChanged;
         }
 
@@ -74,19 +91,6 @@ namespace BCLabManager.ViewModel
 
         #region Presentation Properties
 
-        public int Id
-        {
-            get { return _record.Id; }
-            set
-            {
-                if (value == _record.Id)
-                    return;
-
-                _record.Id = value;
-
-                base.OnPropertyChanged("Id");
-            }
-        }
         public TestStatus Status
         {
             get
@@ -109,7 +113,7 @@ namespace BCLabManager.ViewModel
             get
             {
                 //if (_batteryType == null)
-                    //return null;
+                //return null;
                 return _batteryType;
             }
             set
@@ -121,10 +125,8 @@ namespace BCLabManager.ViewModel
 
                 base.OnPropertyChanged("BatteryType");
 
-                var dbContext = new AppDbContext();
-                List<BatteryClass> all = dbContext.Batteries
-                    .Include(i=>i.BatteryType)
-                    .ToList();
+
+                List<BatteryClass> all = _batteries;
                 List<BatteryClass> allstring = (
                     from i in all
                     where (i.BatteryType.Id == BatteryType.Id) && i.Status == AssetStatusEnum.IDLE
@@ -138,8 +140,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                var dbContext = new AppDbContext();
-                List<BatteryTypeClass> all = dbContext.BatteryTypes.ToList();
+                List<BatteryTypeClass> all = _batteryTypes;
 
                 return new ObservableCollection<BatteryTypeClass>(all);
             }
@@ -150,7 +151,7 @@ namespace BCLabManager.ViewModel
             get
             {
                 //if (_record.BatteryStr == null)
-                    //return "/";
+                //return "/";
                 return _battery;
             }
             set
@@ -187,7 +188,7 @@ namespace BCLabManager.ViewModel
             get
             {
                 //if (_record.ChamberStr == null)
-                    //return "/";
+                //return "/";
                 return _chamber;
             }
             set
@@ -205,7 +206,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<ChamberClass> all = _chamberRepository.GetItems();
+                List<ChamberClass> all = _chambers;
                 List<ChamberClass> allstring = (
                     from i in all
                     where i.Status == AssetStatusEnum.IDLE
@@ -220,7 +221,7 @@ namespace BCLabManager.ViewModel
             get
             {
                 //if (_record.ChannelStr == null)
-                    //return "/";
+                //return "/";
                 return _tester;
             }
             set
@@ -233,10 +234,10 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("Tester");
 
 
-                List<ChannelClass> all = _channelRepository.GetItems();
+                List<ChannelClass> all = _channels;
                 List<ChannelClass> allstring = (
                     from i in all
-                    where (i.Tester == Tester) && i.Status == AssetStatusEnum.IDLE
+                    where (i.Tester.Id == Tester.Id) && i.Status == AssetStatusEnum.IDLE
                     select i).ToList();
 
                 AllChannels = new ObservableCollection<ChannelClass>(allstring);
@@ -247,7 +248,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TesterClass> all = _testerRepository.GetItems();
+                List<TesterClass> all = _testers;
 
                 return new ObservableCollection<TesterClass>(all);
             }
@@ -258,7 +259,7 @@ namespace BCLabManager.ViewModel
             get
             {
                 //if (_channel == null)
-                    //return "/";
+                //return "/";
                 return _channel;
             }
             set
@@ -428,91 +429,16 @@ namespace BCLabManager.ViewModel
         {
             _record.Execute(this.Battery, this.Chamber, this.Channel, this.Steps, this.StartTime, this._programName, this._subProgramName);
             OnPropertyChanged("Status");
-
-            //battery.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
-            //battery.Status = AssetStatusEnum.USING;
-            //if (chamber != null)
-            //{
-            //    chamber.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
-            //    chamber.Status = AssetStatusEnum.USING;
-            //}
-            //channel.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
-            //channel.Status = AssetStatusEnum.USING;
-
-            //this.Status = TestStatus.Executing;
-            //this.BatteryTypeStr = battery.BatteryType.Name;
-            //this.BatteryStr = battery.Name;
-            //this.TesterStr = channel.Tester.Name;
-            //this.ChannelStr = channel.Name;
-            //if (chamber != null)
-            //    this.ChamberStr = chamber.Name;
-            //this.StartTime = startTime;
-            //this.Steps = steps;
-            //this.ProgramStr = programName;
-            //this.SubProgramStr = subProgramName;
-
-            var dbContext = new AppDbContext();
-            
-            var bat = dbContext.Batteries.SingleOrDefault(i => i.Id == this.Battery.Id);
-            dbContext.Entry(bat)
-                .Collection(i => i.Records)
-                .Load();
-            dbContext.Entry(bat)
-                .Reference(i => i.BatteryType)
-                .Load();
-            bat.Records.Add(new AssetUsageRecordClass(StartTime, AssetStatusEnum.USING, _programName, _subProgramName));
-            bat.Status = AssetStatusEnum.USING;
-
-            var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == this.Id);
-
-            tr.Status = TestStatus.Executing;
-            tr.BatteryTypeStr = bat.BatteryType.Name;
-            tr.BatteryStr = bat.Name;
-            tr.StartTime = StartTime;
-            tr.Steps = Steps;
-            tr.ProgramStr = _programName;
-            tr.SubProgramStr = _subProgramName;
-            dbContext.SaveChanges();
         }
         public void Commit()
         {
             _record.Commit(this.Battery, this.Chamber, this.Channel, this.EndTime, null, this.NewCycle, this.Comment);
             OnPropertyChanged("Status");
-
-
-            var dbContext = new AppDbContext();
-
-            var bat = dbContext.Batteries.SingleOrDefault(i => i.Id == this.Battery.Id);
-            dbContext.Entry(bat)
-                .Collection(i => i.Records)
-                .Load();
-            dbContext.Entry(bat)
-                .Reference(i => i.BatteryType)
-                .Load();
-            bat.Records.Add(new AssetUsageRecordClass(EndTime, AssetStatusEnum.IDLE, "", ""));
-            bat.Status = AssetStatusEnum.IDLE;
-
-            var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == this.Id);
-            tr.Status = TestStatus.Completed;
-            tr.EndTime = EndTime;
-            tr.RawData = null;
-            tr.NewCycle = NewCycle;
-            tr.Comment = Comment;
-            dbContext.SaveChanges();
         }
         public void Invalidate()
         {
             _record.Invalidate(this.Comment);
             OnPropertyChanged("Status");
-
-
-            var dbContext = new AppDbContext();
-
-            var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == this.Id);
-            tr.Status = TestStatus.Invalid;
-            tr.Comment += "\n" + Comment;
-
-            dbContext.SaveChanges();
         }
         #endregion
     }

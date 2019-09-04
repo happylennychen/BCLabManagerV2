@@ -23,11 +23,9 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public TestRecordViewModel(TestRecordClass record)     //
+        public TestRecordViewModel(
+            TestRecordClass record)     //
         {
-            if (record == null)
-                throw new ArgumentNullException("record");
-
             _record = record;
             //_record.PropertyChanged += _record_PropertyChanged;
         }

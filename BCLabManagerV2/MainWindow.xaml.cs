@@ -112,7 +112,16 @@ namespace BCLabManager
                     .ToList());
             }
 
-            allProgramsViewModel = new AllProgramsViewModel(programClasses, subProgramTemplates);    //ViewModel初始化
+            allProgramsViewModel = new AllProgramsViewModel
+                (
+                programClasses, 
+                subProgramTemplates,
+                batteryTypes,
+                batteries,
+                testers,
+                channels,
+                chambers
+                );    //ViewModel初始化
             this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定
         }
     }
