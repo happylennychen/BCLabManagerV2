@@ -23,8 +23,8 @@ namespace BCLabManager.ViewModel
     public class TestRecordEditViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-        string _programName;
-        string _subProgramName;
+        //string _programName;
+        //string _subProgramName;
         readonly TestRecordClass _record;
         //readonly BatteryTypeRepository _batterytypeRepository;
         //readonly BatteryRepository _batteryRepository;
@@ -427,7 +427,7 @@ namespace BCLabManager.ViewModel
         #region Public Interface
         public void Execute()
         {
-            _record.Execute(this.Battery, this.Chamber, this.Channel, this.Steps, this.StartTime, this._programName, this._subProgramName);
+            _record.Execute(this.Battery, this.Chamber, this.Channel, this.Steps, this.StartTime, "", "");
             OnPropertyChanged("Status");
         }
         public void Commit()

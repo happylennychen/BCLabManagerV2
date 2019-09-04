@@ -130,23 +130,23 @@
             />
                             <GridViewColumn 
             Header="BatteryType" 
-            DisplayMemberBinding="{Binding Path=BatteryType}" 
+            DisplayMemberBinding="{Binding Path=BatteryTypeStr}" 
             />
                             <GridViewColumn 
             Header="Battery" 
-            DisplayMemberBinding="{Binding Path=Battery}" 
+            DisplayMemberBinding="{Binding Path=BatteryStr}" 
             />
                             <GridViewColumn 
             Header="Chamber" 
-            DisplayMemberBinding="{Binding Path=Chamber}" 
+            DisplayMemberBinding="{Binding Path=ChamberStr}" 
             />
                             <GridViewColumn 
             Header="Tester" 
-            DisplayMemberBinding="{Binding Path=Tester}" 
+            DisplayMemberBinding="{Binding Path=TesterStr}" 
             />
                             <GridViewColumn 
             Header="Channel" 
-            DisplayMemberBinding="{Binding Path=Channel}" 
+            DisplayMemberBinding="{Binding Path=ChannelStr}" 
             />
                             <GridViewColumn 
             Header="StartTime" 
@@ -193,23 +193,23 @@
             />
                             <GridViewColumn 
             Header="BatteryType" 
-            DisplayMemberBinding="{Binding Path=BatteryType}" 
+            DisplayMemberBinding="{Binding Path=BatteryTypeStr}" 
             />
                             <GridViewColumn 
             Header="Battery" 
-            DisplayMemberBinding="{Binding Path=Battery}" 
+            DisplayMemberBinding="{Binding Path=BatteryStr}" 
             />
                             <GridViewColumn 
             Header="Chamber" 
-            DisplayMemberBinding="{Binding Path=Chamber}" 
+            DisplayMemberBinding="{Binding Path=ChamberStr}" 
             />
                             <GridViewColumn 
             Header="Tester" 
-            DisplayMemberBinding="{Binding Path=Tester}" 
+            DisplayMemberBinding="{Binding Path=TesterStr}" 
             />
                             <GridViewColumn 
             Header="Channel" 
-            DisplayMemberBinding="{Binding Path=Channel}" 
+            DisplayMemberBinding="{Binding Path=ChannelStr}" 
             />
                             <GridViewColumn 
             Header="StartTime" 

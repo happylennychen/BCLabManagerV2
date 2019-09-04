@@ -503,14 +503,29 @@ namespace BCLabManager.ViewModel
             TestRecordViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                //SelectedFirstTestRecord.BatteryType = viewmodel.BatteryType;
-                //SelectedFirstTestRecord.Battery = viewmodel.Battery;
-                //SelectedFirstTestRecord.Chamber = viewmodel.Chamber;
-                //SelectedFirstTestRecord.Tester = viewmodel.Tester;
-                //SelectedFirstTestRecord.Channel = viewmodel.Channel;
-                //SelectedFirstTestRecord.StartTime = viewmodel.StartTime;
-                //SelectedFirstTestRecord.Steps = viewmodel.Steps;
-                //SelectedFirstTestRecord.Execute();
+                SelectedFirstTestRecord.BatteryTypeStr = evm.BatteryType.Name;
+                SelectedFirstTestRecord.BatteryStr = evm.Battery.Name;
+                SelectedFirstTestRecord.ChamberStr = evm.Chamber.Name;
+                SelectedFirstTestRecord.TesterStr = evm.Tester.Name;
+                SelectedFirstTestRecord.ChannelStr = evm.Channel.Name;
+                SelectedFirstTestRecord.StartTime = evm.StartTime;
+                SelectedFirstTestRecord.Steps = evm.Steps;
+                SelectedFirstTestRecord.Status = TestStatus.Executing;
+
+                using(var dbContext = new AppDbContext())
+                {
+                    var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == SelectedFirstTestRecord.Id);
+                    tr.BatteryTypeStr = SelectedFirstTestRecord.BatteryTypeStr;
+                    tr.BatteryStr = SelectedFirstTestRecord.BatteryStr;
+                    tr.ChamberStr = SelectedFirstTestRecord.ChamberStr;
+                    tr.TesterStr = SelectedFirstTestRecord.TesterStr;
+                    tr.ChannelStr = SelectedFirstTestRecord.ChannelStr;
+                    tr.StartTime = SelectedFirstTestRecord.StartTime;
+                    tr.Steps = SelectedFirstTestRecord.Steps;
+                    tr.Status = SelectedFirstTestRecord.Status;
+                    dbContext.SaveChanges();
+                }
+                evm.Execute();
             }
         }
         private bool CanExecute

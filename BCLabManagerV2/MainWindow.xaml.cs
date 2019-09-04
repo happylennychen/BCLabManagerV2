@@ -53,7 +53,12 @@ namespace BCLabManager
             List<BatteryClass> batteries;
             using (var dbContext = new AppDbContext())
             {
-                batteries = new List<BatteryClass>(dbContext.Batteries.Include(i=>i.BatteryType).ToList());
+                batteries = new List<BatteryClass>(
+                    dbContext.Batteries
+                    .Include(i=>i.BatteryType)
+                    .Include(o=>o.Records)
+                    .ToList()
+                    );
             }
 
             allBatteriesViewModel = new AllBatteriesViewModel(batteries, batteryTypes);    //ViewModel初始化
@@ -73,7 +78,12 @@ namespace BCLabManager
             List<ChannelClass> channels;
             using (var dbContext = new AppDbContext())
             {
-                channels = new List<ChannelClass>(dbContext.Channels.Include(i=>i.Tester).ToList());
+                channels = new List<ChannelClass>(
+                    dbContext.Channels
+                    .Include(i=>i.Tester)
+                    .Include(o=>o.Records)
+                    .ToList()
+                    );
             }
 
             allChannelsViewModel = new AllChannelsViewModel(channels, testers);    //ViewModel初始化
@@ -83,7 +93,11 @@ namespace BCLabManager
             List<ChamberClass> chambers;
             using (var dbContext = new AppDbContext())
             {
-                chambers = new List<ChamberClass>(dbContext.Chambers.ToList());
+                chambers = new List<ChamberClass>(
+                    dbContext.Chambers
+                    .Include(o=>o.Records)
+                    .ToList()
+                    );
             }
 
             allChambersViewModel = new AllChambersViewModel(chambers);    //ViewModel初始化

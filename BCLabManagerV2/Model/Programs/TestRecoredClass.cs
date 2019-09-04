@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BCLabManager.DataAccess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -101,17 +102,47 @@ namespace BCLabManager.Model
             channel.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
             channel.Status = AssetStatusEnum.USING;
 
-            this.Status = TestStatus.Executing;
-            this.BatteryTypeStr = battery.BatteryType.Name;
-            this.BatteryStr = battery.Name;
-            this.TesterStr = channel.Tester.Name;
-            this.ChannelStr = channel.Name;
-            if(chamber!=null)
-                this.ChamberStr = chamber.Name;
-            this.StartTime = startTime;
-            this.Steps = steps;
-            this.ProgramStr = programName;
-            this.SubProgramStr = subProgramName;
+            using (var dbContext = new AppDbContext())
+            {
+                var db_battery = dbContext.Batteries.SingleOrDefault(o => o.Id == battery.Id);
+                dbContext.Entry(db_battery)
+                    .Collection(o => o.Records)
+                    .Load();
+
+                db_battery.Status = AssetStatusEnum.USING;
+                db_battery.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
+
+                if (chamber != null)
+                {
+                    var db_chamber = dbContext.Chambers.SingleOrDefault(o => o.Id == chamber.Id);
+                    dbContext.Entry(db_chamber)
+                        .Collection(o => o.Records)
+                        .Load();
+                    db_chamber.Status = AssetStatusEnum.USING;
+                    db_chamber.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
+                }
+                var db_channel = dbContext.Channels.SingleOrDefault(o => o.Id == channel.Id);
+                dbContext.Entry(db_channel)
+                    .Collection(o => o.Records)
+                    .Load();
+
+                db_channel.Status = AssetStatusEnum.USING;
+                db_channel.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
+
+                dbContext.SaveChanges();
+            }
+
+            //this.Status = TestStatus.Executing;
+            //this.BatteryTypeStr = battery.BatteryType.Name;
+            //this.BatteryStr = battery.Name;
+            //this.TesterStr = channel.Tester.Name;
+            //this.ChannelStr = channel.Name;
+            //if(chamber!=null)
+            //    this.ChamberStr = chamber.Name;
+            //this.StartTime = startTime;
+            //this.Steps = steps;
+            //this.ProgramStr = programName;
+            //this.SubProgramStr = subProgramName;
         }
 
         public void Commit(BatteryClass battery, ChamberClass chamber, ChannelClass channel, DateTime endTime, RawDataClass rawData, Double newCycle, String comment = "")  //Need to check the Executor Status to make sure it is executing
