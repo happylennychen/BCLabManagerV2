@@ -311,13 +311,5 @@ namespace BCLabManager.ViewModel
             get { return _isOK; }
             set { _isOK = value; }
         }
-
-        #region Public Interface
-        public void CommitOnAssets()
-        {
-            _record.Commit(this.EndTime, null, this.NewCycle, this.Comment);
-            OnPropertyChanged("Status");
-        }
-        #endregion
     }
 }

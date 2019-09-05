@@ -99,9 +99,9 @@ namespace BCLabManager.Model
         public void Execute(BatteryClass battery, ChamberClass chamber, ChannelClass channel, String steps, DateTime startTime, string programName, string subProgramName)
         {
             //分配Assets
-            //AssignedBattery = battery;
-            //AssignedChamber = chamber;
-            //AssignedChannel = channel;
+            AssignedBattery = battery;
+            AssignedChamber = chamber;
+            AssignedChannel = channel;
 
             battery.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
             battery.Status = AssetStatusEnum.USING;
@@ -197,9 +197,9 @@ namespace BCLabManager.Model
                 dbContext.SaveChanges();
             }
             //释放Assets
-            //AssignedBattery = null;
-            //AssignedChamber = null;
-            //AssignedChannel = null;
+            AssignedBattery = null;
+            AssignedChamber = null;
+            AssignedChannel = null;
         }
 
         public void Abandon(String comment = "")

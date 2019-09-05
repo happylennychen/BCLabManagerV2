@@ -423,13 +423,5 @@ namespace BCLabManager.ViewModel
             get { return _isOK; }
             set { _isOK = value; }
         }
-
-        #region Public Interface
-        public void ExecuteOnAssets()
-        {
-            _record.Execute(this.Battery, this.Chamber, this.Channel, this.Steps, this.StartTime, "", "");
-            OnPropertyChanged("Status");
-        }
-        #endregion
     }
 }

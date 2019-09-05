@@ -588,7 +588,7 @@ namespace BCLabManager.ViewModel
 
             TestRecordExecuteViewModel evm = new TestRecordExecuteViewModel
                 (
-                testRecord.Record,      //将model传给ExecuteViewModel
+                testRecord.Record,      //将model传给ExecuteViewModel      //??????????????????????????
                 _batteryTypes,
                 _batteries,
                 _testers,
@@ -626,10 +626,11 @@ namespace BCLabManager.ViewModel
                     tr.AssignedChannel = dbContext.Channels.SingleOrDefault(o => o.Id == evm.Channel.Id);
                     dbContext.SaveChanges();
                 }
-                evm.ExecuteOnAssets();      //evm的Record就是testRecord的Record. Record中的Assets会被赋值
+                testRecord.ExecuteOnAssets(evm.Battery, evm.Chamber, evm.Channel);      //将evm的Assets传给testRecord
             }
         }
         private void Commit(TestRecordViewModel testRecord)
+        //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
         {
             //viewmodel.DisplayName = "Test-Commit";
             //var TestRecordCommitViewInstance = new CommitView();
@@ -646,7 +647,7 @@ namespace BCLabManager.ViewModel
             //TestRecordClass m = new TestRecordClass();
             TestRecordCommitViewModel evm = new TestRecordCommitViewModel
                 (
-                testRecord.Record
+                testRecord.Record      //??????????????????????????
                 );
             evm.DisplayName = "Test-Commit";
             var TestRecordCommitViewInstance = new CommitView();
@@ -658,7 +659,7 @@ namespace BCLabManager.ViewModel
                 testRecord.NewCycle = evm.NewCycle;
                 testRecord.Comment = evm.Comment;
                 testRecord.Status = TestStatus.Completed;
-                evm.CommitOnAssets();
+                testRecord.CommitOnAssets();
                 using (var dbContext = new AppDbContext())
                 {
                     var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == testRecord.Id);
@@ -677,7 +678,7 @@ namespace BCLabManager.ViewModel
         {
             TestRecordInvalidateViewModel evm = new TestRecordInvalidateViewModel
                 (
-                testRecord.Record
+                testRecord.Record      //??????????????????????????
                 );
             evm.DisplayName = "Test-Invalidate";
             var TestRecordInvalidateViewInstance = new InvalidateView();
