@@ -148,13 +148,13 @@ namespace BCLabManager.ViewModel
             ChamberViewInstance.ShowDialog();                   //设置viewmodel属性
             if (evm.IsOK == true)
             {
-                _chambers.Add(m);
                 using (var dbContext = new AppDbContext())
                 {
                     dbContext.Chambers.Add(m);
                     dbContext.SaveChanges();
-                    this.AllChambers.Add(new ChamberViewModel(m)); 
                 }
+                _chambers.Add(m);
+                this.AllChambers.Add(new ChamberViewModel(m));
             }
         }
         private void Edit()
@@ -207,13 +207,13 @@ namespace BCLabManager.ViewModel
             ChamberViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _chambers.Add(m);
                 using (var dbContext = new AppDbContext())
                 {
                     dbContext.Chambers.Add(m);
                     dbContext.SaveChanges();
-                    this.AllChambers.Add(new ChamberViewModel(m));
                 }
+                _chambers.Add(m);
+                this.AllChambers.Add(new ChamberViewModel(m));
             }
         }
         private bool CanSaveAs

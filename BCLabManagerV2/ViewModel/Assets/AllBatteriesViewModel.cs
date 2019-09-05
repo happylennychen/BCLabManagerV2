@@ -141,7 +141,6 @@ namespace BCLabManager.ViewModel
             BatteryViewInstance.ShowDialog();                   //设置viewmodel属性
             if (bevm.IsOK == true)
             {
-                _batteries.Add(bc);
                 using (var dbContext = new AppDbContext())
                 {
                     //dbContext.Batteries.Add(bc);    //不能直接这样写，不然会报错。这里不是添加一个全新的graph，而是添加一个新的bc，然后修改关系
@@ -155,6 +154,7 @@ namespace BCLabManager.ViewModel
                     dbContext.SaveChanges();    //side effect是会更新newb的id
                     bc = newb;                  //所以把newb存到using语句外面的bc里
                 }
+                _batteries.Add(bc);
                 this.AllBatteries.Add(new BatteryViewModel(bc));    //然后用bc生成vm，这样ID就会更新
             }
         }
@@ -208,7 +208,6 @@ namespace BCLabManager.ViewModel
             BatteryViewInstance.ShowDialog();
             if (bevm.IsOK == true)
             {
-                _batteries.Add(bc);
                 using (var dbContext = new AppDbContext())
                 {
                     //dbContext.Batteries.Add(bc);    //不能直接这样写，不然会报错。这里不是添加一个全新的graph，而是添加一个新的bc，然后修改关系
@@ -222,6 +221,7 @@ namespace BCLabManager.ViewModel
                     dbContext.SaveChanges();    //side effect是会更新newb的id
                     bc = newb;                  //所以把newb存到using语句外面的bc里
                 }
+                _batteries.Add(bc);
                 this.AllBatteries.Add(new BatteryViewModel(bc));    //然后用bc生成vm，这样ID就会更新
             }
         }

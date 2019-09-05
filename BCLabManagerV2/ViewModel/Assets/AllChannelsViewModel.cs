@@ -139,7 +139,6 @@ namespace BCLabManager.ViewModel
             ChannelViewInstance.ShowDialog();                   //设置viewmodel属性
             if (evm.IsOK == true)
             {
-                _channels.Add(m);
                 using (var dbContext = new AppDbContext())
                 {
                     //dbContext.Channels.Add(bc);    //不能直接这样写，不然会报错。这里不是添加一个全新的graph，而是添加一个新的m，然后修改关系
@@ -152,6 +151,7 @@ namespace BCLabManager.ViewModel
                     dbContext.SaveChanges();    //side effect是会更新newc的id
                     m = newc;                  //所以把newc存到using语句外面的bc里
                 }
+                _channels.Add(m);
                 this.AllChannels.Add(new ChannelViewModel(m));    //然后用m生成vm，这样ID就会更新
             }
         }
@@ -200,7 +200,6 @@ namespace BCLabManager.ViewModel
             ChannelViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _channels.Add(m);
                 using (var dbContext = new AppDbContext())
                 {
                     //dbContext.Channels.Add(bc);    //不能直接这样写，不然会报错。这里不是添加一个全新的graph，而是添加一个新的m，然后修改关系
@@ -213,6 +212,7 @@ namespace BCLabManager.ViewModel
                     dbContext.SaveChanges();    //side effect是会更新newc的id
                     m = newc;                  //所以把newc存到using语句外面的bc里
                 }
+                _channels.Add(m);
                 this.AllChannels.Add(new ChannelViewModel(m));    //然后用m生成vm，这样ID就会更新
             }
         }
