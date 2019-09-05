@@ -13,7 +13,7 @@ namespace BCLabManager.ViewModel
     public class AllSubProgramTemplatesViewModel : ViewModelBase
     {
         #region Fields
-
+        List<SubProgramTemplate> _subProgramTemplates;
         SubProgramTemplateViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
@@ -30,6 +30,7 @@ namespace BCLabManager.ViewModel
 
         void CreateAllSubProgramTemplates(List<SubProgramTemplate> subProgramTemplates)
         {
+            _subProgramTemplates = subProgramTemplates;
             List<SubProgramTemplateViewModel> all =
                 (from subt in subProgramTemplates
                  select new SubProgramTemplateViewModel(subt)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
@@ -122,8 +123,9 @@ namespace BCLabManager.ViewModel
                 {
                     dbContext.SubProgramTemplates.Add(model);
                     dbContext.SaveChanges();
-                    this.AllSubProgramTemplates.Add(new SubProgramTemplateViewModel(model));
                 }
+                _subProgramTemplates.Add(model);
+                this.AllSubProgramTemplates.Add(new SubProgramTemplateViewModel(model));
             }
         }
         private void Edit()
@@ -171,8 +173,9 @@ namespace BCLabManager.ViewModel
                 {
                     dbContext.SubProgramTemplates.Add(model);
                     dbContext.SaveChanges();
-                    this.AllSubProgramTemplates.Add(new SubProgramTemplateViewModel(model));
                 }
+                _subProgramTemplates.Add(model);
+                this.AllSubProgramTemplates.Add(new SubProgramTemplateViewModel(model));
             }
         }
         private bool CanSaveAs
