@@ -263,6 +263,8 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public string FilePath { get; set; }
+
         #endregion // Presentation Properties
 
 

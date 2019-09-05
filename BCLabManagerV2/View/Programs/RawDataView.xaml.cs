@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,9 +16,9 @@ namespace BCLabManager.View
     /// <summary>
     /// Interaction logic for ChannelView.xaml
     /// </summary>
-    public partial class CommitView : Window
+    public partial class RawDataView : Window
     {
-        public CommitView()
+        public RawDataView()
         {
             InitializeComponent();
         }
@@ -27,15 +26,6 @@ namespace BCLabManager.View
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            var dialog = new OpenFileDialog();
-            if(dialog.ShowDialog()==true)
-            {
-                FilePathLabel.Text = dialog.FileName;
-            }
         }
     }
 }

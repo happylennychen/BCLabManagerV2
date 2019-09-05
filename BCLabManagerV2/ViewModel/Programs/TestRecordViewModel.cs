@@ -224,19 +224,34 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("NewCycle");
             }
         }
+        public string FilePath
+        {
+            get
+            {
+                return _record.FilePath;
+            }
+            set
+            {
+                if (value == _record.FilePath)
+                    return;
 
+                _record.FilePath = value;
+
+                base.OnPropertyChanged("FilePath");
+            }
+        }
         #endregion // Presentation Properties
 
 
         #region Public Interface
         public void ExecuteOnAssets(BatteryClass battery, ChamberClass chamber, ChannelClass channel)
         {
-            _record.Execute(battery, chamber, channel, this.Steps, this.StartTime, "", "");
+            _record.AssetsExecute(battery, chamber, channel, this.Steps, this.StartTime, "", "");
             OnPropertyChanged("Status");
         }
         public void CommitOnAssets()
         {
-            _record.Commit(this.EndTime, null, this.NewCycle, this.Comment);
+            _record.AssetsCommit(this.EndTime, null, this.NewCycle, this.Comment);
             OnPropertyChanged("Status");
         }
         #endregion

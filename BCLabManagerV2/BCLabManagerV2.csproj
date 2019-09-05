@@ -198,6 +198,10 @@
     <Compile Include="Migrations\20190905024842_Init.designer.cs">
       <DependentUpon>20190905024842_Init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20190905084220_AddFilePath.cs" />
+    <Compile Include="Migrations\20190905084220_AddFilePath.designer.cs">
+      <DependentUpon>20190905084220_AddFilePath.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Model\Assets\BatteryClass.cs" />
     <Compile Include="Model\Assets\BatteryTypeClass.cs" />
@@ -228,6 +232,7 @@
     <Compile Include="ViewModel\Programs\ProgramEditViewModel.cs" />
     <Compile Include="ViewModel\Programs\SubProgramTemplateEditViewModel.cs" />
     <Compile Include="ViewModel\Programs\SubProgramTemplateViewModel.cs" />
+    <Compile Include="ViewModel\Programs\TestRecordRawDataViewModel.cs" />
     <Compile Include="ViewModel\Programs\TestRecordInvalidateViewModel.cs" />
     <Compile Include="ViewModel\Programs\TestRecordCommitViewModel.cs" />
     <Compile Include="ViewModel\Programs\TestRecordExecuteViewModel.cs" />
@@ -274,6 +279,9 @@
     </Compile>
     <Compile Include="View\Programs\AllProgramsView.xaml.cs">
       <DependentUpon>AllProgramsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Programs\RawDataView.xaml.cs">
+      <DependentUpon>RawDataView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Programs\InvalidateView.xaml.cs">
       <DependentUpon>InvalidateView.xaml</DependentUpon>
@@ -348,6 +356,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Programs\AllProgramsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Programs\RawDataView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -48,9 +48,9 @@
       />
             <DockPanel LastChildFill="True"
       Grid.Row="2" Grid.Column="2" >
-                <Button DockPanel.Dock="Right">...</Button>
-                <TextBlock
-      Text="{Binding Path=FilePath, UpdateSourceTrigger=PropertyChanged}" ></TextBlock>
+                <Button DockPanel.Dock="Right" Click="Button_Click_1">...</Button>
+                <TextBlock Name="FilePathLabel"
+      Text="{Binding Path=FilePath,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBlock>
             </DockPanel>
             <Label 
       Grid.Row="4" Grid.Column="0" 

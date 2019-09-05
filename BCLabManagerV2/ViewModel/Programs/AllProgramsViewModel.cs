@@ -499,17 +499,7 @@ namespace BCLabManager.ViewModel
         }
         private void View()
         {
-            /*TestRecordClass model = new TestRecordClass();
-            TestRecordViewModel viewmodel = new TestRecordViewModel(model, SelectedProgram.Name, SelectedSubProgram.Name);
-            viewmodel.DisplayName = "Test-Invalidate";
-            var TestRecordInvalidateViewInstance = new InvalidateView();
-            TestRecordInvalidateViewInstance.DataContext = viewmodel;
-            TestRecordInvalidateViewInstance.ShowDialog();
-            if (viewmodel.IsOK == true)
-            {
-                SelectedFirstTestRecord.Comment = viewmodel.Comment;
-                SelectedFirstTestRecord.Invalidate();
-            }*/
+            ViewRawData(SelectedFirstTestRecord);
         }
         private bool CanView
         {
@@ -541,17 +531,7 @@ namespace BCLabManager.ViewModel
         }
         private void View2()
         {
-            /*TestRecordClass model = new TestRecordClass();
-            TestRecordViewModel viewmodel = new TestRecordViewModel(model, SelectedProgram.Name, SelectedSubProgram.Name);
-            viewmodel.DisplayName = "Test-Invalidate";
-            var TestRecordInvalidateViewInstance = new InvalidateView();
-            TestRecordInvalidateViewInstance.DataContext = viewmodel;
-            TestRecordInvalidateViewInstance.ShowDialog();
-            if (viewmodel.IsOK == true)
-            {
-                SelectedSecondTestRecord.Comment = viewmodel.Comment;
-                SelectedSecondTestRecord.Invalidate();
-            }*/
+            ViewRawData(SelectedSecondTestRecord);
         }
         private bool CanView2
         {
@@ -659,6 +639,7 @@ namespace BCLabManager.ViewModel
                 testRecord.NewCycle = evm.NewCycle;
                 testRecord.Comment = evm.Comment;
                 testRecord.Status = TestStatus.Completed;
+                testRecord.FilePath = evm.FilePath;
                 testRecord.CommitOnAssets();
                 using (var dbContext = new AppDbContext())
                 {
@@ -667,6 +648,7 @@ namespace BCLabManager.ViewModel
                     tr.NewCycle = testRecord.NewCycle;
                     tr.Comment = testRecord.Comment;
                     tr.Status = testRecord.Status;
+                    tr.FilePath = testRecord.FilePath;
                     tr.AssignedBattery = null;
                     tr.AssignedChamber = null;
                     tr.AssignedChannel = null;
@@ -698,6 +680,17 @@ namespace BCLabManager.ViewModel
                 }
                 evm.Invalidate();
             }
+        }
+        private void ViewRawData(TestRecordViewModel testRecordVM)
+        {
+            TestRecordRawDataViewModel evm = new TestRecordRawDataViewModel
+                (
+                testRecordVM.Record      //??????????????????????????
+                );
+            evm.DisplayName = "Test-View Raw Data";
+            var TestRecordRawDataViewInstance = new RawDataView();
+            TestRecordRawDataViewInstance.DataContext = evm;
+            TestRecordRawDataViewInstance.ShowDialog();
         }
     }
 }

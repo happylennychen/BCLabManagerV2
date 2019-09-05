@@ -58,6 +58,7 @@ namespace BCLabManager.Model
         public String Steps { get; set; }
         public String Comment { get; set; }
         public RawDataClass RawData { get; set; }
+        public string FilePath { get; set; }
         public Double NewCycle { get; set; }
 
         #region Store the assets in use
@@ -96,7 +97,7 @@ namespace BCLabManager.Model
             //this.NewCycle = ??
         }
 
-        public void Execute(BatteryClass battery, ChamberClass chamber, ChannelClass channel, String steps, DateTime startTime, string programName, string subProgramName)
+        public void AssetsExecute(BatteryClass battery, ChamberClass chamber, ChannelClass channel, String steps, DateTime startTime, string programName, string subProgramName)
         {
             //分配Assets
             AssignedBattery = battery;
@@ -155,7 +156,7 @@ namespace BCLabManager.Model
             //this.SubProgramStr = subProgramName;
         }
 
-        public void Commit(DateTime endTime, RawDataClass rawData, Double newCycle, String comment = "")  //Need to check the Executor Status to make sure it is executing
+        public void AssetsCommit(DateTime endTime, RawDataClass rawData, Double newCycle, String comment = "")  //Need to check the Executor Status to make sure it is executing
         {
             AssignedBattery.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
             AssignedBattery.Status = AssetStatusEnum.IDLE;
