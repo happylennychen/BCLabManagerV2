@@ -15,6 +15,7 @@ using BCLabManager.ViewModel;
 using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace BCLabManager
 {
@@ -40,6 +41,7 @@ namespace BCLabManager
         public MainWindow()
         {
             InitializeComponent();
+            InitializeDatabase();
             List<BatteryTypeClass> batteryTypes;
             using (var dbContext = new AppDbContext())
             {
@@ -155,6 +157,17 @@ namespace BCLabManager
                 chambers
                 );    //ViewModel初始化
             this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定
+        }
+        void InitializeDatabase()
+        {
+            string defaultfilepath = "D://BCLab.db3";
+            if(!File.Exists(defaultfilepath))
+            {
+                using (var dbContext = new AppDbContext())
+                {
+                    dbContext.Database.Migrate();
+                }
+            }
         }
     }
 }
