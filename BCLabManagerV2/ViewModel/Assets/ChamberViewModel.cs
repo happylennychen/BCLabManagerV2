@@ -29,13 +29,13 @@ namespace BCLabManager.ViewModel
             //    throw new ArgumentNullException("chamberRepository");
 
             _chamber = chamber;
-            //_chamber.PropertyChanged += _chamber_PropertyChanged;
+            _chamber.PropertyChanged += _chamber_PropertyChanged;
         }
 
-        //private void _chamber_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        //{
-        //    OnPropertyChanged(e.PropertyName);
-        //}
+        private void _chamber_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(e.PropertyName);
+        }
 
         #endregion // Constructor
 
