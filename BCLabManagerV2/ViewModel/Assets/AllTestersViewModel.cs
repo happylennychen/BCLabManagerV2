@@ -14,23 +14,18 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        readonly TesterRepository _testerRepository;
-        readonly ChannelRepository _channelRepository;
         TesterViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
-
+        List<TesterClass> _testers;
         #endregion // Fields
 
         #region Constructor
 
         public AllTestersViewModel(List<TesterClass> testers)
         {
-            // Subscribe for notifications of when a new customer is saved.
-            //_testerRepository.ItemAdded += this.OnTesterAddedToRepository;
-
-            // Populate the AllTesters collection with _testerRepository.
+            _testers = testers;
             this.CreateAllTesters(testers);
         }
 
@@ -138,6 +133,7 @@ namespace BCLabManager.ViewModel
             TesterViewInstance.ShowDialog();                   //设置viewmodel属性
             if (evm.IsOK == true)
             {
+                _testers.Add(m);
                 using (var dbContext = new AppDbContext())
                 {
                     dbContext.Testers.Add(m);
@@ -185,6 +181,7 @@ namespace BCLabManager.ViewModel
             TesterViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
+                _testers.Add(m);
                 using (var dbContext = new AppDbContext())
                 {
                     dbContext.Testers.Add(m);

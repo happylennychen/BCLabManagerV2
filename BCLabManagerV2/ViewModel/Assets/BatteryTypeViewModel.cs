@@ -27,6 +27,12 @@ namespace BCLabManager.ViewModel
                 throw new ArgumentNullException("batterytype");
 
             _batterytype = batterytype;
+            _batterytype.PropertyChanged += _batterytype_PropertyChanged;
+        }
+
+        private void _batterytype_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(e.PropertyName);
         }
 
         #endregion // Constructor

@@ -23,6 +23,12 @@ namespace BCLabManager.ViewModel
         public TesterViewModel(TesterClass tester)  //构造函数里面之所以要testerrepository,是因为IsNewBattery需要用此进行判断
         {
             _tester = tester;
+            _tester.PropertyChanged += _tester_PropertyChanged;
+        }
+
+        private void _tester_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(e.PropertyName);
         }
 
         #endregion // Constructor

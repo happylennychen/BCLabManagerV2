@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20190904013120_Init")]
+    [Migration("20190905024842_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -199,6 +199,12 @@ namespace BCLabManager.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("AssignedBatteryId");
+
+                    b.Property<int?>("AssignedChamberId");
+
+                    b.Property<int?>("AssignedChannelId");
+
                     b.Property<string>("BatteryStr");
 
                     b.Property<string>("BatteryTypeStr");
@@ -232,6 +238,12 @@ namespace BCLabManager.Migrations
                     b.Property<string>("TesterStr");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AssignedBatteryId");
+
+                    b.HasIndex("AssignedChamberId");
+
+                    b.HasIndex("AssignedChannelId");
 
                     b.HasIndex("RawDataId");
 
@@ -294,6 +306,18 @@ namespace BCLabManager.Migrations
 
             modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>
                 {
+                    b.HasOne("BCLabManager.Model.BatteryClass", "AssignedBattery")
+                        .WithMany()
+                        .HasForeignKey("AssignedBatteryId");
+
+                    b.HasOne("BCLabManager.Model.ChamberClass", "AssignedChamber")
+                        .WithMany()
+                        .HasForeignKey("AssignedChamberId");
+
+                    b.HasOne("BCLabManager.Model.ChannelClass", "AssignedChannel")
+                        .WithMany()
+                        .HasForeignKey("AssignedChannelId");
+
                     b.HasOne("BCLabManager.Model.RawDataClass", "RawData")
                         .WithMany()
                         .HasForeignKey("RawDataId");

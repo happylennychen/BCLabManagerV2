@@ -61,9 +61,9 @@ namespace BCLabManager.Model
         public Double NewCycle { get; set; }
 
         #region Store the assets in use
-        private BatteryClass _battery;
-        private ChamberClass _chamber;
-        private ChannelClass _channel;
+        public BatteryClass AssignedBattery { get; set; }
+        public ChamberClass AssignedChamber { get; set; }
+        public ChannelClass AssignedChannel { get; set; }
         #endregion
 
         public event EventHandler<StatusChangedEventArgs> StatusChanged;
@@ -99,9 +99,9 @@ namespace BCLabManager.Model
         public void Execute(BatteryClass battery, ChamberClass chamber, ChannelClass channel, String steps, DateTime startTime, string programName, string subProgramName)
         {
             //分配Assets
-            _battery = battery;
-            _chamber = chamber;
-            _channel = channel;
+            //AssignedBattery = battery;
+            //AssignedChamber = chamber;
+            //AssignedChannel = channel;
 
             battery.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
             battery.Status = AssetStatusEnum.USING;
@@ -115,30 +115,30 @@ namespace BCLabManager.Model
 
             using (var dbContext = new AppDbContext())
             {
-                var db_battery = dbContext.Batteries.SingleOrDefault(o => o.Id == battery.Id);
-                dbContext.Entry(db_battery)
+                var dbAssignedBattery = dbContext.Batteries.SingleOrDefault(o => o.Id == battery.Id);
+                dbContext.Entry(dbAssignedBattery)
                     .Collection(o => o.Records)
                     .Load();
 
-                db_battery.Status = AssetStatusEnum.USING;
-                db_battery.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
+                dbAssignedBattery.Status = AssetStatusEnum.USING;
+                dbAssignedBattery.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
 
                 if (chamber != null)
                 {
-                    var db_chamber = dbContext.Chambers.SingleOrDefault(o => o.Id == chamber.Id);
-                    dbContext.Entry(db_chamber)
+                    var dbAssignedChamber = dbContext.Chambers.SingleOrDefault(o => o.Id == chamber.Id);
+                    dbContext.Entry(dbAssignedChamber)
                         .Collection(o => o.Records)
                         .Load();
-                    db_chamber.Status = AssetStatusEnum.USING;
-                    db_chamber.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
+                    dbAssignedChamber.Status = AssetStatusEnum.USING;
+                    dbAssignedChamber.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
                 }
-                var db_channel = dbContext.Channels.SingleOrDefault(o => o.Id == channel.Id);
-                dbContext.Entry(db_channel)
+                var dbAssignedChannel = dbContext.Channels.SingleOrDefault(o => o.Id == channel.Id);
+                dbContext.Entry(dbAssignedChannel)
                     .Collection(o => o.Records)
                     .Load();
 
-                db_channel.Status = AssetStatusEnum.USING;
-                db_channel.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
+                dbAssignedChannel.Status = AssetStatusEnum.USING;
+                dbAssignedChannel.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
 
                 dbContext.SaveChanges();
             }
@@ -157,49 +157,49 @@ namespace BCLabManager.Model
 
         public void Commit(DateTime endTime, RawDataClass rawData, Double newCycle, String comment = "")  //Need to check the Executor Status to make sure it is executing
         {
-            _battery.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
-            _battery.Status = AssetStatusEnum.IDLE;
-            if (_chamber != null)
+            AssignedBattery.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+            AssignedBattery.Status = AssetStatusEnum.IDLE;
+            if (AssignedChamber != null)
             {
-                _chamber.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
-                _chamber.Status = AssetStatusEnum.IDLE;
+                AssignedChamber.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+                AssignedChamber.Status = AssetStatusEnum.IDLE;
             }
-            _channel.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
-            _channel.Status = AssetStatusEnum.IDLE;
+            AssignedChannel.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+            AssignedChannel.Status = AssetStatusEnum.IDLE;
 
             using (var dbContext = new AppDbContext())
             {
-                var db_battery = dbContext.Batteries.SingleOrDefault(o => o.Id == _battery.Id);
-                dbContext.Entry(db_battery)
+                var dbAssignedBattery = dbContext.Batteries.SingleOrDefault(o => o.Id == AssignedBattery.Id);
+                dbContext.Entry(dbAssignedBattery)
                     .Collection(o => o.Records)
                     .Load();
 
-                db_battery.Status = AssetStatusEnum.IDLE;
-                db_battery.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+                dbAssignedBattery.Status = AssetStatusEnum.IDLE;
+                dbAssignedBattery.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
 
-                if (_chamber != null)
+                if (AssignedChamber != null)
                 {
-                    var db_chamber = dbContext.Chambers.SingleOrDefault(o => o.Id == _chamber.Id);
-                    dbContext.Entry(db_chamber)
+                    var dbAssignedChamber = dbContext.Chambers.SingleOrDefault(o => o.Id == AssignedChamber.Id);
+                    dbContext.Entry(dbAssignedChamber)
                         .Collection(o => o.Records)
                         .Load();
-                    db_chamber.Status = AssetStatusEnum.IDLE;
-                    db_chamber.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+                    dbAssignedChamber.Status = AssetStatusEnum.IDLE;
+                    dbAssignedChamber.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
                 }
-                var db_channel = dbContext.Channels.SingleOrDefault(o => o.Id == _channel.Id);
-                dbContext.Entry(db_channel)
+                var dbAssignedChannel = dbContext.Channels.SingleOrDefault(o => o.Id == AssignedChannel.Id);
+                dbContext.Entry(dbAssignedChannel)
                     .Collection(o => o.Records)
                     .Load();
 
-                db_channel.Status = AssetStatusEnum.IDLE;
-                db_channel.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+                dbAssignedChannel.Status = AssetStatusEnum.IDLE;
+                dbAssignedChannel.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
 
                 dbContext.SaveChanges();
             }
             //释放Assets
-            _battery = null;
-            _chamber = null;
-            _channel = null;
+            //AssignedBattery = null;
+            //AssignedChamber = null;
+            //AssignedChannel = null;
         }
 
         public void Abandon(String comment = "")

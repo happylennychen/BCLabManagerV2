@@ -166,52 +166,6 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TestRecords",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Status = table.Column<int>(nullable: false),
-                    BatteryTypeStr = table.Column<string>(nullable: true),
-                    BatteryStr = table.Column<string>(nullable: true),
-                    TesterStr = table.Column<string>(nullable: true),
-                    ChannelStr = table.Column<string>(nullable: true),
-                    ChamberStr = table.Column<string>(nullable: true),
-                    SubProgramStr = table.Column<string>(nullable: true),
-                    ProgramStr = table.Column<string>(nullable: true),
-                    StartTime = table.Column<DateTime>(nullable: false),
-                    EndTime = table.Column<DateTime>(nullable: false),
-                    Steps = table.Column<string>(nullable: true),
-                    Comment = table.Column<string>(nullable: true),
-                    RawDataId = table.Column<int>(nullable: true),
-                    NewCycle = table.Column<double>(nullable: false),
-                    SubProgramClassId = table.Column<int>(nullable: true),
-                    SubProgramClassId1 = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TestRecords", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TestRecords_RawDataClass_RawDataId",
-                        column: x => x.RawDataId,
-                        principalTable: "RawDataClass",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_TestRecords_SubPrograms_SubProgramClassId",
-                        column: x => x.SubProgramClassId,
-                        principalTable: "SubPrograms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_TestRecords_SubPrograms_SubProgramClassId1",
-                        column: x => x.SubProgramClassId1,
-                        principalTable: "SubPrograms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AssetUsageRecordClass",
                 columns: table => new
                 {
@@ -248,6 +202,73 @@ namespace BCLabManager.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "TestRecords",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Status = table.Column<int>(nullable: false),
+                    BatteryTypeStr = table.Column<string>(nullable: true),
+                    BatteryStr = table.Column<string>(nullable: true),
+                    TesterStr = table.Column<string>(nullable: true),
+                    ChannelStr = table.Column<string>(nullable: true),
+                    ChamberStr = table.Column<string>(nullable: true),
+                    SubProgramStr = table.Column<string>(nullable: true),
+                    ProgramStr = table.Column<string>(nullable: true),
+                    StartTime = table.Column<DateTime>(nullable: false),
+                    EndTime = table.Column<DateTime>(nullable: false),
+                    Steps = table.Column<string>(nullable: true),
+                    Comment = table.Column<string>(nullable: true),
+                    RawDataId = table.Column<int>(nullable: true),
+                    NewCycle = table.Column<double>(nullable: false),
+                    AssignedBatteryId = table.Column<int>(nullable: true),
+                    AssignedChamberId = table.Column<int>(nullable: true),
+                    AssignedChannelId = table.Column<int>(nullable: true),
+                    SubProgramClassId = table.Column<int>(nullable: true),
+                    SubProgramClassId1 = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TestRecords", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TestRecords_Batteries_AssignedBatteryId",
+                        column: x => x.AssignedBatteryId,
+                        principalTable: "Batteries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TestRecords_Chambers_AssignedChamberId",
+                        column: x => x.AssignedChamberId,
+                        principalTable: "Chambers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TestRecords_Channels_AssignedChannelId",
+                        column: x => x.AssignedChannelId,
+                        principalTable: "Channels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TestRecords_RawDataClass_RawDataId",
+                        column: x => x.RawDataId,
+                        principalTable: "RawDataClass",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TestRecords_SubPrograms_SubProgramClassId",
+                        column: x => x.SubProgramClassId,
+                        principalTable: "SubPrograms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TestRecords_SubPrograms_SubProgramClassId1",
+                        column: x => x.SubProgramClassId1,
+                        principalTable: "SubPrograms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AssetUsageRecordClass_BatteryClassId",
                 table: "AssetUsageRecordClass",
@@ -277,6 +298,21 @@ namespace BCLabManager.Migrations
                 name: "IX_SubPrograms_ProgramClassId",
                 table: "SubPrograms",
                 column: "ProgramClassId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TestRecords_AssignedBatteryId",
+                table: "TestRecords",
+                column: "AssignedBatteryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TestRecords_AssignedChamberId",
+                table: "TestRecords",
+                column: "AssignedChamberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TestRecords_AssignedChannelId",
+                table: "TestRecords",
+                column: "AssignedChannelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TestRecords_RawDataId",

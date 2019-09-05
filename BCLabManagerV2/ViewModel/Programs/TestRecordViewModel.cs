@@ -34,13 +34,13 @@ namespace BCLabManager.ViewModel
             TestRecordClass record)     //
         {
             _record = record;
-            //_record.PropertyChanged += _record_PropertyChanged;
+            _record.PropertyChanged += _record_PropertyChanged;
         }
 
-        //private void _record_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        private void _record_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(e.PropertyName);
+        }
 
         #endregion // Constructor
 

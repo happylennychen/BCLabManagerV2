@@ -621,9 +621,12 @@ namespace BCLabManager.ViewModel
                     tr.StartTime = testRecord.StartTime;
                     tr.Steps = testRecord.Steps;
                     tr.Status = testRecord.Status;
+                    tr.AssignedBattery = dbContext.Batteries.SingleOrDefault(o=>o.Id == evm.Battery.Id);
+                    tr.AssignedChamber = dbContext.Chambers.SingleOrDefault(o => o.Id == evm.Chamber.Id);
+                    tr.AssignedChannel = dbContext.Channels.SingleOrDefault(o => o.Id == evm.Channel.Id);
                     dbContext.SaveChanges();
                 }
-                evm.Execute();      //evm的Record就是testRecord的Record. Record中的Assets会被赋值
+                evm.ExecuteOnAssets();      //evm的Record就是testRecord的Record. Record中的Assets会被赋值
             }
         }
         private void Commit(TestRecordViewModel testRecord)
@@ -655,6 +658,7 @@ namespace BCLabManager.ViewModel
                 testRecord.NewCycle = evm.NewCycle;
                 testRecord.Comment = evm.Comment;
                 testRecord.Status = TestStatus.Completed;
+                evm.CommitOnAssets();
                 using (var dbContext = new AppDbContext())
                 {
                     var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == testRecord.Id);
@@ -662,9 +666,11 @@ namespace BCLabManager.ViewModel
                     tr.NewCycle = testRecord.NewCycle;
                     tr.Comment = testRecord.Comment;
                     tr.Status = testRecord.Status;
+                    tr.AssignedBattery = null;
+                    tr.AssignedChamber = null;
+                    tr.AssignedChannel = null;
                     dbContext.SaveChanges();
                 }
-                evm.Commit();
             }
         }
         private void Invalidate(TestRecordViewModel testRecord)

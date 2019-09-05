@@ -36,8 +36,13 @@ namespace BCLabManager.ViewModel
 
             _program = programmodel;
             this.CreateSubPrograms();
+            _program.PropertyChanged += _program_PropertyChanged;
         }
 
+        private void _program_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(e.PropertyName);
+        }
 
         void CreateSubPrograms()
         {

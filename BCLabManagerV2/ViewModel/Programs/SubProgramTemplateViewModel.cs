@@ -25,6 +25,12 @@ namespace BCLabManager.ViewModel
         public SubProgramTemplateViewModel(SubProgramTemplate subProgramTemplate)
         {
             _subProgramTemplate = subProgramTemplate;
+            _subProgramTemplate.PropertyChanged += _subProgramTemplate_PropertyChanged;
+        }
+
+        private void _subProgramTemplate_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(e.PropertyName);
         }
 
         #endregion // Constructor

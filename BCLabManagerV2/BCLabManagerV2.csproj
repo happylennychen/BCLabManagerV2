@@ -194,9 +194,9 @@
     </ApplicationDefinition>
     <Compile Include="DataAccess\AppDbContext.cs" />
     <Compile Include="DataAccess\Repositories.cs" />
-    <Compile Include="Migrations\20190904013120_Init.cs" />
-    <Compile Include="Migrations\20190904013120_Init.designer.cs">
-      <DependentUpon>20190904013120_Init.cs</DependentUpon>
+    <Compile Include="Migrations\20190905024842_Init.cs" />
+    <Compile Include="Migrations\20190905024842_Init.designer.cs">
+      <DependentUpon>20190905024842_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Model\Assets\BatteryClass.cs" />

@@ -14,6 +14,7 @@ namespace BCLabManager.ViewModel
     public class AllBatteriesViewModel : ViewModelBase
     {
         #region Fields
+        List<BatteryClass> _batteries;
         List<BatteryTypeClass> _batteryTypes;
         BatteryViewModel _selectedItem;
         RelayCommand _createCommand;
@@ -26,6 +27,7 @@ namespace BCLabManager.ViewModel
 
         public AllBatteriesViewModel(List<BatteryClass> batteries, List<BatteryTypeClass> batteryTypes)
         {
+            _batteries = batteries;
             _batteryTypes = batteryTypes;
             this.CreateAllBatteries(batteries);
         }
@@ -139,6 +141,7 @@ namespace BCLabManager.ViewModel
             BatteryViewInstance.ShowDialog();                   //设置viewmodel属性
             if (bevm.IsOK == true)
             {
+                _batteries.Add(bc);
                 using (var dbContext = new AppDbContext())
                 {
                     //dbContext.Batteries.Add(bc);    //不能直接这样写，不然会报错。这里不是添加一个全新的graph，而是添加一个新的bc，然后修改关系
@@ -205,6 +208,7 @@ namespace BCLabManager.ViewModel
             BatteryViewInstance.ShowDialog();
             if (bevm.IsOK == true)
             {
+                _batteries.Add(bc);
                 using (var dbContext = new AppDbContext())
                 {
                     //dbContext.Batteries.Add(bc);    //不能直接这样写，不然会报错。这里不是添加一个全新的graph，而是添加一个新的bc，然后修改关系

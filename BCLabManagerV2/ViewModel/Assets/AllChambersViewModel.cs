@@ -19,6 +19,7 @@ namespace BCLabManager.ViewModel
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
+        List<ChamberClass> _chambers;
 
         #endregion // Fields
 
@@ -26,6 +27,7 @@ namespace BCLabManager.ViewModel
 
         public AllChambersViewModel(List<ChamberClass> chambers)
         {
+            _chambers = chambers;
             this.CreateAllChambers(chambers);
         }
 
@@ -146,6 +148,7 @@ namespace BCLabManager.ViewModel
             ChamberViewInstance.ShowDialog();                   //设置viewmodel属性
             if (evm.IsOK == true)
             {
+                _chambers.Add(m);
                 using (var dbContext = new AppDbContext())
                 {
                     dbContext.Chambers.Add(m);
@@ -204,6 +207,7 @@ namespace BCLabManager.ViewModel
             ChamberViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
+                _chambers.Add(m);
                 using (var dbContext = new AppDbContext())
                 {
                     dbContext.Chambers.Add(m);

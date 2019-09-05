@@ -313,7 +313,7 @@ namespace BCLabManager.ViewModel
         }
 
         #region Public Interface
-        public void Commit()
+        public void CommitOnAssets()
         {
             _record.Commit(this.EndTime, null, this.NewCycle, this.Comment);
             OnPropertyChanged("Status");

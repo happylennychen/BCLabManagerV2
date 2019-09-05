@@ -27,7 +27,13 @@ namespace BCLabManager.ViewModel
             _subprogram = subprogram;
             this.CreateTestRecords();
             _subprogram.TestRecordAdded += _subprogram_TestRecordAdded;
+            //_subprogram.PropertyChanged += _subprogram_PropertyChanged;
         }
+
+        //private void _subprogram_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        //{
+        //    OnPropertyChanged(e.PropertyName);
+        //}
 
         private void _subprogram_TestRecordAdded(object sender, TestRecordAddedEventArgs e)
         {

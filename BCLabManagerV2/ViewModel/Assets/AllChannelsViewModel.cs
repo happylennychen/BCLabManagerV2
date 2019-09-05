@@ -13,7 +13,7 @@ namespace BCLabManager.ViewModel
     public class AllChannelsViewModel : ViewModelBase
     {
         #region Fields
-
+        List<ChannelClass> _channels;
         List<TesterClass> _testers;
         ChannelViewModel _selectedItem;
         RelayCommand _createCommand;
@@ -26,6 +26,7 @@ namespace BCLabManager.ViewModel
 
         public AllChannelsViewModel(List<ChannelClass> channels, List<TesterClass> testers)
         {
+            _channels = channels;
             _testers = testers;
             // Populate the AllTesters collection with _testerRepository.
             this.CreateAllChannels(channels);
@@ -138,6 +139,7 @@ namespace BCLabManager.ViewModel
             ChannelViewInstance.ShowDialog();                   //设置viewmodel属性
             if (evm.IsOK == true)
             {
+                _channels.Add(m);
                 using (var dbContext = new AppDbContext())
                 {
                     //dbContext.Channels.Add(bc);    //不能直接这样写，不然会报错。这里不是添加一个全新的graph，而是添加一个新的m，然后修改关系
@@ -198,6 +200,7 @@ namespace BCLabManager.ViewModel
             ChannelViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
+                _channels.Add(m);
                 using (var dbContext = new AppDbContext())
                 {
                     //dbContext.Channels.Add(bc);    //不能直接这样写，不然会报错。这里不是添加一个全新的graph，而是添加一个新的m，然后修改关系

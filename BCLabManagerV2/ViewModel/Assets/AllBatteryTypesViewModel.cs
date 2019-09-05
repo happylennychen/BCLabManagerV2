@@ -18,6 +18,7 @@ namespace BCLabManager.ViewModel
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
+        private List<BatteryTypeClass> _batteryTypes;
 
         #endregion // Fields
 
@@ -25,6 +26,7 @@ namespace BCLabManager.ViewModel
 
         public AllBatteryTypesViewModel(List<BatteryTypeClass> batteryTypes)
         {
+            _batteryTypes = batteryTypes;
             this.CreateAllBatteryTypes(batteryTypes);
         }
 
@@ -133,7 +135,7 @@ namespace BCLabManager.ViewModel
             BatteryTypeViewInstance.ShowDialog();                   //设置viewmodel属性
             if (btevm.IsOK == true)
             {
-                //_batterytypeRepository.AddItem(btc);
+                _batteryTypes.Add(btc);
                 using (var dbContext = new AppDbContext())
                 {
                     dbContext.BatteryTypes.Add(btc);
@@ -185,7 +187,7 @@ namespace BCLabManager.ViewModel
             BatteryTypeViewInstance.ShowDialog();
             if (btevm.IsOK == true)
             {
-                //_batterytypeRepository.AddItem(btc);
+                _batteryTypes.Add(btc);
                 using (var dbContext = new AppDbContext())
                 {
                     dbContext.BatteryTypes.Add(btc);

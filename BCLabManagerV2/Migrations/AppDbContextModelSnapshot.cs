@@ -197,6 +197,12 @@ namespace BCLabManager.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("AssignedBatteryId");
+
+                    b.Property<int?>("AssignedChamberId");
+
+                    b.Property<int?>("AssignedChannelId");
+
                     b.Property<string>("BatteryStr");
 
                     b.Property<string>("BatteryTypeStr");
@@ -230,6 +236,12 @@ namespace BCLabManager.Migrations
                     b.Property<string>("TesterStr");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AssignedBatteryId");
+
+                    b.HasIndex("AssignedChamberId");
+
+                    b.HasIndex("AssignedChannelId");
 
                     b.HasIndex("RawDataId");
 
@@ -292,6 +304,18 @@ namespace BCLabManager.Migrations
 
             modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>
                 {
+                    b.HasOne("BCLabManager.Model.BatteryClass", "AssignedBattery")
+                        .WithMany()
+                        .HasForeignKey("AssignedBatteryId");
+
+                    b.HasOne("BCLabManager.Model.ChamberClass", "AssignedChamber")
+                        .WithMany()
+                        .HasForeignKey("AssignedChamberId");
+
+                    b.HasOne("BCLabManager.Model.ChannelClass", "AssignedChannel")
+                        .WithMany()
+                        .HasForeignKey("AssignedChannelId");
+
                     b.HasOne("BCLabManager.Model.RawDataClass", "RawData")
                         .WithMany()
                         .HasForeignKey("RawDataId");
