@@ -186,6 +186,21 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -194,13 +209,9 @@
     </ApplicationDefinition>
     <Compile Include="DataAccess\AppDbContext.cs" />
     <Compile Include="DataAccess\Repositories.cs" />
-    <Compile Include="Migrations\20190905024842_Init.cs" />
-    <Compile Include="Migrations\20190905024842_Init.designer.cs">
-      <DependentUpon>20190905024842_Init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20190905084220_AddFilePath.cs" />
-    <Compile Include="Migrations\20190905084220_AddFilePath.designer.cs">
-      <DependentUpon>20190905084220_AddFilePath.cs</DependentUpon>
+    <Compile Include="Migrations\20190905145057_Init.cs" />
+    <Compile Include="Migrations\20190905145057_Init.designer.cs">
+      <DependentUpon>20190905145057_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Model\Assets\BatteryClass.cs" />
@@ -212,6 +223,7 @@
     <Compile Include="Model\Programs\ProgramClass.cs" />
     <Compile Include="Model\Programs\SubProgramTemplate.cs" />
     <Compile Include="Model\Programs\SubProgramClass.cs" />
+    <Compile Include="ViewModel\DashBoardViewModel.cs" />
     <Compile Include="ViewModel\Assets\AllChannelsViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -273,6 +285,9 @@
     </Compile>
     <Compile Include="View\Assets\ChamberView.xaml.cs">
       <DependentUpon>ChamberView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DashBoardView.xaml.cs">
+      <DependentUpon>DashBoardView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Programs\AllSubProgramTemplatesView.xaml.cs">
       <DependentUpon>AllSubProgramTemplatesView.xaml</DependentUpon>
@@ -348,6 +363,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Assets\ChamberView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\DashBoardView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

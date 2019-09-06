@@ -221,6 +221,7 @@ namespace BCLabManager.Migrations
                     Steps = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true),
                     RawDataId = table.Column<int>(nullable: true),
+                    FilePath = table.Column<string>(nullable: true),
                     NewCycle = table.Column<double>(nullable: false),
                     AssignedBatteryId = table.Column<int>(nullable: true),
                     AssignedChamberId = table.Column<int>(nullable: true),

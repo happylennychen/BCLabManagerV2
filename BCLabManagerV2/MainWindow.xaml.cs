@@ -38,6 +38,8 @@ namespace BCLabManager
 
         public AllProgramsViewModel allProgramsViewModel { get; set; }  //其中需要显示Programs, SubPrograms, Test1, Test2, TestSteps
 
+        public DashBoardViewModel dashBoardViewModel { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -115,10 +117,10 @@ namespace BCLabManager
             this.AllSubProgramTemplatesViewInstance.DataContext = allSubProgramTemplatesViewModel;                                                            //ViewModel跟View绑定
 
 
-            List<ProgramClass> programClasses;
+            List<ProgramClass> programs;
             using (var dbContext = new AppDbContext())
             {
-                programClasses = new List<ProgramClass>(dbContext.Programs
+                programs = new List<ProgramClass>(dbContext.Programs
                      .Include(pro => pro.SubPrograms)
                         .ThenInclude(sub => sub.FirstTestRecords)
                             .ThenInclude(tr=>tr.RawData)
@@ -148,7 +150,7 @@ namespace BCLabManager
 
             allProgramsViewModel = new AllProgramsViewModel
                 (
-                programClasses, 
+                programs, 
                 subProgramTemplates,
                 batteryTypes,
                 batteries,
@@ -157,10 +159,13 @@ namespace BCLabManager
                 chambers
                 );    //ViewModel初始化
             this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定
+
+            dashBoardViewModel = new DashBoardViewModel(programs, batteries, channels, chambers);
+            this.DashBoardViewInstance.DataContext = dashBoardViewModel;
         }
         void InitializeDatabase()
         {
-            string defaultfilepath = "D://BCLab.db3";
+            string defaultfilepath = "F://BCLab.db3";
             if(!File.Exists(defaultfilepath))
             {
                 using (var dbContext = new AppDbContext())

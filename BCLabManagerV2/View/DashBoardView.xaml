@@ -1,0 +1,171 @@
+﻿<UserControl x:Class="BCLabManager.View.DashBoardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:src="clr-namespace:BCLabManager.View"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="400">
+    <UserControl.Resources>
+        <src:HeightMultiConverter x:Key="hmc"></src:HeightMultiConverter>
+        <src:PercentageConverter x:Key="percentc"></src:PercentageConverter>
+        <DataTemplate x:Key="BatteryStackedColumn">
+            <DockPanel LastChildFill="True" MinWidth="70">
+                <TextBlock DockPanel.Dock="Bottom" Margin="0,3" HorizontalAlignment="Center">Batteries</TextBlock>
+                <Grid Width="25">
+                    <Grid x:Name="battotalgrid" Background="Beige" VerticalAlignment="Stretch">
+                        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=BatteryAmount}"></TextBlock>
+                    </Grid>
+                    <Grid Background="Red" VerticalAlignment="Bottom">
+                        <Grid.Height>
+                            <MultiBinding Converter="{StaticResource hmc}">
+                                <Binding Path="BatteryAmount"></Binding>
+                                <Binding Path="UsingBatteryAmount"></Binding>
+                                <Binding Path="ActualHeight" ElementName="battotalgrid"></Binding>
+                            </MultiBinding>
+                        </Grid.Height>
+                        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=UsingBatteryAmount}" ></TextBlock>
+                    </Grid>
+                </Grid>
+            </DockPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="ChamberStackedColumn">
+            <DockPanel LastChildFill="True" MinWidth="70">
+                <TextBlock DockPanel.Dock="Bottom" Margin="0,3" HorizontalAlignment="Center">Chambers</TextBlock>
+                <Grid Width="25">
+                    <Grid x:Name="cmbtotalgrid" Background="Beige" VerticalAlignment="Stretch">
+                        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=ChamberAmount}"></TextBlock>
+                    </Grid>
+                    <Grid Background="Red" VerticalAlignment="Bottom">
+                        <Grid.Height>
+                            <MultiBinding Converter="{StaticResource hmc}">
+                                <Binding Path="ChamberAmount"></Binding>
+                                <Binding Path="UsingChamberAmount"></Binding>
+                                <Binding Path="ActualHeight" ElementName="cmbtotalgrid"></Binding>
+                            </MultiBinding>
+                        </Grid.Height>
+                        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=UsingChamberAmount}" ></TextBlock>
+                    </Grid>
+                </Grid>
+            </DockPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="ChannelStackedColumn">
+            <DockPanel LastChildFill="True" MinWidth="70">
+                <TextBlock DockPanel.Dock="Bottom" Margin="0,3" HorizontalAlignment="Center">TesterChannels</TextBlock>
+                <Grid Width="25">
+                    <Grid x:Name="tstctotalgrid" Background="Beige" VerticalAlignment="Stretch">
+                        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=ChannelAmount}"></TextBlock>
+                    </Grid>
+                    <Grid Background="Red" VerticalAlignment="Bottom">
+                        <Grid.Height>
+                            <MultiBinding Converter="{StaticResource hmc}">
+                                <Binding Path="ChannelAmount"></Binding>
+                                <Binding Path="UsingChannelAmount"></Binding>
+                                <Binding Path="ActualHeight" ElementName="tstctotalgrid"></Binding>
+                            </MultiBinding>
+                        </Grid.Height>
+                        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=UsingChannelAmount}" ></TextBlock>
+                    </Grid>
+                </Grid>
+            </DockPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="4"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="4"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Border Grid.Column="0" Grid.Row="0" Margin="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <ContentControl Grid.Column="0" Content="{Binding}" ContentTemplate="{StaticResource BatteryStackedColumn}"></ContentControl>
+                <ContentControl Grid.Column="1" Content="{Binding}" ContentTemplate="{StaticResource ChamberStackedColumn}"></ContentControl>
+                <ContentControl Grid.Column="2" Content="{Binding}" ContentTemplate="{StaticResource ChannelStackedColumn}"></ContentControl>
+            </Grid>
+        </Border>
+        <Border Grid.Row="0" Grid.Column="2">
+            <DockPanel LastChildFill="True">
+                <Grid Grid.Column="1" Margin="10" Width="130" Height="150" DockPanel.Dock="Right">
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20"></ColumnDefinition>
+                        <ColumnDefinition Width="2"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="2"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Rectangle Grid.Row="0" Grid.Column="0" Fill="Orange" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                    <Rectangle Grid.Row="1" Grid.Column="0" Fill="Green" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                    <Rectangle Grid.Row="2" Grid.Column="0" Fill="Yellow" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                    <Rectangle Grid.Row="3" Grid.Column="0" Fill="Blue" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                    <Rectangle Grid.Row="4" Grid.Column="0" Fill="Red" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                    <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">Waiting</TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Executing</TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="2" VerticalAlignment="Center">Completed</TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="2" VerticalAlignment="Center">Invalid</TextBlock>
+                    <TextBlock Grid.Row="4" Grid.Column="2" VerticalAlignment="Center">Abandoned</TextBlock>
+                    <TextBlock Grid.Row="0" Grid.Column="4" VerticalAlignment="Center" Text="{Binding Path=WaitingAmount}"></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" Text="{Binding Path=ExecutingAmount}"></TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" Text="{Binding Path=CompletedAmount}"></TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="4" VerticalAlignment="Center" Text="{Binding Path=InvalidAmount}"></TextBlock>
+                    <TextBlock Grid.Row="4" Grid.Column="4" VerticalAlignment="Center" Text="{Binding Path=AbandonedAmount}"></TextBlock>
+                </Grid>
+
+                <Border x:Name="ChartBorder" MaxHeight="150">
+                    <Grid Width="{Binding Path=ActualHeight,RelativeSource={RelativeSource Self}}"
+               x:Name="PiesGrid">
+
+                        <xctk:Pie x:Name="WaitingPie" Mode="Slice"
+                      Fill="Orange"
+                      Stroke="#FF000000"
+                      Opacity="0.5"
+                  StartAngle="0"
+                      Slice="{Binding Path=WaitingPercentage, Mode=OneWay}" />
+                        <xctk:Pie x:Name="ExecutingPie" Mode="Slice"
+                      Fill="Yellow"
+                      Stroke="#FF000000"
+                      Opacity="0.5"
+                      StartAngle="{Binding Path=EndAngle, ElementName=WaitingPie, Mode=OneWay}"
+                      Slice="{Binding Path=ExecutingPercentage, Mode=OneWay}" />
+                        <xctk:Pie x:Name="CompletedPie" Mode="Slice"
+                      Fill="Blue"
+                      Stroke="#FF000000"
+                      Opacity="0.5"
+                      StartAngle="{Binding Path=EndAngle, ElementName=ExecutingPie, Mode=OneWay}"
+                      Slice="{Binding Path=CompletedPercentage, Mode=OneWay}" />
+                        <xctk:Pie x:Name="InvalidPie" Mode="Slice"
+                      Fill="Red"
+                      Stroke="#FF000000"
+                      Opacity="0.5"
+                      StartAngle="{Binding Path=EndAngle, ElementName=CompletedPie, Mode=OneWay}"
+                      Slice="{Binding Path=InvalidPercentage, Mode=OneWay}" />
+                        <xctk:Pie x:Name="AbandonedPie" Mode="Slice"
+                      Fill="Black"
+                      Stroke="#FF000000"
+                      Opacity="0.5"
+                      StartAngle="{Binding Path=EndAngle, ElementName=InvalidPie, Mode=OneWay}"
+                      Slice="{Binding Path=AbandonedPercentage, Mode=OneWay}" />
+                    </Grid>
+                </Border>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>
