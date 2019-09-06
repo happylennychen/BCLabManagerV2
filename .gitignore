@@ -9,7 +9,6 @@
 *.bak
 *.lnk
 *.suo
-*.config
 
 output/
 packages/

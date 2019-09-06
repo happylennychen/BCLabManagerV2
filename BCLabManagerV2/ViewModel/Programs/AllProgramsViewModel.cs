@@ -35,7 +35,7 @@ namespace BCLabManager.ViewModel
         RelayCommand _viewCommand2;
 
         List<BatteryTypeClass> _batteryTypes;
-        List<BatteryClass> _batteries;
+        ObservableCollection<BatteryClass> _batteries;
         List<TesterClass> _testers;
         List<ChannelClass> _channels;
         List<ChamberClass> _chambers;
@@ -48,7 +48,7 @@ namespace BCLabManager.ViewModel
             List<ProgramClass> programClasses,
             List<SubProgramTemplate> subProgramTemplates,
             List<BatteryTypeClass> batteryTypes,
-            List<BatteryClass> batteries,
+            ObservableCollection<BatteryClass> batteries,
             List<TesterClass> testers,
             List<ChannelClass> channels,
             List<ChamberClass> chambers

@@ -23,7 +23,7 @@ namespace BCLabManager.ViewModel
         RelayCommand _invalidateCommand;
         RelayCommand _viewCommand;
 
-        List<BatteryClass> _batteries;
+        ObservableCollection<BatteryClass> _batteries;
         List<ChannelClass> _channels;
         List<ChamberClass> _chambers;
         List<ProgramClass> _programs;
@@ -34,7 +34,7 @@ namespace BCLabManager.ViewModel
         public DashBoardViewModel
             (
             List<ProgramClass> programs,
-            List<BatteryClass> batteries,
+            ObservableCollection<BatteryClass> batteries,
             List<ChannelClass> channels,
             List<ChamberClass> chambers
             )
@@ -44,6 +44,12 @@ namespace BCLabManager.ViewModel
             _batteries = batteries;
             _channels = channels;
             _chambers = chambers;
+            _batteries.CollectionChanged += _batteries_CollectionChanged;
+        }
+
+        private void _batteries_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("BatteryAmount");
         }
 
         //void CreateAllPrograms(List<ProgramClass> programClasses)

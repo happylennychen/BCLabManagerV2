@@ -16,6 +16,7 @@ using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
+using System.Collections.ObjectModel;
 
 namespace BCLabManager
 {
@@ -54,10 +55,10 @@ namespace BCLabManager
             this.AllBatteryTypesViewInstance.DataContext = allBatteryTypesViewModel;                                                            //ViewModel跟View绑定
 
 
-            List<BatteryClass> batteries;
+            ObservableCollection<BatteryClass> batteries;
             using (var dbContext = new AppDbContext())
             {
-                batteries = new List<BatteryClass>(
+                batteries = new ObservableCollection<BatteryClass>(
                     dbContext.Batteries
                     .Include(i=>i.BatteryType)
                     .Include(o=>o.Records)
@@ -165,7 +166,7 @@ namespace BCLabManager
         }
         void InitializeDatabase()
         {
-            string defaultfilepath = "F://BCLab.db3";
+            string defaultfilepath = "D://BCLab.db3";
             if(!File.Exists(defaultfilepath))
             {
                 using (var dbContext = new AppDbContext())

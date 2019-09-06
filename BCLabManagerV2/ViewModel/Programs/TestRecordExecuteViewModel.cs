@@ -32,7 +32,7 @@ namespace BCLabManager.ViewModel
         //readonly TesterRepository _testerRepository;
         //readonly ChannelRepository _channelRepository;
         List<BatteryTypeClass> _batteryTypes;
-        List<BatteryClass> _batteries;
+        ObservableCollection<BatteryClass> _batteries;
         List<TesterClass> _testers;
         List<ChannelClass> _channels;
         List<ChamberClass> _chambers;
@@ -58,7 +58,7 @@ namespace BCLabManager.ViewModel
         public TestRecordExecuteViewModel(
             TestRecordClass record, 
             List<BatteryTypeClass> batteryTypes,
-            List<BatteryClass> batteries,
+            ObservableCollection<BatteryClass> batteries,
             List<TesterClass> testers,
             List<ChannelClass> channels,
             List<ChamberClass> chambers
@@ -126,7 +126,7 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("BatteryType");
 
 
-                List<BatteryClass> all = _batteries;
+                ObservableCollection<BatteryClass> all = _batteries;
                 List<BatteryClass> allstring = (
                     from i in all
                     where (i.BatteryType.Id == BatteryType.Id) && i.Status == AssetStatusEnum.IDLE

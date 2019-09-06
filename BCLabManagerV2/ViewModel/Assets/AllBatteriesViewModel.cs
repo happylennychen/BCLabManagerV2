@@ -14,7 +14,7 @@ namespace BCLabManager.ViewModel
     public class AllBatteriesViewModel : ViewModelBase
     {
         #region Fields
-        List<BatteryClass> _batteries;
+        ObservableCollection<BatteryClass> _batteries;
         List<BatteryTypeClass> _batteryTypes;
         BatteryViewModel _selectedItem;
         RelayCommand _createCommand;
@@ -25,13 +25,13 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllBatteriesViewModel(List<BatteryClass> batteries, List<BatteryTypeClass> batteryTypes)
+        public AllBatteriesViewModel(ObservableCollection<BatteryClass> batteries, List<BatteryTypeClass> batteryTypes)
         {
             _batteries = batteries;
             _batteryTypes = batteryTypes;
             this.CreateAllBatteries(batteries);
         }
-        void CreateAllBatteries(List<BatteryClass> batteries)
+        void CreateAllBatteries(ObservableCollection<BatteryClass> batteries)
         {
             List<BatteryClass> allbatteries =
                 (from bat in batteries
