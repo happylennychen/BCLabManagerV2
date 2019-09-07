@@ -41,91 +41,66 @@ namespace BCLabManager
 
         public DashBoardViewModel dashBoardViewModel { get; set; }
 
+        List<BatteryTypeClass> BatteryTypes { get; set; }
+        ObservableCollection<BatteryClass> Batteries { get; set; }
+        List<TesterClass> Testers { get; set; }
+        List<ChannelClass> Channels { get; set; }
+        List<ChamberClass> Chambers { get; set; }
+        List<SubProgramTemplate> SubProgramTemplates { get; set; }
+        List<ProgramClass> Programs { get; set; }
         public MainWindow()
         {
             InitializeComponent();
             GlobalSettings.DbPath = "F://BCLab.db3";
             InitializeDatabase();
-            List<BatteryTypeClass> batteryTypes;
-            using (var dbContext = new AppDbContext())
+            LoadingFromDB();
+            CreateViewModels();
+            BindingVMandView();
+        }
+        void InitializeDatabase()
+        {
+            if(!File.Exists(GlobalSettings.DbPath))
             {
-                batteryTypes = new List<BatteryTypeClass>(dbContext.BatteryTypes.ToList());
+                using (var dbContext = new AppDbContext())
+                {
+                    dbContext.Database.Migrate();
+                }
             }
-
-            allBatteryTypesViewModel = new AllBatteryTypesViewModel(batteryTypes);    //ViewModel初始化
-            this.AllBatteryTypesViewInstance.DataContext = allBatteryTypesViewModel;                                                            //ViewModel跟View绑定
-
-
-            ObservableCollection<BatteryClass> batteries;
+        }
+        void LoadingFromDB()
+        {
             using (var dbContext = new AppDbContext())
             {
-                batteries = new ObservableCollection<BatteryClass>(
+                BatteryTypes = new List<BatteryTypeClass>(dbContext.BatteryTypes.ToList());
+
+                Batteries = new ObservableCollection<BatteryClass>(
                     dbContext.Batteries
-                    .Include(i=>i.BatteryType)
-                    .Include(o=>o.Records)
+                    .Include(i => i.BatteryType)
+                    .Include(o => o.Records)
                     .ToList()
                     );
-            }
 
-            allBatteriesViewModel = new AllBatteriesViewModel(batteries, batteryTypes);    //ViewModel初始化
-            this.AllBatteriesViewInstance.DataContext = allBatteriesViewModel;                                                            //ViewModel跟View绑定
+                Testers = new List<TesterClass>(dbContext.Testers.ToList());
 
-
-            List<TesterClass> testers;
-            using (var dbContext = new AppDbContext())
-            {
-                testers = new List<TesterClass>(dbContext.Testers.ToList());
-            }
-
-            allTestersViewModel = new AllTestersViewModel(testers);    //ViewModel初始化
-            this.AllTestersViewInstance.DataContext = allTestersViewModel;                                                            //ViewModel跟View绑定
-
-
-            List<ChannelClass> channels;
-            using (var dbContext = new AppDbContext())
-            {
-                channels = new List<ChannelClass>(
+                Channels = new List<ChannelClass>(
                     dbContext.Channels
-                    .Include(i=>i.Tester)
-                    .Include(o=>o.Records)
+                    .Include(i => i.Tester)
+                    .Include(o => o.Records)
                     .ToList()
                     );
-            }
 
-            allChannelsViewModel = new AllChannelsViewModel(channels, testers);    //ViewModel初始化
-            this.AllChannelsViewInstance.DataContext = allChannelsViewModel;                                                            //ViewModel跟View绑定
-
-
-            List<ChamberClass> chambers;
-            using (var dbContext = new AppDbContext())
-            {
-                chambers = new List<ChamberClass>(
+                Chambers = new List<ChamberClass>(
                     dbContext.Chambers
-                    .Include(o=>o.Records)
+                    .Include(o => o.Records)
                     .ToList()
                     );
-            }
 
-            allChambersViewModel = new AllChambersViewModel(chambers);    //ViewModel初始化
-            this.AllChambersViewInstance.DataContext = allChambersViewModel;                                                            //ViewModel跟View绑定
+                SubProgramTemplates = new List<SubProgramTemplate>(dbContext.SubProgramTemplates.ToList());
 
-
-            List<SubProgramTemplate> subProgramTemplates;
-            using (var dbContext = new AppDbContext())
-            {
-                subProgramTemplates = new List<SubProgramTemplate>(dbContext.SubProgramTemplates.ToList());
-            }
-            allSubProgramTemplatesViewModel = new AllSubProgramTemplatesViewModel(subProgramTemplates);    //ViewModel初始化
-            this.AllSubProgramTemplatesViewInstance.DataContext = allSubProgramTemplatesViewModel;                                                            //ViewModel跟View绑定
-
-
-            List<ProgramClass> programs;
-            using (var dbContext = new AppDbContext())
-            {
-                programs = new List<ProgramClass>(dbContext.Programs
+                Programs = new List<ProgramClass>(dbContext.Programs
                      .Include(pro => pro.SubPrograms)
                         .ThenInclude(sub => sub.FirstTestRecords)
-                            .ThenInclude(tr=>tr.RawData)
+                            .ThenInclude(tr => tr.RawData)
                      .Include(pro => pro.SubPrograms)
                         .ThenInclude(sub => sub.FirstTestRecords)
                             .ThenInclude(tr => tr.AssignedBattery)
@@ -149,31 +124,57 @@ namespace BCLabManager
                             .ThenInclude(tr => tr.AssignedChannel)
                     .ToList());
             }
+        }
+        void CreateViewModels()
+        {
+            allBatteryTypesViewModel = new AllBatteryTypesViewModel(BatteryTypes);    //ViewModel初始化
+
+            allBatteriesViewModel = new AllBatteriesViewModel(Batteries, BatteryTypes);    //ViewModel初始化
+
+            allTestersViewModel = new AllTestersViewModel(Testers);    //ViewModel初始化
+
+            allChannelsViewModel = new AllChannelsViewModel(Channels, Testers);    //ViewModel初始化
+
+            allChambersViewModel = new AllChambersViewModel(Chambers);    //ViewModel初始化
+
+            allSubProgramTemplatesViewModel = new AllSubProgramTemplatesViewModel(SubProgramTemplates);    //ViewModel初始化
 
             allProgramsViewModel = new AllProgramsViewModel
                 (
-                programs, 
-                subProgramTemplates,
-                batteryTypes,
-                batteries,
-                testers,
-                channels,
-                chambers
+                Programs,
+                SubProgramTemplates,
+                BatteryTypes,
+                Batteries,
+                Testers,
+                Channels,
+                Chambers
                 );    //ViewModel初始化
+
+            dashBoardViewModel = new DashBoardViewModel(Programs, Batteries, Channels, Chambers);
+        }
+        void BindingVMandView()
+        {
+
+            this.AllBatteryTypesViewInstance.DataContext = allBatteryTypesViewModel;                                                            //ViewModel跟View绑定
+
+
+            this.AllBatteriesViewInstance.DataContext = allBatteriesViewModel;                                                            //ViewModel跟View绑定
+
+
+            this.AllTestersViewInstance.DataContext = allTestersViewModel;                                                            //ViewModel跟View绑定
+
+
+            this.AllChannelsViewInstance.DataContext = allChannelsViewModel;                                                            //ViewModel跟View绑定
+
+
+            this.AllChambersViewInstance.DataContext = allChambersViewModel;                                                            //ViewModel跟View绑定
+
+            this.AllSubProgramTemplatesViewInstance.DataContext = allSubProgramTemplatesViewModel;                                                            //ViewModel跟View绑定
+
+
             this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定
 
-            dashBoardViewModel = new DashBoardViewModel(programs, batteries, channels, chambers);
             this.DashBoardViewInstance.DataContext = dashBoardViewModel;
-        }
-        void InitializeDatabase()
-        {
-            if(!File.Exists(GlobalSettings.DbPath))
-            {
-                using (var dbContext = new AppDbContext())
-                {
-                    dbContext.Database.Migrate();
-                }
-            }
         }
     }
 }
