@@ -50,12 +50,20 @@ namespace BCLabManager
         List<ProgramClass> Programs { get; set; }
         public MainWindow()
         {
-            InitializeComponent();
-            GlobalSettings.DbPath = "F://BCLab.db3";
-            InitializeDatabase();
-            LoadingFromDB();
-            CreateViewModels();
-            BindingVMandView();
+            try
+            {
+                InitializeComponent();
+                GlobalSettings.DbPath = "F://BCLabEmpty.db3";
+                InitializeDatabase();
+                LoadingFromDB();
+                CreateViewModels();
+                BindingVMandView();
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
+                App.Current.Shutdown();
+            }
         }
         void InitializeDatabase()
         {
