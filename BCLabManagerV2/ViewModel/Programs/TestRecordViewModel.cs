@@ -254,6 +254,11 @@ namespace BCLabManager.ViewModel
             _record.AssetsCommit(this.EndTime, null, this.NewCycle, this.Comment);
             OnPropertyChanged("Status");
         }
+        public void Invalidate()
+        {
+            _record.Invalidate(this.Comment);
+            //OnPropertyChanged("Status");
+        }
         #endregion
     }
 }

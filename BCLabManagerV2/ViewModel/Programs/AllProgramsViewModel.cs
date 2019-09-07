@@ -678,7 +678,7 @@ namespace BCLabManager.ViewModel
                     tr.Status = testRecord.Status;
                     dbContext.SaveChanges();
                 }
-                evm.Invalidate();
+                testRecord.Invalidate();
             }
         }
         private void ViewRawData(TestRecordViewModel testRecordVM)

@@ -50,6 +50,11 @@ namespace BCLabManager.Model
             this.TestCount = TestCount;
         }
 
+        public void AssociateEvent(TestRecordClass testRecord)
+        {
+            testRecord.StatusChanged += this.TestRecord_StatusChanged;
+        }
+
         public void Update(String Name, TestCountEnum TestCount)
         {
             this.Name = Name;
@@ -95,6 +100,7 @@ namespace BCLabManager.Model
                 if (FirstTestRecords.Contains(tr))
                 {
                     var newTestRecord = new TestRecordClass();
+                    newTestRecord.StatusChanged += this.TestRecord_StatusChanged;
                     FirstTestRecords.Add(newTestRecord);
                     OnRasieTestRecordAddedEvent(newTestRecord, true);
                     sub.FirstTestRecords.Add(newTestRecord);
@@ -102,6 +108,7 @@ namespace BCLabManager.Model
                 else if (SecondTestRecords.Contains(tr))
                 {
                     var newTestRecord = new TestRecordClass();
+                    newTestRecord.StatusChanged += this.TestRecord_StatusChanged;
                     SecondTestRecords.Add(newTestRecord);
                     OnRasieTestRecordAddedEvent(newTestRecord, false);
                     sub.SecondTestRecords.Add(newTestRecord);

@@ -123,6 +123,17 @@ namespace BCLabManager
                         .ThenInclude(sub => sub.SecondTestRecords)
                             .ThenInclude(tr => tr.AssignedChannel)
                     .ToList());
+
+                foreach (var pro in Programs)
+                {
+                    foreach (var sub in pro.SubPrograms)
+                    {
+                        foreach (var tr in sub.FirstTestRecords)
+                            sub.AssociateEvent(tr);
+                        foreach (var tr in sub.SecondTestRecords)
+                            sub.AssociateEvent(tr);
+                    }
+                }
             }
         }
         void CreateViewModels()

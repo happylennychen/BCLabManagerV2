@@ -303,13 +303,5 @@ namespace BCLabManager.ViewModel
             get { return _isOK; }
             set { _isOK = value; }
         }
-
-        #region Public Interface
-        public void Invalidate()
-        {
-            _record.Invalidate(this.Comment);
-            OnPropertyChanged("Status");
-        }
-        #endregion
     }
 }
