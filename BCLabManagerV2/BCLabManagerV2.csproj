@@ -242,6 +242,7 @@
     </ApplicationDefinition>
     <Compile Include="DataAccess\AppDbContext.cs" />
     <Compile Include="DataAccess\Repositories.cs" />
+    <Compile Include="GlobalSettings.cs" />
     <Compile Include="Migrations\20190905145057_Init.cs" />
     <Compile Include="Migrations\20190905145057_Init.designer.cs">
       <DependentUpon>20190905145057_Init.cs</DependentUpon>

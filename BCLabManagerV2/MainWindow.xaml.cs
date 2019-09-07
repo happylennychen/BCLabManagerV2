@@ -44,6 +44,7 @@ namespace BCLabManager
         public MainWindow()
         {
             InitializeComponent();
+            GlobalSettings.DbPath = "F://BCLab.db3";
             InitializeDatabase();
             List<BatteryTypeClass> batteryTypes;
             using (var dbContext = new AppDbContext())
@@ -166,8 +167,7 @@ namespace BCLabManager
         }
         void InitializeDatabase()
         {
-            string defaultfilepath = "D://BCLab.db3";
-            if(!File.Exists(defaultfilepath))
+            if(!File.Exists(GlobalSettings.DbPath))
             {
                 using (var dbContext = new AppDbContext())
                 {
