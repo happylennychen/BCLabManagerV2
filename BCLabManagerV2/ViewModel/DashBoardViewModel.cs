@@ -210,35 +210,50 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                return (double)WaitingAmount / (double)TotalExeAmount;
+                if (TotalExeAmount == 0)
+                    return 0;
+                else
+                    return (double)WaitingAmount / (double)TotalExeAmount;
             }
         }
         public double ExecutingPercentage
         {
             get
             {
-                return (double)ExecutingAmount / (double)TotalExeAmount;
+                if (TotalExeAmount == 0)
+                    return 0;
+                else
+                    return (double)ExecutingAmount / (double)TotalExeAmount;
             }
         }
         public double CompletedPercentage
         {
             get
             {
-                return (double)CompletedAmount / (double)TotalExeAmount;
+                if (TotalExeAmount == 0)
+                    return 0;
+                else
+                    return (double)CompletedAmount / (double)TotalExeAmount;
             }
         }
         public double InvalidPercentage
         {
             get
             {
-                return (double)InvalidAmount / (double)TotalExeAmount;
+                if (TotalExeAmount == 0)
+                    return 0;
+                else
+                    return (double)InvalidAmount / (double)TotalExeAmount;
             }
         }
         public double AbandonedPercentage
         {
             get
             {
-                return (double)AbandonedAmount / (double)TotalExeAmount;
+                if (TotalExeAmount == 0)
+                    return 0;
+                else
+                    return (double)AbandonedAmount / (double)TotalExeAmount;
             }
         }
         #endregion
