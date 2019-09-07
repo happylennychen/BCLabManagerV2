@@ -37,8 +37,8 @@ namespace BCLabManager.ViewModel
         List<BatteryTypeClass> _batteryTypes;
         ObservableCollection<BatteryClass> _batteries;
         List<TesterClass> _testers;
-        List<ChannelClass> _channels;
-        List<ChamberClass> _chambers;
+        ObservableCollection<ChannelClass> _channels;
+        ObservableCollection<ChamberClass> _chambers;
         #endregion // Fields
 
         #region Constructor
@@ -50,8 +50,8 @@ namespace BCLabManager.ViewModel
             List<BatteryTypeClass> batteryTypes,
             ObservableCollection<BatteryClass> batteries,
             List<TesterClass> testers,
-            List<ChannelClass> channels,
-            List<ChamberClass> chambers
+            ObservableCollection<ChannelClass> channels,
+            ObservableCollection<ChamberClass> chambers
             )
         {
             _subProgramTemplates = subProgramTemplates;

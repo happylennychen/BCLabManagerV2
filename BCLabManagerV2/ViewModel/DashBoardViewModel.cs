@@ -15,17 +15,9 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        RelayCommand _createCommand;
-        RelayCommand _editCommand;
-        RelayCommand _saveAsCommand;
-        RelayCommand _executeCommand;
-        RelayCommand _commitCommand;
-        RelayCommand _invalidateCommand;
-        RelayCommand _viewCommand;
-
         ObservableCollection<BatteryClass> _batteries;
-        List<ChannelClass> _channels;
-        List<ChamberClass> _chambers;
+        ObservableCollection<ChannelClass> _channels;
+        ObservableCollection<ChamberClass> _chambers;
         List<ProgramClass> _programs;
         #endregion // Fields
 
@@ -35,16 +27,63 @@ namespace BCLabManager.ViewModel
             (
             List<ProgramClass> programs,
             ObservableCollection<BatteryClass> batteries,
-            List<ChannelClass> channels,
-            List<ChamberClass> chambers
+            ObservableCollection<ChannelClass> channels,
+            ObservableCollection<ChamberClass> chambers
             )
         {
-            //this.CreateAllPrograms(programs);
             _programs = programs;
             _batteries = batteries;
             _channels = channels;
             _chambers = chambers;
+            BookEvents();
+        }
+        private void BookEvents()
+        {
+            foreach (var bat in _batteries)
+            {
+                bat.PropertyChanged += Bat_PropertyChanged;
+            }
             _batteries.CollectionChanged += _batteries_CollectionChanged;
+
+            foreach (var cmb in _chambers)
+            {
+                cmb.PropertyChanged += Cmb_PropertyChanged; ;
+            }
+            _chambers.CollectionChanged += _chambers_CollectionChanged; ;
+
+            foreach (var chn in _channels)
+            {
+                chn.PropertyChanged += Chn_PropertyChanged; ;
+            }
+            _channels.CollectionChanged += _channels_CollectionChanged; ;
+        }
+
+        private void _channels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("ChannelAmount");
+        }
+
+        private void Chn_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Status")
+                OnPropertyChanged("UsingChannelAmount");
+        }
+
+        private void _chambers_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("ChamberAmount");
+        }
+
+        private void Cmb_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Status")
+                OnPropertyChanged("UsingChamberAmount");
+        }
+
+        private void Bat_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Status")
+                OnPropertyChanged("UsingBatteryAmount");
         }
 
         private void _batteries_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

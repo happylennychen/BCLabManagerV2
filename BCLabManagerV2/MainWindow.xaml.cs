@@ -44,8 +44,8 @@ namespace BCLabManager
         List<BatteryTypeClass> BatteryTypes { get; set; }
         ObservableCollection<BatteryClass> Batteries { get; set; }
         List<TesterClass> Testers { get; set; }
-        List<ChannelClass> Channels { get; set; }
-        List<ChamberClass> Chambers { get; set; }
+        ObservableCollection<ChannelClass> Channels { get; set; }
+        ObservableCollection<ChamberClass> Chambers { get; set; }
         List<SubProgramTemplate> SubProgramTemplates { get; set; }
         List<ProgramClass> Programs { get; set; }
         public MainWindow()
@@ -90,14 +90,14 @@ namespace BCLabManager
 
                 Testers = new List<TesterClass>(dbContext.Testers.ToList());
 
-                Channels = new List<ChannelClass>(
+                Channels = new ObservableCollection<ChannelClass>(
                     dbContext.Channels
                     .Include(i => i.Tester)
                     .Include(o => o.Records)
                     .ToList()
                     );
 
-                Chambers = new List<ChamberClass>(
+                Chambers = new ObservableCollection<ChamberClass>(
                     dbContext.Chambers
                     .Include(o => o.Records)
                     .ToList()

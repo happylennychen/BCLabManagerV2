@@ -19,19 +19,19 @@ namespace BCLabManager.ViewModel
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
-        List<ChamberClass> _chambers;
+        ObservableCollection<ChamberClass> _chambers;
 
         #endregion // Fields
 
         #region Constructor
 
-        public AllChambersViewModel(List<ChamberClass> chambers)
+        public AllChambersViewModel(ObservableCollection<ChamberClass> chambers)
         {
             _chambers = chambers;
             this.CreateAllChambers(chambers);
         }
 
-        void CreateAllChambers(List<ChamberClass> chambers)
+        void CreateAllChambers(ObservableCollection<ChamberClass> chambers)
         {
             List<ChamberViewModel> all =
                 (from cmb in chambers

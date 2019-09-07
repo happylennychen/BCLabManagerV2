@@ -34,8 +34,8 @@ namespace BCLabManager.ViewModel
         List<BatteryTypeClass> _batteryTypes;
         ObservableCollection<BatteryClass> _batteries;
         List<TesterClass> _testers;
-        List<ChannelClass> _channels;
-        List<ChamberClass> _chambers;
+        ObservableCollection<ChannelClass> _channels;
+        ObservableCollection<ChamberClass> _chambers;
 
         //ObservableCollection<BatteryTypeClass> _allBatteryTypes;
         BatteryTypeClass _batteryType;
@@ -60,8 +60,8 @@ namespace BCLabManager.ViewModel
             List<BatteryTypeClass> batteryTypes,
             ObservableCollection<BatteryClass> batteries,
             List<TesterClass> testers,
-            List<ChannelClass> channels,
-            List<ChamberClass> chambers
+            ObservableCollection<ChannelClass> channels,
+            ObservableCollection<ChamberClass> chambers
             )     //
         {
             if (record == null)
@@ -206,7 +206,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<ChamberClass> all = _chambers;
+                ObservableCollection<ChamberClass> all = _chambers;
                 List<ChamberClass> allstring = (
                     from i in all
                     where i.Status == AssetStatusEnum.IDLE
@@ -234,7 +234,7 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("Tester");
 
 
-                List<ChannelClass> all = _channels;
+                ObservableCollection<ChannelClass> all = _channels;
                 List<ChannelClass> allstring = (
                     from i in all
                     where (i.Tester.Id == Tester.Id) && i.Status == AssetStatusEnum.IDLE

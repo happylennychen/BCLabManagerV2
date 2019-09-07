@@ -13,7 +13,7 @@ namespace BCLabManager.ViewModel
     public class AllChannelsViewModel : ViewModelBase
     {
         #region Fields
-        List<ChannelClass> _channels;
+        ObservableCollection<ChannelClass> _channels;
         List<TesterClass> _testers;
         ChannelViewModel _selectedItem;
         RelayCommand _createCommand;
@@ -24,7 +24,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllChannelsViewModel(List<ChannelClass> channels, List<TesterClass> testers)
+        public AllChannelsViewModel(ObservableCollection<ChannelClass> channels, List<TesterClass> testers)
         {
             _channels = channels;
             _testers = testers;
@@ -32,7 +32,7 @@ namespace BCLabManager.ViewModel
             this.CreateAllChannels(channels);
         }
 
-        void CreateAllChannels(List<ChannelClass> channels)
+        void CreateAllChannels(ObservableCollection<ChannelClass> channels)
         {
             List<ChannelViewModel> all =
                 (from c in channels
