@@ -113,10 +113,10 @@
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Rectangle Grid.Row="0" Grid.Column="0" Fill="Orange" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
-                    <Rectangle Grid.Row="1" Grid.Column="0" Fill="Green" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
-                    <Rectangle Grid.Row="2" Grid.Column="0" Fill="Yellow" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
-                    <Rectangle Grid.Row="3" Grid.Column="0" Fill="Blue" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
-                    <Rectangle Grid.Row="4" Grid.Column="0" Fill="Red" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                    <Rectangle Grid.Row="1" Grid.Column="0" Fill="Yellow" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                    <Rectangle Grid.Row="2" Grid.Column="0" Fill="Blue" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                    <Rectangle Grid.Row="3" Grid.Column="0" Fill="Red" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                    <Rectangle Grid.Row="4" Grid.Column="0" Fill="DarkGray" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
                     <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">Waiting</TextBlock>
                     <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Executing</TextBlock>
                     <TextBlock Grid.Row="2" Grid.Column="2" VerticalAlignment="Center">Completed</TextBlock>
