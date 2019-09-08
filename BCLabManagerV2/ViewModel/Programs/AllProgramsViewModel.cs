@@ -388,6 +388,8 @@ namespace BCLabManager.ViewModel
             ProgramViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)     //Add Remove操作，就是将model.SubPrograms里面的集合内容改变了
             {
+                List<SubProgramClass> TobeRemoved = new List<SubProgramClass>();
+                List<SubProgramClass> TobeAdded = new List<SubProgramClass>();
                 //先改数据库，这样可以使得Id准确
                 using (var dbContext = new AppDbContext())
                 {
@@ -398,8 +400,6 @@ namespace BCLabManager.ViewModel
 
                     bool isTgtNotContainSrc = false;    //Add to target
                     bool isSrcNotContainTgt = false;    //Remove from target
-                    List<SubProgramClass> TobeRemoved = new List<SubProgramClass>();
-                    List<SubProgramClass> TobeAdded = new List<SubProgramClass>();
                     foreach (var sub_target in dbProgram.SubPrograms)     //看看在不在source中，不在则删掉
                     {
                         isSrcNotContainTgt = true;
@@ -439,6 +439,14 @@ namespace BCLabManager.ViewModel
                     dbContext.SaveChanges();        //TobeAdded中的元素Id改变了
                 }
                 //再改model
+                foreach (var sub in TobeRemoved)
+                {
+                    oldsubs.Remove(oldsubs.SingleOrDefault(o => o.Id == sub.Id));
+                }
+                foreach (var sub in TobeAdded)
+                {
+                    oldsubs.Add(sub);
+                }
                 //再改view model
             }
 
