@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,21 +18,21 @@ namespace BCLabManager.Model
         public int Id { get; set; }
         public String Name { get; set; }
         public TestCountEnum TestCount { get; set; }
-        public List<TestRecordClass> FirstTestRecords { get; set; }
-        public List<TestRecordClass> SecondTestRecords { get; set; }
+        public ObservableCollection<TestRecordClass> FirstTestRecords { get; set; }
+        public ObservableCollection<TestRecordClass> SecondTestRecords { get; set; }
 
         public SubProgramClass()
         {
-            FirstTestRecords = new List<TestRecordClass>();
-            SecondTestRecords = new List<TestRecordClass>();
+            FirstTestRecords = new ObservableCollection<TestRecordClass>();
+            SecondTestRecords = new ObservableCollection<TestRecordClass>();
         }
 
         public SubProgramClass(SubProgramTemplate template)
         {
             this.Name = template.Name;
             this.TestCount = template.TestCount;
-            this.FirstTestRecords = new List<TestRecordClass>();
-            this.SecondTestRecords = new List<TestRecordClass>();
+            this.FirstTestRecords = new ObservableCollection<TestRecordClass>();
+            this.SecondTestRecords = new ObservableCollection<TestRecordClass>();
 
             var tr = new TestRecordClass();
             tr.StatusChanged += this.TestRecord_StatusChanged;
@@ -65,18 +66,18 @@ namespace BCLabManager.Model
             var newsub = new SubProgramClass(this.Name, this.TestCount);
             if (this.TestCount == TestCountEnum.One)
             {
-                newsub.FirstTestRecords = new List<TestRecordClass>();
+                newsub.FirstTestRecords = new ObservableCollection<TestRecordClass>();
                 var tr = new TestRecordClass();
                 tr.StatusChanged += newsub.TestRecord_StatusChanged;
                 newsub.FirstTestRecords.Add(tr);
             }
             else if (this.TestCount == TestCountEnum.Two)
             {
-                newsub.FirstTestRecords = new List<TestRecordClass>();
+                newsub.FirstTestRecords = new ObservableCollection<TestRecordClass>();
                 var tr = new TestRecordClass();
                 tr.StatusChanged += newsub.TestRecord_StatusChanged;
                 newsub.FirstTestRecords.Add(tr);
-                newsub.SecondTestRecords = new List<TestRecordClass>();
+                newsub.SecondTestRecords = new ObservableCollection<TestRecordClass>();
                 tr = new TestRecordClass();
                 tr.StatusChanged += newsub.TestRecord_StatusChanged;
                 newsub.SecondTestRecords.Add(tr);

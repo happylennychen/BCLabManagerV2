@@ -63,6 +63,57 @@ namespace BCLabManager.ViewModel
             {
                 pro.SubPrograms.CollectionChanged += SubPrograms_CollectionChanged;
             }
+
+            foreach (var pro in _programs)
+            {
+                foreach(var sub in pro.SubPrograms)
+                {
+                    sub.FirstTestRecords.CollectionChanged += FirstTestRecords_CollectionChanged;
+                    sub.SecondTestRecords.CollectionChanged += SecondTestRecords_CollectionChanged;
+                }
+            }
+
+            foreach (var pro in _programs)
+            {
+                foreach (var sub in pro.SubPrograms)
+                {
+                    foreach(var tr in sub.FirstTestRecords)
+                        tr.StatusChanged += Tr_StatusChanged;
+                    foreach (var tr in sub.SecondTestRecords)
+                        tr.StatusChanged += Tr_StatusChanged;
+                }
+            }
+        }
+
+        private void Tr_StatusChanged(object sender, StatusChangedEventArgs e)
+        {
+            OnPropertyChanged("WaitingAmount");
+            OnPropertyChanged("ExecutingAmount");
+            OnPropertyChanged("CompletedAmount");
+            OnPropertyChanged("InvalidAmount");
+            OnPropertyChanged("AbandonedAmount"); 
+            OnPropertyChanged("TotalExeAmount");
+            OnPropertyChanged("WaitingPercentage");
+            OnPropertyChanged("ExecutingPercentage");
+            OnPropertyChanged("CompletedPercentage");
+            OnPropertyChanged("InvalidPercentage");
+            OnPropertyChanged("AbandonedPercentage");
+        }
+
+        private void SecondTestRecords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("CompletedAmount");
+            OnPropertyChanged("InvalidAmount");
+            OnPropertyChanged("WaitingAmount");
+            OnPropertyChanged("TotalExeAmount");
+        }
+
+        private void FirstTestRecords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("CompletedAmount");
+            OnPropertyChanged("InvalidAmount");
+            OnPropertyChanged("WaitingAmount");
+            OnPropertyChanged("TotalExeAmount");
         }
 
         private void SubPrograms_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
