@@ -448,6 +448,15 @@ namespace BCLabManager.ViewModel
                     oldsubs.Add(sub);
                 }
                 //再改view model
+                foreach (var sub in TobeRemoved)
+                {
+                    oldsubs.Remove(oldsubs.SingleOrDefault(o => o.Id == sub.Id));
+                    SelectedProgram.SubPrograms.Remove(SelectedProgram.SubPrograms.SingleOrDefault(o => o.Id == sub.Id));
+                }
+                foreach (var sub in TobeAdded)
+                {
+                    SelectedProgram.SubPrograms.Add(new SubProgramViewModel(sub));
+                }
             }
 
                 //model.SubPrograms = _selectedProgram._program.SubPrograms;
