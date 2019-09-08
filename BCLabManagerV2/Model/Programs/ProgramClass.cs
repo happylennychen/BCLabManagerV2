@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,14 +15,14 @@ namespace BCLabManager.Model
         public DateTime RequestDate { get; set; }
         public String Description { get; set; }
         public DateTime CompleteDate { get; set; }
-        public List<SubProgramClass> SubPrograms { get; set; }
+        public ObservableCollection<SubProgramClass> SubPrograms { get; set; }
 
         public ProgramClass()           //Create用到
         {
-            SubPrograms = new List<SubProgramClass>();
+            SubPrograms = new ObservableCollection<SubProgramClass>();
         }
 
-        public ProgramClass(String Name, String Requester, DateTime RequestDate, String Description, List<SubProgramClass> SubPrograms) //Clone用到
+        public ProgramClass(String Name, String Requester, DateTime RequestDate, String Description, ObservableCollection<SubProgramClass> SubPrograms) //Clone用到
         {
             this.Name = Name;
             this.Requester = Requester;
@@ -50,9 +51,10 @@ namespace BCLabManager.Model
 
         public ProgramClass Clone() //Edit Save As用到
         {
-            List<SubProgramClass> clonelist =
+            List<SubProgramClass> all =
                 (from sub in SubPrograms
                  select sub.Clone()).ToList();
+            ObservableCollection<SubProgramClass> clonelist = new ObservableCollection<SubProgramClass>(all);
             return new ProgramClass(this.Name, this.Requester, this.RequestDate, this.Description, clonelist);
         }
     }

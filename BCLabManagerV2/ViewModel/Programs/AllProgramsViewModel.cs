@@ -39,13 +39,14 @@ namespace BCLabManager.ViewModel
         List<TesterClass> _testers;
         ObservableCollection<ChannelClass> _channels;
         ObservableCollection<ChamberClass> _chambers;
+        ObservableCollection<ProgramClass> _programs;
         #endregion // Fields
 
         #region Constructor
 
         public AllProgramsViewModel
             (
-            List<ProgramClass> programClasses,
+            ObservableCollection<ProgramClass> programs,
             List<SubProgramTemplate> subProgramTemplates,
             List<BatteryTypeClass> batteryTypes,
             ObservableCollection<BatteryClass> batteries,
@@ -55,7 +56,8 @@ namespace BCLabManager.ViewModel
             )
         {
             _subProgramTemplates = subProgramTemplates;
-            this.CreateAllPrograms(programClasses);
+            _programs = programs;
+            this.CreateAllPrograms(programs);
 
             _batteryTypes = batteryTypes;
             _batteries = batteries;
@@ -64,7 +66,7 @@ namespace BCLabManager.ViewModel
             _chambers = chambers;
         }
 
-        void CreateAllPrograms(List<ProgramClass> programClasses)
+        void CreateAllPrograms(ObservableCollection<ProgramClass> programClasses)
         {
             List<ProgramViewModel> all =
                 (from program in programClasses
@@ -360,8 +362,9 @@ namespace BCLabManager.ViewModel
                 {
                     dbContext.Programs.Add(m);
                     dbContext.SaveChanges();
-                    this.AllPrograms.Add(new ProgramViewModel(m));
                 }
+                _programs.Add(m);
+                this.AllPrograms.Add(new ProgramViewModel(m));
             }
         }
         private void Edit()
@@ -465,8 +468,9 @@ namespace BCLabManager.ViewModel
                 {
                     dbContext.Programs.Add(m);
                     dbContext.SaveChanges();
-                    this.AllPrograms.Add(new ProgramViewModel(m));
                 }
+                _programs.Add(m);
+                this.AllPrograms.Add(new ProgramViewModel(m));
             }
         }
         private bool CanSaveAs

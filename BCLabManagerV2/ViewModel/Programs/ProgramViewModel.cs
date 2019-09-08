@@ -31,10 +31,10 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public ProgramViewModel(ProgramClass programmodel)
+        public ProgramViewModel(ProgramClass program)
         {
 
-            _program = programmodel;
+            _program = program;
             this.CreateSubPrograms();
             _program.PropertyChanged += _program_PropertyChanged;
         }

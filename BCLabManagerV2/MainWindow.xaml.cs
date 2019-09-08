@@ -47,13 +47,13 @@ namespace BCLabManager
         ObservableCollection<ChannelClass> Channels { get; set; }
         ObservableCollection<ChamberClass> Chambers { get; set; }
         List<SubProgramTemplate> SubProgramTemplates { get; set; }
-        List<ProgramClass> Programs { get; set; }
+        ObservableCollection<ProgramClass> Programs { get; set; }
         public MainWindow()
         {
             try
             {
                 InitializeComponent();
-                GlobalSettings.DbPath = "F://BCLabEmpty.db3";
+                GlobalSettings.DbPath = "C://BCLab.db3";
                 InitializeDatabase();
                 LoadingFromDB();
                 CreateViewModels();
@@ -105,7 +105,7 @@ namespace BCLabManager
 
                 SubProgramTemplates = new List<SubProgramTemplate>(dbContext.SubProgramTemplates.ToList());
 
-                Programs = new List<ProgramClass>(dbContext.Programs
+                Programs = new ObservableCollection<ProgramClass>(dbContext.Programs
                      .Include(pro => pro.SubPrograms)
                         .ThenInclude(sub => sub.FirstTestRecords)
                             .ThenInclude(tr => tr.RawData)

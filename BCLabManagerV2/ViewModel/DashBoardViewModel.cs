@@ -18,14 +18,14 @@ namespace BCLabManager.ViewModel
         ObservableCollection<BatteryClass> _batteries;
         ObservableCollection<ChannelClass> _channels;
         ObservableCollection<ChamberClass> _chambers;
-        List<ProgramClass> _programs;
+        ObservableCollection<ProgramClass> _programs;
         #endregion // Fields
 
         #region Constructor
 
         public DashBoardViewModel
             (
-            List<ProgramClass> programs,
+            ObservableCollection<ProgramClass> programs,
             ObservableCollection<BatteryClass> batteries,
             ObservableCollection<ChannelClass> channels,
             ObservableCollection<ChamberClass> chambers
@@ -47,15 +47,34 @@ namespace BCLabManager.ViewModel
 
             foreach (var cmb in _chambers)
             {
-                cmb.PropertyChanged += Cmb_PropertyChanged; ;
+                cmb.PropertyChanged += Cmb_PropertyChanged;
             }
-            _chambers.CollectionChanged += _chambers_CollectionChanged; ;
+            _chambers.CollectionChanged += _chambers_CollectionChanged;
 
             foreach (var chn in _channels)
             {
-                chn.PropertyChanged += Chn_PropertyChanged; ;
+                chn.PropertyChanged += Chn_PropertyChanged;
             }
-            _channels.CollectionChanged += _channels_CollectionChanged; ;
+            _channels.CollectionChanged += _channels_CollectionChanged;
+
+            _programs.CollectionChanged += _programs_CollectionChanged;
+
+            foreach (var pro in _programs)
+            {
+                pro.SubPrograms.CollectionChanged += SubPrograms_CollectionChanged;
+            }
+        }
+
+        private void SubPrograms_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("WaitingAmount");
+            OnPropertyChanged("TotalExeAmount");
+        }
+
+        private void _programs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("WaitingAmount");
+            OnPropertyChanged("TotalExeAmount");
         }
 
         private void _channels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

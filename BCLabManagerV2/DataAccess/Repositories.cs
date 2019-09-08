@@ -5,6 +5,7 @@ using System.Text;
 using BCLabManager.Model;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.ObjectModel;
 
 namespace BCLabManager.DataAccess
 {
@@ -397,7 +398,7 @@ namespace BCLabManager.DataAccess
 
             _subprogramRepository = new SubProgramRepository(SubPrograms);
 
-            var newsubs = new List<SubProgramClass>();
+            var newsubs = new ObservableCollection<SubProgramClass>();
             newsubs.Add(SubPrograms[0].Clone());
             newsubs.Add(SubPrograms[2].Clone());
             newsubs.Add(SubPrograms[4].Clone());
