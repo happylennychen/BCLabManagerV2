@@ -1,6 +1,6 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -27,15 +27,6 @@ namespace BCLabManager.View
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            var dialog = new OpenFileDialog();
-            if(dialog.ShowDialog()==true)
-            {
-                FilePathLabel.Text = dialog.FileName;
-            }
         }
     }
 }

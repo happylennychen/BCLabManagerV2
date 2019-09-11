@@ -39,18 +39,15 @@
 
             <Label 
       Grid.Row="2" Grid.Column="0" 
-      Content="_RawData:" 
+      Content="_RawData:" VerticalAlignment="Center"
       HorizontalAlignment="Right"
-      />
-            <TextBox 
-      Grid.Row="2" Grid.Column="2" 
-      Validation.ErrorTemplate="{x:Null}"
       />
             <DockPanel LastChildFill="True"
       Grid.Row="2" Grid.Column="2" >
-                <Button DockPanel.Dock="Right" Click="Button_Click_1">...</Button>
-                <TextBlock Name="FilePathLabel"
-      Text="{Binding Path=FilePath,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBlock>
+                <Button DockPanel.Dock="Right" Height="15" Width="30" Command="{Binding Path=OpenFilesCommand}">...</Button>
+                <!--<TextBlock Name="FilePathLabel"
+      Text="{Binding Path=FilePath,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBlock>-->
+                <ListBox Height="150" x:Name="FileListBox" ItemsSource="{Binding Path=FileList, Mode=TwoWay}"></ListBox>
             </DockPanel>
             <Label 
       Grid.Row="4" Grid.Column="0" 

@@ -26,14 +26,14 @@
 
             <Label 
       Grid.Row="6" Grid.Column="0" 
-      Content="Raw Data File Path:" 
+      Content="Raw Data List:" 
       HorizontalAlignment="Right"
       Target="{Binding ElementName=CommentTxt}" 
       />
-            <TextBox 
-      x:Name="CommentTxt"
+            <ListBox 
+      x:Name="CommentTxt" Height="150"
       Grid.Row="6" Grid.RowSpan="3" Grid.Column="2" 
-      Text="{Binding Path=FilePath}" 
+                ItemsSource="{Binding Path=FileList}"
       Validation.ErrorTemplate="{x:Null}"
       />
 

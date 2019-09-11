@@ -53,7 +53,7 @@ namespace BCLabManager
             try
             {
                 InitializeComponent();
-                GlobalSettings.DbPath = "C://BCLab.db3";
+                GlobalSettings.DbPath = "D://BCLab.db3";
                 InitializeDatabase();
                 LoadingFromDB();
                 CreateViewModels();
@@ -108,7 +108,7 @@ namespace BCLabManager
                 Programs = new ObservableCollection<ProgramClass>(dbContext.Programs
                      .Include(pro => pro.SubPrograms)
                         .ThenInclude(sub => sub.FirstTestRecords)
-                            .ThenInclude(tr => tr.RawData)
+                            .ThenInclude(tr => tr.RawDataList)
                      .Include(pro => pro.SubPrograms)
                         .ThenInclude(sub => sub.FirstTestRecords)
                             .ThenInclude(tr => tr.AssignedBattery)
@@ -120,7 +120,7 @@ namespace BCLabManager
                             .ThenInclude(tr => tr.AssignedChannel)
                      .Include(pro => pro.SubPrograms)
                         .ThenInclude(sub => sub.SecondTestRecords)
-                            .ThenInclude(tr => tr.RawData)
+                            .ThenInclude(tr => tr.RawDataList)
                      .Include(pro => pro.SubPrograms)
                         .ThenInclude(sub => sub.SecondTestRecords)
                             .ThenInclude(tr => tr.AssignedBattery)

@@ -14,9 +14,11 @@ namespace BCLabManager.Model
         Invalid,
         Abandoned,
     }
-    public class RawDataClass : ModelBase
+    public class RawDataClass
     {
         public int Id { get; set; }
+        public string FileName { get; set; }
+        public byte[] BinaryData { get; set; }
     }
     public class StatusChangedEventArgs : EventArgs
     {
@@ -57,8 +59,7 @@ namespace BCLabManager.Model
         public DateTime EndTime { get; set; }
         public String Steps { get; set; }
         public String Comment { get; set; }
-        public RawDataClass RawData { get; set; }
-        public string FilePath { get; set; }
+        public List<RawDataClass> RawDataList { get; set; }
         public Double NewCycle { get; set; }
 
         #region Store the assets in use

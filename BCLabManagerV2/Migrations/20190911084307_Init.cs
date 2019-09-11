@@ -62,18 +62,6 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RawDataClass",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RawDataClass", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "SubProgramTemplates",
                 columns: table => new
                 {
@@ -220,8 +208,6 @@ namespace BCLabManager.Migrations
                     EndTime = table.Column<DateTime>(nullable: false),
                     Steps = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true),
-                    RawDataId = table.Column<int>(nullable: true),
-                    FilePath = table.Column<string>(nullable: true),
                     NewCycle = table.Column<double>(nullable: false),
                     AssignedBatteryId = table.Column<int>(nullable: true),
                     AssignedChamberId = table.Column<int>(nullable: true),
@@ -251,12 +237,6 @@ namespace BCLabManager.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_TestRecords_RawDataClass_RawDataId",
-                        column: x => x.RawDataId,
-                        principalTable: "RawDataClass",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_TestRecords_SubPrograms_SubProgramClassId",
                         column: x => x.SubProgramClassId,
                         principalTable: "SubPrograms",
@@ -266,6 +246,27 @@ namespace BCLabManager.Migrations
                         name: "FK_TestRecords_SubPrograms_SubProgramClassId1",
                         column: x => x.SubProgramClassId1,
                         principalTable: "SubPrograms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RawDataClass",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    FileName = table.Column<string>(nullable: true),
+                    BinaryData = table.Column<byte[]>(nullable: true),
+                    TestRecordClassId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RawDataClass", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RawDataClass_TestRecords_TestRecordClassId",
+                        column: x => x.TestRecordClassId,
+                        principalTable: "TestRecords",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -296,6 +297,11 @@ namespace BCLabManager.Migrations
                 column: "TesterId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RawDataClass_TestRecordClassId",
+                table: "RawDataClass",
+                column: "TestRecordClassId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SubPrograms_ProgramClassId",
                 table: "SubPrograms",
                 column: "ProgramClassId");
@@ -316,11 +322,6 @@ namespace BCLabManager.Migrations
                 column: "AssignedChannelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TestRecords_RawDataId",
-                table: "TestRecords",
-                column: "RawDataId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TestRecords_SubProgramClassId",
                 table: "TestRecords",
                 column: "SubProgramClassId");
@@ -337,6 +338,9 @@ namespace BCLabManager.Migrations
                 name: "AssetUsageRecordClass");
 
             migrationBuilder.DropTable(
+                name: "RawDataClass");
+
+            migrationBuilder.DropTable(
                 name: "SubProgramTemplates");
 
             migrationBuilder.DropTable(
@@ -350,9 +354,6 @@ namespace BCLabManager.Migrations
 
             migrationBuilder.DropTable(
                 name: "Channels");
-
-            migrationBuilder.DropTable(
-                name: "RawDataClass");
 
             migrationBuilder.DropTable(
                 name: "SubPrograms");

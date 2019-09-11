@@ -36,15 +36,11 @@ namespace BCLabManager.ViewModel
 
         #region Presentation Properties
 
-        public String FilePath
+        public List<String> FileList
         {
             get
             {
-                return _record.FilePath;
-            }
-            set
-            {
-                _record.FilePath = value;
+                return _record.RawDataList.Select(o=>o.FileName).ToList();
             }
         }
 

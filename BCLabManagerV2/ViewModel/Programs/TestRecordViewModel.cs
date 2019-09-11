@@ -224,22 +224,6 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("NewCycle");
             }
         }
-        public string FilePath
-        {
-            get
-            {
-                return _record.FilePath;
-            }
-            set
-            {
-                if (value == _record.FilePath)
-                    return;
-
-                _record.FilePath = value;
-
-                base.OnPropertyChanged("FilePath");
-            }
-        }
         #endregion // Presentation Properties
 
 

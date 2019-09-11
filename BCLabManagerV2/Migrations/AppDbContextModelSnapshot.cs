@@ -155,7 +155,15 @@ namespace BCLabManager.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<byte[]>("BinaryData");
+
+                    b.Property<string>("FileName");
+
+                    b.Property<int?>("TestRecordClassId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TestRecordClassId");
 
                     b.ToTable("RawDataClass");
                 });
@@ -215,13 +223,9 @@ namespace BCLabManager.Migrations
 
                     b.Property<DateTime>("EndTime");
 
-                    b.Property<string>("FilePath");
-
                     b.Property<double>("NewCycle");
 
                     b.Property<string>("ProgramStr");
-
-                    b.Property<int?>("RawDataId");
 
                     b.Property<DateTime>("StartTime");
 
@@ -244,8 +248,6 @@ namespace BCLabManager.Migrations
                     b.HasIndex("AssignedChamberId");
 
                     b.HasIndex("AssignedChannelId");
-
-                    b.HasIndex("RawDataId");
 
                     b.HasIndex("SubProgramClassId");
 
@@ -297,6 +299,13 @@ namespace BCLabManager.Migrations
                         .HasForeignKey("TesterId");
                 });
 
+            modelBuilder.Entity("BCLabManager.Model.RawDataClass", b =>
+                {
+                    b.HasOne("BCLabManager.Model.TestRecordClass")
+                        .WithMany("RawDataList")
+                        .HasForeignKey("TestRecordClassId");
+                });
+
             modelBuilder.Entity("BCLabManager.Model.SubProgramClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.ProgramClass")
@@ -317,10 +326,6 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.ChannelClass", "AssignedChannel")
                         .WithMany()
                         .HasForeignKey("AssignedChannelId");
-
-                    b.HasOne("BCLabManager.Model.RawDataClass", "RawData")
-                        .WithMany()
-                        .HasForeignKey("RawDataId");
 
                     b.HasOne("BCLabManager.Model.SubProgramClass")
                         .WithMany("FirstTestRecords")

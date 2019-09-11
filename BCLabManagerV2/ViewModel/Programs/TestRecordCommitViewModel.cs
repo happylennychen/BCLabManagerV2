@@ -7,6 +7,7 @@ using BCLabManager.Model;
 using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Microsoft.Win32;
 
 namespace BCLabManager.ViewModel
 {
@@ -37,6 +38,7 @@ namespace BCLabManager.ViewModel
         ChamberClass _chamber;
         //RelayCommand _executeCommand;
         RelayCommand _okCommand;
+        RelayCommand _openFilesCommand;
         bool _isOK;
 
         #endregion // Fields
@@ -263,7 +265,21 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public string FilePath { get; set; }
+        private ObservableCollection<string> _fileList;
+
+        public ObservableCollection<string> FileList
+        {
+            get { return _fileList; }
+            set
+            {
+                if (value == _fileList)
+                    return;
+                _fileList = value;
+
+                base.OnPropertyChanged("FileList");
+            }
+        }
+
 
         #endregion // Presentation Properties
 
@@ -312,6 +328,30 @@ namespace BCLabManager.ViewModel
         {
             get { return _isOK; }
             set { _isOK = value; }
+        }
+
+        public ICommand OpenFilesCommand
+        {
+            get
+            {
+                if (_openFilesCommand == null)
+                {
+                    _openFilesCommand = new RelayCommand(
+                        param => { this.OpenFiles(); }//,
+                                               //param => this.CanExecute
+                        );
+                }
+                return _openFilesCommand;
+            }
+        }
+        public void OpenFiles()
+        {
+            var dialog = new OpenFileDialog();
+            dialog.Multiselect = true;
+            if (dialog.ShowDialog() == true)
+            {
+                FileList = new ObservableCollection<string>(dialog.FileNames.ToList());
+            }
         }
     }
 }

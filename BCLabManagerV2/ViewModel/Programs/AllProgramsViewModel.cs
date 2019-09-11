@@ -8,6 +8,7 @@ using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace BCLabManager.ViewModel
 {
@@ -732,7 +733,7 @@ namespace BCLabManager.ViewModel
                 testRecord.NewCycle = evm.NewCycle;
                 testRecord.Comment = evm.Comment;
                 testRecord.Status = TestStatus.Completed;
-                testRecord.FilePath = evm.FilePath;
+                //testRecord.FilePath = evm.FileList;
                 testRecord.CommitOnAssets();
                 using (var dbContext = new AppDbContext())
                 {
@@ -741,13 +742,25 @@ namespace BCLabManager.ViewModel
                     tr.NewCycle = testRecord.NewCycle;
                     tr.Comment = testRecord.Comment;
                     tr.Status = testRecord.Status;
-                    tr.FilePath = testRecord.FilePath;
+                    tr.RawDataList = CreateRawDataList(evm.FileList);
                     tr.AssignedBattery = null;
                     tr.AssignedChamber = null;
                     tr.AssignedChannel = null;
                     dbContext.SaveChanges();
                 }
             }
+        }
+        private List<RawDataClass> CreateRawDataList(ObservableCollection<string> fileList)
+        {
+            List<RawDataClass> output = new List<RawDataClass>();
+            foreach (var filepath in fileList)
+            {
+                var rd = new RawDataClass();
+                rd.FileName = Path.GetFileName(filepath);
+                rd.BinaryData = File.ReadAllBytes(filepath);
+                output.Add(rd);
+            }
+            return output;
         }
         private void Invalidate(TestRecordViewModel testRecord)
         {
