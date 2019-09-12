@@ -23,8 +23,6 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"></RowDefinition>
-            <RowDefinition Height="4"></RowDefinition>
-            <RowDefinition Height="40*"></RowDefinition>
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" Header="SubProgram Template">
             <DockPanel>
