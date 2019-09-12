@@ -28,10 +28,10 @@
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" Header="Chamber">
             <DockPanel>
-                <StackPanel DockPanel.Dock="Right">
-                    <Button Content="_Create" Command="{Binding Path=CreateCommand}"></Button>
-                    <Button Content="_Edit" Command="{Binding Path=EditCommand}"></Button>
-                    <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}"></Button>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="_Create" Command="{Binding Path=CreateCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Edit" Command="{Binding Path=EditCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
                 <ListView Grid.Row="1"
                       x:Name="Chamberlist"

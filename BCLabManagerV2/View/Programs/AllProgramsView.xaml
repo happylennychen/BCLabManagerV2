@@ -54,16 +54,16 @@
             <RowDefinition Height="30*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="30*"></ColumnDefinition>
+            <ColumnDefinition Width="65*"></ColumnDefinition>
             <ColumnDefinition Width="4"></ColumnDefinition>
-            <ColumnDefinition Width="70*"></ColumnDefinition>
+            <ColumnDefinition Width="35*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <GroupBox Grid.Row="0" Grid.ColumnSpan="3" Header="Program">
+        <GroupBox Grid.Row="0" Header="Program">
             <DockPanel>
-                <StackPanel DockPanel.Dock="Right">
-                    <Button Content="_Create" Command="{Binding Path=CreateCommand}"></Button>
-                    <Button Content="_Edit" Command="{Binding Path=EditCommand}"></Button>
-                    <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}"></Button>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="_Create" Command="{Binding Path=CreateCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Edit" Command="{Binding Path=EditCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
                 <ListView Grid.Row="1"
                       x:Name="Programlist"
@@ -104,7 +104,7 @@
                 </ListView>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="2" Grid.RowSpan="3" Header="Sub Program">
+        <GroupBox Grid.Row="0" Grid.Column="2" Header="Sub Program">
             <ListView
                       x:Name="SubProgramlist"
       AlternationCount="2" 
@@ -127,13 +127,13 @@
                 </ListView.View>
             </ListView>
         </GroupBox>
-        <GroupBox Grid.Row="2" Grid.Column="2" Header="First Test Record">
+        <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Header="First Test Record">
             <DockPanel>
-                <StackPanel DockPanel.Dock="Right">
-                    <Button Content="_Execute" Command="{Binding Path=ExecuteCommand}"></Button>
-                    <Button Content="_Commit" Command="{Binding Path=CommitCommand}"></Button>
-                    <Button Content="_Invalidate" Command="{Binding Path=InvalidateCommand}"></Button>
-                    <Button Content="_View Data" Command="{Binding Path=ViewCommand}"></Button>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="_Execute" Command="{Binding Path=ExecuteCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Commit" Command="{Binding Path=CommitCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Invalidate" Command="{Binding Path=InvalidateCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_View Data" Command="{Binding Path=ViewCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
                 <ListView
                       x:Name="Test1recordlist"
@@ -190,13 +190,13 @@
                 </ListView>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="4" Grid.Column="2" Header="Second Test Record">
+        <GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Header="Second Test Record">
             <DockPanel>
-                <StackPanel DockPanel.Dock="Right">
-                    <Button Content="_Execute" Command="{Binding Path=ExecuteCommand2}"></Button>
-                    <Button Content="_Commit" Command="{Binding Path=CommitCommand2}"></Button>
-                    <Button Content="_Invalidate" Command="{Binding Path=InvalidateCommand2}"></Button>
-                    <Button Content="_View Data" Command="{Binding Path=ViewCommand2}"></Button>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="_Execute" Command="{Binding Path=ExecuteCommand2}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Commit" Command="{Binding Path=CommitCommand2}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Invalidate" Command="{Binding Path=InvalidateCommand2}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_View Data" Command="{Binding Path=ViewCommand2}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
                 <ListView
                       x:Name="Test2recordlist"
