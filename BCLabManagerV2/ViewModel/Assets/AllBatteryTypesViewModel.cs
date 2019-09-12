@@ -68,15 +68,17 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                //var dbContext = new AppDbContext();
-                //if (SelectedItem == null)
-                //    return null;
-                //List<BatteryViewModel> all =
-                //  (from bat in dbContext.Batteries
-                //   where bat.BatteryType.Name == SelectedItem.Name
-                //   select new BatteryViewModel(bat)).ToList();
-                //return all;
-                return null;
+                if (SelectedItem == null)
+                    return null;
+                using (var dbContext = new AppDbContext())
+                {
+                    List<BatteryViewModel> all =
+                      (from bat in dbContext.Batteries
+                       where bat.BatteryType.Id == SelectedItem.Id
+                       select new BatteryViewModel(bat)).ToList();
+                    return all;
+                }
+                //return null;
             }
         }
 

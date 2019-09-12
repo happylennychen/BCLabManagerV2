@@ -67,14 +67,17 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                //if (SelectedItem == null)
-                //    return null;
-                //List<ChannelViewModel> all =
-                //  (from bat in _channelRepository.GetItems()
-                //   where bat.Tester.Name == SelectedItem.Name
-                //   select new ChannelViewModel(bat, _channelRepository, _testerRepository)).ToList();
-                //return all;
-                return null;
+                if (SelectedItem == null)
+                    return null;
+                using (var dbContext = new AppDbContext())
+                {
+                    List<ChannelViewModel> all =
+                      (from chn in dbContext.Channels
+                       where chn.Tester.Id == SelectedItem.Id
+                       select new ChannelViewModel(chn)).ToList();
+                    return all;
+                }
+                //return null;
             }
         }
 

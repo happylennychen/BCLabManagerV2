@@ -71,8 +71,12 @@
                 <ListView.View>
                     <GridView>
                         <GridViewColumn 
-            Header="ID" 
-            DisplayMemberBinding="{Binding Path=ID}" 
+            Header="Id" 
+            DisplayMemberBinding="{Binding Path=Id}" 
+            />
+                        <GridViewColumn 
+            Header="Name" 
+            DisplayMemberBinding="{Binding Path=Name}" 
             />
                         <GridViewColumn 
             Header="Status" 

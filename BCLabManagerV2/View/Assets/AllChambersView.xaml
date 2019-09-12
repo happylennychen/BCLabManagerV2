@@ -79,12 +79,23 @@
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
       ItemsSource="{Binding Path=Records}"
       >
-
                 <ListView.View>
                     <GridView>
                         <GridViewColumn 
+            Header="Id" 
+            DisplayMemberBinding="{Binding Path=Id}" 
+            />
+                        <GridViewColumn 
             Header="Status" 
             DisplayMemberBinding="{Binding Path=Status}" 
+            />
+                        <GridViewColumn 
+            Header="Program" 
+            DisplayMemberBinding="{Binding Path=ProgramName}" 
+            />
+                        <GridViewColumn 
+            Header="SubProgram" 
+            DisplayMemberBinding="{Binding Path=SubProgramName}" 
             />
                         <GridViewColumn 
             Header="Time" 

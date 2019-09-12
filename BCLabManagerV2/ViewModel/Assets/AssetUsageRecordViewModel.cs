@@ -78,6 +78,13 @@ namespace BCLabManager.ViewModel
 
         #region Presentation Properties
 
+        public int Id
+        {
+            get
+            {
+                return _record.Id;
+            }
+        }
         public String Status
         {
             get
@@ -91,6 +98,20 @@ namespace BCLabManager.ViewModel
             get
             {
                 return _record.Timestamp.ToString();
+            }
+        }
+        public String ProgramName
+        {
+            get
+            {
+                return _record.ProgramName.ToString();
+            }
+        }
+        public String SubProgramName
+        {
+            get
+            {
+                return _record.SubProgramName.ToString();
             }
         }
 

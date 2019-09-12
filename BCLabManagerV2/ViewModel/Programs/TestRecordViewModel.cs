@@ -228,9 +228,9 @@ namespace BCLabManager.ViewModel
 
 
         #region Public Interface
-        public void ExecuteOnAssets(BatteryClass battery, ChamberClass chamber, ChannelClass channel)
+        public void ExecuteOnAssets(BatteryClass battery, ChamberClass chamber, ChannelClass channel, string proname, string subproname)
         {
-            _record.AssetsExecute(battery, chamber, channel, this.Steps, this.StartTime, "", "");
+            _record.AssetsExecute(battery, chamber, channel, this.Steps, this.StartTime, proname, subproname);
             OnPropertyChanged("Status");
         }
         public void CommitOnAssets()

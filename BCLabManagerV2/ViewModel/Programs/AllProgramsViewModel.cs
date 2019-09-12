@@ -700,7 +700,7 @@ namespace BCLabManager.ViewModel
                     tr.AssignedChannel = dbContext.Channels.SingleOrDefault(o => o.Id == evm.Channel.Id);
                     dbContext.SaveChanges();
                 }
-                testRecord.ExecuteOnAssets(evm.Battery, evm.Chamber, evm.Channel);      //将evm的Assets传给testRecord
+                testRecord.ExecuteOnAssets(evm.Battery, evm.Chamber, evm.Channel,SelectedProgram.Name, SelectedSubProgram.Name);      //将evm的Assets传给testRecord
             }
         }
         private void Commit(TestRecordViewModel testRecord)

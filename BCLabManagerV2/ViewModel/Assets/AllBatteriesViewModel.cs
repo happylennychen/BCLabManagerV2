@@ -62,28 +62,30 @@ namespace BCLabManager.ViewModel
                 if (_selectedItem != value)
                 {
                     _selectedItem = value;
-                    //OnPropertyChanged("SelectedType");
-                    //OnPropertyChanged("Records"); //通知Records改变
+                    //OnPropertyChanged("SelectedItem");
+                    OnPropertyChanged("Records"); //通知Records改变
                 }
             }
         }
 
-        //public List<AssetUsageRecordViewModel> Records //绑定选中battery的Records。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
-        ////如果不是用查询，那么需要维护一个二维List。每一个Battery，对应一个List。用空间换时间。
-        //{
-        //    get
-        //    {
-        //        var dbContext = new AppDbContext();
-        //        if (SelectedItem == null)
-        //            return null;
-        //        List<AssetUsageRecordViewModel> all =
-        //          (from bat in dbContext.Batteries
-        //           where bat.Name == SelectedItem.Name
-        //           from record in bat.Records
-        //           select new AssetUsageRecordViewModel(record)).ToList();
-        //        return all;
-        //    }
-        //}
+        public List<AssetUsageRecordViewModel> Records //绑定选中battery的Records。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
+        //如果不是用查询，那么需要维护一个二维List。每一个Battery，对应一个List。用空间换时间。
+        {
+            get
+            {
+                if (SelectedItem == null)
+                    return null;
+                using (var dbContext = new AppDbContext())
+                {
+                    List<AssetUsageRecordViewModel> all =
+                      (from bat in dbContext.Batteries
+                       where bat.Id == SelectedItem.Id
+                       from record in bat.Records
+                       select new AssetUsageRecordViewModel(record)).ToList();
+                    return all;
+                }
+            }
+        }
 
         public ICommand CreateCommand
         {
