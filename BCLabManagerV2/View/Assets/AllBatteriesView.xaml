@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
 
@@ -13,12 +14,14 @@
         </LinearGradientBrush>
 
         <Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}">
-            <!-- 
-      Stretch the content of each cell so that we can 
-      right-align text in the Total Sales column. 
-      -->
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
+
+        <CollectionViewSource x:Key="batteriesCollectionViewSource" Source="{Binding Path=AllBatteries}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Id" Direction="Descending"></scm:SortDescription>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -37,7 +40,7 @@
                       x:Name="Batterylist"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=AllBatteries}"
+      ItemsSource="{Binding Source={StaticResource batteriesCollectionViewSource}}"
                       SelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 

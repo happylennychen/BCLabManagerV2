@@ -9,5 +9,6 @@ namespace BCLabManager
     public static class GlobalSettings
     {
         public static string DbPath { get; set; }
+        public static string ConfigurationFilePath { get; set; } = "BCLabConfiguration.cfg";
     }
 }

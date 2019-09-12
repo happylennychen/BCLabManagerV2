@@ -17,6 +17,7 @@ using BCLabManager.Model;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Collections.ObjectModel;
+using BCLabManager.View;
 
 namespace BCLabManager
 {
@@ -53,7 +54,7 @@ namespace BCLabManager
             try
             {
                 InitializeComponent();
-                GlobalSettings.DbPath = "D://BCLab.db3";
+                InitializeConfiguration();
                 InitializeDatabase();
                 LoadingFromDB();
                 CreateViewModels();
@@ -63,6 +64,18 @@ namespace BCLabManager
             {
                 MessageBox.Show(e.Message);
                 App.Current.Shutdown();
+            }
+        }
+        void InitializeConfiguration()
+        {
+            if (!File.Exists(GlobalSettings.ConfigurationFilePath))
+            {
+                ConfigureDBPath();
+                CreateConfigurationFile();
+            }
+            else
+            {
+                LoadDBPathFromConfigurationFile();
             }
         }
         void InitializeDatabase()
@@ -75,6 +88,35 @@ namespace BCLabManager
                 }
             }
         }
+
+        private void ConfigureDBPath()
+        {
+            DBConfigureWindow dBConfigureWindow = new DBConfigureWindow();
+            //dBConfigureWindow.Owner = this;
+            dBConfigureWindow.ShowDialog();
+            if (dBConfigureWindow.DialogResult == false)
+            {
+                throw new Exception("Database is not ready.");
+            }
+
+        }
+
+        private void CreateConfigurationFile()
+        {
+            var fs = File.Create(GlobalSettings.ConfigurationFilePath);
+            var sw = new StreamWriter(fs);
+            sw.WriteLine(GlobalSettings.DbPath);
+            sw.Close();
+            fs.Close();
+        }
+
+        private void LoadDBPathFromConfigurationFile()
+        {
+            var fs = new FileStream(GlobalSettings.ConfigurationFilePath, FileMode.Open);
+            var sr = new StreamReader(fs);
+            GlobalSettings.DbPath = sr.ReadLine();
+        }
+
         void LoadingFromDB()
         {
             using (var dbContext = new AppDbContext())

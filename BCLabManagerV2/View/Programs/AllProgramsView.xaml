@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="400">
     <UserControl.Resources>
@@ -19,6 +20,30 @@
       -->
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
+
+        <CollectionViewSource x:Key="programsCollectionViewSource" Source="{Binding Path=AllPrograms}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Id" Direction="Descending"></scm:SortDescription>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+        <CollectionViewSource x:Key="subsCollectionViewSource" Source="{Binding Path=SubPrograms}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Id" Direction="Descending"></scm:SortDescription>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+        <CollectionViewSource x:Key="ftrsCollectionViewSource" Source="{Binding Path=FirstTestRecords}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Id" Direction="Descending"></scm:SortDescription>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+        <CollectionViewSource x:Key="strsCollectionViewSource" Source="{Binding Path=SecondTestRecords}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Id" Direction="Descending"></scm:SortDescription>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -44,7 +69,7 @@
                       x:Name="Programlist"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=AllPrograms}"
+      ItemsSource="{Binding Source={StaticResource programsCollectionViewSource}}"
                       SelectedItem="{Binding Path=SelectedProgram, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 
@@ -84,7 +109,7 @@
                       x:Name="SubProgramlist"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=SubPrograms}"
+      ItemsSource="{Binding Source={StaticResource subsCollectionViewSource}}"
                       SelectedItem="{Binding Path=SelectedSubProgram, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 
@@ -114,7 +139,7 @@
                       x:Name="Test1recordlist"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=FirstTestRecords}"
+      ItemsSource="{Binding Source={StaticResource ftrsCollectionViewSource}}"
                       SelectedItem="{Binding Path=SelectedFirstTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 
@@ -177,7 +202,7 @@
                       x:Name="Test2recordlist"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=SecondTestRecords}"
+      ItemsSource="{Binding Source={StaticResource strsCollectionViewSource}}"
                       SelectedItem="{Binding Path=SelectedSecondTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 

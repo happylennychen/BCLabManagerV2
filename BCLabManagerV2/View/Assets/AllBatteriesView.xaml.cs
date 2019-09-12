@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -24,6 +25,7 @@ namespace BCLabManager.View
         public AllBatteriesView()
         {
             InitializeComponent();
+            //Batterylist.Items.SortDescriptions.Add(new SortDescription("Id", ListSortDirection.Descending));
         }
     }
 }

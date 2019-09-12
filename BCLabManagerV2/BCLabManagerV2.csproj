@@ -326,6 +326,9 @@
     <Compile Include="View\DashBoardView.xaml.cs">
       <DependentUpon>DashBoardView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\DBConfigureWindow.xaml.cs">
+      <DependentUpon>DBConfigureWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Programs\AllSubProgramTemplatesView.xaml.cs">
       <DependentUpon>AllSubProgramTemplatesView.xaml</DependentUpon>
     </Compile>
@@ -406,6 +409,10 @@
     <Page Include="View\DashBoardView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\DBConfigureWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Programs\AllSubProgramTemplatesView.xaml">
       <Generator>MSBuild:Compile</Generator>
