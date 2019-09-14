@@ -31,7 +31,7 @@
                 </TabControl>
             </TabItem>
             <TabItem Header="Sub Programs">
-                <v:AllSubProgramTemplatesView x:Name="AllSubProgramTemplatesViewInstance" Width="500"></v:AllSubProgramTemplatesView>
+                <v:AllSubProgramTemplatesView x:Name="AllSubProgramTemplatesViewInstance"></v:AllSubProgramTemplatesView>
             </TabItem>
             <TabItem Header="Programs">
                 <v:AllProgramsView x:Name="AllProgramsViewInstance"></v:AllProgramsView>

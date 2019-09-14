@@ -14,6 +14,10 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
         List<SubProgramTemplate> _subProgramTemplates;
+        List<ChargeTemperatureClass> _chargeTemperatures;
+        List<ChargeCurrentClass> _chargeCurrents;
+        List<DischargeTemperatureClass> _dischargeTemperatures;
+        List<DischargeCurrentClass> _dischargeCurrents;
         SubProgramTemplateViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
@@ -23,8 +27,18 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllSubProgramTemplatesViewModel(List<SubProgramTemplate> subProgramTemplates)
+        public AllSubProgramTemplatesViewModel(
+            List<SubProgramTemplate> subProgramTemplates,
+            List<ChargeTemperatureClass> chargeTemperatures,
+            List<ChargeCurrentClass> chargeCurrents,
+            List<DischargeTemperatureClass> dischargeTemperatures,
+            List<DischargeCurrentClass> dischargeCurrents
+            )
         {
+            _chargeTemperatures = chargeTemperatures;
+            _chargeCurrents = chargeCurrents;
+            _dischargeTemperatures = dischargeTemperatures;
+            _dischargeCurrents = dischargeCurrents;
             this.CreateAllSubProgramTemplates(subProgramTemplates);
         }
 
@@ -111,7 +125,14 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             SubProgramTemplate model = new SubProgramTemplate();      //实例化一个新的model
-            SubProgramTemplateEditViewModel viewmodel = new SubProgramTemplateEditViewModel(model);      //实例化一个新的view model
+            SubProgramTemplateEditViewModel viewmodel = 
+                new SubProgramTemplateEditViewModel(
+                    model, 
+                    _chargeTemperatures,
+                    _chargeCurrents,
+                    _dischargeTemperatures,
+                    _dischargeCurrents
+                    );      //实例化一个新的view model
             viewmodel.DisplayName = "SubProgramTemplate-Create";
             viewmodel.commandType = CommandType.Create;
             var SubProgramViewInstance = new SubProgramTemplateView();      //实例化一个新的view
@@ -121,7 +142,15 @@ namespace BCLabManager.ViewModel
             {
                 using (var dbContext = new AppDbContext())
                 {
-                    dbContext.SubProgramTemplates.Add(model);
+                    //dbContext.SubProgramTemplates.Add(model);
+                    var newsub = new SubProgramTemplate()
+                    {
+                        ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == model.ChargeTemperature.Id),
+                        ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == model.ChargeCurrent.Id),
+                        DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == model.DischargeTemperature.Id),
+                        DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == model.DischargeCurrent.Id)
+                    };
+                    dbContext.SubProgramTemplates.Add(newsub);
                     dbContext.SaveChanges();
                 }
                 _subProgramTemplates.Add(model);
@@ -131,8 +160,19 @@ namespace BCLabManager.ViewModel
         private void Edit()
         {
             SubProgramTemplate model = new SubProgramTemplate();      //实例化一个新的model
-            SubProgramTemplateEditViewModel viewmodel = new SubProgramTemplateEditViewModel(model);      //实例化一个新的view model
-            viewmodel.Name = _selectedItem.Name;
+            SubProgramTemplateEditViewModel viewmodel =
+                new SubProgramTemplateEditViewModel(
+                    model,
+                    _chargeTemperatures,
+                    _chargeCurrents,
+                    _dischargeTemperatures,
+                    _dischargeCurrents
+                    );      //实例化一个新的view model
+            //viewmodel.Name = _selectedItem.Name;
+            viewmodel.ChargeTemperature = _selectedItem.ChargeTemperature;
+            viewmodel.ChargeCurrent = _selectedItem.ChargeCurrent;
+            viewmodel.DischargeTemperature = _selectedItem.DischargeTemperature;
+            viewmodel.DischargeCurrent = _selectedItem.DischargeCurrent;
             viewmodel.TestCount = _selectedItem.TestCount;
             viewmodel.DisplayName = "SubProgram-Edit";
             viewmodel.commandType = CommandType.Edit;
@@ -141,12 +181,20 @@ namespace BCLabManager.ViewModel
             SubProgramViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)
             {
-                _selectedItem.Name = viewmodel.Name;
+                //_selectedItem.Name = viewmodel.Name;
+                _selectedItem.ChargeTemperature = viewmodel.ChargeTemperature;
+                _selectedItem.ChargeCurrent = viewmodel.ChargeCurrent;
+                _selectedItem.DischargeTemperature = viewmodel.DischargeTemperature;
+                _selectedItem.DischargeCurrent = viewmodel.DischargeCurrent;
                 _selectedItem.TestCount = viewmodel.TestCount;
                 using (var dbContext = new AppDbContext())
                 {
                     var sub = dbContext.SubProgramTemplates.SingleOrDefault(i => i.Id == _selectedItem.Id);
-                    sub.Name = _selectedItem.Name;
+                    //sub.Name = _selectedItem.Name;
+                    sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == model.ChargeTemperature.Id);
+                    sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == model.ChargeCurrent.Id);
+                    sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == model.DischargeTemperature.Id);
+                    sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == model.DischargeCurrent.Id);
                     sub.TestCount = _selectedItem.TestCount;
                     dbContext.SaveChanges();
                 }
@@ -159,8 +207,19 @@ namespace BCLabManager.ViewModel
         private void SaveAs()
         {
             SubProgramTemplate model = new SubProgramTemplate();      //实例化一个新的model
-            SubProgramTemplateEditViewModel viewmodel = new SubProgramTemplateEditViewModel(model);      //实例化一个新的view model
-            viewmodel.Name = _selectedItem.Name;
+            SubProgramTemplateEditViewModel viewmodel =
+                new SubProgramTemplateEditViewModel(
+                    model,
+                    _chargeTemperatures,
+                    _chargeCurrents,
+                    _dischargeTemperatures,
+                    _dischargeCurrents
+                    );      //实例化一个新的view model
+            //viewmodel.Name = _selectedItem.Name;
+            viewmodel.ChargeTemperature = _selectedItem.ChargeTemperature;
+            viewmodel.ChargeCurrent = _selectedItem.ChargeCurrent;
+            viewmodel.DischargeTemperature = _selectedItem.DischargeTemperature;
+            viewmodel.DischargeCurrent = _selectedItem.DischargeCurrent;
             viewmodel.TestCount = _selectedItem.TestCount;
             viewmodel.DisplayName = "SubProgram-Save As";
             viewmodel.commandType = CommandType.SaveAs;
@@ -171,7 +230,15 @@ namespace BCLabManager.ViewModel
             {
                 using (var dbContext = new AppDbContext())
                 {
-                    dbContext.SubProgramTemplates.Add(model);
+                    //dbContext.SubProgramTemplates.Add(model);
+                    var newsub = new SubProgramTemplate()
+                    {
+                        ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == model.ChargeTemperature.Id),
+                        ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == model.ChargeCurrent.Id),
+                        DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == model.DischargeTemperature.Id),
+                        DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == model.DischargeCurrent.Id)
+                    };
+                    dbContext.SubProgramTemplates.Add(newsub);
                     dbContext.SaveChanges();
                 }
                 _subProgramTemplates.Add(model);

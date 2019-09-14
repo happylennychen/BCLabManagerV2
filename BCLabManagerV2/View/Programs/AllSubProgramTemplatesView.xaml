@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:v="clr-namespace:BCLabManager.View"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="500">
     <UserControl.Resources>
@@ -21,13 +22,30 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <DockPanel>
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="_Create" Command="{Binding Path=CreateCommand}" Margin="0,5,5,0" Width="60"></Button>
-                <Button Content="_Edit" Command="{Binding Path=EditCommand}" Margin="0,5,5,0" Width="60"></Button>
-                <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60"></Button>
-            </StackPanel>
-            <ListView Grid.Row="1"
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="40*"></ColumnDefinition>
+            <ColumnDefinition Width="60*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <v:AllChargeTemperaturesView x:Name="AllChargeTemperaturesViewInstance"></v:AllChargeTemperaturesView>
+            <v:AllChargeCurrentsView x:Name="AllChargeCurrentsViewInstance" Grid.Row="1"></v:AllChargeCurrentsView>
+            <v:AllDischargeTemperaturesView x:Name="AllDischargeTemperaturesViewInstance" Grid.Row="2"></v:AllDischargeTemperaturesView>
+            <v:AllDischargeCurrentsView x:Name="AllDischargeCurrentsViewInstance" Grid.Row="3"></v:AllDischargeCurrentsView>
+        </Grid>
+        <GroupBox Grid.Column="1" Header="SubProgram Templates">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="_Create" Command="{Binding Path=CreateCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Edit" Command="{Binding Path=EditCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60"></Button>
+                </StackPanel>
+                <ListView Grid.Row="1"
                       x:Name="SubProgramlist"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
@@ -35,26 +53,37 @@
                       SelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn 
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn 
                             Width="40"
             Header="Id" 
             DisplayMemberBinding="{Binding Path=Id}" 
             />
-                        <GridViewColumn 
-                            Width="340"
-            Header="Name" 
-            DisplayMemberBinding="{Binding Path=Name}" 
+                            <GridViewColumn 
+            Header="ChargeTemperature" 
+            DisplayMemberBinding="{Binding Path=ChargeTemperature}" 
             />
-                        <GridViewColumn 
-                            Width="120"
+                            <GridViewColumn 
+            Header="ChargeCurrent" 
+            DisplayMemberBinding="{Binding Path=ChargeCurrent}" 
+            />
+                            <GridViewColumn 
+            Header="DischargeTemperature" 
+            DisplayMemberBinding="{Binding Path=DischargeTemperature}" 
+            />
+                            <GridViewColumn 
+            Header="DischargeCurrent" 
+            DisplayMemberBinding="{Binding Path=DischargeCurrent}" 
+            />
+                            <GridViewColumn 
             Header="TestCount" 
             DisplayMemberBinding="{Binding Path=TestCount}" 
             />
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </DockPanel>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </DockPanel>
+        </GroupBox>
     </Grid>
 </UserControl>

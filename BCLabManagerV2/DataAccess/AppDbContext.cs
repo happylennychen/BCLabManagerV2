@@ -16,6 +16,10 @@ namespace BCLabManager.DataAccess
         public DbSet<ChannelClass> Channels { get; set; }
         public DbSet<ChamberClass> Chambers { get; set; }
         public DbSet<TestRecordClass> TestRecords { get; set; }
+        public DbSet<ChargeTemperatureClass> ChargeTemperatures { get; set; }
+        public DbSet<ChargeCurrentClass> ChargeCurrents { get; set; }
+        public DbSet<DischargeTemperatureClass> DischargeTemperatures { get; set; }
+        public DbSet<DischargeCurrentClass> DischargeCurrents { get; set; }
         public DbSet<SubProgramTemplate> SubProgramTemplates { get; set; }
         public DbSet<SubProgramClass> SubPrograms { get; set; }
         public DbSet<ProgramClass> Programs { get; set; }
@@ -23,12 +27,5 @@ namespace BCLabManager.DataAccess
         {
             optionsBuilder.UseSqlite($"Data Source={GlobalSettings.DbPath}");
         }
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<ProgramClass>()
-        //        .HasMany(p=>p.SubPrograms)
-        //        .WithOne()
-        //        .IsRequired();
-        //}
     }
 }

@@ -38,6 +38,12 @@ namespace BCLabManager
 
         public AllSubProgramTemplatesViewModel allSubProgramTemplatesViewModel { get; set; }  //其中需要显示SubPrograms
 
+        public AllChargeTemperaturesViewModel allChargeTemperaturesViewModel { get; set; }
+        public AllChargeCurrentsViewModel allChargeCurrentsViewModel { get; set; }
+
+        public AllDischargeTemperaturesViewModel allDischargeTemperaturesViewModel { get; set; }
+        public AllDischargeCurrentsViewModel allDischargeCurrentsViewModel { get; set; }
+
         public AllProgramsViewModel allProgramsViewModel { get; set; }  //其中需要显示Programs, SubPrograms, Test1, Test2, TestSteps
 
         public DashBoardViewModel dashBoardViewModel { get; set; }
@@ -48,6 +54,10 @@ namespace BCLabManager
         ObservableCollection<ChannelClass> Channels { get; set; }
         ObservableCollection<ChamberClass> Chambers { get; set; }
         List<SubProgramTemplate> SubProgramTemplates { get; set; }
+        List<ChargeTemperatureClass> ChargeTemperatures { get; set; }
+        List<ChargeCurrentClass> ChargeCurrents { get; set; }
+        List<DischargeTemperatureClass> DischargeTemperatures { get; set; }
+        List<DischargeCurrentClass> DischargeCurrents { get; set; }
         ObservableCollection<ProgramClass> Programs { get; set; }
         public MainWindow()
         {
@@ -56,7 +66,7 @@ namespace BCLabManager
                 InitializeComponent();
                 InitializeConfiguration();
                 InitializeDatabase();
-                LoadingFromDB();
+                LoadFromDB();
                 CreateViewModels();
                 BindingVMandView();
             }
@@ -117,7 +127,7 @@ namespace BCLabManager
             GlobalSettings.DbPath = sr.ReadLine();
         }
 
-        void LoadingFromDB()
+        void LoadFromDB()
         {
             using (var dbContext = new AppDbContext())
             {
@@ -146,6 +156,14 @@ namespace BCLabManager
                     );
 
                 SubProgramTemplates = new List<SubProgramTemplate>(dbContext.SubProgramTemplates.ToList());
+
+                ChargeTemperatures = new List<ChargeTemperatureClass>(dbContext.ChargeTemperatures.ToList());
+
+                ChargeCurrents = new List<ChargeCurrentClass>(dbContext.ChargeCurrents.ToList());
+
+                DischargeTemperatures = new List<DischargeTemperatureClass>(dbContext.DischargeTemperatures.ToList());
+
+                DischargeCurrents = new List<DischargeCurrentClass>(dbContext.DischargeCurrents.ToList());
 
                 Programs = new ObservableCollection<ProgramClass>(dbContext.Programs
                      .Include(pro => pro.SubPrograms)
@@ -198,7 +216,22 @@ namespace BCLabManager
 
             allChambersViewModel = new AllChambersViewModel(Chambers);    //ViewModel初始化
 
-            allSubProgramTemplatesViewModel = new AllSubProgramTemplatesViewModel(SubProgramTemplates);    //ViewModel初始化
+            allSubProgramTemplatesViewModel = 
+                new AllSubProgramTemplatesViewModel(
+                    SubProgramTemplates, 
+                    ChargeTemperatures,
+                    ChargeCurrents,
+                    DischargeTemperatures,
+                    DischargeCurrents
+                    );    //ViewModel初始化
+
+            allChargeTemperaturesViewModel = new AllChargeTemperaturesViewModel(ChargeTemperatures);
+
+            allChargeCurrentsViewModel = new AllChargeCurrentsViewModel(ChargeCurrents);
+
+            allDischargeTemperaturesViewModel = new AllDischargeTemperaturesViewModel(DischargeTemperatures);
+
+            allDischargeCurrentsViewModel = new AllDischargeCurrentsViewModel(DischargeCurrents);
 
             allProgramsViewModel = new AllProgramsViewModel
                 (
@@ -232,6 +265,13 @@ namespace BCLabManager
 
             this.AllSubProgramTemplatesViewInstance.DataContext = allSubProgramTemplatesViewModel;                                                            //ViewModel跟View绑定
 
+            this.AllSubProgramTemplatesViewInstance.AllChargeTemperaturesViewInstance.DataContext = allChargeTemperaturesViewModel;
+
+            this.AllSubProgramTemplatesViewInstance.AllChargeCurrentsViewInstance.DataContext = allChargeCurrentsViewModel;
+
+            this.AllSubProgramTemplatesViewInstance.AllDischargeTemperaturesViewInstance.DataContext = allDischargeTemperaturesViewModel;
+
+            this.AllSubProgramTemplatesViewInstance.AllDischargeCurrentsViewInstance.DataContext = allDischargeCurrentsViewModel;
 
             this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定
 

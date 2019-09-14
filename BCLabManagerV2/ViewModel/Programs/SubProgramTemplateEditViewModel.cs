@@ -16,6 +16,10 @@ namespace BCLabManager.ViewModel
     public class SubProgramTemplateEditViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
+        List<ChargeTemperatureClass> _chargeTemperatures;
+        List<ChargeCurrentClass> _chargeCurrents;
+        List<DischargeTemperatureClass> _dischargeTemperatures;
+        List<DischargeCurrentClass> _dischargeCurrents;
         public readonly SubProgramTemplate _subProgramTemplate;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
         RelayCommand _okCommand;
         bool _isOK;
@@ -24,14 +28,44 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public SubProgramTemplateEditViewModel(SubProgramTemplate subProgramTemplateModel)
+        public SubProgramTemplateEditViewModel(
+            SubProgramTemplate subProgramTemplateModel,
+            List<ChargeTemperatureClass> chargeTemperatures,
+            List<ChargeCurrentClass> chargeCurrents,
+            List<DischargeTemperatureClass> dischargeTemperatures,
+            List<DischargeCurrentClass> dischargeCurrents
+            )
         {
-            if (subProgramTemplateModel == null)
-                throw new ArgumentNullException("subProgramTemplateModel");
-
+            _chargeTemperatures = chargeTemperatures;
+            _chargeCurrents = chargeCurrents;
+            _dischargeTemperatures = dischargeTemperatures;
+            _dischargeCurrents = dischargeCurrents;
+            this.AllChargeTemperatures = CreateAllChargeTemperatures(chargeTemperatures);
+            this.AllChargeCurrents = CreateAllChargeCurrents(chargeCurrents);
+            this.AllDischargeTemperatures = CreateAllDischargeTemperatures(dischargeTemperatures);
+            this.AllDischargeCurrents = CreateAllDischargeCurrents(dischargeCurrents);
             _subProgramTemplate = subProgramTemplateModel;
         }
 
+        private ObservableCollection<ChargeTemperatureClass> CreateAllChargeTemperatures(List<ChargeTemperatureClass> chargeTemperatures)
+        {
+            return new ObservableCollection<ChargeTemperatureClass>(chargeTemperatures);
+        }
+
+        private ObservableCollection<ChargeCurrentClass> CreateAllChargeCurrents(List<ChargeCurrentClass> chargeCurrents)
+        {
+            return new ObservableCollection<ChargeCurrentClass>(chargeCurrents);
+        }
+
+        private ObservableCollection<DischargeTemperatureClass> CreateAllDischargeTemperatures(List<DischargeTemperatureClass> dischargeTemperatures)
+        {
+            return new ObservableCollection<DischargeTemperatureClass>(dischargeTemperatures);
+        }
+
+        private ObservableCollection<DischargeCurrentClass> CreateAllDischargeCurrents(List<DischargeCurrentClass> dischargeCurrents)
+        {
+            return new ObservableCollection<DischargeCurrentClass>(dischargeCurrents);
+        }
         #endregion // Constructor
 
         #region SubProgramTemplate Properties
@@ -49,17 +83,69 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("Id");
             }
         }
-        public string Name
+        //public string Name
+        //{
+        //    get { return _subProgramTemplate.Name; }
+        //    set
+        //    {
+        //        if (value == _subProgramTemplate.Name)
+        //            return;
+
+        //        _subProgramTemplate.Name = value;
+
+        //        base.OnPropertyChanged("Name");
+        //    }
+        //}
+        public ChargeTemperatureClass ChargeTemperature
         {
-            get { return _subProgramTemplate.Name; }
+            get { return _subProgramTemplate.ChargeTemperature; }
             set
             {
-                if (value == _subProgramTemplate.Name)
+                if (value == _subProgramTemplate.ChargeTemperature)
                     return;
 
-                _subProgramTemplate.Name = value;
+                _subProgramTemplate.ChargeTemperature = value;
 
-                base.OnPropertyChanged("Name");
+                base.OnPropertyChanged("ChargeTemperature");
+            }
+        }
+        public ChargeCurrentClass ChargeCurrent
+        {
+            get { return _subProgramTemplate.ChargeCurrent; }
+            set
+            {
+                if (value == _subProgramTemplate.ChargeCurrent)
+                    return;
+
+                _subProgramTemplate.ChargeCurrent = value;
+
+                base.OnPropertyChanged("ChargeCurrent");
+            }
+        }
+        public DischargeTemperatureClass DischargeTemperature
+        {
+            get { return _subProgramTemplate.DischargeTemperature; }
+            set
+            {
+                if (value == _subProgramTemplate.DischargeTemperature)
+                    return;
+
+                _subProgramTemplate.DischargeTemperature = value;
+
+                base.OnPropertyChanged("DischargeTemperature");
+            }
+        }
+        public DischargeCurrentClass DischargeCurrent
+        {
+            get { return _subProgramTemplate.DischargeCurrent; }
+            set
+            {
+                if (value == _subProgramTemplate.DischargeCurrent)
+                    return;
+
+                _subProgramTemplate.DischargeCurrent = value;
+
+                base.OnPropertyChanged("DischargeCurrent");
             }
         }
 
@@ -92,6 +178,29 @@ namespace BCLabManager.ViewModel
 
                 return all;
             }
+        }
+
+        public ObservableCollection<ChargeTemperatureClass> AllChargeTemperatures //供选项
+        {
+            get;
+            set;
+        }
+
+        public ObservableCollection<ChargeCurrentClass> AllChargeCurrents //供选项
+        {
+            get;
+            set;
+        }
+        public ObservableCollection<DischargeTemperatureClass> AllDischargeTemperatures //供选项
+        {
+            get;
+            set;
+        }
+
+        public ObservableCollection<DischargeCurrentClass> AllDischargeCurrents //供选项
+        {
+            get;
+            set;
         }
         /// <summary>
         /// Returns a command that saves the customer.

@@ -130,6 +130,54 @@ namespace BCLabManager.Migrations
                     b.ToTable("Channels");
                 });
 
+            modelBuilder.Entity("BCLabManager.Model.ChargeCurrentClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChargeCurrents");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.ChargeTemperatureClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChargeTemperatures");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.DischargeCurrentClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DischargeCurrents");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.DischargeTemperatureClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DischargeTemperatures");
+                });
+
             modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
                 {
                     b.Property<int>("Id")
@@ -173,6 +221,14 @@ namespace BCLabManager.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("ChargeCurrent");
+
+                    b.Property<string>("ChargeTemperature");
+
+                    b.Property<string>("DischargeCurrent");
+
+                    b.Property<string>("DischargeTemperature");
+
                     b.Property<string>("Name");
 
                     b.Property<int?>("ProgramClassId");
@@ -191,11 +247,25 @@ namespace BCLabManager.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<int?>("ChargeCurrentId");
+
+                    b.Property<int?>("ChargeTemperatureId");
+
+                    b.Property<int?>("DischargeCurrentId");
+
+                    b.Property<int?>("DischargeTemperatureId");
 
                     b.Property<int>("TestCount");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ChargeCurrentId");
+
+                    b.HasIndex("ChargeTemperatureId");
+
+                    b.HasIndex("DischargeCurrentId");
+
+                    b.HasIndex("DischargeTemperatureId");
 
                     b.ToTable("SubProgramTemplates");
                 });
@@ -311,6 +381,25 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.ProgramClass")
                         .WithMany("SubPrograms")
                         .HasForeignKey("ProgramClassId");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.SubProgramTemplate", b =>
+                {
+                    b.HasOne("BCLabManager.Model.ChargeCurrentClass", "ChargeCurrent")
+                        .WithMany()
+                        .HasForeignKey("ChargeCurrentId");
+
+                    b.HasOne("BCLabManager.Model.ChargeTemperatureClass", "ChargeTemperature")
+                        .WithMany()
+                        .HasForeignKey("ChargeTemperatureId");
+
+                    b.HasOne("BCLabManager.Model.DischargeCurrentClass", "DischargeCurrent")
+                        .WithMany()
+                        .HasForeignKey("DischargeCurrentId");
+
+                    b.HasOne("BCLabManager.Model.DischargeTemperatureClass", "DischargeTemperature")
+                        .WithMany()
+                        .HasForeignKey("DischargeTemperatureId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>

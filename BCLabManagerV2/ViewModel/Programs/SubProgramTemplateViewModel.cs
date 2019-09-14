@@ -50,17 +50,69 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("Id");
             }
         }
-        public string Name
+        //public string Name
+        //{
+        //    get { return _subProgramTemplate.Name; }
+        //    set
+        //    {
+        //        if (value == _subProgramTemplate.Name)
+        //            return;
+
+        //        _subProgramTemplate.Name = value;
+
+        //        base.OnPropertyChanged("Name");
+        //    }
+        //}
+        public ChargeTemperatureClass ChargeTemperature
         {
-            get { return _subProgramTemplate.Name; }
+            get { return _subProgramTemplate.ChargeTemperature; }
             set
             {
-                if (value == _subProgramTemplate.Name)
+                if (value == _subProgramTemplate.ChargeTemperature)
                     return;
 
-                _subProgramTemplate.Name = value;
+                _subProgramTemplate.ChargeTemperature = value;
 
-                base.OnPropertyChanged("Name");
+                base.OnPropertyChanged("ChargeTemperature");
+            }
+        }
+        public ChargeCurrentClass ChargeCurrent
+        {
+            get { return _subProgramTemplate.ChargeCurrent; }
+            set
+            {
+                if (value == _subProgramTemplate.ChargeCurrent)
+                    return;
+
+                _subProgramTemplate.ChargeCurrent = value;
+
+                base.OnPropertyChanged("ChargeCurrent");
+            }
+        }
+        public DischargeTemperatureClass DischargeTemperature
+        {
+            get { return _subProgramTemplate.DischargeTemperature; }
+            set
+            {
+                if (value == _subProgramTemplate.DischargeTemperature)
+                    return;
+
+                _subProgramTemplate.DischargeTemperature = value;
+
+                base.OnPropertyChanged("DischargeTemperature");
+            }
+        }
+        public DischargeCurrentClass DischargeCurrent
+        {
+            get { return _subProgramTemplate.DischargeCurrent; }
+            set
+            {
+                if (value == _subProgramTemplate.DischargeCurrent)
+                    return;
+
+                _subProgramTemplate.DischargeCurrent = value;
+
+                base.OnPropertyChanged("DischargeCurrent");
             }
         }
 

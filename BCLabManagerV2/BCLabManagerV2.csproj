@@ -246,9 +246,9 @@
     <Compile Include="DataAccess\AppDbContext.cs" />
     <Compile Include="DataAccess\Repositories.cs" />
     <Compile Include="GlobalSettings.cs" />
-    <Compile Include="Migrations\20190911084307_Init.cs" />
-    <Compile Include="Migrations\20190911084307_Init.designer.cs">
-      <DependentUpon>20190911084307_Init.cs</DependentUpon>
+    <Compile Include="Migrations\20190913093321_Init.cs" />
+    <Compile Include="Migrations\20190913093321_Init.designer.cs">
+      <DependentUpon>20190913093321_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Model\Assets\BatteryClass.cs" />
@@ -260,6 +260,16 @@
     <Compile Include="Model\Programs\ProgramClass.cs" />
     <Compile Include="Model\Programs\SubProgramTemplate.cs" />
     <Compile Include="Model\Programs\SubProgramClass.cs" />
+    <Compile Include="ViewModel\Programs\AllDischargeCurrentsViewModel.cs" />
+    <Compile Include="ViewModel\Programs\AllChargeCurrentsViewModel.cs" />
+    <Compile Include="ViewModel\Programs\AllDischargeTemperaturesViewModel.cs" />
+    <Compile Include="ViewModel\Programs\DischargeCurrentEditViewModel.cs" />
+    <Compile Include="ViewModel\Programs\ChargeCurrentEditViewModel.cs" />
+    <Compile Include="ViewModel\Programs\DischargeCurrentViewModel.cs" />
+    <Compile Include="ViewModel\Programs\ChargeCurrentViewModel.cs" />
+    <Compile Include="ViewModel\Programs\DischargeTemperatureEditViewModel.cs" />
+    <Compile Include="ViewModel\Programs\DischargeTemperatureViewModel.cs" />
+    <Compile Include="ViewModel\Programs\ChargeTemperatureViewModel.cs" />
     <Compile Include="ViewModel\DashBoardViewModel.cs" />
     <Compile Include="ViewModel\Assets\AllChannelsViewModel.cs">
       <SubType>Code</SubType>
@@ -276,9 +286,11 @@
     <Compile Include="ViewModel\Assets\AllChambersViewModel.cs" />
     <Compile Include="ViewModel\Assets\ChamberViewModel.cs" />
     <Compile Include="ViewModel\Assets\TesterEditViewModel.cs" />
+    <Compile Include="ViewModel\Programs\AllChargeTemperaturesViewModel.cs" />
     <Compile Include="ViewModel\Programs\AllSubProgramTemplatesViewModel.cs" />
     <Compile Include="ViewModel\Programs\AllProgramsViewModel.cs" />
     <Compile Include="ViewModel\Programs\ProgramEditViewModel.cs" />
+    <Compile Include="ViewModel\Programs\ChargeTemperatureEditViewModel.cs" />
     <Compile Include="ViewModel\Programs\SubProgramTemplateEditViewModel.cs" />
     <Compile Include="ViewModel\Programs\SubProgramTemplateViewModel.cs" />
     <Compile Include="ViewModel\Programs\TestRecordRawDataViewModel.cs" />
@@ -329,11 +341,32 @@
     <Compile Include="View\DBConfigureWindow.xaml.cs">
       <DependentUpon>DBConfigureWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Programs\AllDischargeCurrentsView.xaml.cs">
+      <DependentUpon>AllDischargeCurrentsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Programs\AllChargeCurrentsView.xaml.cs">
+      <DependentUpon>AllChargeCurrentsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Programs\AllDischargeTemperaturesView.xaml.cs">
+      <DependentUpon>AllDischargeTemperaturesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Programs\AllChargeTemperaturesView.xaml.cs">
+      <DependentUpon>AllChargeTemperaturesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Programs\AllSubProgramTemplatesView.xaml.cs">
       <DependentUpon>AllSubProgramTemplatesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Programs\AllProgramsView.xaml.cs">
       <DependentUpon>AllProgramsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Programs\DischargeTemperatureEditView.xaml.cs">
+      <DependentUpon>DischargeTemperatureEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Programs\DischargeCurrentEditView.xaml.cs">
+      <DependentUpon>DischargeCurrentEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Programs\ChargeCurrentEditView.xaml.cs">
+      <DependentUpon>ChargeCurrentEditView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Programs\RawDataView.xaml.cs">
       <DependentUpon>RawDataView.xaml</DependentUpon>
@@ -349,6 +382,9 @@
     </Compile>
     <Compile Include="View\Programs\ProgramView.xaml.cs">
       <DependentUpon>ProgramView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Programs\ChargeTemperatureEditView.xaml.cs">
+      <DependentUpon>ChargeTemperatureEditView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Programs\SubProgramTemplateView.xaml.cs">
       <DependentUpon>SubProgramTemplateView.xaml</DependentUpon>
@@ -414,11 +450,39 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Programs\AllDischargeCurrentsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Programs\AllChargeCurrentsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Programs\AllDischargeTemperaturesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Programs\AllChargeTemperaturesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\Programs\AllSubProgramTemplatesView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Programs\AllProgramsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Programs\DischargeTemperatureEditView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Programs\DischargeCurrentEditView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Programs\ChargeCurrentEditView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -439,6 +503,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Programs\ProgramView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Programs\ChargeTemperatureEditView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

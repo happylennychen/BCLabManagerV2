@@ -17,6 +17,10 @@ namespace BCLabManager.Model
     {
         public int Id { get; set; }
         public String Name { get; set; }
+        public string ChargeTemperature { get; set; }
+        public string ChargeCurrent { get; set; }
+        public string DischargeTemperature { get; set; }
+        public string DischargeCurrent { get; set; }
         public TestCountEnum TestCount { get; set; }
         public ObservableCollection<TestRecordClass> FirstTestRecords { get; set; }
         public ObservableCollection<TestRecordClass> SecondTestRecords { get; set; }
@@ -29,7 +33,7 @@ namespace BCLabManager.Model
 
         public SubProgramClass(SubProgramTemplate template)
         {
-            this.Name = template.Name;
+            //this.Name = template.Name;
             this.TestCount = template.TestCount;
             this.FirstTestRecords = new ObservableCollection<TestRecordClass>();
             this.SecondTestRecords = new ObservableCollection<TestRecordClass>();
