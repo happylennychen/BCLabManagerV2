@@ -50,19 +50,13 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("Id");
             }
         }
-        //public string Name
-        //{
-        //    get { return _subProgramTemplate.Name; }
-        //    set
-        //    {
-        //        if (value == _subProgramTemplate.Name)
-        //            return;
-
-        //        _subProgramTemplate.Name = value;
-
-        //        base.OnPropertyChanged("Name");
-        //    }
-        //}
+        public string Name
+        {
+            get
+            {
+                return $"{_subProgramTemplate.ChargeTemperature.Name} {_subProgramTemplate.ChargeCurrent} charge, {_subProgramTemplate.DischargeTemperature} {_subProgramTemplate.DischargeCurrent} discharge";
+            }
+        }
         public ChargeTemperatureClass ChargeTemperature
         {
             get { return _subProgramTemplate.ChargeTemperature; }

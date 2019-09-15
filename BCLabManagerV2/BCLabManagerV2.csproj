@@ -244,11 +244,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DataAccess\AppDbContext.cs" />
-    <Compile Include="DataAccess\Repositories.cs" />
     <Compile Include="GlobalSettings.cs" />
-    <Compile Include="Migrations\20190913093321_Init.cs" />
-    <Compile Include="Migrations\20190913093321_Init.designer.cs">
-      <DependentUpon>20190913093321_Init.cs</DependentUpon>
+    <Compile Include="Migrations\20190915024813_Init.cs" />
+    <Compile Include="Migrations\20190915024813_Init.designer.cs">
+      <DependentUpon>20190915024813_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Model\Assets\BatteryClass.cs" />

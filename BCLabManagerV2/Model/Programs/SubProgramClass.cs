@@ -16,11 +16,11 @@ namespace BCLabManager.Model
     public class SubProgramClass : ModelBase
     {
         public int Id { get; set; }
-        public String Name { get; set; }
-        public string ChargeTemperature { get; set; }
-        public string ChargeCurrent { get; set; }
-        public string DischargeTemperature { get; set; }
-        public string DischargeCurrent { get; set; }
+        //public String Name { get; set; }
+        public ChargeTemperatureClass ChargeTemperature { get; set; }
+        public ChargeCurrentClass ChargeCurrent { get; set; }
+        public DischargeTemperatureClass DischargeTemperature { get; set; }
+        public DischargeCurrentClass DischargeCurrent { get; set; }
         public TestCountEnum TestCount { get; set; }
         public ObservableCollection<TestRecordClass> FirstTestRecords { get; set; }
         public ObservableCollection<TestRecordClass> SecondTestRecords { get; set; }
@@ -34,6 +34,10 @@ namespace BCLabManager.Model
         public SubProgramClass(SubProgramTemplate template)
         {
             //this.Name = template.Name;
+            this.ChargeTemperature = template.ChargeTemperature;
+            this.ChargeCurrent = template.ChargeCurrent;
+            this.DischargeTemperature = template.DischargeTemperature;
+            this.DischargeCurrent = template.DischargeCurrent;
             this.TestCount = template.TestCount;
             this.FirstTestRecords = new ObservableCollection<TestRecordClass>();
             this.SecondTestRecords = new ObservableCollection<TestRecordClass>();
@@ -49,9 +53,18 @@ namespace BCLabManager.Model
             }
         }
 
-        public SubProgramClass(String Name, TestCountEnum TestCount) : this()
+        public SubProgramClass(
+            ChargeTemperatureClass chargeTemperature, 
+            ChargeCurrentClass chargeCurrent, 
+            DischargeTemperatureClass dischargeTemperature, 
+            DischargeCurrentClass dischargeCurrent, 
+            TestCountEnum TestCount) : this()
         {
-            this.Name = Name;
+            //this.Name = Name;
+            this.ChargeTemperature = chargeTemperature;
+            this.ChargeCurrent = chargeCurrent;
+            this.DischargeTemperature = dischargeTemperature;
+            this.DischargeCurrent = dischargeCurrent;
             this.TestCount = TestCount;
         }
 
@@ -60,14 +73,14 @@ namespace BCLabManager.Model
             testRecord.StatusChanged += this.TestRecord_StatusChanged;
         }
 
-        public void Update(String Name, TestCountEnum TestCount)
-        {
-            this.Name = Name;
-            this.TestCount = TestCount;
-        }
+        //public void Update(String Name, TestCountEnum TestCount)
+        //{
+        //    this.Name = Name;
+        //    this.TestCount = TestCount;
+        //}
         public SubProgramClass Clone()  //Clone Name and Test Count, and create testrecords list
         {
-            var newsub = new SubProgramClass(this.Name, this.TestCount);
+            var newsub = new SubProgramClass(this.ChargeTemperature, this.ChargeCurrent, this.DischargeTemperature, this.DischargeCurrent, this.TestCount);
             if (this.TestCount == TestCountEnum.One)
             {
                 newsub.FirstTestRecords = new ObservableCollection<TestRecordClass>();

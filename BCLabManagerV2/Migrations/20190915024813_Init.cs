@@ -196,17 +196,40 @@ namespace BCLabManager.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true),
-                    ChargeTemperature = table.Column<string>(nullable: true),
-                    ChargeCurrent = table.Column<string>(nullable: true),
-                    DischargeTemperature = table.Column<string>(nullable: true),
-                    DischargeCurrent = table.Column<string>(nullable: true),
+                    ChargeTemperatureId = table.Column<int>(nullable: true),
+                    ChargeCurrentId = table.Column<int>(nullable: true),
+                    DischargeTemperatureId = table.Column<int>(nullable: true),
+                    DischargeCurrentId = table.Column<int>(nullable: true),
                     TestCount = table.Column<int>(nullable: false),
                     ProgramClassId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SubPrograms", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SubPrograms_ChargeCurrents_ChargeCurrentId",
+                        column: x => x.ChargeCurrentId,
+                        principalTable: "ChargeCurrents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SubPrograms_ChargeTemperatures_ChargeTemperatureId",
+                        column: x => x.ChargeTemperatureId,
+                        principalTable: "ChargeTemperatures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SubPrograms_DischargeCurrents_DischargeCurrentId",
+                        column: x => x.DischargeCurrentId,
+                        principalTable: "DischargeCurrents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SubPrograms_DischargeTemperatures_DischargeTemperatureId",
+                        column: x => x.DischargeTemperatureId,
+                        principalTable: "DischargeTemperatures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_SubPrograms_Programs_ProgramClassId",
                         column: x => x.ProgramClassId,
@@ -385,6 +408,26 @@ namespace BCLabManager.Migrations
                 column: "TestRecordClassId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SubPrograms_ChargeCurrentId",
+                table: "SubPrograms",
+                column: "ChargeCurrentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubPrograms_ChargeTemperatureId",
+                table: "SubPrograms",
+                column: "ChargeTemperatureId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubPrograms_DischargeCurrentId",
+                table: "SubPrograms",
+                column: "DischargeCurrentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubPrograms_DischargeTemperatureId",
+                table: "SubPrograms",
+                column: "DischargeTemperatureId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SubPrograms_ProgramClassId",
                 table: "SubPrograms",
                 column: "ProgramClassId");
@@ -450,18 +493,6 @@ namespace BCLabManager.Migrations
                 name: "TestRecords");
 
             migrationBuilder.DropTable(
-                name: "ChargeCurrents");
-
-            migrationBuilder.DropTable(
-                name: "ChargeTemperatures");
-
-            migrationBuilder.DropTable(
-                name: "DischargeCurrents");
-
-            migrationBuilder.DropTable(
-                name: "DischargeTemperatures");
-
-            migrationBuilder.DropTable(
                 name: "Batteries");
 
             migrationBuilder.DropTable(
@@ -478,6 +509,18 @@ namespace BCLabManager.Migrations
 
             migrationBuilder.DropTable(
                 name: "Testers");
+
+            migrationBuilder.DropTable(
+                name: "ChargeCurrents");
+
+            migrationBuilder.DropTable(
+                name: "ChargeTemperatures");
+
+            migrationBuilder.DropTable(
+                name: "DischargeCurrents");
+
+            migrationBuilder.DropTable(
+                name: "DischargeTemperatures");
 
             migrationBuilder.DropTable(
                 name: "Programs");

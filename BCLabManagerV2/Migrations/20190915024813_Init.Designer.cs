@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20190913093321_Init")]
+    [Migration("20190915024813_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -223,21 +223,27 @@ namespace BCLabManager.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ChargeCurrent");
+                    b.Property<int?>("ChargeCurrentId");
 
-                    b.Property<string>("ChargeTemperature");
+                    b.Property<int?>("ChargeTemperatureId");
 
-                    b.Property<string>("DischargeCurrent");
+                    b.Property<int?>("DischargeCurrentId");
 
-                    b.Property<string>("DischargeTemperature");
-
-                    b.Property<string>("Name");
+                    b.Property<int?>("DischargeTemperatureId");
 
                     b.Property<int?>("ProgramClassId");
 
                     b.Property<int>("TestCount");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ChargeCurrentId");
+
+                    b.HasIndex("ChargeTemperatureId");
+
+                    b.HasIndex("DischargeCurrentId");
+
+                    b.HasIndex("DischargeTemperatureId");
 
                     b.HasIndex("ProgramClassId");
 
@@ -380,6 +386,22 @@ namespace BCLabManager.Migrations
 
             modelBuilder.Entity("BCLabManager.Model.SubProgramClass", b =>
                 {
+                    b.HasOne("BCLabManager.Model.ChargeCurrentClass", "ChargeCurrent")
+                        .WithMany()
+                        .HasForeignKey("ChargeCurrentId");
+
+                    b.HasOne("BCLabManager.Model.ChargeTemperatureClass", "ChargeTemperature")
+                        .WithMany()
+                        .HasForeignKey("ChargeTemperatureId");
+
+                    b.HasOne("BCLabManager.Model.DischargeCurrentClass", "DischargeCurrent")
+                        .WithMany()
+                        .HasForeignKey("DischargeCurrentId");
+
+                    b.HasOne("BCLabManager.Model.DischargeTemperatureClass", "DischargeTemperature")
+                        .WithMany()
+                        .HasForeignKey("DischargeTemperatureId");
+
                     b.HasOne("BCLabManager.Model.ProgramClass")
                         .WithMany("SubPrograms")
                         .HasForeignKey("ProgramClassId");

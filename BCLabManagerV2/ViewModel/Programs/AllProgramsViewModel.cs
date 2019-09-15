@@ -361,6 +361,14 @@ namespace BCLabManager.ViewModel
                 //_programRepository.AddItem(model);
                 using (var dbContext = new AppDbContext())
                 {
+                    foreach (var sub in m.SubPrograms)
+                    {
+                        sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
+                        sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
+                        sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
+                        sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
+                        //newP.SubPrograms.Add(dbContext.SubPrograms.SingleOrDefault(o => o.Id == sub.Id));
+                    }
                     dbContext.Programs.Add(m);
                     dbContext.SaveChanges();
                 }
@@ -429,9 +437,27 @@ namespace BCLabManager.ViewModel
                         if (isTgtNotContainSrc == true)
                             TobeAdded.Add(sub_source);
                     }
+
+                    //foreach (var sub in TobeRemoved)
+                    //{
+                    //    sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
+                    //    sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
+                    //    sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
+                    //    sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
+                    //    //newP.SubPrograms.Add(dbContext.SubPrograms.SingleOrDefault(o => o.Id == sub.Id));
+                    //}
                     foreach (var sub in TobeRemoved)
                     {
                         dbProgram.SubPrograms.Remove(sub);
+                    }
+
+                    foreach (var sub in TobeAdded)
+                    {
+                        sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
+                        sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
+                        sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
+                        sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
+                        //newP.SubPrograms.Add(dbContext.SubPrograms.SingleOrDefault(o => o.Id == sub.Id));
                     }
                     foreach (var sub in TobeAdded)
                     {
@@ -556,6 +582,14 @@ namespace BCLabManager.ViewModel
                 //_programRepository.AddItem(model);
                 using (var dbContext = new AppDbContext())
                 {
+                    foreach (var sub in m.SubPrograms)
+                    {
+                        sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
+                        sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
+                        sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
+                        sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
+                        //newP.SubPrograms.Add(dbContext.SubPrograms.SingleOrDefault(o => o.Id == sub.Id));
+                    }
                     dbContext.Programs.Add(m);
                     dbContext.SaveChanges();
                 }

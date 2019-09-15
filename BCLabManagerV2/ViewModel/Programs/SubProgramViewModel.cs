@@ -82,15 +82,9 @@ namespace BCLabManager.ViewModel
         }
         public string Name
         {
-            get { return _subprogram.Name; }
-            set
+            get
             {
-                if (value == _subprogram.Name)
-                    return;
-
-                _subprogram.Name = value;
-
-                base.OnPropertyChanged("Name");
+                return $"{_subprogram.ChargeTemperature.Name} {_subprogram.ChargeCurrent} charge, {_subprogram.DischargeTemperature} {_subprogram.DischargeCurrent} discharge";
             }
         }
 
