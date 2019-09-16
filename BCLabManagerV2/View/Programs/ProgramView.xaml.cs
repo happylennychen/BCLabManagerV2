@@ -21,6 +21,7 @@ namespace BCLabManager.View
         public ProgramView()
         {
             InitializeComponent();
+            RequestDat.Text = DateTime.Now.ToString();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
