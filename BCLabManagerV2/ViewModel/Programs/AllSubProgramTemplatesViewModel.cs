@@ -149,7 +149,8 @@ namespace BCLabManager.ViewModel
                         ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == model.ChargeTemperature.Id),
                         ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == model.ChargeCurrent.Id),
                         DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == model.DischargeTemperature.Id),
-                        DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == model.DischargeCurrent.Id)
+                        DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == model.DischargeCurrent.Id),
+                        TestCount = model.TestCount
                     };
                     dbContext.SubProgramTemplates.Add(newsub);
                     dbContext.SaveChanges();
@@ -241,7 +242,8 @@ namespace BCLabManager.ViewModel
                         ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == model.ChargeTemperature.Id),
                         ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == model.ChargeCurrent.Id),
                         DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == model.DischargeTemperature.Id),
-                        DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == model.DischargeCurrent.Id)
+                        DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == model.DischargeCurrent.Id),
+                        TestCount = model.TestCount
                     };
                     dbContext.SubProgramTemplates.Add(newsub);
                     dbContext.SaveChanges();
