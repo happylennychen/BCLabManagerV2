@@ -96,6 +96,7 @@ namespace BCLabManager
                 {
                     dbContext.Database.Migrate();
                 }
+                DatabasePopulator.PopulateHistoricData();
             }
         }
 

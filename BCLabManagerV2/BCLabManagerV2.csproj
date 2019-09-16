@@ -244,6 +244,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DataAccess\AppDbContext.cs" />
+    <Compile Include="DatabasePopulator.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Migrations\20190915024813_Init.cs" />
     <Compile Include="Migrations\20190915024813_Init.designer.cs">
