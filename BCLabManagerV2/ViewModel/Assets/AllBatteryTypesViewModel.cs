@@ -224,7 +224,7 @@ namespace BCLabManager.ViewModel
             {
                 if (dbContext.Batteries.Count(o => o.BatteryType.Id == _selectedItem.Id) != 0)
                 {
-                    MessageBox.Show("Before deleting this battery type, please delete all batteries that belongs to it.");
+                    MessageBox.Show("Before deleting this battery type, please delete all batteries that belong to it.");
                     return;
                 }
                 if (MessageBox.Show("Are you sure?", "Delete Battery Type", MessageBoxButton.YesNo) == MessageBoxResult.Yes)

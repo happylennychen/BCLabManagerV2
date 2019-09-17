@@ -7,6 +7,7 @@ using BCLabManager.Model;
 using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
@@ -18,6 +19,7 @@ namespace BCLabManager.ViewModel
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
+        RelayCommand _deleteCommand;
         List<TesterClass> _testers;
         #endregion // Fields
 
@@ -122,6 +124,20 @@ namespace BCLabManager.ViewModel
                 return _saveAsCommand;
             }
         }
+        public ICommand DeleteCommand
+        {
+            get
+            {
+                if (_deleteCommand == null)
+                {
+                    _deleteCommand = new RelayCommand(
+                        param => { this.Delete(); },
+                        param => this.CanDelete
+                        );
+                }
+                return _deleteCommand;
+            }
+        }
 
         #endregion // Public Interface
 
@@ -194,6 +210,31 @@ namespace BCLabManager.ViewModel
             }
         }
         private bool CanSaveAs
+        {
+            get { return _selectedItem != null; }
+        }
+        private void Delete()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                if (dbContext.Channels.Count(o => o.Tester.Id == _selectedItem.Id) != 0)
+                {
+                    MessageBox.Show("Before deleting this tester, please delete all channels that belong to it.");
+                    return;
+                }
+                if (MessageBox.Show("Are you sure?", "Delete Tester", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    var model = dbContext.Testers.SingleOrDefault(o => o.Id == _selectedItem.Id);
+                    dbContext.Testers.Remove(model);
+                    dbContext.SaveChanges();
+
+                    model = _testers.SingleOrDefault(o => o.Id == _selectedItem.Id);
+                    _testers.Remove(model);
+                    this.AllTesters.Remove(_selectedItem);
+                }
+            }
+        }
+        private bool CanDelete
         {
             get { return _selectedItem != null; }
         }
