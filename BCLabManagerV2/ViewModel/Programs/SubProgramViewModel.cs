@@ -80,6 +80,19 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("Id");
             }
         }
+        public bool IsAbandoned
+        {
+            get { return _subprogram.IsAbandoned; }
+            set
+            {
+                if (value == _subprogram.IsAbandoned)
+                    return;
+
+                _subprogram.IsAbandoned = value;
+
+                base.OnPropertyChanged("IsAbandoned");
+            }
+        }
         public string Name
         {
             get
@@ -107,5 +120,18 @@ namespace BCLabManager.ViewModel
         public ObservableCollection<TestRecordViewModel> Test2Records { get; private set; }        //这个是当前sub program所拥有的test2
 
         #endregion // Customer Properties
+
+        public void Abandon()
+        {
+            IsAbandoned = true;
+            foreach (var tr in Test1Records)
+            {
+                tr.Abandon();
+            }
+            foreach (var tr in Test2Records)
+            {
+                tr.Abandon();
+            }
+        }
     }
 }

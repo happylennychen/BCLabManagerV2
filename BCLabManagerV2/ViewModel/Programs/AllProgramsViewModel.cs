@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
+using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
@@ -26,6 +27,7 @@ namespace BCLabManager.ViewModel
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
+        RelayCommand _abandonCommand;
         RelayCommand _executeCommand;
         RelayCommand _commitCommand;
         RelayCommand _invalidateCommand;
@@ -224,6 +226,20 @@ namespace BCLabManager.ViewModel
                         );
                 }
                 return _saveAsCommand;
+            }
+        }
+        public ICommand AbandonCommand
+        {
+            get
+            {
+                if (_abandonCommand == null)
+                {
+                    _abandonCommand = new RelayCommand(
+                        param => { this.Abandon(); },
+                        param => this.CanAbandon
+                        );
+                }
+                return _abandonCommand;
             }
         }
         public ICommand ExecuteCommand
@@ -600,6 +616,30 @@ namespace BCLabManager.ViewModel
         private bool CanSaveAs
         {
             get { return _selectedProgram != null; }
+        }
+        private void Abandon()
+        {
+            if (MessageBox.Show("Are you sure?", "Abandon Sub Program", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                //_selectedSubProgram._subprogram.Abandon();    //不需要。因为下面一行代码会做一样的事情。如果这里做了，反而会导致UI无法更新
+                _selectedSubProgram.Abandon();
+                using (var dbContext = new AppDbContext())
+                {
+                    var model = dbContext.SubPrograms.SingleOrDefault(o => o.Id == _selectedSubProgram.Id);
+                    dbContext.Entry(model)
+                        .Collection(o => o.FirstTestRecords)
+                        .Load();
+                    dbContext.Entry(model)
+                        .Collection(o => o.SecondTestRecords)
+                        .Load();
+                    model.Abandon();
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+        private bool CanAbandon
+        {
+            get { return _selectedSubProgram != null; }
         }
         private void Execute()
         {

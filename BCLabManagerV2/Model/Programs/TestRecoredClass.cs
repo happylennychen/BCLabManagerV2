@@ -207,6 +207,7 @@ namespace BCLabManager.Model
 
         public void Abandon(String comment = "")
         {
+            this.Status = TestStatus.Abandoned;
         }
 
         public void Invalidate(String comment = "")

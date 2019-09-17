@@ -243,6 +243,11 @@ namespace BCLabManager.ViewModel
             _record.Invalidate(this.Comment);
             //OnPropertyChanged("Status");
         }
+        public void Abandon()
+        {
+            _record.Abandon();
+            OnPropertyChanged("Status");
+        }
         #endregion
     }
 }

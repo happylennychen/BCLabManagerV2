@@ -19,6 +19,14 @@
       right-align text in the Total Sales column. 
       -->
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsAbandoned, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                    <Setter Property="Background" Value="Gray"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Status, UpdateSourceTrigger=PropertyChanged}" Value="4">
+                    <Setter Property="Background" Value="Gray"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
 
         <CollectionViewSource x:Key="programsCollectionViewSource" Source="{Binding Path=AllPrograms}">
@@ -105,7 +113,11 @@
             </DockPanel>
         </GroupBox>
         <GroupBox Grid.Row="0" Grid.Column="2" Header="Sub Program">
-            <ListView
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="_Abandon" Command="{Binding Path=AbandonCommand}" Margin="0,5,5,0" Width="60"></Button>
+                </StackPanel>
+                <ListView
                       x:Name="SubProgramlist"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
@@ -119,13 +131,14 @@
             Header="Id" 
             DisplayMemberBinding="{Binding Path=Id}" 
             />
-                        <GridViewColumn 
+                            <GridViewColumn 
             Header="Name" 
             DisplayMemberBinding="{Binding Path=Name}" 
             />
-                    </GridView>
+                        </GridView>
                 </ListView.View>
             </ListView>
+            </DockPanel>
         </GroupBox>
         <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Header="First Test Record">
             <DockPanel>

@@ -196,6 +196,7 @@ namespace BCLabManager.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    IsAbandoned = table.Column<bool>(nullable: false),
                     ChargeTemperatureId = table.Column<int>(nullable: true),
                     ChargeCurrentId = table.Column<int>(nullable: true),
                     DischargeTemperatureId = table.Column<int>(nullable: true),

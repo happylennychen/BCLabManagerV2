@@ -16,6 +16,7 @@ namespace BCLabManager.Model
     public class SubProgramClass : ModelBase
     {
         public int Id { get; set; }
+        public bool IsAbandoned { get; set; }
         //public String Name { get; set; }
         public ChargeTemperatureClass ChargeTemperature { get; set; }
         public ChargeCurrentClass ChargeCurrent { get; set; }
@@ -151,6 +152,16 @@ namespace BCLabManager.Model
         #endregion //event
 
         public void Abandon(String Description = "")
-        { }
+        {
+            IsAbandoned = true;
+            foreach (var tr in FirstTestRecords)
+            {
+                tr.Abandon();
+            }
+            foreach (var tr in SecondTestRecords)
+            {
+                tr.Abandon();
+            }
+        }
     }
 }

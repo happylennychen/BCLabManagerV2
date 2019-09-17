@@ -229,6 +229,8 @@ namespace BCLabManager.Migrations
 
                     b.Property<int?>("DischargeTemperatureId");
 
+                    b.Property<bool>("IsAbandoned");
+
                     b.Property<int?>("ProgramClassId");
 
                     b.Property<int>("TestCount");
