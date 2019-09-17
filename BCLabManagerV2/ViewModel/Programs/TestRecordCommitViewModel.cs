@@ -348,6 +348,7 @@ namespace BCLabManager.ViewModel
         {
             var dialog = new OpenFileDialog();
             dialog.Multiselect = true;
+            //dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.NetworkShortcuts); No use, cannot see network driver
             if (dialog.ShowDialog() == true)
             {
                 FileList = new ObservableCollection<string>(dialog.FileNames.ToList());

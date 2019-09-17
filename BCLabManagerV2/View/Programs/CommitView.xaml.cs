@@ -22,6 +22,7 @@ namespace BCLabManager.View
         public CommitView()
         {
             InitializeComponent();
+            EndTimeDat.Text = DateTime.Now.ToString();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

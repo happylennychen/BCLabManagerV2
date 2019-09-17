@@ -203,9 +203,9 @@ namespace BCLabManager.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<byte[]>("BinaryData");
-
                     b.Property<string>("FileName");
+
+                    b.Property<string>("MD5");
 
                     b.Property<int?>("TestRecordClassId");
 

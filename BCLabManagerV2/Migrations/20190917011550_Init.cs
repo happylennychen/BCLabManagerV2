@@ -363,7 +363,7 @@ namespace BCLabManager.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     FileName = table.Column<string>(nullable: true),
-                    BinaryData = table.Column<byte[]>(nullable: true),
+                    MD5 = table.Column<string>(nullable: true),
                     TestRecordClassId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>

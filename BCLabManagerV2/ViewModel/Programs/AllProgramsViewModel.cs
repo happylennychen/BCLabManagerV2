@@ -693,10 +693,11 @@ namespace BCLabManager.ViewModel
             {
                 _programRepository.AddItem(model);
             }*/
-
+            var model = new TestRecordClass();
             TestRecordExecuteViewModel evm = new TestRecordExecuteViewModel
                 (
-                testRecord.Record,      //将model传给ExecuteViewModel      //??????????????????????????
+                //testRecord.Record,      //将model传给ExecuteViewModel      //??????????????????????????
+                model,
                 _batteryTypes,
                 _batteries,
                 _testers,
@@ -752,10 +753,11 @@ namespace BCLabManager.ViewModel
             //    SelectedFirstTestRecord.Commit();
             //}
 
-            //TestRecordClass m = new TestRecordClass();
+            TestRecordClass m = new TestRecordClass();
             TestRecordCommitViewModel evm = new TestRecordCommitViewModel
                 (
-                testRecord.Record      //??????????????????????????
+                //testRecord.Record      //??????????????????????????
+                m
                 );
             evm.DisplayName = "Test-Commit";
             var TestRecordCommitViewInstance = new CommitView();
@@ -767,7 +769,7 @@ namespace BCLabManager.ViewModel
                 testRecord.NewCycle = evm.NewCycle;
                 testRecord.Comment = evm.Comment;
                 testRecord.Status = TestStatus.Completed;
-                //testRecord.FilePath = evm.FileList;
+                testRecord.Record.RawDataList = CreateRawDataList(evm.FileList);
                 testRecord.CommitOnAssets();
                 using (var dbContext = new AppDbContext())
                 {
@@ -776,7 +778,7 @@ namespace BCLabManager.ViewModel
                     tr.NewCycle = testRecord.NewCycle;
                     tr.Comment = testRecord.Comment;
                     tr.Status = testRecord.Status;
-                    tr.RawDataList = CreateRawDataList(evm.FileList);
+                    tr.RawDataList = testRecord.Record.RawDataList;
                     tr.AssignedBattery = null;
                     tr.AssignedChamber = null;
                     tr.AssignedChannel = null;
@@ -791,7 +793,7 @@ namespace BCLabManager.ViewModel
             {
                 var rd = new RawDataClass();
                 rd.FileName = Path.GetFileName(filepath);
-                rd.BinaryData = File.ReadAllBytes(filepath);
+                //rd.BinaryData = File.ReadAllBytes(filepath);
                 output.Add(rd);
             }
             return output;

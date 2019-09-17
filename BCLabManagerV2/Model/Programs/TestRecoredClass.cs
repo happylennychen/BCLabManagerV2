@@ -18,7 +18,8 @@ namespace BCLabManager.Model
     {
         public int Id { get; set; }
         public string FileName { get; set; }
-        public byte[] BinaryData { get; set; }
+        //public byte[] BinaryData { get; set; }
+        public string MD5 { get; set; }
     }
     public class StatusChangedEventArgs : EventArgs
     {
