@@ -8,6 +8,7 @@ using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
+using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
@@ -20,6 +21,7 @@ namespace BCLabManager.ViewModel
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
+        RelayCommand _deleteCommand;
 
         #endregion // Fields
 
@@ -128,6 +130,20 @@ namespace BCLabManager.ViewModel
                 return _saveAsCommand;
             }
         }
+        public ICommand DeleteCommand
+        {
+            get
+            {
+                if (_deleteCommand == null)
+                {
+                    _deleteCommand = new RelayCommand(
+                        param => { this.Delete(); },
+                        param => this.CanDelete
+                        );
+                }
+                return _deleteCommand;
+            }
+        }
 
         #endregion // Public Interface
 
@@ -228,6 +244,31 @@ namespace BCLabManager.ViewModel
             }
         }
         private bool CanSaveAs
+        {
+            get { return _selectedItem != null; }
+        }
+        private void Delete()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var model = dbContext.Batteries.SingleOrDefault(o => o.Id == _selectedItem.Id);
+                if (model.Status == AssetStatusEnum.USING)
+                {
+                    MessageBox.Show("Cannot delete using battery.");
+                    return;
+                }
+                if (MessageBox.Show("Are you sure?", "Delete Battery", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    dbContext.Batteries.Remove(model);
+                    dbContext.SaveChanges();
+
+                    model = _batteries.SingleOrDefault(o => o.Id == _selectedItem.Id);
+                    _batteries.Remove(model);
+                    this.AllBatteries.Remove(_selectedItem);
+                }
+            }
+        }
+        private bool CanDelete
         {
             get { return _selectedItem != null; }
         }
