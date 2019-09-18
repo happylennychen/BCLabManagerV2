@@ -56,6 +56,32 @@ namespace BCLabManager.Model
             }
         }
 
+        public SubProgramClass(SubProgramTemplate template, string ProgramStr)  //Only used by populator
+        {
+            //this.Name = template.Name;
+            this.ChargeTemperature = template.ChargeTemperature;
+            this.ChargeCurrent = template.ChargeCurrent;
+            this.DischargeTemperature = template.DischargeTemperature;
+            this.DischargeCurrent = template.DischargeCurrent;
+            this.TestCount = template.TestCount;
+            this.FirstTestRecords = new ObservableCollection<TestRecordClass>();
+            this.SecondTestRecords = new ObservableCollection<TestRecordClass>();
+
+            var tr = new TestRecordClass();
+            tr.StatusChanged += this.TestRecord_StatusChanged;
+            tr.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
+            tr.ProgramStr = ProgramStr;
+            this.FirstTestRecords.Add(tr);
+            if (this.TestCount == TestCountEnum.Two)
+            {
+                var tr1 = new TestRecordClass();
+                tr1.StatusChanged += this.TestRecord_StatusChanged;
+                tr1.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
+                tr1.ProgramStr = ProgramStr;
+                this.SecondTestRecords.Add(tr1);
+            }
+        }
+
         public SubProgramClass(
             ChargeTemperatureClass chargeTemperature, 
             ChargeCurrentClass chargeCurrent, 
