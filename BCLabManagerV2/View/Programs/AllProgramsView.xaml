@@ -149,7 +149,7 @@
                     <Button Content="_View Data" Command="{Binding Path=ViewCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
                 <ListView
-                      x:Name="Test1recordlist"
+                      x:Name="FirstTestRecordList"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
       ItemsSource="{Binding Path=FirstTestRecords}"
@@ -212,7 +212,7 @@
                     <Button Content="_View Data" Command="{Binding Path=ViewCommand2}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
                 <ListView
-                      x:Name="Test2recordlist"
+                      x:Name="SecondTestRecordList"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
       ItemsSource="{Binding Source={StaticResource strsCollectionViewSource}}"

@@ -26,6 +26,20 @@ namespace BCLabManager.View
         {
             InitializeComponent();
         }
+
+        private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ListViewItem item = sender as ListViewItem;
+            if (item != null)
+            {
+                TestRecordViewModel tr = item.Content as TestRecordViewModel;
+                if (tr != null)
+                {
+                    Navigator.SetMainTabIndex(3);
+                    Navigator.SetSelectedTestRecord(tr.Id);
+                }
+            }
+        }
     }
 
     public class HeightMultiConverter : IMultiValueConverter

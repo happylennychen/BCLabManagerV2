@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:src="clr-namespace:BCLabManager.View"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="400">
     <UserControl.Resources>
@@ -70,6 +71,16 @@
                 </Grid>
             </DockPanel>
         </DataTemplate>
+
+        <Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}">
+            <!-- 
+      Stretch the content of each cell so that we can 
+      right-align text in the Total Sales column. 
+      -->
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Cursor" Value="14"></Setter>
+            <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"></EventSetter>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -173,6 +184,7 @@
                     <ListView
                       x:Name="WaitingTestList"
       AlternationCount="2" 
+      ItemContainerStyle="{StaticResource ListViewItemStyle}"
       ItemsSource="{Binding Path=WaitingTestRecords}"
       >
 
@@ -198,6 +210,7 @@
                     <ListView
                       x:Name="ExecutingTestList"
       AlternationCount="2" 
+      ItemContainerStyle="{StaticResource ListViewItemStyle}"
       ItemsSource="{Binding Path=ExecutingTestRecords}"
                       SelectedItem="{Binding Path=SelectedExecutingTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >

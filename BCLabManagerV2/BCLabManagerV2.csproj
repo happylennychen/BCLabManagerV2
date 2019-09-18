@@ -341,6 +341,7 @@
     <Compile Include="View\DBConfigureWindow.xaml.cs">
       <DependentUpon>DBConfigureWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Navigator.cs" />
     <Compile Include="View\Programs\AllDischargeCurrentsView.xaml.cs">
       <DependentUpon>AllDischargeCurrentsView.xaml</DependentUpon>
     </Compile>

@@ -48,17 +48,17 @@ namespace BCLabManager
 
         public DashBoardViewModel dashBoardViewModel { get; set; }
 
-        List<BatteryTypeClass> BatteryTypes { get; set; }
-        ObservableCollection<BatteryClass> Batteries { get; set; }
-        List<TesterClass> Testers { get; set; }
-        ObservableCollection<ChannelClass> Channels { get; set; }
-        ObservableCollection<ChamberClass> Chambers { get; set; }
-        List<SubProgramTemplate> SubProgramTemplates { get; set; }
-        List<ChargeTemperatureClass> ChargeTemperatures { get; set; }
-        List<ChargeCurrentClass> ChargeCurrents { get; set; }
-        List<DischargeTemperatureClass> DischargeTemperatures { get; set; }
-        List<DischargeCurrentClass> DischargeCurrents { get; set; }
-        ObservableCollection<ProgramClass> Programs { get; set; }
+        public List<BatteryTypeClass> BatteryTypes { get; set; }
+        public ObservableCollection<BatteryClass> Batteries { get; set; }
+        public List<TesterClass> Testers { get; set; }
+        public ObservableCollection<ChannelClass> Channels { get; set; }
+        public ObservableCollection<ChamberClass> Chambers { get; set; }
+        public List<SubProgramTemplate> SubProgramTemplates { get; set; }
+        public List<ChargeTemperatureClass> ChargeTemperatures { get; set; }
+        public List<ChargeCurrentClass> ChargeCurrents { get; set; }
+        public List<DischargeTemperatureClass> DischargeTemperatures { get; set; }
+        public List<DischargeCurrentClass> DischargeCurrents { get; set; }
+        public ObservableCollection<ProgramClass> Programs { get; set; }
         public MainWindow()
         {
             try
@@ -67,8 +67,13 @@ namespace BCLabManager
                 InitializeConfiguration();
                 InitializeDatabase();
                 LoadFromDB();
+                InitializeNavigator();
                 CreateViewModels();
                 BindingVMandView();
+                //MainTab.SelectedIndex = 3;
+                //AllProgramsViewInstance.Programlist.SelectedItem = allProgramsViewModel.AllPrograms[4];
+                //AllProgramsViewInstance.SubProgramlist.SelectedItem = allProgramsViewModel.AllPrograms[4].SubPrograms[1];
+                //AllProgramsViewInstance.FirstTestRecordList.SelectedItem = allProgramsViewModel.AllPrograms[4].SubPrograms[1].Test1Records[0];
             }
             catch(Exception e)
             {
@@ -76,6 +81,12 @@ namespace BCLabManager
                 App.Current.Shutdown();
             }
         }
+
+        private void InitializeNavigator()
+        {
+            Navigator.Initialize(this);
+        }
+
         void InitializeConfiguration()
         {
             if (!File.Exists(GlobalSettings.ConfigurationFilePath))
