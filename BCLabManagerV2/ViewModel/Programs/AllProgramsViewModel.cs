@@ -808,8 +808,8 @@ namespace BCLabManager.ViewModel
                 testRecord.EndTime = evm.EndTime;
                 testRecord.NewCycle = evm.NewCycle;
                 testRecord.Comment = evm.Comment;
-                testRecord.Status = TestStatus.Completed;
                 testRecord.Record.RawDataList = CreateRawDataList(evm.FileList);
+                testRecord.Status = TestStatus.Completed;
                 testRecord.CommitOnAssets();
                 using (var dbContext = new AppDbContext())
                 {

@@ -49,11 +49,11 @@ namespace BCLabManager.View
             else if (y > (double)value[3])
                 y = (double)value[3];
             return y;*/
-            double? total = value[0] as double?;
-            double? val = value[1] as double?;
+            int? total = value[0] as int?;
+            int? val = value[1] as int?;
             double? actualheight = value[2] as double?;
             if (total != null && val != null && actualheight != null)
-                return val / total * actualheight;
+                return (double)val / (double)total * actualheight;
             else
                 return null;
         }

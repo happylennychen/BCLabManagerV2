@@ -82,8 +82,8 @@
             <ColumnDefinition Width="4"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Border Grid.Column="0" Grid.Row="0" Margin="20">
-            <Grid>
+        <GroupBox Header="Assets Usage" Grid.Column="0" Grid.Row="0">
+            <Grid Margin="20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
@@ -93,8 +93,8 @@
                 <ContentControl Grid.Column="1" Content="{Binding}" ContentTemplate="{StaticResource ChamberStackedColumn}"></ContentControl>
                 <ContentControl Grid.Column="2" Content="{Binding}" ContentTemplate="{StaticResource ChannelStackedColumn}"></ContentControl>
             </Grid>
-        </Border>
-        <Border Grid.Row="0" Grid.Column="2">
+        </GroupBox>
+        <GroupBox Header="Test Summary" Grid.Row="0" Grid.Column="2">
             <DockPanel LastChildFill="True">
                 <Grid Grid.Column="1" Margin="10" Width="130" Height="150" DockPanel.Dock="Right">
                     <Grid.RowDefinitions>
@@ -166,6 +166,38 @@
                     </Grid>
                 </Border>
             </DockPanel>
-        </Border>
+        </GroupBox>
+        <GroupBox Header="Waiting and executing Test" Grid.Row="2" Grid.Column="0">
+            <TabControl>
+                <TabItem Header="Waiting"></TabItem>
+                <TabItem Header="Executing"></TabItem>
+            </TabControl>
+        </GroupBox>
+        <GroupBox Header="Statistics" Grid.Row="2" Grid.Column="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="5"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40*"></RowDefinition>
+                    <RowDefinition Height="5"></RowDefinition>
+                    <RowDefinition Height="20*"></RowDefinition>
+                    <RowDefinition Height="5"></RowDefinition>
+                    <RowDefinition Height="20*"></RowDefinition>
+                    <RowDefinition Height="5"></RowDefinition>
+                    <RowDefinition Height="20*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Completed Programs</Label>
+                <Label Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="70" FontWeight="Bold" Foreground="Green" Content="{Binding Path=CompletedProgramNumber}"></Label>
+                <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Completed Sub Programs</Label>
+                <Label Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="Green" Content="{Binding Path=CompletedSubProgramNumber}"></Label>
+                <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Completed Test</Label>
+                <Label Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="Green" Content="{Binding Path=CompletedTestNumber}"></Label>
+                <Label Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Collected Raw Data</Label>
+                <Label Grid.Row="6" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="Green" Content="{Binding Path=CollectedRawDataNumber}"></Label>
+            </Grid>
+        </GroupBox>
     </Grid>
 </UserControl>

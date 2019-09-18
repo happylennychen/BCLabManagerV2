@@ -84,81 +84,110 @@ namespace BCLabManager.ViewModel
                 }
             }
         }
-
-        private void Tr_StatusChanged(object sender, StatusChangedEventArgs e)
+        private void UpdateProgramsUI()
         {
             OnPropertyChanged("WaitingAmount");
             OnPropertyChanged("ExecutingAmount");
             OnPropertyChanged("CompletedAmount");
             OnPropertyChanged("InvalidAmount");
-            OnPropertyChanged("AbandonedAmount"); 
+            OnPropertyChanged("AbandonedAmount");
             OnPropertyChanged("TotalExeAmount");
             OnPropertyChanged("WaitingPercentage");
             OnPropertyChanged("ExecutingPercentage");
             OnPropertyChanged("CompletedPercentage");
             OnPropertyChanged("InvalidPercentage");
-            OnPropertyChanged("AbandonedPercentage");
+            OnPropertyChanged("AbandonedPercentage"); 
+            OnPropertyChanged("CompletedProgramNumber");
+            OnPropertyChanged("CompletedSubProgramNumber");
+            OnPropertyChanged("CompletedTestNumber");
+            OnPropertyChanged("CollectedRawDataNumber");
+        }
+        private void UpdateAssetsUI()
+        {
+            OnPropertyChanged("BatteryAmount");
+            OnPropertyChanged("UsingBatteryAmount");
+            OnPropertyChanged("ChamberAmount");
+            OnPropertyChanged("UsingChamberAmount");
+            OnPropertyChanged("ChannelAmount");
+            OnPropertyChanged("UsingChannelAmount");
+            OnPropertyChanged("ChannelUsingPercent");
+            OnPropertyChanged("ChamberUsingPercent");
+            OnPropertyChanged("BatteryUsingPercent");
+        }
+        private void Tr_StatusChanged(object sender, StatusChangedEventArgs e)
+        {
+            UpdateProgramsUI();
         }
 
         private void SecondTestRecords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            OnPropertyChanged("CompletedAmount");
-            OnPropertyChanged("InvalidAmount");
-            OnPropertyChanged("WaitingAmount");
-            OnPropertyChanged("TotalExeAmount");
+            //OnPropertyChanged("CompletedAmount");
+            //OnPropertyChanged("InvalidAmount");
+            //OnPropertyChanged("WaitingAmount");
+            //OnPropertyChanged("TotalExeAmount");
+            UpdateProgramsUI();
         }
 
         private void FirstTestRecords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            OnPropertyChanged("CompletedAmount");
-            OnPropertyChanged("InvalidAmount");
-            OnPropertyChanged("WaitingAmount");
-            OnPropertyChanged("TotalExeAmount");
+            //OnPropertyChanged("CompletedAmount");
+            //OnPropertyChanged("InvalidAmount");
+            //OnPropertyChanged("WaitingAmount");
+            //OnPropertyChanged("TotalExeAmount");
+            UpdateProgramsUI();
         }
 
         private void SubPrograms_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            OnPropertyChanged("WaitingAmount");
-            OnPropertyChanged("TotalExeAmount");
+            //OnPropertyChanged("WaitingAmount");
+            //OnPropertyChanged("TotalExeAmount");
+            UpdateProgramsUI();
         }
 
         private void _programs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            OnPropertyChanged("WaitingAmount");
-            OnPropertyChanged("TotalExeAmount");
+            //OnPropertyChanged("WaitingAmount");
+            //OnPropertyChanged("TotalExeAmount");
+            UpdateProgramsUI();
         }
 
         private void _channels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            OnPropertyChanged("ChannelAmount");
+            //OnPropertyChanged("ChannelAmount");
+            UpdateAssetsUI();
         }
 
         private void Chn_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Status")
-                OnPropertyChanged("UsingChannelAmount");
+            //if (e.PropertyName == "Status")
+            //    OnPropertyChanged("UsingChannelAmount");
+            UpdateAssetsUI();
         }
 
         private void _chambers_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            OnPropertyChanged("ChamberAmount");
+            //OnPropertyChanged("ChamberAmount");
+            UpdateAssetsUI();
         }
 
         private void Cmb_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Status")
-                OnPropertyChanged("UsingChamberAmount");
+            //if (e.PropertyName == "Status")
+            //    OnPropertyChanged("UsingChamberAmount");
+            UpdateAssetsUI();
         }
 
         private void Bat_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Status")
-                OnPropertyChanged("UsingBatteryAmount");
+            //if (e.PropertyName == "Status")
+            //    OnPropertyChanged("UsingBatteryAmount");
+            UpdateAssetsUI();
         }
 
         private void _batteries_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            OnPropertyChanged("BatteryAmount");
+            //OnPropertyChanged("BatteryAmount");
+            UpdateAssetsUI();
         }
 
         //void CreateAllPrograms(List<ProgramClass> programClasses)
@@ -174,13 +203,13 @@ namespace BCLabManager.ViewModel
 
 
         #region Public Interface
-        #region Assets
-        public double BatteryAmount
+        #region Assets Usage
+        public int BatteryAmount
         {
             get { return _batteries.Count; }
         }
 
-        public double UsingBatteryAmount
+        public int UsingBatteryAmount
         {
             get
             {
@@ -195,12 +224,12 @@ namespace BCLabManager.ViewModel
             get { return (double)UsingBatteryAmount / (double)BatteryAmount; }
         }
 
-        public double ChamberAmount
+        public int ChamberAmount
         {
             get { return _chambers.Count; }
         }
 
-        public double UsingChamberAmount
+        public int UsingChamberAmount
         {
             get
             {
@@ -215,7 +244,7 @@ namespace BCLabManager.ViewModel
             get { return (double)UsingChamberAmount / (double)ChamberAmount; }
         }
 
-        public double ChannelAmount
+        public int ChannelAmount
         {
             get
             {
@@ -223,7 +252,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public double UsingChannelAmount
+        public int UsingChannelAmount
         {
             get
             {
@@ -238,7 +267,7 @@ namespace BCLabManager.ViewModel
             get { return (double)UsingChannelAmount / (double)ChannelAmount; }
         }
         #endregion
-        #region Legend
+        #region Test Summary
         private int GetTestRecordAmountByStatus(TestStatus testStatus)
         {
             return
@@ -366,7 +395,105 @@ namespace BCLabManager.ViewModel
             }
         }
         #endregion
+        #region Ongoing Tests
+        #endregion
+        #region Statistics
+        public int CompletedProgramNumber
+        {
+            get
+            {
+                int i = 0;
+                foreach (var pro in _programs)
+                {
+                    if (IsProgramCompleted(pro))
+                        i++;
+                }
+                return i;
+            }
+        }
 
+        private bool IsProgramCompleted(ProgramClass pro)
+        {
+            foreach (var sub in pro.SubPrograms)
+            {
+                if (sub.IsAbandoned == true)
+                    continue;
+                if (IsSubProgramCompleted(sub) == false)
+                    return false;
+            }
+            return true;
+        }
+        public int CompletedSubProgramNumber
+        {
+            get
+            {
+                int i = 0;
+                foreach (var pro in _programs)
+                {
+                    foreach(var sub in pro.SubPrograms)
+                        if (IsSubProgramCompleted(sub))
+                            i++;
+                }
+                return i;
+            }
+        }
+
+        private bool IsSubProgramCompleted(SubProgramClass sub)
+        {
+            foreach (var tr in sub.FirstTestRecords)
+                if (IsTestCompleted(tr) == false)
+                    return false;
+            foreach (var tr in sub.SecondTestRecords)
+                if (IsTestCompleted(tr) == false)
+                    return false;
+            return true;
+        }
+        public int CompletedTestNumber
+        {
+            get
+            {
+                int i = 0;
+                foreach (var pro in _programs)
+                {
+                    foreach (var sub in pro.SubPrograms)
+                    {
+                        foreach (var tr in sub.FirstTestRecords)
+                            if (IsTestCompleted(tr))
+                                i++;
+                        foreach (var tr in sub.SecondTestRecords)
+                            if (IsTestCompleted(tr))
+                                i++;
+                    }
+                }
+                return i;
+            }
+        }
+
+        private bool IsTestCompleted(TestRecordClass tr)
+        {
+            return tr.Status == TestStatus.Completed;
+        }
+        public int CollectedRawDataNumber
+        {
+            get
+            {
+                int i = 0;
+                foreach (var pro in _programs)
+                {
+                    foreach (var sub in pro.SubPrograms)
+                    {
+                        foreach (var tr in sub.FirstTestRecords)
+                            if (IsTestCompleted(tr))
+                                i+= tr.RawDataList.Count;
+                        foreach (var tr in sub.SecondTestRecords)
+                            if (IsTestCompleted(tr))
+                                i += tr.RawDataList.Count;
+                    }
+                }
+                return i;
+            }
+        }
+        #endregion
         #endregion // Public Interface
 
         #region  Base Class Overrides
