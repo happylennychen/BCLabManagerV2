@@ -175,6 +175,40 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public string ProgramStr
+        {
+            get
+            {
+                return _record.ProgramStr;
+            }
+            set
+            {
+                if (value == _record.ProgramStr)
+                    return;
+
+                _record.ProgramStr = value;
+
+                base.OnPropertyChanged("ProgramStr");
+            }
+        }
+
+        public string SubProgramStr
+        {
+            get
+            {
+                return _record.SubProgramStr;
+            }
+            set
+            {
+                if (value == _record.SubProgramStr)
+                    return;
+
+                _record.SubProgramStr = value;
+
+                base.OnPropertyChanged("ProgramStr");
+            }
+        }
+
         public String Comment
         {
             get

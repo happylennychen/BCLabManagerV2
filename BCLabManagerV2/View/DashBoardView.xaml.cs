@@ -52,6 +52,8 @@ namespace BCLabManager.View
             int? total = value[0] as int?;
             int? val = value[1] as int?;
             double? actualheight = value[2] as double?;
+            if (total == 0)
+                return 0;
             if (total != null && val != null && actualheight != null)
                 return (double)val / (double)total * actualheight;
             else

@@ -8,7 +8,7 @@
     </Window.Resources>
     <Grid>
         <TabControl>
-            <TabItem Header="Dash Board">
+            <TabItem Header="Dashboard">
                 <v:DashBoardView x:Name="DashBoardViewInstance"></v:DashBoardView>
             </TabItem>
             <TabItem Header="Assets">

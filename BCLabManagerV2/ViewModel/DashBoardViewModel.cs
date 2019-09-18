@@ -37,6 +37,7 @@ namespace BCLabManager.ViewModel
             _chambers = chambers;
             BookEvents();
         }
+
         private void BookEvents()
         {
             foreach (var bat in _batteries)
@@ -101,6 +102,8 @@ namespace BCLabManager.ViewModel
             OnPropertyChanged("CompletedSubProgramNumber");
             OnPropertyChanged("CompletedTestNumber");
             OnPropertyChanged("CollectedRawDataNumber");
+            OnPropertyChanged("ExecutingTestRecords");
+            OnPropertyChanged("WaitingTestRecords");
         }
         private void UpdateAssetsUI()
         {
@@ -396,6 +399,54 @@ namespace BCLabManager.ViewModel
         }
         #endregion
         #region Ongoing Tests
+        public ObservableCollection<TestRecordViewModel> ExecutingTestRecords
+        {
+            get
+            {
+                List<TestRecordViewModel> all = new List<TestRecordViewModel>();
+                foreach (var pro in _programs)
+                {
+                    foreach (var sub in pro.SubPrograms)
+                    {
+                        foreach (var tr in sub.FirstTestRecords)
+                        {
+                            if (tr.Status == TestStatus.Executing)
+                                all.Add(new TestRecordViewModel(tr));
+                        }
+                        foreach (var tr in sub.SecondTestRecords)
+                        {
+                            if (tr.Status == TestStatus.Executing)
+                                all.Add(new TestRecordViewModel(tr));
+                        }
+                    }
+                }
+                return new ObservableCollection<TestRecordViewModel>(all);
+            }
+        }
+        public ObservableCollection<TestRecordViewModel> WaitingTestRecords
+        {
+            get
+            {
+                List<TestRecordViewModel> all = new List<TestRecordViewModel>();
+                foreach (var pro in _programs)
+                {
+                    foreach (var sub in pro.SubPrograms)
+                    {
+                        foreach (var tr in sub.FirstTestRecords)
+                        {
+                            if (tr.Status == TestStatus.Waiting)
+                                all.Add(new TestRecordViewModel(tr));
+                        }
+                        foreach (var tr in sub.SecondTestRecords)
+                        {
+                            if (tr.Status == TestStatus.Waiting)
+                                all.Add(new TestRecordViewModel(tr));
+                        }
+                    }
+                }
+                return new ObservableCollection<TestRecordViewModel>(all);
+            }
+        }
         #endregion
         #region Statistics
         public int CompletedProgramNumber

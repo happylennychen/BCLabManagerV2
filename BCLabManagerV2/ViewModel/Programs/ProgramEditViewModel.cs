@@ -265,6 +265,13 @@ namespace BCLabManager.ViewModel
         /// </summary>
         public void OK()
         {
+            foreach (var sub in _program.SubPrograms)
+            {
+                foreach (var tr in sub.FirstTestRecords)
+                    tr.ProgramStr = this.Name;
+                foreach (var tr in sub.SecondTestRecords)
+                    tr.ProgramStr = this.Name;
+            }
             IsOK = true;
         }
 

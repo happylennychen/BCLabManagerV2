@@ -169,8 +169,73 @@
         </GroupBox>
         <GroupBox Header="Waiting and executing Test" Grid.Row="2" Grid.Column="0">
             <TabControl>
-                <TabItem Header="Waiting"></TabItem>
-                <TabItem Header="Executing"></TabItem>
+                <TabItem Header="Waiting">
+                    <ListView
+                      x:Name="WaitingTestList"
+      AlternationCount="2" 
+      ItemsSource="{Binding Path=WaitingTestRecords}"
+      >
+
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn 
+            Header="Id" 
+            DisplayMemberBinding="{Binding Path=Id}" 
+            />
+                                <GridViewColumn 
+            Header="Program" 
+            DisplayMemberBinding="{Binding Path=ProgramStr}" 
+            />
+                                <GridViewColumn 
+            Header="Sub Program" 
+            DisplayMemberBinding="{Binding Path=SubProgramStr}" 
+            />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TabItem>
+                <TabItem Header="Executing">
+                    <ListView
+                      x:Name="ExecutingTestList"
+      AlternationCount="2" 
+      ItemsSource="{Binding Path=ExecutingTestRecords}"
+                      SelectedItem="{Binding Path=SelectedExecutingTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+      >
+
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn 
+            Header="Id" 
+            DisplayMemberBinding="{Binding Path=Id}" 
+            />
+                                <GridViewColumn 
+            Header="BatteryType" 
+            DisplayMemberBinding="{Binding Path=BatteryTypeStr}" 
+            />
+                                <GridViewColumn 
+            Header="Battery" 
+            DisplayMemberBinding="{Binding Path=BatteryStr}" 
+            />
+                                <GridViewColumn 
+            Header="Chamber" 
+            DisplayMemberBinding="{Binding Path=ChamberStr}" 
+            />
+                                <GridViewColumn 
+            Header="Tester" 
+            DisplayMemberBinding="{Binding Path=TesterStr}" 
+            />
+                                <GridViewColumn 
+            Header="Channel" 
+            DisplayMemberBinding="{Binding Path=ChannelStr}" 
+            />
+                                <GridViewColumn 
+            Header="StartTime" 
+            DisplayMemberBinding="{Binding Path=StartTime}" 
+            />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TabItem>
             </TabControl>
         </GroupBox>
         <GroupBox Header="Statistics" Grid.Row="2" Grid.Column="2">

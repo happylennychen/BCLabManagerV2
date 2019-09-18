@@ -45,11 +45,13 @@ namespace BCLabManager.Model
 
             var tr = new TestRecordClass();
             tr.StatusChanged += this.TestRecord_StatusChanged;
+            tr.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
             this.FirstTestRecords.Add(tr);
             if (this.TestCount == TestCountEnum.Two)
             {
                 var tr1 = new TestRecordClass();
                 tr1.StatusChanged += this.TestRecord_StatusChanged;
+                tr1.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
                 this.SecondTestRecords.Add(tr1);
             }
         }
@@ -86,6 +88,7 @@ namespace BCLabManager.Model
             {
                 newsub.FirstTestRecords = new ObservableCollection<TestRecordClass>();
                 var tr = new TestRecordClass();
+                tr.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
                 tr.StatusChanged += newsub.TestRecord_StatusChanged;
                 newsub.FirstTestRecords.Add(tr);
             }
@@ -93,10 +96,12 @@ namespace BCLabManager.Model
             {
                 newsub.FirstTestRecords = new ObservableCollection<TestRecordClass>();
                 var tr = new TestRecordClass();
+                tr.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
                 tr.StatusChanged += newsub.TestRecord_StatusChanged;
                 newsub.FirstTestRecords.Add(tr);
                 newsub.SecondTestRecords = new ObservableCollection<TestRecordClass>();
                 tr = new TestRecordClass();
+                tr.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
                 tr.StatusChanged += newsub.TestRecord_StatusChanged;
                 newsub.SecondTestRecords.Add(tr);
             }
