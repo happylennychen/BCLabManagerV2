@@ -21,10 +21,10 @@
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Path=IsAbandoned, UpdateSourceTrigger=PropertyChanged}" Value="True">
-                    <Setter Property="Background" Value="Gray"></Setter>
+                    <Setter Property="Background" Value="{StaticResource AbandonedBrush}"></Setter>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Path=Status, UpdateSourceTrigger=PropertyChanged}" Value="4">
-                    <Setter Property="Background" Value="Gray"></Setter>
+                    <Setter Property="Background" Value="{StaticResource AbandonedBrush}"></Setter>
                 </DataTrigger>
             </Style.Triggers>
         </Style>

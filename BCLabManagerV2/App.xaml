@@ -4,6 +4,12 @@
                         xmlns:prism="http://prismlibrary.com/"
              >
     <Application.Resources>
-         
+        <SolidColorBrush x:Key="WaitingBrush" Color="#FFF2D2"></SolidColorBrush>
+        <SolidColorBrush x:Key="ExecutingBrush" Color="#3F88C5"></SolidColorBrush>
+        <SolidColorBrush x:Key="CompletedBrush" Color="#56A3A6"></SolidColorBrush>
+        <SolidColorBrush x:Key="InvalidBrush" Color="#D00000"></SolidColorBrush>
+        <SolidColorBrush x:Key="AbandonedBrush" Color="#595F66"></SolidColorBrush>
+        <SolidColorBrush x:Key="UsingBrush" Color="#D00000"></SolidColorBrush>
+        <SolidColorBrush x:Key="IdleBrush" Color="#FFF2D2"></SolidColorBrush>
     </Application.Resources>
 </prism:PrismApplication>

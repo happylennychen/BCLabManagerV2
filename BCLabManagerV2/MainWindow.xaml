@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:v="clr-namespace:BCLabManager.View"
         WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="655" Width="1000">
+        Title="BC Lab Manager" Height="655" Width="1000">
     <Window.Resources>
     </Window.Resources>
     <Grid>

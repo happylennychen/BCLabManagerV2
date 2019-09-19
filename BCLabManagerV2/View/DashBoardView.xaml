@@ -16,10 +16,10 @@
                 <TextBlock DockPanel.Dock="Bottom" Margin="0,3" HorizontalAlignment="Center">Batteries</TextBlock>
                 <Border Width="30" BorderBrush="Black" BorderThickness="1">
                 <Grid>
-                    <Border x:Name="battotalgrid" Background="Beige" VerticalAlignment="Stretch">
+                    <Border x:Name="battotalgrid" Background="{StaticResource IdleBrush}" VerticalAlignment="Stretch">
                         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=BatteryAmount}"></TextBlock>
                     </Border>
-                    <Border Background="Red" VerticalAlignment="Bottom">
+                    <Border Background="{StaticResource UsingBrush}" VerticalAlignment="Bottom">
                         <Border.Height>
                             <MultiBinding Converter="{StaticResource hmc}">
                                 <Binding Path="BatteryAmount"></Binding>
@@ -38,10 +38,10 @@
                 <TextBlock DockPanel.Dock="Bottom" Margin="0,3" HorizontalAlignment="Center">Chambers</TextBlock>
                 <Border Width="30" BorderBrush="Black" BorderThickness="1">
                     <Grid>
-                        <Grid x:Name="cmbtotalgrid" Background="Beige" VerticalAlignment="Stretch">
+                        <Grid x:Name="cmbtotalgrid" Background="{StaticResource IdleBrush}" VerticalAlignment="Stretch">
                             <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=ChamberAmount}"></TextBlock>
                         </Grid>
-                        <Grid Background="Red" VerticalAlignment="Bottom">
+                        <Grid Background="{StaticResource UsingBrush}" VerticalAlignment="Bottom">
                             <Grid.Height>
                                 <MultiBinding Converter="{StaticResource hmc}">
                                     <Binding Path="ChamberAmount"></Binding>
@@ -57,13 +57,13 @@
         </DataTemplate>
         <DataTemplate x:Key="ChannelStackedColumn">
             <DockPanel LastChildFill="True" MinWidth="70">
-                <TextBlock DockPanel.Dock="Bottom" Margin="0,3" HorizontalAlignment="Center">TesterChannels</TextBlock>
+                <TextBlock DockPanel.Dock="Bottom" Margin="0,3" HorizontalAlignment="Center">Channels</TextBlock>
                 <Border Width="30" BorderBrush="Black" BorderThickness="1">
                     <Grid>
-                        <Grid x:Name="tstctotalgrid" Background="Beige" VerticalAlignment="Stretch">
+                        <Grid x:Name="tstctotalgrid" Background="{StaticResource IdleBrush}" VerticalAlignment="Stretch">
                             <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=ChannelAmount}"></TextBlock>
                         </Grid>
-                        <Grid Background="Red" VerticalAlignment="Bottom">
+                        <Grid Background="{StaticResource UsingBrush}" VerticalAlignment="Bottom">
                             <Grid.Height>
                                 <MultiBinding Converter="{StaticResource hmc}">
                                     <Binding Path="ChannelAmount"></Binding>
@@ -95,125 +95,130 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="4"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <GroupBox Header="Assets Usage" Grid.Column="0" Grid.Row="0">
-            <Grid Margin="60">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <ContentControl Grid.Column="0" Content="{Binding}" ContentTemplate="{StaticResource BatteryStackedColumn}"></ContentControl>
-                <ContentControl Grid.Column="1" Content="{Binding}" ContentTemplate="{StaticResource ChamberStackedColumn}"></ContentControl>
-                <ContentControl Grid.Column="2" Content="{Binding}" ContentTemplate="{StaticResource ChannelStackedColumn}"></ContentControl>
-            </Grid>
-        </GroupBox>
-        <GroupBox Header="Test Summary" Grid.Row="0" Grid.Column="2">
-            <DockPanel LastChildFill="True">
-                <Grid Grid.Column="1" Margin="10" Width="130" Height="150" DockPanel.Dock="Right">
-                    <Grid.RowDefinitions>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                    </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20*"></ColumnDefinition>
+                <ColumnDefinition Width="4"></ColumnDefinition>
+                <ColumnDefinition Width="30*"></ColumnDefinition>
+                <ColumnDefinition Width="4"></ColumnDefinition>
+                <ColumnDefinition Width="50*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="Assets Usage" Grid.Column="0" Grid.Row="0">
+                <Grid Margin="0,50">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="20"></ColumnDefinition>
-                        <ColumnDefinition Width="2"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        <ColumnDefinition Width="2"></ColumnDefinition>
-                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Rectangle Grid.Row="0" Grid.Column="0" Fill="Orange" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
-                    <Rectangle Grid.Row="1" Grid.Column="0" Fill="Yellow" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
-                    <Rectangle Grid.Row="2" Grid.Column="0" Fill="Blue" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
-                    <Rectangle Grid.Row="3" Grid.Column="0" Fill="Red" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
-                    <Rectangle Grid.Row="4" Grid.Column="0" Fill="DarkGray" Opacity="0.5" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
-                    <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">Waiting</TextBlock>
-                    <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Executing</TextBlock>
-                    <TextBlock Grid.Row="2" Grid.Column="2" VerticalAlignment="Center">Completed</TextBlock>
-                    <TextBlock Grid.Row="3" Grid.Column="2" VerticalAlignment="Center">Invalid</TextBlock>
-                    <TextBlock Grid.Row="4" Grid.Column="2" VerticalAlignment="Center">Abandoned</TextBlock>
-                    <TextBlock Grid.Row="0" Grid.Column="4" VerticalAlignment="Center" Text="{Binding Path=WaitingAmount}"></TextBlock>
-                    <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" Text="{Binding Path=ExecutingAmount}"></TextBlock>
-                    <TextBlock Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" Text="{Binding Path=CompletedAmount}"></TextBlock>
-                    <TextBlock Grid.Row="3" Grid.Column="4" VerticalAlignment="Center" Text="{Binding Path=InvalidAmount}"></TextBlock>
-                    <TextBlock Grid.Row="4" Grid.Column="4" VerticalAlignment="Center" Text="{Binding Path=AbandonedAmount}"></TextBlock>
+                    <ContentControl Grid.Column="0" Content="{Binding}" ContentTemplate="{StaticResource BatteryStackedColumn}"></ContentControl>
+                    <ContentControl Grid.Column="1" Content="{Binding}" ContentTemplate="{StaticResource ChamberStackedColumn}"></ContentControl>
+                    <ContentControl Grid.Column="2" Content="{Binding}" ContentTemplate="{StaticResource ChannelStackedColumn}"></ContentControl>
                 </Grid>
+            </GroupBox>
+            <GroupBox Header="Test Summary" Grid.Row="0" Grid.Column="2">
+                <DockPanel LastChildFill="True">
+                    <Grid Grid.Column="1" Margin="0,10" Width="110" Height="150" DockPanel.Dock="Right">
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20"></ColumnDefinition>
+                            <ColumnDefinition Width="2"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="2"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Rectangle Grid.Row="0" Grid.Column="0" Fill="{StaticResource WaitingBrush}" Opacity="1" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                        <Rectangle Grid.Row="1" Grid.Column="0" Fill="{StaticResource ExecutingBrush}" Opacity="1" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                        <Rectangle Grid.Row="2" Grid.Column="0" Fill="{StaticResource CompletedBrush}" Opacity="1" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                        <Rectangle Grid.Row="3" Grid.Column="0" Fill="{StaticResource InvalidBrush}" Opacity="1" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                        <Rectangle Grid.Row="4" Grid.Column="0" Fill="{StaticResource AbandonedBrush}" Opacity="1" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                        <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">Waiting</TextBlock>
+                        <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Executing</TextBlock>
+                        <TextBlock Grid.Row="2" Grid.Column="2" VerticalAlignment="Center">Completed</TextBlock>
+                        <TextBlock Grid.Row="3" Grid.Column="2" VerticalAlignment="Center">Invalid</TextBlock>
+                        <TextBlock Grid.Row="4" Grid.Column="2" VerticalAlignment="Center">Abandoned</TextBlock>
+                        <TextBlock Grid.Row="0" Grid.Column="4" VerticalAlignment="Center" Text="{Binding Path=WaitingAmount}"></TextBlock>
+                        <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" Text="{Binding Path=ExecutingAmount}"></TextBlock>
+                        <TextBlock Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" Text="{Binding Path=CompletedAmount}"></TextBlock>
+                        <TextBlock Grid.Row="3" Grid.Column="4" VerticalAlignment="Center" Text="{Binding Path=InvalidAmount}"></TextBlock>
+                        <TextBlock Grid.Row="4" Grid.Column="4" VerticalAlignment="Center" Text="{Binding Path=AbandonedAmount}"></TextBlock>
+                    </Grid>
 
-                <Border x:Name="ChartBorder" MaxHeight="150">
-                    <Grid Width="{Binding Path=ActualHeight,RelativeSource={RelativeSource Self}}"
+                    <Border x:Name="ChartBorder" MaxHeight="150">
+                        <Grid Width="{Binding Path=ActualHeight,RelativeSource={RelativeSource Self}}"
                x:Name="PiesGrid">
 
-                        <xctk:Pie x:Name="WaitingPie" Mode="Slice"
-                      Fill="Orange"
+                            <xctk:Pie x:Name="WaitingPie" Mode="Slice"
+                      Fill="{StaticResource WaitingBrush}"
                       Stroke="#FF000000"
-                      Opacity="0.5"
+                      Opacity="1"
                   StartAngle="0"
                       Slice="{Binding Path=WaitingPercentage, Mode=OneWay}" />
-                        <xctk:Pie x:Name="ExecutingPie" Mode="Slice"
-                      Fill="Yellow"
+                            <xctk:Pie x:Name="ExecutingPie" Mode="Slice"
+                      Fill="{StaticResource ExecutingBrush}"
                       Stroke="#FF000000"
-                      Opacity="0.5"
+                      Opacity="1"
                       StartAngle="{Binding Path=EndAngle, ElementName=WaitingPie, Mode=OneWay}"
                       Slice="{Binding Path=ExecutingPercentage, Mode=OneWay}" />
-                        <xctk:Pie x:Name="CompletedPie" Mode="Slice"
-                      Fill="Blue"
+                            <xctk:Pie x:Name="CompletedPie" Mode="Slice"
+                      Fill="{StaticResource CompletedBrush}"
                       Stroke="#FF000000"
-                      Opacity="0.5"
+                      Opacity="1"
                       StartAngle="{Binding Path=EndAngle, ElementName=ExecutingPie, Mode=OneWay}"
                       Slice="{Binding Path=CompletedPercentage, Mode=OneWay}" />
-                        <xctk:Pie x:Name="InvalidPie" Mode="Slice"
-                      Fill="Red"
+                            <xctk:Pie x:Name="InvalidPie" Mode="Slice"
+                      Fill="{StaticResource InvalidBrush}"
                       Stroke="#FF000000"
-                      Opacity="0.5"
+                      Opacity="1"
                       StartAngle="{Binding Path=EndAngle, ElementName=CompletedPie, Mode=OneWay}"
                       Slice="{Binding Path=InvalidPercentage, Mode=OneWay}" />
-                        <xctk:Pie x:Name="AbandonedPie" Mode="Slice"
-                      Fill="Black"
+                            <xctk:Pie x:Name="AbandonedPie" Mode="Slice"
+                      Fill="{StaticResource AbandonedBrush}"
                       Stroke="#FF000000"
-                      Opacity="0.5"
+                      Opacity="1"
                       StartAngle="{Binding Path=EndAngle, ElementName=InvalidPie, Mode=OneWay}"
                       Slice="{Binding Path=AbandonedPercentage, Mode=OneWay}" />
-                    </Grid>
-                </Border>
-            </DockPanel>
-        </GroupBox>
-        <GroupBox Header="Waiting and executing Test" Grid.Row="2" Grid.Column="0">
-            <TabControl>
-                <TabItem Header="Waiting">
-                    <ListView
+                        </Grid>
+                    </Border>
+                </DockPanel>
+            </GroupBox>
+            <GroupBox Header="Waiting and executing Test" Grid.Row="0" Grid.Column="4">
+                <TabControl>
+                    <TabItem Header="Waiting">
+                        <ListView
                       x:Name="WaitingTestList"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
       ItemsSource="{Binding Path=WaitingTestRecords}"
       >
 
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn 
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn 
             Header="Id" 
             DisplayMemberBinding="{Binding Path=Id}" 
             />
-                                <GridViewColumn 
+                                    <GridViewColumn 
             Header="Program" 
             DisplayMemberBinding="{Binding Path=ProgramStr}" 
             />
-                                <GridViewColumn 
+                                    <GridViewColumn 
             Header="Sub Program" 
             DisplayMemberBinding="{Binding Path=SubProgramStr}" 
             />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </TabItem>
-                <TabItem Header="Executing">
-                    <ListView
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </TabItem>
+                    <TabItem Header="Executing">
+                        <ListView
                       x:Name="ExecutingTestList"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
@@ -221,67 +226,78 @@
                       SelectedItem="{Binding Path=SelectedExecutingTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn 
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn 
             Header="Id" 
             DisplayMemberBinding="{Binding Path=Id}" 
             />
-                                <GridViewColumn 
+                                    <GridViewColumn 
             Header="BatteryType" 
             DisplayMemberBinding="{Binding Path=BatteryTypeStr}" 
             />
-                                <GridViewColumn 
+                                    <GridViewColumn 
             Header="Battery" 
             DisplayMemberBinding="{Binding Path=BatteryStr}" 
             />
-                                <GridViewColumn 
+                                    <GridViewColumn 
             Header="Chamber" 
             DisplayMemberBinding="{Binding Path=ChamberStr}" 
             />
-                                <GridViewColumn 
+                                    <GridViewColumn 
             Header="Tester" 
             DisplayMemberBinding="{Binding Path=TesterStr}" 
             />
-                                <GridViewColumn 
+                                    <GridViewColumn 
             Header="Channel" 
             DisplayMemberBinding="{Binding Path=ChannelStr}" 
             />
-                                <GridViewColumn 
+                                    <GridViewColumn 
             Header="StartTime" 
             DisplayMemberBinding="{Binding Path=StartTime}" 
             />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </TabItem>
-            </TabControl>
-        </GroupBox>
-        <GroupBox Header="Statistics" Grid.Row="2" Grid.Column="2">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition Width="5"></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="40*"></RowDefinition>
-                    <RowDefinition Height="5"></RowDefinition>
-                    <RowDefinition Height="20*"></RowDefinition>
-                    <RowDefinition Height="5"></RowDefinition>
-                    <RowDefinition Height="20*"></RowDefinition>
-                    <RowDefinition Height="5"></RowDefinition>
-                    <RowDefinition Height="20*"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Completed Programs</Label>
-                <Label Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="70" FontWeight="Bold" Foreground="Green" Content="{Binding Path=CompletedProgramNumber}"></Label>
-                <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Completed Sub Programs</Label>
-                <Label Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="Green" Content="{Binding Path=CompletedSubProgramNumber}"></Label>
-                <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Completed Test</Label>
-                <Label Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="Green" Content="{Binding Path=CompletedTestNumber}"></Label>
-                <Label Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Collected Raw Data</Label>
-                <Label Grid.Row="6" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="Green" Content="{Binding Path=CollectedRawDataNumber}"></Label>
-            </Grid>
-        </GroupBox>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </TabItem>
+                </TabControl>
+            </GroupBox>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="4"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="Statistics" Grid.Row="2" Grid.Column="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40*"></RowDefinition>
+                        <RowDefinition Height="5"></RowDefinition>
+                        <RowDefinition Height="20*"></RowDefinition>
+                        <RowDefinition Height="5"></RowDefinition>
+                        <RowDefinition Height="20*"></RowDefinition>
+                        <RowDefinition Height="5"></RowDefinition>
+                        <RowDefinition Height="20*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Completed Programs</Label>
+                    <Label Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="70" FontWeight="Bold" Foreground="{StaticResource CompletedBrush}" Content="{Binding Path=CompletedProgramNumber}"></Label>
+                    <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Completed Sub Programs</Label>
+                    <Label Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="{StaticResource CompletedBrush}" Content="{Binding Path=CompletedSubProgramNumber}"></Label>
+                    <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Completed Test</Label>
+                    <Label Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="{StaticResource CompletedBrush}" Content="{Binding Path=CompletedTestNumber}"></Label>
+                    <Label Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Collected Raw Data</Label>
+                    <Label Grid.Row="6" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="{StaticResource CompletedBrush}" Content="{Binding Path=CollectedRawDataNumber}"></Label>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="RC Tables and Evaluation Results" Grid.Column="2">
+                <Label VerticalAlignment="Center" HorizontalAlignment="Center">RC Tables and their evaluation results will be put here</Label>
+            </GroupBox>
+        </Grid>
     </Grid>
 </UserControl>
