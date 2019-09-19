@@ -71,14 +71,14 @@
       HorizontalAlignment="Right"
       Target="{Binding ElementName=RequestDat}" 
       />
-            <xctk:DateTimePicker 
+                <xctk:DateTimePicker 
       x:Name="RequestDat"
       Grid.Row="4" Grid.Column="2"  ShowButtonSpinner="False" ShowDropDownButton="False" TextAlignment="Center"
-      Text="{Binding Path=RequestDate, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+      Text="{Binding Path=RequestDate, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
       Validation.ErrorTemplate="{x:Null}"
       />
 
-            <Label 
+                <Label 
       Grid.Row="6" Grid.Column="0" 
       Content="_Description:" 
       HorizontalAlignment="Right"

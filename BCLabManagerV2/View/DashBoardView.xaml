@@ -14,61 +14,67 @@
         <DataTemplate x:Key="BatteryStackedColumn">
             <DockPanel LastChildFill="True" MinWidth="70">
                 <TextBlock DockPanel.Dock="Bottom" Margin="0,3" HorizontalAlignment="Center">Batteries</TextBlock>
-                <Grid Width="25">
-                    <Grid x:Name="battotalgrid" Background="Beige" VerticalAlignment="Stretch">
+                <Border Width="30" BorderBrush="Black" BorderThickness="1">
+                <Grid>
+                    <Border x:Name="battotalgrid" Background="Beige" VerticalAlignment="Stretch">
                         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=BatteryAmount}"></TextBlock>
-                    </Grid>
-                    <Grid Background="Red" VerticalAlignment="Bottom">
-                        <Grid.Height>
+                    </Border>
+                    <Border Background="Red" VerticalAlignment="Bottom">
+                        <Border.Height>
                             <MultiBinding Converter="{StaticResource hmc}">
                                 <Binding Path="BatteryAmount"></Binding>
                                 <Binding Path="UsingBatteryAmount"></Binding>
                                 <Binding Path="ActualHeight" ElementName="battotalgrid"></Binding>
                             </MultiBinding>
-                        </Grid.Height>
+                        </Border.Height>
                         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=UsingBatteryAmount}" ></TextBlock>
+                    </Border>
                     </Grid>
-                </Grid>
+                </Border>
             </DockPanel>
         </DataTemplate>
         <DataTemplate x:Key="ChamberStackedColumn">
             <DockPanel LastChildFill="True" MinWidth="70">
                 <TextBlock DockPanel.Dock="Bottom" Margin="0,3" HorizontalAlignment="Center">Chambers</TextBlock>
-                <Grid Width="25">
-                    <Grid x:Name="cmbtotalgrid" Background="Beige" VerticalAlignment="Stretch">
-                        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=ChamberAmount}"></TextBlock>
+                <Border Width="30" BorderBrush="Black" BorderThickness="1">
+                    <Grid>
+                        <Grid x:Name="cmbtotalgrid" Background="Beige" VerticalAlignment="Stretch">
+                            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=ChamberAmount}"></TextBlock>
+                        </Grid>
+                        <Grid Background="Red" VerticalAlignment="Bottom">
+                            <Grid.Height>
+                                <MultiBinding Converter="{StaticResource hmc}">
+                                    <Binding Path="ChamberAmount"></Binding>
+                                    <Binding Path="UsingChamberAmount"></Binding>
+                                    <Binding Path="ActualHeight" ElementName="cmbtotalgrid"></Binding>
+                                </MultiBinding>
+                            </Grid.Height>
+                            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=UsingChamberAmount}" ></TextBlock>
+                        </Grid>
                     </Grid>
-                    <Grid Background="Red" VerticalAlignment="Bottom">
-                        <Grid.Height>
-                            <MultiBinding Converter="{StaticResource hmc}">
-                                <Binding Path="ChamberAmount"></Binding>
-                                <Binding Path="UsingChamberAmount"></Binding>
-                                <Binding Path="ActualHeight" ElementName="cmbtotalgrid"></Binding>
-                            </MultiBinding>
-                        </Grid.Height>
-                        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=UsingChamberAmount}" ></TextBlock>
-                    </Grid>
-                </Grid>
+                </Border>
             </DockPanel>
         </DataTemplate>
         <DataTemplate x:Key="ChannelStackedColumn">
             <DockPanel LastChildFill="True" MinWidth="70">
                 <TextBlock DockPanel.Dock="Bottom" Margin="0,3" HorizontalAlignment="Center">TesterChannels</TextBlock>
-                <Grid Width="25">
-                    <Grid x:Name="tstctotalgrid" Background="Beige" VerticalAlignment="Stretch">
-                        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=ChannelAmount}"></TextBlock>
+                <Border Width="30" BorderBrush="Black" BorderThickness="1">
+                    <Grid>
+                        <Grid x:Name="tstctotalgrid" Background="Beige" VerticalAlignment="Stretch">
+                            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=ChannelAmount}"></TextBlock>
+                        </Grid>
+                        <Grid Background="Red" VerticalAlignment="Bottom">
+                            <Grid.Height>
+                                <MultiBinding Converter="{StaticResource hmc}">
+                                    <Binding Path="ChannelAmount"></Binding>
+                                    <Binding Path="UsingChannelAmount"></Binding>
+                                    <Binding Path="ActualHeight" ElementName="tstctotalgrid"></Binding>
+                                </MultiBinding>
+                            </Grid.Height>
+                            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=UsingChannelAmount}" ></TextBlock>
+                        </Grid>
                     </Grid>
-                    <Grid Background="Red" VerticalAlignment="Bottom">
-                        <Grid.Height>
-                            <MultiBinding Converter="{StaticResource hmc}">
-                                <Binding Path="ChannelAmount"></Binding>
-                                <Binding Path="UsingChannelAmount"></Binding>
-                                <Binding Path="ActualHeight" ElementName="tstctotalgrid"></Binding>
-                            </MultiBinding>
-                        </Grid.Height>
-                        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=UsingChannelAmount}" ></TextBlock>
-                    </Grid>
-                </Grid>
+                </Border>
             </DockPanel>
         </DataTemplate>
 
@@ -94,7 +100,7 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <GroupBox Header="Assets Usage" Grid.Column="0" Grid.Row="0">
-            <Grid Margin="20">
+            <Grid Margin="60">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>

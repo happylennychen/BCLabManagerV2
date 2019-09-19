@@ -832,7 +832,8 @@ namespace BCLabManager.ViewModel
             foreach (var filepath in fileList)
             {
                 var rd = new RawDataClass();
-                rd.FileName = Path.GetFileName(filepath);
+                //rd.FileName = Path.GetFileName(filepath);
+                rd.FileName = filepath;
                 //rd.BinaryData = File.ReadAllBytes(filepath);
                 output.Add(rd);
             }
