@@ -234,7 +234,7 @@ namespace BCLabManager.ViewModel
             using (var dbContext = new AppDbContext())
             {
                 var model = dbContext.Chambers.SingleOrDefault(o => o.Id == _selectedItem.Id);
-                if (model.Status == AssetStatusEnum.USING)
+                if (model.AssetUseCount > 0)
                 {
                     MessageBox.Show("Cannot delete using chamber.");
                     return;

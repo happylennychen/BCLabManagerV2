@@ -80,8 +80,8 @@
             DisplayMemberBinding="{Binding Path=Name}" 
             />
                         <GridViewColumn 
-            Header="Status" 
-            DisplayMemberBinding="{Binding Path=Status}" 
+            Header="Use Count" 
+            DisplayMemberBinding="{Binding Path=AssetUseCount}" 
             />
                     </GridView>
                 </ListView.View>

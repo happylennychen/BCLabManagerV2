@@ -7,6 +7,7 @@ using BCLabManager.Model;
 using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
@@ -129,7 +130,7 @@ namespace BCLabManager.ViewModel
                 ObservableCollection<BatteryClass> all = _batteries;
                 List<BatteryClass> allstring = (
                     from i in all
-                    where (i.BatteryType.Id == BatteryType.Id) && i.Status == AssetStatusEnum.IDLE
+                    where (i.BatteryType.Id == BatteryType.Id) && i.AssetUseCount == 0
                     select i).ToList();
 
                 AllBatteries = new ObservableCollection<BatteryClass>(allstring);
@@ -199,6 +200,8 @@ namespace BCLabManager.ViewModel
                 _chamber = value;
 
                 base.OnPropertyChanged("Chamber");
+                if (_chamber.AssetUseCount > 0)
+                    MessageBox.Show("Please note that this one is in use by another test");
             }
         }
 
@@ -209,7 +212,7 @@ namespace BCLabManager.ViewModel
                 ObservableCollection<ChamberClass> all = _chambers;
                 List<ChamberClass> allstring = (
                     from i in all
-                    where i.Status == AssetStatusEnum.IDLE
+                    //where i.Status == AssetStatusEnum.IDLE    //正在使用的chamber也可能被选来使用
                     select i).ToList();
 
                 return new ObservableCollection<ChamberClass>(allstring);
@@ -237,7 +240,7 @@ namespace BCLabManager.ViewModel
                 ObservableCollection<ChannelClass> all = _channels;
                 List<ChannelClass> allstring = (
                     from i in all
-                    where (i.Tester.Id == Tester.Id) && i.Status == AssetStatusEnum.IDLE
+                    where (i.Tester.Id == Tester.Id) && i.AssetUseCount == 0
                     select i).ToList();
 
                 AllChannels = new ObservableCollection<ChannelClass>(allstring);

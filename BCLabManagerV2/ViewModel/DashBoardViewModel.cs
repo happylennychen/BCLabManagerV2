@@ -217,7 +217,7 @@ namespace BCLabManager.ViewModel
             get
             {
                 return (from bat in _batteries
-                        where bat.Status == AssetStatusEnum.USING
+                        where bat.AssetUseCount > 0
                         select bat).Count();
             }
         }
@@ -237,7 +237,7 @@ namespace BCLabManager.ViewModel
             get
             {
                 return (from cmb in _chambers
-                        where cmb.Status == AssetStatusEnum.USING
+                        where cmb.AssetUseCount > 0
                         select cmb).Count();
             }
         }
@@ -260,7 +260,7 @@ namespace BCLabManager.ViewModel
             get
             {
                 return (from channel in _channels
-                        where channel.Status == AssetStatusEnum.USING
+                        where channel.AssetUseCount > 0
                         select channel).Count();
             }
         }

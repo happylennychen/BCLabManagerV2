@@ -92,17 +92,17 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public AssetStatusEnum Status
+        public int AssetUseCount
         {
-            get { return _battery.Status; }
+            get { return _battery.AssetUseCount; }
             set
             {
-                if (value == _battery.Status)
+                if (value == _battery.AssetUseCount)
                     return;
 
-                _battery.Status = value;
+                _battery.AssetUseCount = value;
 
-                base.OnPropertyChanged("Status");
+                base.OnPropertyChanged("AssetUseCount");
             }
         }
 

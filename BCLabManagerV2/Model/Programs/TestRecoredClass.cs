@@ -106,15 +106,15 @@ namespace BCLabManager.Model
             AssignedChamber = chamber;
             AssignedChannel = channel;
 
-            battery.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
-            battery.Status = AssetStatusEnum.USING;
+            battery.AssetUseCount++;
+            battery.Records.Add(new AssetUsageRecordClass(startTime, battery.AssetUseCount, programName, subProgramName));
             if (chamber != null)
             {
-                chamber.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
-                chamber.Status = AssetStatusEnum.USING;
+                chamber.AssetUseCount++;
+                chamber.Records.Add(new AssetUsageRecordClass(startTime, chamber.AssetUseCount, programName, subProgramName));
             }
-            channel.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
-            channel.Status = AssetStatusEnum.USING;
+            channel.AssetUseCount++;
+            channel.Records.Add(new AssetUsageRecordClass(startTime, channel.AssetUseCount, programName, subProgramName));
 
             using (var dbContext = new AppDbContext())
             {
@@ -123,8 +123,8 @@ namespace BCLabManager.Model
                     .Collection(o => o.Records)
                     .Load();
 
-                dbAssignedBattery.Status = AssetStatusEnum.USING;
-                dbAssignedBattery.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
+                dbAssignedBattery.AssetUseCount++;
+                dbAssignedBattery.Records.Add(new AssetUsageRecordClass(startTime, dbAssignedBattery.AssetUseCount, programName, subProgramName));
 
                 if (chamber != null)
                 {
@@ -132,16 +132,16 @@ namespace BCLabManager.Model
                     dbContext.Entry(dbAssignedChamber)
                         .Collection(o => o.Records)
                         .Load();
-                    dbAssignedChamber.Status = AssetStatusEnum.USING;
-                    dbAssignedChamber.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
+                    dbAssignedChamber.AssetUseCount++;
+                    dbAssignedChamber.Records.Add(new AssetUsageRecordClass(startTime, dbAssignedChamber.AssetUseCount, programName, subProgramName));
                 }
                 var dbAssignedChannel = dbContext.Channels.SingleOrDefault(o => o.Id == channel.Id);
                 dbContext.Entry(dbAssignedChannel)
                     .Collection(o => o.Records)
                     .Load();
 
-                dbAssignedChannel.Status = AssetStatusEnum.USING;
-                dbAssignedChannel.Records.Add(new AssetUsageRecordClass(startTime, AssetStatusEnum.USING, programName, subProgramName));
+                dbAssignedChannel.AssetUseCount++;
+                dbAssignedChannel.Records.Add(new AssetUsageRecordClass(startTime, dbAssignedChannel.AssetUseCount, programName, subProgramName));
 
                 dbContext.SaveChanges();
             }
@@ -160,15 +160,15 @@ namespace BCLabManager.Model
 
         public void AssetsCommit(DateTime endTime, RawDataClass rawData, Double newCycle, String comment = "")  //Need to check the Executor Status to make sure it is executing
         {
-            AssignedBattery.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
-            AssignedBattery.Status = AssetStatusEnum.IDLE;
+            AssignedBattery.AssetUseCount--;
+            AssignedBattery.Records.Add(new AssetUsageRecordClass(endTime, AssignedBattery.AssetUseCount, "", ""));
             if (AssignedChamber != null)
             {
-                AssignedChamber.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
-                AssignedChamber.Status = AssetStatusEnum.IDLE;
+                AssignedChamber.AssetUseCount--;
+                AssignedChamber.Records.Add(new AssetUsageRecordClass(endTime, AssignedChamber.AssetUseCount, "", ""));
             }
-            AssignedChannel.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
-            AssignedChannel.Status = AssetStatusEnum.IDLE;
+            AssignedChannel.AssetUseCount--;
+            AssignedChannel.Records.Add(new AssetUsageRecordClass(endTime, AssignedChannel.AssetUseCount, "", ""));
 
             using (var dbContext = new AppDbContext())
             {
@@ -177,8 +177,8 @@ namespace BCLabManager.Model
                     .Collection(o => o.Records)
                     .Load();
 
-                dbAssignedBattery.Status = AssetStatusEnum.IDLE;
-                dbAssignedBattery.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+                dbAssignedBattery.AssetUseCount--;
+                dbAssignedBattery.Records.Add(new AssetUsageRecordClass(endTime, dbAssignedBattery.AssetUseCount, "", ""));
 
                 if (AssignedChamber != null)
                 {
@@ -186,16 +186,16 @@ namespace BCLabManager.Model
                     dbContext.Entry(dbAssignedChamber)
                         .Collection(o => o.Records)
                         .Load();
-                    dbAssignedChamber.Status = AssetStatusEnum.IDLE;
-                    dbAssignedChamber.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+                    dbAssignedChamber.AssetUseCount--;
+                    dbAssignedChamber.Records.Add(new AssetUsageRecordClass(endTime, dbAssignedChamber.AssetUseCount, "", ""));
                 }
                 var dbAssignedChannel = dbContext.Channels.SingleOrDefault(o => o.Id == AssignedChannel.Id);
                 dbContext.Entry(dbAssignedChannel)
                     .Collection(o => o.Records)
                     .Load();
 
-                dbAssignedChannel.Status = AssetStatusEnum.IDLE;
-                dbAssignedChannel.Records.Add(new AssetUsageRecordClass(endTime, AssetStatusEnum.IDLE, "", ""));
+                dbAssignedChannel.AssetUseCount--;
+                dbAssignedChannel.Records.Add(new AssetUsageRecordClass(endTime, dbAssignedChannel.AssetUseCount, "", ""));
 
                 dbContext.SaveChanges();
             }

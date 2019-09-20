@@ -186,7 +186,7 @@ namespace BCLabManager.ViewModel
             ChannelEditViewModel evm = new ChannelEditViewModel(m, _testers);      //实例化一个新的view model
             evm.Name = _selectedItem.Name;
             evm.Tester = evm.AllTesters.SingleOrDefault(i => i.Id == _selectedItem.Tester.Id);   //所以改用Id来找到List里的item
-            evm.Status = _selectedItem.Status;
+            evm.AssetUseCount = _selectedItem.AssetUseCount;
             evm.DisplayName = "Channel-Edit";
             evm.commandType = CommandType.Edit;
             var ChannelViewInstance = new ChannelView();      //实例化一个新的view
@@ -217,7 +217,7 @@ namespace BCLabManager.ViewModel
             evm.Name = _selectedItem.Name;
             //evm.Tester = _selectedItem.Tester;
             evm.Tester = evm.AllTesters.SingleOrDefault(i => i.Id == _selectedItem.Tester.Id);   //所以改用Id来找到List里的item
-            evm.Status = _selectedItem.Status;
+            evm.AssetUseCount = _selectedItem.AssetUseCount;
             evm.DisplayName = "Channel-Save As";
             evm.commandType = CommandType.SaveAs;
             var ChannelViewInstance = new ChannelView();      //实例化一个新的view
@@ -250,7 +250,7 @@ namespace BCLabManager.ViewModel
             using (var dbContext = new AppDbContext())
             {
                 var model = dbContext.Channels.SingleOrDefault(o => o.Id == _selectedItem.Id);
-                if (model.Status == AssetStatusEnum.USING)
+                if (model.AssetUseCount > 0)
                 {
                     MessageBox.Show("Cannot delete using battery.");
                     return;

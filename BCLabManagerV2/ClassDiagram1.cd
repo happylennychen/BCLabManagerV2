@@ -158,7 +158,7 @@
       <Property Name="SubPrograms" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Enum Name="BCLabManager.Model.AssetStatusEnum">
+  <Enum Name="BCLabManager.Model.int">
     <Position X="4.75" Y="1" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>

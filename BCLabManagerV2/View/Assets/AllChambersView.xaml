@@ -65,8 +65,8 @@
             DisplayMemberBinding="{Binding Path=HighTemp}" 
             />
                             <GridViewColumn 
-            Header="Status" 
-            DisplayMemberBinding="{Binding Path=Status}" 
+            Header="Use Count" 
+            DisplayMemberBinding="{Binding Path=AssetUseCount}" 
             />
                         </GridView>
                     </ListView.View>
@@ -87,8 +87,8 @@
             DisplayMemberBinding="{Binding Path=Id}" 
             />
                         <GridViewColumn 
-            Header="Status" 
-            DisplayMemberBinding="{Binding Path=Status}" 
+            Header="Use Count" 
+            DisplayMemberBinding="{Binding Path=AssetUseCount}" 
             />
                         <GridViewColumn 
             Header="Program" 

@@ -85,11 +85,11 @@ namespace BCLabManager.ViewModel
                 return _record.Id;
             }
         }
-        public String Status
+        public String AssetUseCount
         {
             get
             {
-                return _record.Status.ToString();
+                return _record.AssetUseCount.ToString();
             }
         }
 

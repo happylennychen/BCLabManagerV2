@@ -52,7 +52,7 @@ namespace BCLabManager
                         Name = $"BLP663-{i + 1}",
                         BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663"),
                         CycleCount = 0,
-                        Status = AssetStatusEnum.IDLE
+                        AssetUseCount = 0
                     };
                     dbContext.Batteries.Add(bc);
                 }
@@ -84,7 +84,7 @@ namespace BCLabManager
                     {
                         Name = $"Channel-{i + 1}",
                         Tester = dbContext.Testers.SingleOrDefault(o => o.Name == "17200"),
-                        Status = AssetStatusEnum.IDLE
+                        AssetUseCount = 0
                     };
                     dbContext.Channels.Add(chc);
                 }

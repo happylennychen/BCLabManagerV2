@@ -250,6 +250,10 @@
     <Compile Include="Migrations\20190917074448_Init.designer.cs">
       <DependentUpon>20190917074448_Init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20190920065849_ReplaceStatusWithUseCount.cs" />
+    <Compile Include="Migrations\20190920065849_ReplaceStatusWithUseCount.designer.cs">
+      <DependentUpon>20190920065849_ReplaceStatusWithUseCount.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Model\Assets\BatteryClass.cs" />
     <Compile Include="Model\Assets\BatteryTypeClass.cs" />

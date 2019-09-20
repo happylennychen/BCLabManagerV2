@@ -73,17 +73,17 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public AssetStatusEnum Status
+        public int AssetUseCount
         {
-            get { return _channel.Status; }
+            get { return _channel.AssetUseCount; }
             set
             {
-                if (value == _channel.Status)
+                if (value == _channel.AssetUseCount)
                     return;
 
-                _channel.Status = value;
+                _channel.AssetUseCount = value;
 
-                base.OnPropertyChanged("Status");
+                base.OnPropertyChanged("AssetUseCount");
             }
         }
         public TesterClass Tester

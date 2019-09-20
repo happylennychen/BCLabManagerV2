@@ -185,7 +185,7 @@ namespace BCLabManager.ViewModel
             //bevm.BatteryType = _selectedItem.BatteryType;     //不能用这种方式，猜是因为传来传去之后，_selectedItem.BatteryType已经不是bevm.AllBatteryTypes的一员了
             bevm.BatteryType = bevm.AllBatteryTypes.SingleOrDefault(i=>i.Id == _selectedItem.BatteryType.Id);   //所以改用Id来找到List里的item
             bevm.CycleCount = _selectedItem.CycleCount;
-            bevm.Status = _selectedItem.Status;
+            bevm.AssetUseCount = _selectedItem.AssetUseCount;
             bevm.DisplayName = "Battery-Edit";
             bevm.commandType = CommandType.Edit;
             var BatteryViewInstance = new BatteryView();      //实例化一个新的view
@@ -218,7 +218,7 @@ namespace BCLabManager.ViewModel
             bevm.Name = _selectedItem.Name;
             bevm.BatteryType = bevm.AllBatteryTypes.SingleOrDefault(i => i.Id == _selectedItem.BatteryType.Id);
             bevm.CycleCount = _selectedItem.CycleCount;
-            bevm.Status = _selectedItem.Status;
+            bevm.AssetUseCount = _selectedItem.AssetUseCount;
             bevm.DisplayName = "Battery-Edit";
             bevm.commandType = CommandType.SaveAs;
             var BatteryViewInstance = new BatteryView();      //实例化一个新的view
@@ -252,7 +252,7 @@ namespace BCLabManager.ViewModel
             using (var dbContext = new AppDbContext())
             {
                 var model = dbContext.Batteries.SingleOrDefault(o => o.Id == _selectedItem.Id);
-                if (model.Status == AssetStatusEnum.USING)
+                if (model.AssetUseCount > 0)
                 {
                     MessageBox.Show("Cannot delete using battery.");
                     return;
