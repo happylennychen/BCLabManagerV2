@@ -28,6 +28,18 @@ namespace BCLabManager.ViewModel
             this.CreateTestRecords();
             _subprogram.TestRecordAdded += _subprogram_TestRecordAdded;
             //_subprogram.PropertyChanged += _subprogram_PropertyChanged;
+            var trlist = GetAllTestRecords(subprogram);
+            foreach (var tr in trlist)
+                tr.StatusChanged += Tr_StatusChanged;
+        }
+
+        private void Tr_StatusChanged(object sender, StatusChangedEventArgs e)
+        {
+            OnPropertyChanged("WaitingPercentage");
+            OnPropertyChanged("ExecutingPercentage");
+            OnPropertyChanged("CompletedPercentage");
+            OnPropertyChanged("InvalidPercentage");
+            OnPropertyChanged("AbandonedPercentage");
         }
 
         //private void _subprogram_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -99,6 +111,59 @@ namespace BCLabManager.ViewModel
             {
                 return $"{_subprogram.ChargeTemperature.Name} {_subprogram.ChargeCurrent} charge, {_subprogram.DischargeTemperature} {_subprogram.DischargeCurrent} discharge";
             }
+        }
+        #region Presentation logic
+        public string WaitingPercentage
+        {
+            get
+            {
+                List<TestRecordClass> alltr = GetAllTestRecords(_subprogram);
+                return ((double)alltr.Count(o => o.Status == TestStatus.Waiting) / (double)alltr.Count).ToString() + "*";
+            }
+        }
+
+        public string ExecutingPercentage
+        {
+            get
+            {
+                List<TestRecordClass> alltr = GetAllTestRecords(_subprogram);
+                return ((double)alltr.Count(o => o.Status == TestStatus.Executing) / (double)alltr.Count).ToString() + "*";
+            }
+        }
+        public string CompletedPercentage
+        {
+            get
+            {
+                List<TestRecordClass> alltr = GetAllTestRecords(_subprogram);
+                return ((double)alltr.Count(o => o.Status == TestStatus.Completed) / (double)alltr.Count).ToString() + "*";
+            }
+        }
+        public string InvalidPercentage
+        {
+            get
+            {
+                List<TestRecordClass> alltr = GetAllTestRecords(_subprogram);
+                return ((double)alltr.Count(o => o.Status == TestStatus.Invalid) / (double)alltr.Count).ToString() + "*";
+            }
+        }
+        public string AbandonedPercentage
+        {
+            get
+            {
+                List<TestRecordClass> alltr = GetAllTestRecords(_subprogram);
+                return ((double)alltr.Count(o => o.Status == TestStatus.Abandoned) / (double)alltr.Count).ToString() + "*";
+            }
+        }
+        #endregion
+
+        private List<TestRecordClass> GetAllTestRecords(SubProgramClass sub)
+        {
+            List<TestRecordClass> output = new List<TestRecordClass>();
+            foreach (var tr in sub.FirstTestRecords)
+                output.Add(tr);
+            foreach (var tr in sub.SecondTestRecords)
+                output.Add(tr);
+            return output;
         }
 
         public TestCountEnum TestCount

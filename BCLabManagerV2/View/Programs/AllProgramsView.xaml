@@ -20,14 +20,14 @@
       -->
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
-            <Style.Triggers>
+            <!--<Style.Triggers>
                 <DataTrigger Binding="{Binding Path=IsAbandoned, UpdateSourceTrigger=PropertyChanged}" Value="True">
                     <Setter Property="Background" Value="{StaticResource AbandonedBrush}"></Setter>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Path=Status, UpdateSourceTrigger=PropertyChanged}" Value="4">
                     <Setter Property="Background" Value="{StaticResource AbandonedBrush}"></Setter>
                 </DataTrigger>
-            </Style.Triggers>
+            </Style.Triggers>-->
         </Style>
 
         <CollectionViewSource x:Key="programsCollectionViewSource" Source="{Binding Path=AllPrograms}">
@@ -55,7 +55,7 @@
         </CollectionViewSource>
 
         <DataTemplate x:Key="ProgressBar">
-            <Grid MinWidth="100">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="{Binding Path=AbandonedPercentage}"/>
                     <ColumnDefinition Width="{Binding Path=InvalidPercentage}"/>
@@ -117,7 +117,7 @@
             Header="Request Date" 
             DisplayMemberBinding="{Binding Path=RequestDate}" 
             />
-                            <GridViewColumn
+                            <GridViewColumn Width="100"
             Header="Progress"
                                 CellTemplate="{StaticResource ProgressBar}"
             />
@@ -157,6 +157,10 @@
             Header="Name" 
             DisplayMemberBinding="{Binding Path=Name}" 
             />
+                            <GridViewColumn
+            Header="Progress"
+                                CellTemplate="{StaticResource ProgressBar}"
+            />
                         </GridView>
                 </ListView.View>
             </ListView>
@@ -187,6 +191,10 @@
                             <GridViewColumn 
             Header="Status" 
             DisplayMemberBinding="{Binding Path=Status}" 
+            />
+                            <GridViewColumn Width="40"
+            Header=""
+                                CellTemplate="{StaticResource ProgressBar}"
             />
                             <GridViewColumn 
             Header="BatteryType" 
@@ -250,6 +258,10 @@
                             <GridViewColumn 
             Header="Status" 
             DisplayMemberBinding="{Binding Path=Status}" 
+            />
+                            <GridViewColumn Width="40"
+            Header=""
+                                CellTemplate="{StaticResource ProgressBar}"
             />
                             <GridViewColumn 
             Header="BatteryType" 

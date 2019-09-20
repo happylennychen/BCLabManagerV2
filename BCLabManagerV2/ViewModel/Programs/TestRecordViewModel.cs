@@ -35,6 +35,16 @@ namespace BCLabManager.ViewModel
         {
             _record = record;
             _record.PropertyChanged += _record_PropertyChanged;
+            _record.StatusChanged += _record_StatusChanged;
+        }
+
+        private void _record_StatusChanged(object sender, StatusChangedEventArgs e)
+        {
+            OnPropertyChanged("WaitingPercentage");
+            OnPropertyChanged("ExecutingPercentage");
+            OnPropertyChanged("CompletedPercentage");
+            OnPropertyChanged("InvalidPercentage");
+            OnPropertyChanged("AbandonedPercentage");
         }
 
         private void _record_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -260,7 +270,59 @@ namespace BCLabManager.ViewModel
         }
         #endregion // Presentation Properties
 
+        #region Presentation logic
+        public string WaitingPercentage
+        {
+            get
+            {
+                if (_record.Status == TestStatus.Waiting)
+                    return "1*";
+                else
+                    return "0*";
+            }
+        }
 
+        public string ExecutingPercentage
+        {
+            get
+            {
+                if (_record.Status == TestStatus.Executing)
+                    return "1*";
+                else
+                    return "0*";
+            }
+        }
+        public string CompletedPercentage
+        {
+            get
+            {
+                if (_record.Status == TestStatus.Completed)
+                    return "1*";
+                else
+                    return "0*";
+            }
+        }
+        public string InvalidPercentage
+        {
+            get
+            {
+                if (_record.Status == TestStatus.Invalid)
+                    return "1*";
+                else
+                    return "0*";
+            }
+        }
+        public string AbandonedPercentage
+        {
+            get
+            {
+                if (_record.Status == TestStatus.Abandoned)
+                    return "1*";
+                else
+                    return "0*";
+            }
+        }
+        #endregion
         #region Public Interface
         public void ExecuteOnAssets(BatteryClass battery, ChamberClass chamber, ChannelClass channel, string proname, string subproname)
         {
