@@ -23,7 +23,7 @@
       Target="{Binding ElementName=CommentTxt}" 
       />
             <TextBox 
-      x:Name="CommentTxt"
+      x:Name="CommentTxt" AcceptsReturn="True"
       Grid.Row="0" Grid.Column="2" 
       Text="{Binding Path=Comment, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
       Validation.ErrorTemplate="{x:Null}"

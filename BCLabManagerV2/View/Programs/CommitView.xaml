@@ -59,7 +59,7 @@
             <TextBox 
       x:Name="NewCycleTxt"
       Grid.Row="4" Grid.Column="2" 
-      Text="{Binding Path=NewCycle, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+      Text="{Binding Path=NewCycle, ValidatesOnDataErrors=True, UpdateSourceTrigger=LostFocus}" 
       Validation.ErrorTemplate="{x:Null}"
       />
             <Label 
@@ -69,7 +69,7 @@
       Target="{Binding ElementName=CommentTxt}" 
       />
             <TextBox 
-      x:Name="CommentTxt"
+      x:Name="CommentTxt" AcceptsReturn="True"
       Grid.Row="6" Grid.RowSpan="2" Grid.Column="2" 
       Text="{Binding Path=Comment, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
       Validation.ErrorTemplate="{x:Null}"

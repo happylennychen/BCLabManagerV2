@@ -185,6 +185,14 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public TimeSpan Duration
+        {
+            get
+            {
+                return EndTime - StartTime;
+            }
+        }
+
         public string ProgramStr
         {
             get

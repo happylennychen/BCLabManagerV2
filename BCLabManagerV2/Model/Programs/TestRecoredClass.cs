@@ -158,8 +158,9 @@ namespace BCLabManager.Model
             //this.SubProgramStr = subProgramName;
         }
 
-        public void AssetsCommit(DateTime endTime, RawDataClass rawData, Double newCycle, String comment = "")  //Need to check the Executor Status to make sure it is executing
+        public void AssetsCommit(DateTime endTime, RawDataClass rawData, double newCycle, string comment = "")  //Need to check the Executor Status to make sure it is executing
         {
+            AssignedBattery.CycleCount += newCycle;
             AssignedBattery.AssetUseCount--;
             AssignedBattery.Records.Add(new AssetUsageRecordClass(endTime, AssignedBattery.AssetUseCount, "", ""));
             if (AssignedChamber != null)
@@ -176,7 +177,7 @@ namespace BCLabManager.Model
                 dbContext.Entry(dbAssignedBattery)
                     .Collection(o => o.Records)
                     .Load();
-
+                dbAssignedBattery.CycleCount += newCycle;
                 dbAssignedBattery.AssetUseCount--;
                 dbAssignedBattery.Records.Add(new AssetUsageRecordClass(endTime, dbAssignedBattery.AssetUseCount, "", ""));
 

@@ -85,7 +85,7 @@
       Target="{Binding ElementName=DescriptionTxt}" 
       />
             <TextBox 
-      x:Name="DescriptionTxt"
+      x:Name="DescriptionTxt" AcceptsReturn="True"
       Grid.Row="6" Grid.RowSpan="2" Grid.Column="2" 
       Text="{Binding Path=Description, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
       Validation.ErrorTemplate="{x:Null}"

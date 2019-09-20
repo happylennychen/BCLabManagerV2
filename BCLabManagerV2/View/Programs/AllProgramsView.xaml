@@ -20,6 +20,7 @@
       -->
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="ToolTip" Value="{Binding Path=Description}"></Setter>
             <!--<Style.Triggers>
                 <DataTrigger Binding="{Binding Path=IsAbandoned, UpdateSourceTrigger=PropertyChanged}" Value="True">
                     <Setter Property="Background" Value="{StaticResource AbandonedBrush}"></Setter>
@@ -38,19 +39,19 @@
 
         <CollectionViewSource x:Key="subsCollectionViewSource" Source="{Binding Path=SubPrograms}">
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="Id" Direction="Descending"></scm:SortDescription>
+                <scm:SortDescription PropertyName="Id" Direction="Ascending"></scm:SortDescription>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
 
         <CollectionViewSource x:Key="ftrsCollectionViewSource" Source="{Binding Path=FirstTestRecords}">
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="Id" Direction="Descending"></scm:SortDescription>
+                <scm:SortDescription PropertyName="Id" Direction="Ascending"></scm:SortDescription>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
 
         <CollectionViewSource x:Key="strsCollectionViewSource" Source="{Binding Path=SecondTestRecords}">
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="Id" Direction="Descending"></scm:SortDescription>
+                <scm:SortDescription PropertyName="Id" Direction="Ascending"></scm:SortDescription>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
 
@@ -125,10 +126,10 @@
             Header="Complete Date" 
             DisplayMemberBinding="{Binding Path=CompleteDate}" 
             />
-                            <GridViewColumn 
+                            <!--<GridViewColumn 
             Header="Description" 
             DisplayMemberBinding="{Binding Path=Description}" 
-            />
+            />-->
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -225,9 +226,17 @@
             DisplayMemberBinding="{Binding Path=EndTime}" 
             />
                             <GridViewColumn 
+            Header="Duration" 
+            DisplayMemberBinding="{Binding Path=Duration}" 
+            />
+                            <GridViewColumn 
+            Header="New Cycle" 
+            DisplayMemberBinding="{Binding Path=NewCycle}" 
+            />
+                            <!--<GridViewColumn 
             Header="Comment" 
             DisplayMemberBinding="{Binding Path=Comment}" 
-            />
+            />-->
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -292,9 +301,17 @@
             DisplayMemberBinding="{Binding Path=EndTime}" 
             />
                             <GridViewColumn 
+            Header="Duration" 
+            DisplayMemberBinding="{Binding Path=Duration}" 
+            />
+                            <GridViewColumn 
+            Header="New Cycle" 
+            DisplayMemberBinding="{Binding Path=NewCycle}" 
+            />
+                            <!--<GridViewColumn 
             Header="Comment" 
             DisplayMemberBinding="{Binding Path=Comment}" 
-            />
+            />-->
                         </GridView>
                     </ListView.View>
                 </ListView>

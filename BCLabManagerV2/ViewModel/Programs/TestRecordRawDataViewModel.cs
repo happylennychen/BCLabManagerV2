@@ -44,6 +44,22 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public string Steps
+        {
+            get
+            {
+                return _record.Steps;
+            }
+        }
+
+        public string Comment
+        {
+            get
+            {
+                return _record.Comment;
+            }
+        }
+
         #endregion // Presentation Properties
     }
 }
