@@ -19,6 +19,7 @@
       right-align text in the Total Sales column. 
       -->
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Path=IsAbandoned, UpdateSourceTrigger=PropertyChanged}" Value="True">
                     <Setter Property="Background" Value="{StaticResource AbandonedBrush}"></Setter>
@@ -52,6 +53,23 @@
                 <scm:SortDescription PropertyName="Id" Direction="Descending"></scm:SortDescription>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
+
+        <DataTemplate x:Key="ProgressBar">
+            <Grid MinWidth="100">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{Binding Path=AbandonedPercentage}"/>
+                    <ColumnDefinition Width="{Binding Path=InvalidPercentage}"/>
+                    <ColumnDefinition Width="{Binding Path=CompletedPercentage}"/>
+                    <ColumnDefinition Width="{Binding Path=ExecutingPercentage}"/>
+                    <ColumnDefinition Width="{Binding Path=WaitingPercentage}"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle Grid.Column="0" Fill="{StaticResource AbandonedBrush}" StrokeThickness="1"></Rectangle>
+                <Rectangle Grid.Column="1" Fill="{StaticResource InvalidBrush}" StrokeThickness="1"></Rectangle>
+                <Rectangle Grid.Column="2" Fill="{StaticResource CompletedBrush}" StrokeThickness="1"></Rectangle>
+                <Rectangle Grid.Column="3" Fill="{StaticResource ExecutingBrush}" StrokeThickness="1"></Rectangle>
+                <Rectangle Grid.Column="4" Fill="{StaticResource WaitingBrush}" StrokeThickness="1"></Rectangle>
+            </Grid>
+        </DataTemplate>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -75,7 +93,7 @@
                 </StackPanel>
                 <ListView Grid.Row="1"
                       x:Name="Programlist"
-      AlternationCount="2" 
+      AlternationCount="2"
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
       ItemsSource="{Binding Source={StaticResource programsCollectionViewSource}}"
                       SelectedItem="{Binding Path=SelectedProgram, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
@@ -98,6 +116,10 @@
                             <GridViewColumn 
             Header="Request Date" 
             DisplayMemberBinding="{Binding Path=RequestDate}" 
+            />
+                            <GridViewColumn
+            Header="Progress"
+                                CellTemplate="{StaticResource ProgressBar}"
             />
                             <GridViewColumn 
             Header="Complete Date" 
