@@ -189,6 +189,8 @@ namespace BCLabManager.ViewModel
         {
             get
             {
+                if (EndTime == DateTime.MinValue)
+                    return TimeSpan.Zero;
                 return EndTime - StartTime;
             }
         }

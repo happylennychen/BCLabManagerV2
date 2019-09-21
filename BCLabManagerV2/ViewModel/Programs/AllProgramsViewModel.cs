@@ -671,7 +671,7 @@ namespace BCLabManager.ViewModel
         }
         private bool CanView
         {
-            get { return _selectedFirstTestRecord != null && (_selectedFirstTestRecord.Status == TestStatus.Completed || _selectedFirstTestRecord.Status == TestStatus.Invalid); }
+            get { return _selectedFirstTestRecord != null && (_selectedFirstTestRecord.Record.RawDataList.Count!=0); }
         }
         private void Execute2()
         {
@@ -703,7 +703,7 @@ namespace BCLabManager.ViewModel
         }
         private bool CanView2
         {
-            get { return _selectedSecondTestRecord != null && (_selectedSecondTestRecord.Status == TestStatus.Completed || _selectedSecondTestRecord.Status == TestStatus.Invalid); }
+            get { return _selectedSecondTestRecord != null && (_selectedSecondTestRecord.Record.RawDataList.Count != 0); }
         }
         #endregion //Private Helper
         #region  Base Class Overrides
@@ -841,17 +841,14 @@ namespace BCLabManager.ViewModel
         }
         private void Invalidate(TestRecordViewModel testRecord)
         {
-            TestRecordInvalidateViewModel evm = new TestRecordInvalidateViewModel
-                (
-                testRecord.Record      //??????????????????????????
-                );
+            TestRecordInvalidateViewModel evm = new TestRecordInvalidateViewModel();
             evm.DisplayName = "Test-Invalidate";
             var TestRecordInvalidateViewInstance = new InvalidateView();
             TestRecordInvalidateViewInstance.DataContext = evm;
             TestRecordInvalidateViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                testRecord.Comment = evm.Comment;
+                testRecord.Comment += "\r\n" + evm.Comment;
                 testRecord.Status = TestStatus.Invalid;
 
                 using (var dbContext = new AppDbContext())

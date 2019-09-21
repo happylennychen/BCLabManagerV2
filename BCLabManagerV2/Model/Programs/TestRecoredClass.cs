@@ -92,7 +92,8 @@ namespace BCLabManager.Model
             this.ChamberStr = String.Empty;
             this.ProgramStr = String.Empty;
             this.SubProgramStr = String.Empty;
-            //this.StartTime = ??;
+            this.StartTime = DateTime.MinValue;
+            this.EndTime = DateTime.MinValue;
             this.Steps = String.Empty;
             this.Comment = String.Empty;
             //this.RawData = ??
@@ -214,7 +215,7 @@ namespace BCLabManager.Model
         public void Invalidate(String comment = "")
         {
             this.Status = TestStatus.Invalid;
-            this.Comment += "\n" + comment;
+            this.Comment = comment;
         }
     }
     public class TestRecordAddedEventArgs : EventArgs
