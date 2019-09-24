@@ -111,6 +111,10 @@
             DisplayMemberBinding="{Binding Path=Name}" 
             />
                             <GridViewColumn 
+            Header="Battery Type" 
+            DisplayMemberBinding="{Binding Path=BatteryType}" 
+            />
+                            <GridViewColumn 
             Header="Requester" 
             DisplayMemberBinding="{Binding Path=Requester}" 
             />

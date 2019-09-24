@@ -18,12 +18,6 @@ namespace BCLabManager.ViewModel
         #region Fields
 
         public ProgramClass _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
-        SubProgramTemplateViewModel _leftselectedSubProgram;
-        SubProgramViewModel _rightselectedSubProgram;
-        RelayCommand _okCommand;
-        RelayCommand _addCommand;
-        RelayCommand _removeCommand;
-        bool _isOK;
 
         #endregion // Fields
 
@@ -98,6 +92,20 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public BatteryTypeClass BatteryType
+        {
+            get { return _program.BatteryType; }
+            set
+            {
+                if (value == _program.BatteryType)
+                    return;
+
+                _program.BatteryType = value;
+
+                base.OnPropertyChanged("BatteryType");
+            }
+        }
+
         public string Requester
         {
             get { return _program.Requester; }
@@ -141,7 +149,6 @@ namespace BCLabManager.ViewModel
         }
 
         public ObservableCollection<SubProgramViewModel> SubPrograms { get; set; }        //这个是当前program所拥有的subprograms
-
         #endregion // Customer Properties
         #region Presentation logic
         public string WaitingPercentage

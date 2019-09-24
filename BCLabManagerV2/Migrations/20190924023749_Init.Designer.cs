@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20190917074448_Init")]
+    [Migration("20190924023749_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,8 @@ namespace BCLabManager.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("AssetUseCount");
+
                     b.Property<int?>("BatteryClassId");
 
                     b.Property<int?>("ChamberClassId");
@@ -30,8 +32,6 @@ namespace BCLabManager.Migrations
                     b.Property<int?>("ChannelClassId");
 
                     b.Property<string>("ProgramName");
-
-                    b.Property<int>("Status");
 
                     b.Property<string>("SubProgramName");
 
@@ -53,13 +53,13 @@ namespace BCLabManager.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("AssetUseCount");
+
                     b.Property<int?>("BatteryTypeId");
 
                     b.Property<double>("CycleCount");
 
                     b.Property<string>("Name");
-
-                    b.Property<int>("Status");
 
                     b.HasKey("Id");
 
@@ -99,6 +99,8 @@ namespace BCLabManager.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("AssetUseCount");
+
                     b.Property<double>("HighestTemperature");
 
                     b.Property<double>("LowestTemperature");
@@ -106,8 +108,6 @@ namespace BCLabManager.Migrations
                     b.Property<string>("Manufactor");
 
                     b.Property<string>("Name");
-
-                    b.Property<int>("Status");
 
                     b.HasKey("Id");
 
@@ -119,9 +119,9 @@ namespace BCLabManager.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<int>("AssetUseCount");
 
-                    b.Property<int>("Status");
+                    b.Property<string>("Name");
 
                     b.Property<int?>("TesterId");
 
@@ -180,10 +180,36 @@ namespace BCLabManager.Migrations
                     b.ToTable("DischargeTemperatures");
                 });
 
+            modelBuilder.Entity("BCLabManager.Model.EstimateTimeRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<TimeSpan>("AverageTime");
+
+                    b.Property<int?>("BatteryTypeId");
+
+                    b.Property<int>("ExecutedCount");
+
+                    b.Property<int?>("SubTemplateId");
+
+                    b.Property<int>("TestCount");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BatteryTypeId");
+
+                    b.HasIndex("SubTemplateId");
+
+                    b.ToTable("EstimateTimeRecords");
+                });
+
             modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("BatteryTypeId");
 
                     b.Property<DateTime>("CompleteDate");
 
@@ -196,6 +222,8 @@ namespace BCLabManager.Migrations
                     b.Property<string>("Requester");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BatteryTypeId");
 
                     b.ToTable("Programs");
                 });
@@ -377,6 +405,24 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.TesterClass", "Tester")
                         .WithMany()
                         .HasForeignKey("TesterId");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.EstimateTimeRecord", b =>
+                {
+                    b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
+                        .WithMany()
+                        .HasForeignKey("BatteryTypeId");
+
+                    b.HasOne("BCLabManager.Model.SubProgramTemplate", "SubTemplate")
+                        .WithMany()
+                        .HasForeignKey("SubTemplateId");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
+                {
+                    b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
+                        .WithMany()
+                        .HasForeignKey("BatteryTypeId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.RawDataClass", b =>

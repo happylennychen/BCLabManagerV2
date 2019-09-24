@@ -18,6 +18,7 @@ namespace BCLabManager.ViewModel
         #region Fields
 
         public ProgramClass _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
+        List<BatteryTypeClass> _batteryTypes;
         SubProgramTemplateViewModel _selectedSubProgramTemplate;
         SubProgramViewModel _selectedSubProgram;
         RelayCommand _okCommand;
@@ -29,9 +30,13 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public ProgramEditViewModel(ProgramClass programmodel, List<SubProgramTemplate> subProgramTemplates)
+        public ProgramEditViewModel(
+            ProgramClass programmodel,
+            List<BatteryTypeClass> batteryTypes,
+            List<SubProgramTemplate> subProgramTemplates)
         {
             _program = programmodel;
+            _batteryTypes = batteryTypes;
             this.CreateAllSubProgramTemplates(subProgramTemplates);
             this.CreateSubPrograms();
         }
@@ -89,6 +94,34 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public BatteryTypeClass BatteryType       //选中项
+        {
+            get
+            {
+                //if (_batteryType == null)
+                //return null;
+                return _program.BatteryType;
+            }
+            set
+            {
+                if (value == _program.BatteryType)
+                    return;
+
+                _program.BatteryType = value;
+
+                base.OnPropertyChanged("BatteryType");
+            }
+        }
+
+        public ObservableCollection<BatteryTypeClass> AllBatteryTypes //供选项
+        {
+            get
+            {
+                List<BatteryTypeClass> all = _batteryTypes;
+
+                return new ObservableCollection<BatteryTypeClass>(all);
+            }
+        }
         public string Requester
         {
             get { return _program.Requester; }

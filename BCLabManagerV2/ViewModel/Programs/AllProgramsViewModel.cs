@@ -366,7 +366,7 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             ProgramClass m = new ProgramClass();      //实例化一个新的model
-            ProgramEditViewModel evm = new ProgramEditViewModel(m, _subProgramTemplates);      //实例化一个新的view model
+            ProgramEditViewModel evm = new ProgramEditViewModel(m,_batteryTypes, _subProgramTemplates);      //实例化一个新的view model
             evm.DisplayName = "Program-Create";
             evm.commandType = CommandType.Create;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -385,6 +385,7 @@ namespace BCLabManager.ViewModel
                         sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
                         //newP.SubPrograms.Add(dbContext.SubPrograms.SingleOrDefault(o => o.Id == sub.Id));
                     }
+                    m.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == m.BatteryType.Id);
                     dbContext.Programs.Add(m);
                     dbContext.SaveChanges();
                 }
@@ -405,7 +406,7 @@ namespace BCLabManager.ViewModel
             model.Description = oldpro.Description;
             model.SubPrograms = new ObservableCollection<SubProgramClass>(oldsubs);          //这里并不希望在edit window里面修改原本的subprograms，而是想编辑一个新的subprogram,只是这个新的，是旧集合的浅复制
 
-            ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _subProgramTemplates);      //实例化一个新的view model
+            ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _batteryTypes, _subProgramTemplates);      //实例化一个新的view model
             viewmodel.DisplayName = "Program-Edit";
             viewmodel.commandType = CommandType.Edit;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -587,7 +588,7 @@ namespace BCLabManager.ViewModel
         private void SaveAs()
         {
             ProgramClass m = _selectedProgram._program.Clone();
-            ProgramEditViewModel evm = new ProgramEditViewModel(m, _subProgramTemplates);      //实例化一个新的view model
+            ProgramEditViewModel evm = new ProgramEditViewModel(m, _batteryTypes, _subProgramTemplates);      //实例化一个新的view model
             evm.DisplayName = "Program-Save As";
             evm.commandType = CommandType.SaveAs;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -606,6 +607,7 @@ namespace BCLabManager.ViewModel
                         sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
                         //newP.SubPrograms.Add(dbContext.SubPrograms.SingleOrDefault(o => o.Id == sub.Id));
                     }
+                    m.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == m.BatteryType.Id);
                     dbContext.Programs.Add(m);
                     dbContext.SaveChanges();
                 }

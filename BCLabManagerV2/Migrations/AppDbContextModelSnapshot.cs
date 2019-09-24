@@ -178,10 +178,36 @@ namespace BCLabManager.Migrations
                     b.ToTable("DischargeTemperatures");
                 });
 
+            modelBuilder.Entity("BCLabManager.Model.EstimateTimeRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<TimeSpan>("AverageTime");
+
+                    b.Property<int?>("BatteryTypeId");
+
+                    b.Property<int>("ExecutedCount");
+
+                    b.Property<int?>("SubTemplateId");
+
+                    b.Property<int>("TestCount");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BatteryTypeId");
+
+                    b.HasIndex("SubTemplateId");
+
+                    b.ToTable("EstimateTimeRecords");
+                });
+
             modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("BatteryTypeId");
 
                     b.Property<DateTime>("CompleteDate");
 
@@ -194,6 +220,8 @@ namespace BCLabManager.Migrations
                     b.Property<string>("Requester");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BatteryTypeId");
 
                     b.ToTable("Programs");
                 });
@@ -375,6 +403,24 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.TesterClass", "Tester")
                         .WithMany()
                         .HasForeignKey("TesterId");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.EstimateTimeRecord", b =>
+                {
+                    b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
+                        .WithMany()
+                        .HasForeignKey("BatteryTypeId");
+
+                    b.HasOne("BCLabManager.Model.SubProgramTemplate", "SubTemplate")
+                        .WithMany()
+                        .HasForeignKey("SubTemplateId");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
+                {
+                    b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
+                        .WithMany()
+                        .HasForeignKey("BatteryTypeId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.RawDataClass", b =>

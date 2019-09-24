@@ -246,13 +246,9 @@
     <Compile Include="DataAccess\AppDbContext.cs" />
     <Compile Include="DatabasePopulator.cs" />
     <Compile Include="GlobalSettings.cs" />
-    <Compile Include="Migrations\20190917074448_Init.cs" />
-    <Compile Include="Migrations\20190917074448_Init.designer.cs">
-      <DependentUpon>20190917074448_Init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20190920065849_ReplaceStatusWithUseCount.cs" />
-    <Compile Include="Migrations\20190920065849_ReplaceStatusWithUseCount.designer.cs">
-      <DependentUpon>20190920065849_ReplaceStatusWithUseCount.cs</DependentUpon>
+    <Compile Include="Migrations\20190924023749_Init.cs" />
+    <Compile Include="Migrations\20190924023749_Init.designer.cs">
+      <DependentUpon>20190924023749_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Model\Assets\BatteryClass.cs" />
@@ -260,6 +256,7 @@
     <Compile Include="Model\Assets\ChamberClass.cs" />
     <Compile Include="Model\Assets\ChannelClass.cs" />
     <Compile Include="Model\Assets\TesterClass.cs" />
+    <Compile Include="Model\EstimateTimeManager.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\Programs\ProgramClass.cs" />
     <Compile Include="Model\Programs\SubProgramTemplate.cs" />

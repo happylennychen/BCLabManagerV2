@@ -96,6 +96,7 @@ namespace BCLabManager.Model
             this.EndTime = DateTime.MinValue;
             this.Steps = String.Empty;
             this.Comment = String.Empty;
+            this.RawDataList = new List<RawDataClass>();
             //this.RawData = ??
             //this.NewCycle = ??
         }

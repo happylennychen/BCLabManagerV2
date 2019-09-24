@@ -35,8 +35,10 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-            </Grid.RowDefinitions>
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                </Grid.RowDefinitions>
 
             <!-- CUSTOMER TYPE -->
             <Label 
@@ -51,42 +53,56 @@
       Text="{Binding Path=Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
       Validation.ErrorTemplate="{x:Null}"
       />
-            
-            <Label 
+
+                <!-- CUSTOMER TYPE -->
+                <Label 
       Grid.Row="2" Grid.Column="0" 
+      Content="_Battery Type:" 
+      HorizontalAlignment="Right"
+      />
+                <ComboBox 
+      x:Name="BatteryTypeCmb"
+      Grid.Row="2" Grid.Column="2" 
+      ItemsSource="{Binding Path=AllBatteryTypes, Mode=OneWay}"
+      SelectedItem="{Binding Path=BatteryType, ValidatesOnDataErrors=True}"
+      Validation.ErrorTemplate="{x:Null}"
+      />
+
+                <Label 
+      Grid.Row="4" Grid.Column="0" 
       Content="_Requester:" 
       HorizontalAlignment="Right"
       Target="{Binding ElementName=RequesterTxt}" 
       />
             <TextBox 
       x:Name="RequesterTxt"
-      Grid.Row="2" Grid.Column="2" 
+      Grid.Row="4" Grid.Column="2" 
       Text="{Binding Path=Requester, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
       Validation.ErrorTemplate="{x:Null}"
       />
 
             <Label 
-      Grid.Row="4" Grid.Column="0" 
+      Grid.Row="6" Grid.Column="0" 
       Content="_Request Date:" 
       HorizontalAlignment="Right"
       Target="{Binding ElementName=RequestDat}" 
       />
                 <xctk:DateTimePicker 
       x:Name="RequestDat"
-      Grid.Row="4" Grid.Column="2"  ShowButtonSpinner="False" ShowDropDownButton="False" TextAlignment="Center"
+      Grid.Row="6" Grid.Column="2"  ShowButtonSpinner="False" ShowDropDownButton="False" TextAlignment="Center"
       Text="{Binding Path=RequestDate, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
       Validation.ErrorTemplate="{x:Null}"
       />
 
                 <Label 
-      Grid.Row="6" Grid.Column="0" 
+      Grid.Row="8" Grid.Column="0" 
       Content="_Description:" 
       HorizontalAlignment="Right"
       Target="{Binding ElementName=DescriptionTxt}" 
       />
             <TextBox 
       x:Name="DescriptionTxt" AcceptsReturn="True"
-      Grid.Row="6" Grid.RowSpan="2" Grid.Column="2" 
+      Grid.Row="8" Grid.RowSpan="2" Grid.Column="2" 
       Text="{Binding Path=Description, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
       Validation.ErrorTemplate="{x:Null}"
       />
