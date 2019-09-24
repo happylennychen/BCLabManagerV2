@@ -230,6 +230,7 @@ namespace BCLabManager.Migrations
                     DischargeTemperatureId = table.Column<int>(nullable: true),
                     DischargeCurrentId = table.Column<int>(nullable: true),
                     TestCount = table.Column<int>(nullable: false),
+                    Loop = table.Column<int>(nullable: false),
                     ProgramClassId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>

@@ -162,6 +162,10 @@
             Header="Name" 
             DisplayMemberBinding="{Binding Path=Name}" 
             />
+                            <GridViewColumn 
+            Header="Loop" 
+            DisplayMemberBinding="{Binding Path=Loop}" 
+            />
                             <GridViewColumn
             Header="Progress"
                                 CellTemplate="{StaticResource ProgressBar}"

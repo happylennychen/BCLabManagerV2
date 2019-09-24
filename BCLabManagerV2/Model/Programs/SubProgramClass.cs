@@ -23,6 +23,7 @@ namespace BCLabManager.Model
         public DischargeTemperatureClass DischargeTemperature { get; set; }
         public DischargeCurrentClass DischargeCurrent { get; set; }
         public TestCountEnum TestCount { get; set; }
+        public int Loop { get; set; }
         public ObservableCollection<TestRecordClass> FirstTestRecords { get; set; }
         public ObservableCollection<TestRecordClass> SecondTestRecords { get; set; }
 
@@ -56,7 +57,7 @@ namespace BCLabManager.Model
             }
         }
 
-        public SubProgramClass(SubProgramTemplate template, string ProgramStr)  //Only used by populator
+        public SubProgramClass(SubProgramTemplate template, string ProgramStr, int loop)  //Only used by populator
         {
             //this.Name = template.Name;
             this.ChargeTemperature = template.ChargeTemperature;
@@ -64,6 +65,7 @@ namespace BCLabManager.Model
             this.DischargeTemperature = template.DischargeTemperature;
             this.DischargeCurrent = template.DischargeCurrent;
             this.TestCount = template.TestCount;
+            this.Loop = loop;
             this.FirstTestRecords = new ObservableCollection<TestRecordClass>();
             this.SecondTestRecords = new ObservableCollection<TestRecordClass>();
 
@@ -87,7 +89,8 @@ namespace BCLabManager.Model
             ChargeCurrentClass chargeCurrent, 
             DischargeTemperatureClass dischargeTemperature, 
             DischargeCurrentClass dischargeCurrent, 
-            TestCountEnum TestCount) : this()
+            TestCountEnum TestCount,
+            int Loop) : this()
         {
             //this.Name = Name;
             this.ChargeTemperature = chargeTemperature;
@@ -95,6 +98,7 @@ namespace BCLabManager.Model
             this.DischargeTemperature = dischargeTemperature;
             this.DischargeCurrent = dischargeCurrent;
             this.TestCount = TestCount;
+            this.Loop = Loop;
         }
 
         public void AssociateEvent(TestRecordClass testRecord)
@@ -109,7 +113,7 @@ namespace BCLabManager.Model
         //}
         public SubProgramClass Clone()  //Clone Name and Test Count, and create testrecords list
         {
-            var newsub = new SubProgramClass(this.ChargeTemperature, this.ChargeCurrent, this.DischargeTemperature, this.DischargeCurrent, this.TestCount);
+            var newsub = new SubProgramClass(this.ChargeTemperature, this.ChargeCurrent, this.DischargeTemperature, this.DischargeCurrent, this.TestCount, this.Loop);
             if (this.TestCount == TestCountEnum.One)
             {
                 newsub.FirstTestRecords = new ObservableCollection<TestRecordClass>();

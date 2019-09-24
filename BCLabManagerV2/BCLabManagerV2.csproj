@@ -246,9 +246,9 @@
     <Compile Include="DataAccess\AppDbContext.cs" />
     <Compile Include="DatabasePopulator.cs" />
     <Compile Include="GlobalSettings.cs" />
-    <Compile Include="Migrations\20190924023749_Init.cs" />
-    <Compile Include="Migrations\20190924023749_Init.designer.cs">
-      <DependentUpon>20190924023749_Init.cs</DependentUpon>
+    <Compile Include="Migrations\20190924025724_Init.cs" />
+    <Compile Include="Migrations\20190924025724_Init.designer.cs">
+      <DependentUpon>20190924025724_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Model\Assets\BatteryClass.cs" />

@@ -180,6 +180,20 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public int Loop
+        {
+            get { return _subprogram.Loop; }
+            set
+            {
+                if (value == _subprogram.Loop)
+                    return;
+
+                _subprogram.Loop = value;
+
+                base.OnPropertyChanged("Loop");
+            }
+        }
+
         public ObservableCollection<TestRecordViewModel> Test1Records { get; private set; }        //这个是当前sub program所拥有的test1
 
         public ObservableCollection<TestRecordViewModel> Test2Records { get; private set; }        //这个是当前sub program所拥有的test2
