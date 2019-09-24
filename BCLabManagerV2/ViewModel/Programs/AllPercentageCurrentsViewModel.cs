@@ -13,7 +13,7 @@ namespace BCLabManager.ViewModel
     public class AllPercentageCurrentsViewModel : ViewModelBase
     {
         #region Fields
-        List<PercentageCurrentClass> _PercentageCurrents;
+        List<PercentageCurrentClass> _percentageCurrents;
         PercentageCurrentViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
@@ -30,7 +30,7 @@ namespace BCLabManager.ViewModel
 
         void CreateAllPercentageCurrents(List<PercentageCurrentClass> PercentageCurrents)
         {
-            _PercentageCurrents = PercentageCurrents;
+            _percentageCurrents = PercentageCurrents;
             List<PercentageCurrentViewModel> all =
                 (from ct in PercentageCurrents
                  select new PercentageCurrentViewModel(ct)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
@@ -111,12 +111,12 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             PercentageCurrentClass model = new PercentageCurrentClass();      //实例化一个新的model
-            ChargeCurrentEditViewModel viewmodel = new ChargeCurrentEditViewModel(model);      //实例化一个新的view model
+            PercentageCurrentEditViewModel viewmodel = new PercentageCurrentEditViewModel(model);      //实例化一个新的view model
             viewmodel.DisplayName = "ChargeCurrent-Create";
             viewmodel.commandType = CommandType.Create;
-            var ChargeCurrentEditViewInstance = new ChargeCurrentEditView();      //实例化一个新的view
-            ChargeCurrentEditViewInstance.DataContext = viewmodel;
-            ChargeCurrentEditViewInstance.ShowDialog();                   //设置viewmodel属性
+            var view = new PercentageCurrentEditView();      //实例化一个新的view
+            view.DataContext = viewmodel;
+            view.ShowDialog();                   //设置viewmodel属性
             if (viewmodel.IsOK == true)
             {
                 using (var dbContext = new AppDbContext())
@@ -124,20 +124,20 @@ namespace BCLabManager.ViewModel
                     dbContext.PercentageCurrents.Add(model);
                     dbContext.SaveChanges();
                 }
-                _PercentageCurrents.Add(model);
+                _percentageCurrents.Add(model);
                 this.AllPercentageCurrents.Add(new PercentageCurrentViewModel(model));
             }
         }
         private void Edit()
         {
             PercentageCurrentClass model = new PercentageCurrentClass();      //实例化一个新的model
-            ChargeCurrentEditViewModel viewmodel = new ChargeCurrentEditViewModel(model);      //实例化一个新的view model
+            PercentageCurrentEditViewModel viewmodel = new PercentageCurrentEditViewModel(model);      //实例化一个新的view model
             viewmodel.Value = _selectedItem.Value;
             viewmodel.DisplayName = "ChargeCurrent-Edit";
             viewmodel.commandType = CommandType.Edit;
-            var ChargeCurrentEditViewInstance = new ChargeCurrentEditView();      //实例化一个新的view
-            ChargeCurrentEditViewInstance.DataContext = viewmodel;
-            ChargeCurrentEditViewInstance.ShowDialog();
+            var view = new PercentageCurrentEditView();      //实例化一个新的view
+            view.DataContext = viewmodel;
+            view.ShowDialog();
             if (viewmodel.IsOK == true)
             {
                 _selectedItem.Value = viewmodel.Value;
@@ -156,13 +156,13 @@ namespace BCLabManager.ViewModel
         private void SaveAs()
         {
             PercentageCurrentClass model = new PercentageCurrentClass();      //实例化一个新的model
-            ChargeCurrentEditViewModel viewmodel = new ChargeCurrentEditViewModel(model);      //实例化一个新的view model
+            PercentageCurrentEditViewModel viewmodel = new PercentageCurrentEditViewModel(model);      //实例化一个新的view model
             viewmodel.Value = _selectedItem.Value;
             viewmodel.DisplayName = "ChargeCurrent-Save As";
             viewmodel.commandType = CommandType.SaveAs;
-            var ChargeCurrentEditViewInstance = new ChargeCurrentEditView();      //实例化一个新的view
-            ChargeCurrentEditViewInstance.DataContext = viewmodel;
-            ChargeCurrentEditViewInstance.ShowDialog();
+            var view = new PercentageCurrentEditView();      //实例化一个新的view
+            view.DataContext = viewmodel;
+            view.ShowDialog();
             if (viewmodel.IsOK == true)
             {
                 using (var dbContext = new AppDbContext())
@@ -170,7 +170,7 @@ namespace BCLabManager.ViewModel
                     dbContext.PercentageCurrents.Add(model);
                     dbContext.SaveChanges();
                 }
-                _PercentageCurrents.Add(model);
+                _percentageCurrents.Add(model);
                 this.AllPercentageCurrents.Add(new PercentageCurrentViewModel(model));
             }
         }

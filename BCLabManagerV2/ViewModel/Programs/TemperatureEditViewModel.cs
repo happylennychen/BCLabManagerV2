@@ -16,7 +16,7 @@ namespace BCLabManager.ViewModel
     public class TemperatureEditViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-        public readonly TemperatureClass _chargeTemperature;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
+        public readonly TemperatureClass _temperature;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
         RelayCommand _okCommand;
         bool _isOK;
 
@@ -24,9 +24,9 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public TemperatureEditViewModel(TemperatureClass chargeTemperature)
+        public TemperatureEditViewModel(TemperatureClass temperature)
         {
-            _chargeTemperature = chargeTemperature;
+            _temperature = temperature;
         }
 
         #endregion // Constructor
@@ -35,26 +35,26 @@ namespace BCLabManager.ViewModel
 
         public int Id
         {
-            get { return _chargeTemperature.Id; }
+            get { return _temperature.Id; }
             set
             {
-                if (value == _chargeTemperature.Id)
+                if (value == _temperature.Id)
                     return;
 
-                _chargeTemperature.Id = value;
+                _temperature.Id = value;
 
                 base.OnPropertyChanged("Id");
             }
         }
         public double Value
         {
-            get { return _chargeTemperature.Value; }
+            get { return _temperature.Value; }
             set
             {
-                if (value == _chargeTemperature.Value)
+                if (value == _temperature.Value)
                     return;
 
-                _chargeTemperature.Value = value;
+                _temperature.Value = value;
 
                 base.OnPropertyChanged("Value");
             }

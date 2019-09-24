@@ -16,16 +16,16 @@ namespace BCLabManager.ViewModel
     public class PercentageCurrentViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-        private readonly PercentageCurrentClass _chargeCurrent;
+        private readonly PercentageCurrentClass _model;
 
         #endregion // Fields
 
         #region Constructor
 
-        public PercentageCurrentViewModel(PercentageCurrentClass chargeCurrent)
+        public PercentageCurrentViewModel(PercentageCurrentClass model)
         {
-            _chargeCurrent = chargeCurrent;
-            _chargeCurrent.PropertyChanged += _chargeCurrent_PropertyChanged;
+            _model = model;
+            _model.PropertyChanged += _chargeCurrent_PropertyChanged;
         }
 
         private void _chargeCurrent_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -39,26 +39,26 @@ namespace BCLabManager.ViewModel
 
         public int Id
         {
-            get { return _chargeCurrent.Id; }
+            get { return _model.Id; }
             set
             {
-                if (value == _chargeCurrent.Id)
+                if (value == _model.Id)
                     return;
 
-                _chargeCurrent.Id = value;
+                _model.Id = value;
 
                 base.OnPropertyChanged("Id");
             }
         }
         public double Value
         {
-            get { return _chargeCurrent.Value; }
+            get { return _model.Value; }
             set
             {
-                if (value == _chargeCurrent.Value)
+                if (value == _model.Value)
                     return;
 
-                _chargeCurrent.Value = value;
+                _model.Value = value;
 
                 base.OnPropertyChanged("Value");
             }

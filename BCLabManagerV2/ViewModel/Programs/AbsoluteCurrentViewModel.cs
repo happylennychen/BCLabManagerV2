@@ -16,16 +16,16 @@ namespace BCLabManager.ViewModel
     public class AbsoluteCurrentViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-        private readonly AbsoluteCurrentClass _chargeTemperature;
+        private readonly AbsoluteCurrentClass _model;
 
         #endregion // Fields
 
         #region Constructor
 
-        public AbsoluteCurrentViewModel(AbsoluteCurrentClass chargeTemperature)
+        public AbsoluteCurrentViewModel(AbsoluteCurrentClass model)
         {
-            _chargeTemperature = chargeTemperature;
-            _chargeTemperature.PropertyChanged += _chargeTemperature_PropertyChanged;
+            _model = model;
+            _model.PropertyChanged += _chargeTemperature_PropertyChanged;
         }
 
         private void _chargeTemperature_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -39,26 +39,26 @@ namespace BCLabManager.ViewModel
 
         public int Id
         {
-            get { return _chargeTemperature.Id; }
+            get { return _model.Id; }
             set
             {
-                if (value == _chargeTemperature.Id)
+                if (value == _model.Id)
                     return;
 
-                _chargeTemperature.Id = value;
+                _model.Id = value;
 
                 base.OnPropertyChanged("Id");
             }
         }
         public double Value
         {
-            get { return _chargeTemperature.Value; }
+            get { return _model.Value; }
             set
             {
-                if (value == _chargeTemperature.Value)
+                if (value == _model.Value)
                     return;
 
-                _chargeTemperature.Value = value;
+                _model.Value = value;
 
                 base.OnPropertyChanged("Value");
             }

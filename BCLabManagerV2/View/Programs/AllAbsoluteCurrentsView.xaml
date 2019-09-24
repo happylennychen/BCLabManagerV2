@@ -21,7 +21,7 @@
         </Style>
     </UserControl.Resources>
 
-    <GroupBox Grid.Row="0" Header="Discharge Currents">
+    <GroupBox Grid.Row="0" Header="Absolute Currents(mA)">
         <DockPanel>
             <StackPanel DockPanel.Dock="Right">
                 <Button Content="_Create" Command="{Binding Path=CreateCommand}" Margin="5,5,5,0" Width="60"></Button>
@@ -32,7 +32,7 @@
                       x:Name="DischargeCurrentList"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=AllDischargeCurrents}"
+      ItemsSource="{Binding Path=AllAbsoluteCurrents}"
                       SelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 

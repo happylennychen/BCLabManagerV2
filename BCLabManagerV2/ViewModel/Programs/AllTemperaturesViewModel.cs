@@ -13,7 +13,7 @@ namespace BCLabManager.ViewModel
     public class AllTemperaturesViewModel : ViewModelBase
     {
         #region Fields
-        List<TemperatureClass> _chargeTemperatures;
+        List<TemperatureClass> _temperatures;
         TemperatureViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
@@ -25,17 +25,17 @@ namespace BCLabManager.ViewModel
 
         public AllTemperaturesViewModel(List<TemperatureClass> chargeTemperatures)
         {
-            this.CreateAllChargeTemperatures(chargeTemperatures);
+            this.CreateAllTemperatures(chargeTemperatures);
         }
 
-        void CreateAllChargeTemperatures(List<TemperatureClass> chargeTemperatures)
+        void CreateAllTemperatures(List<TemperatureClass> temperatures)
         {
-            _chargeTemperatures = chargeTemperatures;
+            _temperatures = temperatures;
             List<TemperatureViewModel> all =
-                (from ct in chargeTemperatures
+                (from ct in temperatures
                  select new TemperatureViewModel(ct)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-            this.AllChargeTemperatures = new ObservableCollection<TemperatureViewModel>(all);     //再转换成Observable
+            this.AllTemperatures = new ObservableCollection<TemperatureViewModel>(all);     //再转换成Observable
         }
 
         #endregion // Constructor
@@ -45,7 +45,7 @@ namespace BCLabManager.ViewModel
         /// <summary>
         /// Returns a collection of all the SubProgramModelViewModel objects.
         /// </summary>
-        public ObservableCollection<TemperatureViewModel> AllChargeTemperatures { get; private set; }
+        public ObservableCollection<TemperatureViewModel> AllTemperatures { get; private set; }
 
         public TemperatureViewModel SelectedItem    //绑定选中项，从而改变subprograms
         {
@@ -124,8 +124,8 @@ namespace BCLabManager.ViewModel
                     dbContext.Temperatures.Add(model);
                     dbContext.SaveChanges();
                 }
-                _chargeTemperatures.Add(model);
-                this.AllChargeTemperatures.Add(new TemperatureViewModel(model));
+                _temperatures.Add(model);
+                this.AllTemperatures.Add(new TemperatureViewModel(model));
             }
         }
         private void Edit()
@@ -170,8 +170,8 @@ namespace BCLabManager.ViewModel
                     dbContext.Temperatures.Add(model);
                     dbContext.SaveChanges();
                 }
-                _chargeTemperatures.Add(model);
-                this.AllChargeTemperatures.Add(new TemperatureViewModel(model));
+                _temperatures.Add(model);
+                this.AllTemperatures.Add(new TemperatureViewModel(model));
             }
         }
         private bool CanSaveAs
@@ -183,10 +183,10 @@ namespace BCLabManager.ViewModel
 
         protected override void OnDispose()
         {
-            foreach (TemperatureViewModel viewmodel in this.AllChargeTemperatures)
+            foreach (TemperatureViewModel viewmodel in this.AllTemperatures)
                 viewmodel.Dispose();
 
-            this.AllChargeTemperatures.Clear();
+            this.AllTemperatures.Clear();
             //this.AllSubProgramModels.CollectionChanged -= this.OnCollectionChanged;
         }
 

@@ -16,9 +16,9 @@ namespace BCLabManager.View
     /// <summary>
     /// Interaction logic for ChannelView.xaml
     /// </summary>
-    public partial class ChargeCurrentEditView : Window
+    public partial class PercentageCurrentEditView : Window
     {
-        public ChargeCurrentEditView()
+        public PercentageCurrentEditView()
         {
             InitializeComponent();
         }

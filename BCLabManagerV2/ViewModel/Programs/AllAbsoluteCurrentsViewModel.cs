@@ -13,7 +13,7 @@ namespace BCLabManager.ViewModel
     public class AllAbsoluteCurrentsViewModel : ViewModelBase
     {
         #region Fields
-        List<AbsoluteCurrentClass> _dischargeTemperatures;
+        List<AbsoluteCurrentClass> _absoluteCurrents;
         AbsoluteCurrentViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
@@ -23,19 +23,19 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllAbsoluteCurrentsViewModel(List<AbsoluteCurrentClass> dischargeTemperatures)
+        public AllAbsoluteCurrentsViewModel(List<AbsoluteCurrentClass> absoluteCurrents)
         {
-            this.CreateAllDischargeTemperatures(dischargeTemperatures);
+            this.CreateAllAbsoluteCurrents(absoluteCurrents);
         }
 
-        void CreateAllDischargeTemperatures(List<AbsoluteCurrentClass> dischargeTemperatures)
+        void CreateAllAbsoluteCurrents(List<AbsoluteCurrentClass> absoluteCurrents)
         {
-            _dischargeTemperatures = dischargeTemperatures;
+            _absoluteCurrents = absoluteCurrents;
             List<AbsoluteCurrentViewModel> all =
-                (from ct in dischargeTemperatures
+                (from ct in absoluteCurrents
                  select new AbsoluteCurrentViewModel(ct)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-            this.AllDischargeTemperatures = new ObservableCollection<AbsoluteCurrentViewModel>(all);     //再转换成Observable
+            this.AllAbsoluteCurrents = new ObservableCollection<AbsoluteCurrentViewModel>(all);     //再转换成Observable
         }
 
         #endregion // Constructor
@@ -45,7 +45,7 @@ namespace BCLabManager.ViewModel
         /// <summary>
         /// Returns a collection of all the SubProgramModelViewModel objects.
         /// </summary>
-        public ObservableCollection<AbsoluteCurrentViewModel> AllDischargeTemperatures { get; private set; }
+        public ObservableCollection<AbsoluteCurrentViewModel> AllAbsoluteCurrents { get; private set; }
 
         public AbsoluteCurrentViewModel SelectedItem    //绑定选中项，从而改变subprograms
         {
@@ -114,9 +114,9 @@ namespace BCLabManager.ViewModel
             AbsoluteCurrentEditViewModel viewmodel = new AbsoluteCurrentEditViewModel(model);      //实例化一个新的view model
             viewmodel.DisplayName = "DischargeTemperature-Create";
             viewmodel.commandType = CommandType.Create;
-            var DischargeTemperatureEditViewInstance = new DischargeTemperatureEditView();      //实例化一个新的view
-            DischargeTemperatureEditViewInstance.DataContext = viewmodel;
-            DischargeTemperatureEditViewInstance.ShowDialog();                   //设置viewmodel属性
+            var AbsoluteCurrentEditViewInstance = new AbsoluteCurrentEditView();      //实例化一个新的view
+            AbsoluteCurrentEditViewInstance.DataContext = viewmodel;
+            AbsoluteCurrentEditViewInstance.ShowDialog();                   //设置viewmodel属性
             if (viewmodel.IsOK == true)
             {
                 using (var dbContext = new AppDbContext())
@@ -124,8 +124,8 @@ namespace BCLabManager.ViewModel
                     dbContext.AbsoluteCurrents.Add(model);
                     dbContext.SaveChanges();
                 }
-                _dischargeTemperatures.Add(model);
-                this.AllDischargeTemperatures.Add(new AbsoluteCurrentViewModel(model));
+                _absoluteCurrents.Add(model);
+                this.AllAbsoluteCurrents.Add(new AbsoluteCurrentViewModel(model));
             }
         }
         private void Edit()
@@ -135,9 +135,9 @@ namespace BCLabManager.ViewModel
             viewmodel.Value = _selectedItem.Value;
             viewmodel.DisplayName = "DischargeTemperature-Edit";
             viewmodel.commandType = CommandType.Edit;
-            var DischargeTemperatureEditViewInstance = new DischargeTemperatureEditView();      //实例化一个新的view
-            DischargeTemperatureEditViewInstance.DataContext = viewmodel;
-            DischargeTemperatureEditViewInstance.ShowDialog();
+            var AbsoluteCurrentEditViewInstance = new AbsoluteCurrentEditView();      //实例化一个新的view
+            AbsoluteCurrentEditViewInstance.DataContext = viewmodel;
+            AbsoluteCurrentEditViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)
             {
                 _selectedItem.Value = viewmodel.Value;
@@ -160,9 +160,9 @@ namespace BCLabManager.ViewModel
             viewmodel.Value = _selectedItem.Value;
             viewmodel.DisplayName = "DischargeTemperature-Save As";
             viewmodel.commandType = CommandType.SaveAs;
-            var DischargeTemperatureEditViewInstance = new DischargeTemperatureEditView();      //实例化一个新的view
-            DischargeTemperatureEditViewInstance.DataContext = viewmodel;
-            DischargeTemperatureEditViewInstance.ShowDialog();
+            var AbsoluteCurrentEditViewInstance = new AbsoluteCurrentEditView();      //实例化一个新的view
+            AbsoluteCurrentEditViewInstance.DataContext = viewmodel;
+            AbsoluteCurrentEditViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)
             {
                 using (var dbContext = new AppDbContext())
@@ -170,8 +170,8 @@ namespace BCLabManager.ViewModel
                     dbContext.AbsoluteCurrents.Add(model);
                     dbContext.SaveChanges();
                 }
-                _dischargeTemperatures.Add(model);
-                this.AllDischargeTemperatures.Add(new AbsoluteCurrentViewModel(model));
+                _absoluteCurrents.Add(model);
+                this.AllAbsoluteCurrents.Add(new AbsoluteCurrentViewModel(model));
             }
         }
         private bool CanSaveAs
@@ -183,10 +183,10 @@ namespace BCLabManager.ViewModel
 
         protected override void OnDispose()
         {
-            foreach (AbsoluteCurrentViewModel viewmodel in this.AllDischargeTemperatures)
+            foreach (AbsoluteCurrentViewModel viewmodel in this.AllAbsoluteCurrents)
                 viewmodel.Dispose();
 
-            this.AllDischargeTemperatures.Clear();
+            this.AllAbsoluteCurrents.Clear();
             //this.AllSubProgramModels.CollectionChanged -= this.OnCollectionChanged;
         }
 

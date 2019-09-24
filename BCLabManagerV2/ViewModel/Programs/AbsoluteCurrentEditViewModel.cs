@@ -16,7 +16,7 @@ namespace BCLabManager.ViewModel
     public class AbsoluteCurrentEditViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-        public readonly AbsoluteCurrentClass _chargeTemperature;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
+        public readonly AbsoluteCurrentClass _model;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
         RelayCommand _okCommand;
         bool _isOK;
 
@@ -24,9 +24,9 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AbsoluteCurrentEditViewModel(AbsoluteCurrentClass chargeTemperature)
+        public AbsoluteCurrentEditViewModel(AbsoluteCurrentClass model)
         {
-            _chargeTemperature = chargeTemperature;
+            _model = model;
         }
 
         #endregion // Constructor
@@ -35,26 +35,26 @@ namespace BCLabManager.ViewModel
 
         public int Id
         {
-            get { return _chargeTemperature.Id; }
+            get { return _model.Id; }
             set
             {
-                if (value == _chargeTemperature.Id)
+                if (value == _model.Id)
                     return;
 
-                _chargeTemperature.Id = value;
+                _model.Id = value;
 
                 base.OnPropertyChanged("Id");
             }
         }
         public double Value
         {
-            get { return _chargeTemperature.Value; }
+            get { return _model.Value; }
             set
             {
-                if (value == _chargeTemperature.Value)
+                if (value == _model.Value)
                     return;
 
-                _chargeTemperature.Value = value;
+                _model.Value = value;
 
                 base.OnPropertyChanged("Value");
             }

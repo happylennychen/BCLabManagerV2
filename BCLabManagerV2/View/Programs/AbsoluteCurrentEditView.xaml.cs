@@ -16,9 +16,9 @@ namespace BCLabManager.View
     /// <summary>
     /// Interaction logic for ChannelView.xaml
     /// </summary>
-    public partial class DischargeTemperatureEditView : Window
+    public partial class AbsoluteCurrentEditView : Window
     {
-        public DischargeTemperatureEditView()
+        public AbsoluteCurrentEditView()
         {
             InitializeComponent();
         }

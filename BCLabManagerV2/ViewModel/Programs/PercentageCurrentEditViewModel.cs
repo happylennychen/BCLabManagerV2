@@ -13,10 +13,10 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class ChargeCurrentEditViewModel : ViewModelBase//, IDataErrorInfo
+    public class PercentageCurrentEditViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-        public readonly PercentageCurrentClass _chargeCurrent;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
+        public readonly PercentageCurrentClass _model;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
         RelayCommand _okCommand;
         bool _isOK;
 
@@ -24,9 +24,9 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public ChargeCurrentEditViewModel(PercentageCurrentClass chargeCurrent)
+        public PercentageCurrentEditViewModel(PercentageCurrentClass model)
         {
-            _chargeCurrent = chargeCurrent;
+            _model = model;
         }
 
         #endregion // Constructor
@@ -35,26 +35,26 @@ namespace BCLabManager.ViewModel
 
         public int Id
         {
-            get { return _chargeCurrent.Id; }
+            get { return _model.Id; }
             set
             {
-                if (value == _chargeCurrent.Id)
+                if (value == _model.Id)
                     return;
 
-                _chargeCurrent.Id = value;
+                _model.Id = value;
 
                 base.OnPropertyChanged("Id");
             }
         }
         public double Value
         {
-            get { return _chargeCurrent.Value; }
+            get { return _model.Value; }
             set
             {
-                if (value == _chargeCurrent.Value)
+                if (value == _model.Value)
                     return;
 
-                _chargeCurrent.Value = value;
+                _model.Value = value;
 
                 base.OnPropertyChanged("Value");
             }

@@ -265,7 +265,7 @@
     <Compile Include="ViewModel\Programs\AllPercentageCurrentsViewModel.cs" />
     <Compile Include="ViewModel\Programs\AllAbsoluteCurrentsViewModel.cs" />
     <Compile Include="ViewModel\Programs\DynamicCurrentEditViewModel.cs" />
-    <Compile Include="ViewModel\Programs\ChargeCurrentEditViewModel.cs" />
+    <Compile Include="ViewModel\Programs\PercentageCurrentEditViewModel.cs" />
     <Compile Include="ViewModel\Programs\DischargeCurrentViewModel.cs" />
     <Compile Include="ViewModel\Programs\PercentageCurrentViewModel.cs" />
     <Compile Include="ViewModel\Programs\AbsoluteCurrentEditViewModel.cs" />
@@ -361,8 +361,8 @@
     <Compile Include="View\Programs\AllProgramsView.xaml.cs">
       <DependentUpon>AllProgramsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Programs\DischargeTemperatureEditView.xaml.cs">
-      <DependentUpon>DischargeTemperatureEditView.xaml</DependentUpon>
+    <Compile Include="View\Programs\AbsoluteCurrentEditView.xaml.cs">
+      <DependentUpon>AbsoluteCurrentEditView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Programs\DischargeCurrentEditView.xaml.cs">
       <DependentUpon>DischargeCurrentEditView.xaml</DependentUpon>
@@ -476,7 +476,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Programs\DischargeTemperatureEditView.xaml">
+    <Page Include="View\Programs\AbsoluteCurrentEditView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
