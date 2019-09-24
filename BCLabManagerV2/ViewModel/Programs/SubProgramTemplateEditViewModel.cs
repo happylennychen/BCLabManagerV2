@@ -16,10 +16,10 @@ namespace BCLabManager.ViewModel
     public class SubProgramTemplateEditViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-        List<ChargeTemperatureClass> _chargeTemperatures;
-        List<ChargeCurrentClass> _chargeCurrents;
-        List<DischargeTemperatureClass> _dischargeTemperatures;
-        List<DischargeCurrentClass> _dischargeCurrents;
+        List<TemperatureClass> _temperatures;
+        List<PercentageCurrentClass> _percentageCurrent;
+        List<AbsoluteCurrentClass> _absoluteCurrent;
+        List<DynamicCurrentClass> _dynamicCurrent;
         public readonly SubProgramTemplate _subProgramTemplate;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
         RelayCommand _okCommand;
         bool _isOK;
@@ -30,41 +30,41 @@ namespace BCLabManager.ViewModel
 
         public SubProgramTemplateEditViewModel(
             SubProgramTemplate subProgramTemplateModel,
-            List<ChargeTemperatureClass> chargeTemperatures,
-            List<ChargeCurrentClass> chargeCurrents,
-            List<DischargeTemperatureClass> dischargeTemperatures,
-            List<DischargeCurrentClass> dischargeCurrents
+            List<TemperatureClass> temperatures,
+            List<PercentageCurrentClass> percentageCurrent,
+            List<AbsoluteCurrentClass> absoluteCurrent,
+            List<DynamicCurrentClass> dynamicCurrent
             )
         {
-            _chargeTemperatures = chargeTemperatures;
-            _chargeCurrents = chargeCurrents;
-            _dischargeTemperatures = dischargeTemperatures;
-            _dischargeCurrents = dischargeCurrents;
-            this.AllChargeTemperatures = CreateAllChargeTemperatures(chargeTemperatures);
-            this.AllChargeCurrents = CreateAllChargeCurrents(chargeCurrents);
-            this.AllDischargeTemperatures = CreateAllDischargeTemperatures(dischargeTemperatures);
-            this.AllDischargeCurrents = CreateAllDischargeCurrents(dischargeCurrents);
+            _temperatures = temperatures;
+            _percentageCurrent = percentageCurrent;
+            _absoluteCurrent = absoluteCurrent;
+            _dynamicCurrent = dynamicCurrent;
+            this.AllTemperatures = CreateAlltemperatures(temperatures);
+            this.AllPercentageCurrent = CreateAllpercentageCurrent(percentageCurrent);
+            this.AllAbsoluteCurrent = CreateAllabsoluteCurrent(absoluteCurrent);
+            this.AllDynamicCurrent = CreateAlldynamicCurrent(dynamicCurrent);
             _subProgramTemplate = subProgramTemplateModel;
         }
 
-        private ObservableCollection<ChargeTemperatureClass> CreateAllChargeTemperatures(List<ChargeTemperatureClass> chargeTemperatures)
+        private ObservableCollection<TemperatureClass> CreateAlltemperatures(List<TemperatureClass> temperatures)
         {
-            return new ObservableCollection<ChargeTemperatureClass>(chargeTemperatures);
+            return new ObservableCollection<TemperatureClass>(temperatures);
         }
 
-        private ObservableCollection<ChargeCurrentClass> CreateAllChargeCurrents(List<ChargeCurrentClass> chargeCurrents)
+        private ObservableCollection<PercentageCurrentClass> CreateAllpercentageCurrent(List<PercentageCurrentClass> percentageCurrent)
         {
-            return new ObservableCollection<ChargeCurrentClass>(chargeCurrents);
+            return new ObservableCollection<PercentageCurrentClass>(percentageCurrent);
         }
 
-        private ObservableCollection<DischargeTemperatureClass> CreateAllDischargeTemperatures(List<DischargeTemperatureClass> dischargeTemperatures)
+        private ObservableCollection<AbsoluteCurrentClass> CreateAllabsoluteCurrent(List<AbsoluteCurrentClass> absoluteCurrent)
         {
-            return new ObservableCollection<DischargeTemperatureClass>(dischargeTemperatures);
+            return new ObservableCollection<AbsoluteCurrentClass>(absoluteCurrent);
         }
 
-        private ObservableCollection<DischargeCurrentClass> CreateAllDischargeCurrents(List<DischargeCurrentClass> dischargeCurrents)
+        private ObservableCollection<DynamicCurrentClass> CreateAlldynamicCurrent(List<DynamicCurrentClass> dynamicCurrent)
         {
-            return new ObservableCollection<DischargeCurrentClass>(dischargeCurrents);
+            return new ObservableCollection<DynamicCurrentClass>(dynamicCurrent);
         }
         #endregion // Constructor
 
@@ -96,7 +96,7 @@ namespace BCLabManager.ViewModel
         //        base.OnPropertyChanged("Name");
         //    }
         //}
-        public ChargeTemperatureClass ChargeTemperature
+        public double ChargeTemperature
         {
             get { return _subProgramTemplate.ChargeTemperature; }
             set
@@ -109,7 +109,7 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("ChargeTemperature");
             }
         }
-        public ChargeCurrentClass ChargeCurrent
+        public double ChargeCurrent
         {
             get { return _subProgramTemplate.ChargeCurrent; }
             set
@@ -122,7 +122,7 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("ChargeCurrent");
             }
         }
-        public DischargeTemperatureClass DischargeTemperature
+        public double DischargeTemperature
         {
             get { return _subProgramTemplate.DischargeTemperature; }
             set
@@ -135,7 +135,7 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("DischargeTemperature");
             }
         }
-        public DischargeCurrentClass DischargeCurrent
+        public double DischargeCurrent
         {
             get { return _subProgramTemplate.DischargeCurrent; }
             set
@@ -180,24 +180,24 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ObservableCollection<ChargeTemperatureClass> AllChargeTemperatures //供选项
+        public ObservableCollection<TemperatureClass> AllTemperatures //供选项
         {
             get;
             set;
         }
 
-        public ObservableCollection<ChargeCurrentClass> AllChargeCurrents //供选项
+        public ObservableCollection<PercentageCurrentClass> AllPercentageCurrent //供选项
         {
             get;
             set;
         }
-        public ObservableCollection<DischargeTemperatureClass> AllDischargeTemperatures //供选项
+        public ObservableCollection<AbsoluteCurrentClass> AllAbsoluteCurrent //供选项
         {
             get;
             set;
         }
 
-        public ObservableCollection<DischargeCurrentClass> AllDischargeCurrents //供选项
+        public ObservableCollection<DynamicCurrentClass> AllDynamicCurrent //供选项
         {
             get;
             set;

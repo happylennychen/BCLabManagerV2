@@ -38,11 +38,11 @@ namespace BCLabManager
 
         public AllSubProgramTemplatesViewModel allSubProgramTemplatesViewModel { get; set; }  //其中需要显示SubPrograms
 
-        public AllChargeTemperaturesViewModel allChargeTemperaturesViewModel { get; set; }
-        public AllChargeCurrentsViewModel allChargeCurrentsViewModel { get; set; }
+        public AllTemperaturesViewModel allTemperaturesViewModel { get; set; }
+        public AllPercentageCurrentsViewModel allPercentageCurrentsViewModel { get; set; }
 
-        public AllDischargeTemperaturesViewModel allDischargeTemperaturesViewModel { get; set; }
-        public AllDischargeCurrentsViewModel allDischargeCurrentsViewModel { get; set; }
+        public AllAbsoluteCurrentsViewModel allAbsoluteCurrentsViewModel { get; set; }
+        public AllDynamicCurrentsViewModel allDynamicCurrentsViewModel { get; set; }
 
         public AllProgramsViewModel allProgramsViewModel { get; set; }  //其中需要显示Programs, SubPrograms, Test1, Test2, TestSteps
 
@@ -54,10 +54,10 @@ namespace BCLabManager
         public ObservableCollection<ChannelClass> Channels { get; set; }
         public ObservableCollection<ChamberClass> Chambers { get; set; }
         public List<SubProgramTemplate> SubProgramTemplates { get; set; }
-        public List<ChargeTemperatureClass> ChargeTemperatures { get; set; }
-        public List<ChargeCurrentClass> ChargeCurrents { get; set; }
-        public List<DischargeTemperatureClass> DischargeTemperatures { get; set; }
-        public List<DischargeCurrentClass> DischargeCurrents { get; set; }
+        public List<TemperatureClass> Temperatures { get; set; }
+        public List<PercentageCurrentClass> PercentageCurrents { get; set; }
+        public List<AbsoluteCurrentClass> AbsoluteCurrents { get; set; }
+        public List<DynamicCurrentClass> DynamicCurrents { get; set; }
         public ObservableCollection<ProgramClass> Programs { get; set; }
         public MainWindow()
         {
@@ -169,13 +169,11 @@ namespace BCLabManager
 
                 SubProgramTemplates = new List<SubProgramTemplate>(dbContext.SubProgramTemplates.ToList());
 
-                ChargeTemperatures = new List<ChargeTemperatureClass>(dbContext.ChargeTemperatures.ToList());
+                Temperatures = new List<TemperatureClass>(dbContext.Temperatures.ToList());
 
-                ChargeCurrents = new List<ChargeCurrentClass>(dbContext.ChargeCurrents.ToList());
+                PercentageCurrents = new List<PercentageCurrentClass>(dbContext.PercentageCurrents.ToList());
 
-                DischargeTemperatures = new List<DischargeTemperatureClass>(dbContext.DischargeTemperatures.ToList());
-
-                DischargeCurrents = new List<DischargeCurrentClass>(dbContext.DischargeCurrents.ToList());
+                AbsoluteCurrents = new List<AbsoluteCurrentClass>(dbContext.AbsoluteCurrents.ToList());
 
                 Programs = new ObservableCollection<ProgramClass>(dbContext.Programs
                      .Include(pro => pro.SubPrograms)
@@ -231,19 +229,17 @@ namespace BCLabManager
             allSubProgramTemplatesViewModel = 
                 new AllSubProgramTemplatesViewModel(
                     SubProgramTemplates, 
-                    ChargeTemperatures,
-                    ChargeCurrents,
-                    DischargeTemperatures,
-                    DischargeCurrents
+                    Temperatures,
+                    PercentageCurrents,
+                    AbsoluteCurrents,
+                    DynamicCurrents
                     );    //ViewModel初始化
 
-            allChargeTemperaturesViewModel = new AllChargeTemperaturesViewModel(ChargeTemperatures);
+            allTemperaturesViewModel = new AllTemperaturesViewModel(Temperatures);
 
-            allChargeCurrentsViewModel = new AllChargeCurrentsViewModel(ChargeCurrents);
+            allPercentageCurrentsViewModel = new AllPercentageCurrentsViewModel(PercentageCurrents);
 
-            allDischargeTemperaturesViewModel = new AllDischargeTemperaturesViewModel(DischargeTemperatures);
-
-            allDischargeCurrentsViewModel = new AllDischargeCurrentsViewModel(DischargeCurrents);
+            allAbsoluteCurrentsViewModel = new AllAbsoluteCurrentsViewModel(AbsoluteCurrents);
 
             allProgramsViewModel = new AllProgramsViewModel
                 (
@@ -277,13 +273,13 @@ namespace BCLabManager
 
             this.AllSubProgramTemplatesViewInstance.DataContext = allSubProgramTemplatesViewModel;                                                            //ViewModel跟View绑定
 
-            this.AllSubProgramTemplatesViewInstance.AllChargeTemperaturesViewInstance.DataContext = allChargeTemperaturesViewModel;
+            this.AllSubProgramTemplatesViewInstance.AllTemperaturesViewInstance.DataContext = allTemperaturesViewModel;
 
-            this.AllSubProgramTemplatesViewInstance.AllChargeCurrentsViewInstance.DataContext = allChargeCurrentsViewModel;
+            this.AllSubProgramTemplatesViewInstance.AllPercentageCurrentsViewInstance.DataContext = allPercentageCurrentsViewModel;
 
-            this.AllSubProgramTemplatesViewInstance.AllDischargeTemperaturesViewInstance.DataContext = allDischargeTemperaturesViewModel;
+            this.AllSubProgramTemplatesViewInstance.AllAbsoluteCurrentsViewInstance.DataContext = allAbsoluteCurrentsViewModel;
 
-            this.AllSubProgramTemplatesViewInstance.AllDischargeCurrentsViewInstance.DataContext = allDischargeCurrentsViewModel;
+            this.AllSubProgramTemplatesViewInstance.AllDynamicCurrentsViewInstance.DataContext = allDynamicCurrentsViewModel;
 
             this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定
 

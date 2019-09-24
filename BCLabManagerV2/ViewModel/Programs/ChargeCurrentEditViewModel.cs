@@ -16,7 +16,7 @@ namespace BCLabManager.ViewModel
     public class ChargeCurrentEditViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-        public readonly ChargeCurrentClass _chargeCurrent;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
+        public readonly PercentageCurrentClass _chargeCurrent;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
         RelayCommand _okCommand;
         bool _isOK;
 
@@ -24,7 +24,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public ChargeCurrentEditViewModel(ChargeCurrentClass chargeCurrent)
+        public ChargeCurrentEditViewModel(PercentageCurrentClass chargeCurrent)
         {
             _chargeCurrent = chargeCurrent;
         }
@@ -46,17 +46,17 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("Id");
             }
         }
-        public string Name
+        public double Value
         {
-            get { return _chargeCurrent.Name; }
+            get { return _chargeCurrent.Value; }
             set
             {
-                if (value == _chargeCurrent.Name)
+                if (value == _chargeCurrent.Value)
                     return;
 
-                _chargeCurrent.Name = value;
+                _chargeCurrent.Value = value;
 
-                base.OnPropertyChanged("Name");
+                base.OnPropertyChanged("Value");
             }
         }
 

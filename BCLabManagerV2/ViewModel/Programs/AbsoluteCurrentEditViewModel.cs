@@ -13,10 +13,10 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class ChargeTemperatureEditViewModel : ViewModelBase//, IDataErrorInfo
+    public class AbsoluteCurrentEditViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-        public readonly ChargeTemperatureClass _chargeTemperature;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
+        public readonly AbsoluteCurrentClass _chargeTemperature;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
         RelayCommand _okCommand;
         bool _isOK;
 
@@ -24,14 +24,14 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public ChargeTemperatureEditViewModel(ChargeTemperatureClass chargeTemperature)
+        public AbsoluteCurrentEditViewModel(AbsoluteCurrentClass chargeTemperature)
         {
             _chargeTemperature = chargeTemperature;
         }
 
         #endregion // Constructor
 
-        #region ChargeTemperature Properties
+        #region DischargeTemperature Properties
 
         public int Id
         {
@@ -46,17 +46,17 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("Id");
             }
         }
-        public string Name
+        public double Value
         {
-            get { return _chargeTemperature.Name; }
+            get { return _chargeTemperature.Value; }
             set
             {
-                if (value == _chargeTemperature.Name)
+                if (value == _chargeTemperature.Value)
                     return;
 
-                _chargeTemperature.Name = value;
+                _chargeTemperature.Value = value;
 
-                base.OnPropertyChanged("Name");
+                base.OnPropertyChanged("Value");
             }
         }
 
@@ -133,13 +133,13 @@ namespace BCLabManager.ViewModel
         /// Returns true if this customer was created by the user and it has not yet
         /// been saved to the customer repository.
         /// </summary>
-        bool IsNewChargeTemperature
+        bool IsNewDischargeTemperature
         {
             get
             {
                 //int number = (
                 //    from bat in _subprogramRepository.GetItems()
-                //    where bat.Name == _ChargeTemperature.Name     //名字（某一个属性）一样就认为是一样的
+                //    where bat.Name == _DischargeTemperature.Name     //名字（某一个属性）一样就认为是一样的
                 //    select bat).Count();
                 //if (number != 0)
                 //    return false;
@@ -153,7 +153,7 @@ namespace BCLabManager.ViewModel
         /// </summary>
         bool CanCreate
         {
-            get { return IsNewChargeTemperature; }
+            get { return IsNewDischargeTemperature; }
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace BCLabManager.ViewModel
         /// </summary>
         bool CanSaveAs
         {
-            get { return IsNewChargeTemperature; }
+            get { return IsNewDischargeTemperature; }
         }
 
         #endregion // Private Helpers

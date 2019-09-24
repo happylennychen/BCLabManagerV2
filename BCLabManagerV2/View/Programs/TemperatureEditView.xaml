@@ -1,4 +1,4 @@
-﻿<Window x:Class="BCLabManager.View.ChargeTemperatureEditView"
+﻿<Window x:Class="BCLabManager.View.TemperatureEditView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="{Binding Path=DisplayName}" Height="130" Width="200" WindowStartupLocation="CenterScreen">
@@ -19,14 +19,14 @@
             <!-- CUSTOMER TYPE -->
             <Label 
       Grid.Row="0" Grid.Column="0" 
-      Content="_Name:" 
+      Content="_Value:" 
       HorizontalAlignment="Right"
       Target="{Binding ElementName=NameTxt}" 
       />
             <TextBox 
       x:Name="NameTxt"
       Grid.Row="0" Grid.Column="2" 
-      Text="{Binding Path=Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+      Text="{Binding Path=Value, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
       Validation.ErrorTemplate="{x:Null}"
       />
 

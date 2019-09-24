@@ -109,7 +109,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                return $"{_subprogram.ChargeTemperature.Name} {_subprogram.ChargeCurrent} charge, {_subprogram.DischargeTemperature} {_subprogram.DischargeCurrent} discharge";
+                return _subprogram.Name;
             }
         }
         #region Presentation logic

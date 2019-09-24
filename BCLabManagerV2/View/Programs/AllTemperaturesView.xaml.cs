@@ -9,23 +9,21 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BCLabManager.Model;
+using BCLabManager.ViewModel;
 
 namespace BCLabManager.View
 {
     /// <summary>
-    /// Interaction logic for ChannelView.xaml
+    /// Interaction logic for AllChannelsView.xaml
     /// </summary>
-    public partial class ChargeTemperatureEditView : Window
+    public partial class AllTemperaturesView : UserControl
     {
-        public ChargeTemperatureEditView()
+        public AllTemperaturesView()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
         }
     }
 }

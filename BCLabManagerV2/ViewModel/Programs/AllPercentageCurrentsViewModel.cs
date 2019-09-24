@@ -10,11 +10,11 @@ using System.Windows.Input;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllDischargeCurrentsViewModel : ViewModelBase
+    public class AllPercentageCurrentsViewModel : ViewModelBase
     {
         #region Fields
-        List<DischargeCurrentClass> _dischargeCurrents;
-        DischargeCurrentViewModel _selectedItem;
+        List<PercentageCurrentClass> _PercentageCurrents;
+        PercentageCurrentViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
@@ -23,19 +23,19 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllDischargeCurrentsViewModel(List<DischargeCurrentClass> dischargeCurrents)
+        public AllPercentageCurrentsViewModel(List<PercentageCurrentClass> PercentageCurrents)
         {
-            this.CreateAllDischargeCurrents(dischargeCurrents);
+            this.CreateAllPercentageCurrents(PercentageCurrents);
         }
 
-        void CreateAllDischargeCurrents(List<DischargeCurrentClass> dischargeCurrents)
+        void CreateAllPercentageCurrents(List<PercentageCurrentClass> PercentageCurrents)
         {
-            _dischargeCurrents = dischargeCurrents;
-            List<DischargeCurrentViewModel> all =
-                (from ct in dischargeCurrents
-                 select new DischargeCurrentViewModel(ct)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+            _PercentageCurrents = PercentageCurrents;
+            List<PercentageCurrentViewModel> all =
+                (from ct in PercentageCurrents
+                 select new PercentageCurrentViewModel(ct)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-            this.AllDischargeCurrents = new ObservableCollection<DischargeCurrentViewModel>(all);     //再转换成Observable
+            this.AllPercentageCurrents = new ObservableCollection<PercentageCurrentViewModel>(all);     //再转换成Observable
         }
 
         #endregion // Constructor
@@ -45,9 +45,9 @@ namespace BCLabManager.ViewModel
         /// <summary>
         /// Returns a collection of all the SubProgramModelViewModel objects.
         /// </summary>
-        public ObservableCollection<DischargeCurrentViewModel> AllDischargeCurrents { get; private set; }
+        public ObservableCollection<PercentageCurrentViewModel> AllPercentageCurrents { get; private set; }
 
-        public DischargeCurrentViewModel SelectedItem    //绑定选中项，从而改变subprograms
+        public PercentageCurrentViewModel SelectedItem    //绑定选中项，从而改变subprograms
         {
             get
             {
@@ -110,41 +110,41 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            DischargeCurrentClass model = new DischargeCurrentClass();      //实例化一个新的model
-            DischargeCurrentEditViewModel viewmodel = new DischargeCurrentEditViewModel(model);      //实例化一个新的view model
-            viewmodel.DisplayName = "DischargeCurrent-Create";
+            PercentageCurrentClass model = new PercentageCurrentClass();      //实例化一个新的model
+            ChargeCurrentEditViewModel viewmodel = new ChargeCurrentEditViewModel(model);      //实例化一个新的view model
+            viewmodel.DisplayName = "ChargeCurrent-Create";
             viewmodel.commandType = CommandType.Create;
-            var DischargeCurrentEditViewInstance = new DischargeCurrentEditView();      //实例化一个新的view
-            DischargeCurrentEditViewInstance.DataContext = viewmodel;
-            DischargeCurrentEditViewInstance.ShowDialog();                   //设置viewmodel属性
+            var ChargeCurrentEditViewInstance = new ChargeCurrentEditView();      //实例化一个新的view
+            ChargeCurrentEditViewInstance.DataContext = viewmodel;
+            ChargeCurrentEditViewInstance.ShowDialog();                   //设置viewmodel属性
             if (viewmodel.IsOK == true)
             {
                 using (var dbContext = new AppDbContext())
                 {
-                    dbContext.DischargeCurrents.Add(model);
+                    dbContext.PercentageCurrents.Add(model);
                     dbContext.SaveChanges();
                 }
-                _dischargeCurrents.Add(model);
-                this.AllDischargeCurrents.Add(new DischargeCurrentViewModel(model));
+                _PercentageCurrents.Add(model);
+                this.AllPercentageCurrents.Add(new PercentageCurrentViewModel(model));
             }
         }
         private void Edit()
         {
-            DischargeCurrentClass model = new DischargeCurrentClass();      //实例化一个新的model
-            DischargeCurrentEditViewModel viewmodel = new DischargeCurrentEditViewModel(model);      //实例化一个新的view model
-            viewmodel.Name = _selectedItem.Name;
-            viewmodel.DisplayName = "DischargeCurrent-Edit";
+            PercentageCurrentClass model = new PercentageCurrentClass();      //实例化一个新的model
+            ChargeCurrentEditViewModel viewmodel = new ChargeCurrentEditViewModel(model);      //实例化一个新的view model
+            viewmodel.Value = _selectedItem.Value;
+            viewmodel.DisplayName = "ChargeCurrent-Edit";
             viewmodel.commandType = CommandType.Edit;
-            var DischargeCurrentEditViewInstance = new DischargeCurrentEditView();      //实例化一个新的view
-            DischargeCurrentEditViewInstance.DataContext = viewmodel;
-            DischargeCurrentEditViewInstance.ShowDialog();
+            var ChargeCurrentEditViewInstance = new ChargeCurrentEditView();      //实例化一个新的view
+            ChargeCurrentEditViewInstance.DataContext = viewmodel;
+            ChargeCurrentEditViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)
             {
-                _selectedItem.Name = viewmodel.Name;
+                _selectedItem.Value = viewmodel.Value;
                 using (var dbContext = new AppDbContext())
                 {
-                    var ct = dbContext.DischargeCurrents.SingleOrDefault(i => i.Id == _selectedItem.Id);
-                    ct.Name = _selectedItem.Name;
+                    var ct = dbContext.PercentageCurrents.SingleOrDefault(i => i.Id == _selectedItem.Id);
+                    ct.Value = _selectedItem.Value;
                     dbContext.SaveChanges();
                 }
             }
@@ -155,23 +155,23 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            DischargeCurrentClass model = new DischargeCurrentClass();      //实例化一个新的model
-            DischargeCurrentEditViewModel viewmodel = new DischargeCurrentEditViewModel(model);      //实例化一个新的view model
-            viewmodel.Name = _selectedItem.Name;
-            viewmodel.DisplayName = "DischargeCurrent-Save As";
+            PercentageCurrentClass model = new PercentageCurrentClass();      //实例化一个新的model
+            ChargeCurrentEditViewModel viewmodel = new ChargeCurrentEditViewModel(model);      //实例化一个新的view model
+            viewmodel.Value = _selectedItem.Value;
+            viewmodel.DisplayName = "ChargeCurrent-Save As";
             viewmodel.commandType = CommandType.SaveAs;
-            var DischargeCurrentEditViewInstance = new DischargeCurrentEditView();      //实例化一个新的view
-            DischargeCurrentEditViewInstance.DataContext = viewmodel;
-            DischargeCurrentEditViewInstance.ShowDialog();
+            var ChargeCurrentEditViewInstance = new ChargeCurrentEditView();      //实例化一个新的view
+            ChargeCurrentEditViewInstance.DataContext = viewmodel;
+            ChargeCurrentEditViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)
             {
                 using (var dbContext = new AppDbContext())
                 {
-                    dbContext.DischargeCurrents.Add(model);
+                    dbContext.PercentageCurrents.Add(model);
                     dbContext.SaveChanges();
                 }
-                _dischargeCurrents.Add(model);
-                this.AllDischargeCurrents.Add(new DischargeCurrentViewModel(model));
+                _PercentageCurrents.Add(model);
+                this.AllPercentageCurrents.Add(new PercentageCurrentViewModel(model));
             }
         }
         private bool CanSaveAs
@@ -183,10 +183,10 @@ namespace BCLabManager.ViewModel
 
         protected override void OnDispose()
         {
-            foreach (DischargeCurrentViewModel viewmodel in this.AllDischargeCurrents)
+            foreach (PercentageCurrentViewModel viewmodel in this.AllPercentageCurrents)
                 viewmodel.Dispose();
 
-            this.AllDischargeCurrents.Clear();
+            this.AllPercentageCurrents.Clear();
             //this.AllSubProgramModels.CollectionChanged -= this.OnCollectionChanged;
         }
 

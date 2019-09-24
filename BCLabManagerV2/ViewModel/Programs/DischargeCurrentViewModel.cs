@@ -13,54 +13,54 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class DischargeCurrentViewModel : ViewModelBase//, IDataErrorInfo
+    public class DynamicCurrentViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-        private readonly DischargeCurrentClass _chargeCurrent;
+        private readonly DynamicCurrentClass _dynamicCurrent;
 
         #endregion // Fields
 
         #region Constructor
 
-        public DischargeCurrentViewModel(DischargeCurrentClass chargeCurrent)
+        public DynamicCurrentViewModel(DynamicCurrentClass dynamicCurrent)
         {
-            _chargeCurrent = chargeCurrent;
-            _chargeCurrent.PropertyChanged += _chargeCurrent_PropertyChanged;
+            _dynamicCurrent = dynamicCurrent;
+            _dynamicCurrent.PropertyChanged += _dynamicCurrent_PropertyChanged;
         }
 
-        private void _chargeCurrent_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void _dynamicCurrent_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             OnPropertyChanged(e.PropertyName);
         }
 
         #endregion // Constructor
 
-        #region DischargeCurrentClass Properties
+        #region DynamicCurrentClass Properties
 
         public int Id
         {
-            get { return _chargeCurrent.Id; }
+            get { return _dynamicCurrent.Id; }
             set
             {
-                if (value == _chargeCurrent.Id)
+                if (value == _dynamicCurrent.Id)
                     return;
 
-                _chargeCurrent.Id = value;
+                _dynamicCurrent.Id = value;
 
                 base.OnPropertyChanged("Id");
             }
         }
-        public string Name
+        public double Value
         {
-            get { return _chargeCurrent.Name; }
+            get { return _dynamicCurrent.Value; }
             set
             {
-                if (value == _chargeCurrent.Name)
+                if (value == _dynamicCurrent.Value)
                     return;
 
-                _chargeCurrent.Name = value;
+                _dynamicCurrent.Value = value;
 
-                base.OnPropertyChanged("Name");
+                base.OnPropertyChanged("Value");
             }
         }
         #endregion

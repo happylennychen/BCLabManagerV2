@@ -14,10 +14,10 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
         List<SubProgramTemplate> _subProgramTemplates;
-        List<ChargeTemperatureClass> _chargeTemperatures;
-        List<ChargeCurrentClass> _chargeCurrents;
-        List<DischargeTemperatureClass> _dischargeTemperatures;
-        List<DischargeCurrentClass> _dischargeCurrents;
+        List<TemperatureClass> _temperatures;
+        List<PercentageCurrentClass> _percentageCurrents;
+        List<AbsoluteCurrentClass> _absoluteCurrents;
+        List<DynamicCurrentClass> _dynamicCurrents;
         SubProgramTemplateViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
@@ -29,16 +29,16 @@ namespace BCLabManager.ViewModel
 
         public AllSubProgramTemplatesViewModel(
             List<SubProgramTemplate> subProgramTemplates,
-            List<ChargeTemperatureClass> chargeTemperatures,
-            List<ChargeCurrentClass> chargeCurrents,
-            List<DischargeTemperatureClass> dischargeTemperatures,
-            List<DischargeCurrentClass> dischargeCurrents
+            List<TemperatureClass> temperatures,
+            List<PercentageCurrentClass> percentageCurrents,
+            List<AbsoluteCurrentClass> absoluteCurrents,
+            List<DynamicCurrentClass> dynamicCurrents
             )
         {
-            _chargeTemperatures = chargeTemperatures;
-            _chargeCurrents = chargeCurrents;
-            _dischargeTemperatures = dischargeTemperatures;
-            _dischargeCurrents = dischargeCurrents;
+            _temperatures = temperatures;
+            _percentageCurrents = percentageCurrents;
+            _absoluteCurrents = absoluteCurrents;
+            _dynamicCurrents = dynamicCurrents;
             this.CreateAllSubProgramTemplates(subProgramTemplates);
         }
 
@@ -128,10 +128,10 @@ namespace BCLabManager.ViewModel
             SubProgramTemplateEditViewModel viewmodel = 
                 new SubProgramTemplateEditViewModel(
                     model, 
-                    _chargeTemperatures,
-                    _chargeCurrents,
-                    _dischargeTemperatures,
-                    _dischargeCurrents
+                    _temperatures,
+                    _percentageCurrents,
+                    _absoluteCurrents,
+                    _dynamicCurrents
                     );      //实例化一个新的view model
             viewmodel.DisplayName = "SubProgramTemplate-Create";
             viewmodel.commandType = CommandType.Create;
@@ -144,17 +144,17 @@ namespace BCLabManager.ViewModel
                 using (var dbContext = new AppDbContext())
                 {
                     //dbContext.SubProgramTemplates.Add(model);
-                    var newsub = new SubProgramTemplate()
-                    {
-                        ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == model.ChargeTemperature.Id),
-                        ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == model.ChargeCurrent.Id),
-                        DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == model.DischargeTemperature.Id),
-                        DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == model.DischargeCurrent.Id),
-                        TestCount = model.TestCount
-                    };
-                    dbContext.SubProgramTemplates.Add(newsub);
+                    //var newsub = new SubProgramTemplate()
+                    //{
+                    //    ChargeTemperature = dbContext.Temperatures.SingleOrDefault(o => o.Id == model.ChargeTemperature.Id),
+                    //    ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == model.ChargeCurrent.Id),
+                    //    DischargeTemperature = dbContext.AbsoluteCurrents.SingleOrDefault(o => o.Id == model.DischargeTemperature.Id),
+                    //    DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == model.DischargeCurrent.Id),
+                    //    TestCount = model.TestCount
+                    //};
+                    dbContext.SubProgramTemplates.Add(model);
                     dbContext.SaveChanges();
-                    model = newsub;
+                    //model = newsub;
                 }
                 _subProgramTemplates.Add(model);
                 this.AllSubProgramTemplates.Add(new SubProgramTemplateViewModel(model));
@@ -166,17 +166,17 @@ namespace BCLabManager.ViewModel
             SubProgramTemplateEditViewModel viewmodel =
                 new SubProgramTemplateEditViewModel(
                     model,
-                    _chargeTemperatures,
-                    _chargeCurrents,
-                    _dischargeTemperatures,
-                    _dischargeCurrents
+                    _temperatures,
+                    _percentageCurrents,
+                    _absoluteCurrents,
+                    _dynamicCurrents
                     );      //实例化一个新的view model
             //viewmodel.Name = _selectedItem.Name;
             viewmodel.Id = _selectedItem.Id;
-            viewmodel.ChargeTemperature = viewmodel.AllChargeTemperatures.SingleOrDefault(o=>o.Id == _selectedItem.ChargeTemperature.Id);
-            viewmodel.ChargeCurrent = viewmodel.AllChargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.ChargeCurrent.Id);
-            viewmodel.DischargeTemperature = viewmodel.AllDischargeTemperatures.SingleOrDefault(o=>o.Id == _selectedItem.DischargeTemperature.Id);
-            viewmodel.DischargeCurrent = viewmodel.AllDischargeCurrents.SingleOrDefault(o=>o.Id == _selectedItem.DischargeCurrent.Id);
+            viewmodel.ChargeTemperature = _selectedItem.ChargeTemperature;
+            viewmodel.ChargeCurrent = _selectedItem.ChargeCurrent;
+            viewmodel.DischargeTemperature = _selectedItem.DischargeTemperature;
+            viewmodel.DischargeCurrent = _selectedItem.DischargeCurrent;
             viewmodel.TestCount = _selectedItem.TestCount;
             viewmodel.DisplayName = "SubProgram-Edit";
             viewmodel.commandType = CommandType.Edit;
@@ -195,10 +195,10 @@ namespace BCLabManager.ViewModel
                 {
                     var sub = dbContext.SubProgramTemplates.SingleOrDefault(i => i.Id == _selectedItem.Id);
                     //sub.Name = _selectedItem.Name;
-                    sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == model.ChargeTemperature.Id);
-                    sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == model.ChargeCurrent.Id);
-                    sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == model.DischargeTemperature.Id);
-                    sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == model.DischargeCurrent.Id);
+                    sub.ChargeTemperature = model.ChargeTemperature;
+                    sub.ChargeCurrent = model.ChargeCurrent;
+                    sub.DischargeTemperature = model.DischargeTemperature;
+                    sub.DischargeCurrent = model.DischargeCurrent;
                     sub.TestCount = _selectedItem.TestCount;
                     dbContext.SaveChanges();
                 }
@@ -214,17 +214,17 @@ namespace BCLabManager.ViewModel
             SubProgramTemplateEditViewModel viewmodel =
                 new SubProgramTemplateEditViewModel(
                     model,
-                    _chargeTemperatures,
-                    _chargeCurrents,
-                    _dischargeTemperatures,
-                    _dischargeCurrents
+                    _temperatures,
+                    _percentageCurrents,
+                    _absoluteCurrents,
+                    _dynamicCurrents
                     );      //实例化一个新的view model
             //viewmodel.Name = _selectedItem.Name;
             viewmodel.Id = _selectedItem.Id;
-            viewmodel.ChargeTemperature = viewmodel.AllChargeTemperatures.SingleOrDefault(o => o.Id == _selectedItem.ChargeTemperature.Id);
-            viewmodel.ChargeCurrent = viewmodel.AllChargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.ChargeCurrent.Id);
-            viewmodel.DischargeTemperature = viewmodel.AllDischargeTemperatures.SingleOrDefault(o => o.Id == _selectedItem.DischargeTemperature.Id);
-            viewmodel.DischargeCurrent = viewmodel.AllDischargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.DischargeCurrent.Id);
+            viewmodel.ChargeTemperature = _selectedItem.ChargeTemperature;
+            viewmodel.ChargeCurrent = _selectedItem.ChargeCurrent;
+            viewmodel.DischargeTemperature = _selectedItem.DischargeTemperature;
+            viewmodel.DischargeCurrent = _selectedItem.DischargeCurrent;
             viewmodel.TestCount = _selectedItem.TestCount;
             viewmodel.DisplayName = "SubProgram-Save As";
             viewmodel.commandType = CommandType.SaveAs;
@@ -239,10 +239,10 @@ namespace BCLabManager.ViewModel
                     //dbContext.SubProgramTemplates.Add(model);
                     var newsub = new SubProgramTemplate()
                     {
-                        ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == model.ChargeTemperature.Id),
-                        ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == model.ChargeCurrent.Id),
-                        DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == model.DischargeTemperature.Id),
-                        DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == model.DischargeCurrent.Id),
+                        ChargeTemperature = model.ChargeTemperature,
+                        ChargeCurrent = model.ChargeCurrent,
+                        DischargeTemperature = model.DischargeTemperature,
+                        DischargeCurrent = model.DischargeCurrent,
                         TestCount = model.TestCount
                     };
                     dbContext.SubProgramTemplates.Add(newsub);

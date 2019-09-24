@@ -17,11 +17,31 @@ namespace BCLabManager.Model
     {
         public int Id { get; set; }
         public bool IsAbandoned { get; set; }
-        //public String Name { get; set; }
-        public ChargeTemperatureClass ChargeTemperature { get; set; }
-        public ChargeCurrentClass ChargeCurrent { get; set; }
-        public DischargeTemperatureClass DischargeTemperature { get; set; }
-        public DischargeCurrentClass DischargeCurrent { get; set; }
+        public String Name
+        {
+            get
+            {
+                string ctstr;
+                string ccstr;
+                string dtstr;
+                string dcstr;
+                if (this.ChargeTemperature == -9999)
+                    ctstr = "Room";
+                else
+                    ctstr = this.ChargeTemperature.ToString() + " deg";
+                ccstr = this.ChargeCurrent.ToString() + "mA";
+                if (this.DischargeTemperature == -9999)
+                    dtstr = "Room";
+                else
+                    dtstr = this.DischargeTemperature.ToString() + " deg";
+                dcstr = this.DischargeCurrent.ToString() + "mA";
+                return $"{ctstr} {ccstr} charge, {dtstr} {dcstr} discharge";
+            }
+        }
+        public double ChargeTemperature { get; set; }
+        public double DischargeTemperature { get; set; }
+        public double ChargeCurrent { get; set; }
+        public double DischargeCurrent { get; set; }
         public TestCountEnum TestCount { get; set; }
         public int Loop { get; set; }
         public ObservableCollection<TestRecordClass> FirstTestRecords { get; set; }
@@ -36,23 +56,29 @@ namespace BCLabManager.Model
         public SubProgramClass(SubProgramTemplate template)
         {
             //this.Name = template.Name;
-            this.ChargeTemperature = template.ChargeTemperature;
-            this.ChargeCurrent = template.ChargeCurrent;
-            this.DischargeTemperature = template.DischargeTemperature;
-            this.DischargeCurrent = template.DischargeCurrent;
+            //this.ChargeTemperature = template.ChargeTemperature;
+            //if (template.ChargeCurrentType == CurrentType.Absolute)
+            //    this.ChargeCurrent = template.ChargeCurrent;
+            //else if (template.ChargeCurrentType == CurrentType.Percentage)
+            //    this.ChargeCurrent = template.ChargeCurrent * capacity;
+            //this.DischargeTemperature = template.DischargeTemperature;
+            //if (template.DischargeCurrentType == CurrentType.Absolute)
+            //    this.DischargeCurrent = template.DischargeCurrent;
+            //else if (template.DischargeCurrentType == CurrentType.Percentage)
+            //    this.DischargeCurrent = template.DischargeCurrent * capacity;
             this.TestCount = template.TestCount;
             this.FirstTestRecords = new ObservableCollection<TestRecordClass>();
             this.SecondTestRecords = new ObservableCollection<TestRecordClass>();
 
             var tr = new TestRecordClass();
             tr.StatusChanged += this.TestRecord_StatusChanged;
-            tr.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
+            tr.SubProgramStr = this.Name;
             this.FirstTestRecords.Add(tr);
             if (this.TestCount == TestCountEnum.Two)
             {
                 var tr1 = new TestRecordClass();
                 tr1.StatusChanged += this.TestRecord_StatusChanged;
-                tr1.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
+                tr1.SubProgramStr = this.Name;
                 this.SecondTestRecords.Add(tr1);
             }
         }
@@ -62,7 +88,7 @@ namespace BCLabManager.Model
             //this.Name = template.Name;
             this.ChargeTemperature = template.ChargeTemperature;
             this.ChargeCurrent = template.ChargeCurrent;
-            this.DischargeTemperature = template.DischargeTemperature;
+            this.ChargeCurrent = template.DischargeTemperature;
             this.DischargeCurrent = template.DischargeCurrent;
             this.TestCount = template.TestCount;
             this.Loop = loop;
@@ -71,24 +97,24 @@ namespace BCLabManager.Model
 
             var tr = new TestRecordClass();
             tr.StatusChanged += this.TestRecord_StatusChanged;
-            tr.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
+            tr.SubProgramStr = this.Name;
             tr.ProgramStr = ProgramStr;
             this.FirstTestRecords.Add(tr);
             if (this.TestCount == TestCountEnum.Two)
             {
                 var tr1 = new TestRecordClass();
                 tr1.StatusChanged += this.TestRecord_StatusChanged;
-                tr1.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
+                tr1.SubProgramStr = this.Name;
                 tr1.ProgramStr = ProgramStr;
                 this.SecondTestRecords.Add(tr1);
             }
         }
 
         public SubProgramClass(
-            ChargeTemperatureClass chargeTemperature, 
-            ChargeCurrentClass chargeCurrent, 
-            DischargeTemperatureClass dischargeTemperature, 
-            DischargeCurrentClass dischargeCurrent, 
+            double chargeTemperature,
+            double chargeCurrent,
+            double dischargeTemperature,
+            double dischargeCurrent, 
             TestCountEnum TestCount,
             int Loop) : this()
         {
@@ -113,12 +139,12 @@ namespace BCLabManager.Model
         //}
         public SubProgramClass Clone()  //Clone Name and Test Count, and create testrecords list
         {
-            var newsub = new SubProgramClass(this.ChargeTemperature, this.ChargeCurrent, this.DischargeTemperature, this.DischargeCurrent, this.TestCount, this.Loop);
+            var newsub = new SubProgramClass(this.ChargeTemperature, this.ChargeCurrent, this.ChargeCurrent, this.DischargeCurrent, this.TestCount, this.Loop);
             if (this.TestCount == TestCountEnum.One)
             {
                 newsub.FirstTestRecords = new ObservableCollection<TestRecordClass>();
                 var tr = new TestRecordClass();
-                tr.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
+                tr.SubProgramStr = this.Name;
                 tr.StatusChanged += newsub.TestRecord_StatusChanged;
                 newsub.FirstTestRecords.Add(tr);
             }
@@ -126,12 +152,12 @@ namespace BCLabManager.Model
             {
                 newsub.FirstTestRecords = new ObservableCollection<TestRecordClass>();
                 var tr = new TestRecordClass();
-                tr.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
+                tr.SubProgramStr = this.Name;
                 tr.StatusChanged += newsub.TestRecord_StatusChanged;
                 newsub.FirstTestRecords.Add(tr);
                 newsub.SecondTestRecords = new ObservableCollection<TestRecordClass>();
                 tr = new TestRecordClass();
-                tr.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
+                tr.SubProgramStr = this.Name;
                 tr.StatusChanged += newsub.TestRecord_StatusChanged;
                 newsub.SecondTestRecords.Add(tr);
             }

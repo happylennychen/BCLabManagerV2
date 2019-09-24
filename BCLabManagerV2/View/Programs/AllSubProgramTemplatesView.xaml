@@ -33,10 +33,10 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <v:AllChargeTemperaturesView x:Name="AllChargeTemperaturesViewInstance"></v:AllChargeTemperaturesView>
-            <v:AllChargeCurrentsView x:Name="AllChargeCurrentsViewInstance" Grid.Row="1"></v:AllChargeCurrentsView>
-            <v:AllDischargeTemperaturesView x:Name="AllDischargeTemperaturesViewInstance" Grid.Row="2"></v:AllDischargeTemperaturesView>
-            <v:AllDischargeCurrentsView x:Name="AllDischargeCurrentsViewInstance" Grid.Row="3"></v:AllDischargeCurrentsView>
+            <v:AllTemperaturesView x:Name="AllTemperaturesViewInstance"></v:AllTemperaturesView>
+            <v:AllPercentageCurrentsView x:Name="AllPercentageCurrentsViewInstance" Grid.Row="1"></v:AllPercentageCurrentsView>
+            <v:AllAbsoluteCurrentsView x:Name="AllAbsoluteCurrentsViewInstance" Grid.Row="2"></v:AllAbsoluteCurrentsView>
+            <v:AllDynamicCurrentsView x:Name="AllDynamicCurrentsViewInstance" Grid.Row="3"></v:AllDynamicCurrentsView>
         </Grid>
         <GroupBox Grid.Column="1" Header="SubProgram Templates">
             <DockPanel>

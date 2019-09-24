@@ -19,9 +19,9 @@ namespace BCLabManager.View
     /// <summary>
     /// Interaction logic for AllChannelsView.xaml
     /// </summary>
-    public partial class AllChargeCurrentsView : UserControl
+    public partial class AllDynamicCurrentsView : UserControl
     {
-        public AllChargeCurrentsView()
+        public AllDynamicCurrentsView()
         {
             InitializeComponent();
         }

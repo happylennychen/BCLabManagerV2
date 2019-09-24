@@ -54,10 +54,10 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                return $"{_subProgramTemplate.ChargeTemperature.Name} {_subProgramTemplate.ChargeCurrent} charge, {_subProgramTemplate.DischargeTemperature} {_subProgramTemplate.DischargeCurrent} discharge";
+                return _subProgramTemplate.Name;
             }
         }
-        public ChargeTemperatureClass ChargeTemperature
+        public double ChargeTemperature
         {
             get { return _subProgramTemplate.ChargeTemperature; }
             set
@@ -70,7 +70,7 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("ChargeTemperature");
             }
         }
-        public ChargeCurrentClass ChargeCurrent
+        public double ChargeCurrent
         {
             get { return _subProgramTemplate.ChargeCurrent; }
             set
@@ -83,7 +83,7 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("ChargeCurrent");
             }
         }
-        public DischargeTemperatureClass DischargeTemperature
+        public double DischargeTemperature
         {
             get { return _subProgramTemplate.DischargeTemperature; }
             set
@@ -96,7 +96,7 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("DischargeTemperature");
             }
         }
-        public DischargeCurrentClass DischargeCurrent
+        public double DischargeCurrent
         {
             get { return _subProgramTemplate.DischargeCurrent; }
             set

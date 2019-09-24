@@ -13,16 +13,16 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class ChargeTemperatureViewModel : ViewModelBase//, IDataErrorInfo
+    public class AbsoluteCurrentViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-        private readonly ChargeTemperatureClass _chargeTemperature;
+        private readonly AbsoluteCurrentClass _chargeTemperature;
 
         #endregion // Fields
 
         #region Constructor
 
-        public ChargeTemperatureViewModel(ChargeTemperatureClass chargeTemperature)
+        public AbsoluteCurrentViewModel(AbsoluteCurrentClass chargeTemperature)
         {
             _chargeTemperature = chargeTemperature;
             _chargeTemperature.PropertyChanged += _chargeTemperature_PropertyChanged;
@@ -35,7 +35,7 @@ namespace BCLabManager.ViewModel
 
         #endregion // Constructor
 
-        #region ChargeTemperatureClass Properties
+        #region DischargeTemperatureClass Properties
 
         public int Id
         {
@@ -50,17 +50,17 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("Id");
             }
         }
-        public string Name
+        public double Value
         {
-            get { return _chargeTemperature.Name; }
+            get { return _chargeTemperature.Value; }
             set
             {
-                if (value == _chargeTemperature.Name)
+                if (value == _chargeTemperature.Value)
                     return;
 
-                _chargeTemperature.Name = value;
+                _chargeTemperature.Value = value;
 
-                base.OnPropertyChanged("Name");
+                base.OnPropertyChanged("Value");
             }
         }
         #endregion

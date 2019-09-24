@@ -10,11 +10,11 @@ using System.Windows.Input;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllChargeCurrentsViewModel : ViewModelBase
+    public class AllTemperaturesViewModel : ViewModelBase
     {
         #region Fields
-        List<ChargeCurrentClass> _chargeCurrents;
-        ChargeCurrentViewModel _selectedItem;
+        List<TemperatureClass> _chargeTemperatures;
+        TemperatureViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
@@ -23,19 +23,19 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllChargeCurrentsViewModel(List<ChargeCurrentClass> chargeCurrents)
+        public AllTemperaturesViewModel(List<TemperatureClass> chargeTemperatures)
         {
-            this.CreateAllChargeCurrents(chargeCurrents);
+            this.CreateAllChargeTemperatures(chargeTemperatures);
         }
 
-        void CreateAllChargeCurrents(List<ChargeCurrentClass> chargeCurrents)
+        void CreateAllChargeTemperatures(List<TemperatureClass> chargeTemperatures)
         {
-            _chargeCurrents = chargeCurrents;
-            List<ChargeCurrentViewModel> all =
-                (from ct in chargeCurrents
-                 select new ChargeCurrentViewModel(ct)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+            _chargeTemperatures = chargeTemperatures;
+            List<TemperatureViewModel> all =
+                (from ct in chargeTemperatures
+                 select new TemperatureViewModel(ct)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-            this.AllChargeCurrents = new ObservableCollection<ChargeCurrentViewModel>(all);     //再转换成Observable
+            this.AllChargeTemperatures = new ObservableCollection<TemperatureViewModel>(all);     //再转换成Observable
         }
 
         #endregion // Constructor
@@ -45,9 +45,9 @@ namespace BCLabManager.ViewModel
         /// <summary>
         /// Returns a collection of all the SubProgramModelViewModel objects.
         /// </summary>
-        public ObservableCollection<ChargeCurrentViewModel> AllChargeCurrents { get; private set; }
+        public ObservableCollection<TemperatureViewModel> AllChargeTemperatures { get; private set; }
 
-        public ChargeCurrentViewModel SelectedItem    //绑定选中项，从而改变subprograms
+        public TemperatureViewModel SelectedItem    //绑定选中项，从而改变subprograms
         {
             get
             {
@@ -110,83 +110,83 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            ChargeCurrentClass model = new ChargeCurrentClass();      //实例化一个新的model
-            ChargeCurrentEditViewModel viewmodel = new ChargeCurrentEditViewModel(model);      //实例化一个新的view model
-            viewmodel.DisplayName = "ChargeCurrent-Create";
+            TemperatureClass model = new TemperatureClass();      //实例化一个新的model
+            TemperatureEditViewModel viewmodel = new TemperatureEditViewModel(model);      //实例化一个新的view model
+            viewmodel.DisplayName = "ChargeTemperature-Create";
             viewmodel.commandType = CommandType.Create;
-            var ChargeCurrentEditViewInstance = new ChargeCurrentEditView();      //实例化一个新的view
-            ChargeCurrentEditViewInstance.DataContext = viewmodel;
-            ChargeCurrentEditViewInstance.ShowDialog();                   //设置viewmodel属性
+            var TemperatureEditViewInstance = new TemperatureEditView();      //实例化一个新的view
+            TemperatureEditViewInstance.DataContext = viewmodel;
+            TemperatureEditViewInstance.ShowDialog();                   //设置viewmodel属性
             if (viewmodel.IsOK == true)
             {
                 using (var dbContext = new AppDbContext())
                 {
-                    dbContext.ChargeCurrents.Add(model);
+                    dbContext.Temperatures.Add(model);
                     dbContext.SaveChanges();
                 }
-                _chargeCurrents.Add(model);
-                this.AllChargeCurrents.Add(new ChargeCurrentViewModel(model));
+                _chargeTemperatures.Add(model);
+                this.AllChargeTemperatures.Add(new TemperatureViewModel(model));
             }
         }
         private void Edit()
         {
-            ChargeCurrentClass model = new ChargeCurrentClass();      //实例化一个新的model
-            ChargeCurrentEditViewModel viewmodel = new ChargeCurrentEditViewModel(model);      //实例化一个新的view model
-            viewmodel.Name = _selectedItem.Name;
-            viewmodel.DisplayName = "ChargeCurrent-Edit";
+            TemperatureClass model = new TemperatureClass();      //实例化一个新的model
+            TemperatureEditViewModel viewmodel = new TemperatureEditViewModel(model);      //实例化一个新的view model
+            viewmodel.Value = _selectedItem.Value;
+            viewmodel.DisplayName = "ChargeTemperature-Edit";
             viewmodel.commandType = CommandType.Edit;
-            var ChargeCurrentEditViewInstance = new ChargeCurrentEditView();      //实例化一个新的view
-            ChargeCurrentEditViewInstance.DataContext = viewmodel;
-            ChargeCurrentEditViewInstance.ShowDialog();
+            var ChargeTemperatureEditViewInstance = new TemperatureEditView();      //实例化一个新的view
+            ChargeTemperatureEditViewInstance.DataContext = viewmodel;
+            ChargeTemperatureEditViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)
             {
-                _selectedItem.Name = viewmodel.Name;
+                _selectedItem.Value = viewmodel.Value;
                 using (var dbContext = new AppDbContext())
                 {
-                    var ct = dbContext.ChargeCurrents.SingleOrDefault(i => i.Id == _selectedItem.Id);
-                    ct.Name = _selectedItem.Name;
+                    var ct = dbContext.Temperatures.SingleOrDefault(i => i.Id == _selectedItem.Id);
+                    ct.Value = _selectedItem.Value;
                     dbContext.SaveChanges();
                 }
             }
         }
         private bool CanEdit
         {
-            get { return _selectedItem != null; }
+            get { return (_selectedItem != null && _selectedItem.Value!=-9999); }
         }
         private void SaveAs()
         {
-            ChargeCurrentClass model = new ChargeCurrentClass();      //实例化一个新的model
-            ChargeCurrentEditViewModel viewmodel = new ChargeCurrentEditViewModel(model);      //实例化一个新的view model
-            viewmodel.Name = _selectedItem.Name;
-            viewmodel.DisplayName = "ChargeCurrent-Save As";
+            TemperatureClass model = new TemperatureClass();      //实例化一个新的model
+            TemperatureEditViewModel viewmodel = new TemperatureEditViewModel(model);      //实例化一个新的view model
+            viewmodel.Value = _selectedItem.Value;
+            viewmodel.DisplayName = "ChargeTemperature-Save As";
             viewmodel.commandType = CommandType.SaveAs;
-            var ChargeCurrentEditViewInstance = new ChargeCurrentEditView();      //实例化一个新的view
-            ChargeCurrentEditViewInstance.DataContext = viewmodel;
-            ChargeCurrentEditViewInstance.ShowDialog();
+            var ChargeTemperatureEditViewInstance = new TemperatureEditView();      //实例化一个新的view
+            ChargeTemperatureEditViewInstance.DataContext = viewmodel;
+            ChargeTemperatureEditViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)
             {
                 using (var dbContext = new AppDbContext())
                 {
-                    dbContext.ChargeCurrents.Add(model);
+                    dbContext.Temperatures.Add(model);
                     dbContext.SaveChanges();
                 }
-                _chargeCurrents.Add(model);
-                this.AllChargeCurrents.Add(new ChargeCurrentViewModel(model));
+                _chargeTemperatures.Add(model);
+                this.AllChargeTemperatures.Add(new TemperatureViewModel(model));
             }
         }
         private bool CanSaveAs
         {
-            get { return _selectedItem != null; }
+            get { return (_selectedItem != null && _selectedItem.Value != -9999); }
         }
         #endregion //Private Helper
         #region  Base Class Overrides
 
         protected override void OnDispose()
         {
-            foreach (ChargeCurrentViewModel viewmodel in this.AllChargeCurrents)
+            foreach (TemperatureViewModel viewmodel in this.AllChargeTemperatures)
                 viewmodel.Dispose();
 
-            this.AllChargeCurrents.Clear();
+            this.AllChargeTemperatures.Clear();
             //this.AllSubProgramModels.CollectionChanged -= this.OnCollectionChanged;
         }
 

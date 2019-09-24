@@ -10,11 +10,11 @@ using System.Windows.Input;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllChargeTemperaturesViewModel : ViewModelBase
+    public class AllDynamicCurrentsViewModel : ViewModelBase
     {
         #region Fields
-        List<ChargeTemperatureClass> _chargeTemperatures;
-        ChargeTemperatureViewModel _selectedItem;
+        List<DynamicCurrentClass> _dynamicCurrents;
+        DynamicCurrentViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
@@ -23,19 +23,19 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllChargeTemperaturesViewModel(List<ChargeTemperatureClass> chargeTemperatures)
+        public AllDynamicCurrentsViewModel(List<DynamicCurrentClass> dynamicCurrents)
         {
-            this.CreateAllChargeTemperatures(chargeTemperatures);
+            this.CreateAlldynamicCurrents(dynamicCurrents);
         }
 
-        void CreateAllChargeTemperatures(List<ChargeTemperatureClass> chargeTemperatures)
+        void CreateAlldynamicCurrents(List<DynamicCurrentClass> dynamicCurrents)
         {
-            _chargeTemperatures = chargeTemperatures;
-            List<ChargeTemperatureViewModel> all =
-                (from ct in chargeTemperatures
-                 select new ChargeTemperatureViewModel(ct)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+            _dynamicCurrents = dynamicCurrents;
+            List<DynamicCurrentViewModel> all =
+                (from ct in dynamicCurrents
+                 select new DynamicCurrentViewModel(ct)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-            this.AllChargeTemperatures = new ObservableCollection<ChargeTemperatureViewModel>(all);     //再转换成Observable
+            this.AlldynamicCurrents = new ObservableCollection<DynamicCurrentViewModel>(all);     //再转换成Observable
         }
 
         #endregion // Constructor
@@ -45,9 +45,9 @@ namespace BCLabManager.ViewModel
         /// <summary>
         /// Returns a collection of all the SubProgramModelViewModel objects.
         /// </summary>
-        public ObservableCollection<ChargeTemperatureViewModel> AllChargeTemperatures { get; private set; }
+        public ObservableCollection<DynamicCurrentViewModel> AlldynamicCurrents { get; private set; }
 
-        public ChargeTemperatureViewModel SelectedItem    //绑定选中项，从而改变subprograms
+        public DynamicCurrentViewModel SelectedItem    //绑定选中项，从而改变subprograms
         {
             get
             {
@@ -110,41 +110,41 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            ChargeTemperatureClass model = new ChargeTemperatureClass();      //实例化一个新的model
-            ChargeTemperatureEditViewModel viewmodel = new ChargeTemperatureEditViewModel(model);      //实例化一个新的view model
-            viewmodel.DisplayName = "ChargeTemperature-Create";
+            DynamicCurrentClass model = new DynamicCurrentClass();      //实例化一个新的model
+            DynamicCurrentEditViewModel viewmodel = new DynamicCurrentEditViewModel(model);      //实例化一个新的view model
+            viewmodel.DisplayName = "DischargeCurrent-Create";
             viewmodel.commandType = CommandType.Create;
-            var ChargeTemperatureEditViewInstance = new ChargeTemperatureEditView();      //实例化一个新的view
-            ChargeTemperatureEditViewInstance.DataContext = viewmodel;
-            ChargeTemperatureEditViewInstance.ShowDialog();                   //设置viewmodel属性
+            var DischargeCurrentEditViewInstance = new DischargeCurrentEditView();      //实例化一个新的view
+            DischargeCurrentEditViewInstance.DataContext = viewmodel;
+            DischargeCurrentEditViewInstance.ShowDialog();                   //设置viewmodel属性
             if (viewmodel.IsOK == true)
             {
                 using (var dbContext = new AppDbContext())
                 {
-                    dbContext.ChargeTemperatures.Add(model);
+                    dbContext.DynamicCurrents.Add(model);
                     dbContext.SaveChanges();
                 }
-                _chargeTemperatures.Add(model);
-                this.AllChargeTemperatures.Add(new ChargeTemperatureViewModel(model));
+                _dynamicCurrents.Add(model);
+                this.AlldynamicCurrents.Add(new DynamicCurrentViewModel(model));
             }
         }
         private void Edit()
         {
-            ChargeTemperatureClass model = new ChargeTemperatureClass();      //实例化一个新的model
-            ChargeTemperatureEditViewModel viewmodel = new ChargeTemperatureEditViewModel(model);      //实例化一个新的view model
-            viewmodel.Name = _selectedItem.Name;
-            viewmodel.DisplayName = "ChargeTemperature-Edit";
+            DynamicCurrentClass model = new DynamicCurrentClass();      //实例化一个新的model
+            DynamicCurrentEditViewModel viewmodel = new DynamicCurrentEditViewModel(model);      //实例化一个新的view model
+            viewmodel.Value = _selectedItem.Value;
+            viewmodel.DisplayName = "DischargeCurrent-Edit";
             viewmodel.commandType = CommandType.Edit;
-            var ChargeTemperatureEditViewInstance = new ChargeTemperatureEditView();      //实例化一个新的view
-            ChargeTemperatureEditViewInstance.DataContext = viewmodel;
-            ChargeTemperatureEditViewInstance.ShowDialog();
+            var DischargeCurrentEditViewInstance = new DischargeCurrentEditView();      //实例化一个新的view
+            DischargeCurrentEditViewInstance.DataContext = viewmodel;
+            DischargeCurrentEditViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)
             {
-                _selectedItem.Name = viewmodel.Name;
+                _selectedItem.Value = viewmodel.Value;
                 using (var dbContext = new AppDbContext())
                 {
-                    var ct = dbContext.ChargeTemperatures.SingleOrDefault(i => i.Id == _selectedItem.Id);
-                    ct.Name = _selectedItem.Name;
+                    var ct = dbContext.DynamicCurrents.SingleOrDefault(i => i.Id == _selectedItem.Id);
+                    ct.Value = _selectedItem.Value;
                     dbContext.SaveChanges();
                 }
             }
@@ -155,23 +155,23 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            ChargeTemperatureClass model = new ChargeTemperatureClass();      //实例化一个新的model
-            ChargeTemperatureEditViewModel viewmodel = new ChargeTemperatureEditViewModel(model);      //实例化一个新的view model
-            viewmodel.Name = _selectedItem.Name;
-            viewmodel.DisplayName = "ChargeTemperature-Save As";
+            DynamicCurrentClass model = new DynamicCurrentClass();      //实例化一个新的model
+            DynamicCurrentEditViewModel viewmodel = new DynamicCurrentEditViewModel(model);      //实例化一个新的view model
+            viewmodel.Value = _selectedItem.Value;
+            viewmodel.DisplayName = "DischargeCurrent-Save As";
             viewmodel.commandType = CommandType.SaveAs;
-            var ChargeTemperatureEditViewInstance = new ChargeTemperatureEditView();      //实例化一个新的view
-            ChargeTemperatureEditViewInstance.DataContext = viewmodel;
-            ChargeTemperatureEditViewInstance.ShowDialog();
+            var DischargeCurrentEditViewInstance = new DischargeCurrentEditView();      //实例化一个新的view
+            DischargeCurrentEditViewInstance.DataContext = viewmodel;
+            DischargeCurrentEditViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)
             {
                 using (var dbContext = new AppDbContext())
                 {
-                    dbContext.ChargeTemperatures.Add(model);
+                    dbContext.DynamicCurrents.Add(model);
                     dbContext.SaveChanges();
                 }
-                _chargeTemperatures.Add(model);
-                this.AllChargeTemperatures.Add(new ChargeTemperatureViewModel(model));
+                _dynamicCurrents.Add(model);
+                this.AlldynamicCurrents.Add(new DynamicCurrentViewModel(model));
             }
         }
         private bool CanSaveAs
@@ -183,10 +183,10 @@ namespace BCLabManager.ViewModel
 
         protected override void OnDispose()
         {
-            foreach (ChargeTemperatureViewModel viewmodel in this.AllChargeTemperatures)
+            foreach (DynamicCurrentViewModel viewmodel in this.AlldynamicCurrents)
                 viewmodel.Dispose();
 
-            this.AllChargeTemperatures.Clear();
+            this.AlldynamicCurrents.Clear();
             //this.AllSubProgramModels.CollectionChanged -= this.OnCollectionChanged;
         }
 

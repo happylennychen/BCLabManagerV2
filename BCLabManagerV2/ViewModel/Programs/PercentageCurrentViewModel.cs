@@ -13,16 +13,16 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class ChargeCurrentViewModel : ViewModelBase//, IDataErrorInfo
+    public class PercentageCurrentViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-        private readonly ChargeCurrentClass _chargeCurrent;
+        private readonly PercentageCurrentClass _chargeCurrent;
 
         #endregion // Fields
 
         #region Constructor
 
-        public ChargeCurrentViewModel(ChargeCurrentClass chargeCurrent)
+        public PercentageCurrentViewModel(PercentageCurrentClass chargeCurrent)
         {
             _chargeCurrent = chargeCurrent;
             _chargeCurrent.PropertyChanged += _chargeCurrent_PropertyChanged;
@@ -50,17 +50,17 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("Id");
             }
         }
-        public string Name
+        public double Value
         {
-            get { return _chargeCurrent.Name; }
+            get { return _chargeCurrent.Value; }
             set
             {
-                if (value == _chargeCurrent.Name)
+                if (value == _chargeCurrent.Value)
                     return;
 
-                _chargeCurrent.Name = value;
+                _chargeCurrent.Value = value;
 
-                base.OnPropertyChanged("Name");
+                base.OnPropertyChanged("Value");
             }
         }
         #endregion

@@ -13,19 +13,19 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class DischargeTemperatureViewModel : ViewModelBase//, IDataErrorInfo
+    public class TemperatureViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-        private readonly DischargeTemperatureClass _chargeTemperature;
+        private readonly TemperatureClass _temperature;
 
         #endregion // Fields
 
         #region Constructor
 
-        public DischargeTemperatureViewModel(DischargeTemperatureClass chargeTemperature)
+        public TemperatureViewModel(TemperatureClass temperature)
         {
-            _chargeTemperature = chargeTemperature;
-            _chargeTemperature.PropertyChanged += _chargeTemperature_PropertyChanged;
+            _temperature = temperature;
+            _temperature.PropertyChanged += _chargeTemperature_PropertyChanged;
         }
 
         private void _chargeTemperature_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -35,32 +35,42 @@ namespace BCLabManager.ViewModel
 
         #endregion // Constructor
 
-        #region DischargeTemperatureClass Properties
+        #region ChargeTemperatureClass Properties
 
         public int Id
         {
-            get { return _chargeTemperature.Id; }
+            get { return _temperature.Id; }
             set
             {
-                if (value == _chargeTemperature.Id)
+                if (value == _temperature.Id)
                     return;
 
-                _chargeTemperature.Id = value;
+                _temperature.Id = value;
 
                 base.OnPropertyChanged("Id");
             }
         }
-        public string Name
+        public double Value
         {
-            get { return _chargeTemperature.Name; }
+            get { return _temperature.Value; }
             set
             {
-                if (value == _chargeTemperature.Name)
+                if (value == _temperature.Value)
                     return;
 
-                _chargeTemperature.Name = value;
+                _temperature.Value = value;
 
-                base.OnPropertyChanged("Name");
+                base.OnPropertyChanged("Value");
+            }
+        }
+        public string ValueStr
+        {
+            get
+            {
+                if (_temperature.Value == -9999)
+                    return "Room";
+                else
+                    return _temperature.Value.ToString();
             }
         }
         #endregion

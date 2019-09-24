@@ -13,10 +13,10 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class DischargeCurrentEditViewModel : ViewModelBase//, IDataErrorInfo
+    public class DynamicCurrentEditViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-        public readonly DischargeCurrentClass _dischargeCurrent;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
+        public readonly DynamicCurrentClass _dynamicCurrent;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
         RelayCommand _okCommand;
         bool _isOK;
 
@@ -24,39 +24,39 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public DischargeCurrentEditViewModel(DischargeCurrentClass chargeCurrent)
+        public DynamicCurrentEditViewModel(DynamicCurrentClass chargeCurrent)
         {
-            _dischargeCurrent = chargeCurrent;
+            _dynamicCurrent = chargeCurrent;
         }
 
         #endregion // Constructor
 
-        #region DischargeCurrent Properties
+        #region DynamicCurrent Properties
 
         public int Id
         {
-            get { return _dischargeCurrent.Id; }
+            get { return _dynamicCurrent.Id; }
             set
             {
-                if (value == _dischargeCurrent.Id)
+                if (value == _dynamicCurrent.Id)
                     return;
 
-                _dischargeCurrent.Id = value;
+                _dynamicCurrent.Id = value;
 
                 base.OnPropertyChanged("Id");
             }
         }
-        public string Name
+        public double Value
         {
-            get { return _dischargeCurrent.Name; }
+            get { return _dynamicCurrent.Value; }
             set
             {
-                if (value == _dischargeCurrent.Name)
+                if (value == _dynamicCurrent.Value)
                     return;
 
-                _dischargeCurrent.Name = value;
+                _dynamicCurrent.Value = value;
 
-                base.OnPropertyChanged("Name");
+                base.OnPropertyChanged("Value");
             }
         }
 
@@ -133,13 +133,13 @@ namespace BCLabManager.ViewModel
         /// Returns true if this customer was created by the user and it has not yet
         /// been saved to the customer repository.
         /// </summary>
-        bool IsNewDischargeCurrent
+        bool IsNewdynamicCurrent
         {
             get
             {
                 //int number = (
                 //    from bat in _subprogramRepository.GetItems()
-                //    where bat.Name == _DischargeCurrent.Name     //名字（某一个属性）一样就认为是一样的
+                //    where bat.Name == _dynamicCurrent.Name     //名字（某一个属性）一样就认为是一样的
                 //    select bat).Count();
                 //if (number != 0)
                 //    return false;
@@ -153,7 +153,7 @@ namespace BCLabManager.ViewModel
         /// </summary>
         bool CanCreate
         {
-            get { return IsNewDischargeCurrent; }
+            get { return IsNewdynamicCurrent; }
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace BCLabManager.ViewModel
         /// </summary>
         bool CanSaveAs
         {
-            get { return IsNewDischargeCurrent; }
+            get { return IsNewdynamicCurrent; }
         }
 
         #endregion // Private Helpers
