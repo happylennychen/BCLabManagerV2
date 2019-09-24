@@ -16,16 +16,16 @@ namespace BCLabManager.ViewModel
     public class DynamicCurrentViewModel : ViewModelBase//, IDataErrorInfo
     {
         #region Fields
-        private readonly DynamicCurrentClass _dynamicCurrent;
+        private readonly DynamicCurrentClass _model;
 
         #endregion // Fields
 
         #region Constructor
 
-        public DynamicCurrentViewModel(DynamicCurrentClass dynamicCurrent)
+        public DynamicCurrentViewModel(DynamicCurrentClass model)
         {
-            _dynamicCurrent = dynamicCurrent;
-            _dynamicCurrent.PropertyChanged += _dynamicCurrent_PropertyChanged;
+            _model = model;
+            _model.PropertyChanged += _dynamicCurrent_PropertyChanged;
         }
 
         private void _dynamicCurrent_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -39,29 +39,33 @@ namespace BCLabManager.ViewModel
 
         public int Id
         {
-            get { return _dynamicCurrent.Id; }
+            get { return _model.Id; }
             set
             {
-                if (value == _dynamicCurrent.Id)
+                if (value == _model.Id)
                     return;
 
-                _dynamicCurrent.Id = value;
+                _model.Id = value;
 
                 base.OnPropertyChanged("Id");
             }
         }
         public double Value
         {
-            get { return _dynamicCurrent.Value; }
+            get { return _model.Value; }
             set
             {
-                if (value == _dynamicCurrent.Value)
+                if (value == _model.Value)
                     return;
 
-                _dynamicCurrent.Value = value;
+                _model.Value = value;
 
                 base.OnPropertyChanged("Value");
             }
+        }
+        public string ValueStr
+        {
+            get { return "D" + _model.Value.ToString(); }
         }
         #endregion
     }

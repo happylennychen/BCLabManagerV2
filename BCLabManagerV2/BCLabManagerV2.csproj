@@ -266,7 +266,7 @@
     <Compile Include="ViewModel\Programs\AllAbsoluteCurrentsViewModel.cs" />
     <Compile Include="ViewModel\Programs\DynamicCurrentEditViewModel.cs" />
     <Compile Include="ViewModel\Programs\PercentageCurrentEditViewModel.cs" />
-    <Compile Include="ViewModel\Programs\DischargeCurrentViewModel.cs" />
+    <Compile Include="ViewModel\Programs\DynamicCurrentViewModel.cs" />
     <Compile Include="ViewModel\Programs\PercentageCurrentViewModel.cs" />
     <Compile Include="ViewModel\Programs\AbsoluteCurrentEditViewModel.cs" />
     <Compile Include="ViewModel\Programs\AbsoluteCurrentViewModel.cs" />
@@ -364,11 +364,11 @@
     <Compile Include="View\Programs\AbsoluteCurrentEditView.xaml.cs">
       <DependentUpon>AbsoluteCurrentEditView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Programs\DischargeCurrentEditView.xaml.cs">
-      <DependentUpon>DischargeCurrentEditView.xaml</DependentUpon>
+    <Compile Include="View\Programs\DynamicCurrentEditView.xaml.cs">
+      <DependentUpon>DynamicCurrentEditView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Programs\ChargeCurrentEditView.xaml.cs">
-      <DependentUpon>ChargeCurrentEditView.xaml</DependentUpon>
+    <Compile Include="View\Programs\PercentageCurrentEditView.xaml.cs">
+      <DependentUpon>PercentageCurrentEditView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Programs\RawDataView.xaml.cs">
       <DependentUpon>RawDataView.xaml</DependentUpon>
@@ -480,11 +480,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Programs\DischargeCurrentEditView.xaml">
+    <Page Include="View\Programs\DynamicCurrentEditView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Programs\ChargeCurrentEditView.xaml">
+    <Page Include="View\Programs\PercentageCurrentEditView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

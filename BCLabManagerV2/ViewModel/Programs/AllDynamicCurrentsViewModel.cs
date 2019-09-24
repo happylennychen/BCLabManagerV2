@@ -25,17 +25,17 @@ namespace BCLabManager.ViewModel
 
         public AllDynamicCurrentsViewModel(List<DynamicCurrentClass> dynamicCurrents)
         {
-            this.CreateAlldynamicCurrents(dynamicCurrents);
+            this.CreateAllDynamicCurrents(dynamicCurrents);
         }
 
-        void CreateAlldynamicCurrents(List<DynamicCurrentClass> dynamicCurrents)
+        void CreateAllDynamicCurrents(List<DynamicCurrentClass> dynamicCurrents)
         {
             _dynamicCurrents = dynamicCurrents;
             List<DynamicCurrentViewModel> all =
                 (from ct in dynamicCurrents
                  select new DynamicCurrentViewModel(ct)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-            this.AlldynamicCurrents = new ObservableCollection<DynamicCurrentViewModel>(all);     //再转换成Observable
+            this.AllDynamicCurrents = new ObservableCollection<DynamicCurrentViewModel>(all);     //再转换成Observable
         }
 
         #endregion // Constructor
@@ -45,7 +45,7 @@ namespace BCLabManager.ViewModel
         /// <summary>
         /// Returns a collection of all the SubProgramModelViewModel objects.
         /// </summary>
-        public ObservableCollection<DynamicCurrentViewModel> AlldynamicCurrents { get; private set; }
+        public ObservableCollection<DynamicCurrentViewModel> AllDynamicCurrents { get; private set; }
 
         public DynamicCurrentViewModel SelectedItem    //绑定选中项，从而改变subprograms
         {
@@ -114,9 +114,9 @@ namespace BCLabManager.ViewModel
             DynamicCurrentEditViewModel viewmodel = new DynamicCurrentEditViewModel(model);      //实例化一个新的view model
             viewmodel.DisplayName = "DischargeCurrent-Create";
             viewmodel.commandType = CommandType.Create;
-            var DischargeCurrentEditViewInstance = new DischargeCurrentEditView();      //实例化一个新的view
-            DischargeCurrentEditViewInstance.DataContext = viewmodel;
-            DischargeCurrentEditViewInstance.ShowDialog();                   //设置viewmodel属性
+            var view = new DynamicCurrentEditView();      //实例化一个新的view
+            view.DataContext = viewmodel;
+            view.ShowDialog();                   //设置viewmodel属性
             if (viewmodel.IsOK == true)
             {
                 using (var dbContext = new AppDbContext())
@@ -125,7 +125,7 @@ namespace BCLabManager.ViewModel
                     dbContext.SaveChanges();
                 }
                 _dynamicCurrents.Add(model);
-                this.AlldynamicCurrents.Add(new DynamicCurrentViewModel(model));
+                this.AllDynamicCurrents.Add(new DynamicCurrentViewModel(model));
             }
         }
         private void Edit()
@@ -135,9 +135,9 @@ namespace BCLabManager.ViewModel
             viewmodel.Value = _selectedItem.Value;
             viewmodel.DisplayName = "DischargeCurrent-Edit";
             viewmodel.commandType = CommandType.Edit;
-            var DischargeCurrentEditViewInstance = new DischargeCurrentEditView();      //实例化一个新的view
-            DischargeCurrentEditViewInstance.DataContext = viewmodel;
-            DischargeCurrentEditViewInstance.ShowDialog();
+            var view = new DynamicCurrentEditView();      //实例化一个新的view
+            view.DataContext = viewmodel;
+            view.ShowDialog();
             if (viewmodel.IsOK == true)
             {
                 _selectedItem.Value = viewmodel.Value;
@@ -160,9 +160,9 @@ namespace BCLabManager.ViewModel
             viewmodel.Value = _selectedItem.Value;
             viewmodel.DisplayName = "DischargeCurrent-Save As";
             viewmodel.commandType = CommandType.SaveAs;
-            var DischargeCurrentEditViewInstance = new DischargeCurrentEditView();      //实例化一个新的view
-            DischargeCurrentEditViewInstance.DataContext = viewmodel;
-            DischargeCurrentEditViewInstance.ShowDialog();
+            var view = new DynamicCurrentEditView();      //实例化一个新的view
+            view.DataContext = viewmodel;
+            view.ShowDialog();
             if (viewmodel.IsOK == true)
             {
                 using (var dbContext = new AppDbContext())
@@ -171,7 +171,7 @@ namespace BCLabManager.ViewModel
                     dbContext.SaveChanges();
                 }
                 _dynamicCurrents.Add(model);
-                this.AlldynamicCurrents.Add(new DynamicCurrentViewModel(model));
+                this.AllDynamicCurrents.Add(new DynamicCurrentViewModel(model));
             }
         }
         private bool CanSaveAs
@@ -183,10 +183,10 @@ namespace BCLabManager.ViewModel
 
         protected override void OnDispose()
         {
-            foreach (DynamicCurrentViewModel viewmodel in this.AlldynamicCurrents)
+            foreach (DynamicCurrentViewModel viewmodel in this.AllDynamicCurrents)
                 viewmodel.Dispose();
 
-            this.AlldynamicCurrents.Clear();
+            this.AllDynamicCurrents.Clear();
             //this.AllSubProgramModels.CollectionChanged -= this.OnCollectionChanged;
         }
 

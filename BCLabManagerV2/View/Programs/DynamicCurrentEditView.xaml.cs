@@ -16,9 +16,9 @@ namespace BCLabManager.View
     /// <summary>
     /// Interaction logic for ChannelView.xaml
     /// </summary>
-    public partial class DischargeCurrentEditView : Window
+    public partial class DynamicCurrentEditView : Window
     {
-        public DischargeCurrentEditView()
+        public DynamicCurrentEditView()
         {
             InitializeComponent();
         }

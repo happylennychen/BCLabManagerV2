@@ -753,23 +753,23 @@ namespace BCLabManager
             using (var dbContext = new AppDbContext())
             {
                 DynamicCurrentClass obj = new DynamicCurrentClass();
-                obj.Id = 1;
+                obj.Value = 1;
                 dbContext.DynamicCurrents.Add(obj);
 
                 obj = new DynamicCurrentClass();
-                obj.Id = 2;
+                obj.Value = 2;
                 dbContext.DynamicCurrents.Add(obj);
 
                 obj = new DynamicCurrentClass();
-                obj.Id = 3;
+                obj.Value = 3;
                 dbContext.DynamicCurrents.Add(obj);
 
                 obj = new DynamicCurrentClass();
-                obj.Id = 4;
+                obj.Value = 4;
                 dbContext.DynamicCurrents.Add(obj);
 
                 obj = new DynamicCurrentClass();
-                obj.Id = 5;
+                obj.Value = 5;
                 dbContext.DynamicCurrents.Add(obj);
 
                 dbContext.SaveChanges();

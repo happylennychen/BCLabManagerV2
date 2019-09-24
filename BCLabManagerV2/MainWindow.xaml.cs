@@ -175,6 +175,8 @@ namespace BCLabManager
 
                 AbsoluteCurrents = new List<AbsoluteCurrentClass>(dbContext.AbsoluteCurrents.ToList());
 
+                DynamicCurrents = new List<DynamicCurrentClass>(dbContext.DynamicCurrents.ToList());
+
                 Programs = new ObservableCollection<ProgramClass>(dbContext.Programs
                      .Include(pro => pro.SubPrograms)
                         .ThenInclude(sub => sub.FirstTestRecords)
@@ -240,6 +242,8 @@ namespace BCLabManager
             allPercentageCurrentsViewModel = new AllPercentageCurrentsViewModel(PercentageCurrents);
 
             allAbsoluteCurrentsViewModel = new AllAbsoluteCurrentsViewModel(AbsoluteCurrents);
+
+            allDynamicCurrentsViewModel = new AllDynamicCurrentsViewModel(DynamicCurrents);
 
             allProgramsViewModel = new AllProgramsViewModel
                 (
