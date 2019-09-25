@@ -48,11 +48,11 @@ namespace BCLabManager.ViewModel
             _subProgramTemplate = subProgramTemplateModel;
 
             ChargeAbsoluteCurrentVisibility = Visibility.Hidden;
-            ChargePercentageCurrentVisibility = Visibility.Hidden;
+            ChargePercentageCurrentVisibility = Visibility.Visible;
             ChargeDynamicCurrentVisibility = Visibility.Hidden;
 
             DischargeAbsoluteCurrentVisibility = Visibility.Hidden;
-            DischargePercentageCurrentVisibility = Visibility.Hidden;
+            DischargePercentageCurrentVisibility = Visibility.Visible;
             DischargeDynamicCurrentVisibility = Visibility.Hidden;
         }
 
@@ -107,12 +107,14 @@ namespace BCLabManager.ViewModel
         //}
         public TemperatureClass ChargeTemperature
         {
+            get { return _temperatures.SingleOrDefault(o=>o.Value == _subProgramTemplate.ChargeTemperature); }
             set
             {
                 if (value.Value == _subProgramTemplate.ChargeTemperature)
                     return;
 
                 _subProgramTemplate.ChargeTemperature = value.Value;
+                base.OnPropertyChanged("ChargeTemperature");
             }
         }
         public CurrentTypeEnum ChargeCurrentType
@@ -138,8 +140,8 @@ namespace BCLabManager.ViewModel
                     ChargeAbsoluteCurrentVisibility = Visibility.Hidden;
                     ChargeDynamicCurrentVisibility = Visibility.Visible;
                 }
-                if (value == _subProgramTemplate.ChargeCurrentType)
-                    return;
+                //if (value == _subProgramTemplate.ChargeCurrentType)
+                    //return;
 
                 _subProgramTemplate.ChargeCurrentType = value;
 
@@ -161,12 +163,15 @@ namespace BCLabManager.ViewModel
         //}
         public TemperatureClass DischargeTemperature
         {
+            get { return _temperatures.SingleOrDefault(o => o.Value == _subProgramTemplate.DischargeTemperature); }
             set
             {
                 if (value.Value == _subProgramTemplate.DischargeTemperature)
                     return;
 
                 _subProgramTemplate.DischargeTemperature = value.Value;
+
+                base.OnPropertyChanged("DischargeTemperature");
             }
         }
         public CurrentTypeEnum DischargeCurrentType
@@ -192,8 +197,8 @@ namespace BCLabManager.ViewModel
                     DischargeAbsoluteCurrentVisibility = Visibility.Hidden;
                     DischargeDynamicCurrentVisibility = Visibility.Visible;
                 }
-                if (value == _subProgramTemplate.DischargeCurrentType)
-                    return;
+                //if (value == _subProgramTemplate.DischargeCurrentType)
+                    //return;
 
                 _subProgramTemplate.DischargeCurrentType = value;
 

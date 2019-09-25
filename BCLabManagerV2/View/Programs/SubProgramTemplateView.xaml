@@ -50,7 +50,7 @@
             <ComboBox 
       Grid.Row="2" Grid.Column="2" 
       ItemsSource="{Binding Path=CurrentTypeOptions, Mode=OneTime}"
-      SelectedItem="{Binding Path=ChargeCurrentType, ValidatesOnDataErrors=True, Mode=OneWayToSource}"
+      SelectedItem="{Binding Path=ChargeCurrentType, ValidatesOnDataErrors=True, Mode=TwoWay}"
       Validation.ErrorTemplate="{x:Null}"
       >
             </ComboBox>
@@ -103,7 +103,7 @@
             <ComboBox 
       Grid.Row="8" Grid.Column="2" 
       ItemsSource="{Binding Path=CurrentTypeOptions, Mode=OneTime}"
-      SelectedItem="{Binding Path=DischargeCurrentType, ValidatesOnDataErrors=True, Mode=OneWayToSource}"
+      SelectedItem="{Binding Path=DischargeCurrentType, ValidatesOnDataErrors=True, Mode=TwoWay}"
       Validation.ErrorTemplate="{x:Null}"
       >
             </ComboBox>

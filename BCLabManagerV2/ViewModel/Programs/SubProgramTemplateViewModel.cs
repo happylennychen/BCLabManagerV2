@@ -68,6 +68,7 @@ namespace BCLabManager.ViewModel
                 _subProgramTemplate.ChargeTemperature = value;
 
                 base.OnPropertyChanged("ChargeTemperature");
+                base.OnPropertyChanged("ChargeTemperatureStr");
             }
         }
         public string ChargeTemperatureStr
@@ -103,6 +104,7 @@ namespace BCLabManager.ViewModel
                 _subProgramTemplate.ChargeCurrent = value;
 
                 base.OnPropertyChanged("ChargeCurrent");
+                base.OnPropertyChanged("ChargeCurrentStr");
             }
         }
         public string ChargeCurrentStr
@@ -129,6 +131,7 @@ namespace BCLabManager.ViewModel
                 _subProgramTemplate.DischargeTemperature = value;
 
                 base.OnPropertyChanged("DischargeTemperature");
+                base.OnPropertyChanged("DischargeTemperatureStr");
             }
         }
         public string DischargeTemperatureStr
@@ -165,6 +168,7 @@ namespace BCLabManager.ViewModel
                 _subProgramTemplate.DischargeCurrent = value;
 
                 base.OnPropertyChanged("DischargeCurrent");
+                base.OnPropertyChanged("DischargeCurrentStr");
             }
         }
         public string DischargeCurrentStr
