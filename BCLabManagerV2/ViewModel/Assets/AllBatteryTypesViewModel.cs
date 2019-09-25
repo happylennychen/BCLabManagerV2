@@ -169,6 +169,7 @@ namespace BCLabManager.ViewModel
             btevm.Manufactor = _selectedItem.Manufactor;
             btevm.Material = _selectedItem.Material;
             btevm.Name = _selectedItem.Name;
+            btevm.TypicalCapacity = _selectedItem.TypicalCapacity;
             btevm.DisplayName = "Battery Type-Edit";
             var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
             BatteryTypeViewInstance.DataContext = btevm;
@@ -178,12 +179,14 @@ namespace BCLabManager.ViewModel
                 _selectedItem.Manufactor = btevm.Manufactor;
                 _selectedItem.Material = btevm.Material;
                 _selectedItem.Name = btevm.Name;
+                _selectedItem.TypicalCapacity = btevm.TypicalCapacity;
                 using (var dbContext = new AppDbContext())
                 {
                     var batT = dbContext.BatteryTypes.SingleOrDefault(b => b.Id == _selectedItem.Id);
                     batT.Manufactor = btc.Manufactor;
                     batT.Material = btc.Material;
                     batT.Name = btc.Name;
+                    batT.TypicalCapacity = btc.TypicalCapacity;
                     dbContext.SaveChanges();
                 }
             }
@@ -199,6 +202,7 @@ namespace BCLabManager.ViewModel
             btevm.Manufactor = _selectedItem.Manufactor;
             btevm.Material = _selectedItem.Material;
             btevm.Name = _selectedItem.Name;
+            btevm.TypicalCapacity = _selectedItem.TypicalCapacity;
             btevm.DisplayName = "Battery Type-Save As";
             var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
             BatteryTypeViewInstance.DataContext = btevm;

@@ -29,11 +29,11 @@ namespace BCLabManager.Migrations
                     Manufactor = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     Material = table.Column<string>(nullable: true),
-                    LimitedChargeVoltage = table.Column<int>(nullable: false),
-                    RatedCapacity = table.Column<int>(nullable: false),
-                    NominalVoltage = table.Column<int>(nullable: false),
-                    TypicalCapacity = table.Column<int>(nullable: false),
-                    CutoffDischargeVoltage = table.Column<int>(nullable: false)
+                    LimitedChargeVoltage = table.Column<double>(nullable: false),
+                    RatedCapacity = table.Column<double>(nullable: false),
+                    NominalVoltage = table.Column<double>(nullable: false),
+                    TypicalCapacity = table.Column<double>(nullable: false),
+                    CutoffDischargeVoltage = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -235,7 +235,9 @@ namespace BCLabManager.Migrations
                     ChargeTemperature = table.Column<double>(nullable: false),
                     DischargeTemperature = table.Column<double>(nullable: false),
                     ChargeCurrent = table.Column<double>(nullable: false),
+                    ChargeCurrentType = table.Column<int>(nullable: false),
                     DischargeCurrent = table.Column<double>(nullable: false),
+                    DischargeCurrentType = table.Column<int>(nullable: false),
                     TestCount = table.Column<int>(nullable: false),
                     Loop = table.Column<int>(nullable: false),
                     ProgramClassId = table.Column<int>(nullable: true)

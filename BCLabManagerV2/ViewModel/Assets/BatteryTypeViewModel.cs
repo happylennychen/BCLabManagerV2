@@ -94,6 +94,20 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public double TypicalCapacity
+        {
+            get { return _batterytype.TypicalCapacity; }
+            set
+            {
+                if (value == _batterytype.TypicalCapacity)
+                    return;
+
+                _batterytype.TypicalCapacity = value;
+
+                base.OnPropertyChanged("TypicalCapacity");
+            }
+        }
+
         #endregion // Customer Properties
     }
 }

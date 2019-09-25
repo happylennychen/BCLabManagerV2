@@ -12,11 +12,11 @@ namespace BCLabManager.Model
         public String Manufactor { get; set; }
         public String Name { get; set; }
         public String Material { get; set; }
-        public Int32 LimitedChargeVoltage { get; set; }
-        public Int32 RatedCapacity { get; set; }
-        public Int32 NominalVoltage { get; set; }
-        public Int32 TypicalCapacity { get; set; }
-        public Int32 CutoffDischargeVoltage { get; set; }
+        public double LimitedChargeVoltage { get; set; }
+        public double RatedCapacity { get; set; }
+        public double NominalVoltage { get; set; }
+        public double TypicalCapacity { get; set; }
+        public double CutoffDischargeVoltage { get; set; }
 
         public BatteryTypeClass()
         { }

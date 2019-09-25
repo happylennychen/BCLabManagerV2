@@ -21,29 +21,45 @@ namespace BCLabManager.Model
         {
             get
             {
-                string ctstr;
-                string ccstr;
-                string dtstr;
-                string dcstr;
+                string ctstr = "";
+                string ccstr = "";
+                string dtstr = "";
+                string dcstr = "";
                 if (this.ChargeTemperature == -9999)
                     ctstr = "Room";
                 else
                     ctstr = this.ChargeTemperature.ToString() + " deg";
-                ccstr = this.ChargeCurrent.ToString() + "mA";
+
+                if (ChargeCurrentType == CurrentTypeEnum.Absolute)
+                    ccstr = this.ChargeCurrent.ToString() + "mA";
+                else if (ChargeCurrentType == CurrentTypeEnum.Percentage)
+                    ccstr = this.ChargeCurrent.ToString() + "C";
+                else if (ChargeCurrentType == CurrentTypeEnum.Dynamic)
+                    ccstr = "D" + this.ChargeCurrent.ToString();
+
                 if (this.DischargeTemperature == -9999)
                     dtstr = "Room";
                 else
                     dtstr = this.DischargeTemperature.ToString() + " deg";
-                dcstr = this.DischargeCurrent.ToString() + "mA";
+
+                if (DischargeCurrentType == CurrentTypeEnum.Absolute)
+                    dcstr = this.DischargeCurrent.ToString() + "mA";
+                else if (DischargeCurrentType == CurrentTypeEnum.Percentage)
+                    dcstr = this.DischargeCurrent.ToString() + "C";
+                else if (DischargeCurrentType == CurrentTypeEnum.Dynamic)
+                    dcstr = "D" + this.DischargeCurrent.ToString();
+
                 return $"{ctstr} {ccstr} charge, {dtstr} {dcstr} discharge";
             }
         }
         public double ChargeTemperature { get; set; }
         public double DischargeTemperature { get; set; }
         public double ChargeCurrent { get; set; }
+        public CurrentTypeEnum ChargeCurrentType { get; set; }
         public double DischargeCurrent { get; set; }
+        public CurrentTypeEnum DischargeCurrentType { get; set; }
         public TestCountEnum TestCount { get; set; }
-        public int Loop { get; set; }
+        public int Loop { get; set; } = 1;
         public ObservableCollection<TestRecordClass> FirstTestRecords { get; set; }
         public ObservableCollection<TestRecordClass> SecondTestRecords { get; set; }
 
@@ -56,16 +72,12 @@ namespace BCLabManager.Model
         public SubProgramClass(SubProgramTemplate template)
         {
             //this.Name = template.Name;
-            //this.ChargeTemperature = template.ChargeTemperature;
-            //if (template.ChargeCurrentType == CurrentType.Absolute)
-            //    this.ChargeCurrent = template.ChargeCurrent;
-            //else if (template.ChargeCurrentType == CurrentType.Percentage)
-            //    this.ChargeCurrent = template.ChargeCurrent * capacity;
-            //this.DischargeTemperature = template.DischargeTemperature;
-            //if (template.DischargeCurrentType == CurrentType.Absolute)
-            //    this.DischargeCurrent = template.DischargeCurrent;
-            //else if (template.DischargeCurrentType == CurrentType.Percentage)
-            //    this.DischargeCurrent = template.DischargeCurrent * capacity;
+            this.ChargeTemperature = template.ChargeTemperature;
+                this.ChargeCurrent = template.ChargeCurrent;
+            this.DischargeTemperature = template.DischargeTemperature;
+                this.DischargeCurrent = template.DischargeCurrent;
+            this.ChargeCurrentType = template.ChargeCurrentType;
+            this.DischargeCurrentType = template.DischargeCurrentType;
             this.TestCount = template.TestCount;
             this.FirstTestRecords = new ObservableCollection<TestRecordClass>();
             this.SecondTestRecords = new ObservableCollection<TestRecordClass>();
@@ -88,8 +100,10 @@ namespace BCLabManager.Model
             //this.Name = template.Name;
             this.ChargeTemperature = template.ChargeTemperature;
             this.ChargeCurrent = template.ChargeCurrent;
-            this.ChargeCurrent = template.DischargeTemperature;
+            this.DischargeTemperature = template.DischargeTemperature;
             this.DischargeCurrent = template.DischargeCurrent;
+            this.ChargeCurrentType = template.ChargeCurrentType;
+            this.DischargeCurrentType = template.DischargeCurrentType;
             this.TestCount = template.TestCount;
             this.Loop = loop;
             this.FirstTestRecords = new ObservableCollection<TestRecordClass>();
@@ -115,6 +129,8 @@ namespace BCLabManager.Model
             double chargeCurrent,
             double dischargeTemperature,
             double dischargeCurrent, 
+            CurrentTypeEnum chargeCurrentType,
+            CurrentTypeEnum dischargeCurrentType,
             TestCountEnum TestCount,
             int Loop) : this()
         {
@@ -123,6 +139,8 @@ namespace BCLabManager.Model
             this.ChargeCurrent = chargeCurrent;
             this.DischargeTemperature = dischargeTemperature;
             this.DischargeCurrent = dischargeCurrent;
+            this.ChargeCurrentType = chargeCurrentType;
+            this.DischargeCurrentType = dischargeCurrentType;
             this.TestCount = TestCount;
             this.Loop = Loop;
         }
@@ -139,7 +157,7 @@ namespace BCLabManager.Model
         //}
         public SubProgramClass Clone()  //Clone Name and Test Count, and create testrecords list
         {
-            var newsub = new SubProgramClass(this.ChargeTemperature, this.ChargeCurrent, this.ChargeCurrent, this.DischargeCurrent, this.TestCount, this.Loop);
+            var newsub = new SubProgramClass(this.ChargeTemperature, this.ChargeCurrent, this.ChargeCurrent, this.DischargeCurrent,this.ChargeCurrentType, this.DischargeCurrentType, this.TestCount, this.Loop);
             if (this.TestCount == TestCountEnum.One)
             {
                 newsub.FirstTestRecords = new ObservableCollection<TestRecordClass>();

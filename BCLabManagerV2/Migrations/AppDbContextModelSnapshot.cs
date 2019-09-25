@@ -83,9 +83,9 @@ namespace BCLabManager.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CutoffDischargeVoltage");
+                    b.Property<double>("CutoffDischargeVoltage");
 
-                    b.Property<int>("LimitedChargeVoltage");
+                    b.Property<double>("LimitedChargeVoltage");
 
                     b.Property<string>("Manufactor");
 
@@ -93,11 +93,11 @@ namespace BCLabManager.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("NominalVoltage");
+                    b.Property<double>("NominalVoltage");
 
-                    b.Property<int>("RatedCapacity");
+                    b.Property<double>("RatedCapacity");
 
-                    b.Property<int>("TypicalCapacity");
+                    b.Property<double>("TypicalCapacity");
 
                     b.HasKey("Id");
 
@@ -239,9 +239,13 @@ namespace BCLabManager.Migrations
 
                     b.Property<double>("ChargeCurrent");
 
+                    b.Property<int>("ChargeCurrentType");
+
                     b.Property<double>("ChargeTemperature");
 
                     b.Property<double>("DischargeCurrent");
+
+                    b.Property<int>("DischargeCurrentType");
 
                     b.Property<double>("DischargeTemperature");
 

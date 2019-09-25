@@ -60,6 +60,10 @@
             Header="Material" 
             DisplayMemberBinding="{Binding Path=Material}" 
             />
+                            <GridViewColumn 
+            Header="Capacity" 
+            DisplayMemberBinding="{Binding Path=TypicalCapacity}" 
+            />
                         </GridView>
                     </ListView.View>
                 </ListView>
