@@ -16,6 +16,7 @@ namespace BCLabManager.Model
     public class SubProgramClass : ModelBase
     {
         public int Id { get; set; }
+        public SubProgramTemplate Template { get; set; }
         public bool IsAbandoned { get; set; }
         public String Name
         {
@@ -72,6 +73,7 @@ namespace BCLabManager.Model
         public SubProgramClass(SubProgramTemplate template)
         {
             //this.Name = template.Name;
+            Template = template;
             this.ChargeTemperature = template.ChargeTemperature;
                 this.ChargeCurrent = template.ChargeCurrent;
             this.DischargeTemperature = template.DischargeTemperature;

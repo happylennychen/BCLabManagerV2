@@ -30,5 +30,13 @@ namespace BCLabManager.Model
                 //if(etr == null)
             }
         }
+        public static bool IsContain(BatteryTypeClass batteryType, SubProgramTemplate subProgramTemplate, TestCountEnum testCount)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var etr = dbContext.EstimateTimeRecords.Count(o => o.BatteryType.Id == batteryType.Id && o.SubTemplate.Id == subProgramTemplate.Id && o.SubTemplate.TestCount == testCount);
+                return etr == 1;
+            }
+        }
     }
 }

@@ -32,6 +32,31 @@ namespace BCLabManager.ViewModel
             var trlist = GetAllTestRecords(program);
             foreach(var tr in trlist)
                 tr.StatusChanged += Tr_StatusChanged;
+
+            UpdateEstimateTime();
+        }
+
+        private void UpdateEstimateTime()
+        {
+            foreach (var sub in _program.SubPrograms)
+            {
+                if (sub.TestCount == TestCountEnum.One)
+                {
+                    if (EstimateTimeManager.IsContain(_program.BatteryType, sub.Template, TestCountEnum.One))   //如果有历史数据，就看历史数据
+                    { 
+                    }
+                    else            //否则看配置
+                    {
+                        if (sub.ChargeCurrentType != CurrentTypeEnum.Dynamic && sub.DischargeCurrentType != CurrentTypeEnum.Dynamic)
+                        {
+                            double cap = _program.BatteryType.TypicalCapacity;
+                            TimeSpan chargetime = TimeSpan.FromHours(cap / sub.ChargeCurrent);
+                            TimeSpan dischargetime = TimeSpan.FromHours(cap / sub.DischargeCurrent);
+                            TimeSpan subtime = chargetime + dischargetime;
+                        }
+                    }
+            }
+
         }
 
         private void Tr_StatusChanged(object sender, StatusChangedEventArgs e)
@@ -192,6 +217,19 @@ namespace BCLabManager.ViewModel
                 return ((double)alltr.Count(o => o.Status == TestStatus.Abandoned) / (double)alltr.Count).ToString() + "*";
             }
         }
+
+        private TimeSpan _estimateTime;
+
+        public TimeSpan EstimateTime
+        {
+            get { return _estimateTime; }
+            set
+            {
+                _estimateTime = value;
+                OnPropertyChanged("EstimateTime");
+            }
+        }
+
         #endregion
 
         private List<TestRecordClass> GetAllTestRecords(ProgramClass program)
