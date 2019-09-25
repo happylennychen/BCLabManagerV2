@@ -62,19 +62,27 @@
             />
                             <GridViewColumn 
             Header="ChargeTemperature" 
-            DisplayMemberBinding="{Binding Path=ChargeTemperature}" 
+            DisplayMemberBinding="{Binding Path=ChargeTemperatureStr}" 
+            />
+                            <GridViewColumn 
+            Header="ChargeCurrentType" 
+            DisplayMemberBinding="{Binding Path=ChargeCurrentType}" 
             />
                             <GridViewColumn 
             Header="ChargeCurrent" 
-            DisplayMemberBinding="{Binding Path=ChargeCurrent}" 
+            DisplayMemberBinding="{Binding Path=ChargeCurrentStr}" 
             />
                             <GridViewColumn 
             Header="DischargeTemperature" 
-            DisplayMemberBinding="{Binding Path=DischargeTemperature}" 
+            DisplayMemberBinding="{Binding Path=DischargeTemperatureStr}" 
+            />
+                            <GridViewColumn 
+            Header="DischargeCurrentType" 
+            DisplayMemberBinding="{Binding Path=DischargeCurrentType}" 
             />
                             <GridViewColumn 
             Header="DischargeCurrent" 
-            DisplayMemberBinding="{Binding Path=DischargeCurrent}" 
+            DisplayMemberBinding="{Binding Path=DischargeCurrentStr}" 
             />
                             <GridViewColumn 
             Header="TestCount" 

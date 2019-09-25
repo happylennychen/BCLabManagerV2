@@ -1,7 +1,7 @@
 ﻿<Window x:Class="BCLabManager.View.SubProgramTemplateView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="{Binding Path=DisplayName}" Height="350" Width="300" WindowStartupLocation="CenterScreen">
+        Title="{Binding Path=DisplayName}" Height="450" Width="300" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid Margin="4">
             <Grid.ColumnDefinitions>
@@ -11,6 +11,10 @@
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="30" />
                 <RowDefinition Height="Auto" />
@@ -32,7 +36,7 @@
       />
             <ComboBox 
       Grid.Row="0" Grid.Column="2" 
-      ItemsSource="{Binding Path=AllChargeTemperatures, Mode=OneWay}"
+      ItemsSource="{Binding Path=AllTemperatures, Mode=OneWay}"
       SelectedItem="{Binding Path=ChargeTemperature, ValidatesOnDataErrors=True}"
       Validation.ErrorTemplate="{x:Null}"
       >
@@ -40,52 +44,106 @@
             
             <Label 
       Grid.Row="2" Grid.Column="0" 
-      Content="Charge Current:" 
+      Content="Charge Current Type:" 
       HorizontalAlignment="Right"
       />
             <ComboBox 
       Grid.Row="2" Grid.Column="2" 
-      ItemsSource="{Binding Path=AllChargeCurrents, Mode=OneWay}"
-      SelectedItem="{Binding Path=ChargeCurrent, ValidatesOnDataErrors=True}"
+      ItemsSource="{Binding Path=CurrentTypeOptions, Mode=OneTime}"
+      SelectedItem="{Binding Path=ChargeCurrentType, ValidatesOnDataErrors=True, Mode=OneWayToSource}"
       Validation.ErrorTemplate="{x:Null}"
       >
             </ComboBox>
-            
+
             <Label 
       Grid.Row="4" Grid.Column="0" 
+      Content="Charge Current:" 
+      HorizontalAlignment="Right"
+      />
+            <ComboBox
+      Grid.Row="4" Grid.Column="2" 
+      ItemsSource="{Binding Path=AllPercentageCurrents, Mode=OneWay}"
+      SelectedItem="{Binding Path=ChargePercentageCurrent, ValidatesOnDataErrors=True}"
+                Visibility="{Binding Path=ChargePercentageCurrentVisibility}"
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <ComboBox
+      Grid.Row="4" Grid.Column="2" 
+      ItemsSource="{Binding Path=AllAbsoluteCurrents, Mode=OneWay}"
+      SelectedItem="{Binding Path=ChargeAbsoluteCurrent, ValidatesOnDataErrors=True}"
+                Visibility="{Binding Path=ChargeAbsoluteCurrentVisibility}"
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <ComboBox
+      Grid.Row="4" Grid.Column="2" 
+      ItemsSource="{Binding Path=AllDynamicCurrents, Mode=OneWay}"
+      SelectedItem="{Binding Path=ChargeDynamicCurrent, ValidatesOnDataErrors=True}"
+                Visibility="{Binding Path=ChargeDynamicCurrentVisibility}"
+      Validation.ErrorTemplate="{x:Null}"
+      />
+
+            <Label 
+      Grid.Row="6" Grid.Column="0" 
       Content="Discharge Temperature:" 
       HorizontalAlignment="Right"
       />
             <ComboBox 
-      Grid.Row="4" Grid.Column="2" 
-      ItemsSource="{Binding Path=AllDischargeTemperatures, Mode=OneWay}"
+      Grid.Row="6" Grid.Column="2" 
+      ItemsSource="{Binding Path=AllTemperatures, Mode=OneWay}"
       SelectedItem="{Binding Path=DischargeTemperature, ValidatesOnDataErrors=True}"
       Validation.ErrorTemplate="{x:Null}"
       >
             </ComboBox>
 
             <Label 
-      Grid.Row="6" Grid.Column="0" 
-      Content="Discharge Current:" 
+      Grid.Row="8" Grid.Column="0" 
+      Content="Discharge Current Type:" 
       HorizontalAlignment="Right"
       />
             <ComboBox 
-      Grid.Row="6" Grid.Column="2" 
-      ItemsSource="{Binding Path=AllDischargeCurrents, Mode=OneWay}"
-      SelectedItem="{Binding Path=DischargeCurrent, ValidatesOnDataErrors=True}"
+      Grid.Row="8" Grid.Column="2" 
+      ItemsSource="{Binding Path=CurrentTypeOptions, Mode=OneTime}"
+      SelectedItem="{Binding Path=DischargeCurrentType, ValidatesOnDataErrors=True, Mode=OneWayToSource}"
       Validation.ErrorTemplate="{x:Null}"
       >
             </ComboBox>
 
             <Label 
-      Grid.Row="8" Grid.Column="0" 
+      Grid.Row="10" Grid.Column="0" 
+      Content="Discharge Current:" 
+      HorizontalAlignment="Right"
+      />
+            <ComboBox 
+      Grid.Row="10" Grid.Column="2" 
+      ItemsSource="{Binding Path=AllPercentageCurrents, Mode=OneWay}"
+      SelectedItem="{Binding Path=DischargePercentageCurrent, ValidatesOnDataErrors=True}"
+                Visibility="{Binding Path=DischargePercentageCurrentVisibility}"
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <ComboBox 
+      Grid.Row="10" Grid.Column="2" 
+      ItemsSource="{Binding Path=AllAbsoluteCurrents, Mode=OneWay}"
+      SelectedItem="{Binding Path=DischargeAbsoluteCurrent, ValidatesOnDataErrors=True}"
+                Visibility="{Binding Path=DischargeAbsoluteCurrentVisibility}"
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <ComboBox 
+      Grid.Row="10" Grid.Column="2" 
+      ItemsSource="{Binding Path=AllDynamicCurrents, Mode=OneWay}"
+      SelectedItem="{Binding Path=DischargeDynamicCurrent, ValidatesOnDataErrors=True}"
+                Visibility="{Binding Path=DischargeDynamicCurrentVisibility}"
+      Validation.ErrorTemplate="{x:Null}"
+      />
+
+            <Label 
+      Grid.Row="12" Grid.Column="0" 
       Content="_Test Count:" 
       HorizontalAlignment="Right"
       Target="{Binding ElementName=TestCountCmb}" 
       />
             <ComboBox 
       x:Name="TestCountCmb"
-      Grid.Row="8" Grid.Column="2" 
+      Grid.Row="12" Grid.Column="2" 
       ItemsSource="{Binding Path=TestCountOptions, Mode=OneTime}"
       SelectedItem="{Binding Path=TestCount, ValidatesOnDataErrors=True}"
       Validation.ErrorTemplate="{x:Null}"
@@ -95,7 +153,7 @@
 
             <!-- SAVE BUTTON -->
             <Button 
-      Grid.Row="10" Grid.Column="2"
+      Grid.Row="14" Grid.Column="2"
       Command="{Binding Path=OKCommand}"
                 Click="Button_Click"
       Content="_OK"

@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using BCLabManager.Properties;
+using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
@@ -17,9 +18,9 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
         List<TemperatureClass> _temperatures;
-        List<PercentageCurrentClass> _percentageCurrent;
-        List<AbsoluteCurrentClass> _absoluteCurrent;
-        List<DynamicCurrentClass> _dynamicCurrent;
+        List<PercentageCurrentClass> _percentageCurrents;
+        List<AbsoluteCurrentClass> _absoluteCurrents;
+        List<DynamicCurrentClass> _dynamicCurrents;
         public readonly SubProgramTemplate _subProgramTemplate;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
         RelayCommand _okCommand;
         bool _isOK;
@@ -31,40 +32,48 @@ namespace BCLabManager.ViewModel
         public SubProgramTemplateEditViewModel(
             SubProgramTemplate subProgramTemplateModel,
             List<TemperatureClass> temperatures,
-            List<PercentageCurrentClass> percentageCurrent,
-            List<AbsoluteCurrentClass> absoluteCurrent,
-            List<DynamicCurrentClass> dynamicCurrent
+            List<PercentageCurrentClass> percentageCurrents,
+            List<AbsoluteCurrentClass> absoluteCurrents,
+            List<DynamicCurrentClass> dynamicCurrents
             )
         {
             _temperatures = temperatures;
-            _percentageCurrent = percentageCurrent;
-            _absoluteCurrent = absoluteCurrent;
-            _dynamicCurrent = dynamicCurrent;
-            this.AllTemperatures = CreateAlltemperatures(temperatures);
-            this.AllPercentageCurrent = CreateAllpercentageCurrent(percentageCurrent);
-            this.AllAbsoluteCurrent = CreateAllabsoluteCurrent(absoluteCurrent);
-            this.AllDynamicCurrent = CreateAlldynamicCurrent(dynamicCurrent);
+            _percentageCurrents = percentageCurrents;
+            _absoluteCurrents = absoluteCurrents;
+            _dynamicCurrents = dynamicCurrents;
+            this.AllTemperatures = CreateAllTemperatures(temperatures);
+            this.AllPercentageCurrents = CreateAllPercentageCurrents(percentageCurrents);
+            this.AllAbsoluteCurrents = CreateAllAbsoluteCurrents(absoluteCurrents);
+            this.AllDynamicCurrents = CreateAllDynamicCurrents(dynamicCurrents);
             _subProgramTemplate = subProgramTemplateModel;
+
+            ChargeAbsoluteCurrentVisibility = Visibility.Hidden;
+            ChargePercentageCurrentVisibility = Visibility.Hidden;
+            ChargeDynamicCurrentVisibility = Visibility.Hidden;
+
+            DischargeAbsoluteCurrentVisibility = Visibility.Hidden;
+            DischargePercentageCurrentVisibility = Visibility.Hidden;
+            DischargeDynamicCurrentVisibility = Visibility.Hidden;
         }
 
-        private ObservableCollection<TemperatureClass> CreateAlltemperatures(List<TemperatureClass> temperatures)
+        private ObservableCollection<TemperatureClass> CreateAllTemperatures(List<TemperatureClass> temperatures)
         {
             return new ObservableCollection<TemperatureClass>(temperatures);
         }
 
-        private ObservableCollection<PercentageCurrentClass> CreateAllpercentageCurrent(List<PercentageCurrentClass> percentageCurrent)
+        private ObservableCollection<PercentageCurrentClass> CreateAllPercentageCurrents(List<PercentageCurrentClass> percentageCurrents)
         {
-            return new ObservableCollection<PercentageCurrentClass>(percentageCurrent);
+            return new ObservableCollection<PercentageCurrentClass>(percentageCurrents);
         }
 
-        private ObservableCollection<AbsoluteCurrentClass> CreateAllabsoluteCurrent(List<AbsoluteCurrentClass> absoluteCurrent)
+        private ObservableCollection<AbsoluteCurrentClass> CreateAllAbsoluteCurrents(List<AbsoluteCurrentClass> absoluteCurrents)
         {
-            return new ObservableCollection<AbsoluteCurrentClass>(absoluteCurrent);
+            return new ObservableCollection<AbsoluteCurrentClass>(absoluteCurrents);
         }
 
-        private ObservableCollection<DynamicCurrentClass> CreateAlldynamicCurrent(List<DynamicCurrentClass> dynamicCurrent)
+        private ObservableCollection<DynamicCurrentClass> CreateAllDynamicCurrents(List<DynamicCurrentClass> dynamicCurrents)
         {
-            return new ObservableCollection<DynamicCurrentClass>(dynamicCurrent);
+            return new ObservableCollection<DynamicCurrentClass>(dynamicCurrents);
         }
         #endregion // Constructor
 
@@ -109,19 +118,50 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("ChargeTemperature");
             }
         }
-        public double ChargeCurrent
+        public CurrentTypeEnum ChargeCurrentType
         {
-            get { return _subProgramTemplate.ChargeCurrent; }
+            get { return _subProgramTemplate.ChargeCurrentType; }
             set
             {
-                if (value == _subProgramTemplate.ChargeCurrent)
+                if (value == _subProgramTemplate.ChargeCurrentType)
                     return;
 
-                _subProgramTemplate.ChargeCurrent = value;
+                _subProgramTemplate.ChargeCurrentType = value;
 
-                base.OnPropertyChanged("ChargeCurrent");
+                base.OnPropertyChanged("ChargeCurrentType");
+                if (value == CurrentTypeEnum.Percentage)
+                {
+                    ChargePercentageCurrentVisibility = Visibility.Visible;
+                    ChargeAbsoluteCurrentVisibility = Visibility.Hidden;
+                    ChargeDynamicCurrentVisibility = Visibility.Hidden;
+                }
+                else if (value == CurrentTypeEnum.Absolute)
+                {
+                    ChargePercentageCurrentVisibility = Visibility.Hidden;
+                    ChargeAbsoluteCurrentVisibility = Visibility.Visible;
+                    ChargeDynamicCurrentVisibility = Visibility.Hidden;
+                }
+                else if(value == CurrentTypeEnum.Dynamic)
+                {
+                    ChargePercentageCurrentVisibility = Visibility.Hidden;
+                    ChargeAbsoluteCurrentVisibility = Visibility.Hidden;
+                    ChargeDynamicCurrentVisibility = Visibility.Visible;
+                }
             }
         }
+        //public double ChargeCurrent
+        //{
+        //    get { return _subProgramTemplate.ChargeCurrent; }
+        //    set
+        //    {
+        //        if (value == _subProgramTemplate.ChargeCurrent)
+        //            return;
+
+        //        _subProgramTemplate.ChargeCurrent = value;
+
+        //        base.OnPropertyChanged("ChargeCurrent");
+        //    }
+        //}
         public double DischargeTemperature
         {
             get { return _subProgramTemplate.DischargeTemperature; }
@@ -133,6 +173,37 @@ namespace BCLabManager.ViewModel
                 _subProgramTemplate.DischargeTemperature = value;
 
                 base.OnPropertyChanged("DischargeTemperature");
+            }
+        }
+        public CurrentTypeEnum DischargeCurrentType
+        {
+            get { return _subProgramTemplate.DischargeCurrentType; }
+            set
+            {
+                if (value == _subProgramTemplate.DischargeCurrentType)
+                    return;
+
+                _subProgramTemplate.DischargeCurrentType = value;
+
+                base.OnPropertyChanged("DischargeCurrentType");
+                if (value == CurrentTypeEnum.Percentage)
+                {
+                    DischargePercentageCurrentVisibility = Visibility.Visible;
+                    DischargeAbsoluteCurrentVisibility = Visibility.Hidden;
+                    DischargeDynamicCurrentVisibility = Visibility.Hidden;
+                }
+                else if (value == CurrentTypeEnum.Absolute)
+                {
+                    DischargePercentageCurrentVisibility = Visibility.Hidden;
+                    DischargeAbsoluteCurrentVisibility = Visibility.Visible;
+                    DischargeDynamicCurrentVisibility = Visibility.Hidden;
+                }
+                else if (value == CurrentTypeEnum.Dynamic)
+                {
+                    DischargePercentageCurrentVisibility = Visibility.Hidden;
+                    DischargeAbsoluteCurrentVisibility = Visibility.Hidden;
+                    DischargeDynamicCurrentVisibility = Visibility.Visible;
+                }
             }
         }
         public double DischargeCurrent
@@ -180,27 +251,120 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public List<CurrentTypeEnum> CurrentTypeOptions
+        {
+            get
+            {
+                return new List<CurrentTypeEnum>()
+                {
+                    CurrentTypeEnum.Absolute,
+                    CurrentTypeEnum.Dynamic,
+                    CurrentTypeEnum.Percentage
+                };
+            }
+        }
+
         public ObservableCollection<TemperatureClass> AllTemperatures //供选项
         {
             get;
             set;
         }
-
-        public ObservableCollection<PercentageCurrentClass> AllPercentageCurrent //供选项
+        public ObservableCollection<PercentageCurrentClass> AllPercentageCurrents //供选项
         {
             get;
             set;
         }
-        public ObservableCollection<AbsoluteCurrentClass> AllAbsoluteCurrent //供选项
+        public ObservableCollection<AbsoluteCurrentClass> AllAbsoluteCurrents //供选项
         {
             get;
             set;
         }
 
-        public ObservableCollection<DynamicCurrentClass> AllDynamicCurrent //供选项
+        public ObservableCollection<DynamicCurrentClass> AllDynamicCurrents //供选项
         {
             get;
             set;
+        }
+
+        public PercentageCurrentClass ChargePercentageCurrent { get; set; }
+        public PercentageCurrentClass DischargePercentageCurrent { get; set; }
+
+        public AbsoluteCurrentClass ChargeAbsoluteCurrent { get; set; }
+        public AbsoluteCurrentClass DischargeAbsoluteCurrent { get; set; }
+        public DynamicCurrentClass ChargeDynamicCurrent { get; set; }
+        public DynamicCurrentClass DischargeDynamicCurrent { get; set; }
+
+        private Visibility _chargePercentageCurrentVisibility;
+
+        public Visibility ChargePercentageCurrentVisibility
+        {
+            get { return _chargePercentageCurrentVisibility; }
+            set
+            {
+                _chargePercentageCurrentVisibility = value;
+                base.OnPropertyChanged("ChargePercentageCurrentVisibility");
+            }
+        }
+
+        private Visibility _dischargePercentageCurrentVisibility;
+
+        public Visibility DischargePercentageCurrentVisibility
+        {
+            get { return _dischargePercentageCurrentVisibility; }
+            set
+            {
+                _dischargePercentageCurrentVisibility = value;
+                base.OnPropertyChanged("DischargePercentageCurrentVisibility");
+            }
+        }
+
+
+        private Visibility _chargeAbsoluteCurrentVisibility;
+
+        public Visibility ChargeAbsoluteCurrentVisibility
+        {
+            get { return _chargeAbsoluteCurrentVisibility; }
+            set
+            {
+                _chargeAbsoluteCurrentVisibility = value;
+                base.OnPropertyChanged("ChargeAbsoluteCurrentVisibility");
+            }
+        }
+
+        private Visibility _dischargeAbsoluteCurrentVisibility;
+
+        public Visibility DischargeAbsoluteCurrentVisibility
+        {
+            get { return _dischargeAbsoluteCurrentVisibility; }
+            set
+            {
+                _dischargeAbsoluteCurrentVisibility = value;
+                base.OnPropertyChanged("DischargeAbsoluteCurrentVisibility");
+            }
+        }
+
+        private Visibility _chargeDynamicCurrentVisibility;
+
+        public Visibility ChargeDynamicCurrentVisibility
+        {
+            get { return _chargeDynamicCurrentVisibility; }
+            set
+            {
+                _chargeDynamicCurrentVisibility = value;
+                base.OnPropertyChanged("ChargeDynamicCurrentVisibility");
+            }
+        }
+
+        private Visibility _dischargeDynamicCurrentVisibility;
+
+        public Visibility DischargeDynamicCurrentVisibility
+        {
+            get { return _dischargeDynamicCurrentVisibility; }
+            set
+            {
+                _dischargeDynamicCurrentVisibility = value;
+                base.OnPropertyChanged("DischargeDynamicCurrentVisibility");
+            }
         }
         /// <summary>
         /// Returns a command that saves the customer.

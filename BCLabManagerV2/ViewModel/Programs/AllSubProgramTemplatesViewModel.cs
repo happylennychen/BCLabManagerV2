@@ -174,7 +174,7 @@ namespace BCLabManager.ViewModel
             //viewmodel.Name = _selectedItem.Name;
             viewmodel.Id = _selectedItem.Id;
             viewmodel.ChargeTemperature = _selectedItem.ChargeTemperature;
-            viewmodel.ChargeCurrent = _selectedItem.ChargeCurrent;
+            //viewmodel.ChargeCurrent = _selectedItem.ChargeCurrent;
             viewmodel.DischargeTemperature = _selectedItem.DischargeTemperature;
             viewmodel.DischargeCurrent = _selectedItem.DischargeCurrent;
             viewmodel.TestCount = _selectedItem.TestCount;
@@ -187,7 +187,7 @@ namespace BCLabManager.ViewModel
             {
                 //_selectedItem.Name = viewmodel.Name;
                 _selectedItem.ChargeTemperature = viewmodel.ChargeTemperature;
-                _selectedItem.ChargeCurrent = viewmodel.ChargeCurrent;
+                //_selectedItem.ChargeCurrent = viewmodel.ChargeCurrent;
                 _selectedItem.DischargeTemperature = viewmodel.DischargeTemperature;
                 _selectedItem.DischargeCurrent = viewmodel.DischargeCurrent;
                 _selectedItem.TestCount = viewmodel.TestCount;
@@ -222,7 +222,7 @@ namespace BCLabManager.ViewModel
             //viewmodel.Name = _selectedItem.Name;
             viewmodel.Id = _selectedItem.Id;
             viewmodel.ChargeTemperature = _selectedItem.ChargeTemperature;
-            viewmodel.ChargeCurrent = _selectedItem.ChargeCurrent;
+            //viewmodel.ChargeCurrent = _selectedItem.ChargeCurrent;
             viewmodel.DischargeTemperature = _selectedItem.DischargeTemperature;
             viewmodel.DischargeCurrent = _selectedItem.DischargeCurrent;
             viewmodel.TestCount = _selectedItem.TestCount;

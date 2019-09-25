@@ -70,6 +70,28 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("ChargeTemperature");
             }
         }
+        public string ChargeTemperatureStr
+        {
+            get
+            {
+                if (_subProgramTemplate.ChargeTemperature == -9999)
+                    return "Room";
+                else
+                    return _subProgramTemplate.ChargeTemperature.ToString() + " deg"; }
+        }
+        public CurrentTypeEnum ChargeCurrentType
+        {
+            get { return _subProgramTemplate.ChargeCurrentType; }
+            set
+            {
+                if (value == _subProgramTemplate.ChargeCurrentType)
+                    return;
+
+                _subProgramTemplate.ChargeCurrentType = value;
+
+                base.OnPropertyChanged("ChargeCurrentType");
+            }
+        }
         public double ChargeCurrent
         {
             get { return _subProgramTemplate.ChargeCurrent; }
@@ -81,6 +103,19 @@ namespace BCLabManager.ViewModel
                 _subProgramTemplate.ChargeCurrent = value;
 
                 base.OnPropertyChanged("ChargeCurrent");
+            }
+        }
+        public string ChargeCurrentStr
+        {
+            get
+            {
+                if(ChargeCurrentType == CurrentTypeEnum.Absolute)
+                    return _subProgramTemplate.ChargeCurrent.ToString() + "mA";
+                else if(ChargeCurrentType == CurrentTypeEnum.Percentage)
+                    return _subProgramTemplate.ChargeCurrent.ToString() + "C";
+                else if (ChargeCurrentType == CurrentTypeEnum.Dynamic)
+                    return "D" + _subProgramTemplate.ChargeCurrent.ToString();
+                return "";
             }
         }
         public double DischargeTemperature
@@ -96,6 +131,29 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("DischargeTemperature");
             }
         }
+        public string DischargeTemperatureStr
+        {
+            get
+            {
+                if (_subProgramTemplate.DischargeTemperature == -9999)
+                    return "Room";
+                else
+                    return _subProgramTemplate.DischargeTemperature.ToString() + " deg";
+            }
+        }
+        public CurrentTypeEnum DischargeCurrentType
+        {
+            get { return _subProgramTemplate.DischargeCurrentType; }
+            set
+            {
+                if (value == _subProgramTemplate.DischargeCurrentType)
+                    return;
+
+                _subProgramTemplate.DischargeCurrentType = value;
+
+                base.OnPropertyChanged("DischargeCurrentType");
+            }
+        }
         public double DischargeCurrent
         {
             get { return _subProgramTemplate.DischargeCurrent; }
@@ -107,6 +165,19 @@ namespace BCLabManager.ViewModel
                 _subProgramTemplate.DischargeCurrent = value;
 
                 base.OnPropertyChanged("DischargeCurrent");
+            }
+        }
+        public string DischargeCurrentStr
+        {
+            get
+            {
+                if (DischargeCurrentType == CurrentTypeEnum.Absolute)
+                    return _subProgramTemplate.DischargeCurrent.ToString() + "mA";
+                else if (DischargeCurrentType == CurrentTypeEnum.Percentage)
+                    return _subProgramTemplate.DischargeCurrent.ToString() + "C";
+                else if (DischargeCurrentType == CurrentTypeEnum.Dynamic)
+                    return "D" + _subProgramTemplate.DischargeCurrent.ToString();
+                return "";
             }
         }
 
@@ -136,6 +207,19 @@ namespace BCLabManager.ViewModel
                 {
                     TestCountEnum.One,
                     TestCountEnum.Two
+                };
+            }
+        }
+
+        public List<CurrentTypeEnum> CurrentTypeOptions
+        {
+            get
+            {
+                return new List<CurrentTypeEnum>()
+                {
+                    CurrentTypeEnum.Absolute,
+                    CurrentTypeEnum.Dynamic,
+                    CurrentTypeEnum.Percentage
                 };
             }
         }

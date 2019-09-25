@@ -22,34 +22,34 @@ namespace BCLabManager.Model
                 else
                     ctstr = this.ChargeTemperature.ToString() + " deg";
 
-                if (ChargeCurrentType == CurrentType.Absolute)
+                if (ChargeCurrentType == CurrentTypeEnum.Absolute)
                     ccstr = this.ChargeCurrent.ToString() + "mA";
-                else if (ChargeCurrentType == CurrentType.Percentage)
+                else if (ChargeCurrentType == CurrentTypeEnum.Percentage)
                     ccstr = this.ChargeCurrent.ToString() + "C";
-                else if (ChargeCurrentType == CurrentType.Dynamic)
-                    ccstr = "D" + this.ChargeCurrent.ToString("D4");
+                else if (ChargeCurrentType == CurrentTypeEnum.Dynamic)
+                    ccstr = "D" + this.ChargeCurrent.ToString();
 
                 if (this.DischargeTemperature == -9999)
                     dtstr = "Room";
                 else
                     dtstr = this.DischargeTemperature.ToString() + " deg";
 
-                if (DischargeCurrentType == CurrentType.Absolute)
+                if (DischargeCurrentType == CurrentTypeEnum.Absolute)
                     dcstr = this.DischargeCurrent.ToString() + "mA";
-                else if (DischargeCurrentType == CurrentType.Percentage)
+                else if (DischargeCurrentType == CurrentTypeEnum.Percentage)
                     dcstr = this.DischargeCurrent.ToString() + "C";
-                else if (DischargeCurrentType == CurrentType.Dynamic)
-                    dcstr = "D" + this.DischargeCurrent.ToString("D4");
+                else if (DischargeCurrentType == CurrentTypeEnum.Dynamic)
+                    dcstr = "D" + this.DischargeCurrent.ToString();
 
                 return $"{ctstr} {ccstr} charge, {dtstr} {dcstr} discharge";
             }
         }//需判断type
         public double ChargeTemperature { get; set; }
         public double ChargeCurrent { get; set; }
-        public CurrentType ChargeCurrentType { get; set; }
+        public CurrentTypeEnum ChargeCurrentType { get; set; }
         public double DischargeTemperature { get; set; }
         public double DischargeCurrent { get; set; }
-        public CurrentType DischargeCurrentType { get; set; }
+        public CurrentTypeEnum DischargeCurrentType { get; set; }
         public TestCountEnum TestCount { get; set; }
         public SubProgramTemplate()
         {
@@ -63,6 +63,8 @@ namespace BCLabManager.Model
 
         public override string ToString()
         {
+            if (Value == -9999)
+                return "Room";
             return this.Value.ToString() + " deg";
         }
     }
@@ -95,11 +97,11 @@ namespace BCLabManager.Model
         public double Value { get; set; }
         public override string ToString()
         {
-            return "D"+ Value.ToString("D4");
+            return "D"+ Value.ToString();
         }
     }
 
-    public enum CurrentType
+    public enum CurrentTypeEnum
     {
         Percentage,
         Absolute,
