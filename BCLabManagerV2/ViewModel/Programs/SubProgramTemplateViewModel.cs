@@ -75,7 +75,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                if (_subProgramTemplate.ChargeTemperature == -9999)
+                if (_subProgramTemplate.ChargeTemperature == GlobalSettings.RoomTemperatureConstant)
                     return "Room";
                 else
                     return _subProgramTemplate.ChargeTemperature.ToString() + " deg"; }
@@ -138,7 +138,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                if (_subProgramTemplate.DischargeTemperature == -9999)
+                if (_subProgramTemplate.DischargeTemperature == GlobalSettings.RoomTemperatureConstant)
                     return "Room";
                 else
                     return _subProgramTemplate.DischargeTemperature.ToString() + " deg";

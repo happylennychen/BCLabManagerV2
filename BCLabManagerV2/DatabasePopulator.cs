@@ -364,7 +364,7 @@ namespace BCLabManager
                 int i = 1;
                 SubProgramTemplate obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
                 obj.DischargeTemperature = -5;
@@ -375,7 +375,7 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
                 obj.DischargeTemperature = -5;
@@ -386,7 +386,7 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
                 obj.DischargeTemperature = -5;
@@ -397,10 +397,10 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
-                obj.DischargeTemperature = -9999;
+                obj.DischargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.DischargeCurrentType = CurrentTypeEnum.Absolute;
                 obj.DischargeCurrent = 500;
                 obj.TestCount = TestCountEnum.One;
@@ -408,10 +408,10 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
-                obj.DischargeTemperature = -9999;
+                obj.DischargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.DischargeCurrentType = CurrentTypeEnum.Absolute;
                 obj.DischargeCurrent = 1700;
                 obj.TestCount = TestCountEnum.One;
@@ -419,10 +419,10 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
-                obj.DischargeTemperature = -9999;
+                obj.DischargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.DischargeCurrentType = CurrentTypeEnum.Absolute;
                 obj.DischargeCurrent = 3000;
                 obj.TestCount = TestCountEnum.One;
@@ -463,7 +463,7 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
                 obj.DischargeTemperature = -5;
@@ -474,7 +474,7 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
                 obj.DischargeTemperature = -5;
@@ -485,10 +485,10 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
-                obj.DischargeTemperature = -9999;
+                obj.DischargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.DischargeCurrentType = CurrentTypeEnum.Dynamic;
                 obj.DischargeCurrent = 1;
                 obj.TestCount = TestCountEnum.One;
@@ -496,10 +496,10 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
-                obj.DischargeTemperature = -9999;
+                obj.DischargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.DischargeCurrentType = CurrentTypeEnum.Dynamic;
                 obj.DischargeCurrent = 2;
                 obj.TestCount = TestCountEnum.One;
@@ -529,7 +529,7 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
                 obj.DischargeTemperature = -10;
@@ -595,7 +595,7 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
                 obj.DischargeTemperature = -5;
@@ -606,10 +606,10 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
-                obj.DischargeTemperature = -9999;
+                obj.DischargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.DischargeCurrentType = CurrentTypeEnum.Absolute;
                 obj.DischargeCurrent = 2000;
                 obj.TestCount = TestCountEnum.One;
@@ -628,7 +628,7 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
                 obj.DischargeTemperature = -5;
@@ -639,10 +639,10 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
-                obj.DischargeTemperature = -9999;
+                obj.DischargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.DischargeCurrentType = CurrentTypeEnum.Dynamic;
                 obj.DischargeCurrent = 4;
                 obj.TestCount = TestCountEnum.One;
@@ -661,10 +661,10 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
-                obj.DischargeTemperature = -9999;
+                obj.DischargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.DischargeCurrentType = CurrentTypeEnum.Absolute;
                 obj.DischargeCurrent = 1200;
                 obj.TestCount = TestCountEnum.One;
@@ -672,10 +672,10 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
-                obj.DischargeTemperature = -9999;
+                obj.DischargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.DischargeCurrentType = CurrentTypeEnum.Absolute;
                 obj.DischargeCurrent = 3450;
                 obj.TestCount = TestCountEnum.One;
@@ -683,10 +683,10 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
-                obj.DischargeTemperature = -9999;
+                obj.DischargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.DischargeCurrentType = CurrentTypeEnum.Dynamic;
                 obj.DischargeCurrent = 4;
                 obj.TestCount = TestCountEnum.One;
@@ -694,10 +694,10 @@ namespace BCLabManager
 
                 obj = new SubProgramTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = -9999;
+                obj.ChargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.ChargeCurrentType = CurrentTypeEnum.Percentage;
                 obj.ChargeCurrent = 1;
-                obj.DischargeTemperature = -9999;
+                obj.DischargeTemperature = GlobalSettings.RoomTemperatureConstant;
                 obj.DischargeCurrentType = CurrentTypeEnum.Dynamic;
                 obj.DischargeCurrent = 5;
                 obj.TestCount = TestCountEnum.One;
@@ -788,7 +788,7 @@ namespace BCLabManager
             using (var dbContext = new AppDbContext())
             {
                 TemperatureClass obj = new TemperatureClass();
-                obj.Value = -9999;
+                obj.Value = GlobalSettings.RoomTemperatureConstant;
                 dbContext.Temperatures.Add(obj);
 
                 obj = new TemperatureClass();

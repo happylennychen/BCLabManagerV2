@@ -25,7 +25,7 @@ namespace BCLabManager.Model
                 string ccstr = "";
                 string dtstr = "";
                 string dcstr = "";
-                if (this.ChargeTemperature == -9999)
+                if (this.ChargeTemperature == GlobalSettings.RoomTemperatureConstant)
                     ctstr = "Room";
                 else
                     ctstr = this.ChargeTemperature.ToString() + " deg";
@@ -37,7 +37,7 @@ namespace BCLabManager.Model
                 else if (ChargeCurrentType == CurrentTypeEnum.Dynamic)
                     ccstr = "D" + this.ChargeCurrent.ToString();
 
-                if (this.DischargeTemperature == -9999)
+                if (this.DischargeTemperature == GlobalSettings.RoomTemperatureConstant)
                     dtstr = "Room";
                 else
                     dtstr = this.DischargeTemperature.ToString() + " deg";

@@ -10,5 +10,9 @@ namespace BCLabManager
     {
         public static string DbPath { get; set; }
         public static string ConfigurationFilePath { get; set; } = "BCLabConfiguration.cfg";
+
+        public const int RoomTemperatureConstant = -9999;
+        public const double ChargeTimeCoff = 1.2;
+        public const double DischargeTimeCoff = 1.2;
     }
 }

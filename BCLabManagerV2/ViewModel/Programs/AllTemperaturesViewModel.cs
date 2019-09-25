@@ -151,7 +151,7 @@ namespace BCLabManager.ViewModel
         }
         private bool CanEdit
         {
-            get { return (_selectedItem != null && _selectedItem.Value!=-9999); }
+            get { return (_selectedItem != null && _selectedItem.Value!=GlobalSettings.RoomTemperatureConstant); }
         }
         private void SaveAs()
         {
@@ -176,7 +176,7 @@ namespace BCLabManager.ViewModel
         }
         private bool CanSaveAs
         {
-            get { return (_selectedItem != null && _selectedItem.Value != -9999); }
+            get { return (_selectedItem != null && _selectedItem.Value != GlobalSettings.RoomTemperatureConstant); }
         }
         #endregion //Private Helper
         #region  Base Class Overrides

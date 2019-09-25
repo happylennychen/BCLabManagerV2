@@ -67,7 +67,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                if (_temperature.Value == -9999)
+                if (_temperature.Value == GlobalSettings.RoomTemperatureConstant)
                     return "Room";
                 else
                     return _temperature.Value.ToString();
