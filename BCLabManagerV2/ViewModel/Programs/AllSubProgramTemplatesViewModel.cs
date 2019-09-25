@@ -173,10 +173,10 @@ namespace BCLabManager.ViewModel
                     );      //实例化一个新的view model
             //viewmodel.Name = _selectedItem.Name;
             viewmodel.Id = _selectedItem.Id;
-            viewmodel.ChargeTemperature = _selectedItem.ChargeTemperature;
+            //viewmodel.ChargeTemperature = _selectedItem.ChargeTemperature;
             //viewmodel.ChargeCurrent = _selectedItem.ChargeCurrent;
-            viewmodel.DischargeTemperature = _selectedItem.DischargeTemperature;
-            viewmodel.DischargeCurrent = _selectedItem.DischargeCurrent;
+            //viewmodel.DischargeTemperature = _selectedItem.DischargeTemperature;
+            //viewmodel.DischargeCurrent = _selectedItem.DischargeCurrent;
             viewmodel.TestCount = _selectedItem.TestCount;
             viewmodel.DisplayName = "SubProgram-Edit";
             viewmodel.commandType = CommandType.Edit;
@@ -186,10 +186,10 @@ namespace BCLabManager.ViewModel
             if (viewmodel.IsOK == true)
             {
                 //_selectedItem.Name = viewmodel.Name;
-                _selectedItem.ChargeTemperature = viewmodel.ChargeTemperature;
+                //_selectedItem.ChargeTemperature = viewmodel.ChargeTemperature;
                 //_selectedItem.ChargeCurrent = viewmodel.ChargeCurrent;
-                _selectedItem.DischargeTemperature = viewmodel.DischargeTemperature;
-                _selectedItem.DischargeCurrent = viewmodel.DischargeCurrent;
+                //_selectedItem.DischargeTemperature = viewmodel.DischargeTemperature;
+                //_selectedItem.DischargeCurrent = viewmodel.DischargeCurrent;
                 _selectedItem.TestCount = viewmodel.TestCount;
                 using (var dbContext = new AppDbContext())
                 {
@@ -221,10 +221,10 @@ namespace BCLabManager.ViewModel
                     );      //实例化一个新的view model
             //viewmodel.Name = _selectedItem.Name;
             viewmodel.Id = _selectedItem.Id;
-            viewmodel.ChargeTemperature = _selectedItem.ChargeTemperature;
+            //viewmodel.ChargeTemperature = _selectedItem.ChargeTemperature;
             //viewmodel.ChargeCurrent = _selectedItem.ChargeCurrent;
-            viewmodel.DischargeTemperature = _selectedItem.DischargeTemperature;
-            viewmodel.DischargeCurrent = _selectedItem.DischargeCurrent;
+            //viewmodel.DischargeTemperature = _selectedItem.DischargeTemperature;
+            //viewmodel.DischargeCurrent = _selectedItem.DischargeCurrent;
             viewmodel.TestCount = _selectedItem.TestCount;
             viewmodel.DisplayName = "SubProgram-Save As";
             viewmodel.commandType = CommandType.SaveAs;

@@ -105,17 +105,14 @@ namespace BCLabManager.ViewModel
         //        base.OnPropertyChanged("Name");
         //    }
         //}
-        public double ChargeTemperature
+        public TemperatureClass ChargeTemperature
         {
-            get { return _subProgramTemplate.ChargeTemperature; }
             set
             {
-                if (value == _subProgramTemplate.ChargeTemperature)
+                if (value.Value == _subProgramTemplate.ChargeTemperature)
                     return;
 
-                _subProgramTemplate.ChargeTemperature = value;
-
-                base.OnPropertyChanged("ChargeTemperature");
+                _subProgramTemplate.ChargeTemperature = value.Value;
             }
         }
         public CurrentTypeEnum ChargeCurrentType
@@ -123,12 +120,6 @@ namespace BCLabManager.ViewModel
             get { return _subProgramTemplate.ChargeCurrentType; }
             set
             {
-                if (value == _subProgramTemplate.ChargeCurrentType)
-                    return;
-
-                _subProgramTemplate.ChargeCurrentType = value;
-
-                base.OnPropertyChanged("ChargeCurrentType");
                 if (value == CurrentTypeEnum.Percentage)
                 {
                     ChargePercentageCurrentVisibility = Visibility.Visible;
@@ -141,12 +132,18 @@ namespace BCLabManager.ViewModel
                     ChargeAbsoluteCurrentVisibility = Visibility.Visible;
                     ChargeDynamicCurrentVisibility = Visibility.Hidden;
                 }
-                else if(value == CurrentTypeEnum.Dynamic)
+                else if (value == CurrentTypeEnum.Dynamic)
                 {
                     ChargePercentageCurrentVisibility = Visibility.Hidden;
                     ChargeAbsoluteCurrentVisibility = Visibility.Hidden;
                     ChargeDynamicCurrentVisibility = Visibility.Visible;
                 }
+                if (value == _subProgramTemplate.ChargeCurrentType)
+                    return;
+
+                _subProgramTemplate.ChargeCurrentType = value;
+
+                base.OnPropertyChanged("ChargeCurrentType");
             }
         }
         //public double ChargeCurrent
@@ -162,17 +159,14 @@ namespace BCLabManager.ViewModel
         //        base.OnPropertyChanged("ChargeCurrent");
         //    }
         //}
-        public double DischargeTemperature
+        public TemperatureClass DischargeTemperature
         {
-            get { return _subProgramTemplate.DischargeTemperature; }
             set
             {
-                if (value == _subProgramTemplate.DischargeTemperature)
+                if (value.Value == _subProgramTemplate.DischargeTemperature)
                     return;
 
-                _subProgramTemplate.DischargeTemperature = value;
-
-                base.OnPropertyChanged("DischargeTemperature");
+                _subProgramTemplate.DischargeTemperature = value.Value;
             }
         }
         public CurrentTypeEnum DischargeCurrentType
@@ -180,12 +174,6 @@ namespace BCLabManager.ViewModel
             get { return _subProgramTemplate.DischargeCurrentType; }
             set
             {
-                if (value == _subProgramTemplate.DischargeCurrentType)
-                    return;
-
-                _subProgramTemplate.DischargeCurrentType = value;
-
-                base.OnPropertyChanged("DischargeCurrentType");
                 if (value == CurrentTypeEnum.Percentage)
                 {
                     DischargePercentageCurrentVisibility = Visibility.Visible;
@@ -204,21 +192,27 @@ namespace BCLabManager.ViewModel
                     DischargeAbsoluteCurrentVisibility = Visibility.Hidden;
                     DischargeDynamicCurrentVisibility = Visibility.Visible;
                 }
-            }
-        }
-        public double DischargeCurrent
-        {
-            get { return _subProgramTemplate.DischargeCurrent; }
-            set
-            {
-                if (value == _subProgramTemplate.DischargeCurrent)
+                if (value == _subProgramTemplate.DischargeCurrentType)
                     return;
 
-                _subProgramTemplate.DischargeCurrent = value;
+                _subProgramTemplate.DischargeCurrentType = value;
 
-                base.OnPropertyChanged("DischargeCurrent");
+                base.OnPropertyChanged("DischargeCurrentType");
             }
         }
+        //public double DischargeCurrent
+        //{
+        //    get { return _subProgramTemplate.DischargeCurrent; }
+        //    set
+        //    {
+        //        if (value == _subProgramTemplate.DischargeCurrent)
+        //            return;
+
+        //        _subProgramTemplate.DischargeCurrent = value;
+
+        //        base.OnPropertyChanged("DischargeCurrent");
+        //    }
+        //}
 
         public TestCountEnum TestCount
         {
@@ -425,6 +419,20 @@ namespace BCLabManager.ViewModel
             //_subprogramtypeRepository.AddItem(_subprogramtype);
 
             //base.OnPropertyChanged("DisplayName");
+            if(ChargeCurrentType == CurrentTypeEnum.Percentage)
+                _subProgramTemplate.ChargeCurrent = ChargePercentageCurrent.Value;
+            else if(ChargeCurrentType == CurrentTypeEnum.Absolute)
+                _subProgramTemplate.ChargeCurrent = ChargeAbsoluteCurrent.Value;
+            else if (ChargeCurrentType == CurrentTypeEnum.Dynamic)
+                _subProgramTemplate.ChargeCurrent = ChargeDynamicCurrent.Value;
+
+            if (DischargeCurrentType == CurrentTypeEnum.Percentage)
+                _subProgramTemplate.DischargeCurrent = DischargePercentageCurrent.Value;
+            else if (DischargeCurrentType == CurrentTypeEnum.Absolute)
+                _subProgramTemplate.DischargeCurrent = DischargeAbsoluteCurrent.Value;
+            else if (DischargeCurrentType == CurrentTypeEnum.Dynamic)
+                _subProgramTemplate.DischargeCurrent = DischargeDynamicCurrent.Value;
+
             IsOK = true;
         }
 
