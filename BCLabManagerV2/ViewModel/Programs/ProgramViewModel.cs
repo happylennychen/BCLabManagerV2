@@ -43,7 +43,7 @@ namespace BCLabManager.ViewModel
                 if (sub.TestCount == TestCountEnum.One)
                 {
                     if (EstimateTimeManager.IsContain(_program.BatteryType, sub.Template, TestCountEnum.One))   //如果有历史数据，就看历史数据
-                    { 
+                    {
                     }
                     else            //否则看配置
                     {
@@ -55,6 +55,7 @@ namespace BCLabManager.ViewModel
                             TimeSpan subtime = chargetime + dischargetime;
                         }
                     }
+                }
             }
 
         }

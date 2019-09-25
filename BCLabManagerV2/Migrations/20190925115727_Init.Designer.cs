@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20190925081052_Init")]
+    [Migration("20190925115727_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -257,11 +257,15 @@ namespace BCLabManager.Migrations
 
                     b.Property<int?>("ProgramClassId");
 
+                    b.Property<int?>("TemplateId");
+
                     b.Property<int>("TestCount");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProgramClassId");
+
+                    b.HasIndex("TemplateId");
 
                     b.ToTable("SubPrograms");
                 });
@@ -431,6 +435,10 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.ProgramClass")
                         .WithMany("SubPrograms")
                         .HasForeignKey("ProgramClassId");
+
+                    b.HasOne("BCLabManager.Model.SubProgramTemplate", "Template")
+                        .WithMany()
+                        .HasForeignKey("TemplateId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>

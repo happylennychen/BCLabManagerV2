@@ -231,6 +231,7 @@ namespace BCLabManager.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    TemplateId = table.Column<int>(nullable: true),
                     IsAbandoned = table.Column<bool>(nullable: false),
                     ChargeTemperature = table.Column<double>(nullable: false),
                     DischargeTemperature = table.Column<double>(nullable: false),
@@ -249,6 +250,12 @@ namespace BCLabManager.Migrations
                         name: "FK_SubPrograms_Programs_ProgramClassId",
                         column: x => x.ProgramClassId,
                         principalTable: "Programs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SubPrograms_SubProgramTemplates_TemplateId",
+                        column: x => x.TemplateId,
+                        principalTable: "SubProgramTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -422,6 +429,11 @@ namespace BCLabManager.Migrations
                 column: "ProgramClassId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SubPrograms_TemplateId",
+                table: "SubPrograms",
+                column: "TemplateId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TestRecords_AssignedBatteryId",
                 table: "TestRecords",
                 column: "AssignedBatteryId");
@@ -471,9 +483,6 @@ namespace BCLabManager.Migrations
                 name: "Temperatures");
 
             migrationBuilder.DropTable(
-                name: "SubProgramTemplates");
-
-            migrationBuilder.DropTable(
                 name: "TestRecords");
 
             migrationBuilder.DropTable(
@@ -493,6 +502,9 @@ namespace BCLabManager.Migrations
 
             migrationBuilder.DropTable(
                 name: "Programs");
+
+            migrationBuilder.DropTable(
+                name: "SubProgramTemplates");
 
             migrationBuilder.DropTable(
                 name: "BatteryTypes");
