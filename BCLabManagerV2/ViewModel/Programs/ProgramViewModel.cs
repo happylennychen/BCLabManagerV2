@@ -136,13 +136,13 @@ namespace BCLabManager.ViewModel
 
         public DateTime RequestDate
         {
-            get { return _program.RequestDate; }
+            get { return _program.RequestTime; }
             set
             {
-                if (value == _program.RequestDate)
+                if (value == _program.RequestTime)
                     return;
 
-                _program.RequestDate = value;
+                _program.RequestTime = value;
 
                 base.OnPropertyChanged("RequestDate");
             }

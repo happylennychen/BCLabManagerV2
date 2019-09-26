@@ -141,9 +141,10 @@ namespace BCLabManager.Migrations
                     Name = table.Column<string>(nullable: true),
                     BatteryTypeId = table.Column<int>(nullable: true),
                     Requester = table.Column<string>(nullable: true),
-                    RequestDate = table.Column<DateTime>(nullable: false),
+                    RequestTime = table.Column<DateTime>(nullable: false),
                     Description = table.Column<string>(nullable: true),
-                    CompleteDate = table.Column<DateTime>(nullable: false)
+                    StartTime = table.Column<DateTime>(nullable: false),
+                    CompleteTime = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -231,6 +232,8 @@ namespace BCLabManager.Migrations
                     DischargeCurrentId = table.Column<int>(nullable: true),
                     TestCount = table.Column<int>(nullable: false),
                     Loop = table.Column<int>(nullable: false),
+                    StartTime = table.Column<DateTime>(nullable: false),
+                    CompleteTime = table.Column<DateTime>(nullable: false),
                     ProgramClassId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>

@@ -126,7 +126,7 @@ namespace BCLabManager
                 obj.Name = "Oppo BLP663 Static Test";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
                 obj.Requester = "Francis";
-                obj.RequestDate = DateTime.Parse("2019/02/28");
+                obj.RequestTime = DateTime.Parse("2019/02/28");
                 obj.Description = "Oppo BLP663 Static Test";
                 SubProgramClass sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 1), obj.Name, 1);
                 sub.Id = sub_i++;
@@ -164,7 +164,7 @@ namespace BCLabManager
                 obj.Name = "Oppo BLP663 Dynamic Test";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
                 obj.Requester = "Francis";
-                obj.RequestDate = DateTime.Parse("2019/02/28");
+                obj.RequestTime = DateTime.Parse("2019/02/28");
                 obj.Description = "Oppo BLP663 Dynamic Test";
                 sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 10), obj.Name, 1);
                 sub.Id = sub_i++;
@@ -193,7 +193,7 @@ namespace BCLabManager
                 obj.Name = "Oppo BLP663 RC";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
                 obj.Requester = "Francis";
-                obj.RequestDate = DateTime.Parse("2019/02/28");
+                obj.RequestTime = DateTime.Parse("2019/02/28");
                 obj.Description = "Oppo BLP663 RC";
                 sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 16), obj.Name, 1);
                 sub.Id = sub_i++;
@@ -222,7 +222,7 @@ namespace BCLabManager
                 obj.Name = "Oppo BLP663 Static Test-2";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
                 obj.Requester = "Francis";
-                obj.RequestDate = DateTime.Parse("2019/03/12");
+                obj.RequestTime = DateTime.Parse("2019/03/12");
                 obj.Description = "Oppo BLP663 Static Test-2";
 
                 sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 22), obj.Name, 1);
@@ -243,7 +243,7 @@ namespace BCLabManager
                 obj.Name = "Oppo BLP663 Dynamic Test-2";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
                 obj.Requester = "Francis";
-                obj.RequestDate = DateTime.Parse("2019/03/14");
+                obj.RequestTime = DateTime.Parse("2019/03/14");
                 obj.Description = "Oppo BLP663 Dynamic Test-2";
                 sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 25), obj.Name, 1);
                 sub.Id = sub_i++;
@@ -269,7 +269,7 @@ namespace BCLabManager
                 obj.Name = "Oppo BLP663 Static Test-3";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
                 obj.Requester = "Francis";
-                obj.RequestDate = DateTime.Parse("2019/03/25");
+                obj.RequestTime = DateTime.Parse("2019/03/25");
                 obj.Description = "Oppo BLP663 Static Test-3";
                 sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 28), obj.Name, 1);
                 sub.Id = sub_i++;
@@ -283,7 +283,7 @@ namespace BCLabManager
                 obj.Name = "Aging Test";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
                 obj.Requester = "Francis";
-                obj.RequestDate = DateTime.Parse("2019/04/01");
+                obj.RequestTime = DateTime.Parse("2019/04/01");
                 obj.Description = "Run 500 cycle to see the aging effect";
                 sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 29), obj.Name, 500);
                 sub.Id = sub_i++;
@@ -297,7 +297,7 @@ namespace BCLabManager
                 obj.Name = "5 time test";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
                 obj.Requester = "Francis";
-                obj.RequestDate = DateTime.Parse("2019/04/01");
+                obj.RequestTime = DateTime.Parse("2019/04/01");
                 obj.Description = "Run 5 same cycle";
                 sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 4), obj.Name, 5);
                 sub.Id = sub_i++;
@@ -317,7 +317,7 @@ namespace BCLabManager
                 obj.Name = "Oppo BLP663 Dynamic Test-3";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
                 obj.Requester = "Francis";
-                obj.RequestDate = DateTime.Parse("2019/05/07");
+                obj.RequestTime = DateTime.Parse("2019/05/07");
                 obj.Description = "Oppo BLP663 Dynamic Test-3";
                 sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 30), obj.Name, 1);
                 sub.Id = sub_i++;
@@ -331,7 +331,7 @@ namespace BCLabManager
                 obj.Name = "Oppo BLP663 Dynamic Test-4";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
                 obj.Requester = "Francis";
-                obj.RequestDate = DateTime.Parse("2019/05/24");
+                obj.RequestTime = DateTime.Parse("2019/05/24");
                 obj.Description = "Oppo BLP663 Dynamic Test-4";
                 sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 31), obj.Name, 1);
                 sub.Id = sub_i++;
@@ -345,7 +345,7 @@ namespace BCLabManager
                 obj.Name = "2000mA Test";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
                 obj.Requester = "Jon";
-                obj.RequestDate = DateTime.Parse("2019/07/09");
+                obj.RequestTime = DateTime.Parse("2019/07/09");
                 obj.Description = "";
                 sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 23), obj.Name, 1);
                 sub.Id = sub_i++;

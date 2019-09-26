@@ -13,9 +13,10 @@ namespace BCLabManager.Model
         public String Name { get; set; }
         public BatteryTypeClass BatteryType { get; set; }
         public String Requester { get; set; }
-        public DateTime RequestDate { get; set; }
+        public DateTime RequestTime { get; set; }
         public String Description { get; set; }
-        public DateTime CompleteDate { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime CompleteTime { get; set; }
         public ObservableCollection<SubProgramClass> SubPrograms { get; set; }
 
         public ProgramClass()           //Create用到
@@ -23,12 +24,12 @@ namespace BCLabManager.Model
             SubPrograms = new ObservableCollection<SubProgramClass>();
         }
 
-        public ProgramClass(String Name, BatteryTypeClass BatteryType, String Requester, DateTime RequestDate, String Description, ObservableCollection<SubProgramClass> SubPrograms) //Clone用到
+        public ProgramClass(String Name, BatteryTypeClass BatteryType, String Requester, DateTime RequestTime, String Description, ObservableCollection<SubProgramClass> SubPrograms) //Clone用到
         {
             this.Name = Name;
             this.BatteryType = BatteryType;
             this.Requester = Requester;
-            this.RequestDate = RequestDate;
+            this.RequestTime = RequestTime;
             this.Description = Description;
             this.SubPrograms = SubPrograms;
         }
@@ -57,7 +58,7 @@ namespace BCLabManager.Model
                 (from sub in SubPrograms
                  select sub.Clone()).ToList();
             ObservableCollection<SubProgramClass> clonelist = new ObservableCollection<SubProgramClass>(all);
-            return new ProgramClass(this.Name, this.BatteryType, this.Requester, this.RequestDate, this.Description, clonelist);
+            return new ProgramClass(this.Name, this.BatteryType, this.Requester, this.RequestTime, this.Description, clonelist);
         }
     }
 }

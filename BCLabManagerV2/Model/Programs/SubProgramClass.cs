@@ -23,7 +23,9 @@ namespace BCLabManager.Model
         public DischargeTemperatureClass DischargeTemperature { get; set; }
         public DischargeCurrentClass DischargeCurrent { get; set; }
         public TestCountEnum TestCount { get; set; }
-        public int Loop { get; set; }
+        public int Loop { get; set; } = 1;
+        public DateTime StartTime { get; set; }
+        public DateTime CompleteTime { get; set; }
         public ObservableCollection<TestRecordClass> FirstTestRecords { get; set; }
         public ObservableCollection<TestRecordClass> SecondTestRecords { get; set; }
 

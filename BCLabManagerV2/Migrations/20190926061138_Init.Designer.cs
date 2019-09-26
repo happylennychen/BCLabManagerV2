@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20190924025724_Init")]
+    [Migration("20190926061138_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -211,15 +211,17 @@ namespace BCLabManager.Migrations
 
                     b.Property<int?>("BatteryTypeId");
 
-                    b.Property<DateTime>("CompleteDate");
+                    b.Property<DateTime>("CompleteTime");
 
                     b.Property<string>("Description");
 
                     b.Property<string>("Name");
 
-                    b.Property<DateTime>("RequestDate");
+                    b.Property<DateTime>("RequestTime");
 
                     b.Property<string>("Requester");
+
+                    b.Property<DateTime>("StartTime");
 
                     b.HasKey("Id");
 
@@ -255,6 +257,8 @@ namespace BCLabManager.Migrations
 
                     b.Property<int?>("ChargeTemperatureId");
 
+                    b.Property<DateTime>("CompleteTime");
+
                     b.Property<int?>("DischargeCurrentId");
 
                     b.Property<int?>("DischargeTemperatureId");
@@ -264,6 +268,8 @@ namespace BCLabManager.Migrations
                     b.Property<int>("Loop");
 
                     b.Property<int?>("ProgramClassId");
+
+                    b.Property<DateTime>("StartTime");
 
                     b.Property<int>("TestCount");
 
