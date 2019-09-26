@@ -354,6 +354,16 @@ namespace BCLabManager.ViewModel
             _record.Abandon();
             OnPropertyChanged("Status");
         }
+
+        internal void ExecuteUpdateTime()
+        {
+            _record.ExeuteUpdateTime();
+        }
+
+        internal void CommitUpdateTime()
+        {
+            _record.CommitUpdateTime();
+        }
         #endregion
     }
 }

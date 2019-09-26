@@ -775,24 +775,10 @@ namespace BCLabManager.ViewModel
                     tr.AssignedBattery = dbContext.Batteries.SingleOrDefault(o=>o.Id == evm.Battery.Id);
                     tr.AssignedChamber = dbContext.Chambers.SingleOrDefault(o => o.Id == evm.Chamber.Id);
                     tr.AssignedChannel = dbContext.Channels.SingleOrDefault(o => o.Id == evm.Channel.Id);
-
-                    #region update time
-                    var sub = dbContext.SubPrograms.SingleOrDefault(o => o.Id == _selectedSubProgram.Id);
-                    dbContext.Entry(sub)
-                        .Collection(o => o.FirstTestRecords)
-                        .Load();
-                    dbContext.Entry(sub)
-                        .Collection(o => o.SecondTestRecords)
-                        .Load();
-                    if (sub.StartTime == DateTime.MinValue)
-                        sub.StartTime = tr.StartTime;
-                    var pro = dbContext.Programs.SingleOrDefault(o => o.Id == _selectedProgram.Id);
-                    if (pro.StartTime == DateTime.MinValue)
-                        pro.StartTime = tr.StartTime;
-                    #endregion
                     dbContext.SaveChanges();
                 }
                 testRecord.ExecuteOnAssets(evm.Battery, evm.Chamber, evm.Channel,SelectedProgram.Name, SelectedSubProgram.Name);      //将evm的Assets传给testRecord
+                testRecord.ExecuteUpdateTime();
             }
         }
         private void Commit(TestRecordViewModel testRecord)
@@ -839,62 +825,10 @@ namespace BCLabManager.ViewModel
                     tr.AssignedBattery = null;
                     tr.AssignedChamber = null;
                     tr.AssignedChannel = null;
-
-                    #region update time
-                    var pro = dbContext.Programs.SingleOrDefault(o => o.Id == _selectedProgram.Id);
-                    dbContext.Entry(pro)
-                        .Collection(o => o.SubPrograms)
-                        .Load();
-                    foreach (var Sub in pro.SubPrograms)
-                    {
-                        dbContext.Entry(Sub)
-                            .Collection(o => o.FirstTestRecords)
-                            .Load();
-                        dbContext.Entry(Sub)
-                            .Collection(o => o.SecondTestRecords)
-                            .Load();
-                    }
-                    var sub = dbContext.SubPrograms.SingleOrDefault(o => o.Id == _selectedSubProgram.Id);
-                    //dbContext.Entry(sub)
-                    //    .Collection(o => o.FirstTestRecords)
-                    //    .Load();
-                    //dbContext.Entry(sub)
-                    //    .Collection(o => o.SecondTestRecords)
-                    //    .Load();
-                    if (IsSubCompleted(sub))
-                        sub.CompleteTime = tr.EndTime;
-                    if (IsProCompleted(pro))
-                        pro.CompleteTime = tr.EndTime;
-                    #endregion
                     dbContext.SaveChanges();
                 }
+                testRecord.CommitUpdateTime();
             }
-        }
-
-        private bool IsProCompleted(ProgramClass pro)
-        {
-            foreach(var sub in pro.SubPrograms)
-            {
-                if (IsSubCompleted(sub) == false)
-                    return false;
-            }
-            return true;
-        }
-
-        private bool IsSubCompleted(SubProgramClass sub)
-        {
-            if(sub.TestCount == TestCountEnum.One)
-            {
-                return sub.FirstTestRecords[FirstTestRecords.Count-1].Status == TestStatus.Completed;
-            }
-            else if (sub.TestCount == TestCountEnum.Two)
-            {
-                return 
-                    sub.FirstTestRecords[sub.FirstTestRecords.Count-1].Status == TestStatus.Completed 
-                    &&
-                    sub.SecondTestRecords[sub.SecondTestRecords.Count - 1].Status == TestStatus.Completed;
-            }
-            return false;
         }
 
         private List<RawDataClass> CreateRawDataList(ObservableCollection<string> fileList)

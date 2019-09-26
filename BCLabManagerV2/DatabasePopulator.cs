@@ -15,7 +15,7 @@ namespace BCLabManager
         {
             PopulateAssets();
             PopulatePrograms();
-            PopulateOperations();
+            //PopulateOperations();
         }
 
         private static void PopulateAssets()

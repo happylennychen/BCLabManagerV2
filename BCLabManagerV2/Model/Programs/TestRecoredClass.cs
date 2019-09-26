@@ -1,4 +1,5 @@
 ﻿using BCLabManager.DataAccess;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -217,6 +218,120 @@ namespace BCLabManager.Model
         {
             this.Status = TestStatus.Invalid;
             this.Comment = comment;
+        }
+
+        public void ExeuteUpdateTime()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                SubProgramClass sub = null;
+                ProgramClass pro = null;
+                GetParentNode(dbContext, ref pro, ref sub);
+
+                if (sub != null & pro != null)
+                {
+                    if (IsSubStarted(sub) == false)
+                        sub.StartTime = this.StartTime;
+                    if (IsProStarted(pro) == false)
+                        pro.StartTime = this.StartTime;
+                }
+                dbContext.SaveChanges();
+            }
+        }
+
+        public void CommitUpdateTime()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                SubProgramClass sub = null;
+                ProgramClass pro = null;
+                GetParentNode(dbContext, ref pro, ref sub);
+
+                if (sub != null & pro != null)
+                {
+                    if (IsSubCompleted(sub))
+                        sub.CompleteTime = this.EndTime;
+                    if (IsProCompleted(pro))
+                        pro.CompleteTime = this.EndTime;
+                }
+                dbContext.SaveChanges();
+            }
+        }
+
+        private void GetParentNode(AppDbContext dbContext, ref ProgramClass Pro, ref SubProgramClass Sub)
+        {
+            var pros = dbContext.Programs
+                 .Include(pro => pro.SubPrograms)
+                    .ThenInclude(sub => sub.FirstTestRecords)
+                 .Include(pro => pro.SubPrograms)
+                    .ThenInclude(sub => sub.SecondTestRecords)
+                 .ToList();
+            foreach (var p in pros)
+            {
+                foreach (var s in p.SubPrograms)
+                {
+                    foreach (var t in s.FirstTestRecords)
+                    {
+                        if (t.Id == this.Id)
+                        {
+                            Sub = s;
+                            Pro = p;
+                            break;
+                        }
+                    }
+                    if (Sub != null)
+                        break;
+                    foreach (var t in s.SecondTestRecords)
+                    {
+                        if (t.Id == this.Id)
+                        {
+                            Sub = s;
+                            Pro = p;
+                            break;
+                        }
+                    }
+                    if (Sub != null)
+                        break;
+                }
+                if (Sub != null)
+                    break;
+            }
+        }
+
+        private bool IsProStarted(ProgramClass pro)
+        {
+            return pro.StartTime != DateTime.MinValue;
+        }
+
+        private bool IsSubStarted(SubProgramClass sub)
+        {
+            return sub.StartTime != DateTime.MinValue;
+        }
+
+        private bool IsProCompleted(ProgramClass pro)
+        {
+            foreach (var sub in pro.SubPrograms)
+            {
+                if (IsSubCompleted(sub) == false)
+                    return false;
+            }
+            return true;
+        }
+
+        private bool IsSubCompleted(SubProgramClass sub)
+        {
+            if (sub.TestCount == TestCountEnum.One)
+            {
+                return sub.FirstTestRecords[sub.FirstTestRecords.Count - 1].Status == TestStatus.Completed;
+            }
+            else if (sub.TestCount == TestCountEnum.Two)
+            {
+                return
+                    sub.FirstTestRecords[sub.FirstTestRecords.Count - 1].Status == TestStatus.Completed
+                    &&
+                    sub.SecondTestRecords[sub.SecondTestRecords.Count - 1].Status == TestStatus.Completed;
+            }
+            return false;
         }
     }
     public class TestRecordAddedEventArgs : EventArgs
