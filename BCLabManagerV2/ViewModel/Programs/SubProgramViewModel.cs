@@ -105,6 +105,32 @@ namespace BCLabManager.ViewModel
                 base.OnPropertyChanged("IsAbandoned");
             }
         }
+        public DateTime StartTime
+        {
+            get { return _subprogram.StartTime; }
+            set
+            {
+                if (value == _subprogram.StartTime)
+                    return;
+
+                _subprogram.StartTime = value;
+
+                OnPropertyChanged("StartTime");
+            }
+        }
+        public DateTime CompleteTime
+        {
+            get { return _subprogram.CompleteTime; }
+            set
+            {
+                if (value == _subprogram.CompleteTime)
+                    return;
+
+                _subprogram.CompleteTime = value;
+
+                OnPropertyChanged("CompleteTime");
+            }
+        }
         public string Name
         {
             get

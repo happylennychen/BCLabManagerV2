@@ -9,14 +9,33 @@ namespace BCLabManager.Model
 {
     public class ProgramClass : ModelBase
     {
+        private DateTime startTime;
+        private DateTime completeTime;
+
         public int Id { get; set; }
         public String Name { get; set; }
         public BatteryTypeClass BatteryType { get; set; }
         public String Requester { get; set; }
         public DateTime RequestTime { get; set; }
         public String Description { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime CompleteTime { get; set; }
+        public DateTime StartTime
+        {
+            get => startTime;
+            set
+            {
+                startTime = value;
+                OnPropertyChanged("StartTime");
+            }
+        }
+        public DateTime CompleteTime
+        {
+            get => completeTime;
+            set
+            {
+                completeTime = value;
+                OnPropertyChanged("CompleteTime");
+            }
+        }
         public ObservableCollection<SubProgramClass> SubPrograms { get; set; }
 
         public ProgramClass()           //Create用到

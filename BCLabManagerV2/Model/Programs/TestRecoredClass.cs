@@ -220,8 +220,14 @@ namespace BCLabManager.Model
             this.Comment = comment;
         }
 
-        public void ExeuteUpdateTime()
+        public void ExeuteUpdateTime(ProgramClass _program, SubProgramClass _subprogram)
         {
+
+            if (IsSubStarted(_subprogram) == false)
+                _subprogram.StartTime = this.StartTime;
+            if (IsProStarted(_program) == false)
+                _program.StartTime = this.StartTime;
+
             using (var dbContext = new AppDbContext())
             {
                 SubProgramClass sub = null;
@@ -239,8 +245,13 @@ namespace BCLabManager.Model
             }
         }
 
-        public void CommitUpdateTime()
+        public void CommitUpdateTime(ProgramClass _program, SubProgramClass _subprogram)
         {
+            if (IsSubCompleted(_subprogram))
+                _subprogram.CompleteTime = this.EndTime;
+            if (IsProCompleted(_program))
+                _program.CompleteTime = this.EndTime;
+
             using (var dbContext = new AppDbContext())
             {
                 SubProgramClass sub = null;

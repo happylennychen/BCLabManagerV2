@@ -134,7 +134,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public DateTime RequestDate
+        public DateTime RequestTime
         {
             get { return _program.RequestTime; }
             set
@@ -144,7 +144,33 @@ namespace BCLabManager.ViewModel
 
                 _program.RequestTime = value;
 
-                base.OnPropertyChanged("RequestDate");
+                base.OnPropertyChanged("RequestTime");
+            }
+        }
+        public DateTime StartTime
+        {
+            get { return _program.StartTime; }
+            set
+            {
+                if (value == _program.StartTime)
+                    return;
+
+                _program.StartTime = value;
+
+                OnPropertyChanged("StartTime");
+            }
+        }
+        public DateTime CompleteTime
+        {
+            get { return _program.CompleteTime; }
+            set
+            {
+                if (value == _program.CompleteTime)
+                    return;
+
+                _program.CompleteTime = value;
+
+                OnPropertyChanged("CompleteTime");
             }
         }
 

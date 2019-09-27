@@ -778,7 +778,7 @@ namespace BCLabManager.ViewModel
                     dbContext.SaveChanges();
                 }
                 testRecord.ExecuteOnAssets(evm.Battery, evm.Chamber, evm.Channel,SelectedProgram.Name, SelectedSubProgram.Name);      //将evm的Assets传给testRecord
-                testRecord.ExecuteUpdateTime();
+                testRecord.ExecuteUpdateTime(_selectedProgram._program, _selectedSubProgram._subprogram);
             }
         }
         private void Commit(TestRecordViewModel testRecord)
@@ -827,7 +827,7 @@ namespace BCLabManager.ViewModel
                     tr.AssignedChannel = null;
                     dbContext.SaveChanges();
                 }
-                testRecord.CommitUpdateTime();
+                testRecord.CommitUpdateTime(_selectedProgram._program, _selectedSubProgram._subprogram);
             }
         }
 

@@ -355,14 +355,14 @@ namespace BCLabManager.ViewModel
             OnPropertyChanged("Status");
         }
 
-        internal void ExecuteUpdateTime()
+        internal void ExecuteUpdateTime(ProgramClass _program, SubProgramClass _subprogram)
         {
-            _record.ExeuteUpdateTime();
+            _record.ExeuteUpdateTime(_program, _subprogram);
         }
 
-        internal void CommitUpdateTime()
+        internal void CommitUpdateTime(ProgramClass _program, SubProgramClass _subprogram)
         {
-            _record.CommitUpdateTime();
+            _record.CommitUpdateTime(_program, _subprogram);
         }
         #endregion
     }

@@ -119,16 +119,16 @@
             DisplayMemberBinding="{Binding Path=Requester}" 
             />
                             <GridViewColumn 
-            Header="Request Date" 
-            DisplayMemberBinding="{Binding Path=RequestDate}" 
+            Header="Request Time" 
+            DisplayMemberBinding="{Binding Path=RequestTime}" 
             />
                             <GridViewColumn Width="100"
             Header="Progress"
                                 CellTemplate="{StaticResource ProgressBar}"
             />
                             <GridViewColumn 
-            Header="Complete Date" 
-            DisplayMemberBinding="{Binding Path=CompleteDate}" 
+            Header="Complete Time" 
+            DisplayMemberBinding="{Binding Path=CompleteTime}" 
             />
                             <!--<GridViewColumn 
             Header="Description" 

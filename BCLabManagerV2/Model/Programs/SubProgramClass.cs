@@ -15,6 +15,9 @@ namespace BCLabManager.Model
     }
     public class SubProgramClass : ModelBase
     {
+        private DateTime startTime;
+        private DateTime completeTime;
+
         public int Id { get; set; }
         public bool IsAbandoned { get; set; }
         //public String Name { get; set; }
@@ -24,8 +27,24 @@ namespace BCLabManager.Model
         public DischargeCurrentClass DischargeCurrent { get; set; }
         public TestCountEnum TestCount { get; set; }
         public int Loop { get; set; } = 1;
-        public DateTime StartTime { get; set; }
-        public DateTime CompleteTime { get; set; }
+        public DateTime StartTime
+        {
+            get => startTime;
+            set
+            {
+                startTime = value;
+                OnPropertyChanged("StartTime");
+            }
+        }
+        public DateTime CompleteTime
+        {
+            get => completeTime;
+            set
+            {
+                completeTime = value;
+                OnPropertyChanged("CompleteTime");
+            }
+        }
         public ObservableCollection<TestRecordClass> FirstTestRecords { get; set; }
         public ObservableCollection<TestRecordClass> SecondTestRecords { get; set; }
 
@@ -87,10 +106,10 @@ namespace BCLabManager.Model
         }
 
         public SubProgramClass(
-            ChargeTemperatureClass chargeTemperature, 
-            ChargeCurrentClass chargeCurrent, 
-            DischargeTemperatureClass dischargeTemperature, 
-            DischargeCurrentClass dischargeCurrent, 
+            ChargeTemperatureClass chargeTemperature,
+            ChargeCurrentClass chargeCurrent,
+            DischargeTemperatureClass dischargeTemperature,
+            DischargeCurrentClass dischargeCurrent,
             TestCountEnum TestCount,
             int Loop) : this()
         {
