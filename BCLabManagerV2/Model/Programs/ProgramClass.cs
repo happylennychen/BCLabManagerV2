@@ -14,6 +14,7 @@ namespace BCLabManager.Model
 
         public int Id { get; set; }
         public String Name { get; set; }
+        public ProgramGroupClass Group { get; set; }
         public BatteryTypeClass BatteryType { get; set; }
         public String Requester { get; set; }
         public DateTime RequestTime { get; set; }
@@ -79,5 +80,10 @@ namespace BCLabManager.Model
             ObservableCollection<SubProgramClass> clonelist = new ObservableCollection<SubProgramClass>(all);
             return new ProgramClass(this.Name, this.BatteryType, this.Requester, this.RequestTime, this.Description, clonelist);
         }
+    }
+
+    public class ProgramGroupClass
+    {
+        public int Id { get; set; }
     }
 }

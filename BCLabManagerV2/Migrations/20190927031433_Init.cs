@@ -97,6 +97,18 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProgramGroups",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProgramGroups", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Testers",
                 columns: table => new
                 {
@@ -126,31 +138,6 @@ namespace BCLabManager.Migrations
                     table.PrimaryKey("PK_Batteries", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Batteries_BatteryTypes_BatteryTypeId",
-                        column: x => x.BatteryTypeId,
-                        principalTable: "BatteryTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Programs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true),
-                    BatteryTypeId = table.Column<int>(nullable: true),
-                    Requester = table.Column<string>(nullable: true),
-                    RequestTime = table.Column<DateTime>(nullable: false),
-                    Description = table.Column<string>(nullable: true),
-                    StartTime = table.Column<DateTime>(nullable: false),
-                    CompleteTime = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Programs", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Programs_BatteryTypes_BatteryTypeId",
                         column: x => x.BatteryTypeId,
                         principalTable: "BatteryTypes",
                         principalColumn: "Id",
@@ -199,6 +186,38 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Programs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(nullable: true),
+                    GroupId = table.Column<int>(nullable: true),
+                    BatteryTypeId = table.Column<int>(nullable: true),
+                    Requester = table.Column<string>(nullable: true),
+                    RequestTime = table.Column<DateTime>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    StartTime = table.Column<DateTime>(nullable: false),
+                    CompleteTime = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Programs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Programs_BatteryTypes_BatteryTypeId",
+                        column: x => x.BatteryTypeId,
+                        principalTable: "BatteryTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Programs_ProgramGroups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "ProgramGroups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Channels",
                 columns: table => new
                 {
@@ -215,6 +234,35 @@ namespace BCLabManager.Migrations
                         name: "FK_Channels_Testers_TesterId",
                         column: x => x.TesterId,
                         principalTable: "Testers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EstimateTimeRecords",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BatteryTypeId = table.Column<int>(nullable: true),
+                    SubTemplateId = table.Column<int>(nullable: true),
+                    TestCount = table.Column<int>(nullable: false),
+                    ExecutedCount = table.Column<int>(nullable: false),
+                    AverageTime = table.Column<TimeSpan>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EstimateTimeRecords", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EstimateTimeRecords_BatteryTypes_BatteryTypeId",
+                        column: x => x.BatteryTypeId,
+                        principalTable: "BatteryTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_EstimateTimeRecords_SubProgramTemplates_SubTemplateId",
+                        column: x => x.SubTemplateId,
+                        principalTable: "SubProgramTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -267,35 +315,6 @@ namespace BCLabManager.Migrations
                         name: "FK_SubPrograms_Programs_ProgramClassId",
                         column: x => x.ProgramClassId,
                         principalTable: "Programs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EstimateTimeRecords",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    BatteryTypeId = table.Column<int>(nullable: true),
-                    SubTemplateId = table.Column<int>(nullable: true),
-                    TestCount = table.Column<int>(nullable: false),
-                    ExecutedCount = table.Column<int>(nullable: false),
-                    AverageTime = table.Column<TimeSpan>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EstimateTimeRecords", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EstimateTimeRecords_BatteryTypes_BatteryTypeId",
-                        column: x => x.BatteryTypeId,
-                        principalTable: "BatteryTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_EstimateTimeRecords_SubProgramTemplates_SubTemplateId",
-                        column: x => x.SubTemplateId,
-                        principalTable: "SubProgramTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -459,6 +478,11 @@ namespace BCLabManager.Migrations
                 column: "BatteryTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Programs_GroupId",
+                table: "Programs",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RawDataClass_TestRecordClassId",
                 table: "RawDataClass",
                 column: "TestRecordClassId");
@@ -583,6 +607,9 @@ namespace BCLabManager.Migrations
 
             migrationBuilder.DropTable(
                 name: "BatteryTypes");
+
+            migrationBuilder.DropTable(
+                name: "ProgramGroups");
         }
     }
 }

@@ -122,6 +122,7 @@ namespace BCLabManager
                 int i = 1;
                 int sub_i = 1;
                 ProgramClass obj = new ProgramClass();
+                obj.Group = new ProgramGroupClass();
                 obj.Id = i++;
                 obj.Name = "Oppo BLP663 Static Test";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
@@ -160,6 +161,7 @@ namespace BCLabManager
                 dbContext.SaveChanges();
 
                 obj = new ProgramClass();
+                obj.Group = new ProgramGroupClass();
                 obj.Id = i++;
                 obj.Name = "Oppo BLP663 Dynamic Test";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
@@ -189,6 +191,7 @@ namespace BCLabManager
                 dbContext.SaveChanges();
 
                 obj = new ProgramClass();
+                obj.Group = new ProgramGroupClass();
                 obj.Id = i++;
                 obj.Name = "Oppo BLP663 RC";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
@@ -218,6 +221,7 @@ namespace BCLabManager
                 dbContext.SaveChanges();
 
                 obj = new ProgramClass();
+                obj.Group = new ProgramGroupClass();
                 obj.Id = i++;
                 obj.Name = "Oppo BLP663 Static Test-2";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
@@ -239,6 +243,7 @@ namespace BCLabManager
                 dbContext.SaveChanges();
 
                 obj = new ProgramClass();
+                obj.Group = new ProgramGroupClass();
                 obj.Id = i++;
                 obj.Name = "Oppo BLP663 Dynamic Test-2";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
@@ -265,6 +270,7 @@ namespace BCLabManager
                 dbContext.SaveChanges();
 
                 obj = new ProgramClass();
+                obj.Group = new ProgramGroupClass();
                 obj.Id = i++;
                 obj.Name = "Oppo BLP663 Static Test-3";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
@@ -279,6 +285,7 @@ namespace BCLabManager
                 dbContext.SaveChanges();
 
                 obj = new ProgramClass();
+                obj.Group = new ProgramGroupClass();
                 obj.Id = i++;
                 obj.Name = "Aging Test";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
@@ -293,6 +300,7 @@ namespace BCLabManager
                 dbContext.SaveChanges();
 
                 obj = new ProgramClass();
+                obj.Group = new ProgramGroupClass();
                 obj.Id = i++;
                 obj.Name = "5 time test";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
@@ -313,6 +321,7 @@ namespace BCLabManager
                 dbContext.SaveChanges();
 
                 obj = new ProgramClass();
+                obj.Group = new ProgramGroupClass();
                 obj.Id = i++;
                 obj.Name = "Oppo BLP663 Dynamic Test-3";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
@@ -327,6 +336,7 @@ namespace BCLabManager
                 dbContext.SaveChanges();
 
                 obj = new ProgramClass();
+                obj.Group = new ProgramGroupClass();
                 obj.Id = i++;
                 obj.Name = "Oppo BLP663 Dynamic Test-4";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
@@ -341,6 +351,7 @@ namespace BCLabManager
                 dbContext.SaveChanges();
 
                 obj = new ProgramClass();
+                obj.Group = new ProgramGroupClass();
                 obj.Id = i++;
                 obj.Name = "2000mA Test";
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);

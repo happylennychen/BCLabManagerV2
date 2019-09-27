@@ -366,6 +366,7 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             ProgramClass m = new ProgramClass();      //实例化一个新的model
+            m.Group = new ProgramGroupClass();
             ProgramEditViewModel evm = new ProgramEditViewModel(m,_batteryTypes, _subProgramTemplates);      //实例化一个新的view model
             evm.DisplayName = "Program-Create";
             evm.commandType = CommandType.Create;
@@ -599,6 +600,13 @@ namespace BCLabManager.ViewModel
                 //_programRepository.AddItem(model);
                 using (var dbContext = new AppDbContext())
                 {
+                    if (true)    //没改battery type和sub programs
+                    {
+                        var g = dbContext.ProgramGroups.SingleOrDefault(o => o.Id == _selectedProgram._program.Group.Id);
+                        m.Group = g;
+                    }
+                    else
+                        m.Group = new ProgramGroupClass();
                     foreach (var sub in m.SubPrograms)
                     {
                         sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);

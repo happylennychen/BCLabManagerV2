@@ -23,6 +23,7 @@ namespace BCLabManager.DataAccess
         public DbSet<SubProgramTemplate> SubProgramTemplates { get; set; }
         public DbSet<SubProgramClass> SubPrograms { get; set; }
         public DbSet<ProgramClass> Programs { get; set; }
+        public DbSet<ProgramGroupClass> ProgramGroups { get; set; }
         public DbSet<EstimateTimeRecord> EstimateTimeRecords { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

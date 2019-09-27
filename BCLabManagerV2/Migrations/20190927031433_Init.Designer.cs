@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20190926061138_Init")]
+    [Migration("20190927031433_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -215,6 +215,8 @@ namespace BCLabManager.Migrations
 
                     b.Property<string>("Description");
 
+                    b.Property<int?>("GroupId");
+
                     b.Property<string>("Name");
 
                     b.Property<DateTime>("RequestTime");
@@ -227,7 +229,19 @@ namespace BCLabManager.Migrations
 
                     b.HasIndex("BatteryTypeId");
 
+                    b.HasIndex("GroupId");
+
                     b.ToTable("Programs");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.ProgramGroupClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProgramGroups");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.RawDataClass", b =>
@@ -431,6 +445,10 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
                         .WithMany()
                         .HasForeignKey("BatteryTypeId");
+
+                    b.HasOne("BCLabManager.Model.ProgramGroupClass", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.RawDataClass", b =>

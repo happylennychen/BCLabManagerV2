@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using BCLabManager.Properties;
+using Microsoft.EntityFrameworkCore;
+using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
@@ -162,6 +164,16 @@ namespace BCLabManager.ViewModel
                 OnPropertyChanged("StartTime");
             }
         }
+        //public Visibility StartTimeVisibility
+        //{
+        //    get
+        //    {
+        //        if (StartTime == DateTime.MinValue)
+        //            return Visibility.Hidden;
+        //        else
+        //            return Visibility.Visible;
+        //    }
+        //}
         public DateTime CompleteTime
         {
             get
@@ -185,6 +197,38 @@ namespace BCLabManager.ViewModel
                 if (CompleteTime == DateTime.MinValue)
                     return TimeSpan.Zero;
                 return CompleteTime - StartTime;
+            }
+        }
+        public TimeSpan EstimatedTime
+        {
+            get
+            {
+                List<ProgramClass> pros = GetAllCompletedProgramByGroup();
+                if (pros.Count == 0 /*|| CompleteTime != DateTime.MinValue*/)
+                    return TimeSpan.Zero;
+                TimeSpan total = GetTotalTime(pros);
+                var est = TimeSpan.FromSeconds((total.TotalSeconds) / pros.Count);
+                return est;
+            }
+        }
+
+        private TimeSpan GetTotalTime(List<ProgramClass> pros)
+        {
+            TimeSpan total = TimeSpan.Zero;
+            foreach (var pro in pros)
+            {
+                total += (pro.CompleteTime - pro.StartTime);
+            }
+            return total;
+        }
+
+        private List<ProgramClass> GetAllCompletedProgramByGroup()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                return dbContext.Programs
+                    .Where(o => o.Group.Id == this._program.Group.Id && o.CompleteTime != DateTime.MinValue)
+                    .ToList();
             }
         }
 

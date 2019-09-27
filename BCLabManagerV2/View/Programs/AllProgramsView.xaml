@@ -138,6 +138,10 @@
             Header="Duration" 
             DisplayMemberBinding="{Binding Path=Duration}" 
             />
+                            <GridViewColumn 
+            Header="Estimated Time" 
+            DisplayMemberBinding="{Binding Path=EstimatedTime}" 
+            />
                             <!--<GridViewColumn 
             Header="Description" 
             DisplayMemberBinding="{Binding Path=Description}" 

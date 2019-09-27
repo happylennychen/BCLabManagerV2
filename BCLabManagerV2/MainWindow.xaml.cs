@@ -178,7 +178,8 @@ namespace BCLabManager
                 DischargeCurrents = new List<DischargeCurrentClass>(dbContext.DischargeCurrents.ToList());
 
                 Programs = new ObservableCollection<ProgramClass>(dbContext.Programs
-                     .Include(pro => pro.SubPrograms)
+                    .Include(pro => pro.Group)
+                    .Include(pro => pro.SubPrograms)
                         .ThenInclude(sub => sub.FirstTestRecords)
                             .ThenInclude(tr => tr.RawDataList)
                      .Include(pro => pro.SubPrograms)
