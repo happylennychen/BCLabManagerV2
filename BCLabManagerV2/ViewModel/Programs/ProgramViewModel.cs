@@ -46,6 +46,8 @@ namespace BCLabManager.ViewModel
         private void _program_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             OnPropertyChanged(e.PropertyName);
+            if(e.PropertyName == "CompleteTime")
+                OnPropertyChanged("Duration");
         }
 
         void CreateSubPrograms()
@@ -162,7 +164,10 @@ namespace BCLabManager.ViewModel
         }
         public DateTime CompleteTime
         {
-            get { return _program.CompleteTime; }
+            get
+            {
+                return _program.CompleteTime;
+            }
             set
             {
                 if (value == _program.CompleteTime)
@@ -171,6 +176,15 @@ namespace BCLabManager.ViewModel
                 _program.CompleteTime = value;
 
                 OnPropertyChanged("CompleteTime");
+            }
+        }
+        public TimeSpan Duration
+        {
+            get
+            {
+                if (CompleteTime == DateTime.MinValue)
+                    return TimeSpan.Zero;
+                return CompleteTime - StartTime;
             }
         }
 

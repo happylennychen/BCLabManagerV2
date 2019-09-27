@@ -50,6 +50,8 @@ namespace BCLabManager.ViewModel
         private void _record_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             OnPropertyChanged(e.PropertyName);
+            if (e.PropertyName == "CompleteTime")
+                OnPropertyChanged("Duration");
         }
 
         #endregion // Constructor
@@ -168,20 +170,20 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public DateTime EndTime
+        public DateTime CompleteTime
         {
             get
             {
-                return _record.EndTime;
+                return _record.CompleteTime;
             }
             set
             {
-                if (value == _record.EndTime)
+                if (value == _record.CompleteTime)
                     return;
 
-                _record.EndTime = value;
+                _record.CompleteTime = value;
 
-                base.OnPropertyChanged("EndTime");
+                base.OnPropertyChanged("CompleteTime");
             }
         }
 
@@ -189,9 +191,9 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                if (EndTime == DateTime.MinValue)
+                if (CompleteTime == DateTime.MinValue)
                     return TimeSpan.Zero;
-                return EndTime - StartTime;
+                return CompleteTime - StartTime;
             }
         }
 
@@ -341,7 +343,7 @@ namespace BCLabManager.ViewModel
         }
         public void CommitOnAssets()
         {
-            _record.AssetsCommit(this.EndTime, null, this.NewCycle, this.Comment);
+            _record.AssetsCommit(this.CompleteTime, null, this.NewCycle, this.Comment);
             OnPropertyChanged("Status");
         }
         public void Invalidate()

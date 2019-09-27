@@ -29,12 +29,12 @@
       Grid.Row="0" Grid.Column="0" 
       Content="_End Time:" 
       HorizontalAlignment="Right"
-      Target="{Binding ElementName=EndTimeDat}" 
+      Target="{Binding ElementName=CompleteTimeDat}" 
       />
             <xctk:DateTimePicker
-      x:Name="EndTimeDat"
+      x:Name="CompleteTimeDat"
       Grid.Row="0" Grid.Column="2" ShowButtonSpinner="False" ShowDropDownButton="False" TextAlignment="Center"
-      Text="{Binding Path=EndTime, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
+      Text="{Binding Path=CompleteTime, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
       Validation.ErrorTemplate="{x:Null}"
       />
 

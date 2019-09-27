@@ -790,7 +790,7 @@ namespace BCLabManager.ViewModel
             //TestRecordCommitViewInstance.ShowDialog();
             //if (viewmodel.IsOK == true)
             //{
-            //    SelectedFirstTestRecord.EndTime = viewmodel.EndTime;
+            //    SelectedFirstTestRecord.CompleteTime = viewmodel.CompleteTime;
             //    SelectedFirstTestRecord.NewCycle = viewmodel.NewCycle;
             //    SelectedFirstTestRecord.Comment = viewmodel.Comment;
             //    SelectedFirstTestRecord.Commit();
@@ -808,7 +808,7 @@ namespace BCLabManager.ViewModel
             TestRecordCommitViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                testRecord.EndTime = evm.EndTime;
+                testRecord.CompleteTime = evm.CompleteTime;
                 testRecord.NewCycle = evm.NewCycle;
                 testRecord.Comment = evm.Comment;
                 testRecord.Record.RawDataList = CreateRawDataList(evm.FileList);
@@ -817,7 +817,7 @@ namespace BCLabManager.ViewModel
                 using (var dbContext = new AppDbContext())
                 {
                     var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == testRecord.Id);
-                    tr.EndTime = testRecord.EndTime;
+                    tr.CompleteTime = testRecord.CompleteTime;
                     tr.NewCycle = testRecord.NewCycle;
                     tr.Comment = testRecord.Comment;
                     tr.Status = testRecord.Status;

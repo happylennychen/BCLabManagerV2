@@ -122,6 +122,10 @@
             Header="Request Time" 
             DisplayMemberBinding="{Binding Path=RequestTime}" 
             />
+                            <GridViewColumn 
+            Header="Start Time" 
+            DisplayMemberBinding="{Binding Path=StartTime}" 
+            />
                             <GridViewColumn Width="100"
             Header="Progress"
                                 CellTemplate="{StaticResource ProgressBar}"
@@ -129,6 +133,10 @@
                             <GridViewColumn 
             Header="Complete Time" 
             DisplayMemberBinding="{Binding Path=CompleteTime}" 
+            />
+                            <GridViewColumn 
+            Header="Duration" 
+            DisplayMemberBinding="{Binding Path=Duration}" 
             />
                             <!--<GridViewColumn 
             Header="Description" 
@@ -230,8 +238,8 @@
             DisplayMemberBinding="{Binding Path=StartTime}" 
             />
                             <GridViewColumn 
-            Header="EndTime" 
-            DisplayMemberBinding="{Binding Path=EndTime}" 
+            Header="CompleteTime" 
+            DisplayMemberBinding="{Binding Path=CompleteTime}" 
             />
                             <GridViewColumn 
             Header="Duration" 
@@ -305,8 +313,8 @@
             DisplayMemberBinding="{Binding Path=StartTime}" 
             />
                             <GridViewColumn 
-            Header="EndTime" 
-            DisplayMemberBinding="{Binding Path=EndTime}" 
+            Header="CompleteTime" 
+            DisplayMemberBinding="{Binding Path=CompleteTime}" 
             />
                             <GridViewColumn 
             Header="Duration" 

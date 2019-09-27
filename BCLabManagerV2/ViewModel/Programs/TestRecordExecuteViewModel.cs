@@ -311,20 +311,20 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public DateTime EndTime
+        public DateTime CompleteTime
         {
             get
             {
-                return _record.EndTime;
+                return _record.CompleteTime;
             }
             set
             {
-                if (value == _record.EndTime)
+                if (value == _record.CompleteTime)
                     return;
 
-                _record.EndTime = value;
+                _record.CompleteTime = value;
 
-                base.OnPropertyChanged("EndTime");
+                base.OnPropertyChanged("CompleteTime");
             }
         }
 

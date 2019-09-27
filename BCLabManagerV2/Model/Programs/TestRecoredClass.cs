@@ -33,6 +33,8 @@ namespace BCLabManager.Model
     }
     public class TestRecordClass : ModelBase
     {
+        private DateTime startTime;
+        private DateTime completeTime;
         public int Id { get; set; }
         private TestStatus status = TestStatus.Waiting;
         public TestStatus Status
@@ -57,8 +59,24 @@ namespace BCLabManager.Model
         public String ChamberStr { get; set; }
         public String SubProgramStr { get; set; }
         public String ProgramStr { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public DateTime StartTime
+        {
+            get => startTime;
+            set
+            {
+                startTime = value;
+                OnPropertyChanged("StartTime");
+            }
+        }
+        public DateTime CompleteTime
+        {
+            get => completeTime;
+            set
+            {
+                completeTime = value;
+                OnPropertyChanged("CompleteTime");
+            }
+        }
         public String Steps { get; set; }
         public String Comment { get; set; }
         public List<RawDataClass> RawDataList { get; set; }
@@ -94,7 +112,7 @@ namespace BCLabManager.Model
             this.ProgramStr = String.Empty;
             this.SubProgramStr = String.Empty;
             this.StartTime = DateTime.MinValue;
-            this.EndTime = DateTime.MinValue;
+            this.CompleteTime = DateTime.MinValue;
             this.Steps = String.Empty;
             this.Comment = String.Empty;
             this.RawDataList = new List<RawDataClass>();
@@ -161,18 +179,18 @@ namespace BCLabManager.Model
             //this.SubProgramStr = subProgramName;
         }
 
-        public void AssetsCommit(DateTime endTime, RawDataClass rawData, double newCycle, string comment = "")  //Need to check the Executor Status to make sure it is executing
+        public void AssetsCommit(DateTime CompleteTime, RawDataClass rawData, double newCycle, string comment = "")  //Need to check the Executor Status to make sure it is executing
         {
             AssignedBattery.CycleCount += newCycle;
             AssignedBattery.AssetUseCount--;
-            AssignedBattery.Records.Add(new AssetUsageRecordClass(endTime, AssignedBattery.AssetUseCount, "", ""));
+            AssignedBattery.Records.Add(new AssetUsageRecordClass(CompleteTime, AssignedBattery.AssetUseCount, "", ""));
             if (AssignedChamber != null)
             {
                 AssignedChamber.AssetUseCount--;
-                AssignedChamber.Records.Add(new AssetUsageRecordClass(endTime, AssignedChamber.AssetUseCount, "", ""));
+                AssignedChamber.Records.Add(new AssetUsageRecordClass(CompleteTime, AssignedChamber.AssetUseCount, "", ""));
             }
             AssignedChannel.AssetUseCount--;
-            AssignedChannel.Records.Add(new AssetUsageRecordClass(endTime, AssignedChannel.AssetUseCount, "", ""));
+            AssignedChannel.Records.Add(new AssetUsageRecordClass(CompleteTime, AssignedChannel.AssetUseCount, "", ""));
 
             using (var dbContext = new AppDbContext())
             {
@@ -182,7 +200,7 @@ namespace BCLabManager.Model
                     .Load();
                 dbAssignedBattery.CycleCount += newCycle;
                 dbAssignedBattery.AssetUseCount--;
-                dbAssignedBattery.Records.Add(new AssetUsageRecordClass(endTime, dbAssignedBattery.AssetUseCount, "", ""));
+                dbAssignedBattery.Records.Add(new AssetUsageRecordClass(CompleteTime, dbAssignedBattery.AssetUseCount, "", ""));
 
                 if (AssignedChamber != null)
                 {
@@ -191,7 +209,7 @@ namespace BCLabManager.Model
                         .Collection(o => o.Records)
                         .Load();
                     dbAssignedChamber.AssetUseCount--;
-                    dbAssignedChamber.Records.Add(new AssetUsageRecordClass(endTime, dbAssignedChamber.AssetUseCount, "", ""));
+                    dbAssignedChamber.Records.Add(new AssetUsageRecordClass(CompleteTime, dbAssignedChamber.AssetUseCount, "", ""));
                 }
                 var dbAssignedChannel = dbContext.Channels.SingleOrDefault(o => o.Id == AssignedChannel.Id);
                 dbContext.Entry(dbAssignedChannel)
@@ -199,7 +217,7 @@ namespace BCLabManager.Model
                     .Load();
 
                 dbAssignedChannel.AssetUseCount--;
-                dbAssignedChannel.Records.Add(new AssetUsageRecordClass(endTime, dbAssignedChannel.AssetUseCount, "", ""));
+                dbAssignedChannel.Records.Add(new AssetUsageRecordClass(CompleteTime, dbAssignedChannel.AssetUseCount, "", ""));
 
                 dbContext.SaveChanges();
             }
@@ -248,9 +266,9 @@ namespace BCLabManager.Model
         public void CommitUpdateTime(ProgramClass _program, SubProgramClass _subprogram)
         {
             if (IsSubCompleted(_subprogram))
-                _subprogram.CompleteTime = this.EndTime;
+                _subprogram.CompleteTime = this.CompleteTime;
             if (IsProCompleted(_program))
-                _program.CompleteTime = this.EndTime;
+                _program.CompleteTime = this.CompleteTime;
 
             using (var dbContext = new AppDbContext())
             {
@@ -261,9 +279,9 @@ namespace BCLabManager.Model
                 if (sub != null & pro != null)
                 {
                     if (IsSubCompleted(sub))
-                        sub.CompleteTime = this.EndTime;
+                        sub.CompleteTime = this.CompleteTime;
                     if (IsProCompleted(pro))
-                        pro.CompleteTime = this.EndTime;
+                        pro.CompleteTime = this.CompleteTime;
                 }
                 dbContext.SaveChanges();
             }
