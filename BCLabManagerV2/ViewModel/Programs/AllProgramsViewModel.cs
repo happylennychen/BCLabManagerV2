@@ -67,8 +67,16 @@ namespace BCLabManager.ViewModel
             _testers = testers;
             _channels = channels;
             _chambers = chambers;
-        }
+            RefrashAllProgramsEstimatedTime();
 
+        }
+        void RefrashAllProgramsEstimatedTime()
+        {
+            foreach (var pro in AllPrograms)
+            {
+                pro.UpdateEstimatedTime(AllPrograms);
+            }
+        }
         void CreateAllPrograms(ObservableCollection<ProgramClass> programClasses)
         {
             List<ProgramViewModel> all =
@@ -836,6 +844,8 @@ namespace BCLabManager.ViewModel
                     dbContext.SaveChanges();
                 }
                 testRecord.CommitUpdateTime(_selectedProgram._program, _selectedSubProgram._subprogram);
+
+                RefrashAllProgramsEstimatedTime();
             }
         }
 

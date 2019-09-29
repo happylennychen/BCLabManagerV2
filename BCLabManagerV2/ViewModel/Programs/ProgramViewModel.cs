@@ -164,16 +164,6 @@ namespace BCLabManager.ViewModel
                 OnPropertyChanged("StartTime");
             }
         }
-        //public Visibility StartTimeVisibility
-        //{
-        //    get
-        //    {
-        //        if (StartTime == DateTime.MinValue)
-        //            return Visibility.Hidden;
-        //        else
-        //            return Visibility.Visible;
-        //    }
-        //}
         public DateTime CompleteTime
         {
             get
@@ -199,20 +189,64 @@ namespace BCLabManager.ViewModel
                 return CompleteTime - StartTime;
             }
         }
+        //public TimeSpan EstimatedTime
+        //{
+        //    get
+        //    {
+        //        List<ProgramClass> pros = GetAllCompletedProgramByGroup();
+        //        if (pros.Count == 0 /*|| CompleteTime != DateTime.MinValue*/)
+        //            return TimeSpan.Zero;
+        //        TimeSpan total = GetTotalTime(pros);
+        //        var est = TimeSpan.FromSeconds((total.TotalSeconds) / pros.Count);
+        //        return est;
+        //    }
+        //}
+
+        //private TimeSpan GetTotalTime(List<ProgramClass> pros)
+        //{
+        //    TimeSpan total = TimeSpan.Zero;
+        //    foreach (var pro in pros)
+        //    {
+        //        total += (pro.CompleteTime - pro.StartTime);
+        //    }
+        //    return total;
+        //}
+
+        //private List<ProgramClass> GetAllCompletedProgramByGroup()
+        //{
+        //    using (var dbContext = new AppDbContext())
+        //    {
+        //        return dbContext.Programs
+        //            .Where(o => o.Group.Id == this._program.Group.Id && o.CompleteTime != DateTime.MinValue)
+        //            .ToList();
+        //    }
+        //}
+        private TimeSpan _estimatedTime;
+
         public TimeSpan EstimatedTime
         {
-            get
-            {
-                List<ProgramClass> pros = GetAllCompletedProgramByGroup();
-                if (pros.Count == 0 /*|| CompleteTime != DateTime.MinValue*/)
-                    return TimeSpan.Zero;
-                TimeSpan total = GetTotalTime(pros);
-                var est = TimeSpan.FromSeconds((total.TotalSeconds) / pros.Count);
-                return est;
+            get { return _estimatedTime; }
+            set { _estimatedTime = value;
+                OnPropertyChanged("EstimatedTime");
             }
         }
 
-        private TimeSpan GetTotalTime(List<ProgramClass> pros)
+        public void UpdateEstimatedTime(ObservableCollection<ProgramViewModel> allpros)
+        {
+            List<ProgramViewModel> grouppros = GetAllCompletedProgramByGroup(allpros);
+            if (grouppros.Count == 0 /*|| CompleteTime != DateTime.MinValue*/)
+            {
+                EstimatedTime = TimeSpan.Zero;
+            }
+            else
+            {
+                TimeSpan total = GetTotalTime(grouppros);
+                var est = TimeSpan.FromSeconds((total.TotalSeconds) / grouppros.Count);
+                EstimatedTime = est;
+            }
+        }
+
+        private TimeSpan GetTotalTime(List<ProgramViewModel> pros)
         {
             TimeSpan total = TimeSpan.Zero;
             foreach (var pro in pros)
@@ -222,15 +256,13 @@ namespace BCLabManager.ViewModel
             return total;
         }
 
-        private List<ProgramClass> GetAllCompletedProgramByGroup()
+        private List<ProgramViewModel> GetAllCompletedProgramByGroup(ObservableCollection<ProgramViewModel> allpros)
         {
-            using (var dbContext = new AppDbContext())
-            {
-                return dbContext.Programs
-                    .Where(o => o.Group.Id == this._program.Group.Id && o.CompleteTime != DateTime.MinValue)
-                    .ToList();
-            }
+            return allpros
+                .Where(o => o._program.Group.Id == this._program.Group.Id && o.CompleteTime != DateTime.MinValue)
+                .ToList();
         }
+
 
         public ObservableCollection<SubProgramViewModel> SubPrograms { get; set; }        //这个是当前program所拥有的subprograms
         #endregion // Customer Properties
