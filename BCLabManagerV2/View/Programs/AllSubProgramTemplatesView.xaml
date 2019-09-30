@@ -38,7 +38,7 @@
             <v:AllDischargeTemperaturesView x:Name="AllDischargeTemperaturesViewInstance" Grid.Row="2"></v:AllDischargeTemperaturesView>
             <v:AllDischargeCurrentsView x:Name="AllDischargeCurrentsViewInstance" Grid.Row="3"></v:AllDischargeCurrentsView>
         </Grid>
-        <GroupBox Grid.Column="1" Header="SubProgram Templates">
+        <GroupBox Grid.Column="1" Header="Sub Program Templates">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="_Create" Command="{Binding Path=CreateCommand}" Margin="0,5,5,0" Width="60"></Button>
