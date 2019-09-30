@@ -629,6 +629,7 @@ namespace BCLabManager.ViewModel
                 }
                 _programs.Add(m);
                 this.AllPrograms.Add(new ProgramViewModel(m));
+                RefrashAllProgramsEstimatedTime();
             }
         }
         private bool CanSaveAs
