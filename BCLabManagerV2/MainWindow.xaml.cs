@@ -69,7 +69,7 @@ namespace BCLabManager
                 InitializeComponent();
                 InitializeConfiguration();
                 InitializeDatabase();
-                LoadFromDB(DomainData);
+                LoadFromDB(DomainData); //后续应改为DomainData.LoadFromDB();
                 InitializeNavigator();
                 CreateViewModels();
                 BindingVMandView();

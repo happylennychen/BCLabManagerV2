@@ -23,7 +23,15 @@ namespace BCLabManager.DataAccess
         public ObservableCollection<ProgramClass> Programs { get; set; }
         public DomainDataClass()
         {
-            //Batteries = new ObservableCollection<BatteryClass>();
+            BatteryTypes.CollectionChanged += BatteryTypes_CollectionChanged;
         }
+
+        private void BatteryTypes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LoadFromDB()
+        { }
     }
 }
