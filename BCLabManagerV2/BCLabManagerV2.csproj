@@ -244,9 +244,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DataAccess\AppDbContext.cs" />
+    <Compile Include="DataAccess\TesterRepository.cs" />
     <Compile Include="DataAccess\BatteryRepository.cs" />
+    <Compile Include="DataAccess\BatteryTypeRepository.cs" />
     <Compile Include="DataAccess\DomainDataClass.cs" />
     <Compile Include="DataAccess\IBatteryRepository.cs" />
+    <Compile Include="DataAccess\ITesterRepository.cs" />
+    <Compile Include="DataAccess\IBatteryTypeRepository.cs" />
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />

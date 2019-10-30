@@ -32,7 +32,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public BatteryEditViewModel(BatteryClass battery, List<BatteryTypeClass> batteryTypes)
+        public BatteryEditViewModel(BatteryClass battery, ObservableCollection<BatteryTypeClass> batteryTypes)
         {
             if (battery == null)
                 throw new ArgumentNullException("batterymodel");
@@ -49,7 +49,7 @@ namespace BCLabManager.ViewModel
             OnPropertyChanged(e.PropertyName);
         }
 
-        void CreateAllBatteryTypes(List<BatteryTypeClass> batteryTypes)
+        void CreateAllBatteryTypes(ObservableCollection<BatteryTypeClass> batteryTypes)
         {
             //List<BatteryTypeClass> all = _batterytypeRepository.GetItems();
 
@@ -164,7 +164,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public List<BatteryTypeClass> AllBatteryTypes
+        public ObservableCollection<BatteryTypeClass> AllBatteryTypes
         {
             get;set;
         }

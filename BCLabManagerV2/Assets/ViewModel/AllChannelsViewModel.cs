@@ -15,7 +15,7 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
         ObservableCollection<ChannelClass> _channels;
-        List<TesterClass> _testers;
+        ObservableCollection<TesterClass> _testers;
         ChannelViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
@@ -26,7 +26,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllChannelsViewModel(ObservableCollection<ChannelClass> channels, List<TesterClass> testers)
+        public AllChannelsViewModel(ObservableCollection<ChannelClass> channels, ObservableCollection<TesterClass> testers)
         {
             _channels = channels;
             _testers = testers;

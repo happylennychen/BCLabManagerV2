@@ -32,9 +32,9 @@ namespace BCLabManager.ViewModel
         //readonly ChamberRepository _chamberRepository;
         //readonly TesterRepository _testerRepository;
         //readonly ChannelRepository _channelRepository;
-        List<BatteryTypeClass> _batteryTypes;
+        ObservableCollection<BatteryTypeClass> _batteryTypes;
         ObservableCollection<BatteryClass> _batteries;
-        List<TesterClass> _testers;
+        ObservableCollection<TesterClass> _testers;
         ObservableCollection<ChannelClass> _channels;
         ObservableCollection<ChamberClass> _chambers;
 
@@ -57,10 +57,10 @@ namespace BCLabManager.ViewModel
         #region Constructor
 
         public TestRecordExecuteViewModel(
-            TestRecordClass record, 
-            List<BatteryTypeClass> batteryTypes,
+            TestRecordClass record,
+            ObservableCollection<BatteryTypeClass> batteryTypes,
             ObservableCollection<BatteryClass> batteries,
-            List<TesterClass> testers,
+            ObservableCollection<TesterClass> testers,
             ObservableCollection<ChannelClass> channels,
             ObservableCollection<ChamberClass> chambers
             )     //
@@ -141,7 +141,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<BatteryTypeClass> all = _batteryTypes;
+                ObservableCollection<BatteryTypeClass> all = _batteryTypes;
 
                 return new ObservableCollection<BatteryTypeClass>(all);
             }
@@ -251,7 +251,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TesterClass> all = _testers;
+                ObservableCollection<TesterClass> all = _testers;
 
                 return new ObservableCollection<TesterClass>(all);
             }

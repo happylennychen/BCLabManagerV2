@@ -18,7 +18,7 @@ namespace BCLabManager.ViewModel
         #region Fields
 
         public ProgramClass _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
-        List<BatteryTypeClass> _batteryTypes;
+        ObservableCollection<BatteryTypeClass> _batteryTypes;
         SubProgramTemplateViewModel _selectedSubProgramTemplate;
         SubProgramViewModel _selectedSubProgram;
         RelayCommand _okCommand;
@@ -32,7 +32,7 @@ namespace BCLabManager.ViewModel
 
         public ProgramEditViewModel(
             ProgramClass programmodel,
-            List<BatteryTypeClass> batteryTypes,
+            ObservableCollection<BatteryTypeClass> batteryTypes,
             List<SubProgramTemplate> subProgramTemplates)
         {
             _program = programmodel;
@@ -117,7 +117,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<BatteryTypeClass> all = _batteryTypes;
+                ObservableCollection<BatteryTypeClass> all = _batteryTypes;
 
                 return new ObservableCollection<BatteryTypeClass>(all);
             }

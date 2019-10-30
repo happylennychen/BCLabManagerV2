@@ -48,9 +48,9 @@ namespace BCLabManager
 
         public DashBoardViewModel dashBoardViewModel { get; set; }
 
-        public List<BatteryTypeClass> BatteryTypes { get; set; }
-        public ObservableCollection<BatteryClass> Batteries { get; set; }
-        public List<TesterClass> Testers { get; set; }
+        //public List<BatteryTypeClass> BatteryTypes { get; set; }
+        //public ObservableCollection<BatteryClass> Batteries { get; set; }
+        //public List<TesterClass> Testers { get; set; }
         public ObservableCollection<ChannelClass> Channels { get; set; }
         public ObservableCollection<ChamberClass> Chambers { get; set; }
         public List<SubProgramTemplate> SubProgramTemplates { get; set; }
@@ -146,20 +146,22 @@ namespace BCLabManager
         {
             using (var dbContext = new AppDbContext())
             {
-                BatteryTypes = new List<BatteryTypeClass>(dbContext.BatteryTypes.ToList());
-
-                domainData.Batteries = new ObservableCollection<BatteryClass>(
-                    dbContext.Batteries
-                    .Include(i => i.BatteryType)
-                    .Include(o => o.Records)
-                    .ToList()
-                    );
-                using(var uow = new UnitOfWork(new AppDbContext()))
+                using (var uow = new UnitOfWork(new AppDbContext()))
                 {
-                    Batteries = new ObservableCollection<BatteryClass>(uow.Batteries.GetAll("BatteryType,Records"));
+                    domainData.BatteryTypes = new ObservableCollection<BatteryTypeClass>(uow.BatteryTypes.GetAll());
+                    domainData.Batteries = new ObservableCollection<BatteryClass>(uow.Batteries.GetAll("BatteryType,Records"));
+                    domainData.Testers = new ObservableCollection<TesterClass>(uow.Testers.GetAll());
                 }
+                //BatteryTypes = new List<BatteryTypeClass>(dbContext.BatteryTypes.ToList());
 
-                Testers = new List<TesterClass>(dbContext.Testers.ToList());
+                //domainData.Batteries = new ObservableCollection<BatteryClass>(
+                //    dbContext.Batteries
+                //    .Include(i => i.BatteryType)
+                //    .Include(o => o.Records)
+                //    .ToList()
+                //    );
+
+                //Testers = new List<TesterClass>(dbContext.Testers.ToList());
 
                 Channels = new ObservableCollection<ChannelClass>(
                     dbContext.Channels
@@ -226,13 +228,13 @@ namespace BCLabManager
         }
         void CreateViewModels()
         {
-            allBatteryTypesViewModel = new AllBatteryTypesViewModel(BatteryTypes);    //ViewModel初始化
+            allBatteryTypesViewModel = new AllBatteryTypesViewModel(DomainData.BatteryTypes);    //ViewModel初始化
 
-            allBatteriesViewModel = new AllBatteriesViewModel(DomainData.Batteries, BatteryTypes);    //ViewModel初始化
+            allBatteriesViewModel = new AllBatteriesViewModel(DomainData.Batteries, DomainData.BatteryTypes);    //ViewModel初始化
 
-            allTestersViewModel = new AllTestersViewModel(Testers);    //ViewModel初始化
+            allTestersViewModel = new AllTestersViewModel(DomainData.Testers);    //ViewModel初始化
 
-            allChannelsViewModel = new AllChannelsViewModel(Channels, Testers);    //ViewModel初始化
+            allChannelsViewModel = new AllChannelsViewModel(Channels, DomainData.Testers);    //ViewModel初始化
 
             allChambersViewModel = new AllChambersViewModel(Chambers);    //ViewModel初始化
 
@@ -257,9 +259,9 @@ namespace BCLabManager
                 (
                 Programs,
                 SubProgramTemplates,
-                BatteryTypes,
+                DomainData.BatteryTypes,
                 DomainData.Batteries,
-                Testers,
+                DomainData.Testers,
                 Channels,
                 Chambers
                 );    //ViewModel初始化

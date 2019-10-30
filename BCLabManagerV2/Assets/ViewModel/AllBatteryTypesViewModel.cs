@@ -20,19 +20,19 @@ namespace BCLabManager.ViewModel
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
         RelayCommand _deleteCommand;
-        private List<BatteryTypeClass> _batteryTypes;
+        private ObservableCollection<BatteryTypeClass> _batteryTypes;
 
         #endregion // Fields
 
         #region Constructor
 
-        public AllBatteryTypesViewModel(List<BatteryTypeClass> batteryTypes)
+        public AllBatteryTypesViewModel(ObservableCollection<BatteryTypeClass> batteryTypes)
         {
             _batteryTypes = batteryTypes;
             this.CreateAllBatteryTypes(batteryTypes);
         }
 
-        void CreateAllBatteryTypes(List<BatteryTypeClass> batteryTypes)
+        void CreateAllBatteryTypes(ObservableCollection<BatteryTypeClass> batteryTypes)
         {
             List<BatteryTypeViewModel> all =
                 (from batT in batteryTypes

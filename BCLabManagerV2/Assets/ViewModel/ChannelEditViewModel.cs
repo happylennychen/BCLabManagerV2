@@ -25,7 +25,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public ChannelEditViewModel(ChannelClass channel, List<TesterClass> testers)
+        public ChannelEditViewModel(ChannelClass channel, ObservableCollection<TesterClass> testers)
         {
             _channel = channel;
             _channel.PropertyChanged += _channel_PropertyChanged;
@@ -37,7 +37,7 @@ namespace BCLabManager.ViewModel
             OnPropertyChanged(e.PropertyName);
         }
 
-        void CreateAllTesters(List<TesterClass> testers)
+        void CreateAllTesters(ObservableCollection<TesterClass> testers)
         {
             this.AllTesters = testers;
         }
@@ -107,7 +107,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public List<TesterClass> AllTesters { get; set; }
+        public ObservableCollection<TesterClass> AllTesters { get; set; }
 
         /// <summary>
         /// Returns a command that saves the customer.

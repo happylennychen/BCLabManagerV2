@@ -23,7 +23,7 @@ namespace BCLabManager.DataAccess
         public ObservableCollection<ProgramClass> Programs { get; set; }
         public DomainDataClass()
         {
-            Batteries = new ObservableCollection<BatteryClass>();
+            //Batteries = new ObservableCollection<BatteryClass>();
         }
     }
 }

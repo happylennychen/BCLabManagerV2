@@ -16,7 +16,7 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
         ObservableCollection<BatteryClass> _batteries;
-        List<BatteryTypeClass> _batteryTypes;
+        ObservableCollection<BatteryTypeClass> _batteryTypes;
         BatteryViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
@@ -27,7 +27,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllBatteriesViewModel(ObservableCollection<BatteryClass> batteries, List<BatteryTypeClass> batteryTypes)
+        public AllBatteriesViewModel(ObservableCollection<BatteryClass> batteries, ObservableCollection<BatteryTypeClass> batteryTypes)
         {
             _batteries = batteries;
             _batteryTypes = batteryTypes;

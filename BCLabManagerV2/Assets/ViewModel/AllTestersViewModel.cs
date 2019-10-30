@@ -20,18 +20,18 @@ namespace BCLabManager.ViewModel
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
         RelayCommand _deleteCommand;
-        List<TesterClass> _testers;
+        ObservableCollection<TesterClass> _testers;
         #endregion // Fields
 
         #region Constructor
 
-        public AllTestersViewModel(List<TesterClass> testers)
+        public AllTestersViewModel(ObservableCollection<TesterClass> testers)
         {
             _testers = testers;
             this.CreateAllTesters(testers);
         }
 
-        void CreateAllTesters(List<TesterClass> testers)
+        void CreateAllTesters(ObservableCollection<TesterClass> testers)
         {
             List<TesterViewModel> all =
                 (from tster in testers
