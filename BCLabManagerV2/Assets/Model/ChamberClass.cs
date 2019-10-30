@@ -17,21 +17,21 @@ namespace BCLabManager.Model
         public ChamberClass()
         { }
 
-        public ChamberClass(String Manufactor, String Name, String TemperatureRange)
-        {
-            this.Manufactor = Manufactor;
-            this.Name = Name;
-            this.LowestTemperature = LowestTemperature;
-            this.HighestTemperature = HighestTemperature;
-        }
+        //public ChamberClass(String Manufactor, String Name, String TemperatureRange)
+        //{
+        //    this.Manufactor = Manufactor;
+        //    this.Name = Name;
+        //    this.LowestTemperature = LowestTemperature;
+        //    this.HighestTemperature = HighestTemperature;
+        //}
 
-        public void Update(String Manufactor, String Name, String TemperatureRange)
-        {
-            this.Manufactor = Manufactor;
-            this.Name = Name;
-            this.LowestTemperature = LowestTemperature;
-            this.HighestTemperature = HighestTemperature;
-        }
+        //public void Update(String Manufactor, String Name, String TemperatureRange)
+        //{
+        //    this.Manufactor = Manufactor;
+        //    this.Name = Name;
+        //    this.LowestTemperature = LowestTemperature;
+        //    this.HighestTemperature = HighestTemperature;
+        //}
 
         public override string ToString()
         {

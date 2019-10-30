@@ -228,7 +228,7 @@ namespace BCLabManager
         }
         void CreateViewModels()
         {
-            allBatteryTypesViewModel = new AllBatteryTypesViewModel(DomainData.BatteryTypes);    //ViewModel初始化
+            allBatteryTypesViewModel = new AllBatteryTypesViewModel(DomainData.BatteryTypes, DomainData.Batteries);    //ViewModel初始化
 
             allBatteriesViewModel = new AllBatteriesViewModel(DomainData.Batteries, DomainData.BatteryTypes);    //ViewModel初始化
 

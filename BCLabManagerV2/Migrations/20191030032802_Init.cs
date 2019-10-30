@@ -328,7 +328,7 @@ namespace BCLabManager.Migrations
                     Timestamp = table.Column<DateTime>(nullable: false),
                     AssetUseCount = table.Column<int>(nullable: false),
                     ProgramName = table.Column<string>(nullable: true),
-                    SubProgramName = table.Column<string>(nullable: true),
+                    RecipeName = table.Column<string>(nullable: true),
                     BatteryClassId = table.Column<int>(nullable: true),
                     ChamberClassId = table.Column<int>(nullable: true),
                     ChannelClassId = table.Column<int>(nullable: true)

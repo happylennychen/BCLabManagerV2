@@ -111,7 +111,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                return _record.SubProgramName.ToString();
+                return _record.RecipeName.ToString();
             }
         }
 

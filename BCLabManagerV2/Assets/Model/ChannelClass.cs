@@ -15,17 +15,17 @@ namespace BCLabManager.Model
         public ChannelClass()
         { }
 
-        public ChannelClass(String Name, TesterClass Tester)
-        {
-            this.Tester = Tester;
-            this.Name = Name;
-        }
+        //public ChannelClass(String Name, TesterClass Tester)
+        //{
+        //    this.Tester = Tester;
+        //    this.Name = Name;
+        //}
 
-        public void Update(String Name, TesterClass Tester)
-        {
-            this.Tester = Tester;
-            this.Name = Name;
-        }
+        //public void Update(String Name, TesterClass Tester)
+        //{
+        //    this.Tester = Tester;
+        //    this.Name = Name;
+        //}
 
         public override string ToString()
         {

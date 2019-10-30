@@ -243,6 +243,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Assets\Model\AssetUsageRecordClass.cs" />
+    <Compile Include="Assets\Model\IAsset.cs" />
     <Compile Include="DataAccess\AppDbContext.cs" />
     <Compile Include="DataAccess\TesterRepository.cs" />
     <Compile Include="DataAccess\BatteryRepository.cs" />
@@ -254,13 +256,13 @@
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
-    <Compile Include="Services\DatabasePopulator.cs" />
-    <Compile Include="Services\GlobalSettings.cs" />
-    <Compile Include="Migrations\20190927031433_Init.cs" />
-    <Compile Include="Migrations\20190927031433_Init.designer.cs">
-      <DependentUpon>20190927031433_Init.cs</DependentUpon>
+    <Compile Include="Migrations\20191030032802_Init.cs" />
+    <Compile Include="Migrations\20191030032802_Init.designer.cs">
+      <DependentUpon>20191030032802_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
+    <Compile Include="Services\DatabasePopulator.cs" />
+    <Compile Include="Services\GlobalSettings.cs" />
     <Compile Include="Assets\Model\BatteryClass.cs" />
     <Compile Include="Assets\Model\BatteryTypeClass.cs" />
     <Compile Include="Assets\Model\ChamberClass.cs" />
@@ -412,7 +414,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Assets\Model\Assets.cs" />
+    <Compile Include="Assets\Model\AssetClass.cs" />
     <Compile Include="Programs\Model\TestRecoredClass.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

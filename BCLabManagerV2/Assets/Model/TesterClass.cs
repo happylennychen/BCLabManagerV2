@@ -15,18 +15,18 @@ namespace BCLabManager.Model
         public TesterClass()
         { }
 
-        public TesterClass(String Manufactor, String Name)
-        {
-            //this.TesterID = NextID;
-            this.Manufactor = Manufactor;
-            this.Name = Name;
-        }
+        //public TesterClass(String Manufactor, String Name)
+        //{
+        //    //this.TesterID = NextID;
+        //    this.Manufactor = Manufactor;
+        //    this.Name = Name;
+        //}
 
-        public void Update(String Manufactor, String Name)
-        {
-            this.Manufactor = Manufactor;
-            this.Name = Name;
-        }
+        //public void Update(String Manufactor, String Name)
+        //{
+        //    this.Manufactor = Manufactor;
+        //    this.Name = Name;
+        //}
 
         public override string ToString()
         {

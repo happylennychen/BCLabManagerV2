@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20190927031433_Init")]
+    [Migration("20191030032802_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,7 +33,7 @@ namespace BCLabManager.Migrations
 
                     b.Property<string>("ProgramName");
 
-                    b.Property<string>("SubProgramName");
+                    b.Property<string>("RecipeName");
 
                     b.Property<DateTime>("Timestamp");
 

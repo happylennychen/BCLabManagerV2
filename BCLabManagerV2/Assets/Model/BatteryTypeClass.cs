@@ -21,28 +21,28 @@ namespace BCLabManager.Model
         public BatteryTypeClass()
         { }
 
-        public BatteryTypeClass(String Manufactor, String Name, String Material, Int32 LimitedChargeVoltage, Int32 RatedCapacity, Int32 NominalVoltage, Int32 TypicalCapacity, Int32 CutoffDischargeVoltage)
-        {
-            this.Manufactor = Manufactor;
-            this.Name = Name;
-            this.Material = Material;
-            this.LimitedChargeVoltage = LimitedChargeVoltage;
-            this.RatedCapacity = RatedCapacity;
-            this.NominalVoltage = NominalVoltage;
-            this.TypicalCapacity = TypicalCapacity;
-            this.CutoffDischargeVoltage = CutoffDischargeVoltage;
-        }
-        public void Update(String Manufactor, String Name, String Material, Int32 LimitedChargeVoltage, Int32 RatedCapacity, Int32 NominalVoltage, Int32 TypicalCapacity, Int32 CutoffDischargeVoltage)
-        {
-            this.Manufactor = Manufactor;
-            this.Name = Name;
-            this.Material = Material;
-            this.LimitedChargeVoltage = LimitedChargeVoltage;
-            this.RatedCapacity = RatedCapacity;
-            this.NominalVoltage = NominalVoltage;
-            this.TypicalCapacity = TypicalCapacity;
-            this.CutoffDischargeVoltage = CutoffDischargeVoltage;
-        }
+        //public BatteryTypeClass(String Manufactor, String Name, String Material, Int32 LimitedChargeVoltage, Int32 RatedCapacity, Int32 NominalVoltage, Int32 TypicalCapacity, Int32 CutoffDischargeVoltage)
+        //{
+        //    this.Manufactor = Manufactor;
+        //    this.Name = Name;
+        //    this.Material = Material;
+        //    this.LimitedChargeVoltage = LimitedChargeVoltage;
+        //    this.RatedCapacity = RatedCapacity;
+        //    this.NominalVoltage = NominalVoltage;
+        //    this.TypicalCapacity = TypicalCapacity;
+        //    this.CutoffDischargeVoltage = CutoffDischargeVoltage;
+        //}
+        //public void Update(String Manufactor, String Name, String Material, Int32 LimitedChargeVoltage, Int32 RatedCapacity, Int32 NominalVoltage, Int32 TypicalCapacity, Int32 CutoffDischargeVoltage)
+        //{
+        //    this.Manufactor = Manufactor;
+        //    this.Name = Name;
+        //    this.Material = Material;
+        //    this.LimitedChargeVoltage = LimitedChargeVoltage;
+        //    this.RatedCapacity = RatedCapacity;
+        //    this.NominalVoltage = NominalVoltage;
+        //    this.TypicalCapacity = TypicalCapacity;
+        //    this.CutoffDischargeVoltage = CutoffDischargeVoltage;
+        //}
 
         public override string ToString()
         {

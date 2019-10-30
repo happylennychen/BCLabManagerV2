@@ -21,14 +21,16 @@ namespace BCLabManager.ViewModel
         RelayCommand _saveAsCommand;
         RelayCommand _deleteCommand;
         private ObservableCollection<BatteryTypeClass> _batteryTypes;
+        private ObservableCollection<BatteryClass> _batteries;
 
         #endregion // Fields
 
         #region Constructor
 
-        public AllBatteryTypesViewModel(ObservableCollection<BatteryTypeClass> batteryTypes)
+        public AllBatteryTypesViewModel(ObservableCollection<BatteryTypeClass> batteryTypes, ObservableCollection<BatteryClass> batteries)
         {
             _batteryTypes = batteryTypes;
+            _batteries = batteries;
             this.CreateAllBatteryTypes(batteryTypes);
         }
 
@@ -65,8 +67,25 @@ namespace BCLabManager.ViewModel
                 }
             }
         }
-        public List<BatteryViewModel> Batteries //绑定选中type的batteries。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
-        //如果不是用查询，那么需要维护一个二维List。每一个BatteryType，对应一个List。用空间换时间。
+        //public List<BatteryViewModel> Batteries //绑定选中type的batteries。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
+        ////如果不是用查询，那么需要维护一个二维List。每一个BatteryType，对应一个List。用空间换时间。
+        //{
+        //    get
+        //    {
+        //        if (SelectedItem == null)
+        //            return null;
+        //        using (var dbContext = new AppDbContext())
+        //        {
+        //            List<BatteryViewModel> all =
+        //              (from bat in dbContext.Batteries
+        //               where bat.BatteryType.Id == SelectedItem.Id
+        //               select new BatteryViewModel(bat)).ToList();
+        //            return all;
+        //        }
+        //        //return null;
+        //    }
+        //}
+        public List<BatteryViewModel> Batteries //从Domain取
         {
             get
             {
@@ -75,7 +94,7 @@ namespace BCLabManager.ViewModel
                 using (var dbContext = new AppDbContext())
                 {
                     List<BatteryViewModel> all =
-                      (from bat in dbContext.Batteries
+                      (from bat in _batteries
                        where bat.BatteryType.Id == SelectedItem.Id
                        select new BatteryViewModel(bat)).ToList();
                     return all;

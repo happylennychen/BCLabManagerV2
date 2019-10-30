@@ -31,7 +31,7 @@ namespace BCLabManager.Migrations
 
                     b.Property<string>("ProgramName");
 
-                    b.Property<string>("SubProgramName");
+                    b.Property<string>("RecipeName");
 
                     b.Property<DateTime>("Timestamp");
 

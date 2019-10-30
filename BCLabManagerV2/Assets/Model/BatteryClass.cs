@@ -16,20 +16,20 @@ namespace BCLabManager.Model
         public BatteryClass()
         { }
 
-        public BatteryClass(String Name, BatteryTypeClass BatteryType, Double CycleCount = 0)
-        {
-            //this.BatteryID = NextID;
-            this.Name = Name;
-            this.BatteryType = BatteryType;
-            this.CycleCount = CycleCount;
-        }
+        //public BatteryClass(String Name, BatteryTypeClass BatteryType, Double CycleCount = 0)
+        //{
+        //    //this.BatteryID = NextID;
+        //    this.Name = Name;
+        //    this.BatteryType = BatteryType;
+        //    this.CycleCount = CycleCount;
+        //}
 
-        public void Update(String Name, BatteryTypeClass BatteryType, Double CycleCount = 0)
-        {
-            this.Name = Name;
-            this.BatteryType = BatteryType;
-            this.CycleCount = CycleCount;
-        }
+        //public void Update(String Name, BatteryTypeClass BatteryType, Double CycleCount = 0)
+        //{
+        //    this.Name = Name;
+        //    this.BatteryType = BatteryType;
+        //    this.CycleCount = CycleCount;
+        //}
 
         public override string ToString()
         {
