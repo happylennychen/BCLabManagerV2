@@ -9,7 +9,7 @@ namespace BCLabManager.DataAccess
 {
     public interface IRepository<T> where T : class
     {
-        IEnumerable<T> GetAll();
+        IEnumerable<T> GetAll(string includeProperties = "");
         IEnumerable<T> Find(Expression<Func<T, bool>> predicate);
         T SingleOrDefault(Expression<Func<T, bool>> predicate);
         T GetById(object Id);

@@ -21,5 +21,9 @@ namespace BCLabManager.DataAccess
         public ObservableCollection<DischargeTemperatureClass> DischargeTemperatures { get; set; }
         public ObservableCollection<DischargeCurrentClass> DischargeCurrents { get; set; }
         public ObservableCollection<ProgramClass> Programs { get; set; }
+        public DomainDataClass()
+        {
+            Batteries = new ObservableCollection<BatteryClass>();
+        }
     }
 }

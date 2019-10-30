@@ -244,8 +244,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DataAccess\AppDbContext.cs" />
-    <Compile Include="DatabasePopulator.cs" />
-    <Compile Include="GlobalSettings.cs" />
+    <Compile Include="DataAccess\BatteryRepository.cs" />
+    <Compile Include="DataAccess\DomainDataClass.cs" />
+    <Compile Include="DataAccess\IBatteryRepository.cs" />
+    <Compile Include="DataAccess\IRepository.cs" />
+    <Compile Include="DataAccess\Repository.cs" />
+    <Compile Include="DataAccess\UnitOfWork.cs" />
+    <Compile Include="Services\DatabasePopulator.cs" />
+    <Compile Include="Services\GlobalSettings.cs" />
     <Compile Include="Migrations\20190927031433_Init.cs" />
     <Compile Include="Migrations\20190927031433_Init.designer.cs">
       <DependentUpon>20190927031433_Init.cs</DependentUpon>
@@ -257,7 +263,7 @@
     <Compile Include="Assets\Model\ChannelClass.cs" />
     <Compile Include="Assets\Model\TesterClass.cs" />
     <Compile Include="Assets\Service\EstimateTimeManager.cs" />
-    <Compile Include="ModelBase.cs" />
+    <Compile Include="Services\ModelBase.cs" />
     <Compile Include="Programs\Model\ProgramClass.cs" />
     <Compile Include="Programs\Model\SubProgramTemplate.cs" />
     <Compile Include="Programs\Model\SubProgramClass.cs" />
@@ -304,8 +310,8 @@
     <Compile Include="Assets\ViewModel\AssetUsageRecordViewModel.cs" />
     <Compile Include="Assets\ViewModel\TesterViewModel.cs" />
     <Compile Include="Assets\ViewModel\BatteryTypeViewModel.cs" />
-    <Compile Include="RelayCommand.cs" />
-    <Compile Include="ViewModelBase.cs" />
+    <Compile Include="Services\RelayCommand.cs" />
+    <Compile Include="Services\ViewModelBase.cs" />
     <Compile Include="Assets\View\AllBatteriesView.xaml.cs">
       <DependentUpon>AllBatteriesView.xaml</DependentUpon>
       <SubType>Code</SubType>

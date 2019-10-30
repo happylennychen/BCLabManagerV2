@@ -80,13 +80,13 @@ namespace BCLabManager.ViewModel
             _channels = channels;
             _chambers = chambers;
 
-            _record.PropertyChanged += _record_PropertyChanged;
+            //_record.PropertyChanged += _record_PropertyChanged;
         }
 
-        private void _record_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+        //private void _record_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         #endregion // Constructor
 

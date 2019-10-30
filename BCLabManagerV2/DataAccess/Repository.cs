@@ -47,6 +47,17 @@ namespace BCLabManager.DataAccess
             return table.ToList();
         }
 
+        public IEnumerable<T> GetAll(string includeProperties = "")
+        {
+            IQueryable<T> query = table;
+
+            foreach (var includeProperty in includeProperties.Split
+                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                )
+                query = query.Include(includeProperty);
+            return query.ToList();
+        }
+
         public T GetById(object id)
         {
             return table.Find(id);

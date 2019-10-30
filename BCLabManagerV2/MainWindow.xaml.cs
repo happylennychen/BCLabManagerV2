@@ -46,26 +46,21 @@ namespace BCLabManager
 
         public AllProgramsViewModel allProgramsViewModel { get; set; }  //其中需要显示Programs, SubPrograms, Test1, Test2, TestSteps
 
-        //public DashBoardViewModel dashBoardViewModel { get; set; }
+        public DashBoardViewModel dashBoardViewModel { get; set; }
 
-        //public List<BatteryTypeClass> BatteryTypes { get; set; }
-        //public ObservableCollection<BatteryClass> Batteries { get; set; }
-        //public List<TesterClass> Testers { get; set; }
-        //public ObservableCollection<ChannelClass> Channels { get; set; }
-        //public ObservableCollection<ChamberClass> Chambers { get; set; }
-        //public List<SubProgramTemplate> SubProgramTemplates { get; set; }
-        //public List<ChargeTemperatureClass> ChargeTemperatures { get; set; }
-        //public List<ChargeCurrentClass> ChargeCurrents { get; set; }
-        //public List<DischargeTemperatureClass> DischargeTemperatures { get; set; }
-        //public List<DischargeCurrentClass> DischargeCurrents { get; set; }
-        //public ObservableCollection<ProgramClass> Programs { get; set; }
-        private DomainDataClass _domainData;
+        public List<BatteryTypeClass> BatteryTypes { get; set; }
+        public ObservableCollection<BatteryClass> Batteries { get; set; }
+        public List<TesterClass> Testers { get; set; }
+        public ObservableCollection<ChannelClass> Channels { get; set; }
+        public ObservableCollection<ChamberClass> Chambers { get; set; }
+        public List<SubProgramTemplate> SubProgramTemplates { get; set; }
+        public List<ChargeTemperatureClass> ChargeTemperatures { get; set; }
+        public List<ChargeCurrentClass> ChargeCurrents { get; set; }
+        public List<DischargeTemperatureClass> DischargeTemperatures { get; set; }
+        public List<DischargeCurrentClass> DischargeCurrents { get; set; }
+        public ObservableCollection<ProgramClass> Programs { get; set; }
 
-        public DomainDataClass DomainData
-        {
-            get { return _domainData; }
-            set { _domainData = value; }
-        }
+        public DomainDataClass DomainData = new DomainDataClass();
 
         public MainWindow()
         {
@@ -74,7 +69,7 @@ namespace BCLabManager
                 InitializeComponent();
                 InitializeConfiguration();
                 InitializeDatabase();
-                LoadFromDB(ref _domainData);
+                LoadFromDB(DomainData);
                 InitializeNavigator();
                 CreateViewModels();
                 BindingVMandView();
@@ -147,11 +142,11 @@ namespace BCLabManager
             GlobalSettings.DbPath = sr.ReadLine();
         }
 
-        void LoadFromDB(ref DomainDataClass domainData)
+        void LoadFromDB(DomainDataClass domainData)
         {
             using (var dbContext = new AppDbContext())
             {
-                domainData.BatteryTypes = new ObservableCollection<BatteryTypeClass>(dbContext.BatteryTypes.ToList());
+                BatteryTypes = new List<BatteryTypeClass>(dbContext.BatteryTypes.ToList());
 
                 domainData.Batteries = new ObservableCollection<BatteryClass>(
                     dbContext.Batteries
@@ -159,33 +154,37 @@ namespace BCLabManager
                     .Include(o => o.Records)
                     .ToList()
                     );
+                using(var uow = new UnitOfWork(new AppDbContext()))
+                {
+                    Batteries = new ObservableCollection<BatteryClass>(uow.Batteries.GetAll("BatteryType,Records"));
+                }
 
-                domainData.Testers = new LiObservableCollectionst<TesterClass>(dbContext.Testers.ToList());
+                Testers = new List<TesterClass>(dbContext.Testers.ToList());
 
-                domainData.Channels = new ObservableCollection<ChannelClass>(
+                Channels = new ObservableCollection<ChannelClass>(
                     dbContext.Channels
                     .Include(i => i.Tester)
                     .Include(o => o.Records)
                     .ToList()
                     );
 
-                domainData.Chambers = new ObservableCollection<ChamberClass>(
+                Chambers = new ObservableCollection<ChamberClass>(
                     dbContext.Chambers
                     .Include(o => o.Records)
                     .ToList()
                     );
 
-                domainData.SubProgramTemplates = new ObservableCollection<SubProgramTemplate>(dbContext.SubProgramTemplates.ToList());
+                SubProgramTemplates = new List<SubProgramTemplate>(dbContext.SubProgramTemplates.ToList());
 
-                domainData.ChargeTemperatures = new ObservableCollection<ChargeTemperatureClass>(dbContext.ChargeTemperatures.ToList());
+                ChargeTemperatures = new List<ChargeTemperatureClass>(dbContext.ChargeTemperatures.ToList());
 
-                domainData.ChargeCurrents = new ObservableCollection<ChargeCurrentClass>(dbContext.ChargeCurrents.ToList());
+                ChargeCurrents = new List<ChargeCurrentClass>(dbContext.ChargeCurrents.ToList());
 
-                domainData.DischargeTemperatures = new ObservableCollection<DischargeTemperatureClass>(dbContext.DischargeTemperatures.ToList());
+                DischargeTemperatures = new List<DischargeTemperatureClass>(dbContext.DischargeTemperatures.ToList());
 
-                domainData.DischargeCurrents = new ObservableCollection<DischargeCurrentClass>(dbContext.DischargeCurrents.ToList());
+                DischargeCurrents = new List<DischargeCurrentClass>(dbContext.DischargeCurrents.ToList());
 
-                domainData.Programs = new ObservableCollection<ProgramClass>(dbContext.Programs
+                Programs = new ObservableCollection<ProgramClass>(dbContext.Programs
                     .Include(pro => pro.Group)
                     .Include(pro => pro.SubPrograms)
                         .ThenInclude(sub => sub.FirstTestRecords)
@@ -213,7 +212,7 @@ namespace BCLabManager
                             .ThenInclude(tr => tr.AssignedChannel)
                     .ToList());
 
-                foreach (var pro in domainData.Programs)
+                foreach (var pro in Programs)
                 {
                     foreach (var sub in pro.SubPrograms)
                     {
@@ -229,7 +228,7 @@ namespace BCLabManager
         {
             allBatteryTypesViewModel = new AllBatteryTypesViewModel(BatteryTypes);    //ViewModel初始化
 
-            allBatteriesViewModel = new AllBatteriesViewModel(Batteries, BatteryTypes);    //ViewModel初始化
+            allBatteriesViewModel = new AllBatteriesViewModel(DomainData.Batteries, BatteryTypes);    //ViewModel初始化
 
             allTestersViewModel = new AllTestersViewModel(Testers);    //ViewModel初始化
 
@@ -259,13 +258,13 @@ namespace BCLabManager
                 Programs,
                 SubProgramTemplates,
                 BatteryTypes,
-                Batteries,
+                DomainData.Batteries,
                 Testers,
                 Channels,
                 Chambers
                 );    //ViewModel初始化
 
-            dashBoardViewModel = new DashBoardViewModel(Programs, Batteries, Channels, Chambers);
+            dashBoardViewModel = new DashBoardViewModel(Programs, DomainData.Batteries, Channels, Chambers);
         }
         void BindingVMandView()
         {
