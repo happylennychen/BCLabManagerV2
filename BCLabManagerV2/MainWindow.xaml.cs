@@ -60,7 +60,7 @@ namespace BCLabManager
         public List<DischargeCurrentClass> DischargeCurrents { get; set; }
         public ObservableCollection<ProgramClass> Programs { get; set; }
 
-        public DomainDataClass DomainData = new DomainDataClass();
+        private DomainDataClass _domainData;
 
         public MainWindow()
         {
@@ -69,7 +69,9 @@ namespace BCLabManager
                 InitializeComponent();
                 InitializeConfiguration();
                 InitializeDatabase();
-                LoadFromDB(DomainData); //后续应改为DomainData.LoadFromDB();
+                _domainData = new DomainDataClass();
+                LoadFromDB(); //后续应改为DomainData.LoadFromDB();
+                //_domainData.LoadFromDB();
                 InitializeNavigator();
                 CreateViewModels();
                 BindingVMandView();
@@ -142,16 +144,10 @@ namespace BCLabManager
             GlobalSettings.DbPath = sr.ReadLine();
         }
 
-        void LoadFromDB(DomainDataClass domainData)
+        void LoadFromDB()
         {
             using (var dbContext = new AppDbContext())
             {
-                using (var uow = new UnitOfWork(new AppDbContext()))
-                {
-                    domainData.BatteryTypes = new ObservableCollection<BatteryTypeClass>(uow.BatteryTypes.GetAll());
-                    domainData.Batteries = new ObservableCollection<BatteryClass>(uow.Batteries.GetAll("BatteryType,Records"));
-                    domainData.Testers = new ObservableCollection<TesterClass>(uow.Testers.GetAll());
-                }
                 //BatteryTypes = new List<BatteryTypeClass>(dbContext.BatteryTypes.ToList());
 
                 //domainData.Batteries = new ObservableCollection<BatteryClass>(
@@ -228,13 +224,13 @@ namespace BCLabManager
         }
         void CreateViewModels()
         {
-            allBatteryTypesViewModel = new AllBatteryTypesViewModel(DomainData.BatteryTypes, DomainData.Batteries);    //ViewModel初始化
+            allBatteryTypesViewModel = new AllBatteryTypesViewModel(_domainData.BatteryTypes, _domainData.Batteries);    //ViewModel初始化
 
-            allBatteriesViewModel = new AllBatteriesViewModel(DomainData.Batteries, DomainData.BatteryTypes);    //ViewModel初始化
+            allBatteriesViewModel = new AllBatteriesViewModel(_domainData.Batteries, _domainData.BatteryTypes);    //ViewModel初始化
 
-            allTestersViewModel = new AllTestersViewModel(DomainData.Testers);    //ViewModel初始化
+            allTestersViewModel = new AllTestersViewModel(_domainData.Testers);    //ViewModel初始化
 
-            allChannelsViewModel = new AllChannelsViewModel(Channels, DomainData.Testers);    //ViewModel初始化
+            allChannelsViewModel = new AllChannelsViewModel(Channels, _domainData.Testers);    //ViewModel初始化
 
             allChambersViewModel = new AllChambersViewModel(Chambers);    //ViewModel初始化
 
@@ -259,14 +255,14 @@ namespace BCLabManager
                 (
                 Programs,
                 SubProgramTemplates,
-                DomainData.BatteryTypes,
-                DomainData.Batteries,
-                DomainData.Testers,
+                _domainData.BatteryTypes,
+                _domainData.Batteries,
+                _domainData.Testers,
                 Channels,
                 Chambers
                 );    //ViewModel初始化
 
-            dashBoardViewModel = new DashBoardViewModel(Programs, DomainData.Batteries, Channels, Chambers);
+            dashBoardViewModel = new DashBoardViewModel(Programs, _domainData.Batteries, Channels, Chambers);
         }
         void BindingVMandView()
         {

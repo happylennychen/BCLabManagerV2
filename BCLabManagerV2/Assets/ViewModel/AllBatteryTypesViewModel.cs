@@ -173,11 +173,11 @@ namespace BCLabManager.ViewModel
             if (btevm.IsOK == true)
             {
                 _batteryTypes.Add(btc);
-                using (var dbContext = new AppDbContext())
-                {
-                    dbContext.BatteryTypes.Add(btc);
-                    dbContext.SaveChanges();
-                }
+                //using (var dbContext = new AppDbContext())
+                //{
+                //    dbContext.BatteryTypes.Add(btc);
+                //    dbContext.SaveChanges();
+                //}
                 this.AllBatteryTypes.Add(new BatteryTypeViewModel(btc));
             }
         }

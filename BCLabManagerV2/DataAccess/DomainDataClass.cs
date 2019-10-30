@@ -23,15 +23,45 @@ namespace BCLabManager.DataAccess
         public ObservableCollection<ProgramClass> Programs { get; set; }
         public DomainDataClass()
         {
+            LoadFromDB();
             BatteryTypes.CollectionChanged += BatteryTypes_CollectionChanged;
         }
 
         private void BatteryTypes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            throw new NotImplementedException();
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
+                    {
+                        using (var uow = new UnitOfWork(new AppDbContext()))
+                        {
+                            uow.BatteryTypes.Insert((BatteryTypeClass)item);
+                            uow.Commit();
+                        }
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    foreach (var item in e.OldItems)
+                    {
+                        using (var uow = new UnitOfWork(new AppDbContext()))
+                        {
+                            uow.BatteryTypes.Delete((BatteryTypeClass)item);
+                            uow.Commit();
+                        }
+                    }
+                    break;
+            }
         }
 
         public void LoadFromDB()
-        { }
+        {
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                BatteryTypes = new ObservableCollection<BatteryTypeClass>(uow.BatteryTypes.GetAll());
+                Batteries = new ObservableCollection<BatteryClass>(uow.Batteries.GetAll("BatteryType,Records"));
+                Testers = new ObservableCollection<TesterClass>(uow.Testers.GetAll());
+            }
+        }
     }
 }

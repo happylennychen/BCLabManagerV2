@@ -20,6 +20,10 @@ namespace BCLabManager.DataAccess
             BatteryTypes = new BatteryTypeRepository(_context);
             Testers = new TesterRepository(_context);
         }
+        public void Commit()
+        {
+            _context.SaveChanges();
+        }
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
