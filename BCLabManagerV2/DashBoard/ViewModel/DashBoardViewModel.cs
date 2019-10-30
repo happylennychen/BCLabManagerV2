@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BCLabManager.ViewModel
 {
-    public class DashBoardViewModel : ViewModelBase
+    public class DashBoardViewModel : BindBase
     {
         #region Fields
 
@@ -62,12 +62,12 @@ namespace BCLabManager.ViewModel
 
             foreach (var pro in _programs)
             {
-                pro.SubPrograms.CollectionChanged += SubPrograms_CollectionChanged;
+                pro.Recipes.CollectionChanged += SubPrograms_CollectionChanged;
             }
 
             foreach (var pro in _programs)
             {
-                foreach(var sub in pro.SubPrograms)
+                foreach(var sub in pro.Recipes)
                 {
                     sub.FirstTestRecords.CollectionChanged += FirstTestRecords_CollectionChanged;
                     sub.SecondTestRecords.CollectionChanged += SecondTestRecords_CollectionChanged;
@@ -76,7 +76,7 @@ namespace BCLabManager.ViewModel
 
             foreach (var pro in _programs)
             {
-                foreach (var sub in pro.SubPrograms)
+                foreach (var sub in pro.Recipes)
                 {
                     foreach(var tr in sub.FirstTestRecords)
                         tr.StatusChanged += Tr_StatusChanged;
@@ -276,7 +276,7 @@ namespace BCLabManager.ViewModel
             return
             (
                 from pro in _programs
-                from sub in pro.SubPrograms
+                from sub in pro.Recipes
                 from ftr in sub.FirstTestRecords
                 where ftr.Status == testStatus
                 select ftr
@@ -284,7 +284,7 @@ namespace BCLabManager.ViewModel
             +
             (
                 from pro in _programs
-                from sub in pro.SubPrograms
+                from sub in pro.Recipes
                 from str in sub.SecondTestRecords
                 where str.Status == testStatus
                 select str
@@ -333,14 +333,14 @@ namespace BCLabManager.ViewModel
                 return
                 (
                     from pro in _programs
-                    from sub in pro.SubPrograms
+                    from sub in pro.Recipes
                     from ftr in sub.FirstTestRecords
                     select ftr
                 ).Count()
                 +
                 (
                     from pro in _programs
-                    from sub in pro.SubPrograms
+                    from sub in pro.Recipes
                     from str in sub.SecondTestRecords
                     select str
                 ).Count()
@@ -406,7 +406,7 @@ namespace BCLabManager.ViewModel
                 List<TestRecordViewModel> all = new List<TestRecordViewModel>();
                 foreach (var pro in _programs)
                 {
-                    foreach (var sub in pro.SubPrograms)
+                    foreach (var sub in pro.Recipes)
                     {
                         foreach (var tr in sub.FirstTestRecords)
                         {
@@ -430,7 +430,7 @@ namespace BCLabManager.ViewModel
                 List<TestRecordViewModel> all = new List<TestRecordViewModel>();
                 foreach (var pro in _programs)
                 {
-                    foreach (var sub in pro.SubPrograms)
+                    foreach (var sub in pro.Recipes)
                     {
                         foreach (var tr in sub.FirstTestRecords)
                         {
@@ -465,7 +465,7 @@ namespace BCLabManager.ViewModel
 
         private bool IsProgramCompleted(ProgramClass pro)
         {
-            foreach (var sub in pro.SubPrograms)
+            foreach (var sub in pro.Recipes)
             {
                 if (sub.IsAbandoned == true)
                     continue;
@@ -481,7 +481,7 @@ namespace BCLabManager.ViewModel
                 int i = 0;
                 foreach (var pro in _programs)
                 {
-                    foreach(var sub in pro.SubPrograms)
+                    foreach(var sub in pro.Recipes)
                         if (IsSubProgramCompleted(sub))
                             i++;
                 }
@@ -489,7 +489,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        private bool IsSubProgramCompleted(SubProgramClass sub)
+        private bool IsSubProgramCompleted(RecipeClass sub)
         {
             foreach (var tr in sub.FirstTestRecords)
                 if (IsTestCompleted(tr) == false)
@@ -506,7 +506,7 @@ namespace BCLabManager.ViewModel
                 int i = 0;
                 foreach (var pro in _programs)
                 {
-                    foreach (var sub in pro.SubPrograms)
+                    foreach (var sub in pro.Recipes)
                     {
                         foreach (var tr in sub.FirstTestRecords)
                             if (IsTestCompleted(tr))
@@ -531,7 +531,7 @@ namespace BCLabManager.ViewModel
                 int i = 0;
                 foreach (var pro in _programs)
                 {
-                    foreach (var sub in pro.SubPrograms)
+                    foreach (var sub in pro.Recipes)
                     {
                         foreach (var tr in sub.FirstTestRecords)
                             if (IsTestCompleted(tr))
@@ -546,17 +546,5 @@ namespace BCLabManager.ViewModel
         }
         #endregion
         #endregion // Public Interface
-
-        #region  Base Class Overrides
-
-        protected override void OnDispose()
-        {
-            //foreach (ProgramViewModel viewmodel in this.AllPrograms)
-            //    viewmodel.Dispose();
-
-            //this.AllPrograms.Clear();
-        }
-
-        #endregion // Base Class Overrides
     }
 }

@@ -15,7 +15,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Program object.
     /// </summary>
-    public class ProgramViewModel : ViewModelBase//, IDataErrorInfo
+    public class ProgramViewModel : BindBase//, IDataErrorInfo
     {
         #region Fields
 
@@ -55,7 +55,7 @@ namespace BCLabManager.ViewModel
         void CreateSubPrograms()
         {
             List<SubProgramViewModel> all =
-                (from sub in _program.SubPrograms
+                (from sub in _program.Recipes
                  select new SubProgramViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             //foreach (SubProgramModelViewModel batmod in all)
@@ -313,7 +313,7 @@ namespace BCLabManager.ViewModel
         private List<TestRecordClass> GetAllTestRecords(ProgramClass program)
         {
             List<TestRecordClass> output = new List<TestRecordClass>();
-            foreach (var sub in program.SubPrograms)
+            foreach (var sub in program.Recipes)
             {
                 foreach (var tr in sub.FirstTestRecords)
                     output.Add(tr);

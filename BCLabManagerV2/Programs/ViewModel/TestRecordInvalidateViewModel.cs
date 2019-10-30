@@ -13,7 +13,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class TestRecordInvalidateViewModel : ViewModelBase//, IDataErrorInfo
+    public class TestRecordInvalidateViewModel : BindBase//, IDataErrorInfo
     {
         #region Fields
         RelayCommand _okCommand;

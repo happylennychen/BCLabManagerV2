@@ -25,6 +25,20 @@ namespace BCLabManager.DataAccess
         {
             LoadFromDB();
             BatteryTypes.CollectionChanged += BatteryTypes_CollectionChanged;
+            foreach (var batteryType in BatteryTypes)
+            {
+                batteryType.PropertyChanged += BatteryType_PropertyChanged;
+            }
+        }
+
+        private void BatteryType_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            BatteryTypeClass batteryType = sender as BatteryTypeClass;
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                uow.BatteryTypes.Update(batteryType);
+                uow.Commit();
+            }
         }
 
         private void BatteryTypes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -34,9 +48,11 @@ namespace BCLabManager.DataAccess
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems)
                     {
+                        var batteryType = item as BatteryTypeClass;
+                        batteryType.PropertyChanged += BatteryType_PropertyChanged;
                         using (var uow = new UnitOfWork(new AppDbContext()))
                         {
-                            uow.BatteryTypes.Insert((BatteryTypeClass)item);
+                            uow.BatteryTypes.Insert(batteryType);
                             uow.Commit();
                         }
                     }
@@ -44,9 +60,10 @@ namespace BCLabManager.DataAccess
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
                     foreach (var item in e.OldItems)
                     {
+                        var batteryType = item as BatteryTypeClass;
                         using (var uow = new UnitOfWork(new AppDbContext()))
                         {
-                            uow.BatteryTypes.Delete((BatteryTypeClass)item);
+                            uow.BatteryTypes.Delete(batteryType);
                             uow.Commit();
                         }
                     }

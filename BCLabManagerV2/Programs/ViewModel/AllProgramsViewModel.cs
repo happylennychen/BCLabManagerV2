@@ -13,7 +13,7 @@ using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllProgramsViewModel : ViewModelBase
+    public class AllProgramsViewModel : BindBase
     {
         #region Fields
         List<SubProgramTemplate> _subProgramTemplates;
@@ -386,7 +386,7 @@ namespace BCLabManager.ViewModel
                 //_programRepository.AddItem(model);
                 using (var dbContext = new AppDbContext())
                 {
-                    foreach (var sub in m.SubPrograms)
+                    foreach (var sub in m.Recipes)
                     {
                         sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
                         sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
@@ -405,7 +405,7 @@ namespace BCLabManager.ViewModel
         private void Edit()
         {
             var oldpro = _selectedProgram._program;
-            var oldsubs = oldpro.SubPrograms;
+            var oldsubs = oldpro.Recipes;
 
             ProgramClass model = new ProgramClass();    //Edit Window要用到的model
 
@@ -413,7 +413,7 @@ namespace BCLabManager.ViewModel
             model.Requester = oldpro.Requester;
             model.RequestTime = oldpro.RequestTime;
             model.Description = oldpro.Description;
-            model.SubPrograms = new ObservableCollection<SubProgramClass>(oldsubs);          //这里并不希望在edit window里面修改原本的subprograms，而是想编辑一个新的subprogram,只是这个新的，是旧集合的浅复制
+            model.Recipes = new ObservableCollection<RecipeClass>(oldsubs);          //这里并不希望在edit window里面修改原本的subprograms，而是想编辑一个新的subprogram,只是这个新的，是旧集合的浅复制
 
             ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _batteryTypes, _subProgramTemplates);      //实例化一个新的view model
             viewmodel.DisplayName = "Program-Edit";
@@ -423,22 +423,22 @@ namespace BCLabManager.ViewModel
             ProgramViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)     //Add Remove操作，就是将model.SubPrograms里面的集合内容改变了
             {
-                List<SubProgramClass> TobeRemoved = new List<SubProgramClass>();
-                List<SubProgramClass> TobeAdded = new List<SubProgramClass>();
+                List<RecipeClass> TobeRemoved = new List<RecipeClass>();
+                List<RecipeClass> TobeAdded = new List<RecipeClass>();
                 //先改数据库，这样可以使得Id准确
                 using (var dbContext = new AppDbContext())
                 {
                     var dbProgram = dbContext.Programs.SingleOrDefault(i => i.Id == SelectedProgram.Id);  //没有完全取出
                     dbContext.Entry(dbProgram)
-                        .Collection(p => p.SubPrograms)
+                        .Collection(p => p.Recipes)
                         .Load();
 
                     bool isTgtNotContainSrc = false;    //Add to target
                     bool isSrcNotContainTgt = false;    //Remove from target
-                    foreach (var sub_target in dbProgram.SubPrograms)     //看看在不在source中，不在则删掉
+                    foreach (var sub_target in dbProgram.Recipes)     //看看在不在source中，不在则删掉
                     {
                         isSrcNotContainTgt = true;
-                        foreach (var sub_source in model.SubPrograms)
+                        foreach (var sub_source in model.Recipes)
                         {
                             if (sub_target.Id == sub_source.Id)
                             {
@@ -449,10 +449,10 @@ namespace BCLabManager.ViewModel
                         if (isSrcNotContainTgt == true)
                             TobeRemoved.Add(sub_target);
                     }
-                    foreach (var sub_source in model.SubPrograms)
+                    foreach (var sub_source in model.Recipes)
                     {
                         isTgtNotContainSrc = true;
-                        foreach (var sub_target in dbProgram.SubPrograms)
+                        foreach (var sub_target in dbProgram.Recipes)
                         {
                             if (sub_target.Id == sub_source.Id)
                             {
@@ -474,7 +474,7 @@ namespace BCLabManager.ViewModel
                     //}
                     foreach (var sub in TobeRemoved)
                     {
-                        dbProgram.SubPrograms.Remove(sub);
+                        dbProgram.Recipes.Remove(sub);
                     }
 
                     foreach (var sub in TobeAdded)
@@ -487,7 +487,7 @@ namespace BCLabManager.ViewModel
                     }
                     foreach (var sub in TobeAdded)
                     {
-                        dbProgram.SubPrograms.Add(sub);
+                        dbProgram.Recipes.Add(sub);
                     }
                     dbContext.SaveChanges();        //TobeAdded中的元素Id改变了
                 }
@@ -615,7 +615,7 @@ namespace BCLabManager.ViewModel
                     }
                     else
                         m.Group = new ProgramGroupClass();
-                    foreach (var sub in m.SubPrograms)
+                    foreach (var sub in m.Recipes)
                     {
                         sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
                         sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
@@ -725,17 +725,6 @@ namespace BCLabManager.ViewModel
             get { return _selectedSecondTestRecord != null && (_selectedSecondTestRecord.Record.RawDataList.Count != 0); }
         }
         #endregion //Private Helper
-        #region  Base Class Overrides
-
-        protected override void OnDispose()
-        {
-            foreach (ProgramViewModel viewmodel in this.AllPrograms)
-                viewmodel.Dispose();
-
-            this.AllPrograms.Clear();
-        }
-
-        #endregion // Base Class Overrides
 
 
         private void Execute(TestRecordViewModel testRecord)                                      

@@ -13,7 +13,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class SubProgramTemplateEditViewModel : ViewModelBase//, IDataErrorInfo
+    public class SubProgramTemplateEditViewModel : BindBase//, IDataErrorInfo
     {
         #region Fields
         List<ChargeTemperatureClass> _chargeTemperatures;

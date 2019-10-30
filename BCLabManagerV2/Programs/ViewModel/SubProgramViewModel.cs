@@ -13,16 +13,16 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class SubProgramViewModel : ViewModelBase//, IDataErrorInfo
+    public class SubProgramViewModel : BindBase//, IDataErrorInfo
     {
         #region Fields
-        public readonly SubProgramClass _subprogram;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
+        public readonly RecipeClass _subprogram;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
 
         #endregion // Fields
 
         #region Constructor
 
-        public SubProgramViewModel(SubProgramClass subprogram)
+        public SubProgramViewModel(RecipeClass subprogram)
         {
             _subprogram = subprogram;
             this.CreateTestRecords();
@@ -182,7 +182,7 @@ namespace BCLabManager.ViewModel
         }
         #endregion
 
-        private List<TestRecordClass> GetAllTestRecords(SubProgramClass sub)
+        private List<TestRecordClass> GetAllTestRecords(RecipeClass sub)
         {
             List<TestRecordClass> output = new List<TestRecordClass>();
             foreach (var tr in sub.FirstTestRecords)

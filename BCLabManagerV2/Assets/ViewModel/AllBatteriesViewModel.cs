@@ -12,7 +12,7 @@ using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllBatteriesViewModel : ViewModelBase
+    public class AllBatteriesViewModel : BindBase
     {
         #region Fields
         ObservableCollection<BatteryClass> _batteries;
@@ -273,20 +273,6 @@ namespace BCLabManager.ViewModel
             get { return _selectedItem != null; }
         }
         #endregion //Private Helper
-        #region  Base Class Overrides
-
-        protected override void OnDispose()
-        {
-            foreach (BatteryViewModel custVM in this.AllBatteries)
-                custVM.Dispose();
-
-            this.AllBatteries.Clear();
-            //this.AllBatteryModels.CollectionChanged -= this.OnCollectionChanged;
-
-            //_batteryRepository.ItemAdded -= this.OnBatteryAddedToRepository;
-        }
-
-        #endregion // Base Class Overrides
 
         #region Event Handling Methods
 

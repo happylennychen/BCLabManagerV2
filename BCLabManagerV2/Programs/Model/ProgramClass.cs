@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class ProgramClass : ModelBase
+    public class ProgramClass : BindBase
     {
         private DateTime startTime;
         private DateTime completeTime;
@@ -37,21 +37,21 @@ namespace BCLabManager.Model
                 OnPropertyChanged("CompleteTime");
             }
         }
-        public ObservableCollection<SubProgramClass> SubPrograms { get; set; }
+        public ObservableCollection<RecipeClass> Recipes { get; set; }
 
         public ProgramClass()           //Create用到
         {
-            SubPrograms = new ObservableCollection<SubProgramClass>();
+            Recipes = new ObservableCollection<RecipeClass>();
         }
 
-        public ProgramClass(String Name, BatteryTypeClass BatteryType, String Requester, DateTime RequestTime, String Description, ObservableCollection<SubProgramClass> SubPrograms) //Clone用到
+        public ProgramClass(String Name, BatteryTypeClass BatteryType, String Requester, DateTime RequestTime, String Description, ObservableCollection<RecipeClass> Recipes) //Clone用到
         {
             this.Name = Name;
             this.BatteryType = BatteryType;
             this.Requester = Requester;
             this.RequestTime = RequestTime;
             this.Description = Description;
-            this.SubPrograms = SubPrograms;
+            this.Recipes = Recipes;
         }
 
         /*public void Update(String Name, String Requester, DateTime RequestDate, String Description, List<SubProgramClass> SubPrograms)  //没用？
@@ -74,10 +74,10 @@ namespace BCLabManager.Model
 
         public ProgramClass Clone() //Edit Save As用到
         {
-            List<SubProgramClass> all =
-                (from sub in SubPrograms
+            List<RecipeClass> all =
+                (from sub in Recipes
                  select sub.Clone()).ToList();
-            ObservableCollection<SubProgramClass> clonelist = new ObservableCollection<SubProgramClass>(all);
+            ObservableCollection<RecipeClass> clonelist = new ObservableCollection<RecipeClass>(all);
             return new ProgramClass(this.Name, this.BatteryType, this.Requester, this.RequestTime, this.Description, clonelist);
         }
     }

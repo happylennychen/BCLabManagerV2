@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllChambersViewModel : ViewModelBase
+    public class AllChambersViewModel : BindBase
     {
         #region Fields
 
@@ -255,20 +255,6 @@ namespace BCLabManager.ViewModel
             get { return _selectedItem != null; }
         }
         #endregion //Private Helper
-        #region  Base Class Overrides
-
-        protected override void OnDispose()
-        {
-            foreach (ChamberViewModel custVM in this.AllChambers)
-                custVM.Dispose();
-
-            this.AllChambers.Clear();
-            //this.AllChamberModels.CollectionChanged -= this.OnCollectionChanged;
-
-            //_chamberRepository.ItemAdded -= this.OnChamberAddedToRepository;
-        }
-
-        #endregion // Base Class Overrides
 
         #region Event Handling Methods
 

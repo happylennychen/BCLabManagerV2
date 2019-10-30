@@ -13,7 +13,7 @@ namespace BCLabManager.Model
         One,
         Two,
     }
-    public class SubProgramClass : ModelBase
+    public class RecipeClass : BindBase
     {
         private DateTime startTime;
         private DateTime completeTime;
@@ -48,13 +48,13 @@ namespace BCLabManager.Model
         public ObservableCollection<TestRecordClass> FirstTestRecords { get; set; }
         public ObservableCollection<TestRecordClass> SecondTestRecords { get; set; }
 
-        public SubProgramClass()
+        public RecipeClass()
         {
             FirstTestRecords = new ObservableCollection<TestRecordClass>();
             SecondTestRecords = new ObservableCollection<TestRecordClass>();
         }
 
-        public SubProgramClass(SubProgramTemplate template)
+        public RecipeClass(SubProgramTemplate template)
         {
             //this.Name = template.Name;
             this.ChargeTemperature = template.ChargeTemperature;
@@ -78,7 +78,7 @@ namespace BCLabManager.Model
             }
         }
 
-        public SubProgramClass(SubProgramTemplate template, string ProgramStr, int loop)  //Only used by populator
+        public RecipeClass(SubProgramTemplate template, string ProgramStr, int loop)  //Only used by populator
         {
             //this.Name = template.Name;
             this.ChargeTemperature = template.ChargeTemperature;
@@ -105,7 +105,7 @@ namespace BCLabManager.Model
             }
         }
 
-        public SubProgramClass(
+        public RecipeClass(
             ChargeTemperatureClass chargeTemperature,
             ChargeCurrentClass chargeCurrent,
             DischargeTemperatureClass dischargeTemperature,
@@ -132,9 +132,9 @@ namespace BCLabManager.Model
         //    this.Name = Name;
         //    this.TestCount = TestCount;
         //}
-        public SubProgramClass Clone()  //Clone Name and Test Count, and create testrecords list
+        public RecipeClass Clone()  //Clone Name and Test Count, and create testrecords list
         {
-            var newsub = new SubProgramClass(this.ChargeTemperature, this.ChargeCurrent, this.DischargeTemperature, this.DischargeCurrent, this.TestCount, this.Loop);
+            var newsub = new RecipeClass(this.ChargeTemperature, this.ChargeCurrent, this.DischargeTemperature, this.DischargeCurrent, this.TestCount, this.Loop);
             if (this.TestCount == TestCountEnum.One)
             {
                 newsub.FirstTestRecords = new ObservableCollection<TestRecordClass>();

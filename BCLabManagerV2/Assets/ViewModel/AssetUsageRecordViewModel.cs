@@ -14,7 +14,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class AssetUsageRecordViewModel : ViewModelBase//, IDataErrorInfo
+    public class AssetUsageRecordViewModel : BindBase//, IDataErrorInfo
     {
         #region Fields
 

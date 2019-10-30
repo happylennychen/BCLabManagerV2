@@ -13,7 +13,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Program object.
     /// </summary>
-    public class ProgramEditViewModel : ViewModelBase//, IDataErrorInfo
+    public class ProgramEditViewModel : BindBase//, IDataErrorInfo
     {
         #region Fields
 
@@ -53,7 +53,7 @@ namespace BCLabManager.ViewModel
         void CreateSubPrograms()
         {
             List<SubProgramViewModel> all =
-                (from sub in _program.SubPrograms
+                (from sub in _program.Recipes
                  select new SubProgramViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             //foreach (SubProgramModelViewModel batmod in all)
@@ -298,7 +298,7 @@ namespace BCLabManager.ViewModel
         /// </summary>
         public void OK()
         {
-            foreach (var sub in _program.SubPrograms)
+            foreach (var sub in _program.Recipes)
             {
                 foreach (var tr in sub.FirstTestRecords)
                     tr.ProgramStr = this.Name;
@@ -310,15 +310,15 @@ namespace BCLabManager.ViewModel
 
         public void Add()       //对于model来说，需要将选中的sub copy到_program.SubPrograms来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.SubPrograms里面去
         {
-            var newsubmodel = new SubProgramClass(SelectedSubProgramTemplate._subProgramTemplate);
+            var newsubmodel = new RecipeClass(SelectedSubProgramTemplate._subProgramTemplate);
             var newsubviewmodel = new SubProgramViewModel(newsubmodel);
-            _program.SubPrograms.Add(newsubmodel);
+            _program.Recipes.Add(newsubmodel);
             this.SubPrograms.Add(newsubviewmodel);
         }
 
         public void Remove()       //对于model来说，需要将选中的sub 从_program.SubPrograms中移除。对于viewmodel来说，需要将这个viewmodel从this.SubPrograms中移除
         {
-            _program.SubPrograms.Remove(SelectedSubProgram._subprogram);
+            _program.Recipes.Remove(SelectedSubProgram._subprogram);
             this.SubPrograms.Remove(SelectedSubProgram);
         }
 

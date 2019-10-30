@@ -4,18 +4,32 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BCLabManager.Model
+namespace BCLabManager
 {
-    public abstract class ModelBase : INotifyPropertyChanged
+    public abstract class BindBase : INotifyPropertyChanged
     {
         #region Constructor
 
-        protected ModelBase()
+        protected BindBase()
         {
         }
 
         #endregion // Constructor
+
+        #region DisplayName
+
+        /// <summary>
+        /// Returns the user-friendly name of this object.
+        /// Child classes can set this property to a new value,
+        /// or override it to determine the value on-demand.
+        /// </summary>
+        [NotMapped]
+        public virtual string DisplayName { get; set; }
+
+        #endregion // DisplayName
 
         #region Debugging Aides
 
@@ -62,7 +76,7 @@ namespace BCLabManager.Model
         /// Raises this object's PropertyChanged event.
         /// </summary>
         /// <param name="propertyName">The property that has a new value.</param>
-        protected virtual void OnPropertyChanged(string propertyName)
+        protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = "")
         {
             this.VerifyPropertyName(propertyName);
 
@@ -77,4 +91,3 @@ namespace BCLabManager.Model
         #endregion // INotifyPropertyChanged Members
     }
 }
-

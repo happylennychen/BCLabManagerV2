@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllChannelsViewModel : ViewModelBase
+    public class AllChannelsViewModel : BindBase
     {
         #region Fields
         ObservableCollection<ChannelClass> _channels;
@@ -271,20 +271,6 @@ namespace BCLabManager.ViewModel
             get { return _selectedItem != null; }
         }
         #endregion //Private Helper
-        #region  Base Class Overrides
-
-        protected override void OnDispose()
-        {
-            foreach (ChannelViewModel viewmodel in this.AllChannels)
-                viewmodel.Dispose();
-
-            this.AllChannels.Clear();
-            //this.AllChannelModels.CollectionChanged -= this.OnCollectionChanged;
-
-            //_channelRepository.ItemAdded -= this.OnChannelAddedToRepository;
-        }
-
-        #endregion // Base Class Overrides
 
         #region Event Handling Methods
 

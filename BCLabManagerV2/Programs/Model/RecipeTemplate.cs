@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class SubProgramTemplate : ModelBase
+    public class SubProgramTemplate : BindBase
     {
         public int Id { get; set; }
         //public String Name { get; set; }
@@ -21,7 +21,7 @@ namespace BCLabManager.Model
         }
     }
 
-    public class ChargeTemperatureClass : ModelBase
+    public class ChargeTemperatureClass : BindBase
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -32,7 +32,7 @@ namespace BCLabManager.Model
         }
     }
 
-    public class ChargeCurrentClass : ModelBase
+    public class ChargeCurrentClass : BindBase
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -43,7 +43,7 @@ namespace BCLabManager.Model
         }
     }
 
-    public class DischargeTemperatureClass : ModelBase
+    public class DischargeTemperatureClass : BindBase
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -54,7 +54,7 @@ namespace BCLabManager.Model
         }
     }
 
-    public class DischargeCurrentClass : ModelBase
+    public class DischargeCurrentClass : BindBase
     {
         public int Id { get; set; }
         public string Name { get; set; }

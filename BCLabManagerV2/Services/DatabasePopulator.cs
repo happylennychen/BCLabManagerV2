@@ -129,33 +129,33 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/02/28");
                 obj.Description = "Oppo BLP663 Static Test";
-                SubProgramClass sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 1), obj.Name, 1);
+                RecipeClass sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 1), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 2), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 2), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 3), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 3), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 4), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 4), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 5), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 5), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 6), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 6), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 7), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 7), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 8), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 8), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 9), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 9), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
+                obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
 
                 dbContext.SaveChanges();
@@ -168,24 +168,24 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/02/28");
                 obj.Description = "Oppo BLP663 Dynamic Test";
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 10), obj.Name, 1);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 10), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 11), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 11), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 12), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 12), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 13), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 13), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 14), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 14), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 15), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 15), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
+                obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
 
                 dbContext.SaveChanges();
@@ -198,24 +198,24 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/02/28");
                 obj.Description = "Oppo BLP663 RC";
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 16), obj.Name, 1);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 16), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 17), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 17), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 18), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 18), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 19), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 19), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 20), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 20), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 21), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 21), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
+                obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
 
                 dbContext.SaveChanges();
@@ -229,15 +229,15 @@ namespace BCLabManager
                 obj.RequestTime = DateTime.Parse("2019/03/12");
                 obj.Description = "Oppo BLP663 Static Test-2";
 
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 22), obj.Name, 1);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 22), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 23), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 23), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 24), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 24), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
+                obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
 
                 dbContext.SaveChanges();
@@ -250,21 +250,21 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/03/14");
                 obj.Description = "Oppo BLP663 Dynamic Test-2";
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 25), obj.Name, 1);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 25), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 26), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 26), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 27), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 27), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 30), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 30), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 31), obj.Name, 1);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 31), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
+                obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
 
                 dbContext.SaveChanges();
@@ -277,9 +277,9 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/03/25");
                 obj.Description = "Oppo BLP663 Static Test-3";
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 28), obj.Name, 1);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 28), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
+                obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
 
                 dbContext.SaveChanges();
@@ -292,9 +292,9 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/04/01");
                 obj.Description = "Run 500 cycle to see the aging effect";
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 29), obj.Name, 500);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 29), obj.Name, 500);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
+                obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
 
                 dbContext.SaveChanges();
@@ -307,15 +307,15 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/04/01");
                 obj.Description = "Run 5 same cycle";
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 4), obj.Name, 5);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 4), obj.Name, 5);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 23), obj.Name, 5);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 23), obj.Name, 5);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 26), obj.Name, 5);
+                obj.Recipes.Add(sub);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 26), obj.Name, 5);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
+                obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
 
                 dbContext.SaveChanges();
@@ -328,9 +328,9 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/05/07");
                 obj.Description = "Oppo BLP663 Dynamic Test-3";
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 30), obj.Name, 1);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 30), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
+                obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
 
                 dbContext.SaveChanges();
@@ -343,9 +343,9 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/05/24");
                 obj.Description = "Oppo BLP663 Dynamic Test-4";
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 31), obj.Name, 1);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 31), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
+                obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
 
                 dbContext.SaveChanges();
@@ -358,9 +358,9 @@ namespace BCLabManager
                 obj.Requester = "Jon";
                 obj.RequestTime = DateTime.Parse("2019/07/09");
                 obj.Description = "";
-                sub = new SubProgramClass(GetSubProgramTemplateById(dbContext, 23), obj.Name, 1);
+                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 23), obj.Name, 1);
                 sub.Id = sub_i++;
-                obj.SubPrograms.Add(sub);
+                obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
 
                 dbContext.SaveChanges();
@@ -825,7 +825,7 @@ namespace BCLabManager
         private static void PopulateOperations()
         {
             TestRecordClass tr;
-            SubProgramClass sub;
+            RecipeClass sub;
             ProgramClass pro;
             using (var dbContext = new AppDbContext())
             {

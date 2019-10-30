@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllSubProgramTemplatesViewModel : ViewModelBase
+    public class AllSubProgramTemplatesViewModel : BindBase
     {
         #region Fields
         List<SubProgramTemplate> _subProgramTemplates;
@@ -258,18 +258,6 @@ namespace BCLabManager.ViewModel
             get { return _selectedItem != null; }
         }
         #endregion //Private Helper
-        #region  Base Class Overrides
-
-        protected override void OnDispose()
-        {
-            foreach (SubProgramTemplateViewModel viewmodel in this.AllSubProgramTemplates)
-                viewmodel.Dispose();
-
-            this.AllSubProgramTemplates.Clear();
-            //this.AllSubProgramModels.CollectionChanged -= this.OnCollectionChanged;
-        }
-
-        #endregion // Base Class Overrides
 
         #region Event Handling Methods
 

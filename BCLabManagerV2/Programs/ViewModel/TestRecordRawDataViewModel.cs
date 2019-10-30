@@ -13,7 +13,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class TestRecordRawDataViewModel : ViewModelBase//, IDataErrorInfo
+    public class TestRecordRawDataViewModel : BindBase//, IDataErrorInfo
     {
         #region Fields
         readonly TestRecordClass _record;

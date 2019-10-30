@@ -10,7 +10,7 @@ using BCLabManager.Properties;
 
 namespace BCLabManager.ViewModel
 {
-    public class TesterEditViewModel : ViewModelBase//, IDataErrorInfo
+    public class TesterEditViewModel : BindBase//, IDataErrorInfo
     {
         #region Fields
 

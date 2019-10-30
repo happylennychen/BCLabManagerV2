@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BCLabManager.Model
 {
-    public class AssetClass : ModelBase, IAsset
+    public class AssetClass : BindBase, IAsset
     {
         private int assetUseCount = 0;
         public int AssetUseCount

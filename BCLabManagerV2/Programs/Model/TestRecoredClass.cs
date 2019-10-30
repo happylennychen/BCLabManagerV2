@@ -15,13 +15,6 @@ namespace BCLabManager.Model
         Invalid,
         Abandoned,
     }
-    public class RawDataClass
-    {
-        public int Id { get; set; }
-        public string FileName { get; set; }
-        //public byte[] BinaryData { get; set; }
-        public string MD5 { get; set; }
-    }
     public class StatusChangedEventArgs : EventArgs
     {
         public StatusChangedEventArgs(TestStatus newStatus)
@@ -31,7 +24,7 @@ namespace BCLabManager.Model
 
         public TestStatus Status { get; private set; }
     }
-    public class TestRecordClass : ModelBase
+    public class TestRecordClass : BindBase
     {
         private DateTime startTime;
         private DateTime completeTime;
@@ -238,7 +231,7 @@ namespace BCLabManager.Model
             this.Comment = comment;
         }
 
-        public void ExeuteUpdateTime(ProgramClass _program, SubProgramClass _subprogram)
+        public void ExeuteUpdateTime(ProgramClass _program, RecipeClass _subprogram)
         {
 
             if (IsSubStarted(_subprogram) == false)
@@ -248,7 +241,7 @@ namespace BCLabManager.Model
 
             using (var dbContext = new AppDbContext())
             {
-                SubProgramClass sub = null;
+                RecipeClass sub = null;
                 ProgramClass pro = null;
                 GetParentNode(dbContext, ref pro, ref sub);
 
@@ -263,7 +256,7 @@ namespace BCLabManager.Model
             }
         }
 
-        public void CommitUpdateTime(ProgramClass _program, SubProgramClass _subprogram)
+        public void CommitUpdateTime(ProgramClass _program, RecipeClass _subprogram)
         {
             if (IsSubCompleted(_subprogram))
                 _subprogram.CompleteTime = this.CompleteTime;
@@ -272,7 +265,7 @@ namespace BCLabManager.Model
 
             using (var dbContext = new AppDbContext())
             {
-                SubProgramClass sub = null;
+                RecipeClass sub = null;
                 ProgramClass pro = null;
                 GetParentNode(dbContext, ref pro, ref sub);
 
@@ -287,17 +280,17 @@ namespace BCLabManager.Model
             }
         }
 
-        private void GetParentNode(AppDbContext dbContext, ref ProgramClass Pro, ref SubProgramClass Sub)
+        private void GetParentNode(AppDbContext dbContext, ref ProgramClass Pro, ref RecipeClass Sub)
         {
             var pros = dbContext.Programs
-                 .Include(pro => pro.SubPrograms)
+                 .Include(pro => pro.Recipes)
                     .ThenInclude(sub => sub.FirstTestRecords)
-                 .Include(pro => pro.SubPrograms)
+                 .Include(pro => pro.Recipes)
                     .ThenInclude(sub => sub.SecondTestRecords)
                  .ToList();
             foreach (var p in pros)
             {
-                foreach (var s in p.SubPrograms)
+                foreach (var s in p.Recipes)
                 {
                     foreach (var t in s.FirstTestRecords)
                     {
@@ -332,14 +325,14 @@ namespace BCLabManager.Model
             return pro.StartTime != DateTime.MinValue;
         }
 
-        private bool IsSubStarted(SubProgramClass sub)
+        private bool IsSubStarted(RecipeClass sub)
         {
             return sub.StartTime != DateTime.MinValue;
         }
 
         private bool IsProCompleted(ProgramClass pro)
         {
-            foreach (var sub in pro.SubPrograms)
+            foreach (var sub in pro.Recipes)
             {
                 if (IsSubCompleted(sub) == false)
                     return false;
@@ -347,7 +340,7 @@ namespace BCLabManager.Model
             return true;
         }
 
-        private bool IsSubCompleted(SubProgramClass sub)
+        private bool IsSubCompleted(RecipeClass sub)
         {
             if (sub.TestCount == TestCountEnum.One)
             {
@@ -374,7 +367,5 @@ namespace BCLabManager.Model
         public TestRecordClass NewTestRecord { get; private set; }
         public bool IsFirst { get; private set; }
     }
-    // Summary:
-    //     Represents a sub program which can be united to form a program
 
 }

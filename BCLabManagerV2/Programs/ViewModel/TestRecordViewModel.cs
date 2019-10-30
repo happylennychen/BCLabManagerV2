@@ -14,7 +14,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class TestRecordViewModel : ViewModelBase//, IDataErrorInfo
+    public class TestRecordViewModel : BindBase//, IDataErrorInfo
     {
         #region Fields
         private TestRecordClass _record;
@@ -357,12 +357,12 @@ namespace BCLabManager.ViewModel
             OnPropertyChanged("Status");
         }
 
-        internal void ExecuteUpdateTime(ProgramClass _program, SubProgramClass _subprogram)
+        internal void ExecuteUpdateTime(ProgramClass _program, RecipeClass _subprogram)
         {
             _record.ExeuteUpdateTime(_program, _subprogram);
         }
 
-        internal void CommitUpdateTime(ProgramClass _program, SubProgramClass _subprogram)
+        internal void CommitUpdateTime(ProgramClass _program, RecipeClass _subprogram)
         {
             _record.CommitUpdateTime(_program, _subprogram);
         }

@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllChargeCurrentsViewModel : ViewModelBase
+    public class AllChargeCurrentsViewModel : BindBase
     {
         #region Fields
         List<ChargeCurrentClass> _chargeCurrents;
@@ -179,18 +179,6 @@ namespace BCLabManager.ViewModel
             get { return _selectedItem != null; }
         }
         #endregion //Private Helper
-        #region  Base Class Overrides
-
-        protected override void OnDispose()
-        {
-            foreach (ChargeCurrentViewModel viewmodel in this.AllChargeCurrents)
-                viewmodel.Dispose();
-
-            this.AllChargeCurrents.Clear();
-            //this.AllSubProgramModels.CollectionChanged -= this.OnCollectionChanged;
-        }
-
-        #endregion // Base Class Overrides
 
         #region Event Handling Methods
 

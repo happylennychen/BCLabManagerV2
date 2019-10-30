@@ -13,7 +13,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class DischargeCurrentViewModel : ViewModelBase//, IDataErrorInfo
+    public class DischargeCurrentViewModel : BindBase//, IDataErrorInfo
     {
         #region Fields
         private readonly DischargeCurrentClass _chargeCurrent;

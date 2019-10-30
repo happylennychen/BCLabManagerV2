@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BCLabManager.Model
 {
-    public class AssetUsageRecordClass : ModelBase
+    public class AssetUsageRecordClass : BindBase
     {
         public int Id { get; set; }
         public DateTime Timestamp { get; set; }

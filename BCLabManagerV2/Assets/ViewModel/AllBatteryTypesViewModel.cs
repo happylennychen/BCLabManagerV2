@@ -12,7 +12,7 @@ using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllBatteryTypesViewModel : ViewModelBase
+    public class AllBatteryTypesViewModel : BindBase
     {
         #region Fields
         BatteryTypeViewModel _selectedItem;
@@ -197,14 +197,14 @@ namespace BCLabManager.ViewModel
                 _selectedItem.Manufactor = btevm.Manufactor;
                 _selectedItem.Material = btevm.Material;
                 _selectedItem.Name = btevm.Name;
-                using (var dbContext = new AppDbContext())
-                {
-                    var batT = dbContext.BatteryTypes.SingleOrDefault(b => b.Id == _selectedItem.Id);
-                    batT.Manufactor = btc.Manufactor;
-                    batT.Material = btc.Material;
-                    batT.Name = btc.Name;
-                    dbContext.SaveChanges();
-                }
+                //using (var dbContext = new AppDbContext())
+                //{
+                //    var batT = dbContext.BatteryTypes.SingleOrDefault(b => b.Id == _selectedItem.Id);
+                //    batT.Manufactor = btc.Manufactor;
+                //    batT.Material = btc.Material;
+                //    batT.Name = btc.Name;
+                //    dbContext.SaveChanges();
+                //}
             }
         }
         private bool CanEdit
@@ -225,11 +225,11 @@ namespace BCLabManager.ViewModel
             if (btevm.IsOK == true)
             {
                 _batteryTypes.Add(btc);
-                using (var dbContext = new AppDbContext())
-                {
-                    dbContext.BatteryTypes.Add(btc);
-                    dbContext.SaveChanges();
-                }
+                //using (var dbContext = new AppDbContext())
+                //{
+                //    dbContext.BatteryTypes.Add(btc);
+                //    dbContext.SaveChanges();
+                //}
                 this.AllBatteryTypes.Add(new BatteryTypeViewModel(btc));
             }
         }
@@ -239,23 +239,34 @@ namespace BCLabManager.ViewModel
         }
         private void Delete()
         {
-            using (var dbContext = new AppDbContext())
-            {
-                if (dbContext.Batteries.Count(o => o.BatteryType.Id == _selectedItem.Id) != 0)
-                {
-                    MessageBox.Show("Before deleting this battery type, please delete all batteries that belong to it.");
-                    return;
-                }
-                if (MessageBox.Show("Are you sure?", "Delete Battery Type", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    var model = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == _selectedItem.Id);
-                    dbContext.BatteryTypes.Remove(model);
-                    dbContext.SaveChanges();
+            //using (var dbContext = new AppDbContext())
+            //{
+            //    if (dbContext.Batteries.Count(o => o.BatteryType.Id == _selectedItem.Id) != 0)
+            //    {
+            //        MessageBox.Show("Before deleting this battery type, please delete all batteries that belong to it.");
+            //        return;
+            //    }
+            //    if (MessageBox.Show("Are you sure?", "Delete Battery Type", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            //    {
+            //        var model = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == _selectedItem.Id);
+            //        dbContext.BatteryTypes.Remove(model);
+            //        dbContext.SaveChanges();
 
-                    model = _batteryTypes.SingleOrDefault(o => o.Id == _selectedItem.Id);
-                    _batteryTypes.Remove(model);
-                    this.AllBatteryTypes.Remove(_selectedItem);
-                }
+            //        model = _batteryTypes.SingleOrDefault(o => o.Id == _selectedItem.Id);
+            //        _batteryTypes.Remove(model);
+            //        this.AllBatteryTypes.Remove(_selectedItem);
+            //    }
+            //}
+            if(_batteries.Count(o=>o.BatteryType.Id == _selectedItem.Id)!=0)
+            {
+                MessageBox.Show("Before deleting this battery type, please delete all batteries that belong to it.");
+                return;
+            }
+            if (MessageBox.Show("Are you sure?", "Delete Battery Type", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                var model = _batteryTypes.SingleOrDefault(o => o.Id == _selectedItem.Id);
+                _batteryTypes.Remove(model);
+                this.AllBatteryTypes.Remove(_selectedItem);
             }
         }
         private bool CanDelete
@@ -263,28 +274,8 @@ namespace BCLabManager.ViewModel
             get { return _selectedItem != null; }
         }
         #endregion //Private Helper
-        #region  Base Class Overrides
-
-        protected override void OnDispose()
-        {
-            foreach (BatteryTypeViewModel custVM in this.AllBatteryTypes)
-                custVM.Dispose();
-
-            this.AllBatteryTypes.Clear();
-            //this.AllBatteryModels.CollectionChanged -= this.OnCollectionChanged;
-
-            //_batterytypeRepository.ItemAdded -= this.OnBatteryModelAddedToRepository;
-        }
-
-        #endregion // Base Class Overrides
 
         #region Event Handling Methods
-
-        //void OnBatteryModelAddedToRepository(object sender, ItemAddedEventArgs<BatteryTypeClass> e)
-        //{
-        //    var viewModel = new BatteryTypeViewModel(e.NewItem, _batterytypeRepository);
-        //    this.AllBatteryTypes.Add(viewModel);
-        //}
 
         #endregion // Event Handling Methods
     }

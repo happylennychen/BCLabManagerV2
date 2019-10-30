@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllTestersViewModel : ViewModelBase
+    public class AllTestersViewModel : BindBase
     {
         #region Fields
 
@@ -239,16 +239,5 @@ namespace BCLabManager.ViewModel
             get { return _selectedItem != null; }
         }
         #endregion //Private Helper
-        #region  Base Class Overrides
-
-        protected override void OnDispose()
-        {
-            foreach (TesterViewModel custVM in this.AllTesters)
-                custVM.Dispose();
-
-            this.AllTesters.Clear();
-        }
-
-        #endregion // Base Class Overrides
     }
 }

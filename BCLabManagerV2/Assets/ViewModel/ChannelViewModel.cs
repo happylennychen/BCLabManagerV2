@@ -13,7 +13,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class ChannelViewModel : ViewModelBase//, IDataErrorInfo
+    public class ChannelViewModel : BindBase//, IDataErrorInfo
     {
         #region Fields
 

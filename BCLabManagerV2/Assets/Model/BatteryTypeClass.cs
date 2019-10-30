@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class BatteryTypeClass : ModelBase
+    public class BatteryTypeClass : BindBase
     {
         public int Id { get; set; }
-        public String Manufactor { get; set; }
+        private string _manufactor;
+        public String Manufactor { get { return _manufactor; } set { _manufactor = value;OnPropertyChanged(); } }
         public String Name { get; set; }
         public String Material { get; set; }
         public Int32 LimitedChargeVoltage { get; set; }

@@ -261,6 +261,7 @@
       <DependentUpon>20191030032802_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
+    <Compile Include="Programs\Model\RawDataClass.cs" />
     <Compile Include="Services\DatabasePopulator.cs" />
     <Compile Include="Services\GlobalSettings.cs" />
     <Compile Include="Assets\Model\BatteryClass.cs" />
@@ -269,10 +270,9 @@
     <Compile Include="Assets\Model\ChannelClass.cs" />
     <Compile Include="Assets\Model\TesterClass.cs" />
     <Compile Include="Assets\Service\EstimateTimeManager.cs" />
-    <Compile Include="Services\ModelBase.cs" />
     <Compile Include="Programs\Model\ProgramClass.cs" />
-    <Compile Include="Programs\Model\SubProgramTemplate.cs" />
-    <Compile Include="Programs\Model\SubProgramClass.cs" />
+    <Compile Include="Programs\Model\RecipeTemplate.cs" />
+    <Compile Include="Programs\Model\RecipeClass.cs" />
     <Compile Include="Programs\ViewModel\AllDischargeCurrentsViewModel.cs" />
     <Compile Include="Programs\ViewModel\AllChargeCurrentsViewModel.cs" />
     <Compile Include="Programs\ViewModel\AllDischargeTemperaturesViewModel.cs" />
@@ -317,7 +317,7 @@
     <Compile Include="Assets\ViewModel\TesterViewModel.cs" />
     <Compile Include="Assets\ViewModel\BatteryTypeViewModel.cs" />
     <Compile Include="Services\RelayCommand.cs" />
-    <Compile Include="Services\ViewModelBase.cs" />
+    <Compile Include="Services\BindBase.cs" />
     <Compile Include="Assets\View\AllBatteriesView.xaml.cs">
       <DependentUpon>AllBatteriesView.xaml</DependentUpon>
       <SubType>Code</SubType>

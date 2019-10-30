@@ -21,7 +21,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class TestRecordExecuteViewModel : ViewModelBase//, IDataErrorInfo
+    public class TestRecordExecuteViewModel : BindBase//, IDataErrorInfo
     {
         #region Fields
         //string _programName;

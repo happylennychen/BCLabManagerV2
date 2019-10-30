@@ -10,7 +10,7 @@ using BCLabManager.Properties;
 
 namespace BCLabManager.ViewModel
 {
-    public class BatteryTypeEditViewModel : ViewModelBase//, IDataErrorInfo
+    public class BatteryTypeEditViewModel : BindBase//, IDataErrorInfo
     {
         #region Fields
 

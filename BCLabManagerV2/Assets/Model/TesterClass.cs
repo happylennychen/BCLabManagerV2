@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class TesterClass : ModelBase
+    public class TesterClass : BindBase
     {
         public int Id { get; set; }
         public String Manufactor { get; set; }

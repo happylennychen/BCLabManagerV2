@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllChargeTemperaturesViewModel : ViewModelBase
+    public class AllChargeTemperaturesViewModel : BindBase
     {
         #region Fields
         List<ChargeTemperatureClass> _chargeTemperatures;
@@ -179,18 +179,6 @@ namespace BCLabManager.ViewModel
             get { return _selectedItem != null; }
         }
         #endregion //Private Helper
-        #region  Base Class Overrides
-
-        protected override void OnDispose()
-        {
-            foreach (ChargeTemperatureViewModel viewmodel in this.AllChargeTemperatures)
-                viewmodel.Dispose();
-
-            this.AllChargeTemperatures.Clear();
-            //this.AllSubProgramModels.CollectionChanged -= this.OnCollectionChanged;
-        }
-
-        #endregion // Base Class Overrides
 
         #region Event Handling Methods
 
