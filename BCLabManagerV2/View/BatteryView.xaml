@@ -1,0 +1,82 @@
+﻿<Window x:Class="BCLabManager.View.BatteryView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{Binding Path=DisplayName}" Height="300" Width="300">
+    <Grid>
+        <Grid Margin="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="6" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- CUSTOMER TYPE -->
+            <Label 
+      Grid.Row="0" Grid.Column="0" 
+      Content="_Name:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=NameTxt}" 
+      />
+            <TextBox 
+      x:Name="NameTxt"
+      Grid.Row="0" Grid.Column="2" 
+      Text="{Binding Path=Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />
+
+            <!-- FIRST NAME-->
+            <Label 
+      Grid.Row="2" Grid.Column="0" 
+      Content="_Type:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=TypeTxt}"
+      />
+            <ComboBox 
+      x:Name="TypeCmb"
+      Grid.Row="2" Grid.Column="2" 
+      ItemsSource="{Binding Path=AllBatteryTypes, Mode=OneWay}"
+      SelectedItem="{Binding Path=BatteryType, ValidatesOnDataErrors=True}"
+      Validation.ErrorTemplate="{x:Null}"
+      >
+
+            </ComboBox>
+
+            <!-- LAST NAME-->
+            <Label 
+      Grid.Row="4" Grid.Column="0" 
+      Content="_Cycle:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=CycleTxt}" 
+      />
+            <TextBox 
+      x:Name="CycleTxt"
+      Grid.Row="4" Grid.Column="2" 
+      Text="{Binding Path=CycleCount, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+      Validation.ErrorTemplate="{x:Null}"
+      />
+
+            <!-- SAVE BUTTON -->
+            <Button 
+      Grid.Row="8" Grid.Column="2"
+      Command="{Binding Path=OKCommand}"
+                Click="Button_Click"
+      Content="_OK"
+      HorizontalAlignment="Right"
+      Margin="4,2" 
+      MinWidth="60" 
+      />
+        </Grid>
+    </Grid>
+</Window>
