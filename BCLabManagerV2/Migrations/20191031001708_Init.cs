@@ -378,8 +378,8 @@ namespace BCLabManager.Migrations
                     AssignedBatteryId = table.Column<int>(nullable: true),
                     AssignedChamberId = table.Column<int>(nullable: true),
                     AssignedChannelId = table.Column<int>(nullable: true),
-                    SubProgramClassId = table.Column<int>(nullable: true),
-                    SubProgramClassId1 = table.Column<int>(nullable: true)
+                    RecipeClassId = table.Column<int>(nullable: true),
+                    RecipeClassId1 = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -403,14 +403,14 @@ namespace BCLabManager.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_TestRecords_SubPrograms_SubProgramClassId",
-                        column: x => x.SubProgramClassId,
+                        name: "FK_TestRecords_SubPrograms_RecipeClassId",
+                        column: x => x.RecipeClassId,
                         principalTable: "SubPrograms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_TestRecords_SubPrograms_SubProgramClassId1",
-                        column: x => x.SubProgramClassId1,
+                        name: "FK_TestRecords_SubPrograms_RecipeClassId1",
+                        column: x => x.RecipeClassId1,
                         principalTable: "SubPrograms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -548,14 +548,14 @@ namespace BCLabManager.Migrations
                 column: "AssignedChannelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TestRecords_SubProgramClassId",
+                name: "IX_TestRecords_RecipeClassId",
                 table: "TestRecords",
-                column: "SubProgramClassId");
+                column: "RecipeClassId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TestRecords_SubProgramClassId1",
+                name: "IX_TestRecords_RecipeClassId1",
                 table: "TestRecords",
-                column: "SubProgramClassId1");
+                column: "RecipeClassId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

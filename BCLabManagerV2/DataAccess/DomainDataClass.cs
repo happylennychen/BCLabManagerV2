@@ -24,6 +24,20 @@ namespace BCLabManager.DataAccess
         public DomainDataClass()
         {
             LoadFromDB();
+            EventBooking();
+        }
+        private void LoadFromDB()
+        {
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                BatteryTypes = new ObservableCollection<BatteryTypeClass>(uow.BatteryTypes.GetAll());
+                Batteries = new ObservableCollection<BatteryClass>(uow.Batteries.GetAll("BatteryType,Records"));
+                Testers = new ObservableCollection<TesterClass>(uow.Testers.GetAll());
+            }
+        }
+
+        private void EventBooking()
+        {
             BatteryTypes.CollectionChanged += BatteryTypes_CollectionChanged;
             foreach (var batteryType in BatteryTypes)
             {
@@ -71,14 +85,5 @@ namespace BCLabManager.DataAccess
             }
         }
 
-        public void LoadFromDB()
-        {
-            using (var uow = new UnitOfWork(new AppDbContext()))
-            {
-                BatteryTypes = new ObservableCollection<BatteryTypeClass>(uow.BatteryTypes.GetAll());
-                Batteries = new ObservableCollection<BatteryClass>(uow.Batteries.GetAll("BatteryType,Records"));
-                Testers = new ObservableCollection<TesterClass>(uow.Testers.GetAll());
-            }
-        }
     }
 }

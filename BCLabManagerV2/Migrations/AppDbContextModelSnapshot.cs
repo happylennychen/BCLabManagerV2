@@ -260,7 +260,7 @@ namespace BCLabManager.Migrations
                     b.ToTable("RawDataClass");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.SubProgramClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.RecipeClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -355,15 +355,15 @@ namespace BCLabManager.Migrations
 
                     b.Property<string>("ProgramStr");
 
+                    b.Property<int?>("RecipeClassId");
+
+                    b.Property<int?>("RecipeClassId1");
+
                     b.Property<DateTime>("StartTime");
 
                     b.Property<int>("Status");
 
                     b.Property<string>("Steps");
-
-                    b.Property<int?>("SubProgramClassId");
-
-                    b.Property<int?>("SubProgramClassId1");
 
                     b.Property<string>("SubProgramStr");
 
@@ -377,9 +377,9 @@ namespace BCLabManager.Migrations
 
                     b.HasIndex("AssignedChannelId");
 
-                    b.HasIndex("SubProgramClassId");
+                    b.HasIndex("RecipeClassId");
 
-                    b.HasIndex("SubProgramClassId1");
+                    b.HasIndex("RecipeClassId1");
 
                     b.ToTable("TestRecords");
                 });
@@ -456,7 +456,7 @@ namespace BCLabManager.Migrations
                         .HasForeignKey("TestRecordClassId");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.SubProgramClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.RecipeClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.ChargeCurrentClass", "ChargeCurrent")
                         .WithMany()
@@ -475,7 +475,7 @@ namespace BCLabManager.Migrations
                         .HasForeignKey("DischargeTemperatureId");
 
                     b.HasOne("BCLabManager.Model.ProgramClass")
-                        .WithMany("SubPrograms")
+                        .WithMany("Recipes")
                         .HasForeignKey("ProgramClassId");
                 });
 
@@ -512,13 +512,13 @@ namespace BCLabManager.Migrations
                         .WithMany()
                         .HasForeignKey("AssignedChannelId");
 
-                    b.HasOne("BCLabManager.Model.SubProgramClass")
+                    b.HasOne("BCLabManager.Model.RecipeClass")
                         .WithMany("FirstTestRecords")
-                        .HasForeignKey("SubProgramClassId");
+                        .HasForeignKey("RecipeClassId");
 
-                    b.HasOne("BCLabManager.Model.SubProgramClass")
+                    b.HasOne("BCLabManager.Model.RecipeClass")
                         .WithMany("SecondTestRecords")
-                        .HasForeignKey("SubProgramClassId1");
+                        .HasForeignKey("RecipeClassId1");
                 });
 #pragma warning restore 612, 618
         }

@@ -256,9 +256,9 @@
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
-    <Compile Include="Migrations\20191030032802_Init.cs" />
-    <Compile Include="Migrations\20191030032802_Init.designer.cs">
-      <DependentUpon>20191030032802_Init.cs</DependentUpon>
+    <Compile Include="Migrations\20191031001708_Init.cs" />
+    <Compile Include="Migrations\20191031001708_Init.designer.cs">
+      <DependentUpon>20191031001708_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Programs\Model\RawDataClass.cs" />
