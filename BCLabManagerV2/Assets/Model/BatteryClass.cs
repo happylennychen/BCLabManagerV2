@@ -9,9 +9,27 @@ namespace BCLabManager.Model
     public class BatteryClass : AssetClass
     {
         public int Id { get; set; }
-        public String Name { get; set; }
-        public BatteryTypeClass BatteryType { get; set; }
-        public Double CycleCount { get; set; }
+        //public String Name { get; set; }
+        //public BatteryTypeClass BatteryType { get; set; }
+        //public Double CycleCount { get; set; }
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set { SetProperty(ref _name, value); }
+        }
+        private BatteryTypeClass _batteryType;
+        public BatteryTypeClass BatteryType
+        {
+            get { return _batteryType; }
+            set { SetProperty(ref _batteryType, value); }
+        }
+        private double _cycleCount;
+        public double CycleCount
+        {
+            get { return _cycleCount; }
+            set { SetProperty(ref _cycleCount, value); }
+        }
 
         public BatteryClass()
         { }

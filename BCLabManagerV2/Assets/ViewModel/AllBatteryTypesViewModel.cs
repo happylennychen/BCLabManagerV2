@@ -9,10 +9,11 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllBatteryTypesViewModel : BindBase
+    public class AllBatteryTypesViewModel : BindableBase
     {
         #region Fields
         BatteryTypeViewModel _selectedItem;
@@ -63,7 +64,7 @@ namespace BCLabManager.ViewModel
                 if (_selectedItem != value)
                 {
                     _selectedItem = value;
-                    OnPropertyChanged("Batteries"); //通知Batteries改变
+                    RaisePropertyChanged("Batteries"); //通知Batteries改变
                 }
             }
         }

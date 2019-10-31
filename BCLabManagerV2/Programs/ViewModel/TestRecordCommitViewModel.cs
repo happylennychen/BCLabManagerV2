@@ -64,7 +64,7 @@ namespace BCLabManager.ViewModel
 
         private void _record_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         #endregion // Constructor
@@ -349,7 +349,7 @@ namespace BCLabManager.ViewModel
             var dialog = new OpenFileDialog();
             dialog.Multiselect = true;
             //dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.NetworkShortcuts); No use, cannot see network driver
-            dialog.InitialDirectory = @"Q:\807\Software\WH BC Lab\Raw Data";
+            //dialog.InitialDirectory = @"Q:\807\Software\WH BC Lab\Raw Data";
             if (dialog.ShowDialog() == true)
             {
                 FileList = new ObservableCollection<string>(dialog.FileNames.ToList());

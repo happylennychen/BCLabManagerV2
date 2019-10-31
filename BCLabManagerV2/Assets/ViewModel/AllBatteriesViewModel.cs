@@ -9,10 +9,11 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllBatteriesViewModel : BindBase
+    public class AllBatteriesViewModel : BindableBase
     {
         #region Fields
         ObservableCollection<BatteryClass> _batteries;
@@ -32,7 +33,21 @@ namespace BCLabManager.ViewModel
             _batteries = batteries;
             _batteryTypes = batteryTypes;
             this.CreateAllBatteries(batteries);
+            EventBooking();
         }
+        private void EventBooking()
+        {
+            foreach (var battery in _batteries)
+            {
+                battery.PropertyChanged += Battery_PropertyChanged; ;
+            }
+        }
+
+        private void Battery_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            RaisePropertyChanged(e.PropertyName);
+        }
+
         void CreateAllBatteries(ObservableCollection<BatteryClass> batteries)
         {
             List<BatteryClass> allbatteries =
@@ -64,28 +79,42 @@ namespace BCLabManager.ViewModel
                 if (_selectedItem != value)
                 {
                     _selectedItem = value;
-                    //OnPropertyChanged("SelectedItem");
-                    OnPropertyChanged("Records"); //通知Records改变
+                    RaisePropertyChanged("Records"); //通知Records改变
                 }
             }
         }
 
-        public List<AssetUsageRecordViewModel> Records //绑定选中battery的Records。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
-        //如果不是用查询，那么需要维护一个二维List。每一个Battery，对应一个List。用空间换时间。
+        //public List<AssetUsageRecordViewModel> Records //绑定选中battery的Records。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
+        ////如果不是用查询，那么需要维护一个二维List。每一个Battery，对应一个List。用空间换时间。
+        //{
+        //    get
+        //    {
+        //        if (SelectedItem == null)
+        //            return null;
+        //        using (var dbContext = new AppDbContext())
+        //        {
+        //            List<AssetUsageRecordViewModel> all =
+        //              (from bat in dbContext.Batteries
+        //               where bat.Id == SelectedItem.Id
+        //               from record in bat.Records
+        //               select new AssetUsageRecordViewModel(record)).ToList();
+        //            return all;
+        //        }
+        //    }
+        //}
+
+        public List<AssetUsageRecordViewModel> Records //从Domain获取
         {
             get
             {
                 if (SelectedItem == null)
                     return null;
-                using (var dbContext = new AppDbContext())
-                {
-                    List<AssetUsageRecordViewModel> all =
-                      (from bat in dbContext.Batteries
-                       where bat.Id == SelectedItem.Id
-                       from record in bat.Records
-                       select new AssetUsageRecordViewModel(record)).ToList();
-                    return all;
-                }
+                List<AssetUsageRecordViewModel> all =
+                  (from bat in _batteries
+                   where bat.Id == SelectedItem.Id
+                   from record in bat.Records
+                   select new AssetUsageRecordViewModel(record)).ToList();
+                return all;
             }
         }
 
