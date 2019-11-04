@@ -245,6 +245,10 @@
     </ApplicationDefinition>
     <Compile Include="Assets\Model\AssetUsageRecordClass.cs" />
     <Compile Include="Assets\Model\IAsset.cs" />
+    <Compile Include="Assets\Model\Service\BatteryServieClass.cs" />
+    <Compile Include="Assets\Model\Service\BatteryTypeServieClass.cs" />
+    <Compile Include="Assets\Model\Service\IModelService.cs" />
+    <Compile Include="Assets\Model\Service\ModelService.cs" />
     <Compile Include="DataAccess\AppDbContext.cs" />
     <Compile Include="DataAccess\TesterRepository.cs" />
     <Compile Include="DataAccess\BatteryRepository.cs" />

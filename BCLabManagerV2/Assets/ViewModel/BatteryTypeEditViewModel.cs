@@ -7,10 +7,11 @@ using BCLabManager.View;
 using BCLabManager.DataAccess;
 using System.Windows.Input;
 using BCLabManager.Properties;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
-    public class BatteryTypeEditViewModel : BindBase//, IDataErrorInfo
+    public class BatteryTypeEditViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
 
@@ -46,7 +47,7 @@ namespace BCLabManager.ViewModel
 
                 _batterytype.Id = value;
 
-                base.OnPropertyChanged("Id");
+                RaisePropertyChanged("Id");
             }
         }
         public string Manufactor
@@ -59,7 +60,7 @@ namespace BCLabManager.ViewModel
 
                 _batterytype.Manufactor = value;
 
-                base.OnPropertyChanged("Manufactor");
+                RaisePropertyChanged("Manufactor");
             }
         }
 
@@ -73,7 +74,7 @@ namespace BCLabManager.ViewModel
 
                 _batterytype.Name = value;
 
-                base.OnPropertyChanged("Name");
+                RaisePropertyChanged("Name");
             }
         }
 
@@ -87,7 +88,7 @@ namespace BCLabManager.ViewModel
 
                 _batterytype.Material = value;
 
-                base.OnPropertyChanged("Material");
+                RaisePropertyChanged("Material");
             }
         }
 

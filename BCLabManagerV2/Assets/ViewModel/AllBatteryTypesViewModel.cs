@@ -21,18 +21,42 @@ namespace BCLabManager.ViewModel
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
         RelayCommand _deleteCommand;
-        private ObservableCollection<BatteryTypeClass> _batteryTypes;
-        private ObservableCollection<BatteryClass> _batteries;
+        //private ObservableCollection<BatteryTypeClass> _batteryTypes;
+        private BatteryTypeServieClass _batteryTypeService;
+        private BatteryServieClass _batteryService;
 
         #endregion // Fields
 
         #region Constructor
 
-        public AllBatteryTypesViewModel(ObservableCollection<BatteryTypeClass> batteryTypes, ObservableCollection<BatteryClass> batteries)
+        public AllBatteryTypesViewModel(BatteryTypeServieClass batteryTypeService, BatteryServieClass batteryService)
         {
-            _batteryTypes = batteryTypes;
-            _batteries = batteries;
-            this.CreateAllBatteryTypes(batteryTypes);
+            _batteryTypeService = batteryTypeService;
+            _batteryService = batteryService;
+            this.CreateAllBatteryTypes(_batteryTypeService.Items);
+            _batteryTypeService.Items.CollectionChanged += Items_CollectionChanged;
+        }
+
+        private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
+                    {
+                        var batteryType = item as BatteryTypeClass; 
+                        this.AllBatteryTypes.Add(new BatteryTypeViewModel(batteryType));
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    foreach (var item in e.OldItems)
+                    {
+                        var batteryType = item as BatteryTypeClass;
+                        var deletetarget = this.AllBatteryTypes.SingleOrDefault(o => o.Id == batteryType.Id);
+                        this.AllBatteryTypes.Remove(deletetarget);
+                    }
+                    break;
+            }
         }
 
         void CreateAllBatteryTypes(ObservableCollection<BatteryTypeClass> batteryTypes)
@@ -95,7 +119,7 @@ namespace BCLabManager.ViewModel
                 using (var dbContext = new AppDbContext())
                 {
                     List<BatteryViewModel> all =
-                      (from bat in _batteries
+                      (from bat in _batteryService.Items
                        where bat.BatteryType.Id == SelectedItem.Id
                        select new BatteryViewModel(bat)).ToList();
                     return all;
@@ -167,37 +191,40 @@ namespace BCLabManager.ViewModel
         {
             BatteryTypeClass btc = new BatteryTypeClass();      //实例化一个新的model
             BatteryTypeEditViewModel btevm = new BatteryTypeEditViewModel(btc);      //实例化一个新的view model
-            btevm.DisplayName = "Battery Type-Create";
+            //btevm.DisplayName = "Battery Type-Create";
             var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
             BatteryTypeViewInstance.DataContext = btevm;
             BatteryTypeViewInstance.ShowDialog();                   //设置viewmodel属性
             if (btevm.IsOK == true)
             {
-                _batteryTypes.Add(btc);
+                _batteryTypeService.Add(btc);
+                //_batteryTypes.Add(btc);
                 //using (var dbContext = new AppDbContext())
                 //{
                 //    dbContext.BatteryTypes.Add(btc);
                 //    dbContext.SaveChanges();
                 //}
-                this.AllBatteryTypes.Add(new BatteryTypeViewModel(btc));
+                //this.AllBatteryTypes.Add(new BatteryTypeViewModel(btc));
             }
         }
         private void Edit()
         {
             BatteryTypeClass btc = new BatteryTypeClass();      //实例化一个新的model
             BatteryTypeEditViewModel btevm = new BatteryTypeEditViewModel(btc);      //实例化一个新的view model
+            btevm.Id = _selectedItem.Id;
             btevm.Manufactor = _selectedItem.Manufactor;
             btevm.Material = _selectedItem.Material;
             btevm.Name = _selectedItem.Name;
-            btevm.DisplayName = "Battery Type-Edit";
+            //btevm.DisplayName = "Battery Type-Edit";
             var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
             BatteryTypeViewInstance.DataContext = btevm;
             BatteryTypeViewInstance.ShowDialog();
             if (btevm.IsOK == true)
             {
-                _selectedItem.Manufactor = btevm.Manufactor;
-                _selectedItem.Material = btevm.Material;
-                _selectedItem.Name = btevm.Name;
+                _batteryTypeService.Update(btc);
+                //_selectedItem.Manufactor = btevm.Manufactor;
+                //_selectedItem.Material = btevm.Material;
+                //_selectedItem.Name = btevm.Name;
                 //using (var dbContext = new AppDbContext())
                 //{
                 //    var batT = dbContext.BatteryTypes.SingleOrDefault(b => b.Id == _selectedItem.Id);
@@ -219,19 +246,20 @@ namespace BCLabManager.ViewModel
             btevm.Manufactor = _selectedItem.Manufactor;
             btevm.Material = _selectedItem.Material;
             btevm.Name = _selectedItem.Name;
-            btevm.DisplayName = "Battery Type-Save As";
+            //btevm.DisplayName = "Battery Type-Save As";
             var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
             BatteryTypeViewInstance.DataContext = btevm;
             BatteryTypeViewInstance.ShowDialog();
             if (btevm.IsOK == true)
             {
-                _batteryTypes.Add(btc);
+                _batteryTypeService.Add(btc);
+                //_batteryTypes.Add(btc);
                 //using (var dbContext = new AppDbContext())
                 //{
                 //    dbContext.BatteryTypes.Add(btc);
                 //    dbContext.SaveChanges();
                 //}
-                this.AllBatteryTypes.Add(new BatteryTypeViewModel(btc));
+                //this.AllBatteryTypes.Add(new BatteryTypeViewModel(btc));
             }
         }
         private bool CanSaveAs
@@ -258,16 +286,17 @@ namespace BCLabManager.ViewModel
             //        this.AllBatteryTypes.Remove(_selectedItem);
             //    }
             //}
-            if(_batteries.Count(o=>o.BatteryType.Id == _selectedItem.Id)!=0)
+            if(_batteryService.Items.Count(o=>o.BatteryType.Id == _selectedItem.Id)!=0)
             {
                 MessageBox.Show("Before deleting this battery type, please delete all batteries that belong to it.");
                 return;
             }
             if (MessageBox.Show("Are you sure?", "Delete Battery Type", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                var model = _batteryTypes.SingleOrDefault(o => o.Id == _selectedItem.Id);
-                _batteryTypes.Remove(model);
-                this.AllBatteryTypes.Remove(_selectedItem);
+                _batteryTypeService.Remove(_selectedItem.Id);
+                //var model = _batteryTypes.SingleOrDefault(o => o.Id == _selectedItem.Id);
+                //_batteryTypes.Remove(model);
+                //this.AllBatteryTypes.Remove(_selectedItem);
             }
         }
         private bool CanDelete

@@ -8,6 +8,7 @@ using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using BCLabManager.Properties;
 using Microsoft.EntityFrameworkCore;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
@@ -20,7 +21,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class BatteryEditViewModel : BindBase//, IDataErrorInfo
+    public class BatteryEditViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
 
@@ -39,15 +40,15 @@ namespace BCLabManager.ViewModel
 
             _battery = battery;
 
-            _battery.PropertyChanged += _battery_PropertyChanged;
+            //_battery.PropertyChanged += _battery_PropertyChanged;
             CreateAllBatteryTypes(batteryTypes);
         }
 
-        private void _battery_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            //throw new NotImplementedException();
-            OnPropertyChanged(e.PropertyName);
-        }
+        //private void _battery_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        //{
+        //    //throw new NotImplementedException();
+        //    OnPropertyChanged(e.PropertyName);
+        //}
 
         void CreateAllBatteryTypes(ObservableCollection<BatteryTypeClass> batteryTypes)
         {

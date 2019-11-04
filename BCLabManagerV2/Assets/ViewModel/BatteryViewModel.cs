@@ -8,13 +8,14 @@ using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using BCLabManager.Properties;
 using Microsoft.EntityFrameworkCore;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class BatteryViewModel : BindBase//, IDataErrorInfo
+    public class BatteryViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
 
@@ -37,7 +38,7 @@ namespace BCLabManager.ViewModel
         private void _battery_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             //throw new NotImplementedException();
-            OnPropertyChanged(e.PropertyName);
+            RaisePropertyChanged(e.PropertyName);
         }
 
         /*void CreateAllBatteryTypes()
@@ -61,7 +62,7 @@ namespace BCLabManager.ViewModel
 
                 _battery.Id = value;
 
-                base.OnPropertyChanged("Id");
+                RaisePropertyChanged("Id");
             }
         }
         public string Name
@@ -74,7 +75,7 @@ namespace BCLabManager.ViewModel
 
                 _battery.Name = value;
 
-                base.OnPropertyChanged("Name");
+                RaisePropertyChanged("Name");
             }
         }
 
@@ -88,7 +89,7 @@ namespace BCLabManager.ViewModel
 
                 _battery.CycleCount = value;
 
-                base.OnPropertyChanged("CycleCount");
+                RaisePropertyChanged("CycleCount");
             }
         }
 
@@ -102,7 +103,7 @@ namespace BCLabManager.ViewModel
 
                 _battery.AssetUseCount = value;
 
-                base.OnPropertyChanged("AssetUseCount");
+                RaisePropertyChanged("AssetUseCount");
             }
         }
 
@@ -151,7 +152,7 @@ namespace BCLabManager.ViewModel
 
                 _battery.BatteryType = value;
 
-                base.OnPropertyChanged("BatteryType");
+                RaisePropertyChanged("BatteryType");
             }
         }
         #endregion

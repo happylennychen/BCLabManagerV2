@@ -43,6 +43,52 @@ namespace BCLabManager.DataAccess
             {
                 batteryType.PropertyChanged += BatteryType_PropertyChanged;
             }
+
+            Batteries.CollectionChanged += Batteries_CollectionChanged;
+            foreach(var battery in Batteries)
+            {
+                battery.PropertyChanged += Battery_PropertyChanged;
+            }
+        }
+
+        private void Battery_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            BatteryClass battery = sender as BatteryClass;
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                uow.Batteries.Update(battery);
+                uow.Commit();
+            }
+        }
+
+        private void Batteries_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    foreach(var item in e.NewItems)
+                    {
+                        var battery = item as BatteryClass;
+                        battery.PropertyChanged += Battery_PropertyChanged;
+                        using(var uow = new UnitOfWork(new AppDbContext()))
+                        {
+                            uow.Batteries.Insert(battery);
+                            uow.Commit();
+                        }
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    foreach(var item in e.OldItems)
+                    {
+                        var battery = item as BatteryClass;
+                        using(var uow = new UnitOfWork(new AppDbContext()))
+                        {
+                            uow.Batteries.Delete(battery);
+                            uow.Commit();
+                        }
+                    }
+                    break;
+            }
         }
 
         private void BatteryType_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
