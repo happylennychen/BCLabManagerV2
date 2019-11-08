@@ -62,17 +62,10 @@ namespace BCLabManager.ViewModel
         void CreateTestRecords()
         {
             List<TestRecordViewModel> all1 =
-                (from ft in _subprogram.FirstTestRecords
+                (from ft in _subprogram.TestRecords
                  select new TestRecordViewModel(ft)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.Test1Records = new ObservableCollection<TestRecordViewModel>(all1);     //再转换成Observable
-
-
-            List<TestRecordViewModel> all2 =
-                (from st in _subprogram.SecondTestRecords
-                 select new TestRecordViewModel(st)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
-
-            this.Test2Records = new ObservableCollection<TestRecordViewModel>(all2);     //再转换成Observable
         }
 
         #endregion // Constructor
@@ -185,25 +178,9 @@ namespace BCLabManager.ViewModel
         private List<TestRecordClass> GetAllTestRecords(RecipeClass sub)
         {
             List<TestRecordClass> output = new List<TestRecordClass>();
-            foreach (var tr in sub.FirstTestRecords)
-                output.Add(tr);
-            foreach (var tr in sub.SecondTestRecords)
+            foreach (var tr in sub.TestRecords)
                 output.Add(tr);
             return output;
-        }
-
-        public TestCountEnum TestCount
-        {
-            get { return _subprogram.TestCount; }
-            set
-            {
-                if (value == _subprogram.TestCount)
-                    return;
-
-                _subprogram.TestCount = value;
-
-                base.OnPropertyChanged("TestCount");
-            }
         }
 
         public int Loop

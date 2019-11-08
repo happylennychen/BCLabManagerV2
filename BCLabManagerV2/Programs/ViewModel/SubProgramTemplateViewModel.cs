@@ -16,13 +16,13 @@ namespace BCLabManager.ViewModel
     public class SubProgramTemplateViewModel : BindBase//, IDataErrorInfo
     {
         #region Fields
-        public readonly SubProgramTemplate _subProgramTemplate;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
+        public readonly RecipeTemplate _subProgramTemplate;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
 
         #endregion // Fields
 
         #region Constructor
 
-        public SubProgramTemplateViewModel(SubProgramTemplate subProgramTemplate)
+        public SubProgramTemplateViewModel(RecipeTemplate subProgramTemplate)
         {
             _subProgramTemplate = subProgramTemplate;
             _subProgramTemplate.PropertyChanged += _subProgramTemplate_PropertyChanged;
@@ -110,35 +110,9 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public TestCountEnum TestCount
-        {
-            get { return _subProgramTemplate.TestCount; }
-            set
-            {
-                if (value == _subProgramTemplate.TestCount)
-                    return;
-
-                _subProgramTemplate.TestCount = value;
-
-                base.OnPropertyChanged("TestCount");
-            }
-        }
-
         #endregion // Customer Properties
 
         #region Presentation Properties
-
-        public List<TestCountEnum> TestCountOptions
-        {
-            get
-            {
-                return new List<TestCountEnum>()
-                {
-                    TestCountEnum.One,
-                    TestCountEnum.Two
-                };
-            }
-        }
 
         #endregion // Presentation Properties
 

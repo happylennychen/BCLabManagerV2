@@ -16,7 +16,7 @@ namespace BCLabManager.ViewModel
     public class AllProgramsViewModel : BindBase
     {
         #region Fields
-        List<SubProgramTemplate> _subProgramTemplates;
+        List<RecipeTemplate> _subProgramTemplates;
         ProgramViewModel _selectedProgram;
         SubProgramViewModel _selectedSubProgram;
         TestRecordViewModel _selectedFirstTestRecord;
@@ -50,7 +50,7 @@ namespace BCLabManager.ViewModel
         public AllProgramsViewModel
             (
             ObservableCollection<ProgramClass> programs,
-            List<SubProgramTemplate> subProgramTemplates,
+            List<RecipeTemplate> subProgramTemplates,
             ObservableCollection<BatteryTypeClass> batteryTypes,
             ObservableCollection<BatteryClass> batteries,
             ObservableCollection<TesterClass> testers,
@@ -67,15 +67,7 @@ namespace BCLabManager.ViewModel
             _testers = testers;
             _channels = channels;
             _chambers = chambers;
-            RefrashAllProgramsEstimatedTime();
 
-        }
-        void RefrashAllProgramsEstimatedTime()
-        {
-            foreach (var pro in AllPrograms)
-            {
-                pro.UpdateEstimatedTime(AllPrograms);
-            }
         }
         void CreateAllPrograms(ObservableCollection<ProgramClass> programClasses)
         {
@@ -137,13 +129,13 @@ namespace BCLabManager.ViewModel
                 {
                     _selectedSubProgram = value;
                     //OnPropertyChanged("SelectedType");
-                    OnPropertyChanged("FirstTestRecords"); //通知Test1改变
+                    OnPropertyChanged("TestRecords"); //通知Test1改变
                     OnPropertyChanged("SecondTestRecords"); //通知Test2改变
                 }
             }
         }
 
-        public ObservableCollection<TestRecordViewModel> FirstTestRecords
+        public ObservableCollection<TestRecordViewModel> TestRecords
         {
             get
             {
@@ -374,7 +366,6 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             ProgramClass m = new ProgramClass();      //实例化一个新的model
-            m.Group = new ProgramGroupClass();
             ProgramEditViewModel evm = new ProgramEditViewModel(m,_batteryTypes, _subProgramTemplates);      //实例化一个新的view model
             evm.DisplayName = "Program-Create";
             evm.commandType = CommandType.Create;
@@ -608,13 +599,6 @@ namespace BCLabManager.ViewModel
                 //_programRepository.AddItem(model);
                 using (var dbContext = new AppDbContext())
                 {
-                    if (true)    //没改battery type和sub programs
-                    {
-                        var g = dbContext.ProgramGroups.SingleOrDefault(o => o.Id == _selectedProgram._program.Group.Id);
-                        m.Group = g;
-                    }
-                    else
-                        m.Group = new ProgramGroupClass();
                     foreach (var sub in m.Recipes)
                     {
                         sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
@@ -629,7 +613,6 @@ namespace BCLabManager.ViewModel
                 }
                 _programs.Add(m);
                 this.AllPrograms.Add(new ProgramViewModel(m));
-                RefrashAllProgramsEstimatedTime();
             }
         }
         private bool CanSaveAs
@@ -646,10 +629,7 @@ namespace BCLabManager.ViewModel
                 {
                     var model = dbContext.SubPrograms.SingleOrDefault(o => o.Id == _selectedSubProgram.Id);
                     dbContext.Entry(model)
-                        .Collection(o => o.FirstTestRecords)
-                        .Load();
-                    dbContext.Entry(model)
-                        .Collection(o => o.SecondTestRecords)
+                        .Collection(o => o.TestRecords)
                         .Load();
                     model.Abandon();
                     dbContext.SaveChanges();
@@ -834,8 +814,6 @@ namespace BCLabManager.ViewModel
                     dbContext.SaveChanges();
                 }
                 testRecord.CommitUpdateTime(_selectedProgram._program, _selectedSubProgram._subprogram);
-
-                RefrashAllProgramsEstimatedTime();
             }
         }
 

@@ -11,22 +11,22 @@ namespace BCLabManager.Model
     {
         public int Id { get; set; }
         public BatteryTypeClass BatteryType { get; set; }
-        public SubProgramTemplate SubTemplate { get; set; }
+        public RecipeTemplate SubTemplate { get; set; }
         public int TestCount { get; set; }
         public int ExecutedCount { get; set; }
         public TimeSpan AverageTime { get; set; }
     }
     public static class EstimateTimeManager
     {
-        public static TimeSpan GetAverageTime(BatteryTypeClass batteryType, SubProgramTemplate subProgramTemplate, TestCountEnum testCount)
+        public static TimeSpan GetAverageTime(BatteryTypeClass batteryType, RecipeTemplate subProgramTemplate)
         {
             throw new NotImplementedException();
         }
-        public static void UpdateAverageTime(BatteryTypeClass batteryType, SubProgramTemplate subProgramTemplate, TestCountEnum testCount, TimeSpan newTime)
+        public static void UpdateAverageTime(BatteryTypeClass batteryType, RecipeTemplate subProgramTemplate, TimeSpan newTime)
         {
             using (var dbContext = new AppDbContext())
             {
-                var etr = dbContext.EstimateTimeRecords.SingleOrDefault(o => o.BatteryType.Id == batteryType.Id && o.SubTemplate.Id == subProgramTemplate.Id && o.SubTemplate.TestCount == testCount);
+                var etr = dbContext.EstimateTimeRecords.SingleOrDefault(o => o.BatteryType.Id == batteryType.Id && o.SubTemplate.Id == subProgramTemplate.Id);
                 //if(etr == null)
             }
         }

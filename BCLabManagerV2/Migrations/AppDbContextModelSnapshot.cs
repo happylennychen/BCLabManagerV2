@@ -513,7 +513,7 @@ namespace BCLabManager.Migrations
                         .HasForeignKey("AssignedChannelId");
 
                     b.HasOne("BCLabManager.Model.RecipeClass")
-                        .WithMany("FirstTestRecords")
+                        .WithMany("TestRecords")
                         .HasForeignKey("RecipeClassId");
 
                     b.HasOne("BCLabManager.Model.RecipeClass")

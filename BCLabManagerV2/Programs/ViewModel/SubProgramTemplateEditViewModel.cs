@@ -20,7 +20,7 @@ namespace BCLabManager.ViewModel
         List<ChargeCurrentClass> _chargeCurrents;
         List<DischargeTemperatureClass> _dischargeTemperatures;
         List<DischargeCurrentClass> _dischargeCurrents;
-        public readonly SubProgramTemplate _subProgramTemplate;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
+        public readonly RecipeTemplate _subProgramTemplate;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
         RelayCommand _okCommand;
         bool _isOK;
 
@@ -29,7 +29,7 @@ namespace BCLabManager.ViewModel
         #region Constructor
 
         public SubProgramTemplateEditViewModel(
-            SubProgramTemplate subProgramTemplateModel,
+            RecipeTemplate subProgramTemplateModel,
             List<ChargeTemperatureClass> chargeTemperatures,
             List<ChargeCurrentClass> chargeCurrents,
             List<DischargeTemperatureClass> dischargeTemperatures,
@@ -149,36 +149,9 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public TestCountEnum TestCount
-        {
-            get { return _subProgramTemplate.TestCount; }
-            set
-            {
-                if (value == _subProgramTemplate.TestCount)
-                    return;
-
-                _subProgramTemplate.TestCount = value;
-
-                base.OnPropertyChanged("TestCount");
-            }
-        }
-
         #endregion // Customer Properties
 
         #region Presentation Properties
-
-        public List<TestCountEnum> TestCountOptions
-        {
-            get
-            {
-                List<TestCountEnum> all = new List<TestCountEnum>();
-                all.Add(TestCountEnum.One);
-                all.Add(TestCountEnum.Two);
-
-
-                return all;
-            }
-        }
 
         public ObservableCollection<ChargeTemperatureClass> AllChargeTemperatures //供选项
         {

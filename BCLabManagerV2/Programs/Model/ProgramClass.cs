@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,41 +8,62 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class ProgramClass : BindBase
+    public class ProgramClass : BindableBase
     {
-        private DateTime startTime;
-        private DateTime completeTime;
 
         public int Id { get; set; }
-        public String Name { get; set; }
-        public ProgramGroupClass Group { get; set; }
-        public BatteryTypeClass BatteryType { get; set; }
-        public String Requester { get; set; }
-        public DateTime RequestTime { get; set; }
-        public String Description { get; set; }
+        //public String Name { get; set; }
+        //public ProgramGroupClass Group { get; set; }
+        //public BatteryTypeClass BatteryType { get; set; }
+        //public String Requester { get; set; }
+        //public DateTime RequestTime { get; set; }
+        //public String Description { get; set; }
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set { SetProperty(ref _name, value); }
+        }
+        private BatteryTypeClass _batteryType;
+        public BatteryTypeClass BatteryType
+        {
+            get { return _batteryType; }
+            set { SetProperty(ref _batteryType, value); }
+        }
+        private string _requester;
+        public string Requester
+        {
+            get { return _requester; }
+            set { SetProperty(ref _requester, value); }
+        }
+        private DateTime _requestTime;
+        public DateTime RequestTime
+        {
+            get => _requestTime;
+            set { SetProperty(ref _requestTime, value); }
+        }
+        private DateTime _startTime;
         public DateTime StartTime
         {
-            get => startTime;
-            set
-            {
-                startTime = value;
-                OnPropertyChanged("StartTime");
-            }
+            get => _startTime;
+            set { SetProperty(ref _startTime, value); }
         }
+        private DateTime _completeTime;
         public DateTime CompleteTime
         {
-            get => completeTime;
-            set
-            {
-                completeTime = value;
-                OnPropertyChanged("CompleteTime");
-            }
+            get => _completeTime;
+            set { SetProperty(ref _completeTime, value); }
         }
-        public ObservableCollection<RecipeClass> Recipes { get; set; }
+        private string _description;
+        public string Description
+        {
+            get { return _description; }
+            set { SetProperty(ref _description, value); }
+        }
+        public ObservableCollection<RecipeClass> Recipes { get; set; } = new ObservableCollection<RecipeClass>();
 
         public ProgramClass()           //Create用到
         {
-            Recipes = new ObservableCollection<RecipeClass>();
         }
 
         public ProgramClass(String Name, BatteryTypeClass BatteryType, String Requester, DateTime RequestTime, String Description, ObservableCollection<RecipeClass> Recipes) //Clone用到
@@ -80,10 +102,5 @@ namespace BCLabManager.Model
             ObservableCollection<RecipeClass> clonelist = new ObservableCollection<RecipeClass>(all);
             return new ProgramClass(this.Name, this.BatteryType, this.Requester, this.RequestTime, this.Description, clonelist);
         }
-    }
-
-    public class ProgramGroupClass
-    {
-        public int Id { get; set; }
     }
 }

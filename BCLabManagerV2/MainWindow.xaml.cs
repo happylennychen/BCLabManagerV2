@@ -53,7 +53,7 @@ namespace BCLabManager
         public ObservableCollection<TesterClass> Testers { get; set; }
         public ObservableCollection<ChannelClass> Channels { get; set; }
         public ObservableCollection<ChamberClass> Chambers { get; set; }
-        public List<SubProgramTemplate> SubProgramTemplates { get; set; }
+        public List<RecipeTemplate> SubProgramTemplates { get; set; }
         public List<ChargeTemperatureClass> ChargeTemperatures { get; set; }
         public List<ChargeCurrentClass> ChargeCurrents { get; set; }
         public List<DischargeTemperatureClass> DischargeTemperatures { get; set; }
@@ -176,7 +176,7 @@ namespace BCLabManager
                     .ToList()
                     );
 
-                SubProgramTemplates = new List<SubProgramTemplate>(dbContext.SubProgramTemplates.ToList());
+                SubProgramTemplates = new List<RecipeTemplate>(dbContext.SubProgramTemplates.ToList());
 
                 ChargeTemperatures = new List<ChargeTemperatureClass>(dbContext.ChargeTemperatures.ToList());
 
@@ -187,30 +187,17 @@ namespace BCLabManager
                 DischargeCurrents = new List<DischargeCurrentClass>(dbContext.DischargeCurrents.ToList());
 
                 Programs = new ObservableCollection<ProgramClass>(dbContext.Programs
-                    .Include(pro => pro.Group)
                     .Include(pro => pro.Recipes)
-                        .ThenInclude(sub => sub.FirstTestRecords)
+                        .ThenInclude(sub => sub.TestRecords)
                             .ThenInclude(tr => tr.RawDataList)
                      .Include(pro => pro.Recipes)
-                        .ThenInclude(sub => sub.FirstTestRecords)
+                        .ThenInclude(sub => sub.TestRecords)
                             .ThenInclude(tr => tr.AssignedBattery)
                      .Include(pro => pro.Recipes)
-                        .ThenInclude(sub => sub.FirstTestRecords)
+                        .ThenInclude(sub => sub.TestRecords)
                             .ThenInclude(tr => tr.AssignedChamber)
                      .Include(pro => pro.Recipes)
-                        .ThenInclude(sub => sub.FirstTestRecords)
-                            .ThenInclude(tr => tr.AssignedChannel)
-                     .Include(pro => pro.Recipes)
-                        .ThenInclude(sub => sub.SecondTestRecords)
-                            .ThenInclude(tr => tr.RawDataList)
-                     .Include(pro => pro.Recipes)
-                        .ThenInclude(sub => sub.SecondTestRecords)
-                            .ThenInclude(tr => tr.AssignedBattery)
-                     .Include(pro => pro.Recipes)
-                        .ThenInclude(sub => sub.SecondTestRecords)
-                            .ThenInclude(tr => tr.AssignedChamber)
-                     .Include(pro => pro.Recipes)
-                        .ThenInclude(sub => sub.SecondTestRecords)
+                        .ThenInclude(sub => sub.TestRecords)
                             .ThenInclude(tr => tr.AssignedChannel)
                     .ToList());
 
@@ -218,9 +205,7 @@ namespace BCLabManager
                 {
                     foreach (var sub in pro.Recipes)
                     {
-                        foreach (var tr in sub.FirstTestRecords)
-                            sub.AssociateEvent(tr);
-                        foreach (var tr in sub.SecondTestRecords)
+                        foreach (var tr in sub.TestRecords)
                             sub.AssociateEvent(tr);
                     }
                 }

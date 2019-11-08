@@ -231,21 +231,6 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public void UpdateEstimatedTime(ObservableCollection<ProgramViewModel> allpros)
-        {
-            List<ProgramViewModel> grouppros = GetAllCompletedProgramByGroup(allpros);
-            if (grouppros.Count == 0 /*|| CompleteTime != DateTime.MinValue*/)
-            {
-                EstimatedTime = TimeSpan.Zero;
-            }
-            else
-            {
-                TimeSpan total = GetTotalTime(grouppros);
-                var est = TimeSpan.FromSeconds((total.TotalSeconds) / grouppros.Count);
-                EstimatedTime = est;
-            }
-        }
-
         private TimeSpan GetTotalTime(List<ProgramViewModel> pros)
         {
             TimeSpan total = TimeSpan.Zero;
@@ -254,13 +239,6 @@ namespace BCLabManager.ViewModel
                 total += (pro.CompleteTime - pro.StartTime);
             }
             return total;
-        }
-
-        private List<ProgramViewModel> GetAllCompletedProgramByGroup(ObservableCollection<ProgramViewModel> allpros)
-        {
-            return allpros
-                .Where(o => o._program.Group.Id == this._program.Group.Id && o.CompleteTime != DateTime.MinValue)
-                .ToList();
         }
 
 
@@ -315,9 +293,7 @@ namespace BCLabManager.ViewModel
             List<TestRecordClass> output = new List<TestRecordClass>();
             foreach (var sub in program.Recipes)
             {
-                foreach (var tr in sub.FirstTestRecords)
-                    output.Add(tr);
-                foreach (var tr in sub.SecondTestRecords)
+                foreach (var tr in sub.TestRecords)
                     output.Add(tr);
             }
             return output;

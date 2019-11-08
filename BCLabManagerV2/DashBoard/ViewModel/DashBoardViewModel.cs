@@ -69,8 +69,7 @@ namespace BCLabManager.ViewModel
             {
                 foreach(var sub in pro.Recipes)
                 {
-                    sub.FirstTestRecords.CollectionChanged += FirstTestRecords_CollectionChanged;
-                    sub.SecondTestRecords.CollectionChanged += SecondTestRecords_CollectionChanged;
+                    sub.TestRecords.CollectionChanged += TestRecords_CollectionChanged;
                 }
             }
 
@@ -78,9 +77,7 @@ namespace BCLabManager.ViewModel
             {
                 foreach (var sub in pro.Recipes)
                 {
-                    foreach(var tr in sub.FirstTestRecords)
-                        tr.StatusChanged += Tr_StatusChanged;
-                    foreach (var tr in sub.SecondTestRecords)
+                    foreach(var tr in sub.TestRecords)
                         tr.StatusChanged += Tr_StatusChanged;
                 }
             }
@@ -131,7 +128,7 @@ namespace BCLabManager.ViewModel
             UpdateProgramsUI();
         }
 
-        private void FirstTestRecords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void TestRecords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             //OnPropertyChanged("CompletedAmount");
             //OnPropertyChanged("InvalidAmount");
@@ -277,19 +274,10 @@ namespace BCLabManager.ViewModel
             (
                 from pro in _programs
                 from sub in pro.Recipes
-                from ftr in sub.FirstTestRecords
+                from ftr in sub.TestRecords
                 where ftr.Status == testStatus
                 select ftr
-            ).Count()
-            +
-            (
-                from pro in _programs
-                from sub in pro.Recipes
-                from str in sub.SecondTestRecords
-                where str.Status == testStatus
-                select str
-            ).Count()
-            ;
+            ).Count();
         }
         public Int32 WaitingAmount
         {
@@ -334,17 +322,9 @@ namespace BCLabManager.ViewModel
                 (
                     from pro in _programs
                     from sub in pro.Recipes
-                    from ftr in sub.FirstTestRecords
+                    from ftr in sub.TestRecords
                     select ftr
-                ).Count()
-                +
-                (
-                    from pro in _programs
-                    from sub in pro.Recipes
-                    from str in sub.SecondTestRecords
-                    select str
-                ).Count()
-                ;
+                ).Count();
             }
         }
         public double WaitingPercentage
@@ -408,12 +388,7 @@ namespace BCLabManager.ViewModel
                 {
                     foreach (var sub in pro.Recipes)
                     {
-                        foreach (var tr in sub.FirstTestRecords)
-                        {
-                            if (tr.Status == TestStatus.Executing)
-                                all.Add(new TestRecordViewModel(tr));
-                        }
-                        foreach (var tr in sub.SecondTestRecords)
+                        foreach (var tr in sub.TestRecords)
                         {
                             if (tr.Status == TestStatus.Executing)
                                 all.Add(new TestRecordViewModel(tr));
@@ -432,12 +407,7 @@ namespace BCLabManager.ViewModel
                 {
                     foreach (var sub in pro.Recipes)
                     {
-                        foreach (var tr in sub.FirstTestRecords)
-                        {
-                            if (tr.Status == TestStatus.Waiting)
-                                all.Add(new TestRecordViewModel(tr));
-                        }
-                        foreach (var tr in sub.SecondTestRecords)
+                        foreach (var tr in sub.TestRecords)
                         {
                             if (tr.Status == TestStatus.Waiting)
                                 all.Add(new TestRecordViewModel(tr));
@@ -491,10 +461,7 @@ namespace BCLabManager.ViewModel
 
         private bool IsSubProgramCompleted(RecipeClass sub)
         {
-            foreach (var tr in sub.FirstTestRecords)
-                if (IsTestCompleted(tr) == false)
-                    return false;
-            foreach (var tr in sub.SecondTestRecords)
+            foreach (var tr in sub.TestRecords)
                 if (IsTestCompleted(tr) == false)
                     return false;
             return true;
@@ -508,10 +475,7 @@ namespace BCLabManager.ViewModel
                 {
                     foreach (var sub in pro.Recipes)
                     {
-                        foreach (var tr in sub.FirstTestRecords)
-                            if (IsTestCompleted(tr))
-                                i++;
-                        foreach (var tr in sub.SecondTestRecords)
+                        foreach (var tr in sub.TestRecords)
                             if (IsTestCompleted(tr))
                                 i++;
                     }
@@ -533,12 +497,9 @@ namespace BCLabManager.ViewModel
                 {
                     foreach (var sub in pro.Recipes)
                     {
-                        foreach (var tr in sub.FirstTestRecords)
+                        foreach (var tr in sub.TestRecords)
                             if (IsTestCompleted(tr))
                                 i+= tr.RawDataList.Count;
-                        foreach (var tr in sub.SecondTestRecords)
-                            if (IsTestCompleted(tr))
-                                i += tr.RawDataList.Count;
                     }
                 }
                 return i;

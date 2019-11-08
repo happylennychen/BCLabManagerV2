@@ -20,10 +20,9 @@ namespace BCLabManager.DataAccess
         public DbSet<ChargeCurrentClass> ChargeCurrents { get; set; }
         public DbSet<DischargeTemperatureClass> DischargeTemperatures { get; set; }
         public DbSet<DischargeCurrentClass> DischargeCurrents { get; set; }
-        public DbSet<SubProgramTemplate> SubProgramTemplates { get; set; }
+        public DbSet<RecipeTemplate> SubProgramTemplates { get; set; }
         public DbSet<RecipeClass> SubPrograms { get; set; }
         public DbSet<ProgramClass> Programs { get; set; }
-        public DbSet<ProgramGroupClass> ProgramGroups { get; set; }
         public DbSet<EstimateTimeRecord> EstimateTimeRecords { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

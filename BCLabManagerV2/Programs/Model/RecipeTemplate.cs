@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class SubProgramTemplate : BindBase
+    public class RecipeTemplate : BindableBase
     {
         public int Id { get; set; }
         //public String Name { get; set; }
@@ -14,9 +15,8 @@ namespace BCLabManager.Model
         public ChargeCurrentClass ChargeCurrent { get; set; }
         public DischargeTemperatureClass DischargeTemperature { get; set; }
         public DischargeCurrentClass DischargeCurrent { get; set; }
-        public TestCountEnum TestCount { get; set; }
 
-        public SubProgramTemplate()
+        public RecipeTemplate()
         {
         }
     }

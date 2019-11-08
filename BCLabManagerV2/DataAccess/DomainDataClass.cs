@@ -15,7 +15,7 @@ namespace BCLabManager.DataAccess
         public ObservableCollection<TesterClass> Testers { get; set; }
         public ObservableCollection<ChannelClass> Channels { get; set; }
         public ObservableCollection<ChamberClass> Chambers { get; set; }
-        public ObservableCollection<SubProgramTemplate> SubProgramTemplates { get; set; }
+        public ObservableCollection<RecipeTemplate> SubProgramTemplates { get; set; }
         public ObservableCollection<ChargeTemperatureClass> ChargeTemperatures { get; set; }
         public ObservableCollection<ChargeCurrentClass> ChargeCurrents { get; set; }
         public ObservableCollection<DischargeTemperatureClass> DischargeTemperatures { get; set; }

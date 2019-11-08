@@ -33,7 +33,7 @@ namespace BCLabManager.ViewModel
         public ProgramEditViewModel(
             ProgramClass programmodel,
             ObservableCollection<BatteryTypeClass> batteryTypes,
-            List<SubProgramTemplate> subProgramTemplates)
+            List<RecipeTemplate> subProgramTemplates)
         {
             _program = programmodel;
             _batteryTypes = batteryTypes;
@@ -42,7 +42,7 @@ namespace BCLabManager.ViewModel
         }
 
 
-        void CreateAllSubProgramTemplates(List<SubProgramTemplate> subProgramTemplates)
+        void CreateAllSubProgramTemplates(List<RecipeTemplate> subProgramTemplates)
         {
             List<SubProgramTemplateViewModel> all =
                 (from sub in subProgramTemplates
@@ -300,9 +300,7 @@ namespace BCLabManager.ViewModel
         {
             foreach (var sub in _program.Recipes)
             {
-                foreach (var tr in sub.FirstTestRecords)
-                    tr.ProgramStr = this.Name;
-                foreach (var tr in sub.SecondTestRecords)
+                foreach (var tr in sub.TestRecords)
                     tr.ProgramStr = this.Name;
             }
             IsOK = true;

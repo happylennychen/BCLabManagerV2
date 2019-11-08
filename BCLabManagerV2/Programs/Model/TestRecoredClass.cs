@@ -1,5 +1,6 @@
 ﻿using BCLabManager.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace BCLabManager.Model
 
         public TestStatus Status { get; private set; }
     }
-    public class TestRecordClass : BindBase
+    public class TestRecordClass : BindableBase
     {
         private DateTime startTime;
         private DateTime completeTime;
@@ -58,7 +59,7 @@ namespace BCLabManager.Model
             set
             {
                 startTime = value;
-                OnPropertyChanged("StartTime");
+                RaisePropertyChanged("StartTime");
             }
         }
         public DateTime CompleteTime
@@ -67,7 +68,7 @@ namespace BCLabManager.Model
             set
             {
                 completeTime = value;
-                OnPropertyChanged("CompleteTime");
+                RaisePropertyChanged("CompleteTime");
             }
         }
         public String Steps { get; set; }
@@ -284,26 +285,13 @@ namespace BCLabManager.Model
         {
             var pros = dbContext.Programs
                  .Include(pro => pro.Recipes)
-                    .ThenInclude(sub => sub.FirstTestRecords)
-                 .Include(pro => pro.Recipes)
-                    .ThenInclude(sub => sub.SecondTestRecords)
+                    .ThenInclude(sub => sub.TestRecords)
                  .ToList();
             foreach (var p in pros)
             {
                 foreach (var s in p.Recipes)
                 {
-                    foreach (var t in s.FirstTestRecords)
-                    {
-                        if (t.Id == this.Id)
-                        {
-                            Sub = s;
-                            Pro = p;
-                            break;
-                        }
-                    }
-                    if (Sub != null)
-                        break;
-                    foreach (var t in s.SecondTestRecords)
+                    foreach (var t in s.TestRecords)
                     {
                         if (t.Id == this.Id)
                         {
@@ -342,18 +330,7 @@ namespace BCLabManager.Model
 
         private bool IsSubCompleted(RecipeClass sub)
         {
-            if (sub.TestCount == TestCountEnum.One)
-            {
-                return sub.FirstTestRecords[sub.FirstTestRecords.Count - 1].Status == TestStatus.Completed;
-            }
-            else if (sub.TestCount == TestCountEnum.Two)
-            {
-                return
-                    sub.FirstTestRecords[sub.FirstTestRecords.Count - 1].Status == TestStatus.Completed
-                    &&
-                    sub.SecondTestRecords[sub.SecondTestRecords.Count - 1].Status == TestStatus.Completed;
-            }
-            return false;
+            return sub.TestRecords[sub.TestRecords.Count - 1].Status == TestStatus.Completed;
         }
     }
     public class TestRecordAddedEventArgs : EventArgs

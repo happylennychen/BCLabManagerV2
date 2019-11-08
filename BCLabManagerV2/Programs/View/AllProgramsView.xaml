@@ -43,7 +43,7 @@
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
 
-        <CollectionViewSource x:Key="ftrsCollectionViewSource" Source="{Binding Path=FirstTestRecords}">
+        <CollectionViewSource x:Key="ftrsCollectionViewSource" Source="{Binding Path=TestRecords}">
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="Id" Direction="Ascending"></scm:SortDescription>
             </CollectionViewSource.SortDescriptions>
@@ -195,7 +195,7 @@
                       x:Name="FirstTestRecordList"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=FirstTestRecords}"
+      ItemsSource="{Binding Path=TestRecords}"
                       SelectedItem="{Binding Path=SelectedFirstTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 
