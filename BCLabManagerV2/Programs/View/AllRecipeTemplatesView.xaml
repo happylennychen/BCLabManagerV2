@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BCLabManager.View.AllSubProgramTemplatesView"
+﻿<UserControl x:Class="BCLabManager.View.AllRecipeTemplatesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -33,12 +33,9 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <v:AllChargeTemperaturesView x:Name="AllChargeTemperaturesViewInstance"></v:AllChargeTemperaturesView>
-            <v:AllChargeCurrentsView x:Name="AllChargeCurrentsViewInstance" Grid.Row="1"></v:AllChargeCurrentsView>
-            <v:AllDischargeTemperaturesView x:Name="AllDischargeTemperaturesViewInstance" Grid.Row="2"></v:AllDischargeTemperaturesView>
-            <v:AllDischargeCurrentsView x:Name="AllDischargeCurrentsViewInstance" Grid.Row="3"></v:AllDischargeCurrentsView>
+            <!--<v:AllChargeCurrentsView x:Name="AllChargeCurrentsViewInstance" Grid.Row="1"></v:AllChargeCurrentsView>-->
         </Grid>
-        <GroupBox Grid.Column="1" Header="Sub Program Templates">
+        <GroupBox Grid.Column="1" Header="Recipe Templates">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="_Create" Command="{Binding Path=CreateCommand}" Margin="0,5,5,0" Width="60"></Button>
@@ -46,10 +43,10 @@
                     <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
                 <ListView Grid.Row="1"
-                      x:Name="SubProgramlist"
+                      x:Name="Recipelist"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=AllSubProgramTemplates}"
+      ItemsSource="{Binding Path=AllRecipeTemplates}"
                       SelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 

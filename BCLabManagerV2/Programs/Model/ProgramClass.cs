@@ -76,13 +76,13 @@ namespace BCLabManager.Model
             this.Recipes = Recipes;
         }
 
-        /*public void Update(String Name, String Requester, DateTime RequestDate, String Description, List<SubProgramClass> SubPrograms)  //没用？
+        /*public void Update(String Name, String Requester, DateTime RequestDate, String Description, List<RecipeClass> Recipes)  //没用？
         {
             this.Name = Name;
             this.Requester = Requester;
             this.RequestDate = RequestDate;
             this.Description = Description;
-            this.SubPrograms = SubPrograms;
+            this.Recipes = Recipes;
         }*/
 
         //public void Update(ProgramClass model)  //Edit用到
@@ -91,16 +91,16 @@ namespace BCLabManager.Model
         //    this.Requester = model.Requester;
         //    this.RequestDate = model.RequestDate;
         //    this.Description = model.Description;
-        //    this.SubPrograms = model.SubPrograms;
+        //    this.Recipes = model.Recipes;
         //}
 
-        public ProgramClass Clone() //Edit Save As用到
-        {
-            List<RecipeClass> all =
-                (from sub in Recipes
-                 select sub.Clone()).ToList();
-            ObservableCollection<RecipeClass> clonelist = new ObservableCollection<RecipeClass>(all);
-            return new ProgramClass(this.Name, this.BatteryType, this.Requester, this.RequestTime, this.Description, clonelist);
-        }
+        //public ProgramClass Clone() //Edit Save As用到
+        //{
+        //    List<RecipeClass> all =
+        //        (from sub in Recipes
+        //         select sub.Clone()).ToList();
+        //    ObservableCollection<RecipeClass> clonelist = new ObservableCollection<RecipeClass>(all);
+        //    return new ProgramClass(this.Name, this.BatteryType, this.Requester, this.RequestTime, this.Description, clonelist);
+        //}
     }
 }

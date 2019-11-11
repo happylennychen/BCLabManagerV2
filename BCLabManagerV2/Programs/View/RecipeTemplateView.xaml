@@ -1,4 +1,4 @@
-﻿<Window x:Class="BCLabManager.View.SubProgramTemplateView"
+﻿<Window x:Class="BCLabManager.View.RecipeTemplateView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="{Binding Path=DisplayName}" Height="350" Width="300" WindowStartupLocation="CenterScreen">

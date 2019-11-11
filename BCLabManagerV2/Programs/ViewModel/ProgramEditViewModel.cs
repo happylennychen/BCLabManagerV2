@@ -7,20 +7,21 @@ using System.Collections.ObjectModel;
 using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using BCLabManager.Properties;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
     /// <summary>
     /// A UI-friendly wrapper for a Program object.
     /// </summary>
-    public class ProgramEditViewModel : BindBase//, IDataErrorInfo
+    public class ProgramEditViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
 
         public ProgramClass _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
         ObservableCollection<BatteryTypeClass> _batteryTypes;
-        SubProgramTemplateViewModel _selectedSubProgramTemplate;
-        SubProgramViewModel _selectedSubProgram;
+        RecipeTemplateViewModel _selectedRecipeTemplate;
+        RecipeViewModel _selectedRecipe;
         RelayCommand _okCommand;
         RelayCommand _addCommand;
         RelayCommand _removeCommand;
@@ -33,33 +34,33 @@ namespace BCLabManager.ViewModel
         public ProgramEditViewModel(
             ProgramClass programmodel,
             ObservableCollection<BatteryTypeClass> batteryTypes,
-            List<RecipeTemplate> subProgramTemplates)
+            List<RecipeTemplate> RecipeTemplates)
         {
             _program = programmodel;
             _batteryTypes = batteryTypes;
-            this.CreateAllSubProgramTemplates(subProgramTemplates);
-            this.CreateSubPrograms();
+            this.CreateAllRecipeTemplates(RecipeTemplates);
+            this.CreateRecipes();
         }
 
 
-        void CreateAllSubProgramTemplates(List<RecipeTemplate> subProgramTemplates)
+        void CreateAllRecipeTemplates(List<RecipeTemplate> RecipeTemplates)
         {
-            List<SubProgramTemplateViewModel> all =
-                (from sub in subProgramTemplates
-                 select new SubProgramTemplateViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+            List<RecipeTemplateViewModel> all =
+                (from sub in RecipeTemplates
+                 select new RecipeTemplateViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-            this.AllSubProgramTemplates = new ObservableCollection<SubProgramTemplateViewModel>(all);     //再转换成Observable
+            this.AllRecipeTemplates = new ObservableCollection<RecipeTemplateViewModel>(all);     //再转换成Observable
         }
-        void CreateSubPrograms()
+        void CreateRecipes()
         {
-            List<SubProgramViewModel> all =
+            List<RecipeViewModel> all =
                 (from sub in _program.Recipes
-                 select new SubProgramViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+                 select new RecipeViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-            //foreach (SubProgramModelViewModel batmod in all)
-            //batmod.PropertyChanged += this.OnSubProgramModelViewModelPropertyChanged;
+            //foreach (RecipeModelViewModel batmod in all)
+            //batmod.PropertyChanged += this.OnRecipeModelViewModelPropertyChanged;
 
-            this.SubPrograms = new ObservableCollection<SubProgramViewModel>(all);     //再转换成Observable
+            this.Recipes = new ObservableCollection<RecipeViewModel>(all);     //再转换成Observable
             //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
         }
         #endregion // Constructor
@@ -76,7 +77,7 @@ namespace BCLabManager.ViewModel
 
                 _program.Id = value;
 
-                base.OnPropertyChanged("Id");
+                RaisePropertyChanged("Id");
             }
         }
 
@@ -90,7 +91,7 @@ namespace BCLabManager.ViewModel
 
                 _program.Name = value;
 
-                base.OnPropertyChanged("Name");
+                RaisePropertyChanged("Name");
             }
         }
 
@@ -109,7 +110,7 @@ namespace BCLabManager.ViewModel
 
                 _program.BatteryType = value;
 
-                base.OnPropertyChanged("BatteryType");
+                RaisePropertyChanged("BatteryType");
             }
         }
 
@@ -132,7 +133,7 @@ namespace BCLabManager.ViewModel
 
                 _program.Requester = value;
 
-                base.OnPropertyChanged("Requester");
+                RaisePropertyChanged("Requester");
             }
         }
 
@@ -146,7 +147,7 @@ namespace BCLabManager.ViewModel
 
                 _program.Description = value;
 
-                base.OnPropertyChanged("Description");
+                RaisePropertyChanged("Description");
             }
         }
 
@@ -160,24 +161,24 @@ namespace BCLabManager.ViewModel
 
                 _program.RequestTime = value;
 
-                base.OnPropertyChanged("RequestDate");
+                RaisePropertyChanged("RequestDate");
             }
         }
 
-        public ObservableCollection<SubProgramViewModel> SubPrograms { get; set; }        //这个是当前program所拥有的subprograms
+        public ObservableCollection<RecipeViewModel> Recipes { get; set; }        //这个是当前program所拥有的Recipes
         /*{
             get
             {
-                if (_program.SubPrograms == null)
-                    return new ObservableCollection<SubProgramViewModel>();
-                List<SubProgramViewModel> all =
-                    (from bat in _program.SubPrograms
-                     select new SubProgramViewModel(bat, _subprogramRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+                if (_program.Recipes == null)
+                    return new ObservableCollection<RecipeViewModel>();
+                List<RecipeViewModel> all =
+                    (from bat in _program.Recipes
+                     select new RecipeViewModel(bat, _RecipeRepository)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-                //foreach (SubProgramModelViewModel batmod in all)
-                //batmod.PropertyChanged += this.OnSubProgramModelViewModelPropertyChanged;
+                //foreach (RecipeModelViewModel batmod in all)
+                //batmod.PropertyChanged += this.OnRecipeModelViewModelPropertyChanged;
 
-                return new ObservableCollection<SubProgramViewModel>(all);     //再转换成Observable
+                return new ObservableCollection<RecipeViewModel>(all);     //再转换成Observable
             }
         }*/
 
@@ -185,34 +186,34 @@ namespace BCLabManager.ViewModel
 
         #region Presentation Properties
 
-        public ObservableCollection<SubProgramTemplateViewModel> AllSubProgramTemplates { get; private set; }   //展示所有SubProgramTemplate以便选用,跟SubPrograms是不一样的
+        public ObservableCollection<RecipeTemplateViewModel> AllRecipeTemplates { get; private set; }   //展示所有RecipeTemplate以便选用,跟Recipes是不一样的
 
-        public SubProgramTemplateViewModel SelectedSubProgramTemplate
+        public RecipeTemplateViewModel SelectedRecipeTemplate
         {
             get
             {
-                return _selectedSubProgramTemplate;
+                return _selectedRecipeTemplate;
             }
             set
             {
-                if (_selectedSubProgramTemplate != value)
+                if (_selectedRecipeTemplate != value)
                 {
-                    _selectedSubProgramTemplate = value;
+                    _selectedRecipeTemplate = value;
                 }
             }
         }
 
-        public SubProgramViewModel SelectedSubProgram
+        public RecipeViewModel SelectedRecipe
         {
             get
             {
-                return _selectedSubProgram;
+                return _selectedRecipe;
             }
             set
             {
-                if (_selectedSubProgram != value)
+                if (_selectedRecipe != value)
                 {
-                    _selectedSubProgram = value;
+                    _selectedRecipe = value;
                 }
             }
         }
@@ -306,23 +307,23 @@ namespace BCLabManager.ViewModel
             IsOK = true;
         }
 
-        public void Add()       //对于model来说，需要将选中的sub copy到_program.SubPrograms来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.SubPrograms里面去
+        public void Add()       //对于model来说，需要将选中的sub copy到_program.Recipes来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.Recipes里面去
         {
-            var newsubmodel = new RecipeClass(SelectedSubProgramTemplate._subProgramTemplate);
-            var newsubviewmodel = new SubProgramViewModel(newsubmodel);
+            var newsubmodel = new RecipeClass(SelectedRecipeTemplate._RecipeTemplate);
+            var newsubviewmodel = new RecipeViewModel(newsubmodel);
             _program.Recipes.Add(newsubmodel);
-            this.SubPrograms.Add(newsubviewmodel);
+            this.Recipes.Add(newsubviewmodel);
         }
 
-        public void Remove()       //对于model来说，需要将选中的sub 从_program.SubPrograms中移除。对于viewmodel来说，需要将这个viewmodel从this.SubPrograms中移除
+        public void Remove()       //对于model来说，需要将选中的sub 从_program.Recipes中移除。对于viewmodel来说，需要将这个viewmodel从this.Recipes中移除
         {
-            _program.Recipes.Remove(SelectedSubProgram._subprogram);
-            this.SubPrograms.Remove(SelectedSubProgram);
+            _program.Recipes.Remove(SelectedRecipe._Recipe);
+            this.Recipes.Remove(SelectedRecipe);
         }
 
         //public ProgramViewModel Clone()
         //{
-        //    return new ProgramViewModel(_program.Clone(), _programRepository, _subprogramRepository);
+        //    return new ProgramViewModel(_program.Clone(), _programRepository, _RecipeRepository);
         //}
 
         #endregion // Public Methods
@@ -367,12 +368,12 @@ namespace BCLabManager.ViewModel
 
         bool CanAdd
         {
-            get { return SelectedSubProgramTemplate!=null; }
+            get { return SelectedRecipeTemplate!=null; }
         }
 
         bool CanRemove
         {
-            get { return SelectedSubProgram != null; }     //如果已经有数据，可否删除？
+            get { return SelectedRecipe != null; }     //如果已经有数据，可否删除？
         }
 
         #endregion // Private Helpers

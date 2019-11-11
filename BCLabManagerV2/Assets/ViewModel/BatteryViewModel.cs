@@ -138,7 +138,7 @@ namespace BCLabManager.ViewModel
         //            _battery.BatteryType = dbContext.BatteryTypes.SingleOrDefault(bt => bt.Name == _batteryType);
         //        }
 
-        //        base.OnPropertyChanged("BatteryType");
+        //        RaisePropertyChanged("BatteryType");
         //    }
         //}
 

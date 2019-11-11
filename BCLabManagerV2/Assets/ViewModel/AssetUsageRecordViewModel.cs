@@ -8,13 +8,14 @@ using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.ComponentModel;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class AssetUsageRecordViewModel : BindBase//, IDataErrorInfo
+    public class AssetUsageRecordViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
 
@@ -107,7 +108,7 @@ namespace BCLabManager.ViewModel
                 return _record.ProgramName.ToString();
             }
         }
-        public String SubProgramName
+        public String RecipeName
         {
             get
             {

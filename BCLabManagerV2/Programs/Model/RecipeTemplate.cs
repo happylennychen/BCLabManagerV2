@@ -11,57 +11,57 @@ namespace BCLabManager.Model
     {
         public int Id { get; set; }
         //public String Name { get; set; }
-        public ChargeTemperatureClass ChargeTemperature { get; set; }
-        public ChargeCurrentClass ChargeCurrent { get; set; }
-        public DischargeTemperatureClass DischargeTemperature { get; set; }
-        public DischargeCurrentClass DischargeCurrent { get; set; }
+        //public ChargeTemperatureClass ChargeTemperature { get; set; }
+        //public ChargeCurrentClass ChargeCurrent { get; set; }
+        //public DischargeTemperatureClass DischargeTemperature { get; set; }
+        //public DischargeCurrentClass DischargeCurrent { get; set; }
 
         public RecipeTemplate()
         {
         }
     }
 
-    public class ChargeTemperatureClass : BindBase
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
+    //public class ChargeTemperatureClass : BindableBase
+    //{
+    //    public int Id { get; set; }
+    //    public string Name { get; set; }
 
-        public override string ToString()
-        {
-            return this.Name;
-        }
-    }
+    //    public override string ToString()
+    //    {
+    //        return this.Name;
+    //    }
+    //}
 
-    public class ChargeCurrentClass : BindBase
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
+    //public class ChargeCurrentClass : BindableBase
+    //{
+    //    public int Id { get; set; }
+    //    public string Name { get; set; }
 
-        public override string ToString()
-        {
-            return this.Name;
-        }
-    }
+    //    public override string ToString()
+    //    {
+    //        return this.Name;
+    //    }
+    //}
 
-    public class DischargeTemperatureClass : BindBase
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
+    //public class DischargeTemperatureClass : BindableBase
+    //{
+    //    public int Id { get; set; }
+    //    public string Name { get; set; }
 
-        public override string ToString()
-        {
-            return this.Name;
-        }
-    }
+    //    public override string ToString()
+    //    {
+    //        return this.Name;
+    //    }
+    //}
 
-    public class DischargeCurrentClass : BindBase
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
+    //public class DischargeCurrentClass : BindableBase
+    //{
+    //    public int Id { get; set; }
+    //    public string Name { get; set; }
 
-        public override string ToString()
-        {
-            return this.Name;
-        }
-    }
+    //    public override string ToString()
+    //    {
+    //        return this.Name;
+    //    }
+    //}
 }

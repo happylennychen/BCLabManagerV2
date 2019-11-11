@@ -7,13 +7,14 @@ using System.Collections.ObjectModel;
 using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using BCLabManager.Properties;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class ChamberEditViewModel : BindBase//, IDataErrorInfo
+    public class ChamberEditViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
 
@@ -45,7 +46,7 @@ namespace BCLabManager.ViewModel
 
                 _chamber.Id = value;
 
-                base.OnPropertyChanged("Id");
+                RaisePropertyChanged("Id");
             }
         }
         public string Name
@@ -58,7 +59,7 @@ namespace BCLabManager.ViewModel
 
                 _chamber.Name = value;
 
-                base.OnPropertyChanged("Name");
+                RaisePropertyChanged("Name");
             }
         }
 
@@ -72,7 +73,7 @@ namespace BCLabManager.ViewModel
 
                 _chamber.Manufactor = value;
 
-                base.OnPropertyChanged("Manufactor");
+                RaisePropertyChanged("Manufactor");
             }
         }
 
@@ -86,7 +87,7 @@ namespace BCLabManager.ViewModel
 
                 _chamber.LowestTemperature = value;
 
-                base.OnPropertyChanged("LowTemp");
+                RaisePropertyChanged("LowTemp");
             }
         }
 
@@ -100,7 +101,7 @@ namespace BCLabManager.ViewModel
 
                 _chamber.HighestTemperature = value;
 
-                base.OnPropertyChanged("HighTemp");
+                RaisePropertyChanged("HighTemp");
             }
         }
 
@@ -114,7 +115,7 @@ namespace BCLabManager.ViewModel
 
                 _chamber.AssetUseCount = value;
 
-                base.OnPropertyChanged("AssetUseCount");
+                RaisePropertyChanged("AssetUseCount");
             }
         }
 

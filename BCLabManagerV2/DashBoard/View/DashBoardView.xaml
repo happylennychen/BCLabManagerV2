@@ -212,8 +212,8 @@
             DisplayMemberBinding="{Binding Path=ProgramStr}" 
             />
                                 <GridViewColumn 
-            Header="Sub Program" 
-            DisplayMemberBinding="{Binding Path=SubProgramStr}" 
+            Header="Recipe" 
+            DisplayMemberBinding="{Binding Path=RecipeStr}" 
             />
                             </GridView>
                         </ListView.View>
@@ -282,8 +282,8 @@
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="24" FontWeight="Bold">Completed Programs</Label>
                 <Label Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="90" FontWeight="Bold" Foreground="{StaticResource CompletedBrush}" Content="{Binding Path=CompletedProgramNumber}"></Label>
-                <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="20" FontWeight="Bold">Completed Sub Programs</Label>
-                <Label Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="{StaticResource CompletedBrush}" Content="{Binding Path=CompletedSubProgramNumber}"></Label>
+                <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="20" FontWeight="Bold">Completed Recipes</Label>
+                <Label Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="{StaticResource CompletedBrush}" Content="{Binding Path=CompletedRecipeNumber}"></Label>
                 <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="20" FontWeight="Bold">Completed Test</Label>
                 <Label Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="{StaticResource CompletedBrush}" Content="{Binding Path=CompletedTestNumber}"></Label>
                 <Label Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="20" FontWeight="Bold">Collected Raw Data</Label>

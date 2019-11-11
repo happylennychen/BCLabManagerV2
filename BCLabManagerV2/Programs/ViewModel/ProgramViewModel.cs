@@ -9,13 +9,14 @@ using BCLabManager.Model;
 using BCLabManager.Properties;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
     /// <summary>
     /// A UI-friendly wrapper for a Program object.
     /// </summary>
-    public class ProgramViewModel : BindBase//, IDataErrorInfo
+    public class ProgramViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
 
@@ -29,7 +30,7 @@ namespace BCLabManager.ViewModel
         {
 
             _program = program;
-            this.CreateSubPrograms();
+            this.CreateRecipes();
             _program.PropertyChanged += _program_PropertyChanged;
             var trlist = GetAllTestRecords(program);
             foreach(var tr in trlist)
@@ -38,30 +39,30 @@ namespace BCLabManager.ViewModel
 
         private void Tr_StatusChanged(object sender, StatusChangedEventArgs e)
         {
-            OnPropertyChanged("WaitingPercentage");
-            OnPropertyChanged("ExecutingPercentage");
-            OnPropertyChanged("CompletedPercentage");
-            OnPropertyChanged("InvalidPercentage");
-            OnPropertyChanged("AbandonedPercentage");
+            RaisePropertyChanged("WaitingPercentage");
+            RaisePropertyChanged("ExecutingPercentage");
+            RaisePropertyChanged("CompletedPercentage");
+            RaisePropertyChanged("InvalidPercentage");
+            RaisePropertyChanged("AbandonedPercentage");
         }
 
         private void _program_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            OnPropertyChanged(e.PropertyName);
+            RaisePropertyChanged(e.PropertyName);
             if(e.PropertyName == "CompleteTime")
-                OnPropertyChanged("Duration");
+                RaisePropertyChanged("Duration");
         }
 
-        void CreateSubPrograms()
+        void CreateRecipes()
         {
-            List<SubProgramViewModel> all =
+            List<RecipeViewModel> all =
                 (from sub in _program.Recipes
-                 select new SubProgramViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+                 select new RecipeViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-            //foreach (SubProgramModelViewModel batmod in all)
-            //batmod.PropertyChanged += this.OnSubProgramModelViewModelPropertyChanged;
+            //foreach (RecipeModelViewModel batmod in all)
+            //batmod.PropertyChanged += this.OnRecipeModelViewModelPropertyChanged;
 
-            this.SubPrograms = new ObservableCollection<SubProgramViewModel>(all);     //再转换成Observable
+            this.Recipes = new ObservableCollection<RecipeViewModel>(all);     //再转换成Observable
             //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
         }
         #endregion // Constructor
@@ -78,7 +79,7 @@ namespace BCLabManager.ViewModel
 
                 _program.Id = value;
 
-                base.OnPropertyChanged("Id");
+                RaisePropertyChanged("Id");
             }
         }
 
@@ -92,7 +93,7 @@ namespace BCLabManager.ViewModel
 
                 _program.Name = value;
 
-                base.OnPropertyChanged("Name");
+                RaisePropertyChanged("Name");
             }
         }
 
@@ -106,7 +107,7 @@ namespace BCLabManager.ViewModel
 
                 _program.BatteryType = value;
 
-                base.OnPropertyChanged("BatteryType");
+                RaisePropertyChanged("BatteryType");
             }
         }
 
@@ -120,7 +121,7 @@ namespace BCLabManager.ViewModel
 
                 _program.Requester = value;
 
-                base.OnPropertyChanged("Requester");
+                RaisePropertyChanged("Requester");
             }
         }
 
@@ -134,7 +135,7 @@ namespace BCLabManager.ViewModel
 
                 _program.Description = value;
 
-                base.OnPropertyChanged("Description");
+                RaisePropertyChanged("Description");
             }
         }
 
@@ -148,7 +149,7 @@ namespace BCLabManager.ViewModel
 
                 _program.RequestTime = value;
 
-                base.OnPropertyChanged("RequestTime");
+                RaisePropertyChanged("RequestTime");
             }
         }
         public DateTime StartTime
@@ -161,7 +162,7 @@ namespace BCLabManager.ViewModel
 
                 _program.StartTime = value;
 
-                OnPropertyChanged("StartTime");
+                RaisePropertyChanged("StartTime");
             }
         }
         public DateTime CompleteTime
@@ -177,7 +178,7 @@ namespace BCLabManager.ViewModel
 
                 _program.CompleteTime = value;
 
-                OnPropertyChanged("CompleteTime");
+                RaisePropertyChanged("CompleteTime");
             }
         }
         public TimeSpan Duration
@@ -227,7 +228,7 @@ namespace BCLabManager.ViewModel
         {
             get { return _estimatedTime; }
             set { _estimatedTime = value;
-                OnPropertyChanged("EstimatedTime");
+                RaisePropertyChanged("EstimatedTime");
             }
         }
 
@@ -242,7 +243,7 @@ namespace BCLabManager.ViewModel
         }
 
 
-        public ObservableCollection<SubProgramViewModel> SubPrograms { get; set; }        //这个是当前program所拥有的subprograms
+        public ObservableCollection<RecipeViewModel> Recipes { get; set; }        //这个是当前program所拥有的Recipes
         #endregion // Customer Properties
         #region Presentation logic
         public string WaitingPercentage

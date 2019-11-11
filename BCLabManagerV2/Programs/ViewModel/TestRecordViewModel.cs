@@ -8,13 +8,14 @@ using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class TestRecordViewModel : BindBase//, IDataErrorInfo
+    public class TestRecordViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
         private TestRecordClass _record;
@@ -40,18 +41,18 @@ namespace BCLabManager.ViewModel
 
         private void _record_StatusChanged(object sender, StatusChangedEventArgs e)
         {
-            OnPropertyChanged("WaitingPercentage");
-            OnPropertyChanged("ExecutingPercentage");
-            OnPropertyChanged("CompletedPercentage");
-            OnPropertyChanged("InvalidPercentage");
-            OnPropertyChanged("AbandonedPercentage");
+            RaisePropertyChanged("WaitingPercentage");
+            RaisePropertyChanged("ExecutingPercentage");
+            RaisePropertyChanged("CompletedPercentage");
+            RaisePropertyChanged("InvalidPercentage");
+            RaisePropertyChanged("AbandonedPercentage");
         }
 
         private void _record_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            OnPropertyChanged(e.PropertyName);
+            RaisePropertyChanged(e.PropertyName);
             if (e.PropertyName == "CompleteTime")
-                OnPropertyChanged("Duration");
+                RaisePropertyChanged("Duration");
         }
 
         #endregion // Constructor
@@ -68,7 +69,7 @@ namespace BCLabManager.ViewModel
 
                 _record.Id = value;
 
-                base.OnPropertyChanged("Id");
+                RaisePropertyChanged("Id");
             }
         }
         public string BatteryTypeStr
@@ -81,7 +82,7 @@ namespace BCLabManager.ViewModel
 
                 _record.BatteryTypeStr = value;
 
-                base.OnPropertyChanged("BatteryTypeStr");
+                RaisePropertyChanged("BatteryTypeStr");
             }
         }
         public string BatteryStr
@@ -94,7 +95,7 @@ namespace BCLabManager.ViewModel
 
                 _record.BatteryStr = value;
 
-                base.OnPropertyChanged("BatteryStr");
+                RaisePropertyChanged("BatteryStr");
             }
         }
         public string TesterStr
@@ -107,7 +108,7 @@ namespace BCLabManager.ViewModel
 
                 _record.TesterStr = value;
 
-                base.OnPropertyChanged("TesterStr");
+                RaisePropertyChanged("TesterStr");
             }
         }
         public string ChannelStr
@@ -120,7 +121,7 @@ namespace BCLabManager.ViewModel
 
                 _record.ChannelStr = value;
 
-                base.OnPropertyChanged("ChannelStr");
+                RaisePropertyChanged("ChannelStr");
             }
         }
         public string ChamberStr
@@ -133,7 +134,7 @@ namespace BCLabManager.ViewModel
 
                 _record.ChamberStr = value;
 
-                base.OnPropertyChanged("ChamberStr");
+                RaisePropertyChanged("ChamberStr");
             }
         }
         public TestStatus Status
@@ -149,7 +150,7 @@ namespace BCLabManager.ViewModel
 
                 _record.Status = value;
 
-                base.OnPropertyChanged("Status");
+                RaisePropertyChanged("Status");
             }
         }
 
@@ -166,7 +167,7 @@ namespace BCLabManager.ViewModel
 
                 _record.StartTime = value;
 
-                base.OnPropertyChanged("StartTime");
+                RaisePropertyChanged("StartTime");
             }
         }
 
@@ -183,7 +184,7 @@ namespace BCLabManager.ViewModel
 
                 _record.CompleteTime = value;
 
-                base.OnPropertyChanged("CompleteTime");
+                RaisePropertyChanged("CompleteTime");
             }
         }
 
@@ -210,24 +211,24 @@ namespace BCLabManager.ViewModel
 
                 _record.ProgramStr = value;
 
-                base.OnPropertyChanged("ProgramStr");
+                RaisePropertyChanged("ProgramStr");
             }
         }
 
-        public string SubProgramStr
+        public string RecipeStr
         {
             get
             {
-                return _record.SubProgramStr;
+                return _record.RecipeStr;
             }
             set
             {
-                if (value == _record.SubProgramStr)
+                if (value == _record.RecipeStr)
                     return;
 
-                _record.SubProgramStr = value;
+                _record.RecipeStr = value;
 
-                base.OnPropertyChanged("ProgramStr");
+                RaisePropertyChanged("ProgramStr");
             }
         }
 
@@ -244,7 +245,7 @@ namespace BCLabManager.ViewModel
 
                 _record.Comment = value;
 
-                base.OnPropertyChanged("Comment");
+                RaisePropertyChanged("Comment");
             }
         }
         public String Steps
@@ -260,7 +261,7 @@ namespace BCLabManager.ViewModel
 
                 _record.Steps = value;
 
-                base.OnPropertyChanged("Steps");
+                RaisePropertyChanged("Steps");
             }
         }
 
@@ -277,7 +278,7 @@ namespace BCLabManager.ViewModel
 
                 _record.NewCycle = value;
 
-                base.OnPropertyChanged("NewCycle");
+                RaisePropertyChanged("NewCycle");
             }
         }
         #endregion // Presentation Properties
@@ -339,32 +340,32 @@ namespace BCLabManager.ViewModel
         public void ExecuteOnAssets(BatteryClass battery, ChamberClass chamber, ChannelClass channel, string proname, string subproname)
         {
             _record.AssetsExecute(battery, chamber, channel, this.Steps, this.StartTime, proname, subproname);
-            OnPropertyChanged("Status");
+            RaisePropertyChanged("Status");
         }
         public void CommitOnAssets()
         {
             _record.AssetsCommit(this.CompleteTime, null, this.NewCycle, this.Comment);
-            OnPropertyChanged("Status");
+            RaisePropertyChanged("Status");
         }
         public void Invalidate()
         {
             _record.Invalidate(this.Comment);
-            //OnPropertyChanged("Status");
+            //RaisePropertyChanged("Status");
         }
         public void Abandon()
         {
             _record.Abandon();
-            OnPropertyChanged("Status");
+            RaisePropertyChanged("Status");
         }
 
-        internal void ExecuteUpdateTime(ProgramClass _program, RecipeClass _subprogram)
+        internal void ExecuteUpdateTime(ProgramClass _program, RecipeClass _Recipe)
         {
-            _record.ExeuteUpdateTime(_program, _subprogram);
+            _record.ExeuteUpdateTime(_program, _Recipe);
         }
 
-        internal void CommitUpdateTime(ProgramClass _program, RecipeClass _subprogram)
+        internal void CommitUpdateTime(ProgramClass _program, RecipeClass _Recipe)
         {
-            _record.CommitUpdateTime(_program, _subprogram);
+            _record.CommitUpdateTime(_program, _Recipe);
         }
         #endregion
     }

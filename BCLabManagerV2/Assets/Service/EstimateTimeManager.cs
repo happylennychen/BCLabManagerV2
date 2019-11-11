@@ -18,15 +18,15 @@ namespace BCLabManager.Model
     }
     public static class EstimateTimeManager
     {
-        public static TimeSpan GetAverageTime(BatteryTypeClass batteryType, RecipeTemplate subProgramTemplate)
+        public static TimeSpan GetAverageTime(BatteryTypeClass batteryType, RecipeTemplate RecipeTemplate)
         {
             throw new NotImplementedException();
         }
-        public static void UpdateAverageTime(BatteryTypeClass batteryType, RecipeTemplate subProgramTemplate, TimeSpan newTime)
+        public static void UpdateAverageTime(BatteryTypeClass batteryType, RecipeTemplate RecipeTemplate, TimeSpan newTime)
         {
             using (var dbContext = new AppDbContext())
             {
-                var etr = dbContext.EstimateTimeRecords.SingleOrDefault(o => o.BatteryType.Id == batteryType.Id && o.SubTemplate.Id == subProgramTemplate.Id);
+                var etr = dbContext.EstimateTimeRecords.SingleOrDefault(o => o.BatteryType.Id == batteryType.Id && o.SubTemplate.Id == RecipeTemplate.Id);
                 //if(etr == null)
             }
         }

@@ -10,15 +10,16 @@ using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Windows;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllProgramsViewModel : BindBase
+    public class AllProgramsViewModel : BindableBase
     {
         #region Fields
-        List<RecipeTemplate> _subProgramTemplates;
+        List<RecipeTemplate> _RecipeTemplates;
         ProgramViewModel _selectedProgram;
-        SubProgramViewModel _selectedSubProgram;
+        RecipeViewModel _selectedRecipe;
         TestRecordViewModel _selectedFirstTestRecord;
         TestRecordViewModel _selectedSecondTestRecord;
         //TestViewModel _selectedTest1;     //Test1区域选中项
@@ -50,7 +51,7 @@ namespace BCLabManager.ViewModel
         public AllProgramsViewModel
             (
             ObservableCollection<ProgramClass> programs,
-            List<RecipeTemplate> subProgramTemplates,
+            List<RecipeTemplate> RecipeTemplates,
             ObservableCollection<BatteryTypeClass> batteryTypes,
             ObservableCollection<BatteryClass> batteries,
             ObservableCollection<TesterClass> testers,
@@ -58,7 +59,7 @@ namespace BCLabManager.ViewModel
             ObservableCollection<ChamberClass> chambers
             )
         {
-            _subProgramTemplates = subProgramTemplates;
+            _RecipeTemplates = RecipeTemplates;
             _programs = programs;
             this.CreateAllPrograms(programs);
 
@@ -87,7 +88,7 @@ namespace BCLabManager.ViewModel
         /// </summary>
         public ObservableCollection<ProgramViewModel> AllPrograms { get; private set; }
 
-        public ProgramViewModel SelectedProgram    //绑定选中项，从而改变subprograms
+        public ProgramViewModel SelectedProgram    //绑定选中项，从而改变Recipes
         {
             get
             {
@@ -98,7 +99,7 @@ namespace BCLabManager.ViewModel
                 if (_selectedProgram != value)
                 {
                     _selectedProgram = value;
-                    OnPropertyChanged("SubPrograms"); //通知SubPrograms改变
+                    RaisePropertyChanged("Recipes"); //通知Recipes改变
                 }
             }
         }
@@ -106,31 +107,31 @@ namespace BCLabManager.ViewModel
         /// <summary>
         /// Returns a collection of all the ProgramModelViewModel objects.
         /// </summary>
-        public ObservableCollection<SubProgramViewModel> SubPrograms
+        public ObservableCollection<RecipeViewModel> Recipes
         {
             get
             {
                 if (_selectedProgram != null)
-                    return _selectedProgram.SubPrograms;
+                    return _selectedProgram.Recipes;
                 else
                     return null;
             }
         }
 
-        public SubProgramViewModel SelectedSubProgram    //绑定选中项，从而改变Test
+        public RecipeViewModel SelectedRecipe    //绑定选中项，从而改变Test
         {
             get
             {
-                return _selectedSubProgram;
+                return _selectedRecipe;
             }
             set
             {
-                if (_selectedSubProgram != value)
+                if (_selectedRecipe != value)
                 {
-                    _selectedSubProgram = value;
-                    //OnPropertyChanged("SelectedType");
-                    OnPropertyChanged("TestRecords"); //通知Test1改变
-                    OnPropertyChanged("SecondTestRecords"); //通知Test2改变
+                    _selectedRecipe = value;
+                    //RaisePropertyChanged("SelectedType");
+                    RaisePropertyChanged("TestRecords"); //通知Test1改变
+                    RaisePropertyChanged("SecondTestRecords"); //通知Test2改变
                 }
             }
         }
@@ -139,8 +140,8 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                if (_selectedSubProgram != null)
-                    return _selectedSubProgram.Test1Records;
+                if (_selectedRecipe != null)
+                    return _selectedRecipe.Test1Records;
                 else
                     return null;
             }
@@ -150,8 +151,8 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                if (_selectedSubProgram != null)
-                    return _selectedSubProgram.Test2Records;
+                if (_selectedRecipe != null)
+                    return _selectedRecipe.Test2Records;
                 else
                     return null;
             }
@@ -366,8 +367,8 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             ProgramClass m = new ProgramClass();      //实例化一个新的model
-            ProgramEditViewModel evm = new ProgramEditViewModel(m,_batteryTypes, _subProgramTemplates);      //实例化一个新的view model
-            evm.DisplayName = "Program-Create";
+            ProgramEditViewModel evm = new ProgramEditViewModel(m,_batteryTypes, _RecipeTemplates);      //实例化一个新的view model
+            //evm.DisplayName = "Program-Create";
             evm.commandType = CommandType.Create;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
             ProgramViewInstance.DataContext = evm;
@@ -379,11 +380,11 @@ namespace BCLabManager.ViewModel
                 {
                     foreach (var sub in m.Recipes)
                     {
-                        sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
-                        sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
-                        sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
-                        sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
-                        //newP.SubPrograms.Add(dbContext.SubPrograms.SingleOrDefault(o => o.Id == sub.Id));
+                        //sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
+                        //sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
+                        //sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
+                        //sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
+                        //newP.Recipes.Add(dbContext.Recipes.SingleOrDefault(o => o.Id == sub.Id));
                     }
                     m.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == m.BatteryType.Id);
                     dbContext.Programs.Add(m);
@@ -404,15 +405,15 @@ namespace BCLabManager.ViewModel
             model.Requester = oldpro.Requester;
             model.RequestTime = oldpro.RequestTime;
             model.Description = oldpro.Description;
-            model.Recipes = new ObservableCollection<RecipeClass>(oldsubs);          //这里并不希望在edit window里面修改原本的subprograms，而是想编辑一个新的subprogram,只是这个新的，是旧集合的浅复制
+            model.Recipes = new ObservableCollection<RecipeClass>(oldsubs);          //这里并不希望在edit window里面修改原本的Recipes，而是想编辑一个新的Recipe,只是这个新的，是旧集合的浅复制
 
-            ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _batteryTypes, _subProgramTemplates);      //实例化一个新的view model
-            viewmodel.DisplayName = "Program-Edit";
+            ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _batteryTypes, _RecipeTemplates);      //实例化一个新的view model
+            //viewmodel.DisplayName = "Program-Edit";
             viewmodel.commandType = CommandType.Edit;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
             ProgramViewInstance.DataContext = viewmodel;
             ProgramViewInstance.ShowDialog();
-            if (viewmodel.IsOK == true)     //Add Remove操作，就是将model.SubPrograms里面的集合内容改变了
+            if (viewmodel.IsOK == true)     //Add Remove操作，就是将model.Recipes里面的集合内容改变了
             {
                 List<RecipeClass> TobeRemoved = new List<RecipeClass>();
                 List<RecipeClass> TobeAdded = new List<RecipeClass>();
@@ -461,7 +462,7 @@ namespace BCLabManager.ViewModel
                     //    sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
                     //    sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
                     //    sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
-                    //    //newP.SubPrograms.Add(dbContext.SubPrograms.SingleOrDefault(o => o.Id == sub.Id));
+                    //    //newP.Recipes.Add(dbContext.Recipes.SingleOrDefault(o => o.Id == sub.Id));
                     //}
                     foreach (var sub in TobeRemoved)
                     {
@@ -470,11 +471,11 @@ namespace BCLabManager.ViewModel
 
                     foreach (var sub in TobeAdded)
                     {
-                        sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
-                        sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
-                        sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
-                        sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
-                        //newP.SubPrograms.Add(dbContext.SubPrograms.SingleOrDefault(o => o.Id == sub.Id));
+                        //sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
+                        //sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
+                        //sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
+                        //sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
+                        //newP.Recipes.Add(dbContext.Recipes.SingleOrDefault(o => o.Id == sub.Id));
                     }
                     foreach (var sub in TobeAdded)
                     {
@@ -495,18 +496,18 @@ namespace BCLabManager.ViewModel
                 foreach (var sub in TobeRemoved)
                 {
                     oldsubs.Remove(oldsubs.SingleOrDefault(o => o.Id == sub.Id));
-                    SelectedProgram.SubPrograms.Remove(SelectedProgram.SubPrograms.SingleOrDefault(o => o.Id == sub.Id));
+                    SelectedProgram.Recipes.Remove(SelectedProgram.Recipes.SingleOrDefault(o => o.Id == sub.Id));
                 }
                 foreach (var sub in TobeAdded)
                 {
-                    SelectedProgram.SubPrograms.Add(new SubProgramViewModel(sub));
+                    SelectedProgram.Recipes.Add(new RecipeViewModel(sub));
                 }
             }
 
-                //model.SubPrograms = _selectedProgram._program.SubPrograms;
+                //model.Recipes = _selectedProgram._program.Recipes;
                 /*
                 ProgramClass model = _selectedProgram._program.Clone();
-                ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _subProgramTemplates);      //实例化一个新的view model
+                ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _RecipeTemplates);      //实例化一个新的view model
                 viewmodel.DisplayName = "Program-Edit";
                 viewmodel.commandType = CommandType.Edit;
                 var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -518,17 +519,17 @@ namespace BCLabManager.ViewModel
                     {
                         var program = dbContext.Programs.SingleOrDefault(i => i.Id == SelectedProgram.Id);  //没有完全取出
                         dbContext.Entry(program)
-                            .Collection(p => p.SubPrograms)
+                            .Collection(p => p.Recipes)
                             .Load();
                         //program.Update(model);
                         bool isTgtNotContainSrc = false;    //Add to target
                         bool isSrcNotContainTgt = false;    //Remove from target
-                        List<SubProgramClass> TobeRemoved = new List<SubProgramClass>();
-                        List<SubProgramClass> TobeAdded = new List<SubProgramClass>();
-                        foreach (var sub_target in program.SubPrograms)     //看看在不在source中，不在则删掉
+                        List<RecipeClass> TobeRemoved = new List<RecipeClass>();
+                        List<RecipeClass> TobeAdded = new List<RecipeClass>();
+                        foreach (var sub_target in program.Recipes)     //看看在不在source中，不在则删掉
                         {
                             isSrcNotContainTgt = true;
-                            foreach (var sub_source in model.SubPrograms)
+                            foreach (var sub_source in model.Recipes)
                             {
                                 if (sub_target.Id == sub_source.Id)
                                 {
@@ -539,10 +540,10 @@ namespace BCLabManager.ViewModel
                             if (isSrcNotContainTgt == true)
                                 TobeRemoved.Add(sub_target);
                         }
-                        foreach (var sub_source in model.SubPrograms)
+                        foreach (var sub_source in model.Recipes)
                         {
                             isTgtNotContainSrc = true;
-                            foreach (var sub_target in program.SubPrograms)
+                            foreach (var sub_target in program.Recipes)
                             {
                                 if (sub_target.Id == sub_source.Id)
                                 {
@@ -555,28 +556,28 @@ namespace BCLabManager.ViewModel
                         }
                         foreach (var sub in TobeRemoved)
                         {
-                            program.SubPrograms.Remove(sub);
-                            //var subs = dbContext.SubPrograms;       //手动递归删除
+                            program.Recipes.Remove(sub);
+                            //var subs = dbContext.Recipes;       //手动递归删除
                             //subs.Remove(sub);
                         }
                         foreach (var sub in TobeAdded)
                         {
-                            program.SubPrograms.Add(sub);
+                            program.Recipes.Add(sub);
                         }
                         dbContext.SaveChanges();
                         SelectedProgram._program = program;
 
-                        //SelectedProgram.UpdateSubPrograms();        //修改viewmodel中的子项
+                        //SelectedProgram.UpdateRecipes();        //修改viewmodel中的子项
 
-                        List<SubProgramViewModel> all =
-                            (from sub in program.SubPrograms
-                             select new SubProgramViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+                        List<RecipeViewModel> all =
+                            (from sub in program.Recipes
+                             select new RecipeViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-                        //foreach (SubProgramModelViewModel batmod in all)
-                        //batmod.PropertyChanged += this.OnSubProgramModelViewModelPropertyChanged;
+                        //foreach (RecipeModelViewModel batmod in all)
+                        //batmod.PropertyChanged += this.OnRecipeModelViewModelPropertyChanged;
 
-                        SelectedProgram.SubPrograms = new ObservableCollection<SubProgramViewModel>(all);     //再转换成Observable
-                        OnPropertyChanged("SubPrograms");
+                        SelectedProgram.Recipes = new ObservableCollection<RecipeViewModel>(all);     //再转换成Observable
+                        RaisePropertyChanged("Recipes");
                     }
                 }
                     */
@@ -587,33 +588,33 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            ProgramClass m = _selectedProgram._program.Clone();
-            ProgramEditViewModel evm = new ProgramEditViewModel(m, _batteryTypes, _subProgramTemplates);      //实例化一个新的view model
-            evm.DisplayName = "Program-Save As";
-            evm.commandType = CommandType.SaveAs;
-            var ProgramViewInstance = new ProgramView();      //实例化一个新的view
-            ProgramViewInstance.DataContext = evm;
-            ProgramViewInstance.ShowDialog();
-            if (evm.IsOK == true)
-            {
-                //_programRepository.AddItem(model);
-                using (var dbContext = new AppDbContext())
-                {
-                    foreach (var sub in m.Recipes)
-                    {
-                        sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
-                        sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
-                        sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
-                        sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
-                        //newP.SubPrograms.Add(dbContext.SubPrograms.SingleOrDefault(o => o.Id == sub.Id));
-                    }
-                    m.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == m.BatteryType.Id);
-                    dbContext.Programs.Add(m);
-                    dbContext.SaveChanges();
-                }
-                _programs.Add(m);
-                this.AllPrograms.Add(new ProgramViewModel(m));
-            }
+            //ProgramClass m = _selectedProgram._program.Clone();
+            //ProgramEditViewModel evm = new ProgramEditViewModel(m, _batteryTypes, _RecipeTemplates);      //实例化一个新的view model
+            ////evm.DisplayName = "Program-Save As";
+            //evm.commandType = CommandType.SaveAs;
+            //var ProgramViewInstance = new ProgramView();      //实例化一个新的view
+            //ProgramViewInstance.DataContext = evm;
+            //ProgramViewInstance.ShowDialog();
+            //if (evm.IsOK == true)
+            //{
+            //    //_programRepository.AddItem(model);
+            //    using (var dbContext = new AppDbContext())
+            //    {
+            //        foreach (var sub in m.Recipes)
+            //        {
+            //            sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
+            //            sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
+            //            sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
+            //            sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
+            //            newP.Recipes.Add(dbContext.Recipes.SingleOrDefault(o => o.Id == sub.Id));
+            //        }
+            //        m.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == m.BatteryType.Id);
+            //        dbContext.Programs.Add(m);
+            //        dbContext.SaveChanges();
+            //    }
+            //    _programs.Add(m);
+            //    this.AllPrograms.Add(new ProgramViewModel(m));
+            //}
         }
         private bool CanSaveAs
         {
@@ -621,13 +622,13 @@ namespace BCLabManager.ViewModel
         }
         private void Abandon()
         {
-            if (MessageBox.Show("Are you sure?", "Abandon Sub Program", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MessageBox.Show("Are you sure?", "Abandon Recipe", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                //_selectedSubProgram._subprogram.Abandon();    //不需要。因为下面一行代码会做一样的事情。如果这里做了，反而会导致UI无法更新
-                _selectedSubProgram.Abandon();
+                //_selectedRecipe._Recipe.Abandon();    //不需要。因为下面一行代码会做一样的事情。如果这里做了，反而会导致UI无法更新
+                _selectedRecipe.Abandon();
                 using (var dbContext = new AppDbContext())
                 {
-                    var model = dbContext.SubPrograms.SingleOrDefault(o => o.Id == _selectedSubProgram.Id);
+                    var model = dbContext.Recipes.SingleOrDefault(o => o.Id == _selectedRecipe.Id);
                     dbContext.Entry(model)
                         .Collection(o => o.TestRecords)
                         .Load();
@@ -638,7 +639,7 @@ namespace BCLabManager.ViewModel
         }
         private bool CanAbandon
         {
-            get { return _selectedSubProgram != null; }
+            get { return _selectedRecipe != null; }
         }
         private void Execute()
         {
@@ -711,7 +712,7 @@ namespace BCLabManager.ViewModel
             //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
         {
             /*ProgramClass model = _selectedProgram._program.Clone();
-            ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _subprogramRepository);      //实例化一个新的view model
+            ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _RecipeRepository);      //实例化一个新的view model
             viewmodel.DisplayName = "Program-Save As";
             viewmodel.commandType = CommandType.SaveAs;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -732,7 +733,7 @@ namespace BCLabManager.ViewModel
                 _channels,
                 _chambers
                 );
-            evm.DisplayName = "Test-Execute";
+            //evm.DisplayName = "Test-Execute";
             var TestRecordViewInstance = new ExecuteView();
             TestRecordViewInstance.DataContext = evm;
             TestRecordViewInstance.ShowDialog();
@@ -763,8 +764,8 @@ namespace BCLabManager.ViewModel
                     tr.AssignedChannel = dbContext.Channels.SingleOrDefault(o => o.Id == evm.Channel.Id);
                     dbContext.SaveChanges();
                 }
-                testRecord.ExecuteOnAssets(evm.Battery, evm.Chamber, evm.Channel,SelectedProgram.Name, SelectedSubProgram.Name);      //将evm的Assets传给testRecord
-                testRecord.ExecuteUpdateTime(_selectedProgram._program, _selectedSubProgram._subprogram);
+                testRecord.ExecuteOnAssets(evm.Battery, evm.Chamber, evm.Channel,SelectedProgram.Name, SelectedRecipe.Name);      //将evm的Assets传给testRecord
+                testRecord.ExecuteUpdateTime(_selectedProgram._program, _selectedRecipe._Recipe);
             }
         }
         private void Commit(TestRecordViewModel testRecord)
@@ -788,7 +789,7 @@ namespace BCLabManager.ViewModel
                 //testRecord.Record      //??????????????????????????
                 m
                 );
-            evm.DisplayName = "Test-Commit";
+            //evm.DisplayName = "Test-Commit";
             var TestRecordCommitViewInstance = new CommitView();
             TestRecordCommitViewInstance.DataContext = evm;
             TestRecordCommitViewInstance.ShowDialog();
@@ -813,7 +814,7 @@ namespace BCLabManager.ViewModel
                     tr.AssignedChannel = null;
                     dbContext.SaveChanges();
                 }
-                testRecord.CommitUpdateTime(_selectedProgram._program, _selectedSubProgram._subprogram);
+                testRecord.CommitUpdateTime(_selectedProgram._program, _selectedRecipe._Recipe);
             }
         }
 
@@ -833,7 +834,7 @@ namespace BCLabManager.ViewModel
         private void Invalidate(TestRecordViewModel testRecord)
         {
             TestRecordInvalidateViewModel evm = new TestRecordInvalidateViewModel();
-            evm.DisplayName = "Test-Invalidate";
+            //evm.DisplayName = "Test-Invalidate";
             var TestRecordInvalidateViewInstance = new InvalidateView();
             TestRecordInvalidateViewInstance.DataContext = evm;
             TestRecordInvalidateViewInstance.ShowDialog();
@@ -858,7 +859,7 @@ namespace BCLabManager.ViewModel
                 (
                 testRecordVM.Record      //??????????????????????????
                 );
-            evm.DisplayName = "Test-View Raw Data";
+            //evm.DisplayName = "Test-View Raw Data";
             var TestRecordRawDataViewInstance = new RawDataView();
             TestRecordRawDataViewInstance.DataContext = evm;
             TestRecordRawDataViewInstance.ShowDialog();

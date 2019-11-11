@@ -8,10 +8,11 @@ using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllChannelsViewModel : BindBase
+    public class AllChannelsViewModel : BindableBase
     {
         #region Fields
         ObservableCollection<ChannelClass> _channels;
@@ -63,8 +64,8 @@ namespace BCLabManager.ViewModel
                 if (_selectedItem != value)
                 {
                     _selectedItem = value;
-                    //OnPropertyChanged("SelectedType");
-                    OnPropertyChanged("Records"); //通知Records改变
+                    //RaisePropertyChanged("SelectedType");
+                    RaisePropertyChanged("Records"); //通知Records改变
                 }
             }
         }
@@ -157,7 +158,7 @@ namespace BCLabManager.ViewModel
         {
             ChannelClass m = new ChannelClass();      //实例化一个新的model
             ChannelEditViewModel evm = new ChannelEditViewModel(m, _testers);      //实例化一个新的view model
-            evm.DisplayName = "Channel-Create";
+            //evm.DisplayName = "Channel-Create";
             evm.commandType = CommandType.Create;
             var ChannelViewInstance = new ChannelView();      //实例化一个新的view
             ChannelViewInstance.DataContext = evm;
@@ -187,7 +188,7 @@ namespace BCLabManager.ViewModel
             evm.Name = _selectedItem.Name;
             evm.Tester = evm.AllTesters.SingleOrDefault(i => i.Id == _selectedItem.Tester.Id);   //所以改用Id来找到List里的item
             evm.AssetUseCount = _selectedItem.AssetUseCount;
-            evm.DisplayName = "Channel-Edit";
+            //evm.DisplayName = "Channel-Edit";
             evm.commandType = CommandType.Edit;
             var ChannelViewInstance = new ChannelView();      //实例化一个新的view
             ChannelViewInstance.DataContext = evm;
@@ -218,7 +219,7 @@ namespace BCLabManager.ViewModel
             //evm.Tester = _selectedItem.Tester;
             evm.Tester = evm.AllTesters.SingleOrDefault(i => i.Id == _selectedItem.Tester.Id);   //所以改用Id来找到List里的item
             evm.AssetUseCount = _selectedItem.AssetUseCount;
-            evm.DisplayName = "Channel-Save As";
+            //evm.DisplayName = "Channel-Save As";
             evm.commandType = CommandType.SaveAs;
             var ChannelViewInstance = new ChannelView();      //实例化一个新的view
             ChannelViewInstance.DataContext = evm;

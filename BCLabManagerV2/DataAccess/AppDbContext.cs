@@ -16,12 +16,8 @@ namespace BCLabManager.DataAccess
         public DbSet<ChannelClass> Channels { get; set; }
         public DbSet<ChamberClass> Chambers { get; set; }
         public DbSet<TestRecordClass> TestRecords { get; set; }
-        public DbSet<ChargeTemperatureClass> ChargeTemperatures { get; set; }
-        public DbSet<ChargeCurrentClass> ChargeCurrents { get; set; }
-        public DbSet<DischargeTemperatureClass> DischargeTemperatures { get; set; }
-        public DbSet<DischargeCurrentClass> DischargeCurrents { get; set; }
-        public DbSet<RecipeTemplate> SubProgramTemplates { get; set; }
-        public DbSet<RecipeClass> SubPrograms { get; set; }
+        public DbSet<RecipeTemplate> RecipeTemplates { get; set; }
+        public DbSet<RecipeClass> Recipes { get; set; }
         public DbSet<ProgramClass> Programs { get; set; }
         public DbSet<EstimateTimeRecord> EstimateTimeRecords { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

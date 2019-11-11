@@ -35,7 +35,7 @@ namespace BCLabManager.Model
             set { SetProperty(ref _typicalCapacity, value); }
         }
         //private string _manufactor;
-        //public String Manufactor { get { return _manufactor; } set { _manufactor = value;OnPropertyChanged(); } }
+        //public String Manufactor { get { return _manufactor; } set { _manufactor = value;RaisePropertyChanged(); } }
         //public String Name { get; set; }
         //public String Material { get; set; }
         public Int32 LimitedChargeVoltage { get; set; }

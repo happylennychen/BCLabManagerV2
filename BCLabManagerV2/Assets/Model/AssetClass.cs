@@ -27,7 +27,7 @@ namespace BCLabManager.Model
         //        if (value != assetUseCount)
         //        {
         //            assetUseCount = value;
-        //            OnPropertyChanged("AssetUseCount");
+        //            RaisePropertyChanged("AssetUseCount");
         //        }
         //        else
         //        {

@@ -95,8 +95,8 @@
             DisplayMemberBinding="{Binding Path=ProgramName}" 
             />
                         <GridViewColumn 
-            Header="SubProgram" 
-            DisplayMemberBinding="{Binding Path=SubProgramName}" 
+            Header="Recipe" 
+            DisplayMemberBinding="{Binding Path=RecipeName}" 
             />
                         <GridViewColumn 
             Header="Time" 

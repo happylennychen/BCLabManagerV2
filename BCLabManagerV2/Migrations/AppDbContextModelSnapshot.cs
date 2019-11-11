@@ -213,8 +213,6 @@ namespace BCLabManager.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<int?>("GroupId");
-
                     b.Property<string>("Name");
 
                     b.Property<DateTime>("RequestTime");
@@ -227,19 +225,7 @@ namespace BCLabManager.Migrations
 
                     b.HasIndex("BatteryTypeId");
 
-                    b.HasIndex("GroupId");
-
                     b.ToTable("Programs");
-                });
-
-            modelBuilder.Entity("BCLabManager.Model.ProgramGroupClass", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProgramGroups");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.RawDataClass", b =>
@@ -283,8 +269,6 @@ namespace BCLabManager.Migrations
 
                     b.Property<DateTime>("StartTime");
 
-                    b.Property<int>("TestCount");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ChargeCurrentId");
@@ -297,10 +281,10 @@ namespace BCLabManager.Migrations
 
                     b.HasIndex("ProgramClassId");
 
-                    b.ToTable("SubPrograms");
+                    b.ToTable("Recipes");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.SubProgramTemplate", b =>
+            modelBuilder.Entity("BCLabManager.Model.RecipeTemplate", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -313,8 +297,6 @@ namespace BCLabManager.Migrations
 
                     b.Property<int?>("DischargeTemperatureId");
 
-                    b.Property<int>("TestCount");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ChargeCurrentId");
@@ -325,7 +307,7 @@ namespace BCLabManager.Migrations
 
                     b.HasIndex("DischargeTemperatureId");
 
-                    b.ToTable("SubProgramTemplates");
+                    b.ToTable("RecipeTemplates");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>
@@ -357,15 +339,13 @@ namespace BCLabManager.Migrations
 
                     b.Property<int?>("RecipeClassId");
 
-                    b.Property<int?>("RecipeClassId1");
+                    b.Property<string>("RecipeStr");
 
                     b.Property<DateTime>("StartTime");
 
                     b.Property<int>("Status");
 
                     b.Property<string>("Steps");
-
-                    b.Property<string>("SubProgramStr");
 
                     b.Property<string>("TesterStr");
 
@@ -378,8 +358,6 @@ namespace BCLabManager.Migrations
                     b.HasIndex("AssignedChannelId");
 
                     b.HasIndex("RecipeClassId");
-
-                    b.HasIndex("RecipeClassId1");
 
                     b.ToTable("TestRecords");
                 });
@@ -433,7 +411,7 @@ namespace BCLabManager.Migrations
                         .WithMany()
                         .HasForeignKey("BatteryTypeId");
 
-                    b.HasOne("BCLabManager.Model.SubProgramTemplate", "SubTemplate")
+                    b.HasOne("BCLabManager.Model.RecipeTemplate", "SubTemplate")
                         .WithMany()
                         .HasForeignKey("SubTemplateId");
                 });
@@ -443,10 +421,6 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
                         .WithMany()
                         .HasForeignKey("BatteryTypeId");
-
-                    b.HasOne("BCLabManager.Model.ProgramGroupClass", "Group")
-                        .WithMany()
-                        .HasForeignKey("GroupId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.RawDataClass", b =>
@@ -479,7 +453,7 @@ namespace BCLabManager.Migrations
                         .HasForeignKey("ProgramClassId");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.SubProgramTemplate", b =>
+            modelBuilder.Entity("BCLabManager.Model.RecipeTemplate", b =>
                 {
                     b.HasOne("BCLabManager.Model.ChargeCurrentClass", "ChargeCurrent")
                         .WithMany()
@@ -515,10 +489,6 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.RecipeClass")
                         .WithMany("TestRecords")
                         .HasForeignKey("RecipeClassId");
-
-                    b.HasOne("BCLabManager.Model.RecipeClass")
-                        .WithMany("SecondTestRecords")
-                        .HasForeignKey("RecipeClassId1");
                 });
 #pragma warning restore 612, 618
         }

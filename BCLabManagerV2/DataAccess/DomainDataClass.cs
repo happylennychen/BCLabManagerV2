@@ -15,11 +15,11 @@ namespace BCLabManager.DataAccess
         public ObservableCollection<TesterClass> Testers { get; set; }
         public ObservableCollection<ChannelClass> Channels { get; set; }
         public ObservableCollection<ChamberClass> Chambers { get; set; }
-        public ObservableCollection<RecipeTemplate> SubProgramTemplates { get; set; }
-        public ObservableCollection<ChargeTemperatureClass> ChargeTemperatures { get; set; }
-        public ObservableCollection<ChargeCurrentClass> ChargeCurrents { get; set; }
-        public ObservableCollection<DischargeTemperatureClass> DischargeTemperatures { get; set; }
-        public ObservableCollection<DischargeCurrentClass> DischargeCurrents { get; set; }
+        public ObservableCollection<RecipeTemplate> RecipeTemplates { get; set; }
+        //public ObservableCollection<ChargeTemperatureClass> ChargeTemperatures { get; set; }
+        //public ObservableCollection<ChargeCurrentClass> ChargeCurrents { get; set; }
+        //public ObservableCollection<DischargeTemperatureClass> DischargeTemperatures { get; set; }
+        //public ObservableCollection<DischargeCurrentClass> DischargeCurrents { get; set; }
         public ObservableCollection<ProgramClass> Programs { get; set; }
         public DomainDataClass()
         {

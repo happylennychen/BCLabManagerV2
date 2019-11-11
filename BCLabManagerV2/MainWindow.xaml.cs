@@ -36,15 +36,9 @@ namespace BCLabManager
 
         public AllChambersViewModel allChambersViewModel { get; set; }  //其中需要显示Chambers和Records
 
-        public AllSubProgramTemplatesViewModel allSubProgramTemplatesViewModel { get; set; }  //其中需要显示SubPrograms
+        public AllRecipeTemplatesViewModel allRecipeTemplatesViewModel { get; set; }  //其中需要显示Recipes
 
-        public AllChargeTemperaturesViewModel allChargeTemperaturesViewModel { get; set; }
-        public AllChargeCurrentsViewModel allChargeCurrentsViewModel { get; set; }
-
-        public AllDischargeTemperaturesViewModel allDischargeTemperaturesViewModel { get; set; }
-        public AllDischargeCurrentsViewModel allDischargeCurrentsViewModel { get; set; }
-
-        public AllProgramsViewModel allProgramsViewModel { get; set; }  //其中需要显示Programs, SubPrograms, Test1, Test2, TestSteps
+        public AllProgramsViewModel allProgramsViewModel { get; set; }  //其中需要显示Programs, Recipes, Test1, Test2, TestSteps
 
         public DashBoardViewModel dashBoardViewModel { get; set; }
 
@@ -53,11 +47,11 @@ namespace BCLabManager
         public ObservableCollection<TesterClass> Testers { get; set; }
         public ObservableCollection<ChannelClass> Channels { get; set; }
         public ObservableCollection<ChamberClass> Chambers { get; set; }
-        public List<RecipeTemplate> SubProgramTemplates { get; set; }
-        public List<ChargeTemperatureClass> ChargeTemperatures { get; set; }
-        public List<ChargeCurrentClass> ChargeCurrents { get; set; }
-        public List<DischargeTemperatureClass> DischargeTemperatures { get; set; }
-        public List<DischargeCurrentClass> DischargeCurrents { get; set; }
+        public List<RecipeTemplate> RecipeTemplates { get; set; }
+        //public List<ChargeTemperatureClass> ChargeTemperatures { get; set; }
+        //public List<ChargeCurrentClass> ChargeCurrents { get; set; }
+        //public List<DischargeTemperatureClass> DischargeTemperatures { get; set; }
+        //public List<DischargeCurrentClass> DischargeCurrents { get; set; }
         public ObservableCollection<ProgramClass> Programs { get; set; }
 
         //private DomainDataClass _domainData;
@@ -176,15 +170,15 @@ namespace BCLabManager
                     .ToList()
                     );
 
-                SubProgramTemplates = new List<RecipeTemplate>(dbContext.SubProgramTemplates.ToList());
+                RecipeTemplates = new List<RecipeTemplate>(dbContext.RecipeTemplates.ToList());
 
-                ChargeTemperatures = new List<ChargeTemperatureClass>(dbContext.ChargeTemperatures.ToList());
+                //ChargeTemperatures = new List<ChargeTemperatureClass>(dbContext.ChargeTemperatures.ToList());
 
-                ChargeCurrents = new List<ChargeCurrentClass>(dbContext.ChargeCurrents.ToList());
+                //ChargeCurrents = new List<ChargeCurrentClass>(dbContext.ChargeCurrents.ToList());
 
-                DischargeTemperatures = new List<DischargeTemperatureClass>(dbContext.DischargeTemperatures.ToList());
+                //DischargeTemperatures = new List<DischargeTemperatureClass>(dbContext.DischargeTemperatures.ToList());
 
-                DischargeCurrents = new List<DischargeCurrentClass>(dbContext.DischargeCurrents.ToList());
+                //DischargeCurrents = new List<DischargeCurrentClass>(dbContext.DischargeCurrents.ToList());
 
                 Programs = new ObservableCollection<ProgramClass>(dbContext.Programs
                     .Include(pro => pro.Recipes)
@@ -223,27 +217,19 @@ namespace BCLabManager
 
             allChambersViewModel = new AllChambersViewModel(Chambers);    //ViewModel初始化
 
-            allSubProgramTemplatesViewModel = 
-                new AllSubProgramTemplatesViewModel(
-                    SubProgramTemplates, 
-                    ChargeTemperatures,
-                    ChargeCurrents,
-                    DischargeTemperatures,
-                    DischargeCurrents
+            allRecipeTemplatesViewModel = 
+                new AllRecipeTemplatesViewModel(
+                    RecipeTemplates//, 
+                    //ChargeTemperatures,
+                    //ChargeCurrents,
+                    //DischargeTemperatures,
+                    //DischargeCurrents
                     );    //ViewModel初始化
-
-            allChargeTemperaturesViewModel = new AllChargeTemperaturesViewModel(ChargeTemperatures);
-
-            allChargeCurrentsViewModel = new AllChargeCurrentsViewModel(ChargeCurrents);
-
-            allDischargeTemperaturesViewModel = new AllDischargeTemperaturesViewModel(DischargeTemperatures);
-
-            allDischargeCurrentsViewModel = new AllDischargeCurrentsViewModel(DischargeCurrents);
 
             allProgramsViewModel = new AllProgramsViewModel
                 (
                 Programs,
-                SubProgramTemplates,
+                RecipeTemplates,
                 BatteryTypes,
                 Batteries,
                 Testers,
@@ -270,15 +256,7 @@ namespace BCLabManager
 
             this.AllChambersViewInstance.DataContext = allChambersViewModel;                                                            //ViewModel跟View绑定
 
-            this.AllSubProgramTemplatesViewInstance.DataContext = allSubProgramTemplatesViewModel;                                                            //ViewModel跟View绑定
-
-            this.AllSubProgramTemplatesViewInstance.AllChargeTemperaturesViewInstance.DataContext = allChargeTemperaturesViewModel;
-
-            this.AllSubProgramTemplatesViewInstance.AllChargeCurrentsViewInstance.DataContext = allChargeCurrentsViewModel;
-
-            this.AllSubProgramTemplatesViewInstance.AllDischargeTemperaturesViewInstance.DataContext = allDischargeTemperaturesViewModel;
-
-            this.AllSubProgramTemplatesViewInstance.AllDischargeCurrentsViewInstance.DataContext = allDischargeCurrentsViewModel;
+            this.AllRecipeTemplatesViewInstance.DataContext = allRecipeTemplatesViewModel;                                                            //ViewModel跟View绑定
 
             this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定
 

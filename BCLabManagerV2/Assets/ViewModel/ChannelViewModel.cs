@@ -7,13 +7,14 @@ using System.Collections.ObjectModel;
 using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using BCLabManager.Properties;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class ChannelViewModel : BindBase//, IDataErrorInfo
+    public class ChannelViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
 
@@ -31,7 +32,7 @@ namespace BCLabManager.ViewModel
 
         private void _channel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            OnPropertyChanged(e.PropertyName);
+            RaisePropertyChanged(e.PropertyName);
         }
 
         /*void CreateAllTesters()
@@ -55,7 +56,7 @@ namespace BCLabManager.ViewModel
 
                 _channel.Id = value;
 
-                base.OnPropertyChanged("Id");
+                RaisePropertyChanged("Id");
             }
         }
 
@@ -69,7 +70,7 @@ namespace BCLabManager.ViewModel
 
                 _channel.Name = value;
 
-                base.OnPropertyChanged("Name");
+                RaisePropertyChanged("Name");
             }
         }
 
@@ -83,7 +84,7 @@ namespace BCLabManager.ViewModel
 
                 _channel.AssetUseCount = value;
 
-                base.OnPropertyChanged("AssetUseCount");
+                RaisePropertyChanged("AssetUseCount");
             }
         }
         public TesterClass Tester
@@ -96,7 +97,7 @@ namespace BCLabManager.ViewModel
 
                 _channel.Tester = value;
 
-                base.OnPropertyChanged("Tester");
+                RaisePropertyChanged("Tester");
             }
         }
 

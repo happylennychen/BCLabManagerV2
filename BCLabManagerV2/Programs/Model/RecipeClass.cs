@@ -17,10 +17,10 @@ namespace BCLabManager.Model
         public int Id { get; set; }
         public bool IsAbandoned { get; set; }
         //public String Name { get; set; }
-        public ChargeTemperatureClass ChargeTemperature { get; set; }
-        public ChargeCurrentClass ChargeCurrent { get; set; }
-        public DischargeTemperatureClass DischargeTemperature { get; set; }
-        public DischargeCurrentClass DischargeCurrent { get; set; }
+        //public ChargeTemperatureClass ChargeTemperature { get; set; }
+        //public ChargeCurrentClass ChargeCurrent { get; set; }
+        //public DischargeTemperatureClass DischargeTemperature { get; set; }
+        //public DischargeCurrentClass DischargeCurrent { get; set; }
         public int Loop { get; set; } = 1;
         public DateTime StartTime
         {
@@ -49,45 +49,45 @@ namespace BCLabManager.Model
         public RecipeClass(RecipeTemplate template)
         {
             //this.Name = template.Name;
-            this.ChargeTemperature = template.ChargeTemperature;
-            this.ChargeCurrent = template.ChargeCurrent;
-            this.DischargeTemperature = template.DischargeTemperature;
-            this.DischargeCurrent = template.DischargeCurrent;
+            //this.ChargeTemperature = template.ChargeTemperature;
+            //this.ChargeCurrent = template.ChargeCurrent;
+            //this.DischargeTemperature = template.DischargeTemperature;
+            //this.DischargeCurrent = template.DischargeCurrent;
 
             var tr = new TestRecordClass();
             tr.StatusChanged += this.TestRecord_StatusChanged;
-            tr.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
+            //tr.RecipeStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
             this.TestRecords.Add(tr);
         }
 
         public RecipeClass(RecipeTemplate template, string ProgramStr, int loop)  //Only used by populator
         {
             //this.Name = template.Name;
-            this.ChargeTemperature = template.ChargeTemperature;
-            this.ChargeCurrent = template.ChargeCurrent;
-            this.DischargeTemperature = template.DischargeTemperature;
-            this.DischargeCurrent = template.DischargeCurrent;
+            //this.ChargeTemperature = template.ChargeTemperature;
+            //this.ChargeCurrent = template.ChargeCurrent;
+            //this.DischargeTemperature = template.DischargeTemperature;
+            //this.DischargeCurrent = template.DischargeCurrent;
             this.Loop = loop;
 
             var tr = new TestRecordClass();
             tr.StatusChanged += this.TestRecord_StatusChanged;
-            tr.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
+            //tr.RecipeStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
             tr.ProgramStr = ProgramStr;
             this.TestRecords.Add(tr);
         }
 
         public RecipeClass(
-            ChargeTemperatureClass chargeTemperature,
-            ChargeCurrentClass chargeCurrent,
-            DischargeTemperatureClass dischargeTemperature,
-            DischargeCurrentClass dischargeCurrent,
+            //ChargeTemperatureClass chargeTemperature,
+            //ChargeCurrentClass chargeCurrent,
+            //DischargeTemperatureClass dischargeTemperature,
+            //DischargeCurrentClass dischargeCurrent,
             int Loop) : this()
         {
             //this.Name = Name;
-            this.ChargeTemperature = chargeTemperature;
-            this.ChargeCurrent = chargeCurrent;
-            this.DischargeTemperature = dischargeTemperature;
-            this.DischargeCurrent = dischargeCurrent;
+            //this.ChargeTemperature = chargeTemperature;
+            //this.ChargeCurrent = chargeCurrent;
+            //this.DischargeTemperature = dischargeTemperature;
+            //this.DischargeCurrent = dischargeCurrent;
             this.Loop = Loop;
         }
 
@@ -101,16 +101,16 @@ namespace BCLabManager.Model
         //    this.Name = Name;
         //    this.TestCount = TestCount;
         //}
-        public RecipeClass Clone()  //Clone Name and Test Count, and create testrecords list
-        {
-            var newsub = new RecipeClass(this.ChargeTemperature, this.ChargeCurrent, this.DischargeTemperature, this.DischargeCurrent, this.Loop);
-            newsub.TestRecords = new ObservableCollection<TestRecordClass>();
-            var tr = new TestRecordClass();
-            tr.SubProgramStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
-            tr.StatusChanged += newsub.TestRecord_StatusChanged;
-            newsub.TestRecords.Add(tr);
-            return newsub;
-        }
+        //public RecipeClass Clone()  //Clone Name and Test Count, and create testrecords list
+        //{
+            //var newsub = new RecipeClass(this.ChargeTemperature, this.ChargeCurrent, this.DischargeTemperature, this.DischargeCurrent, this.Loop);
+            //newsub.TestRecords = new ObservableCollection<TestRecordClass>();
+            //var tr = new TestRecordClass();
+            //tr.RecipeStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
+            //tr.StatusChanged += newsub.TestRecord_StatusChanged;
+            //newsub.TestRecords.Add(tr);
+            //return newsub;
+        //}
 
         private void TestRecord_StatusChanged(object sender, StatusChangedEventArgs e)
         {
@@ -118,7 +118,7 @@ namespace BCLabManager.Model
             if (e.Status == TestStatus.Invalid)
             {
                 var dbContext = new AppDbContext();
-                var sub = dbContext.SubPrograms.SingleOrDefault(i => i.Id == this.Id);
+                var sub = dbContext.Recipes.SingleOrDefault(i => i.Id == this.Id);
                 dbContext.Entry(sub)
                     .Collection(i => i.TestRecords)
                     .Load();

@@ -124,7 +124,7 @@
       MinWidth="60" 
       />
         
-        <GroupBox Header="Sub Programs">
+        <GroupBox Header="Recipes">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
@@ -133,11 +133,11 @@
                 </Grid.ColumnDefinitions>
 
                 <ListView Grid.Column="0"
-                      x:Name="LeftSubProgramlist"
+                      x:Name="LeftRecipelist"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=AllSubProgramTemplates}"
-                      SelectedItem="{Binding Path=SelectedSubProgramTemplate, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+      ItemsSource="{Binding Path=AllRecipeTemplates}"
+                      SelectedItem="{Binding Path=SelectedRecipeTemplate, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 
                     <ListView.View>
@@ -154,11 +154,11 @@
                     </ListView.View>
                 </ListView>
                 <ListView Grid.Column="2"
-                      x:Name="RightSubProgramlist"
+                      x:Name="RightRecipelist"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=SubPrograms}"
-                      SelectedItem="{Binding Path=SelectedSubProgram, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+      ItemsSource="{Binding Path=Recipes}"
+                      SelectedItem="{Binding Path=SelectedRecipe, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 
                     <ListView.View>

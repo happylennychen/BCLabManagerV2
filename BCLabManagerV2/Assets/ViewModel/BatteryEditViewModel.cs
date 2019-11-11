@@ -47,7 +47,7 @@ namespace BCLabManager.ViewModel
         //private void _battery_PropertyChanged(object sender, PropertyChangedEventArgs e)
         //{
         //    //throw new NotImplementedException();
-        //    OnPropertyChanged(e.PropertyName);
+        //    RaisePropertyChanged(e.PropertyName);
         //}
 
         void CreateAllBatteryTypes(ObservableCollection<BatteryTypeClass> batteryTypes)
@@ -71,7 +71,7 @@ namespace BCLabManager.ViewModel
 
                 _battery.Id = value;
 
-                base.OnPropertyChanged("Id");
+                RaisePropertyChanged("Id");
             }
         }
         public string Name
@@ -84,7 +84,7 @@ namespace BCLabManager.ViewModel
 
                 _battery.Name = value;
 
-                base.OnPropertyChanged("Name");
+                RaisePropertyChanged("Name");
             }
         }
 
@@ -98,7 +98,7 @@ namespace BCLabManager.ViewModel
 
                 _battery.CycleCount = value;
 
-                base.OnPropertyChanged("CycleCount");
+                RaisePropertyChanged("CycleCount");
             }
         }
 
@@ -112,7 +112,7 @@ namespace BCLabManager.ViewModel
 
                 _battery.AssetUseCount = value;
 
-                base.OnPropertyChanged("AssetUseCount");
+                RaisePropertyChanged("AssetUseCount");
             }
         }
 
@@ -147,7 +147,7 @@ namespace BCLabManager.ViewModel
         //            _battery.BatteryType = dbContext.BatteryTypes.SingleOrDefault(bt => bt.Name == _batteryType);
         //        }
 
-        //        base.OnPropertyChanged("BatteryType");
+        //        RaisePropertyChanged("BatteryType");
         //    }
         //}
 
@@ -161,7 +161,7 @@ namespace BCLabManager.ViewModel
 
                 _battery.BatteryType = value;
 
-                base.OnPropertyChanged("BatteryType");
+                RaisePropertyChanged("BatteryType");
             }
         }
 
@@ -228,7 +228,7 @@ namespace BCLabManager.ViewModel
             //if (this.IsNewBatteryType)
             //_batterytypeRepository.AddItem(_batterytype);
 
-            //base.OnPropertyChanged("DisplayName");
+            //RaisePropertyChanged("DisplayName");
             IsOK = true;
         }
 

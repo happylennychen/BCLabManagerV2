@@ -30,8 +30,8 @@
                     </TabItem>
                 </TabControl>
             </TabItem>
-            <TabItem Header="Sub Program Templates">
-                <v:AllSubProgramTemplatesView x:Name="AllSubProgramTemplatesViewInstance"></v:AllSubProgramTemplatesView>
+            <TabItem Header="Recipe Templates">
+                <v:AllRecipeTemplatesView x:Name="AllRecipeTemplatesViewInstance"></v:AllRecipeTemplatesView>
             </TabItem>
             <TabItem Header="Programs">
                 <v:AllProgramsView x:Name="AllProgramsViewInstance"></v:AllProgramsView>

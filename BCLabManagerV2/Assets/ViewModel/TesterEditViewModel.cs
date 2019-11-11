@@ -7,10 +7,11 @@ using BCLabManager.View;
 using BCLabManager.DataAccess;
 using System.Windows.Input;
 using BCLabManager.Properties;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
-    public class TesterEditViewModel : BindBase//, IDataErrorInfo
+    public class TesterEditViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
 
@@ -45,7 +46,7 @@ namespace BCLabManager.ViewModel
 
                 _tester.Id = value;
 
-                base.OnPropertyChanged("Id");
+                RaisePropertyChanged("Id");
             }
         }
         public string Manufactor
@@ -58,7 +59,7 @@ namespace BCLabManager.ViewModel
 
                 _tester.Manufactor = value;
 
-                base.OnPropertyChanged("Manufactor");
+                RaisePropertyChanged("Manufactor");
             }
         }
 
@@ -72,7 +73,7 @@ namespace BCLabManager.ViewModel
 
                 _tester.Name = value;
 
-                base.OnPropertyChanged("Name");
+                RaisePropertyChanged("Name");
             }
         }
 

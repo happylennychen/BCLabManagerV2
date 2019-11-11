@@ -102,7 +102,7 @@
       <Property Name="RawData" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="BCLabManager.Model.SubProgramClass">
+  <Class Name="BCLabManager.Model.RecipeClass">
     <Position X="9.25" Y="14.5" Width="2.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -139,7 +139,7 @@
   </Class>
   <Class Name="BCLabManager.Model.ProgramClass">
     <Position X="4" Y="14.5" Width="2.25" />
-    <AssociationLine Name="SubPrograms" Type="BCLabManager.Model.SubProgramClass" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+    <AssociationLine Name="Recipes" Type="BCLabManager.Model.RecipeClass" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="6.25" Y="14.875" />
         <Point X="7.875" Y="14.875" />
@@ -155,7 +155,7 @@
       <FileName>Model\Programs.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Property Name="SubPrograms" />
+      <Property Name="Recipes" />
     </ShowAsCollectionAssociation>
   </Class>
   <Enum Name="BCLabManager.Model.int">

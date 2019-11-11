@@ -51,7 +51,7 @@ namespace BCLabManager.Model
         public String TesterStr { get; set; }
         public String ChannelStr { get; set; }
         public String ChamberStr { get; set; }
-        public String SubProgramStr { get; set; }
+        public String RecipeStr { get; set; }
         public String ProgramStr { get; set; }
         public DateTime StartTime
         {
@@ -95,7 +95,7 @@ namespace BCLabManager.Model
             }
         }
 
-        public TestRecordClass(/*SubProgramClass SubProgramStr*/)
+        public TestRecordClass(/*RecipeClass RecipeStr*/)
         {
             this.Status = TestStatus.Waiting;
             this.BatteryTypeStr = String.Empty;
@@ -104,7 +104,7 @@ namespace BCLabManager.Model
             this.ChannelStr = String.Empty;
             this.ChamberStr = String.Empty;
             this.ProgramStr = String.Empty;
-            this.SubProgramStr = String.Empty;
+            this.RecipeStr = String.Empty;
             this.StartTime = DateTime.MinValue;
             this.CompleteTime = DateTime.MinValue;
             this.Steps = String.Empty;
@@ -114,7 +114,7 @@ namespace BCLabManager.Model
             //this.NewCycle = ??
         }
 
-        public void AssetsExecute(BatteryClass battery, ChamberClass chamber, ChannelClass channel, String steps, DateTime startTime, string programName, string subProgramName)
+        public void AssetsExecute(BatteryClass battery, ChamberClass chamber, ChannelClass channel, String steps, DateTime startTime, string programName, string RecipeName)
         {
             //分配Assets
             AssignedBattery = battery;
@@ -122,14 +122,14 @@ namespace BCLabManager.Model
             AssignedChannel = channel;
 
             battery.AssetUseCount++;
-            battery.Records.Add(new AssetUsageRecordClass(startTime, battery.AssetUseCount, programName, subProgramName));
+            battery.Records.Add(new AssetUsageRecordClass(startTime, battery.AssetUseCount, programName, RecipeName));
             if (chamber != null)
             {
                 chamber.AssetUseCount++;
-                chamber.Records.Add(new AssetUsageRecordClass(startTime, chamber.AssetUseCount, programName, subProgramName));
+                chamber.Records.Add(new AssetUsageRecordClass(startTime, chamber.AssetUseCount, programName, RecipeName));
             }
             channel.AssetUseCount++;
-            channel.Records.Add(new AssetUsageRecordClass(startTime, channel.AssetUseCount, programName, subProgramName));
+            channel.Records.Add(new AssetUsageRecordClass(startTime, channel.AssetUseCount, programName, RecipeName));
 
             using (var dbContext = new AppDbContext())
             {
@@ -139,7 +139,7 @@ namespace BCLabManager.Model
                     .Load();
 
                 dbAssignedBattery.AssetUseCount++;
-                dbAssignedBattery.Records.Add(new AssetUsageRecordClass(startTime, dbAssignedBattery.AssetUseCount, programName, subProgramName));
+                dbAssignedBattery.Records.Add(new AssetUsageRecordClass(startTime, dbAssignedBattery.AssetUseCount, programName, RecipeName));
 
                 if (chamber != null)
                 {
@@ -148,7 +148,7 @@ namespace BCLabManager.Model
                         .Collection(o => o.Records)
                         .Load();
                     dbAssignedChamber.AssetUseCount++;
-                    dbAssignedChamber.Records.Add(new AssetUsageRecordClass(startTime, dbAssignedChamber.AssetUseCount, programName, subProgramName));
+                    dbAssignedChamber.Records.Add(new AssetUsageRecordClass(startTime, dbAssignedChamber.AssetUseCount, programName, RecipeName));
                 }
                 var dbAssignedChannel = dbContext.Channels.SingleOrDefault(o => o.Id == channel.Id);
                 dbContext.Entry(dbAssignedChannel)
@@ -156,7 +156,7 @@ namespace BCLabManager.Model
                     .Load();
 
                 dbAssignedChannel.AssetUseCount++;
-                dbAssignedChannel.Records.Add(new AssetUsageRecordClass(startTime, dbAssignedChannel.AssetUseCount, programName, subProgramName));
+                dbAssignedChannel.Records.Add(new AssetUsageRecordClass(startTime, dbAssignedChannel.AssetUseCount, programName, RecipeName));
 
                 dbContext.SaveChanges();
             }
@@ -170,7 +170,7 @@ namespace BCLabManager.Model
             //this.StartTime = startTime;
             //this.Steps = steps;
             //this.ProgramStr = programName;
-            //this.SubProgramStr = subProgramName;
+            //this.RecipeStr = RecipeName;
         }
 
         public void AssetsCommit(DateTime CompleteTime, RawDataClass rawData, double newCycle, string comment = "")  //Need to check the Executor Status to make sure it is executing
@@ -232,11 +232,11 @@ namespace BCLabManager.Model
             this.Comment = comment;
         }
 
-        public void ExeuteUpdateTime(ProgramClass _program, RecipeClass _subprogram)
+        public void ExeuteUpdateTime(ProgramClass _program, RecipeClass _Recipe)
         {
 
-            if (IsSubStarted(_subprogram) == false)
-                _subprogram.StartTime = this.StartTime;
+            if (IsSubStarted(_Recipe) == false)
+                _Recipe.StartTime = this.StartTime;
             if (IsProStarted(_program) == false)
                 _program.StartTime = this.StartTime;
 
@@ -257,10 +257,10 @@ namespace BCLabManager.Model
             }
         }
 
-        public void CommitUpdateTime(ProgramClass _program, RecipeClass _subprogram)
+        public void CommitUpdateTime(ProgramClass _program, RecipeClass _Recipe)
         {
-            if (IsSubCompleted(_subprogram))
-                _subprogram.CompleteTime = this.CompleteTime;
+            if (IsSubCompleted(_Recipe))
+                _Recipe.CompleteTime = this.CompleteTime;
             if (IsProCompleted(_program))
                 _program.CompleteTime = this.CompleteTime;
 

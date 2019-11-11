@@ -8,10 +8,11 @@ using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
-    public class DashBoardViewModel : BindBase
+    public class DashBoardViewModel : BindableBase
     {
         #region Fields
 
@@ -62,7 +63,7 @@ namespace BCLabManager.ViewModel
 
             foreach (var pro in _programs)
             {
-                pro.Recipes.CollectionChanged += SubPrograms_CollectionChanged;
+                pro.Recipes.CollectionChanged += Recipes_CollectionChanged;
             }
 
             foreach (var pro in _programs)
@@ -84,35 +85,35 @@ namespace BCLabManager.ViewModel
         }
         private void UpdateProgramsUI()
         {
-            OnPropertyChanged("WaitingAmount");
-            OnPropertyChanged("ExecutingAmount");
-            OnPropertyChanged("CompletedAmount");
-            OnPropertyChanged("InvalidAmount");
-            OnPropertyChanged("AbandonedAmount");
-            OnPropertyChanged("TotalExeAmount");
-            OnPropertyChanged("WaitingPercentage");
-            OnPropertyChanged("ExecutingPercentage");
-            OnPropertyChanged("CompletedPercentage");
-            OnPropertyChanged("InvalidPercentage");
-            OnPropertyChanged("AbandonedPercentage"); 
-            OnPropertyChanged("CompletedProgramNumber");
-            OnPropertyChanged("CompletedSubProgramNumber");
-            OnPropertyChanged("CompletedTestNumber");
-            OnPropertyChanged("CollectedRawDataNumber");
-            OnPropertyChanged("ExecutingTestRecords");
-            OnPropertyChanged("WaitingTestRecords");
+            RaisePropertyChanged("WaitingAmount");
+            RaisePropertyChanged("ExecutingAmount");
+            RaisePropertyChanged("CompletedAmount");
+            RaisePropertyChanged("InvalidAmount");
+            RaisePropertyChanged("AbandonedAmount");
+            RaisePropertyChanged("TotalExeAmount");
+            RaisePropertyChanged("WaitingPercentage");
+            RaisePropertyChanged("ExecutingPercentage");
+            RaisePropertyChanged("CompletedPercentage");
+            RaisePropertyChanged("InvalidPercentage");
+            RaisePropertyChanged("AbandonedPercentage"); 
+            RaisePropertyChanged("CompletedProgramNumber");
+            RaisePropertyChanged("CompletedRecipeNumber");
+            RaisePropertyChanged("CompletedTestNumber");
+            RaisePropertyChanged("CollectedRawDataNumber");
+            RaisePropertyChanged("ExecutingTestRecords");
+            RaisePropertyChanged("WaitingTestRecords");
         }
         private void UpdateAssetsUI()
         {
-            OnPropertyChanged("BatteryAmount");
-            OnPropertyChanged("UsingBatteryAmount");
-            OnPropertyChanged("ChamberAmount");
-            OnPropertyChanged("UsingChamberAmount");
-            OnPropertyChanged("ChannelAmount");
-            OnPropertyChanged("UsingChannelAmount");
-            OnPropertyChanged("ChannelUsingPercent");
-            OnPropertyChanged("ChamberUsingPercent");
-            OnPropertyChanged("BatteryUsingPercent");
+            RaisePropertyChanged("BatteryAmount");
+            RaisePropertyChanged("UsingBatteryAmount");
+            RaisePropertyChanged("ChamberAmount");
+            RaisePropertyChanged("UsingChamberAmount");
+            RaisePropertyChanged("ChannelAmount");
+            RaisePropertyChanged("UsingChannelAmount");
+            RaisePropertyChanged("ChannelUsingPercent");
+            RaisePropertyChanged("ChamberUsingPercent");
+            RaisePropertyChanged("BatteryUsingPercent");
         }
         private void Tr_StatusChanged(object sender, StatusChangedEventArgs e)
         {
@@ -121,72 +122,72 @@ namespace BCLabManager.ViewModel
 
         private void SecondTestRecords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            //OnPropertyChanged("CompletedAmount");
-            //OnPropertyChanged("InvalidAmount");
-            //OnPropertyChanged("WaitingAmount");
-            //OnPropertyChanged("TotalExeAmount");
+            //RaisePropertyChanged("CompletedAmount");
+            //RaisePropertyChanged("InvalidAmount");
+            //RaisePropertyChanged("WaitingAmount");
+            //RaisePropertyChanged("TotalExeAmount");
             UpdateProgramsUI();
         }
 
         private void TestRecords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            //OnPropertyChanged("CompletedAmount");
-            //OnPropertyChanged("InvalidAmount");
-            //OnPropertyChanged("WaitingAmount");
-            //OnPropertyChanged("TotalExeAmount");
+            //RaisePropertyChanged("CompletedAmount");
+            //RaisePropertyChanged("InvalidAmount");
+            //RaisePropertyChanged("WaitingAmount");
+            //RaisePropertyChanged("TotalExeAmount");
             UpdateProgramsUI();
         }
 
-        private void SubPrograms_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Recipes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            //OnPropertyChanged("WaitingAmount");
-            //OnPropertyChanged("TotalExeAmount");
+            //RaisePropertyChanged("WaitingAmount");
+            //RaisePropertyChanged("TotalExeAmount");
             UpdateProgramsUI();
         }
 
         private void _programs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            //OnPropertyChanged("WaitingAmount");
-            //OnPropertyChanged("TotalExeAmount");
+            //RaisePropertyChanged("WaitingAmount");
+            //RaisePropertyChanged("TotalExeAmount");
             UpdateProgramsUI();
         }
 
         private void _channels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            //OnPropertyChanged("ChannelAmount");
+            //RaisePropertyChanged("ChannelAmount");
             UpdateAssetsUI();
         }
 
         private void Chn_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             //if (e.PropertyName == "Status")
-            //    OnPropertyChanged("UsingChannelAmount");
+            //    RaisePropertyChanged("UsingChannelAmount");
             UpdateAssetsUI();
         }
 
         private void _chambers_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            //OnPropertyChanged("ChamberAmount");
+            //RaisePropertyChanged("ChamberAmount");
             UpdateAssetsUI();
         }
 
         private void Cmb_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             //if (e.PropertyName == "Status")
-            //    OnPropertyChanged("UsingChamberAmount");
+            //    RaisePropertyChanged("UsingChamberAmount");
             UpdateAssetsUI();
         }
 
         private void Bat_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             //if (e.PropertyName == "Status")
-            //    OnPropertyChanged("UsingBatteryAmount");
+            //    RaisePropertyChanged("UsingBatteryAmount");
             UpdateAssetsUI();
         }
 
         private void _batteries_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            //OnPropertyChanged("BatteryAmount");
+            //RaisePropertyChanged("BatteryAmount");
             UpdateAssetsUI();
         }
 
@@ -439,12 +440,12 @@ namespace BCLabManager.ViewModel
             {
                 if (sub.IsAbandoned == true)
                     continue;
-                if (IsSubProgramCompleted(sub) == false)
+                if (IsRecipeCompleted(sub) == false)
                     return false;
             }
             return true;
         }
-        public int CompletedSubProgramNumber
+        public int CompletedRecipeNumber
         {
             get
             {
@@ -452,14 +453,14 @@ namespace BCLabManager.ViewModel
                 foreach (var pro in _programs)
                 {
                     foreach(var sub in pro.Recipes)
-                        if (IsSubProgramCompleted(sub))
+                        if (IsRecipeCompleted(sub))
                             i++;
                 }
                 return i;
             }
         }
 
-        private bool IsSubProgramCompleted(RecipeClass sub)
+        private bool IsRecipeCompleted(RecipeClass sub)
         {
             foreach (var tr in sub.TestRecords)
                 if (IsTestCompleted(tr) == false)

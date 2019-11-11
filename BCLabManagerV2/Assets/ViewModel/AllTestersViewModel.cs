@@ -8,10 +8,11 @@ using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllTestersViewModel : BindBase
+    public class AllTestersViewModel : BindableBase
     {
         #region Fields
 
@@ -60,7 +61,7 @@ namespace BCLabManager.ViewModel
                 if (_selectedItem != value)
                 {
                     _selectedItem = value;
-                    OnPropertyChanged("Channels"); //通知Channels改变
+                    RaisePropertyChanged("Channels"); //通知Channels改变
                 }
             }
         }
@@ -146,7 +147,7 @@ namespace BCLabManager.ViewModel
         {
             TesterClass m = new TesterClass();      //实例化一个新的model
             TesterEditViewModel evm = new TesterEditViewModel(m);      //实例化一个新的view model
-            evm.DisplayName = "Tester-Create";
+            //evm.DisplayName = "Tester-Create";
             var TesterViewInstance = new TesterView();      //实例化一个新的view
             TesterViewInstance.DataContext = evm;
             TesterViewInstance.ShowDialog();                   //设置viewmodel属性
@@ -167,7 +168,7 @@ namespace BCLabManager.ViewModel
             TesterEditViewModel evm = new TesterEditViewModel(m);      //实例化一个新的view model
             evm.Manufactor = _selectedItem.Manufactor;
             evm.Name = _selectedItem.Name;
-            evm.DisplayName = "Tester-Edit";
+            //evm.DisplayName = "Tester-Edit";
             var TesterViewInstance = new TesterView();      //实例化一个新的view
             TesterViewInstance.DataContext = evm;
             TesterViewInstance.ShowDialog();
@@ -194,7 +195,7 @@ namespace BCLabManager.ViewModel
             TesterEditViewModel evm = new TesterEditViewModel(m);      //实例化一个新的view model
             evm.Manufactor = _selectedItem.Manufactor;
             evm.Name = _selectedItem.Name;
-            evm.DisplayName = "Tester-Save As";
+            //evm.DisplayName = "Tester-Save As";
             var TesterViewInstance = new TesterView();      //实例化一个新的view
             TesterViewInstance.DataContext = evm;
             TesterViewInstance.ShowDialog();

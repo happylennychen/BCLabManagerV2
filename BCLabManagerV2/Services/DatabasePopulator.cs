@@ -107,11 +107,11 @@ namespace BCLabManager
         }
         private static void PopulatePrograms()
         {
-            PopulateChargeTemperatures();
-            PopulateChargeCurrents();
-            PopulateDischargeTemperatures();
-            PopulateDischargeCurrents();
-            PopulateSubProgramTemplates();
+            //PopulateChargeTemperatures();
+            //PopulateChargeCurrents();
+            //PopulateDischargeTemperatures();
+            //PopulateDischargeCurrents();
+            PopulateRecipeTemplates();
             PopulateTestPrograms();
         }
 
@@ -128,31 +128,31 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/02/28");
                 obj.Description = "Oppo BLP663 Static Test";
-                RecipeClass sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 1), obj.Name, 1);
+                RecipeClass sub = new RecipeClass(GetRecipeTemplateById(dbContext, 1), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 2), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 2), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 3), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 3), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 4), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 4), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 5), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 5), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 6), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 6), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 7), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 7), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 8), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 8), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 9), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 9), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
@@ -166,22 +166,22 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/02/28");
                 obj.Description = "Oppo BLP663 Dynamic Test";
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 10), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 10), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 11), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 11), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 12), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 12), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 13), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 13), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 14), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 14), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 15), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 15), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
@@ -195,22 +195,22 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/02/28");
                 obj.Description = "Oppo BLP663 RC";
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 16), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 16), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 17), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 17), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 18), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 18), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 19), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 19), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 20), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 20), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 21), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 21), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
@@ -225,13 +225,13 @@ namespace BCLabManager
                 obj.RequestTime = DateTime.Parse("2019/03/12");
                 obj.Description = "Oppo BLP663 Static Test-2";
 
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 22), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 22), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 23), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 23), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 24), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 24), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
@@ -245,19 +245,19 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/03/14");
                 obj.Description = "Oppo BLP663 Dynamic Test-2";
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 25), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 25), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 26), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 26), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 27), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 27), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 30), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 30), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 31), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 31), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
@@ -271,7 +271,7 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/03/25");
                 obj.Description = "Oppo BLP663 Static Test-3";
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 28), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 28), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
@@ -285,7 +285,7 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/04/01");
                 obj.Description = "Run 500 cycle to see the aging effect";
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 29), obj.Name, 500);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 29), obj.Name, 500);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
@@ -299,13 +299,13 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/04/01");
                 obj.Description = "Run 5 same cycle";
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 4), obj.Name, 5);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 4), obj.Name, 5);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 23), obj.Name, 5);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 23), obj.Name, 5);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 26), obj.Name, 5);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 26), obj.Name, 5);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
@@ -319,7 +319,7 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/05/07");
                 obj.Description = "Oppo BLP663 Dynamic Test-3";
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 30), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 30), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
@@ -333,7 +333,7 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/05/24");
                 obj.Description = "Oppo BLP663 Dynamic Test-4";
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 31), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 31), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
@@ -347,7 +347,7 @@ namespace BCLabManager
                 obj.Requester = "Jon";
                 obj.RequestTime = DateTime.Parse("2019/07/09");
                 obj.Description = "";
-                sub = new RecipeClass(GetSubProgramTemplateById(dbContext, 23), obj.Name, 1);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 23), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
@@ -356,436 +356,288 @@ namespace BCLabManager
             }
         }
 
-        private static void PopulateSubProgramTemplates()
+        private static void PopulateRecipeTemplates()
         {
             using (var dbContext = new AppDbContext())
             {
                 int i = 1;
                 RecipeTemplate obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o=>o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "-5 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "500mA");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o=>o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "-5 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "500mA");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "-5 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "1700mA");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "-5 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "1700mA");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "-5 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3000mA");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "-5 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3000mA");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "500mA");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "500mA");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "1700mA");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "1700mA");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3000mA");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3000mA");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "500mA");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "500mA");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "1700mA");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "1700mA");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3000mA");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3000mA");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "-5 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D01");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "-5 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D01");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "-5 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D02");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "-5 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D02");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D01");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D01");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D02");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D02");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D01");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D01");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D02");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D02");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "-10 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3500mA");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "-10 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3500mA");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "0 deg");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "0 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3500mA");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "0 deg");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "0 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3500mA");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "10 deg");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "10 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3500mA");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "10 deg");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "10 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3500mA");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "20 deg");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "20 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3500mA");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "20 deg");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "20 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3500mA");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "30 deg");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "30 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3500mA");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "30 deg");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "30 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3500mA");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "40 deg");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "40 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3500mA");
-                dbContext.SubProgramTemplates.Add(obj);
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "40 deg");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "40 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3500mA");
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "-5 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "2000mA");
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "-5 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "2000mA");
                 //obj.TestCount = TestCountEnum.Two;
-                dbContext.SubProgramTemplates.Add(obj);
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "2000mA");
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "2000mA");
                 //obj.TestCount = TestCountEnum.One;
-                dbContext.SubProgramTemplates.Add(obj);
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "2000mA");
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "2000mA");
                 //obj.TestCount = TestCountEnum.One;
-                dbContext.SubProgramTemplates.Add(obj);
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "-5 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D03");
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "-5 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D03");
                 //obj.TestCount = TestCountEnum.Two;
-                dbContext.SubProgramTemplates.Add(obj);
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D03");
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D03");
                 //obj.TestCount = TestCountEnum.One;
-                dbContext.SubProgramTemplates.Add(obj);
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D03");
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "35 deg");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D03");
                 //obj.TestCount = TestCountEnum.One;
-                dbContext.SubProgramTemplates.Add(obj);
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "1200mA");
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "1200mA");
                 //obj.TestCount = TestCountEnum.One;
-                dbContext.SubProgramTemplates.Add(obj);
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3450mA");
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "3450mA");
                 //obj.TestCount = TestCountEnum.One;
-                dbContext.SubProgramTemplates.Add(obj);
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D04");
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D04");
                 //obj.TestCount = TestCountEnum.One;
-                dbContext.SubProgramTemplates.Add(obj);
+                dbContext.RecipeTemplates.Add(obj);
 
                 obj = new RecipeTemplate();
                 obj.Id = i++;
-                obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
-                obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
-                obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D05");
+                //obj.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Name == "1C");
+                //obj.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Name == "Room");
+                //obj.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Name == "D05");
                 //obj.TestCount = TestCountEnum.One;
-                dbContext.SubProgramTemplates.Add(obj);
+                dbContext.RecipeTemplates.Add(obj);
 
                 dbContext.SaveChanges();
             }
         }
 
-        private static void PopulateDischargeCurrents()
+        private static RecipeTemplate GetRecipeTemplateById(AppDbContext dbContext, int id)
         {
-            using (var dbContext = new AppDbContext())
-            {
-                DischargeCurrentClass obj = new DischargeCurrentClass();
-                obj.Name = "500mA";
-                dbContext.DischargeCurrents.Add(obj);
-
-                obj = new DischargeCurrentClass();
-                obj.Name = "1200mA";
-                dbContext.DischargeCurrents.Add(obj);
-
-                obj = new DischargeCurrentClass();
-                obj.Name = "1700mA";
-                dbContext.DischargeCurrents.Add(obj);
-
-                obj = new DischargeCurrentClass();
-                obj.Name = "2000mA";
-                dbContext.DischargeCurrents.Add(obj);
-
-                obj = new DischargeCurrentClass();
-                obj.Name = "3000mA";
-                dbContext.DischargeCurrents.Add(obj);
-
-                obj = new DischargeCurrentClass();
-                obj.Name = "3450mA";
-                dbContext.DischargeCurrents.Add(obj);
-
-                obj = new DischargeCurrentClass();
-                obj.Name = "3500mA";
-                dbContext.DischargeCurrents.Add(obj);
-
-                obj = new DischargeCurrentClass();
-                obj.Name = "D01";
-                dbContext.DischargeCurrents.Add(obj);
-
-                obj = new DischargeCurrentClass();
-                obj.Name = "D02";
-                dbContext.DischargeCurrents.Add(obj);
-
-                obj = new DischargeCurrentClass();
-                obj.Name = "D03";
-                dbContext.DischargeCurrents.Add(obj);
-
-                obj = new DischargeCurrentClass();
-                obj.Name = "D04";
-                dbContext.DischargeCurrents.Add(obj);
-
-                obj = new DischargeCurrentClass();
-                obj.Name = "D05";
-                dbContext.DischargeCurrents.Add(obj);
-
-                dbContext.SaveChanges();
-            }
-        }
-
-        private static void PopulateDischargeTemperatures()
-        {
-            using (var dbContext = new AppDbContext())
-            {
-                DischargeTemperatureClass obj = new DischargeTemperatureClass();
-                obj.Name = "Room";
-                dbContext.DischargeTemperatures.Add(obj);
-
-                obj = new DischargeTemperatureClass();
-                obj.Name = "-10 deg";
-                dbContext.DischargeTemperatures.Add(obj);
-
-                obj = new DischargeTemperatureClass();
-                obj.Name = "-5 deg";
-                dbContext.DischargeTemperatures.Add(obj);
-
-                obj = new DischargeTemperatureClass();
-                obj.Name = "0 deg";
-                dbContext.DischargeTemperatures.Add(obj);
-
-                obj = new DischargeTemperatureClass();
-                obj.Name = "10 deg";
-                dbContext.DischargeTemperatures.Add(obj);
-
-                obj = new DischargeTemperatureClass();
-                obj.Name = "20 deg";
-                dbContext.DischargeTemperatures.Add(obj);
-
-                obj = new DischargeTemperatureClass();
-                obj.Name = "30 deg";
-                dbContext.DischargeTemperatures.Add(obj);
-
-                obj = new DischargeTemperatureClass();
-                obj.Name = "35 deg";
-                dbContext.DischargeTemperatures.Add(obj);
-
-                obj = new DischargeTemperatureClass();
-                obj.Name = "40 deg";
-                dbContext.DischargeTemperatures.Add(obj);
-
-                dbContext.SaveChanges();
-            }
-        }
-
-        private static void PopulateChargeCurrents()
-        {
-            using (var dbContext = new AppDbContext())
-            {
-                ChargeCurrentClass obj = new ChargeCurrentClass();
-                obj.Name = "1C";
-                dbContext.ChargeCurrents.Add(obj);
-
-                dbContext.SaveChanges();
-            }
-        }
-
-        private static void PopulateChargeTemperatures()
-        {
-            using (var dbContext = new AppDbContext())
-            {
-                ChargeTemperatureClass obj = new ChargeTemperatureClass();
-                obj.Name = "Room";
-                dbContext.ChargeTemperatures.Add(obj);
-
-                obj = new ChargeTemperatureClass();
-                obj.Name = "0 deg";
-                dbContext.ChargeTemperatures.Add(obj);
-
-                obj = new ChargeTemperatureClass();
-                obj.Name = "10 deg";
-                dbContext.ChargeTemperatures.Add(obj);
-
-                obj = new ChargeTemperatureClass();
-                obj.Name = "20 deg";
-                dbContext.ChargeTemperatures.Add(obj);
-
-                obj = new ChargeTemperatureClass();
-                obj.Name = "30 deg";
-                dbContext.ChargeTemperatures.Add(obj);
-
-                obj = new ChargeTemperatureClass();
-                obj.Name = "35 deg";
-                dbContext.ChargeTemperatures.Add(obj);
-
-                obj = new ChargeTemperatureClass();
-                obj.Name = "40 deg";
-                dbContext.ChargeTemperatures.Add(obj);
-
-                dbContext.SaveChanges();
-            }
-        }
-
-        private static RecipeTemplate GetSubProgramTemplateById(AppDbContext dbContext, int id)
-        {
-            var subtemplate = dbContext.SubProgramTemplates.SingleOrDefault(o => o.Id == id);
-            dbContext.Entry(subtemplate)
-                .Reference(o => o.ChargeTemperature)
-                .Load();
-            dbContext.Entry(subtemplate)
-                .Reference(o => o.ChargeCurrent)
-                .Load();
-            dbContext.Entry(subtemplate)
-                .Reference(o => o.DischargeTemperature)
-                .Load();
-            dbContext.Entry(subtemplate)
-                .Reference(o => o.DischargeCurrent)
-                .Load();
+            var subtemplate = dbContext.RecipeTemplates.SingleOrDefault(o => o.Id == id);
+            //dbContext.Entry(subtemplate)
+            //    .Reference(o => o.ChargeTemperature)
+            //    .Load();
+            //dbContext.Entry(subtemplate)
+            //    .Reference(o => o.ChargeCurrent)
+            //    .Load();
+            //dbContext.Entry(subtemplate)
+            //    .Reference(o => o.DischargeTemperature)
+            //    .Load();
+            //dbContext.Entry(subtemplate)
+            //    .Reference(o => o.DischargeCurrent)
+            //    .Load();
             return subtemplate;
         }
 
@@ -798,19 +650,19 @@ namespace BCLabManager
             using (var dbContext = new AppDbContext())
             {
                 tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == 4);
-                sub = dbContext.SubPrograms.SingleOrDefault(o => o.Id == 1);
-                dbContext.Entry(sub)
-                    .Reference(o => o.ChargeTemperature)
-                    .Load();
-                dbContext.Entry(sub)
-                    .Reference(o => o.ChargeCurrent)
-                    .Load();
-                dbContext.Entry(sub)
-                    .Reference(o => o.DischargeTemperature)
-                    .Load();
-                dbContext.Entry(sub)
-                    .Reference(o => o.DischargeCurrent)
-                    .Load();
+                sub = dbContext.Recipes.SingleOrDefault(o => o.Id == 1);
+                //dbContext.Entry(sub)
+                //    .Reference(o => o.ChargeTemperature)
+                //    .Load();
+                //dbContext.Entry(sub)
+                //    .Reference(o => o.ChargeCurrent)
+                //    .Load();
+                //dbContext.Entry(sub)
+                //    .Reference(o => o.DischargeTemperature)
+                //    .Load();
+                //dbContext.Entry(sub)
+                //    .Reference(o => o.DischargeCurrent)
+                //    .Load();
                 pro = dbContext.Programs.SingleOrDefault(o => o.Id == 1);
                 tr.BatteryTypeStr = dbContext.BatteryTypes.SingleOrDefault(o=>o.Id == 1).Name;
                 tr.BatteryStr = dbContext.Batteries.SingleOrDefault(o => o.Id == 1).Name;
@@ -825,7 +677,7 @@ namespace BCLabManager
                 tr.AssignedChannel = dbContext.Channels.SingleOrDefault(o => o.Id == 1);
                 dbContext.SaveChanges();
             }
-            tr.AssetsExecute(tr.AssignedBattery, tr.AssignedChamber, tr.AssignedChannel, tr.Steps, tr.StartTime, pro.Name, $"{sub.ChargeTemperature.Name} {sub.ChargeCurrent} charge, {sub.DischargeTemperature} {sub.DischargeCurrent} discharge");
+            //tr.AssetsExecute(tr.AssignedBattery, tr.AssignedChamber, tr.AssignedChannel, tr.Steps, tr.StartTime, pro.Name, $"{sub.ChargeTemperature.Name} {sub.ChargeCurrent} charge, {sub.DischargeTemperature} {sub.DischargeCurrent} discharge");
         }
     }
 }

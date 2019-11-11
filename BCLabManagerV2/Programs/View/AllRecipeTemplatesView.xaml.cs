@@ -19,9 +19,9 @@ namespace BCLabManager.View
     /// <summary>
     /// Interaction logic for AllChannelsView.xaml
     /// </summary>
-    public partial class AllChargeTemperaturesView : UserControl
+    public partial class AllRecipeTemplatesView : UserControl
     {
-        public AllChargeTemperaturesView()
+        public AllRecipeTemplatesView()
         {
             InitializeComponent();
         }

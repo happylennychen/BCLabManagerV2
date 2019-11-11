@@ -8,6 +8,7 @@ using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
@@ -21,11 +22,11 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class TestRecordExecuteViewModel : BindBase//, IDataErrorInfo
+    public class TestRecordExecuteViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
         //string _programName;
-        //string _subProgramName;
+        //string _RecipeName;
         readonly TestRecordClass _record;
         //readonly BatteryTypeRepository _batterytypeRepository;
         //readonly BatteryRepository _batteryRepository;
@@ -105,7 +106,7 @@ namespace BCLabManager.ViewModel
 
                 _record.Status = value;
 
-                base.OnPropertyChanged("Status");
+                RaisePropertyChanged("Status");
             }
         }
 
@@ -124,7 +125,7 @@ namespace BCLabManager.ViewModel
 
                 _batteryType = value;
 
-                base.OnPropertyChanged("BatteryType");
+                RaisePropertyChanged("BatteryType");
 
 
                 ObservableCollection<BatteryClass> all = _batteries;
@@ -162,7 +163,7 @@ namespace BCLabManager.ViewModel
 
                 _battery = value;
 
-                base.OnPropertyChanged("Battery");
+                RaisePropertyChanged("Battery");
             }
         }
 
@@ -179,7 +180,7 @@ namespace BCLabManager.ViewModel
                 if (value != _allBatteries)
                 {
                     _allBatteries = value;
-                    base.OnPropertyChanged("AllBatteries");
+                    RaisePropertyChanged("AllBatteries");
                 }
             }
         }
@@ -199,7 +200,7 @@ namespace BCLabManager.ViewModel
 
                 _chamber = value;
 
-                base.OnPropertyChanged("Chamber");
+                RaisePropertyChanged("Chamber");
                 if (_chamber.AssetUseCount > 0)
                     MessageBox.Show("Please note that this one is in use by another test");
             }
@@ -234,7 +235,7 @@ namespace BCLabManager.ViewModel
 
                 _tester = value;
 
-                base.OnPropertyChanged("Tester");
+                RaisePropertyChanged("Tester");
 
 
                 ObservableCollection<ChannelClass> all = _channels;
@@ -272,7 +273,7 @@ namespace BCLabManager.ViewModel
 
                 _channel = value;
 
-                base.OnPropertyChanged("Channel");
+                RaisePropertyChanged("Channel");
             }
         }
 
@@ -289,7 +290,7 @@ namespace BCLabManager.ViewModel
                 if (value != _allChannels)
                 {
                     _allChannels = value;
-                    base.OnPropertyChanged("AllChannels");
+                    RaisePropertyChanged("AllChannels");
                 }
             }
         }
@@ -307,7 +308,7 @@ namespace BCLabManager.ViewModel
 
                 _record.StartTime = value;
 
-                base.OnPropertyChanged("StartTime");
+                RaisePropertyChanged("StartTime");
             }
         }
 
@@ -324,7 +325,7 @@ namespace BCLabManager.ViewModel
 
                 _record.CompleteTime = value;
 
-                base.OnPropertyChanged("CompleteTime");
+                RaisePropertyChanged("CompleteTime");
             }
         }
 
@@ -341,7 +342,7 @@ namespace BCLabManager.ViewModel
 
                 _record.Comment = value;
 
-                base.OnPropertyChanged("Comment");
+                RaisePropertyChanged("Comment");
             }
         }
         public String Steps
@@ -357,7 +358,7 @@ namespace BCLabManager.ViewModel
 
                 _record.Steps = value;
 
-                base.OnPropertyChanged("Steps");
+                RaisePropertyChanged("Steps");
             }
         }
 
@@ -374,7 +375,7 @@ namespace BCLabManager.ViewModel
 
                 _record.NewCycle = value;
 
-                base.OnPropertyChanged("NewCycle");
+                RaisePropertyChanged("NewCycle");
             }
         }
 
@@ -414,7 +415,7 @@ namespace BCLabManager.ViewModel
             //if (this.IsNewProgramType)
             //_programtypeRepository.AddItem(_programtype);
 
-            //base.OnPropertyChanged("DisplayName");
+            //RaisePropertyChanged("DisplayName");
             IsOK = true;
         }
 

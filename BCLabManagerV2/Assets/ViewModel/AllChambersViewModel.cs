@@ -8,10 +8,11 @@ using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllChambersViewModel : BindBase
+    public class AllChambersViewModel : BindableBase
     {
         #region Fields
 
@@ -62,8 +63,8 @@ namespace BCLabManager.ViewModel
                 if (_selectedItem != value)
                 {
                     _selectedItem = value;
-                    //OnPropertyChanged("SelectedType");
-                    OnPropertyChanged("Records"); //通知Records改变
+                    //RaisePropertyChanged("SelectedType");
+                    RaisePropertyChanged("Records"); //通知Records改变
                 }
             }
         }
@@ -150,7 +151,7 @@ namespace BCLabManager.ViewModel
         {
             ChamberClass m = new ChamberClass();      //实例化一个新的model
             ChamberEditViewModel evm = new ChamberEditViewModel(m);      //实例化一个新的view model
-            evm.DisplayName = "Chamber-Create";
+            //evm.DisplayName = "Chamber-Create";
             evm.commandType = CommandType.Create;
             var ChamberViewInstance = new ChamberView();      //实例化一个新的view
             ChamberViewInstance.DataContext = evm;
@@ -174,7 +175,7 @@ namespace BCLabManager.ViewModel
             evm.Manufactor = _selectedItem.Manufactor;
             evm.LowTemp = _selectedItem.LowTemp;
             evm.HighTemp = _selectedItem.HighTemp;
-            evm.DisplayName = "Chamber-Edit";
+            //evm.DisplayName = "Chamber-Edit";
             evm.commandType = CommandType.Edit;
             var ChamberViewInstance = new ChamberView();      //实例化一个新的view
             ChamberViewInstance.DataContext = evm;
@@ -209,7 +210,7 @@ namespace BCLabManager.ViewModel
             evm.Manufactor = _selectedItem.Manufactor;
             evm.LowTemp = _selectedItem.LowTemp;
             evm.HighTemp = _selectedItem.HighTemp;
-            evm.DisplayName = "Chamber-Save As";
+            //evm.DisplayName = "Chamber-Save As";
             evm.commandType = CommandType.SaveAs;
             var ChamberViewInstance = new ChamberView();      //实例化一个新的view
             ChamberViewInstance.DataContext = evm;

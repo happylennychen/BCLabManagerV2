@@ -15,21 +15,21 @@ namespace BCLabManager.View
         {
             _mainWindow = mainWindow;
         }
-        public static void SetMainTabIndex(int i)   //0:Dashboard 1:Assets 2:Sub Program Template 3:Programs
+        public static void SetMainTabIndex(int i)   //0:Dashboard 1:Assets 2:Recipe Template 3:Programs
         {
             _mainWindow.MainTab.SelectedIndex = i;
         }
         public static void SetSelectedTestRecord(int id)
         {
             foreach (var pro in _mainWindow.allProgramsViewModel.AllPrograms)
-                foreach (var sub in pro.SubPrograms)
+                foreach (var sub in pro.Recipes)
                 {
                     foreach(var tr in sub.Test1Records)
                     {
                         if (tr.Id == id)
                         {
                             _mainWindow.AllProgramsViewInstance.Programlist.SelectedItem = pro;
-                            _mainWindow.AllProgramsViewInstance.SubProgramlist.SelectedItem = sub;
+                            _mainWindow.AllProgramsViewInstance.Recipelist.SelectedItem = sub;
                             _mainWindow.AllProgramsViewInstance.FirstTestRecordList.SelectedItem = tr;
                             return;
                         }
@@ -39,7 +39,7 @@ namespace BCLabManager.View
                         if (tr.Id == id)
                         {
                             _mainWindow.AllProgramsViewInstance.Programlist.SelectedItem = pro;
-                            _mainWindow.AllProgramsViewInstance.SubProgramlist.SelectedItem = sub;
+                            _mainWindow.AllProgramsViewInstance.Recipelist.SelectedItem = sub;
                             _mainWindow.AllProgramsViewInstance.SecondTestRecordList.SelectedItem = tr;
                             return;
                         }

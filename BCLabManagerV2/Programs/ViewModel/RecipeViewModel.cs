@@ -7,47 +7,48 @@ using System.Collections.ObjectModel;
 using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using BCLabManager.Properties;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class SubProgramViewModel : BindBase//, IDataErrorInfo
+    public class RecipeViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
-        public readonly RecipeClass _subprogram;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
+        public readonly RecipeClass _Recipe;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
 
         #endregion // Fields
 
         #region Constructor
 
-        public SubProgramViewModel(RecipeClass subprogram)
+        public RecipeViewModel(RecipeClass Recipe)
         {
-            _subprogram = subprogram;
+            _Recipe = Recipe;
             this.CreateTestRecords();
-            _subprogram.TestRecordAdded += _subprogram_TestRecordAdded;
-            //_subprogram.PropertyChanged += _subprogram_PropertyChanged;
-            var trlist = GetAllTestRecords(subprogram);
+            _Recipe.TestRecordAdded += _Recipe_TestRecordAdded;
+            //_Recipe.PropertyChanged += _Recipe_PropertyChanged;
+            var trlist = GetAllTestRecords(Recipe);
             foreach (var tr in trlist)
                 tr.StatusChanged += Tr_StatusChanged;
         }
 
         private void Tr_StatusChanged(object sender, StatusChangedEventArgs e)
         {
-            OnPropertyChanged("WaitingPercentage");
-            OnPropertyChanged("ExecutingPercentage");
-            OnPropertyChanged("CompletedPercentage");
-            OnPropertyChanged("InvalidPercentage");
-            OnPropertyChanged("AbandonedPercentage");
+            RaisePropertyChanged("WaitingPercentage");
+            RaisePropertyChanged("ExecutingPercentage");
+            RaisePropertyChanged("CompletedPercentage");
+            RaisePropertyChanged("InvalidPercentage");
+            RaisePropertyChanged("AbandonedPercentage");
         }
 
-        //private void _subprogram_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        //private void _Recipe_PropertyChanged(object sender, PropertyChangedEventArgs e)
         //{
-        //    OnPropertyChanged(e.PropertyName);
+        //    RaisePropertyChanged(e.PropertyName);
         //}
 
-        private void _subprogram_TestRecordAdded(object sender, TestRecordAddedEventArgs e)
+        private void _Recipe_TestRecordAdded(object sender, TestRecordAddedEventArgs e)
         {
             if (e.IsFirst)
             {
@@ -62,7 +63,7 @@ namespace BCLabManager.ViewModel
         void CreateTestRecords()
         {
             List<TestRecordViewModel> all1 =
-                (from ft in _subprogram.TestRecords
+                (from ft in _Recipe.TestRecords
                  select new TestRecordViewModel(ft)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.Test1Records = new ObservableCollection<TestRecordViewModel>(all1);     //再转换成Observable
@@ -70,65 +71,66 @@ namespace BCLabManager.ViewModel
 
         #endregion // Constructor
 
-        #region SubProgramClass Properties
+        #region RecipeClass Properties
 
         public int Id
         {
-            get { return _subprogram.Id; }
+            get { return _Recipe.Id; }
             set
             {
-                if (value == _subprogram.Id)
+                if (value == _Recipe.Id)
                     return;
 
-                _subprogram.Id = value;
+                _Recipe.Id = value;
 
-                base.OnPropertyChanged("Id");
+                RaisePropertyChanged("Id");
             }
         }
         public bool IsAbandoned
         {
-            get { return _subprogram.IsAbandoned; }
+            get { return _Recipe.IsAbandoned; }
             set
             {
-                if (value == _subprogram.IsAbandoned)
+                if (value == _Recipe.IsAbandoned)
                     return;
 
-                _subprogram.IsAbandoned = value;
+                _Recipe.IsAbandoned = value;
 
-                base.OnPropertyChanged("IsAbandoned");
+                RaisePropertyChanged("IsAbandoned");
             }
         }
         public DateTime StartTime
         {
-            get { return _subprogram.StartTime; }
+            get { return _Recipe.StartTime; }
             set
             {
-                if (value == _subprogram.StartTime)
+                if (value == _Recipe.StartTime)
                     return;
 
-                _subprogram.StartTime = value;
+                _Recipe.StartTime = value;
 
-                OnPropertyChanged("StartTime");
+                RaisePropertyChanged("StartTime");
             }
         }
         public DateTime CompleteTime
         {
-            get { return _subprogram.CompleteTime; }
+            get { return _Recipe.CompleteTime; }
             set
             {
-                if (value == _subprogram.CompleteTime)
+                if (value == _Recipe.CompleteTime)
                     return;
 
-                _subprogram.CompleteTime = value;
+                _Recipe.CompleteTime = value;
 
-                OnPropertyChanged("CompleteTime");
+                RaisePropertyChanged("CompleteTime");
             }
         }
         public string Name
         {
             get
             {
-                return $"{_subprogram.ChargeTemperature.Name} {_subprogram.ChargeCurrent} charge, {_subprogram.DischargeTemperature} {_subprogram.DischargeCurrent} discharge";
+                //return $"{_Recipe.ChargeTemperature.Name} {_Recipe.ChargeCurrent} charge, {_Recipe.DischargeTemperature} {_Recipe.DischargeCurrent} discharge";
+                return "";
             }
         }
         #region Presentation logic
@@ -136,7 +138,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TestRecordClass> alltr = GetAllTestRecords(_subprogram);
+                List<TestRecordClass> alltr = GetAllTestRecords(_Recipe);
                 return ((double)alltr.Count(o => o.Status == TestStatus.Waiting) / (double)alltr.Count).ToString() + "*";
             }
         }
@@ -145,7 +147,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TestRecordClass> alltr = GetAllTestRecords(_subprogram);
+                List<TestRecordClass> alltr = GetAllTestRecords(_Recipe);
                 return ((double)alltr.Count(o => o.Status == TestStatus.Executing) / (double)alltr.Count).ToString() + "*";
             }
         }
@@ -153,7 +155,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TestRecordClass> alltr = GetAllTestRecords(_subprogram);
+                List<TestRecordClass> alltr = GetAllTestRecords(_Recipe);
                 return ((double)alltr.Count(o => o.Status == TestStatus.Completed) / (double)alltr.Count).ToString() + "*";
             }
         }
@@ -161,7 +163,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TestRecordClass> alltr = GetAllTestRecords(_subprogram);
+                List<TestRecordClass> alltr = GetAllTestRecords(_Recipe);
                 return ((double)alltr.Count(o => o.Status == TestStatus.Invalid) / (double)alltr.Count).ToString() + "*";
             }
         }
@@ -169,7 +171,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TestRecordClass> alltr = GetAllTestRecords(_subprogram);
+                List<TestRecordClass> alltr = GetAllTestRecords(_Recipe);
                 return ((double)alltr.Count(o => o.Status == TestStatus.Abandoned) / (double)alltr.Count).ToString() + "*";
             }
         }
@@ -185,21 +187,21 @@ namespace BCLabManager.ViewModel
 
         public int Loop
         {
-            get { return _subprogram.Loop; }
+            get { return _Recipe.Loop; }
             set
             {
-                if (value == _subprogram.Loop)
+                if (value == _Recipe.Loop)
                     return;
 
-                _subprogram.Loop = value;
+                _Recipe.Loop = value;
 
-                base.OnPropertyChanged("Loop");
+                RaisePropertyChanged("Loop");
             }
         }
 
-        public ObservableCollection<TestRecordViewModel> Test1Records { get; private set; }        //这个是当前sub program所拥有的test1
+        public ObservableCollection<TestRecordViewModel> Test1Records { get; private set; }        //这个是当前Recipe所拥有的test1
 
-        public ObservableCollection<TestRecordViewModel> Test2Records { get; private set; }        //这个是当前sub program所拥有的test2
+        public ObservableCollection<TestRecordViewModel> Test2Records { get; private set; }        //这个是当前Recipe所拥有的test2
 
         #endregion // Customer Properties
 

@@ -7,13 +7,14 @@ using BCLabManager.Model;
 using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class TestRecordInvalidateViewModel : BindBase//, IDataErrorInfo
+    public class TestRecordInvalidateViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
         RelayCommand _okCommand;
