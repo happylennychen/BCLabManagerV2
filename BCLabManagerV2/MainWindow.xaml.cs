@@ -58,7 +58,8 @@ namespace BCLabManager
 
         public BatteryTypeServieClass BatteryTypeServcie { get; set; } = new BatteryTypeServieClass();
         public BatteryServieClass BatteryService { get; set; } = new BatteryServieClass();
-        //public BatteryServieClass BatteryServie { get; set; }
+        //public TestRecordServiceClass TestRecordService { get; set; } = new TestRecordServiceClass();
+        public ProgramServiceClass ProgramService { get; set; } = new ProgramServiceClass();
 
         public MainWindow()
         {
@@ -143,6 +144,10 @@ namespace BCLabManager
             {
                 BatteryTypeServcie.Items = new ObservableCollection<BatteryTypeClass>(uow.BatteryTypes.GetAll());
                 BatteryService.Items = new ObservableCollection<BatteryClass>(uow.Batteries.GetAll("BatteryType,Records"));
+
+                ProgramService.Items = new ObservableCollection<ProgramClass>(uow.Programs.GetAll());
+                ProgramService.RecipeService.Items = new ObservableCollection<RecipeClass>(uow.Recipies.GetAll());
+                ProgramService.RecipeService.TestRecordService.Items = new ObservableCollection<TestRecordClass>(uow.TestRecords.GetAll());
             }
             using (var dbContext = new AppDbContext())
             {
@@ -228,10 +233,10 @@ namespace BCLabManager
 
             allProgramsViewModel = new AllProgramsViewModel
                 (
-                Programs,
+                ProgramService,
                 RecipeTemplates,
                 BatteryTypes,
-                Batteries,
+                BatteryService,
                 Testers,
                 Channels,
                 Chambers

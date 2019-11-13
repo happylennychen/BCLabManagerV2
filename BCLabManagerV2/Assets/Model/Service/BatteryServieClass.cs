@@ -46,5 +46,12 @@ namespace BCLabManager.Model
             edittarget.AssetUseCount = item.AssetUseCount;
             edittarget.Records = item.Records;
         }
+        public void Execute(BatteryClass item, DateTime startTime, string programName, string recipeName)
+        {
+            item.AssetUseCount++;
+            item.Records.Add(new AssetUsageRecordClass(startTime, item.AssetUseCount, programName, recipeName));
+
+            Update(item);
+        }
     }
 }

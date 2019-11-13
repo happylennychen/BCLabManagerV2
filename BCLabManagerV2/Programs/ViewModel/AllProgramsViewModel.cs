@@ -21,10 +21,6 @@ namespace BCLabManager.ViewModel
         ProgramViewModel _selectedProgram;
         RecipeViewModel _selectedRecipe;
         TestRecordViewModel _selectedTestRecord;
-        TestRecordViewModel _selectedSecondTestRecord;
-        //TestViewModel _selectedTest1;     //Test1区域选中项
-        //TestViewModel _selectedTest2;     //Test2区域选中项
-        //TestViewModel _selectedTest;      //Test1,Test2选中项中，拥有焦点的那一个
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
@@ -33,38 +29,35 @@ namespace BCLabManager.ViewModel
         RelayCommand _commitCommand;
         RelayCommand _invalidateCommand;
         RelayCommand _viewCommand;
-        RelayCommand _executeCommand2;
-        RelayCommand _commitCommand2;
-        RelayCommand _invalidateCommand2;
-        RelayCommand _viewCommand2;
 
         ObservableCollection<BatteryTypeClass> _batteryTypes;
-        ObservableCollection<BatteryClass> _batteries;
+        private BatteryServieClass _batteryService;
         ObservableCollection<TesterClass> _testers;
         ObservableCollection<ChannelClass> _channels;
         ObservableCollection<ChamberClass> _chambers;
-        ObservableCollection<ProgramClass> _programs;
+        //ObservableCollection<ProgramClass> _programs;
+        private ProgramServiceClass _programService;
         #endregion // Fields
 
         #region Constructor
 
         public AllProgramsViewModel
             (
-            ObservableCollection<ProgramClass> programs,
+            ProgramServiceClass programService,
             List<RecipeTemplate> RecipeTemplates,
             ObservableCollection<BatteryTypeClass> batteryTypes,
-            ObservableCollection<BatteryClass> batteries,
+            BatteryServieClass batteryService,
             ObservableCollection<TesterClass> testers,
             ObservableCollection<ChannelClass> channels,
             ObservableCollection<ChamberClass> chambers
             )
         {
             _RecipeTemplates = RecipeTemplates;
-            _programs = programs;
-            this.CreateAllPrograms(programs);
+            _programService = programService;
+            this.CreateAllPrograms(_programService.Items);
 
             _batteryTypes = batteryTypes;
-            _batteries = batteries;
+            _batteryService = batteryService;
             _testers = testers;
             _channels = channels;
             _chambers = chambers;
@@ -289,23 +282,23 @@ namespace BCLabManager.ViewModel
             ProgramViewInstance.ShowDialog();                   //设置viewmodel属性
             if (evm.IsOK == true)
             {
-                //_programRepository.AddItem(model);
-                using (var dbContext = new AppDbContext())
-                {
-                    foreach (var sub in m.Recipes)
-                    {
-                        //sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
-                        //sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
-                        //sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
-                        //sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
-                        //newP.Recipes.Add(dbContext.Recipes.SingleOrDefault(o => o.Id == sub.Id));
-                    }
-                    m.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == m.BatteryType.Id);
-                    dbContext.Programs.Add(m);
-                    dbContext.SaveChanges();
-                }
-                _programs.Add(m);
-                this.AllPrograms.Add(new ProgramViewModel(m));
+                ////_programRepository.AddItem(model);
+                //using (var dbContext = new AppDbContext())
+                //{
+                //    foreach (var sub in m.Recipes)
+                //    {
+                //        //sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
+                //        //sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
+                //        //sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
+                //        //sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
+                //        //newP.Recipes.Add(dbContext.Recipes.SingleOrDefault(o => o.Id == sub.Id));
+                //    }
+                //    m.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == m.BatteryType.Id);
+                //    dbContext.Programs.Add(m);
+                //    dbContext.SaveChanges();
+                //}
+                //_programs.Add(m);
+                //this.AllPrograms.Add(new ProgramViewModel(m));
             }
         }
         private void Edit()
@@ -593,24 +586,13 @@ namespace BCLabManager.ViewModel
         private void Execute(TestRecordViewModel testRecord)                                      
             //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
         {
-            /*ProgramClass model = _selectedProgram._program.Clone();
-            ProgramViewModel viewmodel = new ProgramViewModel(model, _programRepository, _RecipeRepository);      //实例化一个新的view model
-            viewmodel.DisplayName = "Program-Save As";
-            viewmodel.commandType = CommandType.SaveAs;
-            var ProgramViewInstance = new ProgramView();      //实例化一个新的view
-            ProgramViewInstance.DataContext = viewmodel;
-            ProgramViewInstance.ShowDialog();
-            if (viewmodel.IsOK == true)
-            {
-                _programRepository.AddItem(model);
-            }*/
             var model = new TestRecordClass();
             TestRecordExecuteViewModel evm = new TestRecordExecuteViewModel
                 (
                 //testRecord.Record,      //将model传给ExecuteViewModel      //??????????????????????????
                 model,
                 _batteryTypes,
-                _batteries,
+                _batteryService.Items,
                 _testers,
                 _channels,
                 _chambers
@@ -621,33 +603,35 @@ namespace BCLabManager.ViewModel
             TestRecordViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                testRecord.BatteryTypeStr = evm.BatteryType.Name;
-                testRecord.BatteryStr = evm.Battery.Name;
-                testRecord.ChamberStr = evm.Chamber.Name;
-                testRecord.TesterStr = evm.Tester.Name;
-                testRecord.ChannelStr = evm.Channel.Name;
-                testRecord.StartTime = evm.StartTime;
-                testRecord.Steps = evm.Steps;
-                testRecord.Status = TestStatus.Executing;
+                //testRecord.BatteryTypeStr = evm.BatteryType.Name;
+                //testRecord.BatteryStr = evm.Battery.Name;
+                //testRecord.ChamberStr = evm.Chamber.Name;
+                //testRecord.TesterStr = evm.Tester.Name;
+                //testRecord.ChannelStr = evm.Channel.Name;
+                //testRecord.StartTime = evm.StartTime;
+                //testRecord.Steps = evm.Steps;
+                //testRecord.Status = TestStatus.Executing;
 
-                using (var dbContext = new AppDbContext())
-                {
-                    var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == testRecord.Id);
-                    tr.BatteryTypeStr = testRecord.BatteryTypeStr;
-                    tr.BatteryStr = testRecord.BatteryStr;
-                    tr.ChamberStr = testRecord.ChamberStr;
-                    tr.TesterStr = testRecord.TesterStr;
-                    tr.ChannelStr = testRecord.ChannelStr;
-                    tr.StartTime = testRecord.StartTime;
-                    tr.Steps = testRecord.Steps;
-                    tr.Status = testRecord.Status;
-                    tr.AssignedBattery = dbContext.Batteries.SingleOrDefault(o=>o.Id == evm.Battery.Id);
-                    tr.AssignedChamber = dbContext.Chambers.SingleOrDefault(o => o.Id == evm.Chamber.Id);
-                    tr.AssignedChannel = dbContext.Channels.SingleOrDefault(o => o.Id == evm.Channel.Id);
-                    dbContext.SaveChanges();
-                }
-                testRecord.ExecuteOnAssets(evm.Battery, evm.Chamber, evm.Channel,SelectedProgram.Name, SelectedRecipe.Name);      //将evm的Assets传给testRecord
-                testRecord.ExecuteUpdateTime(_selectedProgram._program, _selectedRecipe._recipe);
+                //using (var dbContext = new AppDbContext())
+                //{
+                //    var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == testRecord.Id);
+                //    tr.BatteryTypeStr = testRecord.BatteryTypeStr;
+                //    tr.BatteryStr = testRecord.BatteryStr;
+                //    tr.ChamberStr = testRecord.ChamberStr;
+                //    tr.TesterStr = testRecord.TesterStr;
+                //    tr.ChannelStr = testRecord.ChannelStr;
+                //    tr.StartTime = testRecord.StartTime;
+                //    tr.Steps = testRecord.Steps;
+                //    tr.Status = testRecord.Status;
+                //    tr.AssignedBattery = dbContext.Batteries.SingleOrDefault(o=>o.Id == evm.Battery.Id);
+                //    tr.AssignedChamber = dbContext.Chambers.SingleOrDefault(o => o.Id == evm.Chamber.Id);
+                //    tr.AssignedChannel = dbContext.Channels.SingleOrDefault(o => o.Id == evm.Channel.Id);
+                //    dbContext.SaveChanges();
+                //}
+                //testRecord.ExecuteOnAssets(evm.Battery, evm.Chamber, evm.Channel,SelectedProgram.Name, SelectedRecipe.Name);      //将evm的Assets传给testRecord
+                //testRecord.ExecuteUpdateTime(_selectedProgram._program, _selectedRecipe._recipe);
+                _programService.RecipeService.TestRecordService.Execute(testRecord.Record, evm.BatteryType.Name, evm.Battery.Name, evm.Chamber.Name, evm.Tester.Name, evm.Channel.Name, evm.StartTime);
+                _batteryService.Execute(evm.Battery, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
             }
         }
         private void Commit(TestRecordViewModel testRecord)

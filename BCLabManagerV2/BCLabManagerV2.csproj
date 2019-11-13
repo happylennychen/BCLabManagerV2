@@ -250,6 +250,12 @@
     <Compile Include="Assets\Model\Service\IModelService.cs" />
     <Compile Include="Assets\Model\Service\ModelService.cs" />
     <Compile Include="DataAccess\AppDbContext.cs" />
+    <Compile Include="DataAccess\IProgramRepository.cs" />
+    <Compile Include="DataAccess\IRecipeRepository.cs" />
+    <Compile Include="DataAccess\ProgramRepository.cs" />
+    <Compile Include="DataAccess\RecipeRepository.cs" />
+    <Compile Include="DataAccess\TestRecordRepository.cs" />
+    <Compile Include="DataAccess\ITestRecordRepository.cs" />
     <Compile Include="DataAccess\TesterRepository.cs" />
     <Compile Include="DataAccess\BatteryRepository.cs" />
     <Compile Include="DataAccess\BatteryTypeRepository.cs" />
@@ -265,6 +271,9 @@
       <DependentUpon>20191113085438_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
+    <Compile Include="Programs\Model\Service\ProgramServiceClass.cs" />
+    <Compile Include="Programs\Model\Service\TestRecordServiceClass.cs" />
+    <Compile Include="Programs\Model\Service\RecipeServiceClass.cs" />
     <Compile Include="Programs\Model\RawDataClass.cs" />
     <Compile Include="Programs\Model\StepTemplate.cs" />
     <Compile Include="Programs\Model\StepClass.cs" />
@@ -511,9 +520,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Programs\Model\Service\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.12\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.12\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
