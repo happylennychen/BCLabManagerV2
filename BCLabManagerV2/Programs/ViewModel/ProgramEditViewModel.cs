@@ -317,7 +317,7 @@ namespace BCLabManager.ViewModel
 
         public void Remove()       //对于model来说，需要将选中的sub 从_program.Recipes中移除。对于viewmodel来说，需要将这个viewmodel从this.Recipes中移除
         {
-            _program.Recipes.Remove(SelectedRecipe._Recipe);
+            _program.Recipes.Remove(SelectedRecipe._recipe);
             this.Recipes.Remove(SelectedRecipe);
         }
 

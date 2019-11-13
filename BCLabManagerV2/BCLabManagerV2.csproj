@@ -311,7 +311,6 @@
     <Compile Include="Assets\ViewModel\TesterViewModel.cs" />
     <Compile Include="Assets\ViewModel\BatteryTypeViewModel.cs" />
     <Compile Include="Services\RelayCommand.cs" />
-    <Compile Include="Services\BindBase.cs" />
     <Compile Include="Assets\View\AllBatteriesView.xaml.cs">
       <DependentUpon>AllBatteriesView.xaml</DependentUpon>
       <SubType>Code</SubType>

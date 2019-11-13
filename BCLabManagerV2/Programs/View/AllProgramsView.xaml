@@ -183,7 +183,7 @@
             </ListView>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Header="First Test Record">
+        <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Header="Test Record">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="_Execute" Command="{Binding Path=ExecuteCommand}" Margin="0,5,5,0" Width="60"></Button>
@@ -192,11 +192,11 @@
                     <Button Content="_View Data" Command="{Binding Path=ViewCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
                 <ListView
-                      x:Name="FirstTestRecordList"
+                      x:Name="TestRecordList"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
       ItemsSource="{Binding Path=TestRecords}"
-                      SelectedItem="{Binding Path=SelectedFirstTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedItem="{Binding Path=SelectedTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 
                     <ListView.View>
@@ -249,88 +249,10 @@
             Header="New Cycle" 
             DisplayMemberBinding="{Binding Path=NewCycle}" 
             />
-                            <!--<GridViewColumn 
-            Header="Comment" 
-            DisplayMemberBinding="{Binding Path=Comment}" 
-            />-->
                         </GridView>
                     </ListView.View>
                 </ListView>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Header="Second Test Record">
-            <DockPanel>
-                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="_Execute" Command="{Binding Path=ExecuteCommand2}" Margin="0,5,5,0" Width="60"></Button>
-                    <Button Content="_Commit" Command="{Binding Path=CommitCommand2}" Margin="0,5,5,0" Width="60"></Button>
-                    <Button Content="_Invalidate" Command="{Binding Path=InvalidateCommand2}" Margin="0,5,5,0" Width="60"></Button>
-                    <Button Content="_View Data" Command="{Binding Path=ViewCommand2}" Margin="0,5,5,0" Width="60"></Button>
-                </StackPanel>
-                <ListView
-                      x:Name="SecondTestRecordList"
-      AlternationCount="2" 
-      ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Source={StaticResource strsCollectionViewSource}}"
-                      SelectedItem="{Binding Path=SelectedSecondTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
-      >
-
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn 
-            Header="Id" 
-            DisplayMemberBinding="{Binding Path=Id}" 
-            />
-                            <GridViewColumn 
-            Header="Status" 
-            DisplayMemberBinding="{Binding Path=Status}" 
-            />
-                            <GridViewColumn Width="40"
-            Header=""
-                                CellTemplate="{StaticResource ProgressBar}"
-            />
-                            <GridViewColumn 
-            Header="BatteryType" 
-            DisplayMemberBinding="{Binding Path=BatteryTypeStr}" 
-            />
-                            <GridViewColumn 
-            Header="Battery" 
-            DisplayMemberBinding="{Binding Path=BatteryStr}" 
-            />
-                            <GridViewColumn 
-            Header="Chamber" 
-            DisplayMemberBinding="{Binding Path=ChamberStr}" 
-            />
-                            <GridViewColumn 
-            Header="Tester" 
-            DisplayMemberBinding="{Binding Path=TesterStr}" 
-            />
-                            <GridViewColumn 
-            Header="Channel" 
-            DisplayMemberBinding="{Binding Path=ChannelStr}" 
-            />
-                            <GridViewColumn 
-            Header="StartTime" 
-            DisplayMemberBinding="{Binding Path=StartTime}" 
-            />
-                            <GridViewColumn 
-            Header="CompleteTime" 
-            DisplayMemberBinding="{Binding Path=CompleteTime}" 
-            />
-                            <GridViewColumn 
-            Header="Duration" 
-            DisplayMemberBinding="{Binding Path=Duration}" 
-            />
-                            <GridViewColumn 
-            Header="New Cycle" 
-            DisplayMemberBinding="{Binding Path=NewCycle}" 
-            />
-                            <!--<GridViewColumn 
-            Header="Comment" 
-            DisplayMemberBinding="{Binding Path=Comment}" 
-            />-->
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </DockPanel></GroupBox>
     </Grid>
 </UserControl>

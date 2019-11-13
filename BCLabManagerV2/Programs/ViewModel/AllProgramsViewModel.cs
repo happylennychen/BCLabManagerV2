@@ -20,7 +20,7 @@ namespace BCLabManager.ViewModel
         List<RecipeTemplate> _RecipeTemplates;
         ProgramViewModel _selectedProgram;
         RecipeViewModel _selectedRecipe;
-        TestRecordViewModel _selectedFirstTestRecord;
+        TestRecordViewModel _selectedTestRecord;
         TestRecordViewModel _selectedSecondTestRecord;
         //TestViewModel _selectedTest1;     //Test1区域选中项
         //TestViewModel _selectedTest2;     //Test2区域选中项
@@ -141,49 +141,23 @@ namespace BCLabManager.ViewModel
             get
             {
                 if (_selectedRecipe != null)
-                    return _selectedRecipe.Test1Records;
+                    return _selectedRecipe.TestRecords;
                 else
                     return null;
             }
         }
 
-        public ObservableCollection<TestRecordViewModel> SecondTestRecords
+        public TestRecordViewModel SelectedTestRecord
         {
             get
             {
-                if (_selectedRecipe != null)
-                    return _selectedRecipe.Test2Records;
-                else
-                    return null;
-            }
-        }
-
-        public TestRecordViewModel SelectedFirstTestRecord
-        {
-            get
-            {
-                return _selectedFirstTestRecord;
+                return _selectedTestRecord;
             }
             set
             {
-                if (_selectedFirstTestRecord != value)
+                if (_selectedTestRecord != value)
                 {
-                    _selectedFirstTestRecord = value;
-                }
-            }
-        }
-
-        public TestRecordViewModel SelectedSecondTestRecord
-        {
-            get
-            {
-                return _selectedSecondTestRecord;
-            }
-            set
-            {
-                if (_selectedSecondTestRecord != value)
-                {
-                    _selectedSecondTestRecord = value;
+                    _selectedTestRecord = value;
                 }
             }
         }
@@ -299,66 +273,6 @@ namespace BCLabManager.ViewModel
                         );
                 }
                 return _viewCommand;
-            }
-        }
-
-
-        public ICommand ExecuteCommand2
-        {
-            get
-            {
-                if (_executeCommand2 == null)
-                {
-                    _executeCommand2 = new RelayCommand(
-                        param => { this.Execute2(); },
-                        param => this.CanExecute2
-                        );
-                }
-                return _executeCommand2;
-            }
-        }
-        public ICommand CommitCommand2
-        {
-            get
-            {
-                if (_commitCommand2 == null)
-                {
-                    _commitCommand2 = new RelayCommand(
-                        param => { this.Commit2(); },
-                        param => this.CanCommit2
-                        );
-                }
-                return _commitCommand2;
-            }
-        }
-
-        public ICommand InvalidateCommand2
-        {
-            get
-            {
-                if (_invalidateCommand2 == null)
-                {
-                    _invalidateCommand2 = new RelayCommand(
-                        param => { this.Invalidate2(); },
-                        param => this.CanInvalidate2
-                        );
-                }
-                return _invalidateCommand2;
-            }
-        }
-
-        public ICommand ViewCommand2
-        {
-            get
-            {
-                if (_viewCommand2 == null)
-                {
-                    _viewCommand2 = new RelayCommand(
-                        param => { this.View2(); },
-                        param => this.CanView2
-                        );
-                }
-                return _viewCommand2;
             }
         }
         #endregion // Public Interface
@@ -643,67 +557,35 @@ namespace BCLabManager.ViewModel
         }
         private void Execute()
         {
-            Execute(SelectedFirstTestRecord);
+            Execute(SelectedTestRecord);
         }
         private bool CanExecute
         {
-            get { return _selectedFirstTestRecord != null && _selectedFirstTestRecord.Status == TestStatus.Waiting; }
+            get { return _selectedTestRecord != null && _selectedTestRecord.Status == TestStatus.Waiting; }
         }
         private void Commit()
         {
-            Commit(SelectedFirstTestRecord);
+            Commit(SelectedTestRecord);
         }
         private bool CanCommit
         {
-            get { return _selectedFirstTestRecord != null && _selectedFirstTestRecord.Status == TestStatus.Executing; }
+            get { return _selectedTestRecord != null && _selectedTestRecord.Status == TestStatus.Executing; }
         }
         private void Invalidate()
         {
-            Invalidate(SelectedFirstTestRecord);
+            Invalidate(SelectedTestRecord);
         }
         private bool CanInvalidate
         {
-            get { return _selectedFirstTestRecord != null && _selectedFirstTestRecord.Status == TestStatus.Completed; }
+            get { return _selectedTestRecord != null && _selectedTestRecord.Status == TestStatus.Completed; }
         }
         private void View()
         {
-            ViewRawData(SelectedFirstTestRecord);
+            ViewRawData(SelectedTestRecord);
         }
         private bool CanView
         {
-            get { return _selectedFirstTestRecord != null && (_selectedFirstTestRecord.Record.RawDataList.Count!=0); }
-        }
-        private void Execute2()
-        {
-            Execute(SelectedSecondTestRecord);
-        }
-        private bool CanExecute2
-        {
-            get { return _selectedSecondTestRecord != null && _selectedSecondTestRecord.Status == TestStatus.Waiting; }
-        }
-        private void Commit2()
-        {
-            Commit(SelectedSecondTestRecord);
-        }
-        private bool CanCommit2
-        {
-            get { return _selectedSecondTestRecord != null && _selectedSecondTestRecord.Status == TestStatus.Executing; }
-        }
-        private void Invalidate2()
-        {
-            Invalidate(SelectedSecondTestRecord);
-        }
-        private bool CanInvalidate2
-        {
-            get { return _selectedSecondTestRecord != null && _selectedSecondTestRecord.Status == TestStatus.Completed; }
-        }
-        private void View2()
-        {
-            ViewRawData(SelectedSecondTestRecord);
-        }
-        private bool CanView2
-        {
-            get { return _selectedSecondTestRecord != null && (_selectedSecondTestRecord.Record.RawDataList.Count != 0); }
+            get { return _selectedTestRecord != null && (_selectedTestRecord.Record.RawDataList.Count!=0); }
         }
         #endregion //Private Helper
 
@@ -765,7 +647,7 @@ namespace BCLabManager.ViewModel
                     dbContext.SaveChanges();
                 }
                 testRecord.ExecuteOnAssets(evm.Battery, evm.Chamber, evm.Channel,SelectedProgram.Name, SelectedRecipe.Name);      //将evm的Assets传给testRecord
-                testRecord.ExecuteUpdateTime(_selectedProgram._program, _selectedRecipe._Recipe);
+                testRecord.ExecuteUpdateTime(_selectedProgram._program, _selectedRecipe._recipe);
             }
         }
         private void Commit(TestRecordViewModel testRecord)
@@ -777,10 +659,10 @@ namespace BCLabManager.ViewModel
             //TestRecordCommitViewInstance.ShowDialog();
             //if (viewmodel.IsOK == true)
             //{
-            //    SelectedFirstTestRecord.CompleteTime = viewmodel.CompleteTime;
-            //    SelectedFirstTestRecord.NewCycle = viewmodel.NewCycle;
-            //    SelectedFirstTestRecord.Comment = viewmodel.Comment;
-            //    SelectedFirstTestRecord.Commit();
+            //    SelectedTestRecord.CompleteTime = viewmodel.CompleteTime;
+            //    SelectedTestRecord.NewCycle = viewmodel.NewCycle;
+            //    SelectedTestRecord.Comment = viewmodel.Comment;
+            //    SelectedTestRecord.Commit();
             //}
 
             TestRecordClass m = new TestRecordClass();
@@ -814,7 +696,7 @@ namespace BCLabManager.ViewModel
                     tr.AssignedChannel = null;
                     dbContext.SaveChanges();
                 }
-                testRecord.CommitUpdateTime(_selectedProgram._program, _selectedRecipe._Recipe);
+                testRecord.CommitUpdateTime(_selectedProgram._program, _selectedRecipe._recipe);
             }
         }
 

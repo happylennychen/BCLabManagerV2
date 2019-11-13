@@ -24,23 +24,13 @@ namespace BCLabManager.View
             foreach (var pro in _mainWindow.allProgramsViewModel.AllPrograms)
                 foreach (var sub in pro.Recipes)
                 {
-                    foreach(var tr in sub.Test1Records)
+                    foreach(var tr in sub.TestRecords)
                     {
                         if (tr.Id == id)
                         {
                             _mainWindow.AllProgramsViewInstance.Programlist.SelectedItem = pro;
                             _mainWindow.AllProgramsViewInstance.Recipelist.SelectedItem = sub;
-                            _mainWindow.AllProgramsViewInstance.FirstTestRecordList.SelectedItem = tr;
-                            return;
-                        }
-                    }
-                    foreach (var tr in sub.Test2Records)
-                    {
-                        if (tr.Id == id)
-                        {
-                            _mainWindow.AllProgramsViewInstance.Programlist.SelectedItem = pro;
-                            _mainWindow.AllProgramsViewInstance.Recipelist.SelectedItem = sub;
-                            _mainWindow.AllProgramsViewInstance.SecondTestRecordList.SelectedItem = tr;
+                            _mainWindow.AllProgramsViewInstance.TestRecordList.SelectedItem = tr;
                             return;
                         }
                     }
