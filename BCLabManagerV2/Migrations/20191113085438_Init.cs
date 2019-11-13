@@ -45,7 +45,7 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ChargeCurrents",
+                name: "RecipeTemplates",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -54,46 +54,7 @@ namespace BCLabManager.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChargeCurrents", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ChargeTemperatures",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ChargeTemperatures", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DischargeCurrents",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DischargeCurrents", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DischargeTemperatures",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DischargeTemperatures", x => x.Id);
+                    table.PrimaryKey("PK_RecipeTemplates", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -158,41 +119,30 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RecipeTemplates",
+                name: "EstimateTimeRecords",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ChargeTemperatureId = table.Column<int>(nullable: true),
-                    ChargeCurrentId = table.Column<int>(nullable: true),
-                    DischargeTemperatureId = table.Column<int>(nullable: true),
-                    DischargeCurrentId = table.Column<int>(nullable: true)
+                    BatteryTypeId = table.Column<int>(nullable: true),
+                    SubTemplateId = table.Column<int>(nullable: true),
+                    TestCount = table.Column<int>(nullable: false),
+                    ExecutedCount = table.Column<int>(nullable: false),
+                    AverageTime = table.Column<TimeSpan>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RecipeTemplates", x => x.Id);
+                    table.PrimaryKey("PK_EstimateTimeRecords", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RecipeTemplates_ChargeCurrents_ChargeCurrentId",
-                        column: x => x.ChargeCurrentId,
-                        principalTable: "ChargeCurrents",
+                        name: "FK_EstimateTimeRecords_BatteryTypes_BatteryTypeId",
+                        column: x => x.BatteryTypeId,
+                        principalTable: "BatteryTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_RecipeTemplates_ChargeTemperatures_ChargeTemperatureId",
-                        column: x => x.ChargeTemperatureId,
-                        principalTable: "ChargeTemperatures",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RecipeTemplates_DischargeCurrents_DischargeCurrentId",
-                        column: x => x.DischargeCurrentId,
-                        principalTable: "DischargeCurrents",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RecipeTemplates_DischargeTemperatures_DischargeTemperatureId",
-                        column: x => x.DischargeTemperatureId,
-                        principalTable: "DischargeTemperatures",
+                        name: "FK_EstimateTimeRecords_RecipeTemplates_SubTemplateId",
+                        column: x => x.SubTemplateId,
+                        principalTable: "RecipeTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -225,10 +175,7 @@ namespace BCLabManager.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     IsAbandoned = table.Column<bool>(nullable: false),
-                    ChargeTemperatureId = table.Column<int>(nullable: true),
-                    ChargeCurrentId = table.Column<int>(nullable: true),
-                    DischargeTemperatureId = table.Column<int>(nullable: true),
-                    DischargeCurrentId = table.Column<int>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
                     Loop = table.Column<int>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
                     CompleteTime = table.Column<DateTime>(nullable: false),
@@ -238,62 +185,9 @@ namespace BCLabManager.Migrations
                 {
                     table.PrimaryKey("PK_Recipes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Recipes_ChargeCurrents_ChargeCurrentId",
-                        column: x => x.ChargeCurrentId,
-                        principalTable: "ChargeCurrents",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Recipes_ChargeTemperatures_ChargeTemperatureId",
-                        column: x => x.ChargeTemperatureId,
-                        principalTable: "ChargeTemperatures",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Recipes_DischargeCurrents_DischargeCurrentId",
-                        column: x => x.DischargeCurrentId,
-                        principalTable: "DischargeCurrents",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Recipes_DischargeTemperatures_DischargeTemperatureId",
-                        column: x => x.DischargeTemperatureId,
-                        principalTable: "DischargeTemperatures",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_Recipes_Programs_ProgramClassId",
                         column: x => x.ProgramClassId,
                         principalTable: "Programs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EstimateTimeRecords",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    BatteryTypeId = table.Column<int>(nullable: true),
-                    SubTemplateId = table.Column<int>(nullable: true),
-                    TestCount = table.Column<int>(nullable: false),
-                    ExecutedCount = table.Column<int>(nullable: false),
-                    AverageTime = table.Column<TimeSpan>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EstimateTimeRecords", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EstimateTimeRecords_BatteryTypes_BatteryTypeId",
-                        column: x => x.BatteryTypeId,
-                        principalTable: "BatteryTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_EstimateTimeRecords_RecipeTemplates_SubTemplateId",
-                        column: x => x.SubTemplateId,
-                        principalTable: "RecipeTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -455,49 +349,9 @@ namespace BCLabManager.Migrations
                 column: "TestRecordClassId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Recipes_ChargeCurrentId",
-                table: "Recipes",
-                column: "ChargeCurrentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Recipes_ChargeTemperatureId",
-                table: "Recipes",
-                column: "ChargeTemperatureId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Recipes_DischargeCurrentId",
-                table: "Recipes",
-                column: "DischargeCurrentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Recipes_DischargeTemperatureId",
-                table: "Recipes",
-                column: "DischargeTemperatureId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Recipes_ProgramClassId",
                 table: "Recipes",
                 column: "ProgramClassId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RecipeTemplates_ChargeCurrentId",
-                table: "RecipeTemplates",
-                column: "ChargeCurrentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RecipeTemplates_ChargeTemperatureId",
-                table: "RecipeTemplates",
-                column: "ChargeTemperatureId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RecipeTemplates_DischargeCurrentId",
-                table: "RecipeTemplates",
-                column: "DischargeCurrentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RecipeTemplates_DischargeTemperatureId",
-                table: "RecipeTemplates",
-                column: "DischargeTemperatureId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TestRecords_AssignedBatteryId",
@@ -551,18 +405,6 @@ namespace BCLabManager.Migrations
 
             migrationBuilder.DropTable(
                 name: "Testers");
-
-            migrationBuilder.DropTable(
-                name: "ChargeCurrents");
-
-            migrationBuilder.DropTable(
-                name: "ChargeTemperatures");
-
-            migrationBuilder.DropTable(
-                name: "DischargeCurrents");
-
-            migrationBuilder.DropTable(
-                name: "DischargeTemperatures");
 
             migrationBuilder.DropTable(
                 name: "Programs");

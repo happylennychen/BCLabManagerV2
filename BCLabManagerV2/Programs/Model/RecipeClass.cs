@@ -16,11 +16,13 @@ namespace BCLabManager.Model
 
         public int Id { get; set; }
         public bool IsAbandoned { get; set; }
-        //public String Name { get; set; }
-        //public ChargeTemperatureClass ChargeTemperature { get; set; }
-        //public ChargeCurrentClass ChargeCurrent { get; set; }
-        //public DischargeTemperatureClass DischargeTemperature { get; set; }
-        //public DischargeCurrentClass DischargeCurrent { get; set; }
+
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set { SetProperty(ref _name, value); }
+        }
         public int Loop { get; set; } = 1;
         public DateTime StartTime
         {
@@ -40,7 +42,8 @@ namespace BCLabManager.Model
                 RaisePropertyChanged("CompleteTime");
             }
         }
-        public ObservableCollection<TestRecordClass> TestRecords { get; set; } = new ObservableCollection<TestRecordClass>();
+        //正常来说一个Recipe应该只包含一个TestRecord。但是考虑到有时候测试会无效，所以这里需要用一个List来处理。
+        public ObservableCollection<TestRecordClass> TestRecords { get; set; } = new ObservableCollection<TestRecordClass>();   
 
         public RecipeClass()
         {
@@ -48,11 +51,6 @@ namespace BCLabManager.Model
 
         public RecipeClass(RecipeTemplate template)
         {
-            //this.Name = template.Name;
-            //this.ChargeTemperature = template.ChargeTemperature;
-            //this.ChargeCurrent = template.ChargeCurrent;
-            //this.DischargeTemperature = template.DischargeTemperature;
-            //this.DischargeCurrent = template.DischargeCurrent;
 
             var tr = new TestRecordClass();
             tr.StatusChanged += this.TestRecord_StatusChanged;
@@ -62,32 +60,20 @@ namespace BCLabManager.Model
 
         public RecipeClass(RecipeTemplate template, string ProgramStr, int loop)  //Only used by populator
         {
-            //this.Name = template.Name;
-            //this.ChargeTemperature = template.ChargeTemperature;
-            //this.ChargeCurrent = template.ChargeCurrent;
-            //this.DischargeTemperature = template.DischargeTemperature;
-            //this.DischargeCurrent = template.DischargeCurrent;
+            this.Name = template.Name;
             this.Loop = loop;
 
             var tr = new TestRecordClass();
             tr.StatusChanged += this.TestRecord_StatusChanged;
-            //tr.RecipeStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
+            tr.RecipeStr = template.Name;
             tr.ProgramStr = ProgramStr;
             this.TestRecords.Add(tr);
         }
 
         public RecipeClass(
-            //ChargeTemperatureClass chargeTemperature,
-            //ChargeCurrentClass chargeCurrent,
-            //DischargeTemperatureClass dischargeTemperature,
-            //DischargeCurrentClass dischargeCurrent,
             int Loop) : this()
         {
             //this.Name = Name;
-            //this.ChargeTemperature = chargeTemperature;
-            //this.ChargeCurrent = chargeCurrent;
-            //this.DischargeTemperature = dischargeTemperature;
-            //this.DischargeCurrent = dischargeCurrent;
             this.Loop = Loop;
         }
 
@@ -95,22 +81,6 @@ namespace BCLabManager.Model
         {
             testRecord.StatusChanged += this.TestRecord_StatusChanged;
         }
-
-        //public void Update(String Name, TestCountEnum TestCount)
-        //{
-        //    this.Name = Name;
-        //    this.TestCount = TestCount;
-        //}
-        //public RecipeClass Clone()  //Clone Name and Test Count, and create testrecords list
-        //{
-            //var newsub = new RecipeClass(this.ChargeTemperature, this.ChargeCurrent, this.DischargeTemperature, this.DischargeCurrent, this.Loop);
-            //newsub.TestRecords = new ObservableCollection<TestRecordClass>();
-            //var tr = new TestRecordClass();
-            //tr.RecipeStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
-            //tr.StatusChanged += newsub.TestRecord_StatusChanged;
-            //newsub.TestRecords.Add(tr);
-            //return newsub;
-        //}
 
         private void TestRecord_StatusChanged(object sender, StatusChangedEventArgs e)
         {

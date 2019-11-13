@@ -260,12 +260,14 @@
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
-    <Compile Include="Migrations\20191111131152_Init.cs" />
-    <Compile Include="Migrations\20191111131152_Init.designer.cs">
-      <DependentUpon>20191111131152_Init.cs</DependentUpon>
+    <Compile Include="Migrations\20191113085438_Init.cs" />
+    <Compile Include="Migrations\20191113085438_Init.designer.cs">
+      <DependentUpon>20191113085438_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Programs\Model\RawDataClass.cs" />
+    <Compile Include="Programs\Model\StepTemplate.cs" />
+    <Compile Include="Programs\Model\StepClass.cs" />
     <Compile Include="Services\DatabasePopulator.cs" />
     <Compile Include="Services\GlobalSettings.cs" />
     <Compile Include="Assets\Model\BatteryClass.cs" />
