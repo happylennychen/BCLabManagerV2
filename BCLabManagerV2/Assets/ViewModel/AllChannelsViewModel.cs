@@ -15,8 +15,10 @@ namespace BCLabManager.ViewModel
     public class AllChannelsViewModel : BindableBase
     {
         #region Fields
-        ObservableCollection<ChannelClass> _channels;
-        ObservableCollection<TesterClass> _testers;
+        //ObservableCollection<ChannelClass> _channels;
+        //ObservableCollection<TesterClass> _testers;
+        private ChannelServieClass _channelService;
+        private TesterServieClass _testerService;
         ChannelViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
@@ -27,14 +29,36 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllChannelsViewModel(ObservableCollection<ChannelClass> channels, ObservableCollection<TesterClass> testers)
+        public AllChannelsViewModel(ChannelServieClass channelService, TesterServieClass testerService)
         {
-            _channels = channels;
-            _testers = testers;
+            _channelService = channelService;
+            _testerService = testerService;
             // Populate the AllTesters collection with _testerRepository.
-            this.CreateAllChannels(channels);
+            this.CreateAllChannels(_channelService.Items);
+            _channelService.Items.CollectionChanged += Items_CollectionChanged;
         }
 
+        private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
+                    {
+                        var channel = item as ChannelClass;
+                        this.AllChannels.Add(new ChannelViewModel(channel));
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    foreach (var item in e.OldItems)
+                    {
+                        var channel = item as ChannelClass;
+                        var deletetarget = this.AllChannels.SingleOrDefault(o => o.Id == channel.Id);
+                        this.AllChannels.Remove(deletetarget);
+                    }
+                    break;
+            }
+        }
         void CreateAllChannels(ObservableCollection<ChannelClass> channels)
         {
             List<ChannelViewModel> all =
@@ -102,7 +126,7 @@ namespace BCLabManager.ViewModel
                 if (_createCommand == null)
                 {
                     _createCommand = new RelayCommand(
-                        param => { this.Create();}
+                        param => { this.Create(); }
                         );
                 }
                 return _createCommand;
@@ -157,7 +181,7 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             ChannelClass m = new ChannelClass();      //实例化一个新的model
-            ChannelEditViewModel evm = new ChannelEditViewModel(m, _testers);      //实例化一个新的view model
+            ChannelEditViewModel evm = new ChannelEditViewModel(m, _testerService.Items);      //实例化一个新的view model
             //evm.DisplayName = "Channel-Create";
             evm.commandType = CommandType.Create;
             var ChannelViewInstance = new ChannelView();      //实例化一个新的view
@@ -165,26 +189,14 @@ namespace BCLabManager.ViewModel
             ChannelViewInstance.ShowDialog();                   //设置viewmodel属性
             if (evm.IsOK == true)
             {
-                using (var dbContext = new AppDbContext())
-                {
-                    //dbContext.Channels.Add(bc);    //不能直接这样写，不然会报错。这里不是添加一个全新的graph，而是添加一个新的m，然后修改关系
-                    var newc = new ChannelClass()
-                    {
-                        Name = m.Name,
-                    };
-                    newc.Tester = dbContext.Testers.SingleOrDefault(i => i.Id == m.Tester.Id);
-                    dbContext.Channels.Add(newc);
-                    dbContext.SaveChanges();    //side effect是会更新newc的id
-                    m = newc;                  //所以把newc存到using语句外面的bc里
-                }
-                _channels.Add(m);
-                this.AllChannels.Add(new ChannelViewModel(m));    //然后用m生成vm，这样ID就会更新
+                _channelService.Add(m);
             }
         }
         private void Edit()
         {
             ChannelClass m = new ChannelClass();      //实例化一个新的model
-            ChannelEditViewModel evm = new ChannelEditViewModel(m, _testers);      //实例化一个新的view model
+            ChannelEditViewModel evm = new ChannelEditViewModel(m, _testerService.Items);      //实例化一个新的view model
+            evm.Id = SelectedItem.Id;
             evm.Name = _selectedItem.Name;
             evm.Tester = evm.AllTesters.SingleOrDefault(i => i.Id == _selectedItem.Tester.Id);   //所以改用Id来找到List里的item
             evm.AssetUseCount = _selectedItem.AssetUseCount;
@@ -195,16 +207,7 @@ namespace BCLabManager.ViewModel
             ChannelViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _selectedItem.Name = evm.Name;
-                _selectedItem.Tester = evm.Tester;
-                using (var dbContext = new AppDbContext())
-                {
-                    var c = dbContext.Channels.SingleOrDefault(i => i.Id == _selectedItem.Id);
-                    c.Name = m.Name;
-                    c.Tester = dbContext.Testers.SingleOrDefault(i => i.Id == m.Tester.Id);
-
-                    dbContext.SaveChanges();
-                }
+                _channelService.Update(m);
             }
         }
         private bool CanEdit
@@ -214,7 +217,7 @@ namespace BCLabManager.ViewModel
         private void SaveAs()
         {
             ChannelClass m = new ChannelClass();      //实例化一个新的model
-            ChannelEditViewModel evm = new ChannelEditViewModel(m, _testers);      //实例化一个新的view model
+            ChannelEditViewModel evm = new ChannelEditViewModel(m, _testerService.Items);      //实例化一个新的view model
             evm.Name = _selectedItem.Name;
             //evm.Tester = _selectedItem.Tester;
             evm.Tester = evm.AllTesters.SingleOrDefault(i => i.Id == _selectedItem.Tester.Id);   //所以改用Id来找到List里的item
@@ -226,20 +229,7 @@ namespace BCLabManager.ViewModel
             ChannelViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                using (var dbContext = new AppDbContext())
-                {
-                    //dbContext.Channels.Add(bc);    //不能直接这样写，不然会报错。这里不是添加一个全新的graph，而是添加一个新的m，然后修改关系
-                    var newc = new ChannelClass()
-                    {
-                        Name = m.Name,
-                    };
-                    newc.Tester = dbContext.Testers.SingleOrDefault(i => i.Id == m.Tester.Id);
-                    dbContext.Channels.Add(newc);
-                    dbContext.SaveChanges();    //side effect是会更新newc的id
-                    m = newc;                  //所以把newc存到using语句外面的bc里
-                }
-                _channels.Add(m);
-                this.AllChannels.Add(new ChannelViewModel(m));    //然后用m生成vm，这样ID就会更新
+                _channelService.Add(m);
             }
         }
         private bool CanSaveAs
@@ -248,23 +238,15 @@ namespace BCLabManager.ViewModel
         }
         private void Delete()
         {
-            using (var dbContext = new AppDbContext())
+            var model = _channelService.Items.SingleOrDefault(o => o.Id == _selectedItem.Id);
+            if (model.AssetUseCount > 0)
             {
-                var model = dbContext.Channels.SingleOrDefault(o => o.Id == _selectedItem.Id);
-                if (model.AssetUseCount > 0)
-                {
-                    MessageBox.Show("Cannot delete using battery.");
-                    return;
-                }
-                if (MessageBox.Show("Are you sure?", "Delete Channel", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    dbContext.Channels.Remove(model);
-                    dbContext.SaveChanges();
-
-                    model = _channels.SingleOrDefault(o => o.Id == _selectedItem.Id);
-                    _channels.Remove(model);
-                    this.AllChannels.Remove(_selectedItem);
-                }
+                MessageBox.Show("Cannot delete using battery.");
+                return;
+            }
+            if (MessageBox.Show("Are you sure?", "Delete Channel", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                _channelService.Remove(SelectedItem.Id);
             }
         }
         private bool CanDelete
@@ -272,15 +254,5 @@ namespace BCLabManager.ViewModel
             get { return _selectedItem != null; }
         }
         #endregion //Private Helper
-
-        #region Event Handling Methods
-
-        //void OnChannelAddedToRepository(object sender, ItemAddedEventArgs<ChannelClass> e)
-        //{
-        //    var viewModel = new ChannelViewModel(e.NewItem, _channelRepository, _testerRepository);
-        //    this.AllChannels.Add(viewModel);
-        //}
-
-        #endregion // Event Handling Methods
     }
 }

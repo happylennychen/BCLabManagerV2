@@ -17,7 +17,7 @@ namespace BCLabManager.ViewModel
     public class RecipeTemplateViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
-        public readonly RecipeTemplate _RecipeTemplate;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
+        public readonly RecipeTemplate _recipeTemplate;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
 
         #endregion // Fields
 
@@ -25,8 +25,8 @@ namespace BCLabManager.ViewModel
 
         public RecipeTemplateViewModel(RecipeTemplate RecipeTemplate)
         {
-            _RecipeTemplate = RecipeTemplate;
-            _RecipeTemplate.PropertyChanged += _RecipeTemplate_PropertyChanged;
+            _recipeTemplate = RecipeTemplate;
+            _recipeTemplate.PropertyChanged += _RecipeTemplate_PropertyChanged;
         }
 
         private void _RecipeTemplate_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -40,13 +40,13 @@ namespace BCLabManager.ViewModel
 
         public int Id
         {
-            get { return _RecipeTemplate.Id; }
+            get { return _recipeTemplate.Id; }
             set
             {
-                if (value == _RecipeTemplate.Id)
+                if (value == _recipeTemplate.Id)
                     return;
 
-                _RecipeTemplate.Id = value;
+                _recipeTemplate.Id = value;
 
                 RaisePropertyChanged("Id");
             }
@@ -55,8 +55,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                //return $"{_RecipeTemplate.ChargeTemperature.Name} {_RecipeTemplate.ChargeCurrent} charge, {_RecipeTemplate.DischargeTemperature} {_RecipeTemplate.DischargeCurrent} discharge";
-                return "";
+                return _recipeTemplate.Name;
             }
         }
         //public ChargeTemperatureClass ChargeTemperature

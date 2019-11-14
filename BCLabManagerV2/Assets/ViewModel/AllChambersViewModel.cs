@@ -22,16 +22,40 @@ namespace BCLabManager.ViewModel
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
         RelayCommand _deleteCommand;
-        ObservableCollection<ChamberClass> _chambers;
+        //ObservableCollection<ChamberClass> _chambers;
+        private ChamberServieClass _chamberService;
 
         #endregion // Fields
 
         #region Constructor
 
-        public AllChambersViewModel(ObservableCollection<ChamberClass> chambers)
+        public AllChambersViewModel(ChamberServieClass chamberService)
         {
-            _chambers = chambers;
-            this.CreateAllChambers(chambers);
+            _chamberService = chamberService;
+            this.CreateAllChambers(_chamberService.Items);
+            _chamberService.Items.CollectionChanged += Items_CollectionChanged;
+        }
+
+        private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
+                    {
+                        var chamber = item as ChamberClass;
+                        this.AllChambers.Add(new ChamberViewModel(chamber));
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    foreach (var item in e.OldItems)
+                    {
+                        var chamber = item as ChamberClass;
+                        var deletetarget = this.AllChambers.SingleOrDefault(o => o.Id == chamber.Id);
+                        this.AllChambers.Remove(deletetarget);
+                    }
+                    break;
+            }
         }
 
         void CreateAllChambers(ObservableCollection<ChamberClass> chambers)
@@ -95,7 +119,7 @@ namespace BCLabManager.ViewModel
                 if (_createCommand == null)
                 {
                     _createCommand = new RelayCommand(
-                        param => { this.Create();}
+                        param => { this.Create(); }
                         );
                 }
                 return _createCommand;
@@ -149,8 +173,8 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            ChamberClass m = new ChamberClass();      //实例化一个新的model
-            ChamberEditViewModel evm = new ChamberEditViewModel(m);      //实例化一个新的view model
+            ChamberClass edititem = new ChamberClass();      //实例化一个新的model
+            ChamberEditViewModel evm = new ChamberEditViewModel(edititem);      //实例化一个新的view model
             //evm.DisplayName = "Chamber-Create";
             evm.commandType = CommandType.Create;
             var ChamberViewInstance = new ChamberView();      //实例化一个新的view
@@ -158,19 +182,14 @@ namespace BCLabManager.ViewModel
             ChamberViewInstance.ShowDialog();                   //设置viewmodel属性
             if (evm.IsOK == true)
             {
-                using (var dbContext = new AppDbContext())
-                {
-                    dbContext.Chambers.Add(m);
-                    dbContext.SaveChanges();
-                }
-                _chambers.Add(m);
-                this.AllChambers.Add(new ChamberViewModel(m));
+                _chamberService.Add(edititem);
             }
         }
         private void Edit()
         {
-            ChamberClass m = new ChamberClass();      //实例化一个新的model
-            ChamberEditViewModel evm = new ChamberEditViewModel(m);      //实例化一个新的view model
+            ChamberClass edititem = new ChamberClass();      //实例化一个新的model
+            ChamberEditViewModel evm = new ChamberEditViewModel(edititem);      //实例化一个新的view model
+            evm.Id = SelectedItem.Id;
             evm.Name = _selectedItem.Name;
             evm.Manufactor = _selectedItem.Manufactor;
             evm.LowTemp = _selectedItem.LowTemp;
@@ -182,20 +201,7 @@ namespace BCLabManager.ViewModel
             ChamberViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _selectedItem.Name = evm.Name;
-                _selectedItem.Manufactor = evm.Manufactor;
-                _selectedItem.LowTemp = evm.LowTemp;
-                _selectedItem.HighTemp = evm.HighTemp;
-
-                using (var dbContext = new AppDbContext())
-                {
-                    var cmb = dbContext.Chambers.SingleOrDefault(b => b.Id == _selectedItem.Id);
-                    cmb.Name = evm.Name;
-                    cmb.Manufactor = evm.Manufactor;
-                    cmb.LowestTemperature = evm.LowTemp;
-                    cmb.HighestTemperature = evm.HighTemp;
-                    dbContext.SaveChanges(); 
-                }
+                _chamberService.Update(edititem);
             }
         }
         private bool CanEdit
@@ -217,13 +223,7 @@ namespace BCLabManager.ViewModel
             ChamberViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                using (var dbContext = new AppDbContext())
-                {
-                    dbContext.Chambers.Add(m);
-                    dbContext.SaveChanges();
-                }
-                _chambers.Add(m);
-                this.AllChambers.Add(new ChamberViewModel(m));
+                _chamberService.Add(m);
             }
         }
         private bool CanSaveAs
@@ -232,23 +232,15 @@ namespace BCLabManager.ViewModel
         }
         private void Delete()
         {
-            using (var dbContext = new AppDbContext())
+            var model = _chamberService.Items.SingleOrDefault(o => o.Id == _selectedItem.Id);
+            if (model.AssetUseCount > 0)
             {
-                var model = dbContext.Chambers.SingleOrDefault(o => o.Id == _selectedItem.Id);
-                if (model.AssetUseCount > 0)
-                {
-                    MessageBox.Show("Cannot delete using chamber.");
-                    return;
-                }
-                if (MessageBox.Show("Are you sure?", "Delete Chamber", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    dbContext.Chambers.Remove(model);
-                    dbContext.SaveChanges();
-
-                    model = _chambers.SingleOrDefault(o => o.Id == _selectedItem.Id);
-                    _chambers.Remove(model);
-                    this.AllChambers.Remove(_selectedItem);
-                }
+                MessageBox.Show("Cannot delete using chamber.");
+                return;
+            }
+            if (MessageBox.Show("Are you sure?", "Delete Chamber", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                _chamberService.Remove(_selectedItem.Id);
             }
         }
         private bool CanDelete
@@ -258,12 +250,6 @@ namespace BCLabManager.ViewModel
         #endregion //Private Helper
 
         #region Event Handling Methods
-
-        //void OnChamberAddedToRepository(object sender, ItemAddedEventArgs<ChamberClass> e)
-        //{
-        //    var viewModel = new ChamberViewModel(e.NewItem, _chamberRepository);
-        //    this.AllChambers.Add(viewModel);
-        //}
 
         #endregion // Event Handling Methods
     }

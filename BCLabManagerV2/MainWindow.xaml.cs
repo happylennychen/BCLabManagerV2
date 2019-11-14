@@ -224,11 +224,11 @@ namespace BCLabManager
 
             allBatteriesViewModel = new AllBatteriesViewModel(BatteryService, BatteryTypeService);    //ViewModel初始化
 
-            allTestersViewModel = new AllTestersViewModel(Testers);    //ViewModel初始化
+            allTestersViewModel = new AllTestersViewModel(TesterService, ChannelService);    //ViewModel初始化
 
-            allChannelsViewModel = new AllChannelsViewModel(Channels, Testers);    //ViewModel初始化
+            allChannelsViewModel = new AllChannelsViewModel(ChannelService, TesterService);    //ViewModel初始化
 
-            allChambersViewModel = new AllChambersViewModel(Chambers);    //ViewModel初始化
+            allChambersViewModel = new AllChambersViewModel(ChamberService);    //ViewModel初始化
 
             allRecipeTemplatesViewModel = 
                 new AllRecipeTemplatesViewModel(

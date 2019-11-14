@@ -11,15 +11,15 @@ namespace BCLabManager.Model
     public class ProgramServiceClass
     {
         public ObservableCollection<ProgramClass> Items { get; set; }
-        public void Add(RecipeClass item)
+        public void Add(ProgramClass item)
         {
-            //using (var uow = new UnitOfWork(new AppDbContext()))
-            //{
-            //    item.BatteryType = uow.BatteryTypes.GetById(item.BatteryType.Id);
-            //    uow.Batteries.Insert(item);
-            //    uow.Commit();
-            //}
-            //Items.Add(item);
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                item.BatteryType = uow.BatteryTypes.GetById(item.BatteryType.Id);
+                uow.Programs.Insert(item);
+                uow.Commit();
+            }
+            Items.Add(item);
         }
         public void Remove(int id)
         {

@@ -11,8 +11,6 @@ namespace BCLabManager.Model
 {
     public class RecipeClass : BindableBase
     {
-        private DateTime _startTime;
-        private DateTime _completeTime;
 
         public int Id { get; set; }
         public bool IsAbandoned { get; set; }
@@ -24,26 +22,22 @@ namespace BCLabManager.Model
             set { SetProperty(ref _name, value); }
         }
         public int Loop { get; set; } = 1;
+
+        private DateTime _startTime;
         public DateTime StartTime
         {
             get => _startTime;
-            set
-            {
-                _startTime = value;
-                RaisePropertyChanged("StartTime");
-            }
+            set { SetProperty(ref _startTime, value); }
         }
+
+        private DateTime _completeTime;
         public DateTime CompleteTime
         {
             get => _completeTime;
-            set
-            {
-                _completeTime = value;
-                RaisePropertyChanged("CompleteTime");
-            }
+            set { SetProperty(ref _completeTime, value); }
         }
         //正常来说一个Recipe应该只包含一个TestRecord。但是考虑到有时候测试会无效，所以这里需要用一个List来处理。
-        public ObservableCollection<TestRecordClass> TestRecords { get; set; } = new ObservableCollection<TestRecordClass>();   
+        public ObservableCollection<TestRecordClass> TestRecords { get; set; } = new ObservableCollection<TestRecordClass>();
 
         public RecipeClass()
         {
@@ -56,6 +50,7 @@ namespace BCLabManager.Model
             tr.StatusChanged += this.TestRecord_StatusChanged;
             //tr.RecipeStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
             this.TestRecords.Add(tr);
+            Name = template.Name;
         }
 
         public RecipeClass(RecipeTemplate template, string ProgramStr, int loop)  //Only used by populator
@@ -126,6 +121,16 @@ namespace BCLabManager.Model
             {
                 tr.Abandon();
             }
+        }
+        public RecipeClass Clone()  //Clone Name and Test Count, and create testrecords list
+        {
+            var newsub = new RecipeClass();
+            newsub.Name = this.Name;
+            newsub.TestRecords = new ObservableCollection<TestRecordClass>();
+            var tr = new TestRecordClass();
+            tr.StatusChanged += newsub.TestRecord_StatusChanged;
+            newsub.TestRecords.Add(tr);
+            return newsub;
         }
     }
 }

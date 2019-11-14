@@ -94,13 +94,13 @@ namespace BCLabManager.Model
         //    this.Recipes = model.Recipes;
         //}
 
-        //public ProgramClass Clone() //Edit Save As用到
-        //{
-        //    List<RecipeClass> all =
-        //        (from sub in Recipes
-        //         select sub.Clone()).ToList();
-        //    ObservableCollection<RecipeClass> clonelist = new ObservableCollection<RecipeClass>(all);
-        //    return new ProgramClass(this.Name, this.BatteryType, this.Requester, this.RequestTime, this.Description, clonelist);
-        //}
+        public ProgramClass Clone() //Edit Save As用到
+        {
+            List<RecipeClass> all =
+                (from sub in Recipes
+                 select sub.Clone()).ToList();
+            ObservableCollection<RecipeClass> clonelist = new ObservableCollection<RecipeClass>(all);
+            return new ProgramClass(this.Name, this.BatteryType, this.Requester, this.RequestTime, this.Description, clonelist);
+        }
     }
 }

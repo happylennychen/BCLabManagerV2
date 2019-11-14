@@ -68,6 +68,22 @@ namespace BCLabManager.ViewModel
 
             foreach(var recipe in _programService.RecipeService.Items)
                 recipe.TestRecords.CollectionChanged += TestRecords_CollectionChanged;
+
+            _programService.Items.CollectionChanged += Items_CollectionChanged;
+        }
+
+        private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
+                    {
+                        var program = item as ProgramClass;
+                        this.AllPrograms.Add(new ProgramViewModel(program));
+                    }
+                    break;
+            }
         }
 
         private void TestRecords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -302,23 +318,7 @@ namespace BCLabManager.ViewModel
             ProgramViewInstance.ShowDialog();                   //设置viewmodel属性
             if (evm.IsOK == true)
             {
-                ////_programRepository.AddItem(model);
-                //using (var dbContext = new AppDbContext())
-                //{
-                //    foreach (var sub in m.Recipes)
-                //    {
-                //        //sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
-                //        //sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
-                //        //sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
-                //        //sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
-                //        //newP.Recipes.Add(dbContext.Recipes.SingleOrDefault(o => o.Id == sub.Id));
-                //    }
-                //    m.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == m.BatteryType.Id);
-                //    dbContext.Programs.Add(m);
-                //    dbContext.SaveChanges();
-                //}
-                //_programs.Add(m);
-                //this.AllPrograms.Add(new ProgramViewModel(m));
+                _programService.Add(m);
             }
         }
         private void Edit()
@@ -327,7 +327,7 @@ namespace BCLabManager.ViewModel
             var oldsubs = oldpro.Recipes;
 
             ProgramClass model = new ProgramClass();    //Edit Window要用到的model
-
+            model.Id = oldpro.Id;
             model.Name = oldpro.Name;
             model.Requester = oldpro.Requester;
             model.RequestTime = oldpro.RequestTime;
@@ -515,33 +515,17 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            //ProgramClass m = _selectedProgram._program.Clone();
-            //ProgramEditViewModel evm = new ProgramEditViewModel(m, _batteryTypes, _RecipeTemplates);      //实例化一个新的view model
+            ProgramClass m = _selectedProgram._program.Clone();
+            ProgramEditViewModel evm = new ProgramEditViewModel(m, _batteryTypeService.Items, _RecipeTemplates);      //实例化一个新的view model
             ////evm.DisplayName = "Program-Save As";
             //evm.commandType = CommandType.SaveAs;
-            //var ProgramViewInstance = new ProgramView();      //实例化一个新的view
-            //ProgramViewInstance.DataContext = evm;
-            //ProgramViewInstance.ShowDialog();
-            //if (evm.IsOK == true)
-            //{
-            //    //_programRepository.AddItem(model);
-            //    using (var dbContext = new AppDbContext())
-            //    {
-            //        foreach (var sub in m.Recipes)
-            //        {
-            //            sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
-            //            sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
-            //            sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
-            //            sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
-            //            newP.Recipes.Add(dbContext.Recipes.SingleOrDefault(o => o.Id == sub.Id));
-            //        }
-            //        m.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == m.BatteryType.Id);
-            //        dbContext.Programs.Add(m);
-            //        dbContext.SaveChanges();
-            //    }
-            //    _programs.Add(m);
-            //    this.AllPrograms.Add(new ProgramViewModel(m));
-            //}
+            var ProgramViewInstance = new ProgramView();      //实例化一个新的view
+            ProgramViewInstance.DataContext = evm;
+            ProgramViewInstance.ShowDialog();
+            if (evm.IsOK == true)
+            {
+                _programService.Add(m);
+            }
         }
         private bool CanSaveAs
         {
@@ -551,17 +535,6 @@ namespace BCLabManager.ViewModel
         {
             if (MessageBox.Show("Are you sure?", "Abandon Recipe", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                ////_selectedRecipe._Recipe.Abandon();    //不需要。因为下面一行代码会做一样的事情。如果这里做了，反而会导致UI无法更新
-                //_selectedRecipe.Abandon();
-                //using (var dbContext = new AppDbContext())
-                //{
-                //    var model = dbContext.Recipes.SingleOrDefault(o => o.Id == _selectedRecipe.Id);
-                //    dbContext.Entry(model)
-                //        .Collection(o => o.TestRecords)
-                //        .Load();
-                //    model.Abandon();
-                //    dbContext.SaveChanges();
-                //}
                 _programService.RecipeService.Abandon(SelectedRecipe._recipe);
             }
         }

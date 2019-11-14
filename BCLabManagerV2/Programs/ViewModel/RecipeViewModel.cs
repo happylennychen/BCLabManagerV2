@@ -198,14 +198,5 @@ namespace BCLabManager.ViewModel
 
 
         #endregion // Customer Properties
-
-        public void Abandon()
-        {
-            IsAbandoned = true;
-            foreach (var tr in TestRecords)
-            {
-                tr.Abandon();
-            }
-        }
     }
 }

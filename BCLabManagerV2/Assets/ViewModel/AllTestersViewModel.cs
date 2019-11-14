@@ -21,15 +21,41 @@ namespace BCLabManager.ViewModel
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
         RelayCommand _deleteCommand;
-        ObservableCollection<TesterClass> _testers;
+        //ObservableCollection<TesterClass> _testers;
+        private TesterServieClass _testerService;
+        private ChannelServieClass _channelService;
         #endregion // Fields
 
         #region Constructor
 
-        public AllTestersViewModel(ObservableCollection<TesterClass> testers)
+        public AllTestersViewModel(TesterServieClass testerService, ChannelServieClass channelService)
         {
-            _testers = testers;
-            this.CreateAllTesters(testers);
+            _testerService = testerService;
+            _channelService = channelService;
+            this.CreateAllTesters(_testerService.Items);
+            _testerService.Items.CollectionChanged += Items_CollectionChanged;
+        }
+
+        private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
+                    {
+                        var tester = item as TesterClass;
+                        this.AllTesters.Add(new TesterViewModel(tester));
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    foreach (var item in e.OldItems)
+                    {
+                        var tester = item as TesterClass;
+                        var deletetarget = this.AllTesters.SingleOrDefault(o => o.Id == tester.Id);
+                        this.AllTesters.Remove(deletetarget);
+                    }
+                    break;
+            }
         }
 
         void CreateAllTesters(ObservableCollection<TesterClass> testers)
@@ -91,7 +117,7 @@ namespace BCLabManager.ViewModel
                 if (_createCommand == null)
                 {
                     _createCommand = new RelayCommand(
-                        param => { this.Create();}
+                        param => { this.Create(); }
                         );
                 }
                 return _createCommand;
@@ -153,19 +179,14 @@ namespace BCLabManager.ViewModel
             TesterViewInstance.ShowDialog();                   //设置viewmodel属性
             if (evm.IsOK == true)
             {
-                _testers.Add(m);
-                using (var dbContext = new AppDbContext())
-                {
-                    dbContext.Testers.Add(m);
-                    dbContext.SaveChanges();
-                }
-                this.AllTesters.Add(new TesterViewModel(m));
+                _testerService.Add(m);
             }
         }
         private void Edit()
         {
             TesterClass m = new TesterClass();      //实例化一个新的model
             TesterEditViewModel evm = new TesterEditViewModel(m);      //实例化一个新的view model
+            evm.Id = SelectedItem.Id;
             evm.Manufactor = _selectedItem.Manufactor;
             evm.Name = _selectedItem.Name;
             //evm.DisplayName = "Tester-Edit";
@@ -174,15 +195,7 @@ namespace BCLabManager.ViewModel
             TesterViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _selectedItem.Manufactor = evm.Manufactor;
-                _selectedItem.Name = evm.Name;
-                using (var dbContext = new AppDbContext())
-                {
-                    var tst = dbContext.Testers.SingleOrDefault(t => t.Id == _selectedItem.Id);
-                    tst.Manufactor = m.Manufactor;
-                    tst.Name = m.Name;
-                    dbContext.SaveChanges();
-                }
+                _testerService.Update(m);
             }
         }
         private bool CanEdit
@@ -201,13 +214,7 @@ namespace BCLabManager.ViewModel
             TesterViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _testers.Add(m);
-                using (var dbContext = new AppDbContext())
-                {
-                    dbContext.Testers.Add(m);
-                    dbContext.SaveChanges();
-                }
-                this.AllTesters.Add(new TesterViewModel(m));
+                _testerService.Add(m);
             }
         }
         private bool CanSaveAs
@@ -216,23 +223,14 @@ namespace BCLabManager.ViewModel
         }
         private void Delete()
         {
-            using (var dbContext = new AppDbContext())
+            if (_channelService.Items.Count(o => o.Tester.Id == _selectedItem.Id) != 0)
             {
-                if (dbContext.Channels.Count(o => o.Tester.Id == _selectedItem.Id) != 0)
-                {
-                    MessageBox.Show("Before deleting this tester, please delete all channels that belong to it.");
-                    return;
-                }
-                if (MessageBox.Show("Are you sure?", "Delete Tester", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    var model = dbContext.Testers.SingleOrDefault(o => o.Id == _selectedItem.Id);
-                    dbContext.Testers.Remove(model);
-                    dbContext.SaveChanges();
-
-                    model = _testers.SingleOrDefault(o => o.Id == _selectedItem.Id);
-                    _testers.Remove(model);
-                    this.AllTesters.Remove(_selectedItem);
-                }
+                MessageBox.Show("Before deleting this tester, please delete all channels that belong to it.");
+                return;
+            }
+            if (MessageBox.Show("Are you sure?", "Delete Tester", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                _testerService.Remove(SelectedItem.Id);
             }
         }
         private bool CanDelete

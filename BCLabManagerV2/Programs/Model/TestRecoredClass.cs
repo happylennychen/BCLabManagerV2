@@ -27,8 +27,6 @@ namespace BCLabManager.Model
     }
     public class TestRecordClass : BindableBase
     {
-        private DateTime startTime;
-        private DateTime completeTime;
         public int Id { get; set; }
         private TestStatus status = TestStatus.Waiting;
         public TestStatus Status
@@ -95,23 +93,19 @@ namespace BCLabManager.Model
             get { return _programStr; }
             set { SetProperty(ref _programStr, value); }
         }
+
+        private DateTime _startTime;
         public DateTime StartTime
         {
-            get => startTime;
-            set
-            {
-                startTime = value;
-                RaisePropertyChanged("StartTime");
-            }
+            get => _startTime;
+            set { SetProperty(ref _startTime, value); }
         }
+
+        private DateTime _completeTime;
         public DateTime CompleteTime
         {
-            get => completeTime;
-            set
-            {
-                completeTime = value;
-                RaisePropertyChanged("CompleteTime");
-            }
+            get => _completeTime;
+            set { SetProperty(ref _completeTime, value); }
         }
         public String Steps { get; set; }
         public String Comment { get; set; }

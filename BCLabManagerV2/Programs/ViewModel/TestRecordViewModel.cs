@@ -336,37 +336,5 @@ namespace BCLabManager.ViewModel
             }
         }
         #endregion
-        #region Public Interface
-        public void ExecuteOnAssets(BatteryClass battery, ChamberClass chamber, ChannelClass channel, string proname, string subproname)
-        {
-            _record.AssetsExecute(battery, chamber, channel, this.Steps, this.StartTime, proname, subproname);
-            RaisePropertyChanged("Status");
-        }
-        public void CommitOnAssets()
-        {
-            _record.AssetsCommit(this.CompleteTime, null, this.NewCycle, this.Comment);
-            RaisePropertyChanged("Status");
-        }
-        public void Invalidate()
-        {
-            _record.Invalidate(this.Comment);
-            //RaisePropertyChanged("Status");
-        }
-        public void Abandon()
-        {
-            _record.Abandon();
-            RaisePropertyChanged("Status");
-        }
-
-        internal void ExecuteUpdateTime(ProgramClass _program, RecipeClass _Recipe)
-        {
-            _record.ExeuteUpdateTime(_program, _Recipe);
-        }
-
-        internal void CommitUpdateTime(ProgramClass _program, RecipeClass _Recipe)
-        {
-            _record.CommitUpdateTime(_program, _Recipe);
-        }
-        #endregion
     }
 }

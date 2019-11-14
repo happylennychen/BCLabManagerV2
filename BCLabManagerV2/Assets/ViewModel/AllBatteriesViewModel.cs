@@ -16,8 +16,6 @@ namespace BCLabManager.ViewModel
     public class AllBatteriesViewModel : BindableBase
     {
         #region Fields
-        //ObservableCollection<BatteryClass> _batteries;
-        //ObservableCollection<BatteryTypeClass> _batteryTypes;
         private BatteryTypeServieClass _batteryTypeServie;
         private BatteryServieClass _batteryService;
         BatteryViewModel _selectedItem;
@@ -57,12 +55,6 @@ namespace BCLabManager.ViewModel
                     }
                     break;
             }
-        }
-
-        private void Battery_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            //if(e.PropertyName == "Records")
-                RaisePropertyChanged(e.PropertyName);//通知View更新Records
         }
 
         void CreateAllBatteries(ObservableCollection<BatteryClass> batteries)
@@ -205,21 +197,6 @@ namespace BCLabManager.ViewModel
             BatteryViewInstance.ShowDialog();                   //设置viewmodel属性
             if (bevm.IsOK == true)
             {
-                //using (var dbContext = new AppDbContext())
-                //{
-                //    //dbContext.Batteries.Add(bc);    //不能直接这样写，不然会报错。这里不是添加一个全新的graph，而是添加一个新的bc，然后修改关系
-                //    var newb = new BatteryClass()
-                //    {
-                //        Name = bc.Name,
-                //        CycleCount = bc.CycleCount
-                //    };
-                //    newb.BatteryType = dbContext.BatteryTypes.SingleOrDefault(i => i.Id == bc.BatteryType.Id);
-                //    dbContext.Batteries.Add(newb);
-                //    dbContext.SaveChanges();    //side effect是会更新newb的id
-                //    bc = newb;                  //所以把newb存到using语句外面的bc里
-                //}
-                //this.AllBatteries.Add(new BatteryViewModel(newItem));    //然后用bc生成vm，这样ID就会更新
-                //this.AllBatteries.Add(new BatteryViewModel(editItem));    //然后用bc生成vm，这样ID就会更新
                 _batteryService.Add(editItem);
 
             }
@@ -242,18 +219,6 @@ namespace BCLabManager.ViewModel
             if (bevm.IsOK == true)
             {
                 _batteryService.Update(editItem);
-                //_selectedItem.Name = bevm.Name;
-                //_selectedItem.BatteryType = bevm.BatteryType;
-                //_selectedItem.CycleCount = bevm.CycleCount;
-                //using (var dbContext = new AppDbContext())
-                //{
-                //    var bat = dbContext.Batteries.SingleOrDefault(b => b.Id == _selectedItem.Id);
-                //    bat.Name = editItem.Name;
-                //    bat.BatteryType = dbContext.BatteryTypes.SingleOrDefault(bt => bt.Id == editItem.BatteryType.Id);
-                //    bat.CycleCount = editItem.CycleCount;
-
-                //    dbContext.SaveChanges();
-                //}
             }
         }
         private bool CanEdit
@@ -275,21 +240,6 @@ namespace BCLabManager.ViewModel
             BatteryViewInstance.ShowDialog();
             if (bevm.IsOK == true)
             {
-                //using (var dbContext = new AppDbContext())
-                //{
-                //    //dbContext.Batteries.Add(bc);    //不能直接这样写，不然会报错。这里不是添加一个全新的graph，而是添加一个新的bc，然后修改关系
-                //    var newb = new BatteryClass()
-                //    {
-                //        Name = bc.Name,
-                //        CycleCount = bc.CycleCount
-                //    };
-                //    newb.BatteryType = dbContext.BatteryTypes.SingleOrDefault(i => i.Id == bc.BatteryType.Id);
-                //    dbContext.Batteries.Add(newb);
-                //    dbContext.SaveChanges();    //side effect是会更新newb的id
-                //    bc = newb;                  //所以把newb存到using语句外面的bc里
-                //}
-                //_batteries.Add(bc);
-                //this.AllBatteries.Add(new BatteryViewModel(bc));    //然后用bc生成vm，这样ID就会更新
                 _batteryService.Add(bc);
             }
         }
@@ -299,24 +249,6 @@ namespace BCLabManager.ViewModel
         }
         private void Delete()
         {
-            //using (var dbContext = new AppDbContext())
-            //{
-            //    var model = dbContext.Batteries.SingleOrDefault(o => o.Id == _selectedItem.Id);
-            //    if (model.AssetUseCount > 0)
-            //    {
-            //        MessageBox.Show("Cannot delete using battery.");
-            //        return;
-            //    }
-            //    if (MessageBox.Show("Are you sure?", "Delete Battery", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            //    {
-            //        dbContext.Batteries.Remove(model);
-            //        dbContext.SaveChanges();
-
-            //        model = _batteries.SingleOrDefault(o => o.Id == _selectedItem.Id);
-            //        _batteries.Remove(model);
-            //        this.AllBatteries.Remove(_selectedItem);
-            //    }
-            //}
             var model = _batteryService.Items.SingleOrDefault(o => o.Id == _selectedItem.Id);
             if (model.AssetUseCount > 0)
             {
@@ -333,15 +265,5 @@ namespace BCLabManager.ViewModel
             get { return _selectedItem != null; }
         }
         #endregion //Private Helper
-
-        #region Event Handling Methods
-
-        //void OnBatteryAddedToRepository(object sender, ItemAddedEventArgs<BatteryClass> e)
-        //{
-        //    var viewModel = new BatteryViewModel(e.NewItem, _batteryRepository, _batteryTypeRepository);
-        //    this.AllBatteries.Add(viewModel);
-        //}
-
-        #endregion // Event Handling Methods
     }
 }
