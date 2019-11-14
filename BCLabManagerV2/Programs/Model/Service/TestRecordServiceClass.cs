@@ -13,13 +13,13 @@ namespace BCLabManager.Model
         public ObservableCollection<TestRecordClass> Items { get; set; }
         public void Add(TestRecordClass item)
         {
-            //using (var uow = new UnitOfWork(new AppDbContext()))
-            //{
-            //    item.BatteryType = uow.BatteryTypes.GetById(item.BatteryType.Id);
-            //    uow.Batteries.Insert(item);
-            //    uow.Commit();
-            //}
-            //Items.Add(item);
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                //item.BatteryType = uow.BatteryTypes.GetById(item.BatteryType.Id);
+                uow.TestRecords.Insert(item);
+                uow.Commit();
+            }
+            Items.Add(item);
         }
         public void Remove(int id)
         {
@@ -54,15 +54,45 @@ namespace BCLabManager.Model
             edittarget.Status = item.Status;
             edittarget.TesterStr = item.TesterStr;
         }
-        public void Execute(TestRecordClass testRecord, string batteryTypeStr, string batteryStr, string chamberStr, string testerStr, string channelStr, DateTime startTime)
+        public void Execute(TestRecordClass testRecord, string batteryTypeStr, BatteryClass battery, ChamberClass chamber, string testerStr, ChannelClass channel, DateTime startTime)
         {
             testRecord.BatteryTypeStr = batteryTypeStr;
-            testRecord.BatteryStr = batteryStr;
-            testRecord.ChamberStr = chamberStr;
+            testRecord.BatteryStr = battery.Name;
+            testRecord.ChamberStr = chamber.Name;
             testRecord.TesterStr = testerStr;
-            testRecord.ChannelStr = channelStr;
+            testRecord.ChannelStr = channel.Name;
             testRecord.StartTime = startTime;
+            testRecord.AssignedBattery = battery;
+            testRecord.AssignedChamber = chamber;
+            testRecord.AssignedChannel = channel;
             testRecord.Status = TestStatus.Executing;
+            Update(testRecord);
+        }
+
+        internal void Commit(TestRecordClass testRecord, string comment, List<RawDataClass> rawDataList, DateTime completeTime, string programName, string recipeName)
+        {
+            testRecord.Comment = comment;
+            testRecord.RawDataList = rawDataList;
+            testRecord.CompleteTime = completeTime;
+            testRecord.AssignedBattery = null;
+            testRecord.AssignedChamber = null;
+            testRecord.AssignedChannel = null;
+            testRecord.ProgramStr = programName;
+            testRecord.RecipeStr = recipeName;
+            testRecord.Status = TestStatus.Completed;
+            Update(testRecord);
+        }
+
+        internal void Invalidate(TestRecordClass testRecord, string comment)
+        {
+            testRecord.Comment += "\r\n" + comment;
+            testRecord.Status = TestStatus.Invalid;
+            Update(testRecord);
+        }
+
+        internal void Abandon(TestRecordClass testRecord)
+        {
+            testRecord.Status = TestStatus.Abandoned;
             Update(testRecord);
         }
     }

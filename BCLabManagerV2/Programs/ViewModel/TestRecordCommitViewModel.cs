@@ -18,26 +18,7 @@ namespace BCLabManager.ViewModel
     public class TestRecordCommitViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
-        //string _programName;
-        //string _RecipeName;
         readonly TestRecordClass _record;
-        //List<BatteryTypeClass> _batteryTypes;
-        //List<BatteryClass> _batteries;
-        //List<TesterClass> _testers;
-        //List<ChannelClass> _channels;
-        //List<ChamberClass> _chambers;
-
-        //ObservableCollection<BatteryTypeClass> _allBatteryTypes;
-        BatteryTypeClass _batteryType;
-        ObservableCollection<BatteryClass> _allBatteries;
-        BatteryClass _battery;
-        //ObservableCollection<TesterClass> _allTesters;
-        TesterClass _tester;
-        ObservableCollection<ChannelClass> _allChannels;
-        ChannelClass _channel;
-        //ObservableCollection<ChamberClass> _allChambers;
-        ChamberClass _chamber;
-        //RelayCommand _executeCommand;
         RelayCommand _okCommand;
         RelayCommand _openFilesCommand;
         bool _isOK;
@@ -50,15 +31,7 @@ namespace BCLabManager.ViewModel
             TestRecordClass record
             )     //
         {
-            if (record == null)
-                throw new ArgumentNullException("record");
-
-            _record = record;
-            //_batteryTypes = batteryTypes;
-            //_batteries = batteries;
-            //_testers = testers;
-            //_channels = channels;
-            //_chambers = chambers;
+            _record = record ?? throw new ArgumentNullException("record");
 
             _record.PropertyChanged += _record_PropertyChanged;
         }
@@ -71,133 +44,6 @@ namespace BCLabManager.ViewModel
         #endregion // Constructor
 
         #region Presentation Properties
-
-        public TestStatus Status
-        {
-            get
-            {
-                return _record.Status;
-            }
-            set
-            {
-                if (value == _record.Status)
-                    return;
-
-                _record.Status = value;
-
-                RaisePropertyChanged("Status");
-            }
-        }
-
-        public BatteryClass Battery   //选中项
-        {
-            get
-            {
-                //if (_record.BatteryStr == null)
-                //return "/";
-                return _battery;
-            }
-            set
-            {
-                if (value == _battery)
-                    return;
-
-                _battery = value;
-
-                RaisePropertyChanged("Battery");
-            }
-        }
-
-        public ObservableCollection<BatteryClass> AllBatteries    //供选项
-        {
-            get
-            {
-                if (_allBatteries == null)
-                    _allBatteries = new ObservableCollection<BatteryClass>();
-                return _allBatteries;
-            }
-            set
-            {
-                if (value != _allBatteries)
-                {
-                    _allBatteries = value;
-                    RaisePropertyChanged("AllBatteries");
-                }
-            }
-        }
-
-        public ChamberClass Chamber   //选中项
-        {
-            get
-            {
-                //if (_record.ChamberStr == null)
-                //return "/";
-                return _chamber;
-            }
-            set
-            {
-                if (value == _chamber)
-                    return;
-
-                _chamber = value;
-
-                RaisePropertyChanged("Chamber");
-            }
-        }
-
-        public ChannelClass Channel
-        {
-            get
-            {
-                //if (_channel == null)
-                //return "/";
-                return _channel;
-            }
-            set
-            {
-                if (value == _channel)
-                    return;
-
-                _channel = value;
-
-                RaisePropertyChanged("Channel");
-            }
-        }
-
-        public ObservableCollection<ChannelClass> AllChannels    //供选项
-        {
-            get
-            {
-                if (_allChannels == null)
-                    _allChannels = new ObservableCollection<ChannelClass>();
-                return _allChannels;
-            }
-            set
-            {
-                if (value != _allChannels)
-                {
-                    _allChannels = value;
-                    RaisePropertyChanged("AllChannels");
-                }
-            }
-        }
-
-        public DateTime StartTime
-        {
-            get
-            {
-                return _record.StartTime;
-            }
-            set
-            {
-                if (value == _record.StartTime)
-                    return;
-
-                _record.StartTime = value;
-
-                RaisePropertyChanged("StartTime");
-            }
-        }
 
         public DateTime CompleteTime
         {
@@ -230,22 +76,6 @@ namespace BCLabManager.ViewModel
                 _record.Comment = value;
 
                 RaisePropertyChanged("Comment");
-            }
-        }
-        public String Steps
-        {
-            get
-            {
-                return _record.Steps;
-            }
-            set
-            {
-                if (value == _record.Steps)
-                    return;
-
-                _record.Steps = value;
-
-                RaisePropertyChanged("Steps");
             }
         }
 

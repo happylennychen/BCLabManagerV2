@@ -30,12 +30,16 @@ namespace BCLabManager.ViewModel
         RelayCommand _invalidateCommand;
         RelayCommand _viewCommand;
 
-        ObservableCollection<BatteryTypeClass> _batteryTypes;
-        private BatteryServieClass _batteryService;
-        ObservableCollection<TesterClass> _testers;
-        ObservableCollection<ChannelClass> _channels;
-        ObservableCollection<ChamberClass> _chambers;
+        //ObservableCollection<BatteryTypeClass> _batteryTypes;
+        //ObservableCollection<TesterClass> _testers;
+        //ObservableCollection<ChannelClass> _channels;
+        //ObservableCollection<ChamberClass> _chambers;
         //ObservableCollection<ProgramClass> _programs;
+        private BatteryServieClass _batteryService;
+        private BatteryTypeServieClass _batteryTypeService;
+        private TesterServieClass _testerService;
+        private ChannelServieClass _channelService;
+        private ChamberServieClass _chamberService;
         private ProgramServiceClass _programService;
         #endregion // Fields
 
@@ -45,24 +49,41 @@ namespace BCLabManager.ViewModel
             (
             ProgramServiceClass programService,
             List<RecipeTemplate> RecipeTemplates,
-            ObservableCollection<BatteryTypeClass> batteryTypes,
+            BatteryTypeServieClass batteryTypeService,
             BatteryServieClass batteryService,
-            ObservableCollection<TesterClass> testers,
-            ObservableCollection<ChannelClass> channels,
-            ObservableCollection<ChamberClass> chambers
+            TesterServieClass testerService,
+            ChannelServieClass channelService,
+            ChamberServieClass chamberService
             )
         {
             _RecipeTemplates = RecipeTemplates;
             _programService = programService;
             this.CreateAllPrograms(_programService.Items);
 
-            _batteryTypes = batteryTypes;
+            _batteryTypeService = batteryTypeService;
             _batteryService = batteryService;
-            _testers = testers;
-            _channels = channels;
-            _chambers = chambers;
+            _testerService = testerService;
+            _channelService = channelService;
+            _chamberService = chamberService;
 
+            foreach(var recipe in _programService.RecipeService.Items)
+                recipe.TestRecords.CollectionChanged += TestRecords_CollectionChanged;
         }
+
+        private void TestRecords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
+                    {
+                        var testRecord = item as TestRecordClass; 
+                        SelectedRecipe.TestRecords.Add(new TestRecordViewModel(testRecord));
+                    }
+                    break;
+            }
+        }
+
         void CreateAllPrograms(ObservableCollection<ProgramClass> programClasses)
         {
             List<ProgramViewModel> all =
@@ -124,7 +145,6 @@ namespace BCLabManager.ViewModel
                     _selectedRecipe = value;
                     //RaisePropertyChanged("SelectedType");
                     RaisePropertyChanged("TestRecords"); //通知Test1改变
-                    RaisePropertyChanged("SecondTestRecords"); //通知Test2改变
                 }
             }
         }
@@ -274,7 +294,7 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             ProgramClass m = new ProgramClass();      //实例化一个新的model
-            ProgramEditViewModel evm = new ProgramEditViewModel(m,_batteryTypes, _RecipeTemplates);      //实例化一个新的view model
+            ProgramEditViewModel evm = new ProgramEditViewModel(m,_batteryTypeService.Items, _RecipeTemplates);      //实例化一个新的view model
             //evm.DisplayName = "Program-Create";
             evm.commandType = CommandType.Create;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -314,7 +334,7 @@ namespace BCLabManager.ViewModel
             model.Description = oldpro.Description;
             model.Recipes = new ObservableCollection<RecipeClass>(oldsubs);          //这里并不希望在edit window里面修改原本的Recipes，而是想编辑一个新的Recipe,只是这个新的，是旧集合的浅复制
 
-            ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _batteryTypes, _RecipeTemplates);      //实例化一个新的view model
+            ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _batteryTypeService.Items, _RecipeTemplates);      //实例化一个新的view model
             //viewmodel.DisplayName = "Program-Edit";
             viewmodel.commandType = CommandType.Edit;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -531,17 +551,18 @@ namespace BCLabManager.ViewModel
         {
             if (MessageBox.Show("Are you sure?", "Abandon Recipe", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                //_selectedRecipe._Recipe.Abandon();    //不需要。因为下面一行代码会做一样的事情。如果这里做了，反而会导致UI无法更新
-                _selectedRecipe.Abandon();
-                using (var dbContext = new AppDbContext())
-                {
-                    var model = dbContext.Recipes.SingleOrDefault(o => o.Id == _selectedRecipe.Id);
-                    dbContext.Entry(model)
-                        .Collection(o => o.TestRecords)
-                        .Load();
-                    model.Abandon();
-                    dbContext.SaveChanges();
-                }
+                ////_selectedRecipe._Recipe.Abandon();    //不需要。因为下面一行代码会做一样的事情。如果这里做了，反而会导致UI无法更新
+                //_selectedRecipe.Abandon();
+                //using (var dbContext = new AppDbContext())
+                //{
+                //    var model = dbContext.Recipes.SingleOrDefault(o => o.Id == _selectedRecipe.Id);
+                //    dbContext.Entry(model)
+                //        .Collection(o => o.TestRecords)
+                //        .Load();
+                //    model.Abandon();
+                //    dbContext.SaveChanges();
+                //}
+                _programService.RecipeService.Abandon(SelectedRecipe._recipe);
             }
         }
         private bool CanAbandon
@@ -591,11 +612,11 @@ namespace BCLabManager.ViewModel
                 (
                 //testRecord.Record,      //将model传给ExecuteViewModel      //??????????????????????????
                 model,
-                _batteryTypes,
+                _batteryTypeService.Items,
                 _batteryService.Items,
-                _testers,
-                _channels,
-                _chambers
+                _testerService.Items,
+                _channelService.Items,
+                _chamberService.Items
                 );
             //evm.DisplayName = "Test-Execute";
             var TestRecordViewInstance = new ExecuteView();
@@ -630,25 +651,15 @@ namespace BCLabManager.ViewModel
                 //}
                 //testRecord.ExecuteOnAssets(evm.Battery, evm.Chamber, evm.Channel,SelectedProgram.Name, SelectedRecipe.Name);      //将evm的Assets传给testRecord
                 //testRecord.ExecuteUpdateTime(_selectedProgram._program, _selectedRecipe._recipe);
-                _programService.RecipeService.TestRecordService.Execute(testRecord.Record, evm.BatteryType.Name, evm.Battery.Name, evm.Chamber.Name, evm.Tester.Name, evm.Channel.Name, evm.StartTime);
+                _programService.RecipeService.TestRecordService.Execute(testRecord.Record, evm.BatteryType.Name, evm.Battery, evm.Chamber, evm.Tester.Name, evm.Channel, evm.StartTime);
                 _batteryService.Execute(evm.Battery, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
+                _channelService.Execute(evm.Channel, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
+                _chamberService.Execute(evm.Chamber, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
             }
         }
         private void Commit(TestRecordViewModel testRecord)
         //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
         {
-            //viewmodel.DisplayName = "Test-Commit";
-            //var TestRecordCommitViewInstance = new CommitView();
-            //TestRecordCommitViewInstance.DataContext = viewmodel;
-            //TestRecordCommitViewInstance.ShowDialog();
-            //if (viewmodel.IsOK == true)
-            //{
-            //    SelectedTestRecord.CompleteTime = viewmodel.CompleteTime;
-            //    SelectedTestRecord.NewCycle = viewmodel.NewCycle;
-            //    SelectedTestRecord.Comment = viewmodel.Comment;
-            //    SelectedTestRecord.Commit();
-            //}
-
             TestRecordClass m = new TestRecordClass();
             TestRecordCommitViewModel evm = new TestRecordCommitViewModel
                 (
@@ -661,26 +672,30 @@ namespace BCLabManager.ViewModel
             TestRecordCommitViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                testRecord.CompleteTime = evm.CompleteTime;
-                testRecord.NewCycle = evm.NewCycle;
-                testRecord.Comment = evm.Comment;
-                testRecord.Record.RawDataList = CreateRawDataList(evm.FileList);
-                testRecord.Status = TestStatus.Completed;
-                testRecord.CommitOnAssets();
-                using (var dbContext = new AppDbContext())
-                {
-                    var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == testRecord.Id);
-                    tr.CompleteTime = testRecord.CompleteTime;
-                    tr.NewCycle = testRecord.NewCycle;
-                    tr.Comment = testRecord.Comment;
-                    tr.Status = testRecord.Status;
-                    tr.RawDataList = testRecord.Record.RawDataList;
-                    tr.AssignedBattery = null;
-                    tr.AssignedChamber = null;
-                    tr.AssignedChannel = null;
-                    dbContext.SaveChanges();
-                }
-                testRecord.CommitUpdateTime(_selectedProgram._program, _selectedRecipe._recipe);
+                //testRecord.CompleteTime = evm.CompleteTime;
+                //testRecord.NewCycle = evm.NewCycle;
+                //testRecord.Comment = evm.Comment;
+                //testRecord.Record.RawDataList = CreateRawDataList(evm.FileList);
+                //testRecord.Status = TestStatus.Completed;
+                //testRecord.CommitOnAssets();
+                //using (var dbContext = new AppDbContext())
+                //{
+                //    var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == testRecord.Id);
+                //    tr.CompleteTime = testRecord.CompleteTime;
+                //    tr.NewCycle = testRecord.NewCycle;
+                //    tr.Comment = testRecord.Comment;
+                //    tr.Status = testRecord.Status;
+                //    tr.RawDataList = testRecord.Record.RawDataList;
+                //    tr.AssignedBattery = null;
+                //    tr.AssignedChamber = null;
+                //    tr.AssignedChannel = null;
+                //    dbContext.SaveChanges();
+                //}
+                //testRecord.CommitUpdateTime(_selectedProgram._program, _selectedRecipe._recipe);
+                _batteryService.Commit(testRecord.Record.AssignedBattery, evm.CompleteTime, SelectedProgram.Name, SelectedRecipe.Name, evm.NewCycle);
+                _channelService.Commit(testRecord.Record.AssignedChannel, evm.CompleteTime, SelectedProgram.Name, SelectedRecipe.Name);
+                _chamberService.Commit(testRecord.Record.AssignedChamber, evm.CompleteTime, SelectedProgram.Name, SelectedRecipe.Name);
+                _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), evm.CompleteTime, SelectedProgram.Name, SelectedRecipe.Name);
             }
         }
 
@@ -706,17 +721,18 @@ namespace BCLabManager.ViewModel
             TestRecordInvalidateViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                testRecord.Comment += "\r\n" + evm.Comment;
-                testRecord.Status = TestStatus.Invalid;
+                //testRecord.Comment += "\r\n" + evm.Comment;
+                //testRecord.Status = TestStatus.Invalid;
 
-                using (var dbContext = new AppDbContext())
-                {
-                    var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == testRecord.Id);
-                    tr.Comment = testRecord.Comment;
-                    tr.Status = testRecord.Status;
-                    dbContext.SaveChanges();
-                }
-                testRecord.Invalidate();
+                //using (var dbContext = new AppDbContext())
+                //{
+                //    var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == testRecord.Id);
+                //    tr.Comment = testRecord.Comment;
+                //    tr.Status = testRecord.Status;
+                //    dbContext.SaveChanges();
+                //}
+                //testRecord.Invalidate();
+                _programService.RecipeService.Invalidate(SelectedRecipe._recipe,testRecord.Record, evm.Comment);
             }
         }
         private void ViewRawData(TestRecordViewModel testRecordVM)

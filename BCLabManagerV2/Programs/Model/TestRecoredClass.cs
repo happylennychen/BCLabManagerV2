@@ -46,13 +46,55 @@ namespace BCLabManager.Model
                 }
             }
         }
-        public String BatteryTypeStr { get; set; }
-        public String BatteryStr { get; set; }
-        public String TesterStr { get; set; }
-        public String ChannelStr { get; set; }
-        public String ChamberStr { get; set; }
-        public String RecipeStr { get; set; }
-        public String ProgramStr { get; set; }
+        //public String BatteryTypeStr { get; set; }
+        private string _batteryTypeStr;
+        public string BatteryTypeStr
+        {
+            get { return _batteryTypeStr; }
+            set { SetProperty(ref _batteryTypeStr, value); }
+        }
+        //public String BatteryStr { get; set; }
+        private string _batteryStr;
+        public string BatteryStr
+        {
+            get { return _batteryStr; }
+            set { SetProperty(ref _batteryStr, value); }
+        }
+        //public String TesterStr { get; set; }
+        private string _testerStr;
+        public string TesterStr
+        {
+            get { return _testerStr; }
+            set { SetProperty(ref _testerStr, value); }
+        }
+        //public String ChannelStr { get; set; }
+        private string _channelStr;
+        public string ChannelStr
+        {
+            get { return _channelStr; }
+            set { SetProperty(ref _channelStr, value); }
+        }
+        //public String ChamberStr { get; set; }
+        private string _chamberStr;
+        public string ChamberStr
+        {
+            get { return _chamberStr; }
+            set { SetProperty(ref _chamberStr, value); }
+        }
+        //public String RecipeStr { get; set; }
+        private string _recipeStr;
+        public string RecipeStr
+        {
+            get { return _recipeStr; }
+            set { SetProperty(ref _recipeStr, value); }
+        }
+        //public String ProgramStr { get; set; }
+        private string _programStr;
+        public string ProgramStr
+        {
+            get { return _programStr; }
+            set { SetProperty(ref _programStr, value); }
+        }
         public DateTime StartTime
         {
             get => startTime;
@@ -74,7 +116,13 @@ namespace BCLabManager.Model
         public String Steps { get; set; }
         public String Comment { get; set; }
         public List<RawDataClass> RawDataList { get; set; }
-        public Double NewCycle { get; set; }
+        //public Double NewCycle { get; set; }
+        private double _newCycle;
+        public double NewCycle
+        {
+            get { return _newCycle; }
+            set { SetProperty(ref _newCycle, value); }
+        }
 
         #region Store the assets in use
         public BatteryClass AssignedBattery { get; set; }

@@ -65,8 +65,8 @@ namespace BCLabManager.Model
 
             var tr = new TestRecordClass();
             tr.StatusChanged += this.TestRecord_StatusChanged;
-            tr.RecipeStr = template.Name;
-            tr.ProgramStr = ProgramStr;
+            //tr.RecipeStr = template.Name;
+            //tr.ProgramStr = ProgramStr;
             this.TestRecords.Add(tr);
         }
 

@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class BatteryServieClass
+    public class ChannelServieClass
     {
-        public ObservableCollection<BatteryClass> Items { get; set; }
-        public void Add(BatteryClass item)
+        public ObservableCollection<ChannelClass> Items { get; set; }
+        public void Add(ChannelClass item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                item.BatteryType = uow.BatteryTypes.GetById(item.BatteryType.Id);
-                uow.Batteries.Insert(item);
+                item.Tester = uow.Testers.GetById(item.Tester.Id);
+                uow.Channels.Insert(item);
                 uow.Commit();
             }
             Items.Add(item);
@@ -25,39 +25,37 @@ namespace BCLabManager.Model
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                uow.Batteries.Delete(id);
+                uow.Channels.Delete(id);
                 uow.Commit();
             }
 
             var item = Items.SingleOrDefault(o => o.Id == id);
             Items.Remove(item);
         }
-        public void Update(BatteryClass item)
+        public void Update(ChannelClass item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                uow.Batteries.Update(item);
+                uow.Channels.Update(item);
                 uow.Commit();
             }
             var edittarget = Items.SingleOrDefault(o=>o.Id == item.Id);
-            edittarget.BatteryType = item.BatteryType;
+            edittarget.Tester = item.Tester;
             edittarget.Name = item.Name;
-            edittarget.CycleCount = item.CycleCount;
             edittarget.AssetUseCount = item.AssetUseCount;
             edittarget.Records = item.Records;
         }
-        public void Execute(BatteryClass item, DateTime startTime, string programName, string recipeName)
+        public void Execute(ChannelClass item, DateTime startTime, string programName, string recipeName)
         {
             item.AssetUseCount++;
             item.Records.Add(new AssetUsageRecordClass(startTime, item.AssetUseCount, programName, recipeName));
 
             Update(item);
         }
-        public void Commit(BatteryClass item, DateTime endTime, string programName, string recipeName, double newCycleCount)
+        public void Commit(ChannelClass item, DateTime endTime, string programName, string recipeName)
         {
             item.AssetUseCount--;
             item.Records.Add(new AssetUsageRecordClass(endTime, item.AssetUseCount, programName, recipeName));
-            item.CycleCount += newCycleCount;
 
             Update(item);
         }

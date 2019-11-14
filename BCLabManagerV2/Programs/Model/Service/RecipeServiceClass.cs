@@ -32,20 +32,39 @@ namespace BCLabManager.Model
             //var item = Items.SingleOrDefault(o => o.Id == id);
             //Items.Remove(item);
         }
-        public void Update(BatteryClass item)
+        public void Update(RecipeClass item)
         {
-            //using (var uow = new UnitOfWork(new AppDbContext()))
-            //{
-            //    uow.Batteries.Update(item);
-            //    uow.Commit();
-            //}
-            //var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
-            //edittarget.BatteryType = item.BatteryType;
-            //edittarget.Name = item.Name;
-            //edittarget.CycleCount = item.CycleCount;
-            //edittarget.AssetUseCount = item.AssetUseCount;
-            //edittarget.Records = item.Records;
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                uow.Recipies.Update(item);
+                uow.Commit();
+            }
+            var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
+            edittarget.CompleteTime = item.CompleteTime;
+            edittarget.IsAbandoned = item.IsAbandoned;
+            edittarget.Loop = item.Loop;
+            edittarget.StartTime = item.StartTime;
+            edittarget.TestRecords = item.TestRecords;
+            edittarget.Name = item.Name;
         }
         public TestRecordServiceClass TestRecordService { get; set; } = new TestRecordServiceClass();
+
+        internal void Invalidate(RecipeClass recipe, TestRecordClass testRecord, string comment)
+        {
+            TestRecordService.Invalidate(testRecord, comment);
+            var newTestRecord = new TestRecordClass();
+            //TestRecordService.Add(newTestRecord);
+            recipe.TestRecords.Add(newTestRecord);
+            Update(recipe);
+        }
+
+        internal void Abandon(RecipeClass recipe)
+        {
+            recipe.IsAbandoned = true;
+            foreach (var testRecord in recipe.TestRecords)
+            {
+                TestRecordService.Abandon(testRecord);
+            }
+        }
     }
 }

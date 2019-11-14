@@ -56,8 +56,11 @@ namespace BCLabManager
 
         //private DomainDataClass _domainData;
 
-        public BatteryTypeServieClass BatteryTypeServcie { get; set; } = new BatteryTypeServieClass();
+        public BatteryTypeServieClass BatteryTypeService { get; set; } = new BatteryTypeServieClass();
         public BatteryServieClass BatteryService { get; set; } = new BatteryServieClass();
+        public TesterServieClass TesterService { get; set; } = new TesterServieClass();
+        public ChannelServieClass ChannelService { get; set; } = new ChannelServieClass();
+        public ChamberServieClass ChamberService { get; set; } = new ChamberServieClass();
         //public TestRecordServiceClass TestRecordService { get; set; } = new TestRecordServiceClass();
         public ProgramServiceClass ProgramService { get; set; } = new ProgramServiceClass();
 
@@ -142,8 +145,13 @@ namespace BCLabManager
         {
             using(var uow = new UnitOfWork(new AppDbContext()))
             {
-                BatteryTypeServcie.Items = new ObservableCollection<BatteryTypeClass>(uow.BatteryTypes.GetAll());
+                BatteryTypeService.Items = new ObservableCollection<BatteryTypeClass>(uow.BatteryTypes.GetAll());
                 BatteryService.Items = new ObservableCollection<BatteryClass>(uow.Batteries.GetAll("BatteryType,Records"));
+
+                TesterService.Items = new ObservableCollection<TesterClass>(uow.Testers.GetAll());
+                ChannelService.Items = new ObservableCollection<ChannelClass>(uow.Channels.GetAll("Tester,Records"));
+
+                ChamberService.Items = new ObservableCollection<ChamberClass>(uow.Chambers.GetAll("Records"));
 
                 ProgramService.Items = new ObservableCollection<ProgramClass>(uow.Programs.GetAll());
                 ProgramService.RecipeService.Items = new ObservableCollection<RecipeClass>(uow.Recipies.GetAll());
@@ -212,9 +220,9 @@ namespace BCLabManager
         }
         void CreateViewModels()
         {
-            allBatteryTypesViewModel = new AllBatteryTypesViewModel(BatteryTypeServcie, BatteryService);    //ViewModel初始化
+            allBatteryTypesViewModel = new AllBatteryTypesViewModel(BatteryTypeService, BatteryService);    //ViewModel初始化
 
-            allBatteriesViewModel = new AllBatteriesViewModel(BatteryService, BatteryTypeServcie);    //ViewModel初始化
+            allBatteriesViewModel = new AllBatteriesViewModel(BatteryService, BatteryTypeService);    //ViewModel初始化
 
             allTestersViewModel = new AllTestersViewModel(Testers);    //ViewModel初始化
 
@@ -235,11 +243,11 @@ namespace BCLabManager
                 (
                 ProgramService,
                 RecipeTemplates,
-                BatteryTypes,
+                BatteryTypeService,
                 BatteryService,
-                Testers,
-                Channels,
-                Chambers
+                TesterService,
+                ChannelService,
+                ChamberService
                 );    //ViewModel初始化
 
             dashBoardViewModel = new DashBoardViewModel(Programs, Batteries, Channels, Chambers);
