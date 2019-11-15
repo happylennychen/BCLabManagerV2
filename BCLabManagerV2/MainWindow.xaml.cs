@@ -76,6 +76,7 @@ namespace BCLabManager
                 InitializeNavigator();
                 CreateViewModels();
                 BindingVMandView();
+                ProgramService.UpdateEstimatedTimeChain();
             }
             catch(Exception e)
             {

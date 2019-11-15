@@ -273,12 +273,13 @@
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
-    <Compile Include="Migrations\20191115063302_Init.cs" />
-    <Compile Include="Migrations\20191115063302_Init.designer.cs">
-      <DependentUpon>20191115063302_Init.cs</DependentUpon>
+    <Compile Include="Migrations\20191115113524_Init.cs" />
+    <Compile Include="Migrations\20191115113524_Init.designer.cs">
+      <DependentUpon>20191115113524_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Programs\Model\Service\ProgramServiceClass.cs" />
+    <Compile Include="Programs\Model\Service\StepRuntimeServiceClass.cs" />
     <Compile Include="Programs\Model\Service\TestRecordServiceClass.cs" />
     <Compile Include="Programs\Model\Service\RecipeServiceClass.cs" />
     <Compile Include="Programs\Model\RawDataClass.cs" />

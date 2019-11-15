@@ -13,7 +13,7 @@ namespace BCLabManager.Model
     {
         public int Id { get; set; }
         public StepClass Step { get; set; }
-
+        public double DesignCapacityInmAH { get; set; }
         private DateTime _startTime;
         public DateTime StartTime
         {
@@ -57,6 +57,16 @@ namespace BCLabManager.Model
         }
         public StepRuntimeClass()
         {
+        }
+
+        public double GetCurrentInmA()
+        {
+            var st = Step.StepTemplate;
+            if (st.CurrentUnit == CurrentUnitEnum.mA)
+                return st.CurrentInput;
+            else if (st.CurrentUnit == CurrentUnitEnum.C)
+                return st.CurrentInput * DesignCapacityInmAH;
+            return 0;
         }
     }
 }

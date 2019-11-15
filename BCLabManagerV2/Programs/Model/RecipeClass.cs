@@ -72,13 +72,14 @@ namespace BCLabManager.Model
             Name = template.Name;
         }
 
-        public RecipeClass(RecipeTemplate template, string ProgramStr, int loop)  //Only used by populator
+        public RecipeClass(RecipeTemplate template, string ProgramStr, int loop, BatteryTypeClass batteryType)  //Only used by populator
         {
             this.Name = template.Name;
             foreach(var step in template.Steps)
             {
                 StepRuntimeClass sr = new StepRuntimeClass();
                 sr.Step = step;
+                sr.DesignCapacityInmAH = batteryType.TypicalCapacity;
                 this.StepRuntimes.Add(sr);
             }
             this.Loop = loop;

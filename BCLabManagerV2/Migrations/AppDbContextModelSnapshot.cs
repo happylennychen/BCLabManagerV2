@@ -277,6 +277,8 @@ namespace BCLabManager.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<double>("DesignCapacityInmAH");
+
                     b.Property<TimeSpan>("Duration");
 
                     b.Property<TimeSpan>("ED");

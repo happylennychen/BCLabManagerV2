@@ -40,11 +40,11 @@ namespace BCLabManager.Model
         }
         public void Update(ProgramClass item)
         {
-            //using (var uow = new UnitOfWork(new AppDbContext()))
-            //{
-            //    uow.Batteries.Update(item);
-            //    uow.Commit();
-            //}
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                uow.Programs.Update(item);
+                uow.Commit();
+            }
             //var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             //edittarget.BatteryType = item.BatteryType;
             //edittarget.Name = item.Name;
@@ -57,20 +57,98 @@ namespace BCLabManager.Model
 
         public void UpdateEstimatedTimeChain()
         {
+            Order();
+            var time = Items[0].RequestTime;
+            double c = 0;
+            foreach (var item in Items)
+            {
+                UpdateEstimatedTime(item, ref time, ref c);
+                Update(item);
+            }
         }
         public void Order()
-        { }
-
-        public void UpdateEstimatedTime(ProgramClass item)
         {
-            if (true)    //是第一个
-            {
+            Items.OrderBy(o => o.Order);
+        }
 
+        public void UpdateEstimatedTime(ProgramClass item, ref DateTime time, ref double c)
+        {
+            //if (item.EndTime != DateTime.MinValue)  //完成状态
+            //    return;
+            //else if (item.StartTime == DateTime.MinValue)    //初始状态
+            //{
+            //    item.EST = GetStartTime(item);
+            //    item.ED = GetDuration(item);
+            //    item.EET = item.EST + item.ED;
+            //}
+            ////运行状态
+            //else
+            //{
+            //    item.ED = GetDuration(item);
+            //    item.EET = item.StartTime + item.ED;
+            //}
+            if (item.StartTime == DateTime.MinValue)
+            {
+                item.EST = time;
+                foreach (var recipe in item.Recipes)
+                    RecipeService.UpdateEstimatedTime(recipe, ref time, ref c);
+                //time += RecipeService.StepRuntimeService.GetDuration(item, ref c);
+                item.EET = time;
             }
             else
             {
-                
+                time = item.StartTime;
+                if (item.EndTime == DateTime.MinValue)
+                {
+                    //time += RecipeService.StepRuntimeService.GetDuration(item, ref c);
+                    foreach (var recipe in item.Recipes)
+                        RecipeService.UpdateEstimatedTime(recipe, ref time, ref c);
+                    item.EET = time;
+                }
+                else
+                {
+                    time = item.EndTime;
+                }
             }
         }
+
+        //private TimeSpan GetDuration(ProgramClass item)     //side effect: Recipes中的预估时间得到更新
+        //{
+        //    TimeSpan duration = new TimeSpan();
+        //    double CBegin = 0;
+        //    foreach (var recipe in item.Recipes)
+        //    {
+        //        //duration += RecipeService.GetDuration(recipe, ref CBegin);
+        //        RecipeService.UpdateEstimatedTime(recipe, ref CBegin);
+        //        duration += recipe.ED;
+        //    }
+        //    return duration;
+        //}
+
+        //private DateTime GetStartTime(ProgramClass item)    //初始状态的才调用这个函数
+        //{
+        //    if (IsFirstOne(item))
+        //    {
+        //        return item.RequestTime;
+        //    }
+        //    else
+        //    {
+        //        var previousitem = GetPreviousItem(item);
+        //        if (previousitem.EndTime != DateTime.MinValue)
+        //            return previousitem.EndTime;
+        //        else
+        //            return previousitem.EET;
+        //    }
+        //}
+
+        //private bool IsFirstOne(ProgramClass item)
+        //{
+        //    return item.Order == 0;
+        //}
+
+        //private ProgramClass GetPreviousItem(ProgramClass item)
+        //{
+        //    return Items.SingleOrDefault(o => o.Order == item.Order - 1);
+        //}
     }
 }

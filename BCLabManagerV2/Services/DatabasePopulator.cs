@@ -143,7 +143,7 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/02/28");
                 obj.Description = "Oppo BLP663 Static Test";
-                RecipeClass sub = new RecipeClass(GetRecipeTemplateById(dbContext, 1), obj.Name, 1);
+                RecipeClass sub = new RecipeClass(GetRecipeTemplateById(dbContext, 1), obj.Name, 1, obj.BatteryType);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
                 //sub = new RecipeClass(GetRecipeTemplateById(dbContext, 2), obj.Name, 1);
