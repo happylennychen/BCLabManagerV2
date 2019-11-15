@@ -20,6 +20,12 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
             Items.Add(item);
+            foreach (var recipe in item.Recipes)
+            {
+                RecipeService.Items.Add(recipe);
+                foreach (var testRecord in recipe.TestRecords)
+                    RecipeService.TestRecordService.Items.Add(testRecord);
+            }
         }
         public void Remove(int id)
         {
