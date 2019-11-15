@@ -38,7 +38,7 @@ namespace BCLabManager.Model
             //var item = Items.SingleOrDefault(o => o.Id == id);
             //Items.Remove(item);
         }
-        public void Update(BatteryClass item)
+        public void Update(ProgramClass item)
         {
             //using (var uow = new UnitOfWork(new AppDbContext()))
             //{
@@ -54,5 +54,23 @@ namespace BCLabManager.Model
         }
 
         public RecipeServiceClass RecipeService { get; set; } = new RecipeServiceClass();
+
+        public void UpdateEstimatedTimeChain()
+        {
+        }
+        public void Order()
+        { }
+
+        public void UpdateEstimatedTime(ProgramClass item)
+        {
+            if (true)    //是第一个
+            {
+
+            }
+            else
+            {
+                
+            }
+        }
     }
 }

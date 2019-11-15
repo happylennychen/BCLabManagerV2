@@ -161,11 +161,19 @@ namespace BCLabManager.Migrations
 
                     b.Property<int?>("BatteryTypeId");
 
-                    b.Property<DateTime>("CompleteTime");
-
                     b.Property<string>("Description");
 
+                    b.Property<TimeSpan>("ED");
+
+                    b.Property<DateTime>("EET");
+
+                    b.Property<DateTime>("EST");
+
+                    b.Property<DateTime>("EndTime");
+
                     b.Property<string>("Name");
+
+                    b.Property<ulong>("Order");
 
                     b.Property<DateTime>("RequestTime");
 
@@ -203,7 +211,13 @@ namespace BCLabManager.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CompleteTime");
+                    b.Property<TimeSpan>("ED");
+
+                    b.Property<DateTime>("EET");
+
+                    b.Property<DateTime>("EST");
+
+                    b.Property<DateTime>("EndTime");
 
                     b.Property<bool>("IsAbandoned");
 
@@ -232,6 +246,84 @@ namespace BCLabManager.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RecipeTemplates");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.StepClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<ushort>("LoopCount");
+
+                    b.Property<string>("LoopLabel");
+
+                    b.Property<string>("LoopTarget");
+
+                    b.Property<int?>("RecipeTemplateId");
+
+                    b.Property<int?>("StepTemplateId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeTemplateId");
+
+                    b.HasIndex("StepTemplateId");
+
+                    b.ToTable("Steps");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.StepRuntimeClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<TimeSpan>("Duration");
+
+                    b.Property<TimeSpan>("ED");
+
+                    b.Property<DateTime>("EET");
+
+                    b.Property<DateTime>("EST");
+
+                    b.Property<DateTime>("EndTime");
+
+                    b.Property<int?>("RecipeClassId");
+
+                    b.Property<DateTime>("StartTime");
+
+                    b.Property<int?>("StepId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeClassId");
+
+                    b.HasIndex("StepId");
+
+                    b.ToTable("StepRuntimes");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.StepTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<double>("CurrentInput");
+
+                    b.Property<int>("CurrentUnit");
+
+                    b.Property<int>("CutOffConditionType");
+
+                    b.Property<double>("CutOffConditionValue");
+
+                    b.Property<double>("Offset");
+
+                    b.Property<double>("Slope");
+
+                    b.Property<double>("Temperature");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StepTemplates");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>
@@ -359,6 +451,28 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.ProgramClass")
                         .WithMany("Recipes")
                         .HasForeignKey("ProgramClassId");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.StepClass", b =>
+                {
+                    b.HasOne("BCLabManager.Model.RecipeTemplate")
+                        .WithMany("Steps")
+                        .HasForeignKey("RecipeTemplateId");
+
+                    b.HasOne("BCLabManager.Model.StepTemplate", "StepTemplate")
+                        .WithMany()
+                        .HasForeignKey("StepTemplateId");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.StepRuntimeClass", b =>
+                {
+                    b.HasOne("BCLabManager.Model.RecipeClass")
+                        .WithMany("StepRuntimes")
+                        .HasForeignKey("RecipeClassId");
+
+                    b.HasOne("BCLabManager.Model.StepClass", "Step")
+                        .WithMany()
+                        .HasForeignKey("StepId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>

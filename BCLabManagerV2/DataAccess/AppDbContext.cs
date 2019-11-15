@@ -16,6 +16,9 @@ namespace BCLabManager.DataAccess
         public DbSet<ChannelClass> Channels { get; set; }
         public DbSet<ChamberClass> Chambers { get; set; }
         public DbSet<TestRecordClass> TestRecords { get; set; }
+        public DbSet<StepTemplate> StepTemplates { get; set; }
+        public DbSet<StepClass> Steps { get; set; }
+        public DbSet<StepRuntimeClass> StepRuntimes { get; set; }
         public DbSet<RecipeTemplate> RecipeTemplates { get; set; }
         public DbSet<RecipeClass> Recipes { get; set; }
         public DbSet<ProgramClass> Programs { get; set; }

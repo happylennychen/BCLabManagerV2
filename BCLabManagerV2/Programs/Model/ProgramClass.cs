@@ -24,6 +24,12 @@ namespace BCLabManager.Model
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
+        private ulong _order;
+        public ulong Order
+        {
+            get { return _order; }
+            set { SetProperty(ref _order, value); }
+        }
         private BatteryTypeClass _batteryType;
         public BatteryTypeClass BatteryType
         {
@@ -48,11 +54,29 @@ namespace BCLabManager.Model
             get => _startTime;
             set { SetProperty(ref _startTime, value); }
         }
-        private DateTime _completeTime;
-        public DateTime CompleteTime
+        private DateTime _endTime;
+        public DateTime EndTime
         {
-            get => _completeTime;
-            set { SetProperty(ref _completeTime, value); }
+            get => _endTime;
+            set { SetProperty(ref _endTime, value); }
+        }
+        private DateTime _est;
+        public DateTime EST
+        {
+            get { return _est; }
+            set { SetProperty(ref _est, value); }
+        }
+        private DateTime _eet;
+        public DateTime EET
+        {
+            get { return _eet; }
+            set { SetProperty(ref _eet, value); }
+        }
+        private TimeSpan _ed;
+        public TimeSpan ED
+        {
+            get { return _ed; }
+            set { SetProperty(ref _ed, value); }
         }
         private string _description;
         public string Description

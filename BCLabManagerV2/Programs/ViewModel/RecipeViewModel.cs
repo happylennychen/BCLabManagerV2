@@ -110,13 +110,13 @@ namespace BCLabManager.ViewModel
         }
         public DateTime CompleteTime
         {
-            get { return _recipe.CompleteTime; }
+            get { return _recipe.EndTime; }
             set
             {
-                if (value == _recipe.CompleteTime)
+                if (value == _recipe.EndTime)
                     return;
 
-                _recipe.CompleteTime = value;
+                _recipe.EndTime = value;
 
                 RaisePropertyChanged("CompleteTime");
             }

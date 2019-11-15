@@ -58,6 +58,25 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "StepTemplates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Temperature = table.Column<double>(nullable: false),
+                    CurrentInput = table.Column<double>(nullable: false),
+                    CurrentUnit = table.Column<int>(nullable: false),
+                    CutOffConditionValue = table.Column<double>(nullable: false),
+                    CutOffConditionType = table.Column<int>(nullable: false),
+                    Slope = table.Column<double>(nullable: false),
+                    Offset = table.Column<double>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StepTemplates", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Testers",
                 columns: table => new
                 {
@@ -100,11 +119,15 @@ namespace BCLabManager.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: true),
+                    Order = table.Column<ulong>(nullable: false),
                     BatteryTypeId = table.Column<int>(nullable: true),
                     Requester = table.Column<string>(nullable: true),
                     RequestTime = table.Column<DateTime>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
-                    CompleteTime = table.Column<DateTime>(nullable: false),
+                    EndTime = table.Column<DateTime>(nullable: false),
+                    EST = table.Column<DateTime>(nullable: false),
+                    EET = table.Column<DateTime>(nullable: false),
+                    ED = table.Column<TimeSpan>(nullable: false),
                     Description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -148,6 +171,35 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Steps",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    StepTemplateId = table.Column<int>(nullable: true),
+                    LoopLabel = table.Column<string>(nullable: true),
+                    LoopTarget = table.Column<string>(nullable: true),
+                    LoopCount = table.Column<ushort>(nullable: false),
+                    RecipeTemplateId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Steps", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Steps_RecipeTemplates_RecipeTemplateId",
+                        column: x => x.RecipeTemplateId,
+                        principalTable: "RecipeTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Steps_StepTemplates_StepTemplateId",
+                        column: x => x.StepTemplateId,
+                        principalTable: "StepTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Channels",
                 columns: table => new
                 {
@@ -178,7 +230,10 @@ namespace BCLabManager.Migrations
                     Name = table.Column<string>(nullable: true),
                     Loop = table.Column<int>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
-                    CompleteTime = table.Column<DateTime>(nullable: false),
+                    EndTime = table.Column<DateTime>(nullable: false),
+                    EST = table.Column<DateTime>(nullable: false),
+                    EET = table.Column<DateTime>(nullable: false),
+                    ED = table.Column<TimeSpan>(nullable: false),
                     ProgramClassId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -225,6 +280,38 @@ namespace BCLabManager.Migrations
                         name: "FK_AssetUsageRecordClass_Channels_ChannelClassId",
                         column: x => x.ChannelClassId,
                         principalTable: "Channels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StepRuntimes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    StepId = table.Column<int>(nullable: true),
+                    StartTime = table.Column<DateTime>(nullable: false),
+                    EndTime = table.Column<DateTime>(nullable: false),
+                    Duration = table.Column<TimeSpan>(nullable: false),
+                    EST = table.Column<DateTime>(nullable: false),
+                    EET = table.Column<DateTime>(nullable: false),
+                    ED = table.Column<TimeSpan>(nullable: false),
+                    RecipeClassId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StepRuntimes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StepRuntimes_Recipes_RecipeClassId",
+                        column: x => x.RecipeClassId,
+                        principalTable: "Recipes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StepRuntimes_Steps_StepId",
+                        column: x => x.StepId,
+                        principalTable: "Steps",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -354,6 +441,26 @@ namespace BCLabManager.Migrations
                 column: "ProgramClassId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_StepRuntimes_RecipeClassId",
+                table: "StepRuntimes",
+                column: "RecipeClassId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StepRuntimes_StepId",
+                table: "StepRuntimes",
+                column: "StepId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Steps_RecipeTemplateId",
+                table: "Steps",
+                column: "RecipeTemplateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Steps_StepTemplateId",
+                table: "Steps",
+                column: "StepTemplateId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TestRecords_AssignedBatteryId",
                 table: "TestRecords",
                 column: "AssignedBatteryId");
@@ -386,10 +493,13 @@ namespace BCLabManager.Migrations
                 name: "RawDataClass");
 
             migrationBuilder.DropTable(
-                name: "RecipeTemplates");
+                name: "StepRuntimes");
 
             migrationBuilder.DropTable(
                 name: "TestRecords");
+
+            migrationBuilder.DropTable(
+                name: "Steps");
 
             migrationBuilder.DropTable(
                 name: "Batteries");
@@ -402,6 +512,12 @@ namespace BCLabManager.Migrations
 
             migrationBuilder.DropTable(
                 name: "Recipes");
+
+            migrationBuilder.DropTable(
+                name: "RecipeTemplates");
+
+            migrationBuilder.DropTable(
+                name: "StepTemplates");
 
             migrationBuilder.DropTable(
                 name: "Testers");

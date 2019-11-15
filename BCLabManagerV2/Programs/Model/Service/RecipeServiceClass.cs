@@ -40,7 +40,7 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
-            edittarget.CompleteTime = item.CompleteTime;
+            edittarget.EndTime = item.EndTime;
             edittarget.IsAbandoned = item.IsAbandoned;
             edittarget.Loop = item.Loop;
             edittarget.StartTime = item.StartTime;

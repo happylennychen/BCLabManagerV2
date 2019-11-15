@@ -107,8 +107,27 @@ namespace BCLabManager
         }
         private static void PopulatePrograms()
         {
+            PopulateStepTemplates();
             PopulateRecipeTemplates();
             PopulateTestPrograms();
+        }
+
+        private static void PopulateStepTemplates()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                StepTemplate obj = new StepTemplate();
+                obj.Id = 1;
+                obj.CurrentInput = 3450;
+                obj.CurrentUnit = CurrentUnitEnum.mA;
+                obj.CutOffConditionValue = 1;
+                obj.CutOffConditionType = CutOffConditionTypeEnum.CRate;
+                obj.Slope = 1;
+                obj.Offset = 0;
+                dbContext.StepTemplates.Add(obj);
+
+                dbContext.SaveChanges();
+            }
         }
 
         private static void PopulateTestPrograms()
@@ -127,30 +146,30 @@ namespace BCLabManager
                 RecipeClass sub = new RecipeClass(GetRecipeTemplateById(dbContext, 1), obj.Name, 1);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 2), obj.Name, 1);
-                sub.Id = sub_i++;
-                obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 3), obj.Name, 1);
-                sub.Id = sub_i++;
-                obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 4), obj.Name, 1);
-                sub.Id = sub_i++;
-                obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 5), obj.Name, 1);
-                sub.Id = sub_i++;
-                obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 6), obj.Name, 1);
-                sub.Id = sub_i++;
-                obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 7), obj.Name, 1);
-                sub.Id = sub_i++;
-                obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 8), obj.Name, 1);
-                sub.Id = sub_i++;
-                obj.Recipes.Add(sub);
-                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 9), obj.Name, 1);
-                sub.Id = sub_i++;
-                obj.Recipes.Add(sub);
+                //sub = new RecipeClass(GetRecipeTemplateById(dbContext, 2), obj.Name, 1);
+                //sub.Id = sub_i++;
+                //obj.Recipes.Add(sub);
+                //sub = new RecipeClass(GetRecipeTemplateById(dbContext, 3), obj.Name, 1);
+                //sub.Id = sub_i++;
+                //obj.Recipes.Add(sub);
+                //sub = new RecipeClass(GetRecipeTemplateById(dbContext, 4), obj.Name, 1);
+                //sub.Id = sub_i++;
+                //obj.Recipes.Add(sub);
+                //sub = new RecipeClass(GetRecipeTemplateById(dbContext, 5), obj.Name, 1);
+                //sub.Id = sub_i++;
+                //obj.Recipes.Add(sub);
+                //sub = new RecipeClass(GetRecipeTemplateById(dbContext, 6), obj.Name, 1);
+                //sub.Id = sub_i++;
+                //obj.Recipes.Add(sub);
+                //sub = new RecipeClass(GetRecipeTemplateById(dbContext, 7), obj.Name, 1);
+                //sub.Id = sub_i++;
+                //obj.Recipes.Add(sub);
+                //sub = new RecipeClass(GetRecipeTemplateById(dbContext, 8), obj.Name, 1);
+                //sub.Id = sub_i++;
+                //obj.Recipes.Add(sub);
+                //sub = new RecipeClass(GetRecipeTemplateById(dbContext, 9), obj.Name, 1);
+                //sub.Id = sub_i++;
+                //obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
 
                 dbContext.SaveChanges();
@@ -165,47 +184,51 @@ namespace BCLabManager
                 RecipeTemplate obj = new RecipeTemplate();
                 obj.Id = i++;
                 obj.Name = "Room 0.2C charge, -5deg 500mA discharge";
+                var newStep = new StepClass();
+                newStep.StepTemplate = dbContext.StepTemplates.First();
+                newStep.Id = 1;
+                obj.Steps.Add(newStep); 
                 dbContext.RecipeTemplates.Add(obj);
 
-                obj = new RecipeTemplate();
-                obj.Id = i++;
-                obj.Name = "Room 0.2C charge, -5deg 1700mA discharge";
-                dbContext.RecipeTemplates.Add(obj);
+                //obj = new RecipeTemplate();
+                //obj.Id = i++;
+                //obj.Name = "Room 0.2C charge, -5deg 1700mA discharge";
+                //dbContext.RecipeTemplates.Add(obj);
 
-                obj = new RecipeTemplate();
-                obj.Id = i++;
-                obj.Name = "Room 0.2C charge, -5deg 3000mA discharge";
-                dbContext.RecipeTemplates.Add(obj);
+                //obj = new RecipeTemplate();
+                //obj.Id = i++;
+                //obj.Name = "Room 0.2C charge, -5deg 3000mA discharge";
+                //dbContext.RecipeTemplates.Add(obj);
 
-                obj = new RecipeTemplate();
-                obj.Id = i++;
-                obj.Name = "Room 0.2C charge, Room 500mA discharge";
-                dbContext.RecipeTemplates.Add(obj);
+                //obj = new RecipeTemplate();
+                //obj.Id = i++;
+                //obj.Name = "Room 0.2C charge, Room 500mA discharge";
+                //dbContext.RecipeTemplates.Add(obj);
 
-                obj = new RecipeTemplate();
-                obj.Id = i++;
-                obj.Name = "Room 0.2C charge, Room 1700mA discharge";
-                dbContext.RecipeTemplates.Add(obj);
+                //obj = new RecipeTemplate();
+                //obj.Id = i++;
+                //obj.Name = "Room 0.2C charge, Room 1700mA discharge";
+                //dbContext.RecipeTemplates.Add(obj);
 
-                obj = new RecipeTemplate();
-                obj.Id = i++;
-                obj.Name = "Room 0.2C charge, Room 3000mA discharge";
-                dbContext.RecipeTemplates.Add(obj);
+                //obj = new RecipeTemplate();
+                //obj.Id = i++;
+                //obj.Name = "Room 0.2C charge, Room 3000mA discharge";
+                //dbContext.RecipeTemplates.Add(obj);
 
-                obj = new RecipeTemplate();
-                obj.Id = i++;
-                obj.Name = "Room 0.2C charge, 35deg 500mA discharge";
-                dbContext.RecipeTemplates.Add(obj);
+                //obj = new RecipeTemplate();
+                //obj.Id = i++;
+                //obj.Name = "Room 0.2C charge, 35deg 500mA discharge";
+                //dbContext.RecipeTemplates.Add(obj);
 
-                obj = new RecipeTemplate();
-                obj.Id = i++;
-                obj.Name = "Room 0.2C charge, 35deg 1700mA discharge";
-                dbContext.RecipeTemplates.Add(obj);
+                //obj = new RecipeTemplate();
+                //obj.Id = i++;
+                //obj.Name = "Room 0.2C charge, 35deg 1700mA discharge";
+                //dbContext.RecipeTemplates.Add(obj);
 
-                obj = new RecipeTemplate();
-                obj.Id = i++;
-                obj.Name = "Room 0.2C charge, 35deg 3000mA discharge";
-                dbContext.RecipeTemplates.Add(obj);
+                //obj = new RecipeTemplate();
+                //obj.Id = i++;
+                //obj.Name = "Room 0.2C charge, 35deg 3000mA discharge";
+                //dbContext.RecipeTemplates.Add(obj);
 
                 dbContext.SaveChanges();
             }
@@ -214,18 +237,9 @@ namespace BCLabManager
         private static RecipeTemplate GetRecipeTemplateById(AppDbContext dbContext, int id)
         {
             var subtemplate = dbContext.RecipeTemplates.SingleOrDefault(o => o.Id == id);
-            //dbContext.Entry(subtemplate)
-            //    .Reference(o => o.ChargeTemperature)
-            //    .Load();
-            //dbContext.Entry(subtemplate)
-            //    .Reference(o => o.ChargeCurrent)
-            //    .Load();
-            //dbContext.Entry(subtemplate)
-            //    .Reference(o => o.DischargeTemperature)
-            //    .Load();
-            //dbContext.Entry(subtemplate)
-            //    .Reference(o => o.DischargeCurrent)
-            //    .Load();
+            dbContext.Entry(subtemplate)
+                .Collection(o => o.Steps)
+                .Load();
             return subtemplate;
         }
 

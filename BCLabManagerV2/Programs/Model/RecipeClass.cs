@@ -30,15 +30,34 @@ namespace BCLabManager.Model
             set { SetProperty(ref _startTime, value); }
         }
 
-        private DateTime _completeTime;
-        public DateTime CompleteTime
+        private DateTime _endTime;
+        public DateTime EndTime
         {
-            get => _completeTime;
-            set { SetProperty(ref _completeTime, value); }
+            get => _endTime;
+            set { SetProperty(ref _endTime, value); }
+        }
+        private DateTime _est;
+        public DateTime EST
+        {
+            get { return _est; }
+            set { SetProperty(ref _est, value); }
+        }
+        private DateTime _eet;
+        public DateTime EET
+        {
+            get { return _eet; }
+            set { SetProperty(ref _eet, value); }
+        }
+        private TimeSpan _ed;
+        public TimeSpan ED
+        {
+            get { return _ed; }
+            set { SetProperty(ref _ed, value); }
         }
         //正常来说一个Recipe应该只包含一个TestRecord。但是考虑到有时候测试会无效，所以这里需要用一个List来处理。
         public ObservableCollection<TestRecordClass> TestRecords { get; set; } = new ObservableCollection<TestRecordClass>();
 
+        public ObservableCollection<StepRuntimeClass> StepRuntimes { get; set; } = new ObservableCollection<StepRuntimeClass>();
         public RecipeClass()
         {
         }
@@ -56,6 +75,12 @@ namespace BCLabManager.Model
         public RecipeClass(RecipeTemplate template, string ProgramStr, int loop)  //Only used by populator
         {
             this.Name = template.Name;
+            foreach(var step in template.Steps)
+            {
+                StepRuntimeClass sr = new StepRuntimeClass();
+                sr.Step = step;
+                this.StepRuntimes.Add(sr);
+            }
             this.Loop = loop;
 
             var tr = new TestRecordClass();

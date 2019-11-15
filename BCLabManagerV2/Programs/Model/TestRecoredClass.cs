@@ -302,9 +302,9 @@ namespace BCLabManager.Model
         public void CommitUpdateTime(ProgramClass _program, RecipeClass _Recipe)
         {
             if (IsSubCompleted(_Recipe))
-                _Recipe.CompleteTime = this.CompleteTime;
+                _Recipe.EndTime = this.CompleteTime;
             if (IsProCompleted(_program))
-                _program.CompleteTime = this.CompleteTime;
+                _program.EndTime = this.CompleteTime;
 
             using (var dbContext = new AppDbContext())
             {
@@ -315,9 +315,9 @@ namespace BCLabManager.Model
                 if (sub != null & pro != null)
                 {
                     if (IsSubCompleted(sub))
-                        sub.CompleteTime = this.CompleteTime;
+                        sub.EndTime = this.CompleteTime;
                     if (IsProCompleted(pro))
-                        pro.CompleteTime = this.CompleteTime;
+                        pro.EndTime = this.CompleteTime;
                 }
                 dbContext.SaveChanges();
             }

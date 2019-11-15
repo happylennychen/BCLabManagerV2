@@ -169,14 +169,14 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                return _program.CompleteTime;
+                return _program.EndTime;
             }
             set
             {
-                if (value == _program.CompleteTime)
+                if (value == _program.EndTime)
                     return;
 
-                _program.CompleteTime = value;
+                _program.EndTime = value;
 
                 RaisePropertyChanged("CompleteTime");
             }
