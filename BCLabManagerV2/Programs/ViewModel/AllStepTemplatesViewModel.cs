@@ -11,16 +11,11 @@ using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
-    public class AllRecipeTemplatesViewModel : BindableBase
+    public class AllStepTemplatesViewModel : BindableBase
     {
         #region Fields
-        //List<RecipeTemplate> _RecipeTemplates;
-        //List<ChargeTemperatureClass> _chargeTemperatures;
-        //List<ChargeCurrentClass> _chargeCurrents;
-        //List<DischargeTemperatureClass> _dischargeTemperatures;
-        //List<DischargeCurrentClass> _dischargeCurrents;
-        private RecipeTemplateServiceClass _recipeTemplateServcie;
-        RecipeTemplateViewModel _selectedItem;
+        private StepTemplateServiceClass _stepTemplateServcie;
+        StepTemplateViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
@@ -29,21 +24,44 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllRecipeTemplatesViewModel(
-            RecipeTemplateServiceClass recipeTemplateServcie
+        public AllStepTemplatesViewModel(
+            StepTemplateServiceClass stepTemplateServcie
             )
         {
-            _recipeTemplateServcie = recipeTemplateServcie;
-            this.CreateAllRecipeTemplates(_recipeTemplateServcie.Items);
+            _stepTemplateServcie = stepTemplateServcie;
+            this.CreateAllStepTemplates(_stepTemplateServcie.Items);
+            _stepTemplateServcie.Items.CollectionChanged += Items_CollectionChanged;
         }
 
-        void CreateAllRecipeTemplates(ObservableCollection<RecipeTemplate> recipeTemplates)
+        private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            List<RecipeTemplateViewModel> all =
-                (from subt in recipeTemplates
-                 select new RecipeTemplateViewModel(subt)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
+                    {
+                        var stepTemplate = item as StepTemplate;
+                        this.AllStepTemplates.Add(new StepTemplateViewModel(stepTemplate));
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    foreach (var item in e.OldItems)
+                    {
+                        var stepTemplate = item as StepTemplate;
+                        var deletetarget = this.AllStepTemplates.SingleOrDefault(o => o.Id == stepTemplate.Id);
+                        this.AllStepTemplates.Remove(deletetarget);
+                    }
+                    break;
+            }
+        }
 
-            this.AllRecipeTemplates = new ObservableCollection<RecipeTemplateViewModel>(all);     //再转换成Observable
+        void CreateAllStepTemplates(ObservableCollection<StepTemplate> stepTemplates)
+        {
+            List<StepTemplateViewModel> all =
+                (from subt in stepTemplates
+                 select new StepTemplateViewModel(subt)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+
+            this.AllStepTemplates = new ObservableCollection<StepTemplateViewModel>(all);     //再转换成Observable
         }
 
         #endregion // Constructor
@@ -51,11 +69,11 @@ namespace BCLabManager.ViewModel
         #region Public Interface
 
         /// <summary>
-        /// Returns a collection of all the RecipeModelViewModel objects.
+        /// Returns a collection of all the StepModelViewModel objects.
         /// </summary>
-        public ObservableCollection<RecipeTemplateViewModel> AllRecipeTemplates { get; private set; }
+        public ObservableCollection<StepTemplateViewModel> AllStepTemplates { get; private set; }
 
-        public RecipeTemplateViewModel SelectedItem    //绑定选中项，从而改变Recipes
+        public StepTemplateViewModel SelectedItem    //绑定选中项，从而改变Steps
         {
             get
             {
@@ -118,30 +136,30 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            RecipeTemplate model = new RecipeTemplate();      //实例化一个新的model
-            RecipeTemplateEditViewModel viewmodel = 
-                new RecipeTemplateEditViewModel(
+            StepTemplate model = new StepTemplate();      //实例化一个新的model
+            StepTemplateEditViewModel viewmodel = 
+                new StepTemplateEditViewModel(
                     model//, 
                     //_chargeTemperatures,
                     //_chargeCurrents,
                     //_dischargeTemperatures,
                     //_dischargeCurrents
                     );      //实例化一个新的view model
-            //viewmodel.DisplayName = "RecipeTemplate-Create";
+            //viewmodel.DisplayName = "StepTemplate-Create";
             viewmodel.commandType = CommandType.Create;
-            var RecipeViewInstance = new RecipeTemplateView();      //实例化一个新的view
-            RecipeViewInstance.DataContext = viewmodel;
-            RecipeViewInstance.ShowDialog();                   //设置viewmodel属性
+            var StepViewInstance = new StepTemplateView();      //实例化一个新的view
+            StepViewInstance.DataContext = viewmodel;
+            StepViewInstance.ShowDialog();                   //设置viewmodel属性
             if (viewmodel.IsOK == true)
             {
-                _recipeTemplateServcie.SuperAdd(model);
+                _stepTemplateServcie.SuperAdd(model);
             }
         }
         private void Edit()
         {
-            RecipeTemplate model = new RecipeTemplate();      //实例化一个新的model
-            RecipeTemplateEditViewModel viewmodel =
-                new RecipeTemplateEditViewModel(
+            StepTemplate model = new StepTemplate();      //实例化一个新的model
+            StepTemplateEditViewModel viewmodel =
+                new StepTemplateEditViewModel(
                     model//,
                     //_chargeTemperatures,
                     //_chargeCurrents,
@@ -154,14 +172,14 @@ namespace BCLabManager.ViewModel
             //viewmodel.ChargeCurrent = viewmodel.AllChargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.ChargeCurrent.Id);
             //viewmodel.DischargeTemperature = viewmodel.AllDischargeTemperatures.SingleOrDefault(o=>o.Id == _selectedItem.DischargeTemperature.Id);
             //viewmodel.DischargeCurrent = viewmodel.AllDischargeCurrents.SingleOrDefault(o=>o.Id == _selectedItem.DischargeCurrent.Id);
-            //viewmodel.DisplayName = "Recipe-Edit";
+            //viewmodel.DisplayName = "Step-Edit";
             viewmodel.commandType = CommandType.Edit;
-            var RecipeViewInstance = new RecipeTemplateView();      //实例化一个新的view
-            RecipeViewInstance.DataContext = viewmodel;
-            RecipeViewInstance.ShowDialog();
+            var StepViewInstance = new StepTemplateView();      //实例化一个新的view
+            StepViewInstance.DataContext = viewmodel;
+            StepViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)
             {
-                _recipeTemplateServcie.SuperUpdate(model);
+                _stepTemplateServcie.SuperUpdate(model);
             }
         }
         private bool CanEdit
@@ -170,9 +188,9 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            RecipeTemplate model = new RecipeTemplate();      //实例化一个新的model
-            RecipeTemplateEditViewModel viewmodel =
-                new RecipeTemplateEditViewModel(
+            StepTemplate model = new StepTemplate();      //实例化一个新的model
+            StepTemplateEditViewModel viewmodel =
+                new StepTemplateEditViewModel(
                     model//,
                     //_chargeTemperatures,
                     //_chargeCurrents,
@@ -185,14 +203,14 @@ namespace BCLabManager.ViewModel
             //viewmodel.ChargeCurrent = viewmodel.AllChargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.ChargeCurrent.Id);
             //viewmodel.DischargeTemperature = viewmodel.AllDischargeTemperatures.SingleOrDefault(o => o.Id == _selectedItem.DischargeTemperature.Id);
             //viewmodel.DischargeCurrent = viewmodel.AllDischargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.DischargeCurrent.Id);
-            //viewmodel.DisplayName = "Recipe-Save As";
+            //viewmodel.DisplayName = "Step-Save As";
             viewmodel.commandType = CommandType.SaveAs;
-            var RecipeViewInstance = new RecipeTemplateView();      //实例化一个新的view
-            RecipeViewInstance.DataContext = viewmodel;
-            RecipeViewInstance.ShowDialog();
+            var StepViewInstance = new StepTemplateView();      //实例化一个新的view
+            StepViewInstance.DataContext = viewmodel;
+            StepViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)
             {
-                _recipeTemplateServcie.SuperAdd(model);
+                _stepTemplateServcie.SuperAdd(model);
             }
         }
         private bool CanSaveAs

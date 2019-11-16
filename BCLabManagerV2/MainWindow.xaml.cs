@@ -36,6 +36,8 @@ namespace BCLabManager
 
         public AllChambersViewModel allChambersViewModel { get; set; }  //其中需要显示Chambers和Records
 
+        public AllStepTemplatesViewModel allStepTemplatesViewModel { get; set; }  //其中需要显示Recipes
+
         public AllRecipeTemplatesViewModel allRecipeTemplatesViewModel { get; set; }  //其中需要显示Recipes
 
         public AllProgramsViewModel allProgramsViewModel { get; set; }  //其中需要显示Programs, Recipes, Test1, Test2, TestSteps
@@ -73,13 +75,13 @@ namespace BCLabManager
                 InitializeConfiguration();
                 InitializeDatabase();
                 //_domainData = new DomainDataClass();
-                LoadFromDB(); 
+                LoadFromDB();
                 InitializeNavigator();
                 CreateViewModels();
                 BindingVMandView();
                 ProgramService.UpdateEstimatedTimeChain();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.Message);
                 App.Current.Shutdown();
@@ -105,7 +107,7 @@ namespace BCLabManager
         }
         void InitializeDatabase()
         {
-            if(!File.Exists(GlobalSettings.DbPath))
+            if (!File.Exists(GlobalSettings.DbPath))
             {
                 using (var dbContext = new AppDbContext())
                 {
@@ -145,7 +147,7 @@ namespace BCLabManager
 
         void LoadFromDB()
         {
-            using(var uow = new UnitOfWork(new AppDbContext()))
+            using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 BatteryTypeService.Items = new ObservableCollection<BatteryTypeClass>(uow.BatteryTypes.GetAll());
                 BatteryService.Items = new ObservableCollection<BatteryClass>(uow.Batteries.GetAll("BatteryType,Records"));
@@ -164,58 +166,58 @@ namespace BCLabManager
                 ProgramService.RecipeService.StepRuntimeService.StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
                 ProgramService.RecipeService.StepRuntimeService.StepService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
             }
-            using (var dbContext = new AppDbContext())
-            {
-                //BatteryTypes = new ObservableCollection<BatteryTypeClass>(dbContext.BatteryTypes.ToList());
+            //using (var dbContext = new AppDbContext())
+            //{
+            //BatteryTypes = new ObservableCollection<BatteryTypeClass>(dbContext.BatteryTypes.ToList());
 
-                //Batteries = new ObservableCollection<BatteryClass>(
-                //    dbContext.Batteries
-                //    .Include(i => i.BatteryType)
-                //    .Include(o => o.Records)
-                //    .ToList()
-                //    );
+            //Batteries = new ObservableCollection<BatteryClass>(
+            //    dbContext.Batteries
+            //    .Include(i => i.BatteryType)
+            //    .Include(o => o.Records)
+            //    .ToList()
+            //    );
 
-                //Testers = new ObservableCollection<TesterClass>(dbContext.Testers.ToList());
+            //Testers = new ObservableCollection<TesterClass>(dbContext.Testers.ToList());
 
-                //Channels = new ObservableCollection<ChannelClass>(
-                //    dbContext.Channels
-                //    .Include(i => i.Tester)
-                //    .Include(o => o.Records)
-                //    .ToList()
-                //    );
+            //Channels = new ObservableCollection<ChannelClass>(
+            //    dbContext.Channels
+            //    .Include(i => i.Tester)
+            //    .Include(o => o.Records)
+            //    .ToList()
+            //    );
 
-                //Chambers = new ObservableCollection<ChamberClass>(
-                //    dbContext.Chambers
-                //    .Include(o => o.Records)
-                //    .ToList()
-                //    );
+            //Chambers = new ObservableCollection<ChamberClass>(
+            //    dbContext.Chambers
+            //    .Include(o => o.Records)
+            //    .ToList()
+            //    );
 
-                //RecipeTemplates = new List<RecipeTemplate>(dbContext.RecipeTemplates.ToList());
+            //RecipeTemplates = new List<RecipeTemplate>(dbContext.RecipeTemplates.ToList());
 
-                //Programs = new ObservableCollection<ProgramClass>(dbContext.Programs
-                //    .Include(pro => pro.Recipes)
-                //        .ThenInclude(sub => sub.TestRecords)
-                //            .ThenInclude(tr => tr.RawDataList)
-                //     .Include(pro => pro.Recipes)
-                //        .ThenInclude(sub => sub.TestRecords)
-                //            .ThenInclude(tr => tr.AssignedBattery)
-                //     .Include(pro => pro.Recipes)
-                //        .ThenInclude(sub => sub.TestRecords)
-                //            .ThenInclude(tr => tr.AssignedChamber)
-                //     .Include(pro => pro.Recipes)
-                //        .ThenInclude(sub => sub.TestRecords)
-                //            .ThenInclude(tr => tr.AssignedChannel)
-                //    .ToList());
+            //Programs = new ObservableCollection<ProgramClass>(dbContext.Programs
+            //    .Include(pro => pro.Recipes)
+            //        .ThenInclude(sub => sub.TestRecords)
+            //            .ThenInclude(tr => tr.RawDataList)
+            //     .Include(pro => pro.Recipes)
+            //        .ThenInclude(sub => sub.TestRecords)
+            //            .ThenInclude(tr => tr.AssignedBattery)
+            //     .Include(pro => pro.Recipes)
+            //        .ThenInclude(sub => sub.TestRecords)
+            //            .ThenInclude(tr => tr.AssignedChamber)
+            //     .Include(pro => pro.Recipes)
+            //        .ThenInclude(sub => sub.TestRecords)
+            //            .ThenInclude(tr => tr.AssignedChannel)
+            //    .ToList());
 
-                //foreach (var pro in Programs)
-                //{
-                //    foreach (var sub in pro.Recipes)
-                //    {
-                //        foreach (var tr in sub.TestRecords)
-                //            sub.AssociateEvent(tr);
-                //    }
-                //}
-            }
+            //foreach (var pro in Programs)
+            //{
+            //    foreach (var sub in pro.Recipes)
+            //    {
+            //        foreach (var tr in sub.TestRecords)
+            //            sub.AssociateEvent(tr);
+            //    }
+            //}
+            //}
         }
         void CreateViewModels()
         {
@@ -229,14 +231,15 @@ namespace BCLabManager
 
             allChambersViewModel = new AllChambersViewModel(ChamberService);    //ViewModel初始化
 
-            allRecipeTemplatesViewModel = 
+            allRecipeTemplatesViewModel =
                 new AllRecipeTemplatesViewModel(
-                    RecipeTemplateService//, 
-                    //ChargeTemperatures,
+                    RecipeTemplateService
                     //ChargeCurrents,
                     //DischargeTemperatures,
                     //DischargeCurrents
                     );    //ViewModel初始化
+
+            allStepTemplatesViewModel = new AllStepTemplatesViewModel(ProgramService.RecipeService.StepRuntimeService.StepService.StepTemplateService);
 
             allProgramsViewModel = new AllProgramsViewModel
                 (
@@ -267,6 +270,8 @@ namespace BCLabManager
 
 
             this.AllChambersViewInstance.DataContext = allChambersViewModel;                                                            //ViewModel跟View绑定
+
+            this.AllStepTemplateViewInstance.DataContext = allStepTemplatesViewModel;
 
             this.AllRecipeTemplatesViewInstance.DataContext = allRecipeTemplatesViewModel;                                                            //ViewModel跟View绑定
 

@@ -297,8 +297,14 @@
     <Compile Include="Programs\Model\StepRuntimeClass.cs" />
     <Compile Include="Programs\Model\StepTemplate.cs" />
     <Compile Include="Programs\Model\StepClass.cs" />
+    <Compile Include="Programs\ViewModel\AllStepTemplatesViewModel.cs" />
+    <Compile Include="Programs\ViewModel\StepTemplateViewModel.cs" />
+    <Compile Include="Programs\ViewModel\StepTemplateEditViewModel.cs" />
     <Compile Include="Programs\View\AllStepTemplatesView.xaml.cs">
       <DependentUpon>AllStepTemplatesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Programs\View\StepTemplateView.xaml.cs">
+      <DependentUpon>StepTemplateView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\DatabasePopulator.cs" />
     <Compile Include="Services\GlobalSettings.cs" />
@@ -494,6 +500,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Programs\View\ProgramView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Programs\View\StepTemplateView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

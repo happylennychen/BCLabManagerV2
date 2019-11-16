@@ -30,8 +30,24 @@
                     </TabItem>
                 </TabControl>
             </TabItem>
-            <TabItem Header="Recipe Templates">
-                <v:AllRecipeTemplatesView x:Name="AllRecipeTemplatesViewInstance"></v:AllRecipeTemplatesView>
+            <TabItem Header="Templates">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60*"></ColumnDefinition>
+                        <ColumnDefinition Width="40*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <!--<v:AllChargeCurrentsView x:Name="AllChargeCurrentsViewInstance" Grid.Row="1"></v:AllChargeCurrentsView>-->
+                    </Grid>
+                    <v:AllStepTemplatesView Grid.Column="0" x:Name="AllStepTemplateViewInstance"></v:AllStepTemplatesView>
+                    <v:AllRecipeTemplatesView Grid.Column="1" x:Name="AllRecipeTemplatesViewInstance"></v:AllRecipeTemplatesView>
+                </Grid>
             </TabItem>
             <TabItem Header="Programs">
                 <v:AllProgramsView x:Name="AllProgramsViewInstance"></v:AllProgramsView>

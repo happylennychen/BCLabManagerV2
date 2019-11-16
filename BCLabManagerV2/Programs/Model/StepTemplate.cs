@@ -51,13 +51,13 @@ namespace BCLabManager.Model
             get { return _cutOffConditionType; }
             set { SetProperty(ref _cutOffConditionType, value); }
         }
-        private double _slope;
+        private double _slope = 1;
         public double Slope
         {
             get { return _slope; }
             set { SetProperty(ref _slope, value); }
         }
-        private double _offset;
+        private double _offset = 0;
         public double Offset
         {
             get { return _offset; }
