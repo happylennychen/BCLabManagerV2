@@ -11,34 +11,49 @@ namespace BCLabManager.Model
     public class ChamberServieClass
     {
         public ObservableCollection<ChamberClass> Items { get; set; }
-        public void Add(ChamberClass item)
+        public void SuperAdd(ChamberClass item)
+        {
+            DatabaseAdd(item);
+            Items.Add(item);
+        }
+        public void DatabaseAdd(ChamberClass item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 uow.Chambers.Insert(item);
                 uow.Commit();
             }
-            Items.Add(item);
         }
-        public void Remove(int id)
+        public void SuperRemove(int id)
+        {
+            DatabaseRemove(id);
+            var item = Items.SingleOrDefault(o => o.Id == id);
+            Items.Remove(item);
+        }
+        public void DatabaseRemove(int id)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 uow.Chambers.Delete(id);
                 uow.Commit();
             }
-
-            var item = Items.SingleOrDefault(o => o.Id == id);
-            Items.Remove(item);
         }
-        public void Update(ChamberClass item)
+        public void SuperUpdate(ChamberClass item)
+        {
+            DatabaseUpdate(item);
+            DomainUpdate(item);
+        }
+        public void DatabaseUpdate(ChamberClass item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 uow.Chambers.Update(item);
                 uow.Commit();
             }
-            var edittarget = Items.SingleOrDefault(o=>o.Id == item.Id);
+        }
+        public void DomainUpdate(ChamberClass item)
+        {
+            var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             edittarget.HighestTemperature = item.HighestTemperature;
             edittarget.LowestTemperature = item.LowestTemperature;
             edittarget.Manufactor = item.Manufactor;
@@ -51,14 +66,14 @@ namespace BCLabManager.Model
             item.AssetUseCount++;
             item.Records.Add(new AssetUsageRecordClass(startTime, item.AssetUseCount, programName, recipeName));
 
-            Update(item);
+            SuperUpdate(item);
         }
         public void Commit(ChamberClass item, DateTime endTime, string programName, string recipeName)
         {
             item.AssetUseCount--;
             item.Records.Add(new AssetUsageRecordClass(endTime, item.AssetUseCount, programName, recipeName));
 
-            Update(item);
+            SuperUpdate(item);
         }
     }
 }

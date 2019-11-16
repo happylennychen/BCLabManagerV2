@@ -189,7 +189,7 @@ namespace BCLabManager.ViewModel
             ChannelViewInstance.ShowDialog();                   //设置viewmodel属性
             if (evm.IsOK == true)
             {
-                _channelService.Add(m);
+                _channelService.SuperAdd(m);
             }
         }
         private void Edit()
@@ -207,7 +207,7 @@ namespace BCLabManager.ViewModel
             ChannelViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _channelService.Update(m);
+                _channelService.SuperUpdate(m);
             }
         }
         private bool CanEdit
@@ -229,7 +229,7 @@ namespace BCLabManager.ViewModel
             ChannelViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _channelService.Add(m);
+                _channelService.SuperAdd(m);
             }
         }
         private bool CanSaveAs
@@ -246,7 +246,7 @@ namespace BCLabManager.ViewModel
             }
             if (MessageBox.Show("Are you sure?", "Delete Channel", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                _channelService.Remove(SelectedItem.Id);
+                _channelService.SuperRemove(SelectedItem.Id);
             }
         }
         private bool CanDelete

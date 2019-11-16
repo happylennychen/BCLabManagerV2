@@ -182,7 +182,7 @@ namespace BCLabManager.ViewModel
             ChamberViewInstance.ShowDialog();                   //设置viewmodel属性
             if (evm.IsOK == true)
             {
-                _chamberService.Add(edititem);
+                _chamberService.SuperAdd(edititem);
             }
         }
         private void Edit()
@@ -201,7 +201,7 @@ namespace BCLabManager.ViewModel
             ChamberViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _chamberService.Update(edititem);
+                _chamberService.SuperUpdate(edititem);
             }
         }
         private bool CanEdit
@@ -223,7 +223,7 @@ namespace BCLabManager.ViewModel
             ChamberViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _chamberService.Add(m);
+                _chamberService.SuperAdd(m);
             }
         }
         private bool CanSaveAs
@@ -240,7 +240,7 @@ namespace BCLabManager.ViewModel
             }
             if (MessageBox.Show("Are you sure?", "Delete Chamber", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                _chamberService.Remove(_selectedItem.Id);
+                _chamberService.SuperRemove(_selectedItem.Id);
             }
         }
         private bool CanDelete

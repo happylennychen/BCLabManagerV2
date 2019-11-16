@@ -34,7 +34,8 @@ namespace BCLabManager
                 BatteryTypeClass btc = new BatteryTypeClass()
                 {
                     Name = "BLP663",
-                    Manufactor = "Oppo"
+                    Manufactor = "Oppo",
+                    TypicalCapacity = 3450
                 };
                 dbContext.BatteryTypes.Add(btc);
                 dbContext.SaveChanges();

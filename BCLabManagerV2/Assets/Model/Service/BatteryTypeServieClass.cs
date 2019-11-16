@@ -11,34 +11,49 @@ namespace BCLabManager.Model
     public class BatteryTypeServieClass//:ModelService<BatteryTypeClass>
     {
         public ObservableCollection<BatteryTypeClass> Items { get; set; }
-        public void Add(BatteryTypeClass item)
+        public void SuperAdd(BatteryTypeClass item)
+        {
+            DatabaseAdd(item);
+            Items.Add(item);
+        }
+        public void DatabaseAdd(BatteryTypeClass item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 uow.BatteryTypes.Insert(item);
                 uow.Commit();
             }
-            Items.Add(item);
         }
-        public void Remove(int id)
+        public void SuperRemove(int id)
+        {
+            DatabaseRemove(id);
+            var item = Items.SingleOrDefault(o => o.Id == id);
+            Items.Remove(item);
+        }
+        public void DatabaseRemove(int id)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 uow.BatteryTypes.Delete(id);
                 uow.Commit();
             }
-
-            var item = Items.SingleOrDefault(o => o.Id == id);
-            Items.Remove(item);
         }
-        public void Update(BatteryTypeClass item)
+        public void SuperUpdate(BatteryTypeClass item)
+        {
+            DatabaseUpdate(item);
+            DomainUpdate(item);
+        }
+        public void DatabaseUpdate(BatteryTypeClass item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 uow.BatteryTypes.Update(item);
                 uow.Commit();
             }
-            var edittarget = Items.SingleOrDefault(o=>o.Id == item.Id);
+        }
+        public void DomainUpdate(BatteryTypeClass item)
+        {
+            var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             edittarget.LimitedChargeVoltage = item.LimitedChargeVoltage;
             edittarget.Manufactor = item.Manufactor;
             edittarget.Material = item.Material;

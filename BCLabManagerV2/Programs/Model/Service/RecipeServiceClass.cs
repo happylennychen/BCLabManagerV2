@@ -11,8 +11,8 @@ namespace BCLabManager.Model
     public class RecipeServiceClass
     {
         public ObservableCollection<RecipeClass> Items { get; set; }
-        public void Add(RecipeClass item)
-        {
+        //public void Add(RecipeClass item)
+        //{
             //using (var uow = new UnitOfWork(new AppDbContext()))
             //{
             //    item.BatteryType = uow.BatteryTypes.GetById(item.BatteryType.Id);
@@ -20,9 +20,9 @@ namespace BCLabManager.Model
             //    uow.Commit();
             //}
             //Items.Add(item);
-        }
-        public void Remove(int id)
-        {
+        //}
+        //public void Remove(int id)
+        //{
             //using (var uow = new UnitOfWork(new AppDbContext()))
             //{
             //    uow.Batteries.Delete(id);
@@ -31,14 +31,22 @@ namespace BCLabManager.Model
 
             //var item = Items.SingleOrDefault(o => o.Id == id);
             //Items.Remove(item);
+        //}
+        public void SuperUpdate(RecipeClass item)
+        {
+            DatabaseUpdate(item);
+            DomainUpdate(item);
         }
-        public void Update(RecipeClass item)
+        public void DatabaseUpdate(RecipeClass item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 uow.Recipies.Update(item);
                 uow.Commit();
             }
+        }
+        public void DomainUpdate(RecipeClass item)
+        {
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             edittarget.EndTime = item.EndTime;
             edittarget.IsAbandoned = item.IsAbandoned;
@@ -56,7 +64,7 @@ namespace BCLabManager.Model
             var newTestRecord = new TestRecordClass();
             //TestRecordService.Add(newTestRecord);
             recipe.TestRecords.Add(newTestRecord);
-            Update(recipe);
+            SuperUpdate(recipe);
         }
 
         internal void Abandon(RecipeClass recipe)

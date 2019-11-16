@@ -11,7 +11,12 @@ namespace BCLabManager.Model
     public class ProgramServiceClass
     {
         public ObservableCollection<ProgramClass> Items { get; set; }
-        public void Add(ProgramClass item)
+        public void SuperAdd(ProgramClass item)
+        {
+            DatabaseAdd(item);
+            DomainAdd(item);
+        }
+        public void DatabaseAdd(ProgramClass item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -19,6 +24,9 @@ namespace BCLabManager.Model
                 uow.Programs.Insert(item);
                 uow.Commit();
             }
+        }
+        public void DomainAdd(ProgramClass item)
+        {
             Items.Add(item);
             foreach (var recipe in item.Recipes)
             {
@@ -27,8 +35,8 @@ namespace BCLabManager.Model
                     RecipeService.TestRecordService.Items.Add(testRecord);
             }
         }
-        public void Remove(int id)
-        {
+        //public void Remove(int id)
+        //{
             //using (var uow = new UnitOfWork(new AppDbContext()))
             //{
             //    uow.Batteries.Delete(id);
@@ -37,14 +45,22 @@ namespace BCLabManager.Model
 
             //var item = Items.SingleOrDefault(o => o.Id == id);
             //Items.Remove(item);
+        //}
+        public void SuperUpdate(ProgramClass item)
+        {
+            DatabaseUpdate(item);
+            DomainUpdate(item);
         }
-        public void Update(ProgramClass item)
+        public void DatabaseUpdate(ProgramClass item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 uow.Programs.Update(item);
                 uow.Commit();
             }
+        }
+        public void DomainUpdate(ProgramClass item)
+        {
             //var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             //edittarget.BatteryType = item.BatteryType;
             //edittarget.Name = item.Name;
@@ -63,7 +79,13 @@ namespace BCLabManager.Model
             foreach (var item in Items)
             {
                 UpdateEstimatedTime(item, ref time, ref c);
-                Update(item);
+                SuperUpdate(item);                               //???这里的Update并不能将item中所有的修改都commit到db，所以只好用下面的foreach来补救
+                foreach (var recipe in item.Recipes)
+                {
+                    RecipeService.SuperUpdate(recipe);
+                    foreach (var sr in recipe.StepRuntimes)
+                        RecipeService.StepRuntimeService.Update(sr);
+                }
             }
         }
         public void Order()

@@ -16,6 +16,9 @@ namespace BCLabManager.DataAccess
         public IChannelRepository Channels { get; private set; }
         public IChamberRepository Chambers { get; private set; }
         public ITestRecordRepository TestRecords { get; private set; }
+        public IStepTemplateRepository StepTemplates { get; private set; }
+        public IStepRepository Steps { get; private set; }
+        public IStepRuntimeRepository StepRuntimes { get; private set; }
         public IRecipeRepository Recipies { get; private set; }
         public IProgramRepository Programs { get; private set; }
         public UnitOfWork(AppDbContext dbContext)
@@ -27,6 +30,9 @@ namespace BCLabManager.DataAccess
             Channels = new ChannelRepository(_context);
             Chambers = new ChamberRepository(_context);
             TestRecords = new TestRecordRepository(_context);
+            Steps = new StepRepository(_context);
+            StepTemplates = new StepTemplateRepository(_context);
+            StepRuntimes = new StepRuntimeRepository(_context);
             Recipies = new RecipeRepository(_context);
             Programs = new ProgramRepository(_context);
         }

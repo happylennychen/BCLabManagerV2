@@ -11,7 +11,12 @@ namespace BCLabManager.Model
     public class ChannelServieClass
     {
         public ObservableCollection<ChannelClass> Items { get; set; }
-        public void Add(ChannelClass item)
+        public void SuperAdd(ChannelClass item)
+        {
+            DatabaseAdd(item);
+            Items.Add(item);
+        }
+        public void DatabaseAdd(ChannelClass item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -19,27 +24,38 @@ namespace BCLabManager.Model
                 uow.Channels.Insert(item);
                 uow.Commit();
             }
-            Items.Add(item);
         }
-        public void Remove(int id)
+        public void SuperRemove(int id)
+        {
+            DatabaseRemove(id);
+
+            var item = Items.SingleOrDefault(o => o.Id == id);
+            Items.Remove(item);
+        }
+        public void DatabaseRemove(int id)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 uow.Channels.Delete(id);
                 uow.Commit();
             }
-
-            var item = Items.SingleOrDefault(o => o.Id == id);
-            Items.Remove(item);
         }
-        public void Update(ChannelClass item)
+        public void SuperUpdate(ChannelClass item)
+        {
+            DatabaseUpdate(item);
+            DomainUpdate(item);
+        }
+        public void DatabaseUpdate(ChannelClass item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 uow.Channels.Update(item);
                 uow.Commit();
             }
-            var edittarget = Items.SingleOrDefault(o=>o.Id == item.Id);
+        }
+        public void DomainUpdate(ChannelClass item)
+        {
+            var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             edittarget.Tester = item.Tester;
             edittarget.Name = item.Name;
             edittarget.AssetUseCount = item.AssetUseCount;
@@ -50,14 +66,14 @@ namespace BCLabManager.Model
             item.AssetUseCount++;
             item.Records.Add(new AssetUsageRecordClass(startTime, item.AssetUseCount, programName, recipeName));
 
-            Update(item);
+            SuperUpdate(item);
         }
         public void Commit(ChannelClass item, DateTime endTime, string programName, string recipeName)
         {
             item.AssetUseCount--;
             item.Records.Add(new AssetUsageRecordClass(endTime, item.AssetUseCount, programName, recipeName));
 
-            Update(item);
+            SuperUpdate(item);
         }
     }
 }

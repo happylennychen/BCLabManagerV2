@@ -157,6 +157,9 @@ namespace BCLabManager
                 ProgramService.Items = new ObservableCollection<ProgramClass>(uow.Programs.GetAll());
                 ProgramService.RecipeService.Items = new ObservableCollection<RecipeClass>(uow.Recipies.GetAll());
                 ProgramService.RecipeService.TestRecordService.Items = new ObservableCollection<TestRecordClass>(uow.TestRecords.GetAll());
+                ProgramService.RecipeService.StepRuntimeService.Items = new ObservableCollection<StepRuntimeClass>(uow.StepRuntimes.GetAll());
+                ProgramService.RecipeService.StepRuntimeService.StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
+                ProgramService.RecipeService.StepRuntimeService.StepService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
             }
             using (var dbContext = new AppDbContext())
             {

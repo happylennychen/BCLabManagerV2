@@ -197,7 +197,7 @@ namespace BCLabManager.ViewModel
             BatteryViewInstance.ShowDialog();                   //设置viewmodel属性
             if (bevm.IsOK == true)
             {
-                _batteryService.Add(editItem);
+                _batteryService.SuperAdd(editItem);
 
             }
         }
@@ -218,7 +218,7 @@ namespace BCLabManager.ViewModel
             BatteryViewInstance.ShowDialog();
             if (bevm.IsOK == true)
             {
-                _batteryService.Update(editItem);
+                _batteryService.SuperUpdate(editItem);
             }
         }
         private bool CanEdit
@@ -240,7 +240,7 @@ namespace BCLabManager.ViewModel
             BatteryViewInstance.ShowDialog();
             if (bevm.IsOK == true)
             {
-                _batteryService.Add(bc);
+                _batteryService.SuperAdd(bc);
             }
         }
         private bool CanSaveAs
@@ -257,7 +257,7 @@ namespace BCLabManager.ViewModel
             }
             if (MessageBox.Show("Are you sure?", "Delete Battery", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                _batteryService.Remove(_selectedItem.Id);
+                _batteryService.SuperRemove(_selectedItem.Id);
             }
         }
         private bool CanDelete

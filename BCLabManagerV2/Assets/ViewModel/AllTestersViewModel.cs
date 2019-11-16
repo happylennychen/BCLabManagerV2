@@ -179,7 +179,7 @@ namespace BCLabManager.ViewModel
             TesterViewInstance.ShowDialog();                   //设置viewmodel属性
             if (evm.IsOK == true)
             {
-                _testerService.Add(m);
+                _testerService.SuperAdd(m);
             }
         }
         private void Edit()
@@ -195,7 +195,7 @@ namespace BCLabManager.ViewModel
             TesterViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _testerService.Update(m);
+                _testerService.SuperUpdate(m);
             }
         }
         private bool CanEdit
@@ -214,7 +214,7 @@ namespace BCLabManager.ViewModel
             TesterViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _testerService.Add(m);
+                _testerService.SuperAdd(m);
             }
         }
         private bool CanSaveAs
@@ -230,7 +230,7 @@ namespace BCLabManager.ViewModel
             }
             if (MessageBox.Show("Are you sure?", "Delete Tester", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                _testerService.Remove(SelectedItem.Id);
+                _testerService.SuperRemove(SelectedItem.Id);
             }
         }
         private bool CanDelete

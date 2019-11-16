@@ -318,7 +318,7 @@ namespace BCLabManager.ViewModel
             ProgramViewInstance.ShowDialog();                   //设置viewmodel属性
             if (evm.IsOK == true)
             {
-                _programService.Add(m);
+                _programService.SuperAdd(m);
             }
         }
         private void Edit()
@@ -524,7 +524,7 @@ namespace BCLabManager.ViewModel
             ProgramViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _programService.Add(m);
+                _programService.SuperAdd(m);
             }
         }
         private bool CanSaveAs

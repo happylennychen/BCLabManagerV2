@@ -13,41 +13,41 @@ namespace BCLabManager.Model
         public ObservableCollection<StepRuntimeClass> Items { get; set; }
         //public void Add(StepRuntimeClass item)
         //{
-            //using (var uow = new UnitOfWork(new AppDbContext()))
-            //{
-            //    item.BatteryType = uow.BatteryTypes.GetById(item.BatteryType.Id);
-            //    uow.Batteries.Insert(item);
-            //    uow.Commit();
-            //}
-            //Items.Add(item);
+        //using (var uow = new UnitOfWork(new AppDbContext()))
+        //{
+        //    item.BatteryType = uow.BatteryTypes.GetById(item.BatteryType.Id);
+        //    uow.Batteries.Insert(item);
+        //    uow.Commit();
+        //}
+        //Items.Add(item);
         //}
         //public void Remove(int id)
         //{
-            //using (var uow = new UnitOfWork(new AppDbContext()))
-            //{
-            //    uow.Batteries.Delete(id);
-            //    uow.Commit();
-            //}
-
-            //var item = Items.SingleOrDefault(o => o.Id == id);
-            //Items.Remove(item);
-        //}
-        //public void Update(StepRuntimeClass item)
+        //using (var uow = new UnitOfWork(new AppDbContext()))
         //{
-        //    using (var uow = new UnitOfWork(new AppDbContext()))
-        //    {
-        //        uow.Recipies.Update(item);
-        //        uow.Commit();
-        //    }
-        //    var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
-        //    edittarget.EndTime = item.EndTime;
-        //    edittarget.IsAbandoned = item.IsAbandoned;
-        //    edittarget.Loop = item.Loop;
-        //    edittarget.StartTime = item.StartTime;
-        //    edittarget.TestRecords = item.TestRecords;
-        //    edittarget.Name = item.Name;
+        //    uow.Batteries.Delete(id);
+        //    uow.Commit();
         //}
 
+        //var item = Items.SingleOrDefault(o => o.Id == id);
+        //Items.Remove(item);
+        //}
+        public void Update(StepRuntimeClass item)
+        {
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                uow.StepRuntimes.Update(item);
+                uow.Commit();
+            }
+            //var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
+            //edittarget.EndTime = item.EndTime;
+            //edittarget.IsAbandoned = item.IsAbandoned;
+            //edittarget.Loop = item.Loop;
+            //edittarget.StartTime = item.StartTime;
+            //edittarget.TestRecords = item.TestRecords;
+            //edittarget.Name = item.Name;
+        }
+        public StepServiceClass StepService { get; set; } = new StepServiceClass();
         internal TimeSpan GetDuration(StepRuntimeClass sr, ref double CBegin)       //计算Duration，并且为下一个sr更新CBegin
         {
             double Cend = 0;
