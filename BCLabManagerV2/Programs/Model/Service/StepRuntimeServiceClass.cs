@@ -11,6 +11,7 @@ namespace BCLabManager.Model
     public class StepRuntimeServiceClass
     {
         public ObservableCollection<StepRuntimeClass> Items { get; set; }
+        public StepServiceClass StepService { get; set; } = new StepServiceClass();
         //public void Add(StepRuntimeClass item)
         //{
         //using (var uow = new UnitOfWork(new AppDbContext()))
@@ -47,7 +48,6 @@ namespace BCLabManager.Model
             //edittarget.TestRecords = item.TestRecords;
             //edittarget.Name = item.Name;
         }
-        public StepServiceClass StepService { get; set; } = new StepServiceClass();
         internal TimeSpan GetDuration(StepRuntimeClass sr, ref double CBegin)       //计算Duration，并且为下一个sr更新CBegin
         {
             double Cend = 0;
@@ -65,11 +65,20 @@ namespace BCLabManager.Model
                 else if (st.CutOffConditionType == CutOffConditionTypeEnum.C_mAH)
                     Cend = st.CutOffConditionValue;
 
-                duration = TimeSpan.FromHours(Math.Abs(Cend - CBegin) / sr.DesignCapacityInmAH);
+                //duration = TimeSpan.FromHours(Math.Abs(Cend - CBegin) / sr.DesignCapacityInmAH);
+                duration = TimeSpan.FromHours(GetTimeInSecondsWithParameters(Cend, CBegin, sr.DesignCapacityInmAH, sr.Step.StepTemplate.Slope, sr.Step.StepTemplate.Offset));
             }
             CBegin = Cend;
             return duration;
 
+        }
+        private double GetTimeInSecondsWithParameters(double Cend, double CBegin, double Current, double Slope, double Offset)
+        {
+            return Slope * GetTimeInSeconds(Cend, CBegin, Current) + Offset;
+        }
+        private double GetTimeInSeconds(double Cend, double CBegin, double Current)
+        {
+            return Math.Abs(Cend - CBegin) / Current;
         }
 
         internal void UpdateEstimatedTime(StepRuntimeClass item, ref DateTime time, ref double c)

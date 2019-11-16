@@ -23,8 +23,8 @@ namespace BCLabManager.ViewModel
         //readonly BatteryRepository _batteryRepository;
         //readonly BatteryTypeRepository _batterytypeRepository;
         //bool _isSelected;
-        string _batteryType;
-        RelayCommand _saveCommand;
+        //string _batteryType;
+        //RelayCommand _saveCommand;
 
         #endregion // Fields
 

@@ -14,11 +14,12 @@ namespace BCLabManager.ViewModel
     public class AllRecipeTemplatesViewModel : BindableBase
     {
         #region Fields
-        List<RecipeTemplate> _RecipeTemplates;
+        //List<RecipeTemplate> _RecipeTemplates;
         //List<ChargeTemperatureClass> _chargeTemperatures;
         //List<ChargeCurrentClass> _chargeCurrents;
         //List<DischargeTemperatureClass> _dischargeTemperatures;
         //List<DischargeCurrentClass> _dischargeCurrents;
+        private RecipeTemplateServiceClass _recipeTemplateServcie;
         RecipeTemplateViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
@@ -29,25 +30,17 @@ namespace BCLabManager.ViewModel
         #region Constructor
 
         public AllRecipeTemplatesViewModel(
-            List<RecipeTemplate> RecipeTemplates//,
-            //List<ChargeTemperatureClass> chargeTemperatures,
-            //List<ChargeCurrentClass> chargeCurrents,
-            //List<DischargeTemperatureClass> dischargeTemperatures,
-            //List<DischargeCurrentClass> dischargeCurrents
+            RecipeTemplateServiceClass recipeTemplateServcie
             )
         {
-            //_chargeTemperatures = chargeTemperatures;
-            //_chargeCurrents = chargeCurrents;
-            //_dischargeTemperatures = dischargeTemperatures;
-            //_dischargeCurrents = dischargeCurrents;
-            this.CreateAllRecipeTemplates(RecipeTemplates);
+            _recipeTemplateServcie = recipeTemplateServcie;
+            this.CreateAllRecipeTemplates(_recipeTemplateServcie.Items);
         }
 
-        void CreateAllRecipeTemplates(List<RecipeTemplate> RecipeTemplates)
+        void CreateAllRecipeTemplates(ObservableCollection<RecipeTemplate> recipeTemplates)
         {
-            _RecipeTemplates = RecipeTemplates;
             List<RecipeTemplateViewModel> all =
-                (from subt in RecipeTemplates
+                (from subt in recipeTemplates
                  select new RecipeTemplateViewModel(subt)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.AllRecipeTemplates = new ObservableCollection<RecipeTemplateViewModel>(all);     //再转换成Observable
@@ -141,23 +134,7 @@ namespace BCLabManager.ViewModel
             RecipeViewInstance.ShowDialog();                   //设置viewmodel属性
             if (viewmodel.IsOK == true)
             {
-                //RecipeTemplate newsub;
-                using (var dbContext = new AppDbContext())
-                {
-                    //dbContext.RecipeTemplates.Add(model);
-                    var newsub = new RecipeTemplate()
-                    {
-                        //ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == model.ChargeTemperature.Id),
-                        //ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == model.ChargeCurrent.Id),
-                        //DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == model.DischargeTemperature.Id),
-                        //DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == model.DischargeCurrent.Id),
-                    };
-                    dbContext.RecipeTemplates.Add(newsub);
-                    dbContext.SaveChanges();
-                    model = newsub;
-                }
-                _RecipeTemplates.Add(model);
-                this.AllRecipeTemplates.Add(new RecipeTemplateViewModel(model));
+                _recipeTemplateServcie.SuperAdd(model);
             }
         }
         private void Edit()
@@ -229,23 +206,7 @@ namespace BCLabManager.ViewModel
             RecipeViewInstance.ShowDialog();
             if (viewmodel.IsOK == true)
             {
-                //RecipeTemplate newsub;
-                using (var dbContext = new AppDbContext())
-                {
-                    //dbContext.RecipeTemplates.Add(model);
-                    var newsub = new RecipeTemplate()
-                    {
-                        //ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == model.ChargeTemperature.Id),
-                        //ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == model.ChargeCurrent.Id),
-                        //DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == model.DischargeTemperature.Id),
-                        //DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == model.DischargeCurrent.Id)
-                    };
-                    dbContext.RecipeTemplates.Add(newsub);
-                    dbContext.SaveChanges();
-                    model = newsub;
-                }
-                _RecipeTemplates.Add(model);
-                this.AllRecipeTemplates.Add(new RecipeTemplateViewModel(model));
+                _recipeTemplateServcie.SuperAdd(model);
             }
         }
         private bool CanSaveAs

@@ -17,7 +17,7 @@ namespace BCLabManager.ViewModel
     public class AllProgramsViewModel : BindableBase
     {
         #region Fields
-        List<RecipeTemplate> _RecipeTemplates;
+        //List<RecipeTemplate> _recipeTemplateService.Items;
         ProgramViewModel _selectedProgram;
         RecipeViewModel _selectedRecipe;
         TestRecordViewModel _selectedTestRecord;
@@ -41,14 +41,15 @@ namespace BCLabManager.ViewModel
         private ChannelServieClass _channelService;
         private ChamberServieClass _chamberService;
         private ProgramServiceClass _programService;
+        private RecipeTemplateServiceClass _recipeTemplateService;
         #endregion // Fields
 
         #region Constructor
 
         public AllProgramsViewModel
             (
-            ProgramServiceClass programService,
-            List<RecipeTemplate> RecipeTemplates,
+            ProgramServiceClass programService, 
+            RecipeTemplateServiceClass recipeTemplateService,
             BatteryTypeServieClass batteryTypeService,
             BatteryServieClass batteryService,
             TesterServieClass testerService,
@@ -56,7 +57,7 @@ namespace BCLabManager.ViewModel
             ChamberServieClass chamberService
             )
         {
-            _RecipeTemplates = RecipeTemplates;
+            _recipeTemplateService = recipeTemplateService;
             _programService = programService;
             this.CreateAllPrograms(_programService.Items);
 
@@ -310,7 +311,7 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             ProgramClass m = new ProgramClass();      //实例化一个新的model
-            ProgramEditViewModel evm = new ProgramEditViewModel(m,_batteryTypeService.Items, _RecipeTemplates);      //实例化一个新的view model
+            ProgramEditViewModel evm = new ProgramEditViewModel(m,_batteryTypeService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
             //evm.DisplayName = "Program-Create";
             evm.commandType = CommandType.Create;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -334,7 +335,7 @@ namespace BCLabManager.ViewModel
             model.Description = oldpro.Description;
             model.Recipes = new ObservableCollection<RecipeClass>(oldsubs);          //这里并不希望在edit window里面修改原本的Recipes，而是想编辑一个新的Recipe,只是这个新的，是旧集合的浅复制
 
-            ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _batteryTypeService.Items, _RecipeTemplates);      //实例化一个新的view model
+            ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _batteryTypeService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
             //viewmodel.DisplayName = "Program-Edit";
             viewmodel.commandType = CommandType.Edit;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -434,7 +435,7 @@ namespace BCLabManager.ViewModel
                 //model.Recipes = _selectedProgram._program.Recipes;
                 /*
                 ProgramClass model = _selectedProgram._program.Clone();
-                ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _RecipeTemplates);      //实例化一个新的view model
+                ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _recipeTemplateService.Items);      //实例化一个新的view model
                 viewmodel.DisplayName = "Program-Edit";
                 viewmodel.commandType = CommandType.Edit;
                 var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -516,7 +517,7 @@ namespace BCLabManager.ViewModel
         private void SaveAs()
         {
             ProgramClass m = _selectedProgram._program.Clone();
-            ProgramEditViewModel evm = new ProgramEditViewModel(m, _batteryTypeService.Items, _RecipeTemplates);      //实例化一个新的view model
+            ProgramEditViewModel evm = new ProgramEditViewModel(m, _batteryTypeService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
             ////evm.DisplayName = "Program-Save As";
             //evm.commandType = CommandType.SaveAs;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view

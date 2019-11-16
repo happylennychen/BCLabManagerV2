@@ -42,17 +42,17 @@ namespace BCLabManager
 
         public DashBoardViewModel dashBoardViewModel { get; set; }
 
-        public ObservableCollection<BatteryTypeClass> BatteryTypes { get; set; }
-        public ObservableCollection<BatteryClass> Batteries { get; set; }
-        public ObservableCollection<TesterClass> Testers { get; set; }
-        public ObservableCollection<ChannelClass> Channels { get; set; }
-        public ObservableCollection<ChamberClass> Chambers { get; set; }
-        public List<RecipeTemplate> RecipeTemplates { get; set; }
+        //public ObservableCollection<BatteryTypeClass> BatteryTypes { get; set; }
+        //public ObservableCollection<BatteryClass> Batteries { get; set; }
+        //public ObservableCollection<TesterClass> Testers { get; set; }
+        //public ObservableCollection<ChannelClass> Channels { get; set; }
+        //public ObservableCollection<ChamberClass> Chambers { get; set; }
+        //public List<RecipeTemplate> RecipeTemplates { get; set; }
         //public List<ChargeTemperatureClass> ChargeTemperatures { get; set; }
         //public List<ChargeCurrentClass> ChargeCurrents { get; set; }
         //public List<DischargeTemperatureClass> DischargeTemperatures { get; set; }
         //public List<DischargeCurrentClass> DischargeCurrents { get; set; }
-        public ObservableCollection<ProgramClass> Programs { get; set; }
+        //public ObservableCollection<ProgramClass> Programs { get; set; }
 
         //private DomainDataClass _domainData;
 
@@ -62,6 +62,7 @@ namespace BCLabManager
         public ChannelServieClass ChannelService { get; set; } = new ChannelServieClass();
         public ChamberServieClass ChamberService { get; set; } = new ChamberServieClass();
         //public TestRecordServiceClass TestRecordService { get; set; } = new TestRecordServiceClass();
+        public RecipeTemplateServiceClass RecipeTemplateService { get; set; } = new RecipeTemplateServiceClass();
         public ProgramServiceClass ProgramService { get; set; } = new ProgramServiceClass();
 
         public MainWindow()
@@ -154,6 +155,8 @@ namespace BCLabManager
 
                 ChamberService.Items = new ObservableCollection<ChamberClass>(uow.Chambers.GetAll("Records"));
 
+                RecipeTemplateService.Items = new ObservableCollection<RecipeTemplate>(uow.RecipeTemplates.GetAll());
+
                 ProgramService.Items = new ObservableCollection<ProgramClass>(uow.Programs.GetAll());
                 ProgramService.RecipeService.Items = new ObservableCollection<RecipeClass>(uow.Recipies.GetAll());
                 ProgramService.RecipeService.TestRecordService.Items = new ObservableCollection<TestRecordClass>(uow.TestRecords.GetAll());
@@ -163,63 +166,55 @@ namespace BCLabManager
             }
             using (var dbContext = new AppDbContext())
             {
-                BatteryTypes = new ObservableCollection<BatteryTypeClass>(dbContext.BatteryTypes.ToList());
+                //BatteryTypes = new ObservableCollection<BatteryTypeClass>(dbContext.BatteryTypes.ToList());
 
-                Batteries = new ObservableCollection<BatteryClass>(
-                    dbContext.Batteries
-                    .Include(i => i.BatteryType)
-                    .Include(o => o.Records)
-                    .ToList()
-                    );
+                //Batteries = new ObservableCollection<BatteryClass>(
+                //    dbContext.Batteries
+                //    .Include(i => i.BatteryType)
+                //    .Include(o => o.Records)
+                //    .ToList()
+                //    );
 
-                Testers = new ObservableCollection<TesterClass>(dbContext.Testers.ToList());
+                //Testers = new ObservableCollection<TesterClass>(dbContext.Testers.ToList());
 
-                Channels = new ObservableCollection<ChannelClass>(
-                    dbContext.Channels
-                    .Include(i => i.Tester)
-                    .Include(o => o.Records)
-                    .ToList()
-                    );
+                //Channels = new ObservableCollection<ChannelClass>(
+                //    dbContext.Channels
+                //    .Include(i => i.Tester)
+                //    .Include(o => o.Records)
+                //    .ToList()
+                //    );
 
-                Chambers = new ObservableCollection<ChamberClass>(
-                    dbContext.Chambers
-                    .Include(o => o.Records)
-                    .ToList()
-                    );
+                //Chambers = new ObservableCollection<ChamberClass>(
+                //    dbContext.Chambers
+                //    .Include(o => o.Records)
+                //    .ToList()
+                //    );
 
-                RecipeTemplates = new List<RecipeTemplate>(dbContext.RecipeTemplates.ToList());
+                //RecipeTemplates = new List<RecipeTemplate>(dbContext.RecipeTemplates.ToList());
 
-                //ChargeTemperatures = new List<ChargeTemperatureClass>(dbContext.ChargeTemperatures.ToList());
+                //Programs = new ObservableCollection<ProgramClass>(dbContext.Programs
+                //    .Include(pro => pro.Recipes)
+                //        .ThenInclude(sub => sub.TestRecords)
+                //            .ThenInclude(tr => tr.RawDataList)
+                //     .Include(pro => pro.Recipes)
+                //        .ThenInclude(sub => sub.TestRecords)
+                //            .ThenInclude(tr => tr.AssignedBattery)
+                //     .Include(pro => pro.Recipes)
+                //        .ThenInclude(sub => sub.TestRecords)
+                //            .ThenInclude(tr => tr.AssignedChamber)
+                //     .Include(pro => pro.Recipes)
+                //        .ThenInclude(sub => sub.TestRecords)
+                //            .ThenInclude(tr => tr.AssignedChannel)
+                //    .ToList());
 
-                //ChargeCurrents = new List<ChargeCurrentClass>(dbContext.ChargeCurrents.ToList());
-
-                //DischargeTemperatures = new List<DischargeTemperatureClass>(dbContext.DischargeTemperatures.ToList());
-
-                //DischargeCurrents = new List<DischargeCurrentClass>(dbContext.DischargeCurrents.ToList());
-
-                Programs = new ObservableCollection<ProgramClass>(dbContext.Programs
-                    .Include(pro => pro.Recipes)
-                        .ThenInclude(sub => sub.TestRecords)
-                            .ThenInclude(tr => tr.RawDataList)
-                     .Include(pro => pro.Recipes)
-                        .ThenInclude(sub => sub.TestRecords)
-                            .ThenInclude(tr => tr.AssignedBattery)
-                     .Include(pro => pro.Recipes)
-                        .ThenInclude(sub => sub.TestRecords)
-                            .ThenInclude(tr => tr.AssignedChamber)
-                     .Include(pro => pro.Recipes)
-                        .ThenInclude(sub => sub.TestRecords)
-                            .ThenInclude(tr => tr.AssignedChannel)
-                    .ToList());
-
-                foreach (var pro in Programs)
-                {
-                    foreach (var sub in pro.Recipes)
-                    {
-                        foreach (var tr in sub.TestRecords)
-                            sub.AssociateEvent(tr);
-                    }
-                }
+                //foreach (var pro in Programs)
+                //{
+                //    foreach (var sub in pro.Recipes)
+                //    {
+                //        foreach (var tr in sub.TestRecords)
+                //            sub.AssociateEvent(tr);
+                //    }
+                //}
             }
         }
         void CreateViewModels()
@@ -236,7 +231,7 @@ namespace BCLabManager
 
             allRecipeTemplatesViewModel = 
                 new AllRecipeTemplatesViewModel(
-                    RecipeTemplates//, 
+                    RecipeTemplateService//, 
                     //ChargeTemperatures,
                     //ChargeCurrents,
                     //DischargeTemperatures,
@@ -246,7 +241,7 @@ namespace BCLabManager
             allProgramsViewModel = new AllProgramsViewModel
                 (
                 ProgramService,
-                RecipeTemplates,
+                RecipeTemplateService,
                 BatteryTypeService,
                 BatteryService,
                 TesterService,
@@ -254,7 +249,7 @@ namespace BCLabManager
                 ChamberService
                 );    //ViewModel初始化
 
-            dashBoardViewModel = new DashBoardViewModel(Programs, Batteries, Channels, Chambers);
+            dashBoardViewModel = new DashBoardViewModel(BatteryService, ChannelService, ChamberService, ProgramService);
         }
         void BindingVMandView()
         {

@@ -11,6 +11,8 @@ namespace BCLabManager.Model
     public class ProgramServiceClass
     {
         public ObservableCollection<ProgramClass> Items { get; set; }
+
+        public RecipeServiceClass RecipeService { get; set; } = new RecipeServiceClass();
         public void SuperAdd(ProgramClass item)
         {
             DatabaseAdd(item);
@@ -68,8 +70,6 @@ namespace BCLabManager.Model
             //edittarget.AssetUseCount = item.AssetUseCount;
             //edittarget.Records = item.Records;
         }
-
-        public RecipeServiceClass RecipeService { get; set; } = new RecipeServiceClass();
 
         public void UpdateEstimatedTimeChain()
         {

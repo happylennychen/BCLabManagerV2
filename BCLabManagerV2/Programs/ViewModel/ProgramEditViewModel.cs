@@ -34,7 +34,7 @@ namespace BCLabManager.ViewModel
         public ProgramEditViewModel(
             ProgramClass programmodel,
             ObservableCollection<BatteryTypeClass> batteryTypes,
-            List<RecipeTemplate> RecipeTemplates)
+            ObservableCollection<RecipeTemplate> RecipeTemplates)
         {
             _program = programmodel;
             _batteryTypes = batteryTypes;
@@ -43,7 +43,7 @@ namespace BCLabManager.ViewModel
         }
 
 
-        void CreateAllRecipeTemplates(List<RecipeTemplate> RecipeTemplates)
+        void CreateAllRecipeTemplates(ObservableCollection<RecipeTemplate> RecipeTemplates)
         {
             List<RecipeTemplateViewModel> all =
                 (from sub in RecipeTemplates

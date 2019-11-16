@@ -19,6 +19,7 @@ namespace BCLabManager.DataAccess
         public IStepTemplateRepository StepTemplates { get; private set; }
         public IStepRepository Steps { get; private set; }
         public IStepRuntimeRepository StepRuntimes { get; private set; }
+        public IRecipeTemplateRepository RecipeTemplates { get; private set; }
         public IRecipeRepository Recipies { get; private set; }
         public IProgramRepository Programs { get; private set; }
         public UnitOfWork(AppDbContext dbContext)
@@ -33,6 +34,7 @@ namespace BCLabManager.DataAccess
             Steps = new StepRepository(_context);
             StepTemplates = new StepTemplateRepository(_context);
             StepRuntimes = new StepRuntimeRepository(_context);
+            RecipeTemplates = new RecipeTemplateRepository(_context);
             Recipies = new RecipeRepository(_context);
             Programs = new ProgramRepository(_context);
         }

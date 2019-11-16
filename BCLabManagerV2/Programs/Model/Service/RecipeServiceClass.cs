@@ -11,26 +11,28 @@ namespace BCLabManager.Model
     public class RecipeServiceClass
     {
         public ObservableCollection<RecipeClass> Items { get; set; }
+        public TestRecordServiceClass TestRecordService { get; set; } = new TestRecordServiceClass();
+        public StepRuntimeServiceClass StepRuntimeService { get; set; } = new StepRuntimeServiceClass();
         //public void Add(RecipeClass item)
         //{
-            //using (var uow = new UnitOfWork(new AppDbContext()))
-            //{
-            //    item.BatteryType = uow.BatteryTypes.GetById(item.BatteryType.Id);
-            //    uow.Batteries.Insert(item);
-            //    uow.Commit();
-            //}
-            //Items.Add(item);
+        //using (var uow = new UnitOfWork(new AppDbContext()))
+        //{
+        //    item.BatteryType = uow.BatteryTypes.GetById(item.BatteryType.Id);
+        //    uow.Batteries.Insert(item);
+        //    uow.Commit();
+        //}
+        //Items.Add(item);
         //}
         //public void Remove(int id)
         //{
-            //using (var uow = new UnitOfWork(new AppDbContext()))
-            //{
-            //    uow.Batteries.Delete(id);
-            //    uow.Commit();
-            //}
+        //using (var uow = new UnitOfWork(new AppDbContext()))
+        //{
+        //    uow.Batteries.Delete(id);
+        //    uow.Commit();
+        //}
 
-            //var item = Items.SingleOrDefault(o => o.Id == id);
-            //Items.Remove(item);
+        //var item = Items.SingleOrDefault(o => o.Id == id);
+        //Items.Remove(item);
         //}
         public void SuperUpdate(RecipeClass item)
         {
@@ -55,8 +57,6 @@ namespace BCLabManager.Model
             edittarget.TestRecords = item.TestRecords;
             edittarget.Name = item.Name;
         }
-        public TestRecordServiceClass TestRecordService { get; set; } = new TestRecordServiceClass();
-        public StepRuntimeServiceClass StepRuntimeService { get; set; } = new StepRuntimeServiceClass();
 
         internal void Invalidate(RecipeClass recipe, TestRecordClass testRecord, string comment)
         {

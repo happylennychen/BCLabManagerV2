@@ -258,11 +258,13 @@
     <Compile Include="DataAccess\IChannelRepository.cs" />
     <Compile Include="DataAccess\IChamberRepository.cs" />
     <Compile Include="DataAccess\IProgramRepository.cs" />
+    <Compile Include="DataAccess\IRecipeTemplateRepository.cs" />
     <Compile Include="DataAccess\IRecipeRepository.cs" />
     <Compile Include="DataAccess\IStepRepository.cs" />
     <Compile Include="DataAccess\IStepTemplateRepository.cs" />
     <Compile Include="DataAccess\IStepRuntimeRepository.cs" />
     <Compile Include="DataAccess\ProgramRepository.cs" />
+    <Compile Include="DataAccess\RecipeTemplateRepository.cs" />
     <Compile Include="DataAccess\RecipeRepository.cs" />
     <Compile Include="DataAccess\StepRepository.cs" />
     <Compile Include="DataAccess\StepTemplateRepository.cs" />
@@ -285,6 +287,7 @@
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Programs\Model\Service\ProgramServiceClass.cs" />
+    <Compile Include="Programs\Model\Service\RecipeTemplateServiceClass.cs" />
     <Compile Include="Programs\Model\Service\StepTemplateServiceClass.cs" />
     <Compile Include="Programs\Model\Service\StepServiceClass.cs" />
     <Compile Include="Programs\Model\Service\StepRuntimeServiceClass.cs" />
@@ -294,6 +297,9 @@
     <Compile Include="Programs\Model\StepRuntimeClass.cs" />
     <Compile Include="Programs\Model\StepTemplate.cs" />
     <Compile Include="Programs\Model\StepClass.cs" />
+    <Compile Include="Programs\View\AllStepTemplatesView.xaml.cs">
+      <DependentUpon>AllStepTemplatesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\DatabasePopulator.cs" />
     <Compile Include="Services\GlobalSettings.cs" />
     <Compile Include="Assets\Model\BatteryClass.cs" />
@@ -458,6 +464,10 @@
     <Page Include="DashBoard\View\DBConfigureWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Programs\View\AllStepTemplatesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Programs\View\AllRecipeTemplatesView.xaml">
       <Generator>MSBuild:Compile</Generator>

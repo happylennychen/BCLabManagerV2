@@ -16,69 +16,77 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        ObservableCollection<BatteryClass> _batteries;
-        ObservableCollection<ChannelClass> _channels;
-        ObservableCollection<ChamberClass> _chambers;
-        ObservableCollection<ProgramClass> _programs;
+        //ObservableCollection<BatteryClass> _batteryService.Items;
+        //ObservableCollection<ChannelClass> _channelService.Items;
+        //ObservableCollection<ChamberClass> _chamberService.Items;
+        //ObservableCollection<ProgramClass> _programService.Items;
+        private BatteryServieClass _batteryService;
+        private ChannelServieClass _channelService;
+        private ChamberServieClass _chamberService;
+        private ProgramServiceClass _programService;
         #endregion // Fields
 
         #region Constructor
 
         public DashBoardViewModel
             (
-            ObservableCollection<ProgramClass> programs,
-            ObservableCollection<BatteryClass> batteries,
-            ObservableCollection<ChannelClass> channels,
-            ObservableCollection<ChamberClass> chambers
+            //ObservableCollection<ProgramClass> programs,
+            //ObservableCollection<BatteryClass> batteries,
+            //ObservableCollection<ChannelClass> channels,
+            //ObservableCollection<ChamberClass> chambers        
+            BatteryServieClass batteryService,
+         ChannelServieClass channelService,
+         ChamberServieClass chamberService,
+         ProgramServiceClass programService
             )
         {
-            _programs = programs;
-            _batteries = batteries;
-            _channels = channels;
-            _chambers = chambers;
+            _batteryService = batteryService;
+            _channelService = channelService;
+            _chamberService = chamberService;
+            _programService = programService;
             BookEvents();
         }
 
         private void BookEvents()
         {
-            foreach (var bat in _batteries)
+            foreach (var bat in _batteryService.Items)
             {
                 bat.PropertyChanged += Bat_PropertyChanged;
             }
-            _batteries.CollectionChanged += _batteries_CollectionChanged;
+            _batteryService.Items.CollectionChanged += _batteries_CollectionChanged;
 
-            foreach (var cmb in _chambers)
+            foreach (var cmb in _chamberService.Items)
             {
                 cmb.PropertyChanged += Cmb_PropertyChanged;
             }
-            _chambers.CollectionChanged += _chambers_CollectionChanged;
+            _chamberService.Items.CollectionChanged += _chambers_CollectionChanged;
 
-            foreach (var chn in _channels)
+            foreach (var chn in _channelService.Items)
             {
                 chn.PropertyChanged += Chn_PropertyChanged;
             }
-            _channels.CollectionChanged += _channels_CollectionChanged;
+            _channelService.Items.CollectionChanged += _channels_CollectionChanged;
 
-            _programs.CollectionChanged += _programs_CollectionChanged;
+            _programService.Items.CollectionChanged += _programs_CollectionChanged;
 
-            foreach (var pro in _programs)
+            foreach (var pro in _programService.Items)
             {
                 pro.Recipes.CollectionChanged += Recipes_CollectionChanged;
             }
 
-            foreach (var pro in _programs)
+            foreach (var pro in _programService.Items)
             {
-                foreach(var sub in pro.Recipes)
+                foreach (var sub in pro.Recipes)
                 {
                     sub.TestRecords.CollectionChanged += TestRecords_CollectionChanged;
                 }
             }
 
-            foreach (var pro in _programs)
+            foreach (var pro in _programService.Items)
             {
                 foreach (var sub in pro.Recipes)
                 {
-                    foreach(var tr in sub.TestRecords)
+                    foreach (var tr in sub.TestRecords)
                         tr.StatusChanged += Tr_StatusChanged;
                 }
             }
@@ -95,7 +103,7 @@ namespace BCLabManager.ViewModel
             RaisePropertyChanged("ExecutingPercentage");
             RaisePropertyChanged("CompletedPercentage");
             RaisePropertyChanged("InvalidPercentage");
-            RaisePropertyChanged("AbandonedPercentage"); 
+            RaisePropertyChanged("AbandonedPercentage");
             RaisePropertyChanged("CompletedProgramNumber");
             RaisePropertyChanged("CompletedRecipeNumber");
             RaisePropertyChanged("CompletedTestNumber");
@@ -207,14 +215,14 @@ namespace BCLabManager.ViewModel
         #region Assets Usage
         public int BatteryAmount
         {
-            get { return _batteries.Count; }
+            get { return _batteryService.Items.Count; }
         }
 
         public int UsingBatteryAmount
         {
             get
             {
-                return (from bat in _batteries
+                return (from bat in _batteryService.Items
                         where bat.AssetUseCount > 0
                         select bat).Count();
             }
@@ -227,14 +235,14 @@ namespace BCLabManager.ViewModel
 
         public int ChamberAmount
         {
-            get { return _chambers.Count; }
+            get { return _chamberService.Items.Count; }
         }
 
         public int UsingChamberAmount
         {
             get
             {
-                return (from cmb in _chambers
+                return (from cmb in _chamberService.Items
                         where cmb.AssetUseCount > 0
                         select cmb).Count();
             }
@@ -249,7 +257,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                return _channels.Count();
+                return _channelService.Items.Count();
             }
         }
 
@@ -257,7 +265,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                return (from channel in _channels
+                return (from channel in _channelService.Items
                         where channel.AssetUseCount > 0
                         select channel).Count();
             }
@@ -273,7 +281,7 @@ namespace BCLabManager.ViewModel
         {
             return
             (
-                from pro in _programs
+                from pro in _programService.Items
                 from sub in pro.Recipes
                 from ftr in sub.TestRecords
                 where ftr.Status == testStatus
@@ -321,7 +329,7 @@ namespace BCLabManager.ViewModel
             {
                 return
                 (
-                    from pro in _programs
+                    from pro in _programService.Items
                     from sub in pro.Recipes
                     from ftr in sub.TestRecords
                     select ftr
@@ -385,7 +393,7 @@ namespace BCLabManager.ViewModel
             get
             {
                 List<TestRecordViewModel> all = new List<TestRecordViewModel>();
-                foreach (var pro in _programs)
+                foreach (var pro in _programService.Items)
                 {
                     foreach (var sub in pro.Recipes)
                     {
@@ -404,7 +412,7 @@ namespace BCLabManager.ViewModel
             get
             {
                 List<TestRecordViewModel> all = new List<TestRecordViewModel>();
-                foreach (var pro in _programs)
+                foreach (var pro in _programService.Items)
                 {
                     foreach (var sub in pro.Recipes)
                     {
@@ -425,7 +433,7 @@ namespace BCLabManager.ViewModel
             get
             {
                 int i = 0;
-                foreach (var pro in _programs)
+                foreach (var pro in _programService.Items)
                 {
                     if (IsProgramCompleted(pro))
                         i++;
@@ -450,9 +458,9 @@ namespace BCLabManager.ViewModel
             get
             {
                 int i = 0;
-                foreach (var pro in _programs)
+                foreach (var pro in _programService.Items)
                 {
-                    foreach(var sub in pro.Recipes)
+                    foreach (var sub in pro.Recipes)
                         if (IsRecipeCompleted(sub))
                             i++;
                 }
@@ -472,7 +480,7 @@ namespace BCLabManager.ViewModel
             get
             {
                 int i = 0;
-                foreach (var pro in _programs)
+                foreach (var pro in _programService.Items)
                 {
                     foreach (var sub in pro.Recipes)
                     {
@@ -494,13 +502,13 @@ namespace BCLabManager.ViewModel
             get
             {
                 int i = 0;
-                foreach (var pro in _programs)
+                foreach (var pro in _programService.Items)
                 {
                     foreach (var sub in pro.Recipes)
                     {
                         foreach (var tr in sub.TestRecords)
                             if (IsTestCompleted(tr))
-                                i+= tr.RawDataList.Count;
+                                i += tr.RawDataList.Count;
                     }
                 }
                 return i;
