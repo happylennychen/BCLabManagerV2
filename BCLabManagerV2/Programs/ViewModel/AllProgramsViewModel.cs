@@ -29,6 +29,8 @@ namespace BCLabManager.ViewModel
         RelayCommand _commitCommand;
         RelayCommand _invalidateCommand;
         RelayCommand _viewCommand;
+        RelayCommand _startCommand;
+        RelayCommand _endCommand;
 
         //ObservableCollection<BatteryTypeClass> _batteryTypes;
         //ObservableCollection<TesterClass> _testers;
@@ -161,7 +163,8 @@ namespace BCLabManager.ViewModel
                 {
                     _selectedRecipe = value;
                     //RaisePropertyChanged("SelectedType");
-                    RaisePropertyChanged("TestRecords"); //通知Test1改变
+                    RaisePropertyChanged("TestRecords"); //通知TestRecords改变
+                    RaisePropertyChanged("StepRuntimes"); //通知TestRecords改变
                 }
             }
         }
@@ -172,6 +175,17 @@ namespace BCLabManager.ViewModel
             {
                 if (_selectedRecipe != null)
                     return _selectedRecipe.TestRecords;
+                else
+                    return null;
+            }
+        }
+
+        public ObservableCollection<StepRuntimeViewModel> StepRuntimes
+        {
+            get
+            {
+                if (_selectedRecipe != null)
+                    return _selectedRecipe.StepRuntimes;
                 else
                     return null;
             }
@@ -303,6 +317,34 @@ namespace BCLabManager.ViewModel
                         );
                 }
                 return _viewCommand;
+            }
+        }
+        public ICommand StartCommand
+        {
+            get
+            {
+                if (_startCommand == null)
+                {
+                    _startCommand = new RelayCommand(
+                        param => { this.Start(); },
+                        param => this.CanStart
+                        );
+                }
+                return _startCommand;
+            }
+        }
+        public ICommand EndCommand
+        {
+            get
+            {
+                if (_endCommand == null)
+                {
+                    _endCommand = new RelayCommand(
+                        param => { this.End(); },
+                        param => this.CanEnd
+                        );
+                }
+                return _endCommand;
             }
         }
         #endregion // Public Interface
@@ -544,42 +586,7 @@ namespace BCLabManager.ViewModel
             get { return _selectedRecipe != null; }
         }
         private void Execute()
-        {
-            Execute(SelectedTestRecord);
-        }
-        private bool CanExecute
-        {
-            get { return _selectedTestRecord != null && _selectedTestRecord.Status == TestStatus.Waiting; }
-        }
-        private void Commit()
-        {
-            Commit(SelectedTestRecord);
-        }
-        private bool CanCommit
-        {
-            get { return _selectedTestRecord != null && _selectedTestRecord.Status == TestStatus.Executing; }
-        }
-        private void Invalidate()
-        {
-            Invalidate(SelectedTestRecord);
-        }
-        private bool CanInvalidate
-        {
-            get { return _selectedTestRecord != null && _selectedTestRecord.Status == TestStatus.Completed; }
-        }
-        private void View()
-        {
-            ViewRawData(SelectedTestRecord);
-        }
-        private bool CanView
-        {
-            get { return _selectedTestRecord != null && (_selectedTestRecord.Record.RawDataList.Count!=0); }
-        }
-        #endregion //Private Helper
-
-
-        private void Execute(TestRecordViewModel testRecord)                                      
-            //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
+        //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
         {
             var model = new TestRecordClass();
             TestRecordExecuteViewModel evm = new TestRecordExecuteViewModel
@@ -598,42 +605,20 @@ namespace BCLabManager.ViewModel
             TestRecordViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                //testRecord.BatteryTypeStr = evm.BatteryType.Name;
-                //testRecord.BatteryStr = evm.Battery.Name;
-                //testRecord.ChamberStr = evm.Chamber.Name;
-                //testRecord.TesterStr = evm.Tester.Name;
-                //testRecord.ChannelStr = evm.Channel.Name;
-                //testRecord.StartTime = evm.StartTime;
-                //testRecord.Steps = evm.Steps;
-                //testRecord.Status = TestStatus.Executing;
-
-                //using (var dbContext = new AppDbContext())
-                //{
-                //    var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == testRecord.Id);
-                //    tr.BatteryTypeStr = testRecord.BatteryTypeStr;
-                //    tr.BatteryStr = testRecord.BatteryStr;
-                //    tr.ChamberStr = testRecord.ChamberStr;
-                //    tr.TesterStr = testRecord.TesterStr;
-                //    tr.ChannelStr = testRecord.ChannelStr;
-                //    tr.StartTime = testRecord.StartTime;
-                //    tr.Steps = testRecord.Steps;
-                //    tr.Status = testRecord.Status;
-                //    tr.AssignedBattery = dbContext.Batteries.SingleOrDefault(o=>o.Id == evm.Battery.Id);
-                //    tr.AssignedChamber = dbContext.Chambers.SingleOrDefault(o => o.Id == evm.Chamber.Id);
-                //    tr.AssignedChannel = dbContext.Channels.SingleOrDefault(o => o.Id == evm.Channel.Id);
-                //    dbContext.SaveChanges();
-                //}
-                //testRecord.ExecuteOnAssets(evm.Battery, evm.Chamber, evm.Channel,SelectedProgram.Name, SelectedRecipe.Name);      //将evm的Assets传给testRecord
-                //testRecord.ExecuteUpdateTime(_selectedProgram._program, _selectedRecipe._recipe);
-                _programService.RecipeService.TestRecordService.Execute(testRecord.Record, evm.BatteryType.Name, evm.Battery, evm.Chamber, evm.Tester.Name, evm.Channel, evm.StartTime);
+                _programService.RecipeService.TestRecordService.Execute(SelectedTestRecord.Record, evm.BatteryType.Name, evm.Battery, evm.Chamber, evm.Tester.Name, evm.Channel, evm.StartTime);
                 _batteryService.Execute(evm.Battery, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
                 _channelService.Execute(evm.Channel, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
                 _chamberService.Execute(evm.Chamber, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
             }
         }
-        private void Commit(TestRecordViewModel testRecord)
+        private bool CanExecute
+        {
+            get { return _selectedTestRecord != null && _selectedTestRecord.Status == TestStatus.Waiting; }
+        }
+        private void Commit()
         //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
         {
+            TestRecordViewModel testRecord = SelectedTestRecord;
             TestRecordClass m = new TestRecordClass();
             TestRecordCommitViewModel evm = new TestRecordCommitViewModel
                 (
@@ -646,26 +631,6 @@ namespace BCLabManager.ViewModel
             TestRecordCommitViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                //testRecord.CompleteTime = evm.CompleteTime;
-                //testRecord.NewCycle = evm.NewCycle;
-                //testRecord.Comment = evm.Comment;
-                //testRecord.Record.RawDataList = CreateRawDataList(evm.FileList);
-                //testRecord.Status = TestStatus.Completed;
-                //testRecord.CommitOnAssets();
-                //using (var dbContext = new AppDbContext())
-                //{
-                //    var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == testRecord.Id);
-                //    tr.CompleteTime = testRecord.CompleteTime;
-                //    tr.NewCycle = testRecord.NewCycle;
-                //    tr.Comment = testRecord.Comment;
-                //    tr.Status = testRecord.Status;
-                //    tr.RawDataList = testRecord.Record.RawDataList;
-                //    tr.AssignedBattery = null;
-                //    tr.AssignedChamber = null;
-                //    tr.AssignedChannel = null;
-                //    dbContext.SaveChanges();
-                //}
-                //testRecord.CommitUpdateTime(_selectedProgram._program, _selectedRecipe._recipe);
                 _batteryService.Commit(testRecord.Record.AssignedBattery, evm.CompleteTime, SelectedProgram.Name, SelectedRecipe.Name, evm.NewCycle);
                 _channelService.Commit(testRecord.Record.AssignedChannel, evm.CompleteTime, SelectedProgram.Name, SelectedRecipe.Name);
                 _chamberService.Commit(testRecord.Record.AssignedChamber, evm.CompleteTime, SelectedProgram.Name, SelectedRecipe.Name);
@@ -686,8 +651,13 @@ namespace BCLabManager.ViewModel
             }
             return output;
         }
-        private void Invalidate(TestRecordViewModel testRecord)
+        private bool CanCommit
         {
+            get { return _selectedTestRecord != null && _selectedTestRecord.Status == TestStatus.Executing; }
+        }
+        private void Invalidate()
+        {
+            TestRecordViewModel testRecord = SelectedTestRecord;
             TestRecordInvalidateViewModel evm = new TestRecordInvalidateViewModel();
             //evm.DisplayName = "Test-Invalidate";
             var TestRecordInvalidateViewInstance = new InvalidateView();
@@ -695,22 +665,16 @@ namespace BCLabManager.ViewModel
             TestRecordInvalidateViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                //testRecord.Comment += "\r\n" + evm.Comment;
-                //testRecord.Status = TestStatus.Invalid;
-
-                //using (var dbContext = new AppDbContext())
-                //{
-                //    var tr = dbContext.TestRecords.SingleOrDefault(i => i.Id == testRecord.Id);
-                //    tr.Comment = testRecord.Comment;
-                //    tr.Status = testRecord.Status;
-                //    dbContext.SaveChanges();
-                //}
-                //testRecord.Invalidate();
-                _programService.RecipeService.Invalidate(SelectedRecipe._recipe,testRecord.Record, evm.Comment);
+                _programService.RecipeService.Invalidate(SelectedRecipe._recipe, testRecord.Record, evm.Comment);
             }
         }
-        private void ViewRawData(TestRecordViewModel testRecordVM)
+        private bool CanInvalidate
         {
+            get { return _selectedTestRecord != null && _selectedTestRecord.Status == TestStatus.Completed; }
+        }
+        private void View()
+        {
+            TestRecordViewModel testRecordVM = SelectedTestRecord;
             TestRecordRawDataViewModel evm = new TestRecordRawDataViewModel
                 (
                 testRecordVM.Record      //??????????????????????????
@@ -720,5 +684,24 @@ namespace BCLabManager.ViewModel
             TestRecordRawDataViewInstance.DataContext = evm;
             TestRecordRawDataViewInstance.ShowDialog();
         }
+        private bool CanView
+        {
+            get { return _selectedTestRecord != null && (_selectedTestRecord.Record.RawDataList.Count!=0); }
+        }
+        private void Start()
+        {
+        }
+        private bool CanStart
+        {
+            get { return true; }
+        }
+        private void End()
+        {
+        }
+        private bool CanEnd
+        {
+            get { return true; }
+        }
+        #endregion //Private Helper
     }
 }

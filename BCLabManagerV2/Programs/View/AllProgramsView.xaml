@@ -33,7 +33,7 @@
 
         <CollectionViewSource x:Key="programsCollectionViewSource" Source="{Binding Path=AllPrograms}">
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="Id" Direction="Descending"></scm:SortDescription>
+                <scm:SortDescription PropertyName="Id" Direction="Ascending"></scm:SortDescription>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
 
@@ -85,7 +85,7 @@
             <ColumnDefinition Width="4"></ColumnDefinition>
             <ColumnDefinition Width="35*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <GroupBox Grid.Row="0" Header="Program">
+        <GroupBox Grid.Row="0" Header="Programs">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="_Create" Command="{Binding Path=CreateCommand}" Margin="0,5,5,0" Width="60"></Button>
@@ -147,7 +147,7 @@
                 </ListView>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="0" Grid.Column="2" Header="Recipe">
+        <GroupBox Grid.Row="0" Grid.Column="2" Header="Recipes">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="_Abandon" Command="{Binding Path=AbandonCommand}" Margin="0,5,5,0" Width="60"></Button>
@@ -183,7 +183,7 @@
             </ListView>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Header="Test Record">
+        <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Header="Test Records">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="_Execute" Command="{Binding Path=ExecuteCommand}" Margin="0,5,5,0" Width="60"></Button>
@@ -248,6 +248,43 @@
                             <GridViewColumn 
             Header="New Cycle" 
             DisplayMemberBinding="{Binding Path=NewCycle}" 
+            />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </DockPanel>
+        </GroupBox>
+        <GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Header="Steps">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="_Start" Command="{Binding Path=StartCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_End" Command="{Binding Path=EndCommand}" Margin="0,5,5,0" Width="60"></Button>
+                </StackPanel>
+                <ListView
+                      x:Name="StepRuntimeList"
+      AlternationCount="2" 
+      ItemContainerStyle="{StaticResource ListViewItemStyle}"
+      ItemsSource="{Binding Path=StepRuntimes}"
+                      SelectedItem="{Binding Path=SelectedStepRuntime, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+      >
+
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn 
+            Header="Id" 
+            DisplayMemberBinding="{Binding Path=Id}" 
+            />
+                            <GridViewColumn 
+            Header="Step" 
+            DisplayMemberBinding="{Binding Path=Step}" 
+            />
+                            <GridViewColumn 
+            Header="Start Time" 
+            DisplayMemberBinding="{Binding Path=StartTime}" 
+            />
+                            <GridViewColumn 
+            Header="End Time" 
+            DisplayMemberBinding="{Binding Path=EndTime}" 
             />
                         </GridView>
                     </ListView.View>

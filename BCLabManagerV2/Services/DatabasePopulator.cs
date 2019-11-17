@@ -119,10 +119,33 @@ namespace BCLabManager
             {
                 StepTemplate obj = new StepTemplate();
                 obj.Id = 1;
+                obj.Temperature = 25;
                 obj.CurrentInput = 3450;
                 obj.CurrentUnit = CurrentUnitEnum.mA;
                 obj.CutOffConditionValue = 1;
                 obj.CutOffConditionType = CutOffConditionTypeEnum.CRate;
+                obj.Slope = 1;
+                obj.Offset = 0;
+                dbContext.StepTemplates.Add(obj);
+
+                obj = new StepTemplate();
+                obj.Id = 2;
+                obj.Temperature = -10;
+                obj.CurrentInput = -2000;
+                obj.CurrentUnit = CurrentUnitEnum.mA;
+                obj.CutOffConditionValue = 0;
+                obj.CutOffConditionType = CutOffConditionTypeEnum.CRate;
+                obj.Slope = 1;
+                obj.Offset = 0;
+                dbContext.StepTemplates.Add(obj);
+
+                obj = new StepTemplate();
+                obj.Id = 3;
+                obj.Temperature = -10;
+                obj.CurrentInput = -0.5;
+                obj.CurrentUnit = CurrentUnitEnum.C;
+                obj.CutOffConditionValue = 0;
+                obj.CutOffConditionType = CutOffConditionTypeEnum.C_mAH;
                 obj.Slope = 1;
                 obj.Offset = 0;
                 dbContext.StepTemplates.Add(obj);
@@ -140,6 +163,7 @@ namespace BCLabManager
                 ProgramClass obj = new ProgramClass();
                 obj.Id = i++;
                 obj.Name = "Oppo BLP663 Static Test";
+                obj.Order = 0;
                 obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/02/28");
@@ -173,6 +197,19 @@ namespace BCLabManager
                 //obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);
 
+                obj = new ProgramClass();
+                obj.Id = i++;
+                obj.Order = 1;
+                obj.Name = "Oppo BLP663 Static Test-2";
+                obj.BatteryType = dbContext.BatteryTypes.SingleOrDefault(o => o.Id == 1);
+                obj.Requester = "Francis";
+                obj.RequestTime = DateTime.Parse("2019/02/28");
+                obj.Description = "Oppo BLP663 Static Test";
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 2), obj.Name, 1, obj.BatteryType);
+                sub.Id = sub_i++;
+                obj.Recipes.Add(sub);
+                dbContext.Programs.Add(obj);
+
                 dbContext.SaveChanges();
             }
         }
@@ -185,16 +222,33 @@ namespace BCLabManager
                 RecipeTemplate obj = new RecipeTemplate();
                 obj.Id = i++;
                 obj.Name = "Room 0.2C charge, -5deg 500mA discharge";
+
                 var newStep = new StepClass();
-                newStep.StepTemplate = dbContext.StepTemplates.First();
+                newStep.StepTemplate = dbContext.StepTemplates.ToList()[0];
                 newStep.Id = 1;
-                obj.Steps.Add(newStep); 
+                obj.Steps.Add(newStep);
+
+                newStep = new StepClass();
+                newStep.StepTemplate = dbContext.StepTemplates.ToList()[1];
+                newStep.Id = 2;
+                obj.Steps.Add(newStep);
+
                 dbContext.RecipeTemplates.Add(obj);
 
-                //obj = new RecipeTemplate();
-                //obj.Id = i++;
-                //obj.Name = "Room 0.2C charge, -5deg 1700mA discharge";
-                //dbContext.RecipeTemplates.Add(obj);
+                obj = new RecipeTemplate();
+                obj.Id = i++;
+                obj.Name = "Room 0.2C charge, -5deg 1700mA discharge";
+
+                newStep = new StepClass();
+                newStep.StepTemplate = dbContext.StepTemplates.ToList()[0];
+                newStep.Id = 3;
+                obj.Steps.Add(newStep);
+
+                newStep = new StepClass();
+                newStep.StepTemplate = dbContext.StepTemplates.ToList()[2];
+                newStep.Id = 4;
+                obj.Steps.Add(newStep);
+                dbContext.RecipeTemplates.Add(obj);
 
                 //obj = new RecipeTemplate();
                 //obj.Id = i++;

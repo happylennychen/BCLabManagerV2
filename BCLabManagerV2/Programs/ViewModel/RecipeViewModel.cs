@@ -27,6 +27,7 @@ namespace BCLabManager.ViewModel
         {
             _recipe = Recipe;
             this.CreateTestRecords();
+            this.CreateStepRuntimes();
             _recipe.TestRecordAdded += _Recipe_TestRecordAdded;
             //_Recipe.PropertyChanged += _Recipe_PropertyChanged;
             var trlist = GetAllTestRecords(Recipe);
@@ -63,6 +64,15 @@ namespace BCLabManager.ViewModel
                  select new TestRecordViewModel(ft)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.TestRecords = new ObservableCollection<TestRecordViewModel>(all1);     //再转换成Observable
+        }
+
+        void CreateStepRuntimes()
+        {
+            List<StepRuntimeViewModel> all1 =
+                (from ft in _recipe.StepRuntimes
+                 select new StepRuntimeViewModel(ft)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+
+            this.StepRuntimes = new ObservableCollection<StepRuntimeViewModel>(all1);     //再转换成Observable
         }
 
         #endregion // Constructor
@@ -180,6 +190,14 @@ namespace BCLabManager.ViewModel
             return output;
         }
 
+        private List<StepRuntimeClass> GetAllStepRuntimes(RecipeClass sub)
+        {
+            List<StepRuntimeClass> output = new List<StepRuntimeClass>();
+            foreach (var tr in sub.StepRuntimes)
+                output.Add(tr);
+            return output;
+        }
+
         public int Loop
         {
             get { return _recipe.Loop; }
@@ -194,7 +212,9 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ObservableCollection<TestRecordViewModel> TestRecords { get; private set; }        //这个是当前Recipe所拥有的test1
+        public ObservableCollection<TestRecordViewModel> TestRecords { get; private set; }        //这个是当前Recipe所拥有的test
+
+        public ObservableCollection<StepRuntimeViewModel> StepRuntimes { get; private set; }        //这个是当前Recipe所拥有的test
 
 
         #endregion // Customer Properties

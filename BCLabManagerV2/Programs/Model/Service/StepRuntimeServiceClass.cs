@@ -66,7 +66,7 @@ namespace BCLabManager.Model
                     Cend = st.CutOffConditionValue;
 
                 //duration = TimeSpan.FromHours(Math.Abs(Cend - CBegin) / sr.DesignCapacityInmAH);
-                duration = TimeSpan.FromHours(GetTimeInSecondsWithParameters(Cend, CBegin, sr.DesignCapacityInmAH, sr.Step.StepTemplate.Slope, sr.Step.StepTemplate.Offset));
+                duration = TimeSpan.FromHours(GetTimeInSecondsWithParameters(Cend, CBegin, sr.GetCurrentInmA(), sr.Step.StepTemplate.Slope, sr.Step.StepTemplate.Offset));
             }
             CBegin = Cend;
             return duration;
@@ -78,7 +78,7 @@ namespace BCLabManager.Model
         }
         private double GetTimeInSeconds(double Cend, double CBegin, double Current)
         {
-            return Math.Abs(Cend - CBegin) / Current;
+            return (Cend - CBegin) / Current;
         }
 
         internal void UpdateEstimatedTime(StepRuntimeClass item, ref DateTime time, ref double c)
@@ -99,6 +99,7 @@ namespace BCLabManager.Model
                 }
                 else
                 {
+                    GetDuration(item, ref c);
                     time = item.EndTime;
                 }
             }

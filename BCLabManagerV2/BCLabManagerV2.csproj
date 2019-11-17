@@ -300,6 +300,7 @@
     <Compile Include="Programs\ViewModel\AllStepTemplatesViewModel.cs" />
     <Compile Include="Programs\ViewModel\StepTemplateViewModel.cs" />
     <Compile Include="Programs\ViewModel\StepTemplateEditViewModel.cs" />
+    <Compile Include="Programs\ViewModel\StepRuntimeViewModel.cs" />
     <Compile Include="Programs\View\AllStepTemplatesView.xaml.cs">
       <DependentUpon>AllStepTemplatesView.xaml</DependentUpon>
     </Compile>
