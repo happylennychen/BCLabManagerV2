@@ -23,6 +23,14 @@ namespace BCLabManager.Model
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 item.BatteryType = uow.BatteryTypes.GetById(item.BatteryType.Id);
+                foreach (var recipe in item.Recipes)
+                    foreach (var stepRuntim in recipe.StepRuntimes)
+                    {
+                        int StepId = stepRuntim.Step.Id;
+                        int StepTemplateId = stepRuntim.Step.StepTemplate.Id;
+                        stepRuntim.Step = uow.Steps.GetById(StepId);
+                        stepRuntim.Step.StepTemplate = uow.StepTemplates.GetById(StepTemplateId);
+                    }
                 uow.Programs.Insert(item);
                 uow.Commit();
             }

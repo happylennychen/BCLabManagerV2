@@ -66,5 +66,10 @@ namespace BCLabManager.Model
         public StepTemplate()
         {
         }
+
+        public override string ToString()
+        {
+            return $"{Temperature} deg, {CurrentInput} {CurrentUnit}, {CutOffConditionValue} {CutOffConditionType}";
+        }
     }
 }

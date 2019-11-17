@@ -309,7 +309,7 @@ namespace BCLabManager.ViewModel
 
         public void Add()       //对于model来说，需要将选中的sub copy到_program.Recipes来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.Recipes里面去
         {
-            var newsubmodel = new RecipeClass(SelectedRecipeTemplate._recipeTemplate);
+            var newsubmodel = new RecipeClass(SelectedRecipeTemplate._recipeTemplate, BatteryType);
             var newsubviewmodel = new RecipeViewModel(newsubmodel);
             _program.Recipes.Add(newsubmodel);
             this.Recipes.Add(newsubviewmodel);

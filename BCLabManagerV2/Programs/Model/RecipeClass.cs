@@ -62,14 +62,19 @@ namespace BCLabManager.Model
         {
         }
 
-        public RecipeClass(RecipeTemplate template)
+        public RecipeClass(RecipeTemplate template, BatteryTypeClass batteryType)
         {
-
+            Name = template.Name;
+            foreach (var step in template.Steps)
+            {
+                StepRuntimeClass sr = new StepRuntimeClass();
+                sr.Step = step;
+                sr.DesignCapacityInmAH = batteryType.TypicalCapacity;
+                this.StepRuntimes.Add(sr);
+            }
             var tr = new TestRecordClass();
             tr.StatusChanged += this.TestRecord_StatusChanged;
-            //tr.RecipeStr = $"{this.ChargeTemperature.Name} {this.ChargeCurrent} charge, {this.DischargeTemperature} {this.DischargeCurrent} discharge";
             this.TestRecords.Add(tr);
-            Name = template.Name;
         }
 
         public RecipeClass(RecipeTemplate template, string ProgramStr, int loop, BatteryTypeClass batteryType)  //Only used by populator
@@ -86,8 +91,6 @@ namespace BCLabManager.Model
 
             var tr = new TestRecordClass();
             tr.StatusChanged += this.TestRecord_StatusChanged;
-            //tr.RecipeStr = template.Name;
-            //tr.ProgramStr = ProgramStr;
             this.TestRecords.Add(tr);
         }
 
