@@ -161,17 +161,14 @@ namespace BCLabManager.ViewModel
             StepTemplateEditViewModel viewmodel =
                 new StepTemplateEditViewModel(
                     model//,
-                    //_chargeTemperatures,
-                    //_chargeCurrents,
-                    //_dischargeTemperatures,
-                    //_dischargeCurrents
                     );      //实例化一个新的view model
             //viewmodel.Name = _selectedItem.Name;
             viewmodel.Id = _selectedItem.Id;
-            //viewmodel.ChargeTemperature = viewmodel.AllChargeTemperatures.SingleOrDefault(o=>o.Id == _selectedItem.ChargeTemperature.Id);
-            //viewmodel.ChargeCurrent = viewmodel.AllChargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.ChargeCurrent.Id);
-            //viewmodel.DischargeTemperature = viewmodel.AllDischargeTemperatures.SingleOrDefault(o=>o.Id == _selectedItem.DischargeTemperature.Id);
-            //viewmodel.DischargeCurrent = viewmodel.AllDischargeCurrents.SingleOrDefault(o=>o.Id == _selectedItem.DischargeCurrent.Id);
+            viewmodel.CurrentInput = _selectedItem.CurrentInput;
+            viewmodel.CurrentUnit = _selectedItem.CurrentUnit;
+            viewmodel.CutOffConditionValue = _selectedItem.CutOffConditionValue;
+            viewmodel.CutOffConditionType = _selectedItem.CutOffConditionType;
+            viewmodel.Temperature = _selectedItem.Temperature;
             //viewmodel.DisplayName = "Step-Edit";
             viewmodel.commandType = CommandType.Edit;
             var StepViewInstance = new StepTemplateView();      //实例化一个新的view
@@ -192,17 +189,14 @@ namespace BCLabManager.ViewModel
             StepTemplateEditViewModel viewmodel =
                 new StepTemplateEditViewModel(
                     model//,
-                    //_chargeTemperatures,
-                    //_chargeCurrents,
-                    //_dischargeTemperatures,
-                    //_dischargeCurrents
                     );      //实例化一个新的view model
             //viewmodel.Name = _selectedItem.Name;
-            viewmodel.Id = _selectedItem.Id;
-            //viewmodel.ChargeTemperature = viewmodel.AllChargeTemperatures.SingleOrDefault(o => o.Id == _selectedItem.ChargeTemperature.Id);
-            //viewmodel.ChargeCurrent = viewmodel.AllChargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.ChargeCurrent.Id);
-            //viewmodel.DischargeTemperature = viewmodel.AllDischargeTemperatures.SingleOrDefault(o => o.Id == _selectedItem.DischargeTemperature.Id);
-            //viewmodel.DischargeCurrent = viewmodel.AllDischargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.DischargeCurrent.Id);
+            //viewmodel.Id = _selectedItem.Id;
+            viewmodel.CurrentInput = _selectedItem.CurrentInput;
+            viewmodel.CurrentUnit = _selectedItem.CurrentUnit;
+            viewmodel.CutOffConditionValue = _selectedItem.CutOffConditionValue;
+            viewmodel.CutOffConditionType = _selectedItem.CutOffConditionType;
+            viewmodel.Temperature = _selectedItem.Temperature;
             //viewmodel.DisplayName = "Step-Save As";
             viewmodel.commandType = CommandType.SaveAs;
             var StepViewInstance = new StepTemplateView();      //实例化一个新的view

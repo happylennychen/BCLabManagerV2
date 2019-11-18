@@ -73,6 +73,8 @@ namespace BCLabManager.Model
                 this.StepRuntimes.Add(sr);
             }
             var tr = new TestRecordClass();
+            //tr.ProgramStr = ProgramStr;
+            tr.RecipeStr = this.Name;
             tr.StatusChanged += this.TestRecord_StatusChanged;
             this.TestRecords.Add(tr);
         }
@@ -90,6 +92,8 @@ namespace BCLabManager.Model
             this.Loop = loop;
 
             var tr = new TestRecordClass();
+            tr.ProgramStr = ProgramStr;
+            tr.RecipeStr = this.Name;
             tr.StatusChanged += this.TestRecord_StatusChanged;
             this.TestRecords.Add(tr);
         }
