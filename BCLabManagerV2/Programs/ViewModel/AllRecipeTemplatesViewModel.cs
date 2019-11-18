@@ -121,11 +121,8 @@ namespace BCLabManager.ViewModel
             RecipeTemplate model = new RecipeTemplate();      //实例化一个新的model
             RecipeTemplateEditViewModel viewmodel = 
                 new RecipeTemplateEditViewModel(
-                    model//, 
-                    //_chargeTemperatures,
-                    //_chargeCurrents,
-                    //_dischargeTemperatures,
-                    //_dischargeCurrents
+                    model,
+                    _recipeTemplateServcie.StepTemplateService.Items
                     );      //实例化一个新的view model
             //viewmodel.DisplayName = "RecipeTemplate-Create";
             viewmodel.commandType = CommandType.Create;
@@ -139,30 +136,30 @@ namespace BCLabManager.ViewModel
         }
         private void Edit()
         {
-            RecipeTemplate model = new RecipeTemplate();      //实例化一个新的model
-            RecipeTemplateEditViewModel viewmodel =
-                new RecipeTemplateEditViewModel(
-                    model//,
-                    //_chargeTemperatures,
-                    //_chargeCurrents,
-                    //_dischargeTemperatures,
-                    //_dischargeCurrents
-                    );      //实例化一个新的view model
-            //viewmodel.Name = _selectedItem.Name;
-            viewmodel.Id = _selectedItem.Id;
-            //viewmodel.ChargeTemperature = viewmodel.AllChargeTemperatures.SingleOrDefault(o=>o.Id == _selectedItem.ChargeTemperature.Id);
-            //viewmodel.ChargeCurrent = viewmodel.AllChargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.ChargeCurrent.Id);
-            //viewmodel.DischargeTemperature = viewmodel.AllDischargeTemperatures.SingleOrDefault(o=>o.Id == _selectedItem.DischargeTemperature.Id);
-            //viewmodel.DischargeCurrent = viewmodel.AllDischargeCurrents.SingleOrDefault(o=>o.Id == _selectedItem.DischargeCurrent.Id);
-            //viewmodel.DisplayName = "Recipe-Edit";
-            viewmodel.commandType = CommandType.Edit;
-            var RecipeViewInstance = new RecipeTemplateView();      //实例化一个新的view
-            RecipeViewInstance.DataContext = viewmodel;
-            RecipeViewInstance.ShowDialog();
-            if (viewmodel.IsOK == true)
-            {
-                _recipeTemplateServcie.SuperUpdate(model);
-            }
+            //RecipeTemplate model = new RecipeTemplate();      //实例化一个新的model
+            //RecipeTemplateEditViewModel viewmodel =
+            //    new RecipeTemplateEditViewModel(
+            //        model//,
+            //        //_chargeTemperatures,
+            //        //_chargeCurrents,
+            //        //_dischargeTemperatures,
+            //        //_dischargeCurrents
+            //        );      //实例化一个新的view model
+            ////viewmodel.Name = _selectedItem.Name;
+            //viewmodel.Id = _selectedItem.Id;
+            ////viewmodel.ChargeTemperature = viewmodel.AllChargeTemperatures.SingleOrDefault(o=>o.Id == _selectedItem.ChargeTemperature.Id);
+            ////viewmodel.ChargeCurrent = viewmodel.AllChargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.ChargeCurrent.Id);
+            ////viewmodel.DischargeTemperature = viewmodel.AllDischargeTemperatures.SingleOrDefault(o=>o.Id == _selectedItem.DischargeTemperature.Id);
+            ////viewmodel.DischargeCurrent = viewmodel.AllDischargeCurrents.SingleOrDefault(o=>o.Id == _selectedItem.DischargeCurrent.Id);
+            ////viewmodel.DisplayName = "Recipe-Edit";
+            //viewmodel.commandType = CommandType.Edit;
+            //var RecipeViewInstance = new RecipeTemplateView();      //实例化一个新的view
+            //RecipeViewInstance.DataContext = viewmodel;
+            //RecipeViewInstance.ShowDialog();
+            //if (viewmodel.IsOK == true)
+            //{
+            //    _recipeTemplateServcie.SuperUpdate(model);
+            //}
         }
         private bool CanEdit
         {
@@ -170,30 +167,30 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            RecipeTemplate model = new RecipeTemplate();      //实例化一个新的model
-            RecipeTemplateEditViewModel viewmodel =
-                new RecipeTemplateEditViewModel(
-                    model//,
-                    //_chargeTemperatures,
-                    //_chargeCurrents,
-                    //_dischargeTemperatures,
-                    //_dischargeCurrents
-                    );      //实例化一个新的view model
-            //viewmodel.Name = _selectedItem.Name;
-            viewmodel.Id = _selectedItem.Id;
-            //viewmodel.ChargeTemperature = viewmodel.AllChargeTemperatures.SingleOrDefault(o => o.Id == _selectedItem.ChargeTemperature.Id);
-            //viewmodel.ChargeCurrent = viewmodel.AllChargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.ChargeCurrent.Id);
-            //viewmodel.DischargeTemperature = viewmodel.AllDischargeTemperatures.SingleOrDefault(o => o.Id == _selectedItem.DischargeTemperature.Id);
-            //viewmodel.DischargeCurrent = viewmodel.AllDischargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.DischargeCurrent.Id);
-            //viewmodel.DisplayName = "Recipe-Save As";
-            viewmodel.commandType = CommandType.SaveAs;
-            var RecipeViewInstance = new RecipeTemplateView();      //实例化一个新的view
-            RecipeViewInstance.DataContext = viewmodel;
-            RecipeViewInstance.ShowDialog();
-            if (viewmodel.IsOK == true)
-            {
-                _recipeTemplateServcie.SuperAdd(model);
-            }
+            //RecipeTemplate model = new RecipeTemplate();      //实例化一个新的model
+            //RecipeTemplateEditViewModel viewmodel =
+            //    new RecipeTemplateEditViewModel(
+            //        model//,
+            //        //_chargeTemperatures,
+            //        //_chargeCurrents,
+            //        //_dischargeTemperatures,
+            //        //_dischargeCurrents
+            //        );      //实例化一个新的view model
+            ////viewmodel.Name = _selectedItem.Name;
+            //viewmodel.Id = _selectedItem.Id;
+            ////viewmodel.ChargeTemperature = viewmodel.AllChargeTemperatures.SingleOrDefault(o => o.Id == _selectedItem.ChargeTemperature.Id);
+            ////viewmodel.ChargeCurrent = viewmodel.AllChargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.ChargeCurrent.Id);
+            ////viewmodel.DischargeTemperature = viewmodel.AllDischargeTemperatures.SingleOrDefault(o => o.Id == _selectedItem.DischargeTemperature.Id);
+            ////viewmodel.DischargeCurrent = viewmodel.AllDischargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.DischargeCurrent.Id);
+            ////viewmodel.DisplayName = "Recipe-Save As";
+            //viewmodel.commandType = CommandType.SaveAs;
+            //var RecipeViewInstance = new RecipeTemplateView();      //实例化一个新的view
+            //RecipeViewInstance.DataContext = viewmodel;
+            //RecipeViewInstance.ShowDialog();
+            //if (viewmodel.IsOK == true)
+            //{
+            //    _recipeTemplateServcie.SuperAdd(model);
+            //}
         }
         private bool CanSaveAs
         {

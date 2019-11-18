@@ -52,6 +52,11 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public string Name
+        {
+            get { return _stepTemplate.ToString(); }
+        }
+
         public double CurrentInput
         {
             get { return _stepTemplate.CurrentInput; }

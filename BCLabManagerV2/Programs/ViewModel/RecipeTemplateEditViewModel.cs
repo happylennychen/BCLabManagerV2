@@ -17,12 +17,12 @@ namespace BCLabManager.ViewModel
     public class RecipeTemplateEditViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
-        //List<ChargeTemperatureClass> _chargeTemperatures;
-        //List<ChargeCurrentClass> _chargeCurrents;
-        //List<DischargeTemperatureClass> _dischargeTemperatures;
-        //List<DischargeCurrentClass> _dischargeCurrents;
         public readonly RecipeTemplate _RecipeTemplate;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
+        StepTemplateViewModel _selectedStepTemplate;
+        StepClass _selectedStep;
         RelayCommand _okCommand;
+        RelayCommand _addCommand;
+        RelayCommand _removeCommand;
         bool _isOK;
 
         #endregion // Fields
@@ -30,43 +30,23 @@ namespace BCLabManager.ViewModel
         #region Constructor
 
         public RecipeTemplateEditViewModel(
-            RecipeTemplate RecipeTemplateModel//,
-            //List<ChargeTemperatureClass> chargeTemperatures,
-            //List<ChargeCurrentClass> chargeCurrents,
-            //List<DischargeTemperatureClass> dischargeTemperatures,
-            //List<DischargeCurrentClass> dischargeCurrents
+            RecipeTemplate RecipeTemplateModel,
+            ObservableCollection<StepTemplate> stepTemplates
             )
         {
-            //_chargeTemperatures = chargeTemperatures;
-            //_chargeCurrents = chargeCurrents;
-            //_dischargeTemperatures = dischargeTemperatures;
-            //_dischargeCurrents = dischargeCurrents;
-            //this.AllChargeTemperatures = CreateAllChargeTemperatures(chargeTemperatures);
-            //this.AllChargeCurrents = CreateAllChargeCurrents(chargeCurrents);
-            //this.AllDischargeTemperatures = CreateAllDischargeTemperatures(dischargeTemperatures);
-            //this.AllDischargeCurrents = CreateAllDischargeCurrents(dischargeCurrents);
             _RecipeTemplate = RecipeTemplateModel;
+            this.CreateStepTemplates(stepTemplates);
         }
 
-        //private ObservableCollection<ChargeTemperatureClass> CreateAllChargeTemperatures(List<ChargeTemperatureClass> chargeTemperatures)
-        //{
-        //    return new ObservableCollection<ChargeTemperatureClass>(chargeTemperatures);
-        //}
 
-        //private ObservableCollection<ChargeCurrentClass> CreateAllChargeCurrents(List<ChargeCurrentClass> chargeCurrents)
-        //{
-        //    return new ObservableCollection<ChargeCurrentClass>(chargeCurrents);
-        //}
+        void CreateStepTemplates(ObservableCollection<StepTemplate> stepTemplates)
+        {
+            List<StepTemplateViewModel> all =
+                (from sub in stepTemplates
+                 select new StepTemplateViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-        //private ObservableCollection<DischargeTemperatureClass> CreateAllDischargeTemperatures(List<DischargeTemperatureClass> dischargeTemperatures)
-        //{
-        //    return new ObservableCollection<DischargeTemperatureClass>(dischargeTemperatures);
-        //}
-
-        //private ObservableCollection<DischargeCurrentClass> CreateAllDischargeCurrents(List<DischargeCurrentClass> dischargeCurrents)
-        //{
-        //    return new ObservableCollection<DischargeCurrentClass>(dischargeCurrents);
-        //}
+            this.StepTemplates = new ObservableCollection<StepTemplateViewModel>(all);     //再转换成Observable
+        }
         #endregion // Constructor
 
         #region RecipeTemplate Properties
@@ -84,98 +64,25 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("Id");
             }
         }
-        //public string Name
-        //{
-        //    get { return _RecipeTemplate.Name; }
-        //    set
-        //    {
-        //        if (value == _RecipeTemplate.Name)
-        //            return;
+        public string Name
+        {
+            get { return _RecipeTemplate.Name; }
+            set
+            {
+                if (value == _RecipeTemplate.Name)
+                    return;
 
-        //        _RecipeTemplate.Name = value;
+                _RecipeTemplate.Name = value;
 
-        //        RaisePropertyChanged("Name");
-        //    }
-        //}
-        //public ChargeTemperatureClass ChargeTemperature
-        //{
-        //    get { return _RecipeTemplate.ChargeTemperature; }
-        //    set
-        //    {
-        //        if (value == _RecipeTemplate.ChargeTemperature)
-        //            return;
-
-        //        _RecipeTemplate.ChargeTemperature = value;
-
-        //        RaisePropertyChanged("ChargeTemperature");
-        //    }
-        //}
-        //public ChargeCurrentClass ChargeCurrent
-        //{
-        //    get { return _RecipeTemplate.ChargeCurrent; }
-        //    set
-        //    {
-        //        if (value == _RecipeTemplate.ChargeCurrent)
-        //            return;
-
-        //        _RecipeTemplate.ChargeCurrent = value;
-
-        //        RaisePropertyChanged("ChargeCurrent");
-        //    }
-        //}
-        //public DischargeTemperatureClass DischargeTemperature
-        //{
-        //    get { return _RecipeTemplate.DischargeTemperature; }
-        //    set
-        //    {
-        //        if (value == _RecipeTemplate.DischargeTemperature)
-        //            return;
-
-        //        _RecipeTemplate.DischargeTemperature = value;
-
-        //        RaisePropertyChanged("DischargeTemperature");
-        //    }
-        //}
-        //public DischargeCurrentClass DischargeCurrent
-        //{
-        //    get { return _RecipeTemplate.DischargeCurrent; }
-        //    set
-        //    {
-        //        if (value == _RecipeTemplate.DischargeCurrent)
-        //            return;
-
-        //        _RecipeTemplate.DischargeCurrent = value;
-
-        //        RaisePropertyChanged("DischargeCurrent");
-        //    }
-        //}
+                RaisePropertyChanged("Name");
+            }
+        }
+        public ObservableCollection<StepTemplateViewModel> StepTemplates { get; set; }
 
         #endregion // Customer Properties
 
         #region Presentation Properties
 
-        //public ObservableCollection<ChargeTemperatureClass> AllChargeTemperatures //供选项
-        //{
-        //    get;
-        //    set;
-        //}
-
-        //public ObservableCollection<ChargeCurrentClass> AllChargeCurrents //供选项
-        //{
-        //    get;
-        //    set;
-        //}
-        //public ObservableCollection<DischargeTemperatureClass> AllDischargeTemperatures //供选项
-        //{
-        //    get;
-        //    set;
-        //}
-
-        //public ObservableCollection<DischargeCurrentClass> AllDischargeCurrents //供选项
-        //{
-        //    get;
-        //    set;
-        //}
         /// <summary>
         /// Returns a command that saves the customer.
         /// </summary>
@@ -228,13 +135,6 @@ namespace BCLabManager.ViewModel
         /// </summary>
         public void OK()
         {
-            //if (!_Recipetype.IsValid)
-            //throw new InvalidOperationException(Resources.RecipeTypeViewModel_Exception_CannotSave);
-
-            //if (this.IsNewRecipeType)
-            //_RecipetypeRepository.AddItem(_Recipetype);
-
-            //RaisePropertyChanged("DisplayName");
             IsOK = true;
         }
 
@@ -250,14 +150,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                //int number = (
-                //    from bat in _RecipeRepository.GetItems()
-                //    where bat.Name == _RecipeTemplate.Name     //名字（某一个属性）一样就认为是一样的
-                //    select bat).Count();
-                //if (number != 0)
-                //    return false;
-                //else
-                    return true;
+                return true;
             }
         }
 

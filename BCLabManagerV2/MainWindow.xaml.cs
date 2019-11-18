@@ -158,6 +158,7 @@ namespace BCLabManager
                 ChamberService.Items = new ObservableCollection<ChamberClass>(uow.Chambers.GetAll("Records"));
 
                 RecipeTemplateService.Items = new ObservableCollection<RecipeTemplate>(uow.RecipeTemplates.GetAll());
+                RecipeTemplateService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
 
                 ProgramService.Items = new ObservableCollection<ProgramClass>(uow.Programs.GetAll());
                 ProgramService.RecipeService.Items = new ObservableCollection<RecipeClass>(uow.Recipies.GetAll());
