@@ -8,6 +8,7 @@ using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using BCLabManager.Properties;
 using Prism.Mvvm;
+using System.Windows.Media;
 
 namespace BCLabManager.ViewModel
 {
@@ -29,7 +30,7 @@ namespace BCLabManager.ViewModel
             this.CreateTestRecords();
             this.CreateStepRuntimes();
             _recipe.TestRecordAdded += _Recipe_TestRecordAdded;
-            //_Recipe.PropertyChanged += _Recipe_PropertyChanged;
+            _recipe.PropertyChanged += _Recipe_PropertyChanged;
             var trlist = GetAllTestRecords(Recipe);
             foreach (var tr in trlist)
                 tr.StatusChanged += Tr_StatusChanged;
@@ -44,10 +45,18 @@ namespace BCLabManager.ViewModel
             RaisePropertyChanged("AbandonedPercentage");
         }
 
-        //private void _Recipe_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        //{
-        //    RaisePropertyChanged(e.PropertyName);
-        //}
+        private void _Recipe_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            RaisePropertyChanged(e.PropertyName);
+            if (e.PropertyName == "EndTime")
+                RaisePropertyChanged("EndTimeColor");
+            else if (e.PropertyName == "StartTime")
+                RaisePropertyChanged("StartTimeColor");
+            else if (e.PropertyName == "EET")
+                RaisePropertyChanged("EndTime");
+            else if (e.PropertyName == "EST")
+                RaisePropertyChanged("StartTime");
+        }
 
         private void _Recipe_TestRecordAdded(object sender, TestRecordAddedEventArgs e)
         {
@@ -105,30 +114,74 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("IsAbandoned");
             }
         }
+        //public DateTime StartTime
+        //{
+        //    get { return _recipe.StartTime; }
+        //    set
+        //    {
+        //        if (value == _recipe.StartTime)
+        //            return;
+
+        //        _recipe.StartTime = value;
+
+        //        RaisePropertyChanged("StartTime");
+        //    }
+        //}
+        //public DateTime EndTime
+        //{
+        //    get { return _recipe.EndTime; }
+        //    set
+        //    {
+        //        if (value == _recipe.EndTime)
+        //            return;
+
+        //        _recipe.EndTime = value;
+
+        //        RaisePropertyChanged("EndTime");
+        //    }
+        //}
+
         public DateTime StartTime
         {
-            get { return _recipe.StartTime; }
-            set
+            get
             {
-                if (value == _recipe.StartTime)
-                    return;
-
-                _recipe.StartTime = value;
-
-                RaisePropertyChanged("StartTime");
+                if (_recipe.StartTime == DateTime.MinValue)
+                    return _recipe.EST;
+                else
+                    return _recipe.StartTime;
             }
         }
+
+        public Brush StartTimeColor
+        {
+            get
+            {
+                if (_recipe.StartTime == DateTime.MinValue)
+                    return Brushes.DarkGray;
+                else
+                    return Brushes.Black;
+            }
+        }
+
         public DateTime EndTime
         {
-            get { return _recipe.EndTime; }
-            set
+            get
             {
-                if (value == _recipe.EndTime)
-                    return;
+                if (_recipe.EndTime == DateTime.MinValue)
+                    return _recipe.EET;
+                else
+                    return _recipe.EndTime;
+            }
+        }
 
-                _recipe.EndTime = value;
-
-                RaisePropertyChanged("EndTime");
+        public Brush EndTimeColor
+        {
+            get
+            {
+                if (_recipe.EndTime == DateTime.MinValue)
+                    return Brushes.DarkGray;
+                else
+                    return Brushes.Black;
             }
         }
         public string Name

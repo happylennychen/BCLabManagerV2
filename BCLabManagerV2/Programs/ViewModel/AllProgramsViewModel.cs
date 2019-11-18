@@ -51,7 +51,7 @@ namespace BCLabManager.ViewModel
 
         public AllProgramsViewModel
             (
-            ProgramServiceClass programService, 
+            ProgramServiceClass programService,
             RecipeTemplateServiceClass recipeTemplateService,
             BatteryTypeServieClass batteryTypeService,
             BatteryServieClass batteryService,
@@ -70,7 +70,7 @@ namespace BCLabManager.ViewModel
             _channelService = channelService;
             _chamberService = chamberService;
 
-            foreach(var recipe in _programService.RecipeService.Items)
+            foreach (var recipe in _programService.RecipeService.Items)
                 recipe.TestRecords.CollectionChanged += TestRecords_CollectionChanged;
 
             _programService.Items.CollectionChanged += Items_CollectionChanged;
@@ -97,7 +97,7 @@ namespace BCLabManager.ViewModel
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems)
                     {
-                        var testRecord = item as TestRecordClass; 
+                        var testRecord = item as TestRecordClass;
                         SelectedRecipe.TestRecords.Add(new TestRecordViewModel(testRecord));
                     }
                     break;
@@ -369,7 +369,7 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             ProgramClass m = new ProgramClass();      //实例化一个新的model
-            ProgramEditViewModel evm = new ProgramEditViewModel(m,_batteryTypeService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
+            ProgramEditViewModel evm = new ProgramEditViewModel(m, _batteryTypeService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
             //evm.DisplayName = "Program-Create";
             evm.commandType = CommandType.Create;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -490,84 +490,84 @@ namespace BCLabManager.ViewModel
                 }
             }
 
-                //model.Recipes = _selectedProgram._program.Recipes;
-                /*
-                ProgramClass model = _selectedProgram._program.Clone();
-                ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _recipeTemplateService.Items);      //实例化一个新的view model
-                viewmodel.DisplayName = "Program-Edit";
-                viewmodel.commandType = CommandType.Edit;
-                var ProgramViewInstance = new ProgramView();      //实例化一个新的view
-                ProgramViewInstance.DataContext = viewmodel;
-                ProgramViewInstance.ShowDialog();
-                if (viewmodel.IsOK == true)
+            //model.Recipes = _selectedProgram._program.Recipes;
+            /*
+            ProgramClass model = _selectedProgram._program.Clone();
+            ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _recipeTemplateService.Items);      //实例化一个新的view model
+            viewmodel.DisplayName = "Program-Edit";
+            viewmodel.commandType = CommandType.Edit;
+            var ProgramViewInstance = new ProgramView();      //实例化一个新的view
+            ProgramViewInstance.DataContext = viewmodel;
+            ProgramViewInstance.ShowDialog();
+            if (viewmodel.IsOK == true)
+            {
+                using (var dbContext = new AppDbContext())
                 {
-                    using (var dbContext = new AppDbContext())
+                    var program = dbContext.Programs.SingleOrDefault(i => i.Id == SelectedProgram.Id);  //没有完全取出
+                    dbContext.Entry(program)
+                        .Collection(p => p.Recipes)
+                        .Load();
+                    //program.Update(model);
+                    bool isTgtNotContainSrc = false;    //Add to target
+                    bool isSrcNotContainTgt = false;    //Remove from target
+                    List<RecipeClass> TobeRemoved = new List<RecipeClass>();
+                    List<RecipeClass> TobeAdded = new List<RecipeClass>();
+                    foreach (var sub_target in program.Recipes)     //看看在不在source中，不在则删掉
                     {
-                        var program = dbContext.Programs.SingleOrDefault(i => i.Id == SelectedProgram.Id);  //没有完全取出
-                        dbContext.Entry(program)
-                            .Collection(p => p.Recipes)
-                            .Load();
-                        //program.Update(model);
-                        bool isTgtNotContainSrc = false;    //Add to target
-                        bool isSrcNotContainTgt = false;    //Remove from target
-                        List<RecipeClass> TobeRemoved = new List<RecipeClass>();
-                        List<RecipeClass> TobeAdded = new List<RecipeClass>();
-                        foreach (var sub_target in program.Recipes)     //看看在不在source中，不在则删掉
-                        {
-                            isSrcNotContainTgt = true;
-                            foreach (var sub_source in model.Recipes)
-                            {
-                                if (sub_target.Id == sub_source.Id)
-                                {
-                                    isSrcNotContainTgt = false;
-                                    break;
-                                }
-                            }
-                            if (isSrcNotContainTgt == true)
-                                TobeRemoved.Add(sub_target);
-                        }
+                        isSrcNotContainTgt = true;
                         foreach (var sub_source in model.Recipes)
                         {
-                            isTgtNotContainSrc = true;
-                            foreach (var sub_target in program.Recipes)
+                            if (sub_target.Id == sub_source.Id)
                             {
-                                if (sub_target.Id == sub_source.Id)
-                                {
-                                    isTgtNotContainSrc = false;
-                                    break;
-                                }
+                                isSrcNotContainTgt = false;
+                                break;
                             }
-                            if (isTgtNotContainSrc == true)
-                                TobeAdded.Add(sub_source);
                         }
-                        foreach (var sub in TobeRemoved)
-                        {
-                            program.Recipes.Remove(sub);
-                            //var subs = dbContext.Recipes;       //手动递归删除
-                            //subs.Remove(sub);
-                        }
-                        foreach (var sub in TobeAdded)
-                        {
-                            program.Recipes.Add(sub);
-                        }
-                        dbContext.SaveChanges();
-                        SelectedProgram._program = program;
-
-                        //SelectedProgram.UpdateRecipes();        //修改viewmodel中的子项
-
-                        List<RecipeViewModel> all =
-                            (from sub in program.Recipes
-                             select new RecipeViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
-
-                        //foreach (RecipeModelViewModel batmod in all)
-                        //batmod.PropertyChanged += this.OnRecipeModelViewModelPropertyChanged;
-
-                        SelectedProgram.Recipes = new ObservableCollection<RecipeViewModel>(all);     //再转换成Observable
-                        RaisePropertyChanged("Recipes");
+                        if (isSrcNotContainTgt == true)
+                            TobeRemoved.Add(sub_target);
                     }
+                    foreach (var sub_source in model.Recipes)
+                    {
+                        isTgtNotContainSrc = true;
+                        foreach (var sub_target in program.Recipes)
+                        {
+                            if (sub_target.Id == sub_source.Id)
+                            {
+                                isTgtNotContainSrc = false;
+                                break;
+                            }
+                        }
+                        if (isTgtNotContainSrc == true)
+                            TobeAdded.Add(sub_source);
+                    }
+                    foreach (var sub in TobeRemoved)
+                    {
+                        program.Recipes.Remove(sub);
+                        //var subs = dbContext.Recipes;       //手动递归删除
+                        //subs.Remove(sub);
+                    }
+                    foreach (var sub in TobeAdded)
+                    {
+                        program.Recipes.Add(sub);
+                    }
+                    dbContext.SaveChanges();
+                    SelectedProgram._program = program;
+
+                    //SelectedProgram.UpdateRecipes();        //修改viewmodel中的子项
+
+                    List<RecipeViewModel> all =
+                        (from sub in program.Recipes
+                         select new RecipeViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+
+                    //foreach (RecipeModelViewModel batmod in all)
+                    //batmod.PropertyChanged += this.OnRecipeModelViewModelPropertyChanged;
+
+                    SelectedProgram.Recipes = new ObservableCollection<RecipeViewModel>(all);     //再转换成Observable
+                    RaisePropertyChanged("Recipes");
                 }
-                    */
             }
+                */
+        }
         private bool CanEdit
         {
             get { return _selectedProgram != null; }
@@ -702,7 +702,7 @@ namespace BCLabManager.ViewModel
         }
         private bool CanView
         {
-            get { return _selectedTestRecord != null && (_selectedTestRecord.Record.RawDataList.Count!=0); }
+            get { return _selectedTestRecord != null && (_selectedTestRecord.Record.RawDataList.Count != 0); }
         }
         private void Start()
         {
@@ -717,7 +717,50 @@ namespace BCLabManager.ViewModel
         }
         private bool CanStart
         {
-            get { return true; }
+            get
+            {
+                if (_selectedStepRuntime != null)
+                {
+                    //    //var sr = _selectedStepRuntime.StepRuntime;
+                    //    if (_selectedProgram == AllPrograms.First())
+                    //    {
+                    //        if (_selectedRecipe == _selectedProgram.Recipes.First())
+                    //        {
+                    if (_selectedStepRuntime == _selectedRecipe.StepRuntimes.First())
+                    {
+                        if (_selectedStepRuntime.StepRuntime.StartTime == DateTime.MinValue)
+                            return true;
+                        else
+                            return false;
+                    }
+                    else
+                    {
+                        var index = _selectedRecipe.StepRuntimes.IndexOf(_selectedStepRuntime);
+                        var previous = _selectedRecipe.StepRuntimes[index - 1];
+                        if (previous.StepRuntime.EndTime == DateTime.MinValue)
+                            return false;
+                        else
+                        {
+                            if (_selectedStepRuntime.StepRuntime.StartTime == DateTime.MinValue)
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
+                    //    }
+                    //    else
+                    //    {
+
+                    //    }
+                    //}
+                    //else
+                    //{
+
+                    //}
+                }
+                else
+                    return false;
+            }
         }
         private void End()
         {
@@ -732,7 +775,13 @@ namespace BCLabManager.ViewModel
         }
         private bool CanEnd
         {
-            get { return true; }
+            get
+            {
+                if (_selectedStepRuntime != null && _selectedStepRuntime.StepRuntime.StartTime != DateTime.MinValue && _selectedStepRuntime.StepRuntime.EndTime == DateTime.MinValue)
+                    return true;
+                else
+                    return false;
+            }
         }
         #endregion //Private Helper
     }

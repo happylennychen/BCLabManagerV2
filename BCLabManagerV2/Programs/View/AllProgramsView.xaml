@@ -116,6 +116,10 @@
             Header="Id" 
             DisplayMemberBinding="{Binding Path=Id}" 
             />
+                            <GridViewColumn Width="100"
+            Header="Progress"
+                                CellTemplate="{StaticResource ProgressBar}"
+            />
                             <GridViewColumn 
             Header="Name" 
             DisplayMemberBinding="{Binding Path=Name}" 
@@ -136,18 +140,14 @@
             Header="Start Time" 
                                 CellTemplate="{StaticResource StartTime}"
             />
-                            <GridViewColumn Width="100"
-            Header="Progress"
-                                CellTemplate="{StaticResource ProgressBar}"
-            />
                             <GridViewColumn 
             Header="End Time" 
                                 CellTemplate="{StaticResource EndTime}"
             />
-                            <GridViewColumn 
+                            <!--<GridViewColumn 
             Header="Duration" 
             DisplayMemberBinding="{Binding Path=Duration}" 
-            />
+            />-->
                             <!--<GridViewColumn 
             Header="Description" 
             DisplayMemberBinding="{Binding Path=Description}" 
@@ -176,17 +176,25 @@
             Header="Id" 
             DisplayMemberBinding="{Binding Path=Id}" 
             />
+                            <GridViewColumn
+            Header="Progress"
+                                CellTemplate="{StaticResource ProgressBar}"
+            />
                             <GridViewColumn 
             Header="Name" 
             DisplayMemberBinding="{Binding Path=Name}" 
             />
-                            <GridViewColumn 
+                            <!--<GridViewColumn 
             Header="Loop" 
             DisplayMemberBinding="{Binding Path=Loop}" 
+            />-->
+                            <GridViewColumn 
+            Header="Start Time" 
+                                CellTemplate="{StaticResource StartTime}"
             />
-                            <GridViewColumn
-            Header="Progress"
-                                CellTemplate="{StaticResource ProgressBar}"
+                            <GridViewColumn 
+            Header="End Time" 
+                                CellTemplate="{StaticResource EndTime}"
             />
                         </GridView>
                 </ListView.View>
@@ -215,13 +223,13 @@
             Header="Id" 
             DisplayMemberBinding="{Binding Path=Id}" 
             />
-                            <GridViewColumn 
-            Header="Status" 
-            DisplayMemberBinding="{Binding Path=Status}" 
-            />
                             <GridViewColumn Width="40"
             Header=""
                                 CellTemplate="{StaticResource ProgressBar}"
+            />
+                            <GridViewColumn 
+            Header="Status" 
+            DisplayMemberBinding="{Binding Path=Status}" 
             />
                             <GridViewColumn 
             Header="BatteryType" 

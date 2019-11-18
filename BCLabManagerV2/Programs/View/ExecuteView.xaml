@@ -106,18 +106,18 @@
       >
             </ComboBox>
 
-            <!--<Label 
+            <Label 
       Grid.Row="10" Grid.Column="0" 
       Content="_Start Time:" 
       HorizontalAlignment="Right"
       Target="{Binding ElementName=StartTimeDat}" 
-      />-->
-            <!--<xctk:DateTimePicker 
+      />
+            <xctk:DateTimePicker 
       x:Name="StartTimeDat"
       Grid.Row="10" Grid.Column="2" ShowButtonSpinner="False" ShowDropDownButton="False" TextAlignment="Center"
       Text="{Binding Path=StartTime, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
       Validation.ErrorTemplate="{x:Null}"
-      />-->
+      />
 
             <!--<Label 
       Grid.Row="12" Grid.Column="0" 

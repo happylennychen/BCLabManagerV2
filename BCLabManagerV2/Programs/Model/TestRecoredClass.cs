@@ -101,11 +101,11 @@ namespace BCLabManager.Model
             set { SetProperty(ref _startTime, value); }
         }
 
-        private DateTime _completeTime;
+        private DateTime _endTime;
         public DateTime EndTime
         {
-            get => _completeTime;
-            set { SetProperty(ref _completeTime, value); }
+            get => _endTime;
+            set { SetProperty(ref _endTime, value); }
         }
         public String Steps { get; set; }
         public String Comment { get; set; }
