@@ -45,7 +45,7 @@ namespace BCLabManager.Model
             edittarget.ChamberStr = item.ChamberStr;
             edittarget.ChannelStr = item.ChannelStr;
             edittarget.Comment = item.Comment;
-            edittarget.CompleteTime = item.CompleteTime;
+            edittarget.EndTime = item.EndTime;
             edittarget.NewCycle = item.NewCycle;
             edittarget.ProgramStr = item.ProgramStr;
             edittarget.RawDataList = item.RawDataList;
@@ -73,7 +73,7 @@ namespace BCLabManager.Model
         {
             testRecord.Comment = comment;
             testRecord.RawDataList = rawDataList;
-            testRecord.CompleteTime = completeTime;
+            testRecord.EndTime = completeTime;
             testRecord.AssignedBattery = null;
             testRecord.AssignedChamber = null;
             testRecord.AssignedChannel = null;

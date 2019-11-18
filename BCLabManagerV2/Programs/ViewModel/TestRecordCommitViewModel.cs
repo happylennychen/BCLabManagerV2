@@ -45,20 +45,20 @@ namespace BCLabManager.ViewModel
 
         #region Presentation Properties
 
-        public DateTime CompleteTime
+        public DateTime EndTime
         {
             get
             {
-                return _record.CompleteTime;
+                return _record.EndTime;
             }
             set
             {
-                if (value == _record.CompleteTime)
+                if (value == _record.EndTime)
                     return;
 
-                _record.CompleteTime = value;
+                _record.EndTime = value;
 
-                RaisePropertyChanged("CompleteTime");
+                RaisePropertyChanged("EndTime");
             }
         }
 

@@ -131,8 +131,8 @@
                                 CellTemplate="{StaticResource ProgressBar}"
             />
                             <GridViewColumn 
-            Header="Complete Time" 
-            DisplayMemberBinding="{Binding Path=CompleteTime}" 
+            Header="End Time" 
+            DisplayMemberBinding="{Binding Path=EndTime}" 
             />
                             <GridViewColumn 
             Header="Duration" 
@@ -238,8 +238,8 @@
             DisplayMemberBinding="{Binding Path=StartTime}" 
             />
                             <GridViewColumn 
-            Header="CompleteTime" 
-            DisplayMemberBinding="{Binding Path=CompleteTime}" 
+            Header="EndTime" 
+            DisplayMemberBinding="{Binding Path=EndTime}" 
             />
                             <GridViewColumn 
             Header="Duration" 

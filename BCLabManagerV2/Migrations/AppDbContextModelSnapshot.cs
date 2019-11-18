@@ -349,7 +349,7 @@ namespace BCLabManager.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<DateTime>("CompleteTime");
+                    b.Property<DateTime>("EndTime");
 
                     b.Property<double>("NewCycle");
 

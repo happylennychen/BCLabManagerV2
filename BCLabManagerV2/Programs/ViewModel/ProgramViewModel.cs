@@ -49,7 +49,7 @@ namespace BCLabManager.ViewModel
         private void _program_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             RaisePropertyChanged(e.PropertyName);
-            if(e.PropertyName == "CompleteTime")
+            if(e.PropertyName == "EndTime")
                 RaisePropertyChanged("Duration");
         }
 
@@ -165,7 +165,7 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("StartTime");
             }
         }
-        public DateTime CompleteTime
+        public DateTime EndTime
         {
             get
             {
@@ -178,16 +178,16 @@ namespace BCLabManager.ViewModel
 
                 _program.EndTime = value;
 
-                RaisePropertyChanged("CompleteTime");
+                RaisePropertyChanged("EndTime");
             }
         }
         public TimeSpan Duration
         {
             get
             {
-                if (CompleteTime == DateTime.MinValue)
+                if (EndTime == DateTime.MinValue)
                     return TimeSpan.Zero;
-                return CompleteTime - StartTime;
+                return EndTime - StartTime;
             }
         }
         //public TimeSpan EstimatedTime
@@ -195,7 +195,7 @@ namespace BCLabManager.ViewModel
         //    get
         //    {
         //        List<ProgramClass> pros = GetAllCompletedProgramByGroup();
-        //        if (pros.Count == 0 /*|| CompleteTime != DateTime.MinValue*/)
+        //        if (pros.Count == 0 /*|| EndTime != DateTime.MinValue*/)
         //            return TimeSpan.Zero;
         //        TimeSpan total = GetTotalTime(pros);
         //        var est = TimeSpan.FromSeconds((total.TotalSeconds) / pros.Count);
@@ -208,7 +208,7 @@ namespace BCLabManager.ViewModel
         //    TimeSpan total = TimeSpan.Zero;
         //    foreach (var pro in pros)
         //    {
-        //        total += (pro.CompleteTime - pro.StartTime);
+        //        total += (pro.EndTime - pro.StartTime);
         //    }
         //    return total;
         //}
@@ -218,7 +218,7 @@ namespace BCLabManager.ViewModel
         //    using (var dbContext = new AppDbContext())
         //    {
         //        return dbContext.Programs
-        //            .Where(o => o.Group.Id == this._program.Group.Id && o.CompleteTime != DateTime.MinValue)
+        //            .Where(o => o.Group.Id == this._program.Group.Id && o.EndTime != DateTime.MinValue)
         //            .ToList();
         //    }
         //}
@@ -237,7 +237,7 @@ namespace BCLabManager.ViewModel
             TimeSpan total = TimeSpan.Zero;
             foreach (var pro in pros)
             {
-                total += (pro.CompleteTime - pro.StartTime);
+                total += (pro.EndTime - pro.StartTime);
             }
             return total;
         }

@@ -332,7 +332,7 @@ namespace BCLabManager.Migrations
                     RecipeStr = table.Column<string>(nullable: true),
                     ProgramStr = table.Column<string>(nullable: true),
                     StartTime = table.Column<DateTime>(nullable: false),
-                    CompleteTime = table.Column<DateTime>(nullable: false),
+                    EndTime = table.Column<DateTime>(nullable: false),
                     Steps = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true),
                     NewCycle = table.Column<double>(nullable: false),

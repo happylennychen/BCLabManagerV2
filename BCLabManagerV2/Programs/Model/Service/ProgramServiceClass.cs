@@ -1,4 +1,5 @@
 ﻿using BCLabManager.DataAccess;
+using BCLabManager.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -142,43 +143,17 @@ namespace BCLabManager.Model
             }
         }
 
-        //private TimeSpan GetDuration(ProgramClass item)     //side effect: Recipes中的预估时间得到更新
-        //{
-        //    TimeSpan duration = new TimeSpan();
-        //    double CBegin = 0;
-        //    foreach (var recipe in item.Recipes)
-        //    {
-        //        //duration += RecipeService.GetDuration(recipe, ref CBegin);
-        //        RecipeService.UpdateEstimatedTime(recipe, ref CBegin);
-        //        duration += recipe.ED;
-        //    }
-        //    return duration;
-        //}
+        internal void StepStart(ProgramClass program, RecipeClass recipe, StepRuntimeClass stepRuntime, DateTime startTime)
+        {
+            if (program.StartTime == DateTime.MinValue)
+                program.StartTime = startTime;
 
-        //private DateTime GetStartTime(ProgramClass item)    //初始状态的才调用这个函数
-        //{
-        //    if (IsFirstOne(item))
-        //    {
-        //        return item.RequestTime;
-        //    }
-        //    else
-        //    {
-        //        var previousitem = GetPreviousItem(item);
-        //        if (previousitem.EndTime != DateTime.MinValue)
-        //            return previousitem.EndTime;
-        //        else
-        //            return previousitem.EET;
-        //    }
-        //}
+            if (recipe.StartTime == DateTime.MinValue)
+                recipe.StartTime = startTime;
 
-        //private bool IsFirstOne(ProgramClass item)
-        //{
-        //    return item.Order == 0;
-        //}
+            stepRuntime.StartTime = startTime;
 
-        //private ProgramClass GetPreviousItem(ProgramClass item)
-        //{
-        //    return Items.SingleOrDefault(o => o.Order == item.Order - 1);
-        //}
+            UpdateEstimatedTimeChain();
+        }
     }
 }

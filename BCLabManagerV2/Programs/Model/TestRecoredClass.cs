@@ -102,7 +102,7 @@ namespace BCLabManager.Model
         }
 
         private DateTime _completeTime;
-        public DateTime CompleteTime
+        public DateTime EndTime
         {
             get => _completeTime;
             set { SetProperty(ref _completeTime, value); }
@@ -148,7 +148,7 @@ namespace BCLabManager.Model
             this.ProgramStr = String.Empty;
             this.RecipeStr = String.Empty;
             this.StartTime = DateTime.MinValue;
-            this.CompleteTime = DateTime.MinValue;
+            this.EndTime = DateTime.MinValue;
             this.Steps = String.Empty;
             this.Comment = String.Empty;
             this.RawDataList = new List<RawDataClass>();
@@ -215,18 +215,18 @@ namespace BCLabManager.Model
             //this.RecipeStr = RecipeName;
         }
 
-        public void AssetsCommit(DateTime CompleteTime, RawDataClass rawData, double newCycle, string comment = "")  //Need to check the Executor Status to make sure it is executing
+        public void AssetsCommit(DateTime EndTime, RawDataClass rawData, double newCycle, string comment = "")  //Need to check the Executor Status to make sure it is executing
         {
             AssignedBattery.CycleCount += newCycle;
             AssignedBattery.AssetUseCount--;
-            AssignedBattery.Records.Add(new AssetUsageRecordClass(CompleteTime, AssignedBattery.AssetUseCount, "", ""));
+            AssignedBattery.Records.Add(new AssetUsageRecordClass(EndTime, AssignedBattery.AssetUseCount, "", ""));
             if (AssignedChamber != null)
             {
                 AssignedChamber.AssetUseCount--;
-                AssignedChamber.Records.Add(new AssetUsageRecordClass(CompleteTime, AssignedChamber.AssetUseCount, "", ""));
+                AssignedChamber.Records.Add(new AssetUsageRecordClass(EndTime, AssignedChamber.AssetUseCount, "", ""));
             }
             AssignedChannel.AssetUseCount--;
-            AssignedChannel.Records.Add(new AssetUsageRecordClass(CompleteTime, AssignedChannel.AssetUseCount, "", ""));
+            AssignedChannel.Records.Add(new AssetUsageRecordClass(EndTime, AssignedChannel.AssetUseCount, "", ""));
 
             using (var dbContext = new AppDbContext())
             {
@@ -236,7 +236,7 @@ namespace BCLabManager.Model
                     .Load();
                 dbAssignedBattery.CycleCount += newCycle;
                 dbAssignedBattery.AssetUseCount--;
-                dbAssignedBattery.Records.Add(new AssetUsageRecordClass(CompleteTime, dbAssignedBattery.AssetUseCount, "", ""));
+                dbAssignedBattery.Records.Add(new AssetUsageRecordClass(EndTime, dbAssignedBattery.AssetUseCount, "", ""));
 
                 if (AssignedChamber != null)
                 {
@@ -245,7 +245,7 @@ namespace BCLabManager.Model
                         .Collection(o => o.Records)
                         .Load();
                     dbAssignedChamber.AssetUseCount--;
-                    dbAssignedChamber.Records.Add(new AssetUsageRecordClass(CompleteTime, dbAssignedChamber.AssetUseCount, "", ""));
+                    dbAssignedChamber.Records.Add(new AssetUsageRecordClass(EndTime, dbAssignedChamber.AssetUseCount, "", ""));
                 }
                 var dbAssignedChannel = dbContext.Channels.SingleOrDefault(o => o.Id == AssignedChannel.Id);
                 dbContext.Entry(dbAssignedChannel)
@@ -253,7 +253,7 @@ namespace BCLabManager.Model
                     .Load();
 
                 dbAssignedChannel.AssetUseCount--;
-                dbAssignedChannel.Records.Add(new AssetUsageRecordClass(CompleteTime, dbAssignedChannel.AssetUseCount, "", ""));
+                dbAssignedChannel.Records.Add(new AssetUsageRecordClass(EndTime, dbAssignedChannel.AssetUseCount, "", ""));
 
                 dbContext.SaveChanges();
             }
@@ -302,9 +302,9 @@ namespace BCLabManager.Model
         public void CommitUpdateTime(ProgramClass _program, RecipeClass _Recipe)
         {
             if (IsSubCompleted(_Recipe))
-                _Recipe.EndTime = this.CompleteTime;
+                _Recipe.EndTime = this.EndTime;
             if (IsProCompleted(_program))
-                _program.EndTime = this.CompleteTime;
+                _program.EndTime = this.EndTime;
 
             using (var dbContext = new AppDbContext())
             {
@@ -315,9 +315,9 @@ namespace BCLabManager.Model
                 if (sub != null & pro != null)
                 {
                     if (IsSubCompleted(sub))
-                        sub.EndTime = this.CompleteTime;
+                        sub.EndTime = this.EndTime;
                     if (IsProCompleted(pro))
-                        pro.EndTime = this.CompleteTime;
+                        pro.EndTime = this.EndTime;
                 }
                 dbContext.SaveChanges();
             }

@@ -21,6 +21,7 @@ namespace BCLabManager.ViewModel
         ProgramViewModel _selectedProgram;
         RecipeViewModel _selectedRecipe;
         TestRecordViewModel _selectedTestRecord;
+        StepRuntimeViewModel _selectedStepRuntime;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
@@ -202,6 +203,21 @@ namespace BCLabManager.ViewModel
                 if (_selectedTestRecord != value)
                 {
                     _selectedTestRecord = value;
+                }
+            }
+        }
+
+        public StepRuntimeViewModel SelectedStepRuntime
+        {
+            get
+            {
+                return _selectedStepRuntime;
+            }
+            set
+            {
+                if (_selectedStepRuntime != value)
+                {
+                    _selectedStepRuntime = value;
                 }
             }
         }
@@ -631,10 +647,10 @@ namespace BCLabManager.ViewModel
             TestRecordCommitViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _batteryService.Commit(testRecord.Record.AssignedBattery, evm.CompleteTime, SelectedProgram.Name, SelectedRecipe.Name, evm.NewCycle);
-                _channelService.Commit(testRecord.Record.AssignedChannel, evm.CompleteTime, SelectedProgram.Name, SelectedRecipe.Name);
-                _chamberService.Commit(testRecord.Record.AssignedChamber, evm.CompleteTime, SelectedProgram.Name, SelectedRecipe.Name);
-                _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), evm.CompleteTime, SelectedProgram.Name, SelectedRecipe.Name);
+                _batteryService.Commit(testRecord.Record.AssignedBattery, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name, evm.NewCycle);
+                _channelService.Commit(testRecord.Record.AssignedChannel, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
+                _chamberService.Commit(testRecord.Record.AssignedChamber, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
+                _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
             }
         }
 
@@ -690,6 +706,14 @@ namespace BCLabManager.ViewModel
         }
         private void Start()
         {
+            StepStartViewModel viewModel = new StepStartViewModel();
+            StartView StartViewInstance = new StartView();
+            StartViewInstance.DataContext = viewModel;
+            StartViewInstance.ShowDialog();
+            if (viewModel.IsOK == true)
+            {
+                _programService.StepStart(SelectedProgram._program, SelectedRecipe._recipe, SelectedStepRuntime.StepRuntime, viewModel.StartTime);
+            }
         }
         private bool CanStart
         {
@@ -697,6 +721,8 @@ namespace BCLabManager.ViewModel
         }
         private void End()
         {
+            var EndViewInstance = new EndView();
+            EndViewInstance.ShowDialog();
         }
         private bool CanEnd
         {

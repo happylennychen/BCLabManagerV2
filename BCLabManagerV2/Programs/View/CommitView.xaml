@@ -34,7 +34,7 @@
             <xctk:DateTimePicker
       x:Name="CompleteTimeDat"
       Grid.Row="0" Grid.Column="2" ShowButtonSpinner="False" ShowDropDownButton="False" TextAlignment="Center"
-      Text="{Binding Path=CompleteTime, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
+      Text="{Binding Path=EndTime, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
       Validation.ErrorTemplate="{x:Null}"
       />
 

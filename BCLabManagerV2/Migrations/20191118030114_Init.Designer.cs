@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20191115113524_Init")]
+    [Migration("20191118030114_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -351,7 +351,7 @@ namespace BCLabManager.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<DateTime>("CompleteTime");
+                    b.Property<DateTime>("EndTime");
 
                     b.Property<double>("NewCycle");
 

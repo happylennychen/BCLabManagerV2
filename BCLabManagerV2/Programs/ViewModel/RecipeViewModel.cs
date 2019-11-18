@@ -118,7 +118,7 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("StartTime");
             }
         }
-        public DateTime CompleteTime
+        public DateTime EndTime
         {
             get { return _recipe.EndTime; }
             set
@@ -128,7 +128,7 @@ namespace BCLabManager.ViewModel
 
                 _recipe.EndTime = value;
 
-                RaisePropertyChanged("CompleteTime");
+                RaisePropertyChanged("EndTime");
             }
         }
         public string Name
