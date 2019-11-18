@@ -10,6 +10,7 @@ using BCLabManager.Properties;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
 using Prism.Mvvm;
+using System.Windows.Media;
 
 namespace BCLabManager.ViewModel
 {
@@ -49,8 +50,14 @@ namespace BCLabManager.ViewModel
         private void _program_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             RaisePropertyChanged(e.PropertyName);
-            if(e.PropertyName == "EndTime")
-                RaisePropertyChanged("Duration");
+            if (e.PropertyName == "EndTime")
+                RaisePropertyChanged("EndTimeColor");
+            else if (e.PropertyName == "StartTime")
+                RaisePropertyChanged("StartTimeColor");
+            else if (e.PropertyName == "EET")
+                RaisePropertyChanged("EndTime");
+            else if (e.PropertyName == "EST")
+                RaisePropertyChanged("StartTime");
         }
 
         void CreateRecipes()
@@ -154,7 +161,13 @@ namespace BCLabManager.ViewModel
         }
         public DateTime StartTime
         {
-            get { return _program.StartTime; }
+            get 
+            {
+                if (_program.StartTime != DateTime.MinValue)
+                    return _program.StartTime;
+                else
+                    return _program.EST;
+            }
             set
             {
                 if (value == _program.StartTime)
@@ -162,14 +175,30 @@ namespace BCLabManager.ViewModel
 
                 _program.StartTime = value;
 
-                RaisePropertyChanged("StartTime");
+
+                RaisePropertyChanged();
+                //RaisePropertyChanged("StartTimeColor");
+            }
+        }
+
+        public Brush StartTimeColor
+        {
+            get
+            {
+                if (_program.StartTime == DateTime.MinValue)
+                    return Brushes.DarkGray;
+                else
+                    return Brushes.Black;
             }
         }
         public DateTime EndTime
         {
             get
             {
-                return _program.EndTime;
+                if (_program.EndTime != DateTime.MinValue)
+                    return _program.EndTime;
+                else
+                    return _program.EET;
             }
             set
             {
@@ -178,7 +207,18 @@ namespace BCLabManager.ViewModel
 
                 _program.EndTime = value;
 
-                RaisePropertyChanged("EndTime");
+                RaisePropertyChanged();
+            }
+        }
+
+        public Brush EndTimeColor
+        {
+            get
+            {
+                if (_program.EndTime == DateTime.MinValue)
+                    return Brushes.DarkGray;
+                else
+                    return Brushes.Black;
             }
         }
         public TimeSpan Duration

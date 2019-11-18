@@ -155,5 +155,20 @@ namespace BCLabManager.Model
 
             UpdateEstimatedTimeChain();
         }
+
+        internal void StepEnd(ProgramClass program, RecipeClass recipe, StepRuntimeClass stepRuntime, DateTime endTime)
+        {
+            stepRuntime.EndTime = endTime;
+
+            if (stepRuntime == recipe.StepRuntimes.Last())
+            {
+                recipe.EndTime = endTime;
+
+                if (recipe == program.Recipes.Last())
+                    program.EndTime = endTime;
+            }
+
+            UpdateEstimatedTimeChain();
+        }
     }
 }

@@ -71,6 +71,16 @@
                 <Rectangle Grid.Column="4" Fill="{StaticResource WaitingBrush}" StrokeThickness="1"></Rectangle>
             </Grid>
         </DataTemplate>
+
+
+
+        <DataTemplate x:Key="StartTime">
+            <TextBlock Text="{Binding Path=StartTime, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding Path=StartTimeColor, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="EndTime">
+            <TextBlock Text="{Binding Path=EndTime, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding Path=EndTimeColor, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+        </DataTemplate>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -124,7 +134,7 @@
             />
                             <GridViewColumn 
             Header="Start Time" 
-            DisplayMemberBinding="{Binding Path=StartTime}" 
+                                CellTemplate="{StaticResource StartTime}"
             />
                             <GridViewColumn Width="100"
             Header="Progress"
@@ -132,7 +142,7 @@
             />
                             <GridViewColumn 
             Header="End Time" 
-            DisplayMemberBinding="{Binding Path=EndTime}" 
+                                CellTemplate="{StaticResource EndTime}"
             />
                             <GridViewColumn 
             Header="Duration" 
@@ -280,11 +290,11 @@
             />
                             <GridViewColumn 
             Header="Start Time" 
-            DisplayMemberBinding="{Binding Path=StartTime}" 
+                                CellTemplate="{StaticResource StartTime}"
             />
                             <GridViewColumn 
             Header="End Time" 
-            DisplayMemberBinding="{Binding Path=EndTime}" 
+                                CellTemplate="{StaticResource EndTime}"
             />
                         </GridView>
                     </ListView.View>

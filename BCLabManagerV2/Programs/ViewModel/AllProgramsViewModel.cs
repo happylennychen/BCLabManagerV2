@@ -721,8 +721,14 @@ namespace BCLabManager.ViewModel
         }
         private void End()
         {
-            var EndViewInstance = new EndView();
+            StepEndViewModel viewModel = new StepEndViewModel();
+            EndView EndViewInstance = new EndView();
+            EndViewInstance.DataContext = viewModel;
             EndViewInstance.ShowDialog();
+            if (viewModel.IsOK == true)
+            {
+                _programService.StepEnd(SelectedProgram._program, SelectedRecipe._recipe, SelectedStepRuntime.StepRuntime, viewModel.EndTime);
+            }
         }
         private bool CanEnd
         {

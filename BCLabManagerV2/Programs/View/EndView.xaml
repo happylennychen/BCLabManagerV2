@@ -23,6 +23,7 @@
       HorizontalAlignment="Right"
       />
             <xctk:DateTimePicker
+      x:Name="EndTimePicker"
       Grid.Row="0" Grid.Column="2" ShowButtonSpinner="False" ShowDropDownButton="False" TextAlignment="Center"
       Text="{Binding Path=EndTime, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
       Validation.ErrorTemplate="{x:Null}"

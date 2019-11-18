@@ -22,7 +22,7 @@ namespace BCLabManager.View
         public EndView()
         {
             InitializeComponent();
-            //CompleteTimeDat.Text = DateTime.Now.ToString();
+            EndTimePicker.Text = DateTime.Now.ToString();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
