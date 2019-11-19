@@ -14,31 +14,36 @@
             <TabItem Header="Assets">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="20*"></ColumnDefinition>
                         <ColumnDefinition Width="10"></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="20*"></ColumnDefinition>
                         <ColumnDefinition Width="10"></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition Width="10"></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition Width="10"></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="60*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <GroupBox Header="Battery Types" Grid.Column="0">
                         <v:AllBatteryTypesView x:Name="AllBatteryTypesViewInstance"></v:AllBatteryTypesView>
                     </GroupBox>
-                    <GroupBox Header="Batteries" Grid.Column="2">
-                        <v:AllBatteriesView x:Name="AllBatteriesViewInstance"></v:AllBatteriesView>
-                    </GroupBox>
-                    <GroupBox Header="Testers" Grid.Column="4">
+                    <GroupBox Header="Testers" Grid.Column="2">
                         <v:AllTestersView x:Name="AllTestersViewInstance"></v:AllTestersView>
                     </GroupBox>
-                    <GroupBox Header="Channels" Grid.Column="6">
-                        <v:AllChannelsView x:Name="AllChannelsViewInstance"></v:AllChannelsView>
-                    </GroupBox>
-                    <GroupBox Header="Chambers" Grid.Column="8">
-                        <v:AllChambersView x:Name="AllChambersViewInstance"></v:AllChambersView>
-                    </GroupBox>
+                    <Grid Grid.Column="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition Height="10"></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition Height="10"></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <GroupBox Header="Batteries" Grid.Row="0">
+                            <v:AllBatteriesView x:Name="AllBatteriesViewInstance"></v:AllBatteriesView>
+                        </GroupBox>
+                        <GroupBox Header="Channels" Grid.Row="2">
+                            <v:AllChannelsView x:Name="AllChannelsViewInstance"></v:AllChannelsView>
+                        </GroupBox>
+                        <GroupBox Header="Chambers" Grid.Row="4">
+                            <v:AllChambersView x:Name="AllChambersViewInstance"></v:AllChambersView>
+                        </GroupBox>
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Templates">
