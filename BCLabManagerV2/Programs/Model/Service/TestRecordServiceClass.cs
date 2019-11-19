@@ -11,6 +11,7 @@ namespace BCLabManager.Model
     public class TestRecordServiceClass
     {
         public ObservableCollection<TestRecordClass> Items { get; set; }
+        public RawDataServiceClass RawDataService { get; set; } = new RawDataServiceClass();
         public void Add(TestRecordClass item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))

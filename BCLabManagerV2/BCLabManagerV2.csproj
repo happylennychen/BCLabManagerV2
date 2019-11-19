@@ -263,12 +263,14 @@
     <Compile Include="DataAccess\IStepRepository.cs" />
     <Compile Include="DataAccess\IStepTemplateRepository.cs" />
     <Compile Include="DataAccess\IStepRuntimeRepository.cs" />
+    <Compile Include="DataAccess\IRawDataRepository.cs" />
     <Compile Include="DataAccess\ProgramRepository.cs" />
     <Compile Include="DataAccess\RecipeTemplateRepository.cs" />
     <Compile Include="DataAccess\RecipeRepository.cs" />
     <Compile Include="DataAccess\StepRepository.cs" />
     <Compile Include="DataAccess\StepTemplateRepository.cs" />
     <Compile Include="DataAccess\StepRuntimeRepository.cs" />
+    <Compile Include="DataAccess\RawDataRepository.cs" />
     <Compile Include="DataAccess\TestRecordRepository.cs" />
     <Compile Include="DataAccess\ITestRecordRepository.cs" />
     <Compile Include="DataAccess\TesterRepository.cs" />
@@ -288,6 +290,7 @@
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Programs\Model\Service\ProgramServiceClass.cs" />
     <Compile Include="Programs\Model\Service\RecipeTemplateServiceClass.cs" />
+    <Compile Include="Programs\Model\Service\RawDataServiceClass.cs" />
     <Compile Include="Programs\Model\Service\StepTemplateServiceClass.cs" />
     <Compile Include="Programs\Model\Service\StepServiceClass.cs" />
     <Compile Include="Programs\Model\Service\StepRuntimeServiceClass.cs" />

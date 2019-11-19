@@ -15,6 +15,7 @@ namespace BCLabManager.DataAccess
         public ITesterRepository Testers { get; private set; }
         public IChannelRepository Channels { get; private set; }
         public IChamberRepository Chambers { get; private set; }
+        public IRawDataRepository RawDataList { get; private set; }
         public ITestRecordRepository TestRecords { get; private set; }
         public IStepTemplateRepository StepTemplates { get; private set; }
         public IStepRepository Steps { get; private set; }
@@ -30,6 +31,7 @@ namespace BCLabManager.DataAccess
             Testers = new TesterRepository(_context);
             Channels = new ChannelRepository(_context);
             Chambers = new ChamberRepository(_context);
+            RawDataList = new RawDataRepository(_context);
             TestRecords = new TestRecordRepository(_context);
             Steps = new StepRepository(_context);
             StepTemplates = new StepTemplateRepository(_context);
