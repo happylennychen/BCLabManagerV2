@@ -108,7 +108,7 @@
 
             <Label 
       Grid.Row="10" Grid.Column="0" 
-      Content="_Start Time:" 
+      Content="Time:" 
       HorizontalAlignment="Right"
       Target="{Binding ElementName=StartTimeDat}" 
       />

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:v="clr-namespace:BCLabManager.View"
         WindowStartupLocation="CenterScreen"
-        Title="BC Lab Manager v0.1.0" Height="655" Width="1200">
+        Title="BC Lab Manager v0.1.0" Height="855" Width="1600">
     <Window.Resources>
     </Window.Resources>
     <Grid>
@@ -12,41 +12,54 @@
                 <v:DashBoardView x:Name="DashBoardViewInstance"></v:DashBoardView>
             </TabItem>
             <TabItem Header="Assets">
-                <TabControl>
-                    <TabItem Header="Battery Types">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="10"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="10"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="10"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="10"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Header="Battery Types" Grid.Column="0">
                         <v:AllBatteryTypesView x:Name="AllBatteryTypesViewInstance"></v:AllBatteryTypesView>
-                    </TabItem>
-                    <TabItem Header="Batteries">
+                    </GroupBox>
+                    <GroupBox Header="Batteries" Grid.Column="2">
                         <v:AllBatteriesView x:Name="AllBatteriesViewInstance"></v:AllBatteriesView>
-                    </TabItem>
-                    <TabItem Header="Testers">
+                    </GroupBox>
+                    <GroupBox Header="Testers" Grid.Column="4">
                         <v:AllTestersView x:Name="AllTestersViewInstance"></v:AllTestersView>
-                    </TabItem>
-                    <TabItem Header="Channels">
+                    </GroupBox>
+                    <GroupBox Header="Channels" Grid.Column="6">
                         <v:AllChannelsView x:Name="AllChannelsViewInstance"></v:AllChannelsView>
-                    </TabItem>
-                    <TabItem Header="Chambers">
+                    </GroupBox>
+                    <GroupBox Header="Chambers" Grid.Column="8">
                         <v:AllChambersView x:Name="AllChambersViewInstance"></v:AllChambersView>
-                    </TabItem>
-                </TabControl>
+                    </GroupBox>
+                </Grid>
             </TabItem>
             <TabItem Header="Templates">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="60*"></ColumnDefinition>
-                        <ColumnDefinition Width="40*"></ColumnDefinition>
+                        <ColumnDefinition Width="29*"></ColumnDefinition>
+                        <ColumnDefinition Width="589*"/>
+                        <ColumnDefinition Width="16*"></ColumnDefinition>
+                        <ColumnDefinition Width="952*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Grid>
-                        <Grid.RowDefinitions>
+                    <Grid Grid.ColumnSpan="2">
+                        <!--<Grid.RowDefinitions>
                             <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
-                        </Grid.RowDefinitions>
+                        </Grid.RowDefinitions>-->
                         <!--<v:AllChargeCurrentsView x:Name="AllChargeCurrentsViewInstance" Grid.Row="1"></v:AllChargeCurrentsView>-->
                     </Grid>
-                    <v:AllStepTemplatesView Grid.Column="0" x:Name="AllStepTemplateViewInstance"></v:AllStepTemplatesView>
-                    <v:AllRecipeTemplatesView Grid.Column="1" x:Name="AllRecipeTemplatesViewInstance"></v:AllRecipeTemplatesView>
+                    <v:AllStepTemplatesView Grid.Column="0" x:Name="AllStepTemplateViewInstance" Grid.ColumnSpan="2"></v:AllStepTemplatesView>
+                    <v:AllRecipeTemplatesView Grid.Column="3" x:Name="AllRecipeTemplatesViewInstance"></v:AllRecipeTemplatesView>
                 </Grid>
             </TabItem>
             <TabItem Header="Programs">

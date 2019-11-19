@@ -291,7 +291,7 @@
             </Grid>
         </GroupBox>
         <GroupBox Header="RC Tables and Evaluation Results" Grid.Row="2" Grid.Column="2" IsEnabled="False">
-            <Label VerticalAlignment="Center" HorizontalAlignment="Center">RC Tables and their evaluation results will be put here</Label>
+            <Label VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">RC Tables and their evaluation results will be put here</Label>
         </GroupBox>
     </Grid>
 </UserControl>

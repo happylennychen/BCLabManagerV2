@@ -27,7 +27,7 @@
 
             <Label 
       Grid.Row="0" Grid.Column="0" 
-      Content="_End Time:" 
+      Content="Time:" 
       HorizontalAlignment="Right"
       Target="{Binding ElementName=CompleteTimeDat}" 
       />

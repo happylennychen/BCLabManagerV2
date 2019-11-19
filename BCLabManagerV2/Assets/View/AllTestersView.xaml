@@ -61,7 +61,7 @@
                 </ListView>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="2" Header="Channel">
+        <GroupBox Grid.Row="2" Header="Channels of Selected Tester">
 
             <ListView Grid.Row="1"
       AlternationCount="2" 

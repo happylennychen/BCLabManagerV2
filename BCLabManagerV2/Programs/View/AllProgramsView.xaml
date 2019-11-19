@@ -84,16 +84,14 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="60*"></RowDefinition>
+            <RowDefinition Height="50*"></RowDefinition>
             <RowDefinition Height="4"></RowDefinition>
-            <RowDefinition Height="30*"></RowDefinition>
-            <RowDefinition Height="4"></RowDefinition>
-            <RowDefinition Height="30*"></RowDefinition>
+            <RowDefinition Height="50*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="65*"></ColumnDefinition>
+            <ColumnDefinition Width="57*"></ColumnDefinition>
             <ColumnDefinition Width="4"></ColumnDefinition>
-            <ColumnDefinition Width="35*"></ColumnDefinition>
+            <ColumnDefinition Width="43*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <GroupBox Grid.Row="0" Header="Programs">
             <DockPanel>
@@ -201,7 +199,7 @@
             </ListView>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Header="Test Records">
+        <GroupBox Grid.Row="2" Grid.Column="0" Header="Test Records">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="_Execute" Command="{Binding Path=ExecuteCommand}" Margin="0,5,5,0" Width="60"></Button>
@@ -252,11 +250,11 @@
             DisplayMemberBinding="{Binding Path=ChannelStr}" 
             />
                             <GridViewColumn 
-            Header="StartTime" 
+            Header="Execute Time" 
             DisplayMemberBinding="{Binding Path=StartTime}" 
             />
                             <GridViewColumn 
-            Header="EndTime" 
+            Header="Commit Time" 
             DisplayMemberBinding="{Binding Path=EndTime}" 
             />
                             <GridViewColumn 
@@ -272,7 +270,7 @@
                 </ListView>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Header="Steps">
+        <GroupBox Grid.Row="2" Grid.Column="2" Header="Steps">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="_Start" Command="{Binding Path=StartCommand}" Margin="0,5,5,0" Width="60"></Button>

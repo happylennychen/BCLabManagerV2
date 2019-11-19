@@ -73,7 +73,7 @@
                 </ListView>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="2" Header="Record">
+        <GroupBox Grid.Row="2" Header="Chamber Using Record">
 
             <ListView Grid.Row="1"
       AlternationCount="2" 

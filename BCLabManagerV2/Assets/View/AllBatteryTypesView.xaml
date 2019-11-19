@@ -65,7 +65,7 @@
                 </ListView>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="2" Header="Battery">
+        <GroupBox Grid.Row="2" Header="Batteries of Selected Type">
 
             <ListView Grid.Row="1"
       AlternationCount="2" 

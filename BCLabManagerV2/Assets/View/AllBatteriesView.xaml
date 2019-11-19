@@ -19,7 +19,7 @@
 
         <CollectionViewSource x:Key="batteriesCollectionViewSource" Source="{Binding Path=AllBatteries}">
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="Id" Direction="Descending"></scm:SortDescription>
+                <scm:SortDescription PropertyName="Id" Direction="Ascending"></scm:SortDescription>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
     </UserControl.Resources>
@@ -71,7 +71,7 @@
                 </ListView>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="2" Header="Record">
+        <GroupBox Grid.Row="2" Header="Battery Using Record">
 
             <ListView Grid.Row="1"
       AlternationCount="2" 
