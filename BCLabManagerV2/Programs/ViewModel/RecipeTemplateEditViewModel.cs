@@ -19,7 +19,7 @@ namespace BCLabManager.ViewModel
         #region Fields
         public readonly RecipeTemplate _RecipeTemplate;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
         StepTemplateViewModel _selectedStepTemplate;
-        StepClass _selectedStep;
+        StepViewModel _selectedStep;
         RelayCommand _okCommand;
         RelayCommand _addCommand;
         RelayCommand _removeCommand;
@@ -36,6 +36,7 @@ namespace BCLabManager.ViewModel
         {
             _RecipeTemplate = RecipeTemplateModel;
             this.CreateStepTemplates(stepTemplates);
+            this.CreateSteps();
         }
 
 
@@ -46,6 +47,18 @@ namespace BCLabManager.ViewModel
                  select new StepTemplateViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.StepTemplates = new ObservableCollection<StepTemplateViewModel>(all);     //再转换成Observable
+        }
+        void CreateSteps()
+        {
+            List<StepViewModel> all =
+                (from step in _RecipeTemplate.Steps
+                 select new StepViewModel(step)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+
+            //foreach (RecipeModelViewModel batmod in all)
+            //batmod.PropertyChanged += this.OnRecipeModelViewModelPropertyChanged;
+
+            this.Steps = new ObservableCollection<StepViewModel>(all);     //再转换成Observable
+            //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
         }
         #endregion // Constructor
 
@@ -79,6 +92,38 @@ namespace BCLabManager.ViewModel
         }
         public ObservableCollection<StepTemplateViewModel> StepTemplates { get; set; }
 
+        public ObservableCollection<StepViewModel> Steps { get; set; }
+
+
+        public StepTemplateViewModel SelectedStepTemplate
+        {
+            get
+            {
+                return _selectedStepTemplate;
+            }
+            set
+            {
+                if (_selectedStepTemplate != value)
+                {
+                    _selectedStepTemplate = value;
+                }
+            }
+        }
+
+        public StepViewModel SelectedStep
+        {
+            get
+            {
+                return _selectedStep;
+            }
+            set
+            {
+                if (_selectedStep != value)
+                {
+                    _selectedStep = value;
+                }
+            }
+        }
         #endregion // Customer Properties
 
         #region Presentation Properties
@@ -126,6 +171,36 @@ namespace BCLabManager.ViewModel
             set { _isOK = value; }
         }
 
+        public ICommand AddCommand
+        {
+            get
+            {
+                if (_addCommand == null)
+                {
+                    _addCommand = new RelayCommand(
+                        param => { this.Add(); },
+                        param => this.CanAdd
+                            );
+                }
+                return _addCommand;
+            }
+        }
+
+        public ICommand RemoveCommand
+        {
+            get
+            {
+                if (_removeCommand == null)
+                {
+                    _removeCommand = new RelayCommand(
+                        param => { this.Remove(); },
+                        param => this.CanRemove
+                            );
+                }
+                return _removeCommand;
+            }
+        }
+
         #endregion // Presentation Properties
 
         #region Public Methods
@@ -136,6 +211,20 @@ namespace BCLabManager.ViewModel
         public void OK()
         {
             IsOK = true;
+        }
+
+        public void Add()       //对于model来说，需要将选中的sub copy到_program.Recipes来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.Recipes里面去
+        {
+            var m = new StepClass(SelectedStepTemplate._stepTemplate);
+            var vm = new StepViewModel(m);
+            _RecipeTemplate.Steps.Add(m);
+            this.Steps.Add(vm);
+        }
+
+        public void Remove()       //对于model来说，需要将选中的sub 从_program.Recipes中移除。对于viewmodel来说，需要将这个viewmodel从this.Recipes中移除
+        {
+            _RecipeTemplate.Steps.Remove(SelectedStep._step);
+            this.Steps.Remove(SelectedStep);
         }
 
         #endregion // Public Methods
@@ -168,6 +257,16 @@ namespace BCLabManager.ViewModel
         bool CanSaveAs
         {
             get { return IsNewRecipeTemplate; }
+        }
+
+        bool CanAdd
+        {
+            get { return SelectedStepTemplate != null; }
+        }
+
+        bool CanRemove
+        {
+            get { return SelectedStep != null; }     //如果已经有数据，可否删除？
         }
 
         #endregion // Private Helpers

@@ -35,5 +35,10 @@ namespace BCLabManager.Model
         public StepClass()
         {
         }
+
+        public StepClass(StepTemplate stepTemplate)
+        {
+            StepTemplate = stepTemplate;
+        }
     }
 }

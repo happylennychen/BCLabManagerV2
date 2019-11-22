@@ -301,6 +301,7 @@
     <Compile Include="Programs\Model\StepTemplate.cs" />
     <Compile Include="Programs\Model\StepClass.cs" />
     <Compile Include="Programs\ViewModel\AllStepTemplatesViewModel.cs" />
+    <Compile Include="Programs\ViewModel\StepViewModel.cs" />
     <Compile Include="Programs\ViewModel\StepEndViewModel.cs" />
     <Compile Include="Programs\ViewModel\StepTemplateViewModel.cs" />
     <Compile Include="Programs\ViewModel\StepTemplateEditViewModel.cs" />

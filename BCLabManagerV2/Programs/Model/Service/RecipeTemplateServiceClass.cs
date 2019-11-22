@@ -21,6 +21,8 @@ namespace BCLabManager.Model
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
+                foreach (var step in item.Steps)
+                    step.StepTemplate = uow.StepTemplates.GetById(step.StepTemplate.Id);
                 uow.RecipeTemplates.Insert(item);
                 uow.Commit();
             }
