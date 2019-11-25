@@ -13,18 +13,14 @@ using Prism.Mvvm;
 namespace BCLabManager.ViewModel
 {
     /// <summary>
-    /// A UI-friendly wrapper for a Customer object.
+    /// Editable: false
+    /// Updateable: false
     /// </summary>
     public class AssetUsageRecordViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
 
         readonly AssetUsageRecordClass _record;
-        //readonly BatteryRepository _batteryRepository;
-        //readonly BatteryTypeRepository _batterytypeRepository;
-        //bool _isSelected;
-        //string _batteryType;
-        //RelayCommand _saveCommand;
 
         #endregion // Fields
 
@@ -35,11 +31,6 @@ namespace BCLabManager.ViewModel
             if (record == null)
                 throw new ArgumentNullException("record");
 
-            //if (batteryRepository == null)
-                //throw new ArgumentNullException("batteryRepository");
-
-            //_battery = batterymodel;
-            //_batteryRepository = batteryRepository;
             _record = record;
             _record.PropertyChanged += _record_PropertyChanged;
         }
@@ -48,32 +39,6 @@ namespace BCLabManager.ViewModel
         {
             throw new NotImplementedException();
         }
-
-        /*public BatteryViewModel(BatteryClass batterymodel, BatteryRepository batteryRepository, BatteryTypeRepository batterytypeRepository)  //BatteryView需要
-        {
-            if (batterymodel == null)
-                throw new ArgumentNullException("batterymodel");
-
-            if (batteryRepository == null)
-                throw new ArgumentNullException("batteryRepository");
-
-            if (batterytypeRepository == null)
-                throw new ArgumentNullException("batterymodelRepository");
-
-            _battery = batterymodel;
-            _batteryRepository = batteryRepository;
-            _batterytypeRepository = batterytypeRepository;
-
-            // Populate the AllCustomers collection with BatteryTypeViewModels.
-            //this.CreateAllBatteryTypes();      
-        }*/
-
-        /*void CreateAllBatteryTypes()
-        {
-            List<BatteryTypeClass> all = _batterytypeRepository.GetItems();
-
-            this.AllBatteryTypes = new ObservableCollection<BatteryTypeClass>(all);
-        }*/
 
         #endregion // Constructor
 
@@ -105,14 +70,14 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                return _record.ProgramName.ToString();
+                return _record.ProgramName;
             }
         }
         public String RecipeName
         {
             get
             {
-                return _record.RecipeName.ToString();
+                return _record.RecipeName;
             }
         }
 

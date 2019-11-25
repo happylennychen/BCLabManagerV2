@@ -34,7 +34,15 @@ namespace BCLabManager.ViewModel
             _batteryService = batteryService;
             this.CreateAllBatteries(_batteryService.Items);
             _batteryService.Items.CollectionChanged += Items_CollectionChanged;
+            foreach(var battery in _batteryService.Items)
+                battery.Records.CollectionChanged += Records_CollectionChanged;
         }
+
+        private void Records_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            RaisePropertyChanged("Records"); //通知Records改变
+        }
+
         private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -93,26 +101,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        //public List<AssetUsageRecordViewModel> Records //绑定选中battery的Records。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
-        ////如果不是用查询，那么需要维护一个二维List。每一个Battery，对应一个List。用空间换时间。
-        //{
-        //    get
-        //    {
-        //        if (SelectedItem == null)
-        //            return null;
-        //        using (var dbContext = new AppDbContext())
-        //        {
-        //            List<AssetUsageRecordViewModel> all =
-        //              (from bat in dbContext.Batteries
-        //               where bat.Id == SelectedItem.Id
-        //               from record in bat.Records
-        //               select new AssetUsageRecordViewModel(record)).ToList();
-        //            return all;
-        //        }
-        //    }
-        //}
-
-        public List<AssetUsageRecordViewModel> Records //从Domain获取
+        public ObservableCollection<AssetUsageRecordViewModel> Records //从Domain获取
         {
             get
             {
@@ -123,7 +112,9 @@ namespace BCLabManager.ViewModel
                    where bat.Id == SelectedItem.Id
                    from record in bat.Records
                    select new AssetUsageRecordViewModel(record)).ToList();
-                return all;
+                var output = new ObservableCollection<AssetUsageRecordViewModel>(all);
+                //output.CollectionChanged += Output_CollectionChanged;
+                return output;
             }
         }
 
