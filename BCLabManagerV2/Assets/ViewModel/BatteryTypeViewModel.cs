@@ -11,12 +11,15 @@ using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
+    /// <summary>
+    /// Editable: no need
+    /// Updateable: true
+    /// </summary>
     public class BatteryTypeViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
 
         readonly BatteryTypeClass _batterytype;
-        //bool _isSelected;
 
         #endregion // Fields
 
@@ -43,56 +46,20 @@ namespace BCLabManager.ViewModel
         public int Id
         {
             get { return _batterytype.Id; }
-            set
-            {
-                if (value == _batterytype.Id)
-                    return;
-
-                _batterytype.Id = value;
-
-                RaisePropertyChanged("Id");
-            }
         }
         public string Manufactor
         {
             get { return _batterytype.Manufactor; }
-            set
-            {
-                if (value == _batterytype.Manufactor)
-                    return;
-
-                _batterytype.Manufactor = value;
-
-                RaisePropertyChanged("Manufactor");
-            }
         }
 
         public string Name
         {
             get { return _batterytype.Name; }
-            set
-            {
-                if (value == _batterytype.Name)
-                    return;
-
-                _batterytype.Name = value;
-
-                RaisePropertyChanged("Name");
-            }
         }
 
         public string Material
         {
             get { return _batterytype.Material; }
-            set
-            {
-                if (value == _batterytype.Material)
-                    return;
-
-                _batterytype.Material = value;
-
-                RaisePropertyChanged("Material");
-            }
         }
 
         #endregion // Customer Properties

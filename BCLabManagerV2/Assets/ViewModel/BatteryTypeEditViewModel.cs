@@ -11,6 +11,10 @@ using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
+    /// <summary>
+    /// Editable: true
+    /// Updateable: no need
+    /// </summary>
     public class BatteryTypeEditViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields

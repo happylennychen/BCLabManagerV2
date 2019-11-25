@@ -12,7 +12,11 @@ using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
-    public enum CommandType
+    /// <summary>
+    /// Editable: true
+    /// Updateable: no need
+    /// </summary>
+    public enum CommandType     //这里是偷懒的做法，不符合OCP。正确做法应该是为每一个view制作一个view model，而不是混用viewmodel然后用一个属性来做区分
     {
         Create,
         Edit,
@@ -40,19 +44,11 @@ namespace BCLabManager.ViewModel
 
             _battery = battery;
 
-            //_battery.PropertyChanged += _battery_PropertyChanged;
             CreateAllBatteryTypes(batteryTypes);
         }
 
-        //private void _battery_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        //{
-        //    //throw new NotImplementedException();
-        //    RaisePropertyChanged(e.PropertyName);
-        //}
-
         void CreateAllBatteryTypes(ObservableCollection<BatteryTypeClass> batteryTypes)
         {
-            //List<BatteryTypeClass> all = _batterytypeRepository.GetItems();
 
             this.AllBatteryTypes = batteryTypes;
         }

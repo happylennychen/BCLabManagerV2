@@ -13,8 +13,8 @@ using Prism.Mvvm;
 namespace BCLabManager.ViewModel
 {
     /// <summary>
-    /// Editable: false
-    /// Updateable: false
+    /// Editable: no need
+    /// Updateable: no need
     /// </summary>
     public class AssetUsageRecordViewModel : BindableBase//, IDataErrorInfo
     {
