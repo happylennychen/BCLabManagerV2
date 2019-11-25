@@ -13,6 +13,10 @@ using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
+    /// <summary>
+    /// Editable: True
+    /// Updateable: 1. Battery Types: True, 2. Batteries: True
+    /// </summary>
     public class AllBatteryTypesViewModel : BindableBase
     {
         #region Fields
@@ -34,6 +38,12 @@ namespace BCLabManager.ViewModel
             _batteryService = batteryService;
             this.CreateAllBatteryTypes(_batteryTypeService.Items);
             _batteryTypeService.Items.CollectionChanged += Items_CollectionChanged;
+            _batteryService.Items.CollectionChanged += Batteries_CollectionChanged;
+        }
+
+        private void Batteries_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            RaisePropertyChanged("Batteries"); //通知Batteries改变
         }
 
         private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -109,7 +119,7 @@ namespace BCLabManager.ViewModel
         //        //return null;
         //    }
         //}
-        public List<BatteryViewModel> Batteries //从Domain取
+        public ObservableCollection<BatteryViewModel> Batteries //从Domain取
         {
             get
             {
@@ -119,7 +129,7 @@ namespace BCLabManager.ViewModel
                   (from bat in _batteryService.Items
                    where bat.BatteryType.Id == SelectedItem.Id
                    select new BatteryViewModel(bat)).ToList();
-                return all;
+                return new ObservableCollection<BatteryViewModel>(all);
             }
         }
 

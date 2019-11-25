@@ -12,6 +12,10 @@ using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
+    /// <summary>
+    /// Editable: True
+    /// Updateable: 1. Testers: True, 2. Channels: True
+    /// </summary>
     public class AllTestersViewModel : BindableBase
     {
         #region Fields
@@ -34,6 +38,12 @@ namespace BCLabManager.ViewModel
             _channelService = channelService;
             this.CreateAllTesters(_testerService.Items);
             _testerService.Items.CollectionChanged += Items_CollectionChanged;
+            _channelService.Items.CollectionChanged += Channels_CollectionChanged;
+        }
+
+        private void Channels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            RaisePropertyChanged("Channels"); //通知Channels改变
         }
 
         private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -91,22 +101,17 @@ namespace BCLabManager.ViewModel
                 }
             }
         }
-        public List<ChannelViewModel> Channels //绑定选中type的batteries。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
-        //如果不是用查询，那么需要维护一个二维List。每一个Tester，对应一个List。用空间换时间。
+        public ObservableCollection<ChannelViewModel> Channels
         {
             get
             {
                 if (SelectedItem == null)
                     return null;
-                using (var dbContext = new AppDbContext())
-                {
-                    List<ChannelViewModel> all =
-                      (from chn in dbContext.Channels
-                       where chn.Tester.Id == SelectedItem.Id
-                       select new ChannelViewModel(chn)).ToList();
-                    return all;
-                }
-                //return null;
+                List<ChannelViewModel> all =
+                  (from chn in _channelService.Items
+                   where chn.Tester.Id == SelectedItem.Id
+                   select new ChannelViewModel(chn)).ToList();
+                return new ObservableCollection<ChannelViewModel>(all);
             }
         }
 

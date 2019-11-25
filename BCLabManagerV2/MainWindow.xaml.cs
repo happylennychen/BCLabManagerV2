@@ -168,58 +168,6 @@ namespace BCLabManager
                 ProgramService.RecipeService.StepRuntimeService.StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
                 ProgramService.RecipeService.StepRuntimeService.StepService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
             }
-            //using (var dbContext = new AppDbContext())
-            //{
-            //BatteryTypes = new ObservableCollection<BatteryTypeClass>(dbContext.BatteryTypes.ToList());
-
-            //Batteries = new ObservableCollection<BatteryClass>(
-            //    dbContext.Batteries
-            //    .Include(i => i.BatteryType)
-            //    .Include(o => o.Records)
-            //    .ToList()
-            //    );
-
-            //Testers = new ObservableCollection<TesterClass>(dbContext.Testers.ToList());
-
-            //Channels = new ObservableCollection<ChannelClass>(
-            //    dbContext.Channels
-            //    .Include(i => i.Tester)
-            //    .Include(o => o.Records)
-            //    .ToList()
-            //    );
-
-            //Chambers = new ObservableCollection<ChamberClass>(
-            //    dbContext.Chambers
-            //    .Include(o => o.Records)
-            //    .ToList()
-            //    );
-
-            //RecipeTemplates = new List<RecipeTemplate>(dbContext.RecipeTemplates.ToList());
-
-            //Programs = new ObservableCollection<ProgramClass>(dbContext.Programs
-            //    .Include(pro => pro.Recipes)
-            //        .ThenInclude(sub => sub.TestRecords)
-            //            .ThenInclude(tr => tr.RawDataList)
-            //     .Include(pro => pro.Recipes)
-            //        .ThenInclude(sub => sub.TestRecords)
-            //            .ThenInclude(tr => tr.AssignedBattery)
-            //     .Include(pro => pro.Recipes)
-            //        .ThenInclude(sub => sub.TestRecords)
-            //            .ThenInclude(tr => tr.AssignedChamber)
-            //     .Include(pro => pro.Recipes)
-            //        .ThenInclude(sub => sub.TestRecords)
-            //            .ThenInclude(tr => tr.AssignedChannel)
-            //    .ToList());
-
-            //foreach (var pro in Programs)
-            //{
-            //    foreach (var sub in pro.Recipes)
-            //    {
-            //        foreach (var tr in sub.TestRecords)
-            //            sub.AssociateEvent(tr);
-            //    }
-            //}
-            //}
         }
         void CreateViewModels()
         {

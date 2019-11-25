@@ -12,6 +12,10 @@ using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
+    /// <summary>
+    /// Editable: True
+    /// Updateable: 1. Chambers: True, 2. Records: True
+    /// </summary>
     public class AllChambersViewModel : BindableBase
     {
         #region Fields
@@ -34,8 +38,14 @@ namespace BCLabManager.ViewModel
             _chamberService = chamberService;
             this.CreateAllChambers(_chamberService.Items);
             _chamberService.Items.CollectionChanged += Items_CollectionChanged;
+            foreach (var chamber in _chamberService.Items)
+                chamber.Records.CollectionChanged += Records_CollectionChanged;
         }
 
+        private void Records_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            RaisePropertyChanged("Records"); //通知Records改变
+        }
         private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -93,22 +103,18 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public List<AssetUsageRecordViewModel> Records //绑定选中chamber的Records。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
-        //如果不是用查询，那么需要维护一个二维List。每一个Chamber，对应一个List。用空间换时间。
+        public ObservableCollection<AssetUsageRecordViewModel> Records
         {
             get
             {
                 if (SelectedItem == null)
                     return null;
-                using (var dbContext = new AppDbContext())
-                {
-                    List<AssetUsageRecordViewModel> all =
-                      (from cmb in dbContext.Chambers
-                       where cmb.Id == SelectedItem.Id
-                       from record in cmb.Records
-                       select new AssetUsageRecordViewModel(record)).ToList();
-                    return all;
-                }
+                List<AssetUsageRecordViewModel> all =
+                  (from cmb in _chamberService.Items
+                   where cmb.Id == SelectedItem.Id
+                   from record in cmb.Records
+                   select new AssetUsageRecordViewModel(record)).ToList();
+                return new ObservableCollection<AssetUsageRecordViewModel>(all);
             }
         }
 

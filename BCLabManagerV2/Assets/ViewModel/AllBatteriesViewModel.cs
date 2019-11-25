@@ -13,6 +13,10 @@ using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
+    /// <summary>
+    /// Editable: True
+    /// Updateable: 1. Batteries: True, 2. Records: True
+    /// </summary>
     public class AllBatteriesViewModel : BindableBase
     {
         #region Fields

@@ -12,6 +12,10 @@ using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
+    /// <summary>
+    /// Editable: True
+    /// Updateable: 1. Channels: True, 2. Records: True
+    /// </summary>
     public class AllChannelsViewModel : BindableBase
     {
         #region Fields
@@ -36,6 +40,13 @@ namespace BCLabManager.ViewModel
             // Populate the AllTesters collection with _testerRepository.
             this.CreateAllChannels(_channelService.Items);
             _channelService.Items.CollectionChanged += Items_CollectionChanged;
+            foreach (var channel in _channelService.Items)
+                channel.Records.CollectionChanged += Records_CollectionChanged;
+        }
+
+        private void Records_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            RaisePropertyChanged("Records"); //通知Records改变
         }
 
         private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -94,28 +105,18 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public List<AssetUsageRecordViewModel> Records //绑定选中channel的Records。只显示，所以只有get没有set。每次改选type，都要重新做一次查询    //不需要ObservableCollection，因为每次变化都已经被通知了
-        //如果不是用查询，那么需要维护一个二维List。每一个Channel，对应一个List。用空间换时间。
+        public ObservableCollection<AssetUsageRecordViewModel> Records
         {
             get
             {
                 if (SelectedItem == null)
                     return null;
-                //List<AssetUsageRecordViewModel> all =
-                //  (from bat in _channelRepository.GetItems()
-                //   where bat.Name == SelectedItem.Name
-                //   from record in bat.Records
-                //   select new AssetUsageRecordViewModel(record)).ToList();
-                //return all;
-                using (var dbContext = new AppDbContext())
-                {
-                    List<AssetUsageRecordViewModel> all =
-                      (from chn in dbContext.Channels
-                       where chn.Id == SelectedItem.Id
-                       from record in chn.Records
-                       select new AssetUsageRecordViewModel(record)).ToList();
-                    return all;
-                }
+                List<AssetUsageRecordViewModel> all =
+                  (from chn in _channelService.Items
+                   where chn.Id == SelectedItem.Id
+                   from record in chn.Records
+                   select new AssetUsageRecordViewModel(record)).ToList();
+                return new ObservableCollection<AssetUsageRecordViewModel>(all);
             }
         }
 

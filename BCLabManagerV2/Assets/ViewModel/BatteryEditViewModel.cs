@@ -120,37 +120,6 @@ namespace BCLabManager.ViewModel
 
         #region Presentation Properties
 
-
-        //public String BatteryType
-        //{
-        //    get
-        //    {
-        //        if (_batteryType == null)
-        //        {
-        //            if (_battery.BatteryType == null)
-        //                _batteryType = string.Empty;
-        //            else
-        //                _batteryType = _battery.BatteryType.Name;
-        //        }
-        //        return _batteryType;
-        //    }
-        //    set
-        //    {
-        //        if (value == _batteryType || String.IsNullOrEmpty(value))
-        //            return;
-
-        //        _batteryType = value;
-
-        //        //_battery.BatteryType = _batterytypeRepository.GetItems().First(i => i.Name == _batteryType);
-        //        using (var dbContext = new AppDbContext())
-        //        {
-        //            _battery.BatteryType = dbContext.BatteryTypes.SingleOrDefault(bt => bt.Name == _batteryType);
-        //        }
-
-        //        RaisePropertyChanged("BatteryType");
-        //    }
-        //}
-
         public BatteryTypeClass BatteryType
         {
             get { return _battery.BatteryType; }
