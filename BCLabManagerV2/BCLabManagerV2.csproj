@@ -326,7 +326,6 @@
     <Compile Include="Assets\Model\ChamberClass.cs" />
     <Compile Include="Assets\Model\ChannelClass.cs" />
     <Compile Include="Assets\Model\TesterClass.cs" />
-    <Compile Include="Assets\Service\EstimateTimeManager.cs" />
     <Compile Include="Programs\Model\ProgramClass.cs" />
     <Compile Include="Programs\Model\RecipeTemplate.cs" />
     <Compile Include="Programs\Model\RecipeClass.cs" />
@@ -578,7 +577,9 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Assets\Service\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.12\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.12\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

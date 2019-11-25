@@ -22,7 +22,6 @@ namespace BCLabManager.DataAccess
         public DbSet<RecipeTemplate> RecipeTemplates { get; set; }
         public DbSet<RecipeClass> Recipes { get; set; }
         public DbSet<ProgramClass> Programs { get; set; }
-        public DbSet<EstimateTimeRecord> EstimateTimeRecords { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite($"Data Source={GlobalSettings.DbPath}");

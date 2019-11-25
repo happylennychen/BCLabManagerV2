@@ -382,193 +382,193 @@ namespace BCLabManager.ViewModel
         }
         private void Edit()
         {
-            var oldpro = _selectedProgram._program;
-            var oldsubs = oldpro.Recipes;
+            //    var oldpro = _selectedProgram._program;
+            //    var oldsubs = oldpro.Recipes;
 
-            ProgramClass model = new ProgramClass();    //Edit Window要用到的model
-            model.Id = oldpro.Id;
-            model.Name = oldpro.Name;
-            model.Requester = oldpro.Requester;
-            model.RequestTime = oldpro.RequestTime;
-            model.Description = oldpro.Description;
-            model.Recipes = new ObservableCollection<RecipeClass>(oldsubs);          //这里并不希望在edit window里面修改原本的Recipes，而是想编辑一个新的Recipe,只是这个新的，是旧集合的浅复制
+            //    ProgramClass model = new ProgramClass();    //Edit Window要用到的model
+            //    model.Id = oldpro.Id;
+            //    model.Name = oldpro.Name;
+            //    model.Requester = oldpro.Requester;
+            //    model.RequestTime = oldpro.RequestTime;
+            //    model.Description = oldpro.Description;
+            //    model.Recipes = new ObservableCollection<RecipeClass>(oldsubs);          //这里并不希望在edit window里面修改原本的Recipes，而是想编辑一个新的Recipe,只是这个新的，是旧集合的浅复制
 
-            ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _batteryTypeService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
-            //viewmodel.DisplayName = "Program-Edit";
-            viewmodel.commandType = CommandType.Edit;
-            var ProgramViewInstance = new ProgramView();      //实例化一个新的view
-            ProgramViewInstance.DataContext = viewmodel;
-            ProgramViewInstance.ShowDialog();
-            if (viewmodel.IsOK == true)     //Add Remove操作，就是将model.Recipes里面的集合内容改变了
-            {
-                List<RecipeClass> TobeRemoved = new List<RecipeClass>();
-                List<RecipeClass> TobeAdded = new List<RecipeClass>();
-                //先改数据库，这样可以使得Id准确
-                using (var dbContext = new AppDbContext())
-                {
-                    var dbProgram = dbContext.Programs.SingleOrDefault(i => i.Id == SelectedProgram.Id);  //没有完全取出
-                    dbContext.Entry(dbProgram)
-                        .Collection(p => p.Recipes)
-                        .Load();
+            //    ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _batteryTypeService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
+            //    //viewmodel.DisplayName = "Program-Edit";
+            //    viewmodel.commandType = CommandType.Edit;
+            //    var ProgramViewInstance = new ProgramView();      //实例化一个新的view
+            //    ProgramViewInstance.DataContext = viewmodel;
+            //    ProgramViewInstance.ShowDialog();
+            //    if (viewmodel.IsOK == true)     //Add Remove操作，就是将model.Recipes里面的集合内容改变了
+            //    {
+            //        List<RecipeClass> TobeRemoved = new List<RecipeClass>();
+            //        List<RecipeClass> TobeAdded = new List<RecipeClass>();
+            //        //先改数据库，这样可以使得Id准确
+            //        using (var dbContext = new AppDbContext())
+            //        {
+            //            var dbProgram = dbContext.Programs.SingleOrDefault(i => i.Id == SelectedProgram.Id);  //没有完全取出
+            //            dbContext.Entry(dbProgram)
+            //                .Collection(p => p.Recipes)
+            //                .Load();
 
-                    bool isTgtNotContainSrc = false;    //Add to target
-                    bool isSrcNotContainTgt = false;    //Remove from target
-                    foreach (var sub_target in dbProgram.Recipes)     //看看在不在source中，不在则删掉
-                    {
-                        isSrcNotContainTgt = true;
-                        foreach (var sub_source in model.Recipes)
-                        {
-                            if (sub_target.Id == sub_source.Id)
-                            {
-                                isSrcNotContainTgt = false;
-                                break;
-                            }
-                        }
-                        if (isSrcNotContainTgt == true)
-                            TobeRemoved.Add(sub_target);
-                    }
-                    foreach (var sub_source in model.Recipes)
-                    {
-                        isTgtNotContainSrc = true;
-                        foreach (var sub_target in dbProgram.Recipes)
-                        {
-                            if (sub_target.Id == sub_source.Id)
-                            {
-                                isTgtNotContainSrc = false;
-                                break;
-                            }
-                        }
-                        if (isTgtNotContainSrc == true)
-                            TobeAdded.Add(sub_source);
-                    }
+            //            bool isTgtNotContainSrc = false;    //Add to target
+            //            bool isSrcNotContainTgt = false;    //Remove from target
+            //            foreach (var sub_target in dbProgram.Recipes)     //看看在不在source中，不在则删掉
+            //            {
+            //                isSrcNotContainTgt = true;
+            //                foreach (var sub_source in model.Recipes)
+            //                {
+            //                    if (sub_target.Id == sub_source.Id)
+            //                    {
+            //                        isSrcNotContainTgt = false;
+            //                        break;
+            //                    }
+            //                }
+            //                if (isSrcNotContainTgt == true)
+            //                    TobeRemoved.Add(sub_target);
+            //            }
+            //            foreach (var sub_source in model.Recipes)
+            //            {
+            //                isTgtNotContainSrc = true;
+            //                foreach (var sub_target in dbProgram.Recipes)
+            //                {
+            //                    if (sub_target.Id == sub_source.Id)
+            //                    {
+            //                        isTgtNotContainSrc = false;
+            //                        break;
+            //                    }
+            //                }
+            //                if (isTgtNotContainSrc == true)
+            //                    TobeAdded.Add(sub_source);
+            //            }
 
-                    //foreach (var sub in TobeRemoved)
-                    //{
-                    //    sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
-                    //    sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
-                    //    sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
-                    //    sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
-                    //    //newP.Recipes.Add(dbContext.Recipes.SingleOrDefault(o => o.Id == sub.Id));
-                    //}
-                    foreach (var sub in TobeRemoved)
-                    {
-                        dbProgram.Recipes.Remove(sub);
-                    }
+            //            //foreach (var sub in TobeRemoved)
+            //            //{
+            //            //    sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
+            //            //    sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
+            //            //    sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
+            //            //    sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
+            //            //    //newP.Recipes.Add(dbContext.Recipes.SingleOrDefault(o => o.Id == sub.Id));
+            //            //}
+            //            foreach (var sub in TobeRemoved)
+            //            {
+            //                dbProgram.Recipes.Remove(sub);
+            //            }
 
-                    foreach (var sub in TobeAdded)
-                    {
-                        //sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
-                        //sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
-                        //sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
-                        //sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
-                        //newP.Recipes.Add(dbContext.Recipes.SingleOrDefault(o => o.Id == sub.Id));
-                    }
-                    foreach (var sub in TobeAdded)
-                    {
-                        dbProgram.Recipes.Add(sub);
-                    }
-                    dbContext.SaveChanges();        //TobeAdded中的元素Id改变了
-                }
-                //再改model
-                foreach (var sub in TobeRemoved)
-                {
-                    oldsubs.Remove(oldsubs.SingleOrDefault(o => o.Id == sub.Id));
-                }
-                foreach (var sub in TobeAdded)
-                {
-                    oldsubs.Add(sub);
-                }
-                //再改view model
-                foreach (var sub in TobeRemoved)
-                {
-                    oldsubs.Remove(oldsubs.SingleOrDefault(o => o.Id == sub.Id));
-                    SelectedProgram.Recipes.Remove(SelectedProgram.Recipes.SingleOrDefault(o => o.Id == sub.Id));
-                }
-                foreach (var sub in TobeAdded)
-                {
-                    SelectedProgram.Recipes.Add(new RecipeViewModel(sub));
-                }
-            }
+            //            foreach (var sub in TobeAdded)
+            //            {
+            //                //sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
+            //                //sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
+            //                //sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
+            //                //sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
+            //                //newP.Recipes.Add(dbContext.Recipes.SingleOrDefault(o => o.Id == sub.Id));
+            //            }
+            //            foreach (var sub in TobeAdded)
+            //            {
+            //                dbProgram.Recipes.Add(sub);
+            //            }
+            //            dbContext.SaveChanges();        //TobeAdded中的元素Id改变了
+            //        }
+            //        //再改model
+            //        foreach (var sub in TobeRemoved)
+            //        {
+            //            oldsubs.Remove(oldsubs.SingleOrDefault(o => o.Id == sub.Id));
+            //        }
+            //        foreach (var sub in TobeAdded)
+            //        {
+            //            oldsubs.Add(sub);
+            //        }
+            //        //再改view model
+            //        foreach (var sub in TobeRemoved)
+            //        {
+            //            oldsubs.Remove(oldsubs.SingleOrDefault(o => o.Id == sub.Id));
+            //            SelectedProgram.Recipes.Remove(SelectedProgram.Recipes.SingleOrDefault(o => o.Id == sub.Id));
+            //        }
+            //        foreach (var sub in TobeAdded)
+            //        {
+            //            SelectedProgram.Recipes.Add(new RecipeViewModel(sub));
+            //        }
+            //    }
 
-            //model.Recipes = _selectedProgram._program.Recipes;
-            /*
-            ProgramClass model = _selectedProgram._program.Clone();
-            ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _recipeTemplateService.Items);      //实例化一个新的view model
-            viewmodel.DisplayName = "Program-Edit";
-            viewmodel.commandType = CommandType.Edit;
-            var ProgramViewInstance = new ProgramView();      //实例化一个新的view
-            ProgramViewInstance.DataContext = viewmodel;
-            ProgramViewInstance.ShowDialog();
-            if (viewmodel.IsOK == true)
-            {
-                using (var dbContext = new AppDbContext())
-                {
-                    var program = dbContext.Programs.SingleOrDefault(i => i.Id == SelectedProgram.Id);  //没有完全取出
-                    dbContext.Entry(program)
-                        .Collection(p => p.Recipes)
-                        .Load();
-                    //program.Update(model);
-                    bool isTgtNotContainSrc = false;    //Add to target
-                    bool isSrcNotContainTgt = false;    //Remove from target
-                    List<RecipeClass> TobeRemoved = new List<RecipeClass>();
-                    List<RecipeClass> TobeAdded = new List<RecipeClass>();
-                    foreach (var sub_target in program.Recipes)     //看看在不在source中，不在则删掉
-                    {
-                        isSrcNotContainTgt = true;
-                        foreach (var sub_source in model.Recipes)
-                        {
-                            if (sub_target.Id == sub_source.Id)
-                            {
-                                isSrcNotContainTgt = false;
-                                break;
-                            }
-                        }
-                        if (isSrcNotContainTgt == true)
-                            TobeRemoved.Add(sub_target);
-                    }
-                    foreach (var sub_source in model.Recipes)
-                    {
-                        isTgtNotContainSrc = true;
-                        foreach (var sub_target in program.Recipes)
-                        {
-                            if (sub_target.Id == sub_source.Id)
-                            {
-                                isTgtNotContainSrc = false;
-                                break;
-                            }
-                        }
-                        if (isTgtNotContainSrc == true)
-                            TobeAdded.Add(sub_source);
-                    }
-                    foreach (var sub in TobeRemoved)
-                    {
-                        program.Recipes.Remove(sub);
-                        //var subs = dbContext.Recipes;       //手动递归删除
-                        //subs.Remove(sub);
-                    }
-                    foreach (var sub in TobeAdded)
-                    {
-                        program.Recipes.Add(sub);
-                    }
-                    dbContext.SaveChanges();
-                    SelectedProgram._program = program;
+            //    //model.Recipes = _selectedProgram._program.Recipes;
+            //    /*
+            //    ProgramClass model = _selectedProgram._program.Clone();
+            //    ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _recipeTemplateService.Items);      //实例化一个新的view model
+            //    viewmodel.DisplayName = "Program-Edit";
+            //    viewmodel.commandType = CommandType.Edit;
+            //    var ProgramViewInstance = new ProgramView();      //实例化一个新的view
+            //    ProgramViewInstance.DataContext = viewmodel;
+            //    ProgramViewInstance.ShowDialog();
+            //    if (viewmodel.IsOK == true)
+            //    {
+            //        using (var dbContext = new AppDbContext())
+            //        {
+            //            var program = dbContext.Programs.SingleOrDefault(i => i.Id == SelectedProgram.Id);  //没有完全取出
+            //            dbContext.Entry(program)
+            //                .Collection(p => p.Recipes)
+            //                .Load();
+            //            //program.Update(model);
+            //            bool isTgtNotContainSrc = false;    //Add to target
+            //            bool isSrcNotContainTgt = false;    //Remove from target
+            //            List<RecipeClass> TobeRemoved = new List<RecipeClass>();
+            //            List<RecipeClass> TobeAdded = new List<RecipeClass>();
+            //            foreach (var sub_target in program.Recipes)     //看看在不在source中，不在则删掉
+            //            {
+            //                isSrcNotContainTgt = true;
+            //                foreach (var sub_source in model.Recipes)
+            //                {
+            //                    if (sub_target.Id == sub_source.Id)
+            //                    {
+            //                        isSrcNotContainTgt = false;
+            //                        break;
+            //                    }
+            //                }
+            //                if (isSrcNotContainTgt == true)
+            //                    TobeRemoved.Add(sub_target);
+            //            }
+            //            foreach (var sub_source in model.Recipes)
+            //            {
+            //                isTgtNotContainSrc = true;
+            //                foreach (var sub_target in program.Recipes)
+            //                {
+            //                    if (sub_target.Id == sub_source.Id)
+            //                    {
+            //                        isTgtNotContainSrc = false;
+            //                        break;
+            //                    }
+            //                }
+            //                if (isTgtNotContainSrc == true)
+            //                    TobeAdded.Add(sub_source);
+            //            }
+            //            foreach (var sub in TobeRemoved)
+            //            {
+            //                program.Recipes.Remove(sub);
+            //                //var subs = dbContext.Recipes;       //手动递归删除
+            //                //subs.Remove(sub);
+            //            }
+            //            foreach (var sub in TobeAdded)
+            //            {
+            //                program.Recipes.Add(sub);
+            //            }
+            //            dbContext.SaveChanges();
+            //            SelectedProgram._program = program;
 
-                    //SelectedProgram.UpdateRecipes();        //修改viewmodel中的子项
+            //            //SelectedProgram.UpdateRecipes();        //修改viewmodel中的子项
 
-                    List<RecipeViewModel> all =
-                        (from sub in program.Recipes
-                         select new RecipeViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+            //            List<RecipeViewModel> all =
+            //                (from sub in program.Recipes
+            //                 select new RecipeViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-                    //foreach (RecipeModelViewModel batmod in all)
-                    //batmod.PropertyChanged += this.OnRecipeModelViewModelPropertyChanged;
+            //            //foreach (RecipeModelViewModel batmod in all)
+            //            //batmod.PropertyChanged += this.OnRecipeModelViewModelPropertyChanged;
 
-                    SelectedProgram.Recipes = new ObservableCollection<RecipeViewModel>(all);     //再转换成Observable
-                    RaisePropertyChanged("Recipes");
-                }
-            }
-                */
+            //            SelectedProgram.Recipes = new ObservableCollection<RecipeViewModel>(all);     //再转换成Observable
+            //            RaisePropertyChanged("Recipes");
+            //        }
+            //    }
+            //        */
         }
-        private bool CanEdit
+    private bool CanEdit
         {
             get { return _selectedProgram != null; }
         }

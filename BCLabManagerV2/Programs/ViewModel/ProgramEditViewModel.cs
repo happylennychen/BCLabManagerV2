@@ -338,14 +338,14 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                var dbContext = new AppDbContext();
-                int number = (
-                    from bat in dbContext.Programs
-                    where bat.Name == _program.Name     //名字（某一个属性）一样就认为是一样的
-                    select bat).Count();
-                if (number != 0)
-                    return false;
-                else
+                //var dbContext = new AppDbContext();
+                //int number = (
+                //    from bat in dbContext.Programs
+                //    where bat.Name == _program.Name     //名字（某一个属性）一样就认为是一样的
+                //    select bat).Count();
+                //if (number != 0)
+                //    return false;
+                //else
                     return true;
             }
         }
