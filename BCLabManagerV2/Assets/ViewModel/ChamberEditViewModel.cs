@@ -12,7 +12,8 @@ using Prism.Mvvm;
 namespace BCLabManager.ViewModel
 {
     /// <summary>
-    /// A UI-friendly wrapper for a Customer object.
+    /// Editable: true
+    /// Updateable: no need
     /// </summary>
     public class ChamberEditViewModel : BindableBase//, IDataErrorInfo
     {
