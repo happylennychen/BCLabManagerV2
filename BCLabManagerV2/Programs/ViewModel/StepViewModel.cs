@@ -60,6 +60,54 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public string LoopLabel
+        {
+            get
+            {
+                return _step.LoopLabel;
+            }
+            set
+            {
+                if (value == _step.LoopLabel)
+                    return;
+                _step.LoopLabel = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        public string LoopTarget
+        {
+            get
+            {
+                return _step.LoopTarget;
+            }
+            set
+            {
+                if (value == _step.LoopTarget)
+                    return;
+                _step.LoopTarget = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        public ushort LoopCount
+        {
+            get
+            {
+                return _step.LoopCount;
+            }
+            set
+            {
+                if (value == _step.LoopCount)
+                    return;
+                _step.LoopCount = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
 
         #endregion // Customer Properties
     }
