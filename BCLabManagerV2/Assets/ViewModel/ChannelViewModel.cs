@@ -12,7 +12,8 @@ using Prism.Mvvm;
 namespace BCLabManager.ViewModel
 {
     /// <summary>
-    /// A UI-friendly wrapper for a Customer object.
+    /// Editable: no need
+    /// Updateable: true
     /// </summary>
     public class ChannelViewModel : BindableBase//, IDataErrorInfo
     {
@@ -35,13 +36,6 @@ namespace BCLabManager.ViewModel
             RaisePropertyChanged(e.PropertyName);
         }
 
-        /*void CreateAllTesters()
-        {
-            List<TesterClass> all = _testerRepository.GetItems();
-
-            this.AllTesters = new ObservableCollection<TesterClass>(all);
-        }*/
-
         #endregion // Constructor
 
         #region ChannelClass Properties
@@ -49,56 +43,20 @@ namespace BCLabManager.ViewModel
         public int Id
         {
             get { return _channel.Id; }
-            set
-            {
-                if (value == _channel.Id)
-                    return;
-
-                _channel.Id = value;
-
-                RaisePropertyChanged("Id");
-            }
         }
 
         public string Name
         {
             get { return _channel.Name; }
-            set
-            {
-                if (value == _channel.Name)
-                    return;
-
-                _channel.Name = value;
-
-                RaisePropertyChanged("Name");
-            }
         }
 
         public int AssetUseCount
         {
             get { return _channel.AssetUseCount; }
-            set
-            {
-                if (value == _channel.AssetUseCount)
-                    return;
-
-                _channel.AssetUseCount = value;
-
-                RaisePropertyChanged("AssetUseCount");
-            }
         }
         public TesterClass Tester
         {
             get { return _channel.Tester; }
-            set
-            {
-                if (value == _channel.Tester)
-                    return;
-
-                _channel.Tester = value;
-
-                RaisePropertyChanged("Tester");
-            }
         }
 
         #endregion // Customer Properties

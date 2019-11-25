@@ -12,14 +12,21 @@ namespace BCLabManager.Model
     {
         public ObservableCollection<TestRecordClass> Items { get; set; }
         public RawDataServiceClass RawDataService { get; set; } = new RawDataServiceClass();
-        public void Add(TestRecordClass item)
+        public void SuperAdd(TestRecordClass item)
+        {
+            DatabaseAdd(item);
+            DomainAdd(item);
+        }
+        public void DatabaseAdd(TestRecordClass item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                //item.BatteryType = uow.BatteryTypes.GetById(item.BatteryType.Id);
                 uow.TestRecords.Insert(item);
                 uow.Commit();
             }
+        }
+        public void DomainAdd(TestRecordClass item)
+        {
             Items.Add(item);
         }
         public void Remove(int id)
@@ -33,13 +40,21 @@ namespace BCLabManager.Model
             //var item = Items.SingleOrDefault(o => o.Id == id);
             //Items.Remove(item);
         }
-        public void Update(TestRecordClass item)
+        public void SuperUpdate(TestRecordClass item)
+        {
+            DatabaseUpdate(item);
+            DomainUpdate(item);
+        }
+        public void DatabaseUpdate(TestRecordClass item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 uow.TestRecords.Update(item);
                 uow.Commit();
             }
+        }
+        public void DomainUpdate(TestRecordClass item)
+        {
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             edittarget.BatteryStr = item.BatteryStr;
             edittarget.BatteryTypeStr = item.BatteryTypeStr;
@@ -67,7 +82,7 @@ namespace BCLabManager.Model
             testRecord.AssignedChamber = chamber;
             testRecord.AssignedChannel = channel;
             testRecord.Status = TestStatus.Executing;
-            Update(testRecord);
+            DatabaseUpdate(testRecord);
         }
 
         internal void Commit(TestRecordClass testRecord, string comment, List<RawDataClass> rawDataList, DateTime completeTime, string programName, string recipeName)
@@ -81,20 +96,20 @@ namespace BCLabManager.Model
             testRecord.ProgramStr = programName;
             testRecord.RecipeStr = recipeName;
             testRecord.Status = TestStatus.Completed;
-            Update(testRecord);
+            SuperUpdate(testRecord);
         }
 
         internal void Invalidate(TestRecordClass testRecord, string comment)
         {
             testRecord.Comment += "\r\n" + comment;
             testRecord.Status = TestStatus.Invalid;
-            Update(testRecord);
+            DatabaseUpdate(testRecord);
         }
 
         internal void Abandon(TestRecordClass testRecord)
         {
             testRecord.Status = TestStatus.Abandoned;
-            Update(testRecord);
+            DatabaseUpdate(testRecord);
         }
     }
 }

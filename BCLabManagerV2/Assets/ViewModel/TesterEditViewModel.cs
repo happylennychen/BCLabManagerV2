@@ -11,12 +11,15 @@ using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
+    /// <summary>
+    /// Editable: true
+    /// Updateable: no need
+    /// </summary>
     public class TesterEditViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
 
         readonly TesterClass _tester;
-        //bool _isSelected;
         RelayCommand _okCommand;
         bool _isOK;
 

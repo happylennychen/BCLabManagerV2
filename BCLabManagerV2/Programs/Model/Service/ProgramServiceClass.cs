@@ -104,26 +104,11 @@ namespace BCLabManager.Model
 
         public void UpdateEstimatedTime(ProgramClass item, ref DateTime time, ref double c)
         {
-            //if (item.EndTime != DateTime.MinValue)  //完成状态
-            //    return;
-            //else if (item.StartTime == DateTime.MinValue)    //初始状态
-            //{
-            //    item.EST = GetStartTime(item);
-            //    item.ED = GetDuration(item);
-            //    item.EET = item.EST + item.ED;
-            //}
-            ////运行状态
-            //else
-            //{
-            //    item.ED = GetDuration(item);
-            //    item.EET = item.StartTime + item.ED;
-            //}
             if (item.StartTime == DateTime.MinValue)
             {
                 item.EST = time;
                 foreach (var recipe in item.Recipes)
                     RecipeService.UpdateEstimatedTime(recipe, ref time, ref c);
-                //time += RecipeService.StepRuntimeService.GetDuration(item, ref c);
                 item.EET = time;
             }
             else
@@ -131,7 +116,6 @@ namespace BCLabManager.Model
                 time = item.StartTime;
                 if (item.EndTime == DateTime.MinValue)
                 {
-                    //time += RecipeService.StepRuntimeService.GetDuration(item, ref c);
                     foreach (var recipe in item.Recipes)
                         RecipeService.UpdateEstimatedTime(recipe, ref time, ref c);
                     item.EET = time;

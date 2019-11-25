@@ -11,6 +11,10 @@ using Prism.Mvvm;
 
 namespace BCLabManager.ViewModel
 {
+    /// <summary>
+    /// Editable: no need
+    /// Updateable: true
+    /// </summary>
     public class TesterViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
@@ -38,42 +42,15 @@ namespace BCLabManager.ViewModel
         public int Id
         {
             get { return _tester.Id; }
-            set
-            {
-                if (value == _tester.Id)
-                    return;
-
-                _tester.Id = value;
-
-                RaisePropertyChanged("Id");
-            }
         }
         public string Manufactor
         {
             get { return _tester.Manufactor; }
-            set
-            {
-                if (value == _tester.Manufactor)
-                    return;
-
-                _tester.Manufactor = value;
-
-                RaisePropertyChanged("Manufactor");
-            }
         }
 
         public string Name
         {
             get { return _tester.Name; }
-            set
-            {
-                if (value == _tester.Name)
-                    return;
-
-                _tester.Name = value;
-
-                RaisePropertyChanged("Name");
-            }
         }
 
         #endregion // Customer Properties

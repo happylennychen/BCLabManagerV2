@@ -98,12 +98,12 @@ namespace BCLabManager.Model
             this.TestRecords.Add(tr);
         }
 
-        public RecipeClass(
-            int Loop) : this()
-        {
-            //this.Name = Name;
-            this.Loop = Loop;
-        }
+        //public RecipeClass(
+        //    int Loop) : this()
+        //{
+        //    //this.Name = Name;
+        //    this.Loop = Loop;
+        //}
 
         public void AssociateEvent(TestRecordClass testRecord)
         {
@@ -163,6 +163,14 @@ namespace BCLabManager.Model
             var tr = new TestRecordClass();
             tr.StatusChanged += newsub.TestRecord_StatusChanged;
             newsub.TestRecords.Add(tr);
+
+            foreach (var stepRuntime in this.StepRuntimes)
+            {
+                StepRuntimeClass sr = new StepRuntimeClass();
+                sr.Step = stepRuntime.Step;
+                sr.DesignCapacityInmAH = stepRuntime.DesignCapacityInmAH;
+                newsub.StepRuntimes.Add(sr);
+            }
             return newsub;
         }
     }
