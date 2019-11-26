@@ -11,7 +11,7 @@ namespace BCLabManager.Model
     public class RecipeTemplateServiceClass
     {
         public ObservableCollection<RecipeTemplate> Items { get; set; }
-        public StepTemplateServiceClass StepTemplateService { get; set; } = new StepTemplateServiceClass();
+        //public StepServiceClass StepService { get; set; } = new StepServiceClass();
         public void SuperAdd(RecipeTemplate item)
         {
             DatabaseAdd(item);

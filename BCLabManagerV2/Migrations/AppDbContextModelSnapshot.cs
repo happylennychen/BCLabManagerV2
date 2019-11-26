@@ -197,8 +197,6 @@ namespace BCLabManager.Migrations
 
                     b.Property<bool>("IsAbandoned");
 
-                    b.Property<int>("Loop");
-
                     b.Property<string>("Name");
 
                     b.Property<int?>("ProgramClassId");

@@ -20,6 +20,7 @@ namespace BCLabManager.ViewModel
         //List<DischargeTemperatureClass> _dischargeTemperatures;
         //List<DischargeCurrentClass> _dischargeCurrents;
         private RecipeTemplateServiceClass _recipeTemplateServcie;
+        private StepTemplateServiceClass _stepTemplateService;
         RecipeTemplateViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
@@ -30,10 +31,11 @@ namespace BCLabManager.ViewModel
         #region Constructor
 
         public AllRecipeTemplatesViewModel(
-            RecipeTemplateServiceClass recipeTemplateServcie
+            RecipeTemplateServiceClass recipeTemplateServcie, StepTemplateServiceClass stepTemplateService
             )
         {
             _recipeTemplateServcie = recipeTemplateServcie;
+            _stepTemplateService = stepTemplateService;
             this.CreateAllRecipeTemplates(_recipeTemplateServcie.Items);
             _recipeTemplateServcie.Items.CollectionChanged += Items_CollectionChanged;
         }
@@ -161,7 +163,7 @@ namespace BCLabManager.ViewModel
             RecipeTemplateEditViewModel viewmodel = 
                 new RecipeTemplateEditViewModel(
                     model,
-                    _recipeTemplateServcie.StepTemplateService.Items
+                    _stepTemplateService.Items
                     );      //实例化一个新的view model
             //viewmodel.DisplayName = "RecipeTemplate-Create";
             viewmodel.commandType = CommandType.Create;

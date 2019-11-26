@@ -65,6 +65,8 @@ namespace BCLabManager
         public ChamberServieClass ChamberService { get; set; } = new ChamberServieClass();
         //public TestRecordServiceClass TestRecordService { get; set; } = new TestRecordServiceClass();
         public RecipeTemplateServiceClass RecipeTemplateService { get; set; } = new RecipeTemplateServiceClass();
+        public StepServiceClass StepService { get; set; } = new StepServiceClass();
+        public StepTemplateServiceClass StepTemplateService { get; set; } = new StepTemplateServiceClass();
         public ProgramServiceClass ProgramService { get; set; } = new ProgramServiceClass();
 
         public MainWindow()
@@ -158,15 +160,16 @@ namespace BCLabManager
                 ChamberService.Items = new ObservableCollection<ChamberClass>(uow.Chambers.GetAll("Records"));
 
                 RecipeTemplateService.Items = new ObservableCollection<RecipeTemplate>(uow.RecipeTemplates.GetAll());
-                RecipeTemplateService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
+                StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
+                StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
 
                 ProgramService.Items = new ObservableCollection<ProgramClass>(uow.Programs.GetAll());
                 ProgramService.RecipeService.Items = new ObservableCollection<RecipeClass>(uow.Recipies.GetAll());
                 ProgramService.RecipeService.TestRecordService.Items = new ObservableCollection<TestRecordClass>(uow.TestRecords.GetAll());
                 ProgramService.RecipeService.TestRecordService.RawDataService.Items = new ObservableCollection<RawDataClass>(uow.RawDataList.GetAll());
                 ProgramService.RecipeService.StepRuntimeService.Items = new ObservableCollection<StepRuntimeClass>(uow.StepRuntimes.GetAll());
-                ProgramService.RecipeService.StepRuntimeService.StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
-                ProgramService.RecipeService.StepRuntimeService.StepService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
+                //ProgramService.RecipeService.StepRuntimeService.StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
+                //ProgramService.RecipeService.StepRuntimeService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
             }
         }
         void CreateViewModels()
@@ -183,13 +186,13 @@ namespace BCLabManager
 
             allRecipeTemplatesViewModel =
                 new AllRecipeTemplatesViewModel(
-                    RecipeTemplateService
+                    RecipeTemplateService, StepTemplateService
                     //ChargeCurrents,
                     //DischargeTemperatures,
                     //DischargeCurrents
                     );    //ViewModel初始化
 
-            allStepTemplatesViewModel = new AllStepTemplatesViewModel(ProgramService.RecipeService.StepRuntimeService.StepService.StepTemplateService);
+            allStepTemplatesViewModel = new AllStepTemplatesViewModel(StepTemplateService);
 
             allProgramsViewModel = new AllProgramsViewModel
                 (

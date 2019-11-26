@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using BCLabManager.DataAccess;
 using Prism.Mvvm;
 
@@ -21,7 +22,6 @@ namespace BCLabManager.Model
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
-        public int Loop { get; set; } = 1;
 
         private DateTime _startTime;
         public DateTime StartTime
@@ -65,14 +65,15 @@ namespace BCLabManager.Model
         public RecipeClass(RecipeTemplate template, BatteryTypeClass batteryType)
         {
             Name = template.Name;
-            foreach (var step in template.Steps)
-            {
-                StepRuntimeClass sr = new StepRuntimeClass();
-                //sr.Step = step;
-                sr.StepTemplate = step.StepTemplate;
-                sr.DesignCapacityInmAH = batteryType.TypicalCapacity;
-                this.StepRuntimes.Add(sr);
-            }
+            //foreach (var step in template.Steps)
+            //{
+            //    StepRuntimeClass sr = new StepRuntimeClass();
+            //    //sr.Step = step;
+            //    sr.StepTemplate = step.StepTemplate;
+            //    sr.DesignCapacityInmAH = batteryType.TypicalCapacity;
+            //    this.StepRuntimes.Add(sr);
+            //}
+            BuildStepRuntimesBasedOnSteps(template.Steps.ToList(), batteryType);
             var tr = new TestRecordClass();
             //tr.ProgramStr = ProgramStr;
             tr.RecipeStr = this.Name;
@@ -80,17 +81,76 @@ namespace BCLabManager.Model
             this.TestRecords.Add(tr);
         }
 
-        public RecipeClass(RecipeTemplate template, string ProgramStr, int loop, BatteryTypeClass batteryType)  //Only used by populator
+        private void BuildStepRuntimesBasedOnSteps(List<StepClass> steps, BatteryTypeClass batteryType)
+        {
+            int targetIndex;
+            List<int> numbers = new List<int>();
+            Dictionary<int, int> LoopCounts = new Dictionary<int, int>();
+
+            for (int i = 0; i < steps.Count; i++)
+            {
+                if (steps[i].LoopLabel != null)
+                {
+                    LoopCounts.Add(i, 1);
+                }
+            }
+            for (int i = 0; i < steps.Count; i = targetIndex)
+            {
+                numbers.Add(i);
+                if (steps[i].LoopTarget != null)
+                {
+                    int ti = FindTargetIndex(steps, steps[i].LoopTarget);
+                    if (ti == -1)
+                    {
+                        MessageBox.Show("Wrong loop settings!");
+                        return;
+                    }
+                    if (LoopCounts[ti] < steps[i].LoopCount)
+                    {
+                        LoopCounts[ti]++;
+                        targetIndex = ti;
+                    }
+                    else
+                    {
+                        LoopCounts[ti] = 1;
+                        targetIndex = i + 1;
+                    }
+                }
+                else
+                {
+                    targetIndex = i + 1;
+                }
+            }
+
+            foreach (var index in numbers)
+            {
+                StepRuntimeClass sr = new StepRuntimeClass();
+                sr.StepTemplate = steps[index].StepTemplate;
+                sr.DesignCapacityInmAH = batteryType.TypicalCapacity;
+                this.StepRuntimes.Add(sr);
+            }
+        }
+
+        private int FindTargetIndex(List<StepClass> steps, string loopTarget)
+        {
+            foreach (var step in steps)
+            {
+                if (step.LoopLabel == loopTarget)
+                    return steps.IndexOf(step);
+            }
+            return -1;
+        }
+
+        public RecipeClass(RecipeTemplate template, string ProgramStr, BatteryTypeClass batteryType)  //Only used by populator
         {
             this.Name = template.Name;
-            foreach(var step in template.Steps)
+            foreach (var step in template.Steps)
             {
                 StepRuntimeClass sr = new StepRuntimeClass();
                 sr.StepTemplate = step.StepTemplate;
                 sr.DesignCapacityInmAH = batteryType.TypicalCapacity;
                 this.StepRuntimes.Add(sr);
             }
-            this.Loop = loop;
 
             var tr = new TestRecordClass();
             tr.ProgramStr = ProgramStr;

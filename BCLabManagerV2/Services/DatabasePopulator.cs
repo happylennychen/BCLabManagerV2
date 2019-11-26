@@ -14,7 +14,7 @@ namespace BCLabManager
         public static void PopulateHistoricData()
         {
             PopulateAssets();
-            PopulatePrograms();
+            //PopulatePrograms();
             //PopulateOperations();
         }
 
@@ -110,7 +110,7 @@ namespace BCLabManager
         {
             PopulateStepTemplates();
             PopulateRecipeTemplates();
-            PopulateTestPrograms();
+            //PopulateTestPrograms();
         }
 
         private static void PopulateStepTemplates()
@@ -168,7 +168,7 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/02/28");
                 obj.Description = "Oppo BLP663 Static Test";
-                RecipeClass sub = new RecipeClass(GetRecipeTemplateById(dbContext, 1), obj.Name, 1, obj.BatteryType);
+                RecipeClass sub = new RecipeClass(GetRecipeTemplateById(dbContext, 1), obj.Name, obj.BatteryType);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
                 //sub = new RecipeClass(GetRecipeTemplateById(dbContext, 2), obj.Name, 1);
@@ -205,7 +205,7 @@ namespace BCLabManager
                 obj.Requester = "Francis";
                 obj.RequestTime = DateTime.Parse("2019/02/28");
                 obj.Description = "Oppo BLP663 Static Test";
-                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 2), obj.Name, 1, obj.BatteryType);
+                sub = new RecipeClass(GetRecipeTemplateById(dbContext, 2), obj.Name, obj.BatteryType);
                 sub.Id = sub_i++;
                 obj.Recipes.Add(sub);
                 dbContext.Programs.Add(obj);

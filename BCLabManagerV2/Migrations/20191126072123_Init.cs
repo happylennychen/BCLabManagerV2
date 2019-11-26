@@ -199,7 +199,6 @@ namespace BCLabManager.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     IsAbandoned = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(nullable: true),
-                    Loop = table.Column<int>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
                     EndTime = table.Column<DateTime>(nullable: false),
                     EST = table.Column<DateTime>(nullable: false),

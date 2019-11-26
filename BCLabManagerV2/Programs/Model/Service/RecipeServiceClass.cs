@@ -52,7 +52,6 @@ namespace BCLabManager.Model
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             edittarget.EndTime = item.EndTime;
             edittarget.IsAbandoned = item.IsAbandoned;
-            edittarget.Loop = item.Loop;
             edittarget.StartTime = item.StartTime;
             edittarget.TestRecords = item.TestRecords;
             edittarget.Name = item.Name;

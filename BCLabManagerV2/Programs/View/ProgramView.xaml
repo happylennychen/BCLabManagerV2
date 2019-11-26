@@ -17,10 +17,6 @@
       -->
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
-
-        <DataTemplate x:Key="Loop">
-            <TextBox Text="{Binding Path=Loop}"></TextBox>
-        </DataTemplate>
     </Window.Resources>
     <DockPanel>
         <GroupBox Header="Program" DockPanel.Dock="Top">
@@ -166,10 +162,6 @@
                             <GridViewColumn 
             Header="Name" 
             DisplayMemberBinding="{Binding Path=Name}" 
-            />
-                            <GridViewColumn 
-            Header="Loop" 
-                                CellTemplate="{StaticResource Loop}"
             />
                         </GridView>
                     </ListView.View>

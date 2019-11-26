@@ -283,9 +283,9 @@
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
-    <Compile Include="Migrations\20191126015807_Init.cs" />
-    <Compile Include="Migrations\20191126015807_Init.designer.cs">
-      <DependentUpon>20191126015807_Init.cs</DependentUpon>
+    <Compile Include="Migrations\20191126072123_Init.cs" />
+    <Compile Include="Migrations\20191126072123_Init.designer.cs">
+      <DependentUpon>20191126072123_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Programs\Model\Service\ProgramServiceClass.cs" />

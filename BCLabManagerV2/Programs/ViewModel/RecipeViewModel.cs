@@ -251,20 +251,6 @@ namespace BCLabManager.ViewModel
             return output;
         }
 
-        public int Loop
-        {
-            get { return _recipe.Loop; }
-            set
-            {
-                if (value == _recipe.Loop)
-                    return;
-
-                _recipe.Loop = value;
-
-                RaisePropertyChanged("Loop");
-            }
-        }
-
         public ObservableCollection<TestRecordViewModel> TestRecords { get; private set; }        //这个是当前Recipe所拥有的test
 
         public ObservableCollection<StepRuntimeViewModel> StepRuntimes { get; private set; }        //这个是当前Recipe所拥有的test

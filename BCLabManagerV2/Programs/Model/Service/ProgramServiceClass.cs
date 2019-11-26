@@ -24,6 +24,10 @@ namespace BCLabManager.Model
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 item.BatteryType = uow.BatteryTypes.GetById(item.BatteryType.Id);
+
+                var nextId = 1;
+                if(RecipeService.StepRuntimeService.Items.Count != 0)
+                    nextId = RecipeService.StepRuntimeService.Items.Max(o=>o.Id) + 1;
                 foreach (var recipe in item.Recipes)
                     foreach (var stepRuntim in recipe.StepRuntimes)
                     {
@@ -31,6 +35,7 @@ namespace BCLabManager.Model
                         int StepTemplateId = stepRuntim.StepTemplate.Id;
                         //stepRuntim.Step = uow.Steps.GetById(StepId);
                         stepRuntim.StepTemplate = uow.StepTemplates.GetById(StepTemplateId);
+                        stepRuntim.Id = nextId++;
                     }
                 uow.Programs.Insert(item);
                 uow.Commit();
@@ -44,6 +49,8 @@ namespace BCLabManager.Model
                 RecipeService.Items.Add(recipe);
                 foreach (var testRecord in recipe.TestRecords)
                     RecipeService.TestRecordService.Items.Add(testRecord);
+                foreach (var tr in recipe.StepRuntimes)
+                    RecipeService.StepRuntimeService.Items.Add(tr);
             }
         }
         //public void Remove(int id)
@@ -82,6 +89,8 @@ namespace BCLabManager.Model
 
         public void UpdateEstimatedTimeChain()
         {
+            if (Items.Count == 0)
+                return;
             Order();
             var time = Items[0].RequestTime;
             double c = 0;

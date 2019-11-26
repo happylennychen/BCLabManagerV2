@@ -11,7 +11,8 @@ namespace BCLabManager.Model
     public class StepRuntimeServiceClass
     {
         public ObservableCollection<StepRuntimeClass> Items { get; set; }
-        public StepServiceClass StepService { get; set; } = new StepServiceClass();
+        //public StepServiceClass StepService { get; set; } = new StepServiceClass();
+        //public StepTemplateServiceClass StepTemplateService { get; set; } = new StepTemplateServiceClass();
         //public void Add(StepRuntimeClass item)
         //{
         //using (var uow = new UnitOfWork(new AppDbContext()))

@@ -182,10 +182,6 @@
             Header="Name" 
             DisplayMemberBinding="{Binding Path=Name}" 
             />
-                            <!--<GridViewColumn 
-            Header="Loop" 
-            DisplayMemberBinding="{Binding Path=Loop}" 
-            />-->
                             <GridViewColumn 
             Header="Start Time" 
                                 CellTemplate="{StaticResource StartTime}"

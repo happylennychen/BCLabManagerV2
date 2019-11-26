@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20191126015807_Init")]
+    [Migration("20191126072123_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -198,8 +198,6 @@ namespace BCLabManager.Migrations
                     b.Property<DateTime>("EndTime");
 
                     b.Property<bool>("IsAbandoned");
-
-                    b.Property<int>("Loop");
 
                     b.Property<string>("Name");
 
