@@ -78,9 +78,20 @@ namespace BCLabManager.ViewModel
         /// </summary>
         public ObservableCollection<RecipeTemplateViewModel> AllRecipeTemplates { get; private set; }
 
-        public ObservableCollection<StepClass> Steps
+        public ObservableCollection<StepViewModel> Steps
         {
-            get { return SelectedItem._recipeTemplate.Steps; }
+            get 
+            {
+                if (SelectedItem == null)
+                    return null;
+                //return SelectedItem._recipeTemplate.Steps;
+                var output = new ObservableCollection<StepViewModel>();
+                foreach(var step in SelectedItem._recipeTemplate.Steps)
+                {
+                    output.Add(new StepViewModel(step));
+                }
+                return output;
+            }
         }
 
         public RecipeTemplateViewModel SelectedItem    //绑定选中项，从而改变Recipes
@@ -94,7 +105,7 @@ namespace BCLabManager.ViewModel
                 if (_selectedItem != value)
                 {
                     _selectedItem = value;
-                    //RaisePropertyChanged("SelectedType");
+                    RaisePropertyChanged("Steps");
                 }
             }
         }

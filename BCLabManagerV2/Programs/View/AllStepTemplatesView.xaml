@@ -44,16 +44,16 @@
             DisplayMemberBinding="{Binding Path=Id}" 
             />
                             <GridViewColumn 
+            Header="Temperature" 
+            DisplayMemberBinding="{Binding Path=Temperature}" 
+            />
+                            <GridViewColumn 
             Header="Current Value" 
             DisplayMemberBinding="{Binding Path=CurrentInput}" 
             />
                             <GridViewColumn 
             Header="Current Unit" 
             DisplayMemberBinding="{Binding Path=CurrentUnit}" 
-            />
-                            <GridViewColumn 
-            Header="Temperature" 
-            DisplayMemberBinding="{Binding Path=Temperature}" 
             />
                             <GridViewColumn 
             Header="Cut-Off Condition Value" 
