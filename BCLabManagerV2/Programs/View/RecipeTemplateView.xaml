@@ -17,8 +17,16 @@
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
 
-        <DataTemplate x:Key="Loop">
-            <TextBox Text="{Binding Path=Loop}"></TextBox>
+        <DataTemplate x:Key="LoopLabel">
+            <TextBox Text="{Binding Path=LoopLabel}"></TextBox>
+        </DataTemplate>
+
+        <DataTemplate x:Key="LoopTarget">
+            <TextBox Text="{Binding Path=LoopTarget}"></TextBox>
+        </DataTemplate>
+
+        <DataTemplate x:Key="LoopCount">
+            <TextBox Text="{Binding Path=LoopCount}"></TextBox>
         </DataTemplate>
     </Window.Resources>
     <DockPanel>
@@ -105,8 +113,16 @@
             DisplayMemberBinding="{Binding Path=Name}" 
             />
                             <GridViewColumn 
-            Header="Loop" 
-                                CellTemplate="{StaticResource Loop}"
+            Header="Loop Label" 
+                                CellTemplate="{StaticResource LoopLabel}"
+            />
+                            <GridViewColumn 
+            Header="Loop Target" 
+                                CellTemplate="{StaticResource LoopTarget}"
+            />
+                            <GridViewColumn 
+            Header="Loop Count" 
+                                CellTemplate="{StaticResource LoopCount}"
             />
                         </GridView>
                     </ListView.View>

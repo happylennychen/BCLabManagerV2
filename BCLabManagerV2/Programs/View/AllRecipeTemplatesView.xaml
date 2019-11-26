@@ -59,8 +59,36 @@
                     </ListView>
                 </DockPanel>
             </GroupBox>
-            <GroupBox Header="Steps" Grid.Column="2" IsEnabled="False">
-                <Label VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="40">Detailed Steps</Label>
+            <GroupBox Header="Steps" Grid.Column="2">
+                <ListView Grid.Row="1"
+                      x:Name="Programlist"
+      AlternationCount="2"
+      ItemContainerStyle="{StaticResource ListViewItemStyle}"
+      ItemsSource="{Binding Path=Steps}"
+      >
+
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn 
+            Header="Id" 
+            DisplayMemberBinding="{Binding Path=Id}" 
+            />
+                            <GridViewColumn 
+            Header="Name" 
+            DisplayMemberBinding="{Binding Path=Name}" 
+            />
+                            <GridViewColumn 
+            Header="Loop Label" DisplayMemberBinding="{Binding Path=LoopLabel}"
+            />
+                            <GridViewColumn 
+            Header="Loop Target" DisplayMemberBinding="{Binding Path=LoopTarget}"
+            />
+                            <GridViewColumn 
+            Header="Loop Count" DisplayMemberBinding="{Binding Path=LoopCount}"
+            />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </GroupBox>
         </Grid>
     </GroupBox>

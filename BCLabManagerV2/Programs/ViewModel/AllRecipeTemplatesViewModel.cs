@@ -35,6 +35,29 @@ namespace BCLabManager.ViewModel
         {
             _recipeTemplateServcie = recipeTemplateServcie;
             this.CreateAllRecipeTemplates(_recipeTemplateServcie.Items);
+            _recipeTemplateServcie.Items.CollectionChanged += Items_CollectionChanged;
+        }
+
+        private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
+                    {
+                        var recipeTemplate = item as RecipeTemplate;
+                        this.AllRecipeTemplates.Add(new RecipeTemplateViewModel(recipeTemplate));
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    foreach (var item in e.OldItems)
+                    {
+                        var recipeTemplate = item as StepTemplate;
+                        var deletetarget = this.AllRecipeTemplates.SingleOrDefault(o => o.Id == recipeTemplate.Id);
+                        this.AllRecipeTemplates.Remove(deletetarget);
+                    }
+                    break;
+            }
         }
 
         void CreateAllRecipeTemplates(ObservableCollection<RecipeTemplate> recipeTemplates)
@@ -54,6 +77,11 @@ namespace BCLabManager.ViewModel
         /// Returns a collection of all the RecipeModelViewModel objects.
         /// </summary>
         public ObservableCollection<RecipeTemplateViewModel> AllRecipeTemplates { get; private set; }
+
+        public ObservableCollection<StepClass> Steps
+        {
+            get { return SelectedItem._recipeTemplate.Steps; }
+        }
 
         public RecipeTemplateViewModel SelectedItem    //绑定选中项，从而改变Recipes
         {
