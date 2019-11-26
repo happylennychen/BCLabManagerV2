@@ -68,7 +68,8 @@ namespace BCLabManager.Model
             foreach (var step in template.Steps)
             {
                 StepRuntimeClass sr = new StepRuntimeClass();
-                sr.Step = step;
+                //sr.Step = step;
+                sr.StepTemplate = step.StepTemplate;
                 sr.DesignCapacityInmAH = batteryType.TypicalCapacity;
                 this.StepRuntimes.Add(sr);
             }
@@ -85,7 +86,7 @@ namespace BCLabManager.Model
             foreach(var step in template.Steps)
             {
                 StepRuntimeClass sr = new StepRuntimeClass();
-                sr.Step = step;
+                sr.StepTemplate = step.StepTemplate;
                 sr.DesignCapacityInmAH = batteryType.TypicalCapacity;
                 this.StepRuntimes.Add(sr);
             }
@@ -167,7 +168,7 @@ namespace BCLabManager.Model
             foreach (var stepRuntime in this.StepRuntimes)
             {
                 StepRuntimeClass sr = new StepRuntimeClass();
-                sr.Step = stepRuntime.Step;
+                sr.StepTemplate = stepRuntime.StepTemplate;
                 sr.DesignCapacityInmAH = stepRuntime.DesignCapacityInmAH;
                 newsub.StepRuntimes.Add(sr);
             }

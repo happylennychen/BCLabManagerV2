@@ -119,7 +119,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                return _stepRuntime.Step.StepTemplate.ToString();
+                return _stepRuntime.StepTemplate.ToString();
             }
         }
         #endregion // Presentation Properties

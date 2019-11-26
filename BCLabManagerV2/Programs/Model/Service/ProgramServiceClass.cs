@@ -27,10 +27,10 @@ namespace BCLabManager.Model
                 foreach (var recipe in item.Recipes)
                     foreach (var stepRuntim in recipe.StepRuntimes)
                     {
-                        int StepId = stepRuntim.Step.Id;
-                        int StepTemplateId = stepRuntim.Step.StepTemplate.Id;
-                        stepRuntim.Step = uow.Steps.GetById(StepId);
-                        stepRuntim.Step.StepTemplate = uow.StepTemplates.GetById(StepTemplateId);
+                        //int StepId = stepRuntim.Step.Id;
+                        int StepTemplateId = stepRuntim.StepTemplate.Id;
+                        //stepRuntim.Step = uow.Steps.GetById(StepId);
+                        stepRuntim.StepTemplate = uow.StepTemplates.GetById(StepTemplateId);
                     }
                 uow.Programs.Insert(item);
                 uow.Commit();

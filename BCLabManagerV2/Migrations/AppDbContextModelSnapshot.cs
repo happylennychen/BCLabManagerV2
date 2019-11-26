@@ -130,30 +130,6 @@ namespace BCLabManager.Migrations
                     b.ToTable("Channels");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.EstimateTimeRecord", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<TimeSpan>("AverageTime");
-
-                    b.Property<int?>("BatteryTypeId");
-
-                    b.Property<int>("ExecutedCount");
-
-                    b.Property<int?>("SubTemplateId");
-
-                    b.Property<int>("TestCount");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BatteryTypeId");
-
-                    b.HasIndex("SubTemplateId");
-
-                    b.ToTable("EstimateTimeRecords");
-                });
-
             modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
                 {
                     b.Property<int>("Id")
@@ -293,13 +269,13 @@ namespace BCLabManager.Migrations
 
                     b.Property<DateTime>("StartTime");
 
-                    b.Property<int?>("StepId");
+                    b.Property<int?>("StepTemplateId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RecipeClassId");
 
-                    b.HasIndex("StepId");
+                    b.HasIndex("StepTemplateId");
 
                     b.ToTable("StepRuntimes");
                 });
@@ -423,17 +399,6 @@ namespace BCLabManager.Migrations
                         .HasForeignKey("TesterId");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.EstimateTimeRecord", b =>
-                {
-                    b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
-                        .WithMany()
-                        .HasForeignKey("BatteryTypeId");
-
-                    b.HasOne("BCLabManager.Model.RecipeTemplate", "SubTemplate")
-                        .WithMany()
-                        .HasForeignKey("SubTemplateId");
-                });
-
             modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
@@ -472,9 +437,9 @@ namespace BCLabManager.Migrations
                         .WithMany("StepRuntimes")
                         .HasForeignKey("RecipeClassId");
 
-                    b.HasOne("BCLabManager.Model.StepClass", "Step")
+                    b.HasOne("BCLabManager.Model.StepTemplate", "StepTemplate")
                         .WithMany()
-                        .HasForeignKey("StepId");
+                        .HasForeignKey("StepTemplateId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>

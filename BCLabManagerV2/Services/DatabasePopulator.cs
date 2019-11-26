@@ -295,6 +295,13 @@ namespace BCLabManager
             dbContext.Entry(subtemplate)
                 .Collection(o => o.Steps)
                 .Load();
+
+            foreach (var step in subtemplate.Steps)
+            {
+                dbContext.Entry(step)
+                    .Reference(o => o.StepTemplate)
+                    .Load();
+            }
             return subtemplate;
         }
 

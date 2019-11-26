@@ -142,35 +142,6 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EstimateTimeRecords",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    BatteryTypeId = table.Column<int>(nullable: true),
-                    SubTemplateId = table.Column<int>(nullable: true),
-                    TestCount = table.Column<int>(nullable: false),
-                    ExecutedCount = table.Column<int>(nullable: false),
-                    AverageTime = table.Column<TimeSpan>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EstimateTimeRecords", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EstimateTimeRecords_BatteryTypes_BatteryTypeId",
-                        column: x => x.BatteryTypeId,
-                        principalTable: "BatteryTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_EstimateTimeRecords_RecipeTemplates_SubTemplateId",
-                        column: x => x.SubTemplateId,
-                        principalTable: "RecipeTemplates",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Steps",
                 columns: table => new
                 {
@@ -290,7 +261,7 @@ namespace BCLabManager.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    StepId = table.Column<int>(nullable: true),
+                    StepTemplateId = table.Column<int>(nullable: true),
                     DesignCapacityInmAH = table.Column<double>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
                     EndTime = table.Column<DateTime>(nullable: false),
@@ -310,9 +281,9 @@ namespace BCLabManager.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_StepRuntimes_Steps_StepId",
-                        column: x => x.StepId,
-                        principalTable: "Steps",
+                        name: "FK_StepRuntimes_StepTemplates_StepTemplateId",
+                        column: x => x.StepTemplateId,
+                        principalTable: "StepTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -417,16 +388,6 @@ namespace BCLabManager.Migrations
                 column: "TesterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EstimateTimeRecords_BatteryTypeId",
-                table: "EstimateTimeRecords",
-                column: "BatteryTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EstimateTimeRecords_SubTemplateId",
-                table: "EstimateTimeRecords",
-                column: "SubTemplateId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Programs_BatteryTypeId",
                 table: "Programs",
                 column: "BatteryTypeId");
@@ -447,9 +408,9 @@ namespace BCLabManager.Migrations
                 column: "RecipeClassId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StepRuntimes_StepId",
+                name: "IX_StepRuntimes_StepTemplateId",
                 table: "StepRuntimes",
-                column: "StepId");
+                column: "StepTemplateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Steps_RecipeTemplateId",
@@ -488,19 +449,22 @@ namespace BCLabManager.Migrations
                 name: "AssetUsageRecordClass");
 
             migrationBuilder.DropTable(
-                name: "EstimateTimeRecords");
-
-            migrationBuilder.DropTable(
                 name: "RawDataClass");
 
             migrationBuilder.DropTable(
                 name: "StepRuntimes");
 
             migrationBuilder.DropTable(
+                name: "Steps");
+
+            migrationBuilder.DropTable(
                 name: "TestRecords");
 
             migrationBuilder.DropTable(
-                name: "Steps");
+                name: "RecipeTemplates");
+
+            migrationBuilder.DropTable(
+                name: "StepTemplates");
 
             migrationBuilder.DropTable(
                 name: "Batteries");
@@ -513,12 +477,6 @@ namespace BCLabManager.Migrations
 
             migrationBuilder.DropTable(
                 name: "Recipes");
-
-            migrationBuilder.DropTable(
-                name: "RecipeTemplates");
-
-            migrationBuilder.DropTable(
-                name: "StepTemplates");
 
             migrationBuilder.DropTable(
                 name: "Testers");

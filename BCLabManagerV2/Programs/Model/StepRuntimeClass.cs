@@ -12,7 +12,7 @@ namespace BCLabManager.Model
     public class StepRuntimeClass : BindableBase
     {
         public int Id { get; set; }
-        public StepClass Step { get; set; }
+        public StepTemplate StepTemplate { get; set; }
         public double DesignCapacityInmAH { get; set; }
         private DateTime _startTime;
         public DateTime StartTime
@@ -61,7 +61,7 @@ namespace BCLabManager.Model
 
         public double GetCurrentInmA()
         {
-            var st = Step.StepTemplate;
+            var st = StepTemplate;
             if (st.CurrentUnit == CurrentUnitEnum.mA)
                 return st.CurrentInput;
             else if (st.CurrentUnit == CurrentUnitEnum.C)

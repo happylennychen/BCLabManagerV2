@@ -52,7 +52,7 @@ namespace BCLabManager.Model
         {
             double Cend = 0;
             TimeSpan duration;
-            var st = sr.Step.StepTemplate;
+            var st = sr.StepTemplate;
             if (st.CutOffConditionType == CutOffConditionTypeEnum.Time_s)
             {
                 duration = TimeSpan.FromSeconds(st.CutOffConditionValue);
@@ -65,7 +65,7 @@ namespace BCLabManager.Model
                 else if (st.CutOffConditionType == CutOffConditionTypeEnum.C_mAH)
                     Cend = st.CutOffConditionValue;
 
-                duration = TimeSpan.FromHours(GetTimeInSecondsWithParameters(Cend, CBegin, sr.GetCurrentInmA(), sr.Step.StepTemplate.Slope, sr.Step.StepTemplate.Offset));
+                duration = TimeSpan.FromHours(GetTimeInSecondsWithParameters(Cend, CBegin, sr.GetCurrentInmA(), sr.StepTemplate.Slope, sr.StepTemplate.Offset));
             }
             CBegin = Cend;
             return duration;
