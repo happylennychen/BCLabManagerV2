@@ -27,7 +27,7 @@ namespace BCLabManager.Model
 
                 var nextId = 1;
                 if(RecipeService.StepRuntimeService.Items.Count != 0)
-                    nextId = RecipeService.StepRuntimeService.Items.Max(o=>o.Id) + 1;
+                    nextId = RecipeService.StepRuntimeService.Items.Max(o=>o.Id) + 1;   //?????help efcore to produce correct id
                 foreach (var recipe in item.Recipes)
                     foreach (var stepRuntim in recipe.StepRuntimes)
                     {

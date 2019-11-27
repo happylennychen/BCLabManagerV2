@@ -96,6 +96,20 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public int TypicalCapacity
+        {
+            get { return _batterytype.TypicalCapacity; }
+            set
+            {
+                if (value == _batterytype.TypicalCapacity)
+                    return;
+
+                _batterytype.TypicalCapacity = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
         #endregion // Customer Properties
 
         #region Presentation Properties

@@ -62,6 +62,11 @@ namespace BCLabManager.ViewModel
             get { return _batterytype.Material; }
         }
 
+        public int TypicalCapacity
+        {
+            get { return _batterytype.TypicalCapacity; }
+        }
+
         #endregion // Customer Properties
     }
 }
