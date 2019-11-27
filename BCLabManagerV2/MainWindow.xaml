@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:v="clr-namespace:BCLabManager.View"
         WindowStartupLocation="CenterScreen"
-        Title="BC Lab Manager v0.1.0" Height="855" Width="1600">
+        Title="BC Lab Manager v0.1.2" Height="855" Width="1600">
     <Window.Resources>
     </Window.Resources>
     <Grid>
@@ -20,10 +20,10 @@
                         <ColumnDefinition Width="10"></ColumnDefinition>
                         <ColumnDefinition Width="60*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <GroupBox Header="Battery Types" Grid.Column="0">
+                    <GroupBox Header="Battery Types" Grid.Column="0" BorderBrush="Black" BorderThickness="1">
                         <v:AllBatteryTypesView x:Name="AllBatteryTypesViewInstance"></v:AllBatteryTypesView>
                     </GroupBox>
-                    <GroupBox Header="Testers" Grid.Column="2">
+                    <GroupBox Header="Testers" Grid.Column="2" BorderBrush="Black" BorderThickness="1">
                         <v:AllTestersView x:Name="AllTestersViewInstance"></v:AllTestersView>
                     </GroupBox>
                     <Grid Grid.Column="4">
@@ -34,13 +34,13 @@
                             <RowDefinition Height="10"></RowDefinition>
                             <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
-                        <GroupBox Header="Batteries" Grid.Row="0">
+                        <GroupBox Header="Batteries" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
                             <v:AllBatteriesView x:Name="AllBatteriesViewInstance"></v:AllBatteriesView>
                         </GroupBox>
-                        <GroupBox Header="Channels" Grid.Row="2">
+                        <GroupBox Header="Channels" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
                             <v:AllChannelsView x:Name="AllChannelsViewInstance"></v:AllChannelsView>
                         </GroupBox>
-                        <GroupBox Header="Chambers" Grid.Row="4">
+                        <GroupBox Header="Chambers" Grid.Row="4" BorderBrush="Black" BorderThickness="1">
                             <v:AllChambersView x:Name="AllChambersViewInstance"></v:AllChambersView>
                         </GroupBox>
                     </Grid>
@@ -67,8 +67,11 @@
                     <v:AllRecipeTemplatesView Grid.Column="3" x:Name="AllRecipeTemplatesViewInstance"></v:AllRecipeTemplatesView>
                 </Grid>
             </TabItem>
-            <TabItem Header="Programs">
+            <TabItem Header="Open Programs">
                 <v:AllProgramsView x:Name="AllProgramsViewInstance"></v:AllProgramsView>
+            </TabItem>
+            <TabItem Header="Products(v0.1)">
+                <v:AllProductsView x:Name="AllProductsViewInstance"></v:AllProductsView>
             </TabItem>
         </TabControl>
     </Grid>

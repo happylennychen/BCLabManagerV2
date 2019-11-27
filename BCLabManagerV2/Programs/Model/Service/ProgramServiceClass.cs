@@ -18,6 +18,7 @@ namespace BCLabManager.Model
         {
             DatabaseAdd(item);
             DomainAdd(item);
+            UpdateEstimatedTimeChain();
         }
         public void DatabaseAdd(ProgramClass item)
         {
