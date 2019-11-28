@@ -1,0 +1,303 @@
+﻿<UserControl x:Class="BCLabManager.View.AllProductsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="400">
+    <UserControl.Resources>
+
+        <LinearGradientBrush x:Key="Brush_HeaderBackground" StartPoint="0.5,0" EndPoint="0.5,1">
+            <GradientStop Color="#66000088" Offset="0" />
+            <GradientStop Color="#BB000088" Offset="1" />
+        </LinearGradientBrush>
+
+        <Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}">
+            <!-- 
+      Stretch the content of each cell so that we can 
+      right-align text in the Total Sales column. 
+      -->
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="ToolTip" Value="{Binding Path=Description}"></Setter>
+            <!--<Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsAbandoned, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                    <Setter Property="Background" Value="{StaticResource AbandonedBrush}"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Status, UpdateSourceTrigger=PropertyChanged}" Value="4">
+                    <Setter Property="Background" Value="{StaticResource AbandonedBrush}"></Setter>
+                </DataTrigger>
+            </Style.Triggers>-->
+        </Style>
+
+        <CollectionViewSource x:Key="programsCollectionViewSource" Source="{Binding Path=AllPrograms}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Id" Direction="Ascending"></scm:SortDescription>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+        <CollectionViewSource x:Key="subsCollectionViewSource" Source="{Binding Path=Recipes}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Id" Direction="Ascending"></scm:SortDescription>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+        <CollectionViewSource x:Key="ftrsCollectionViewSource" Source="{Binding Path=TestRecords}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Id" Direction="Ascending"></scm:SortDescription>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+        <CollectionViewSource x:Key="strsCollectionViewSource" Source="{Binding Path=SecondTestRecords}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Id" Direction="Ascending"></scm:SortDescription>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+        <DataTemplate x:Key="ProgressBar">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{Binding Path=AbandonedPercentage}"/>
+                    <ColumnDefinition Width="{Binding Path=InvalidPercentage}"/>
+                    <ColumnDefinition Width="{Binding Path=CompletedPercentage}"/>
+                    <ColumnDefinition Width="{Binding Path=ExecutingPercentage}"/>
+                    <ColumnDefinition Width="{Binding Path=WaitingPercentage}"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle Grid.Column="0" Fill="{StaticResource AbandonedBrush}" StrokeThickness="1"></Rectangle>
+                <Rectangle Grid.Column="1" Fill="{StaticResource InvalidBrush}" StrokeThickness="1"></Rectangle>
+                <Rectangle Grid.Column="2" Fill="{StaticResource CompletedBrush}" StrokeThickness="1"></Rectangle>
+                <Rectangle Grid.Column="3" Fill="{StaticResource ExecutingBrush}" StrokeThickness="1"></Rectangle>
+                <Rectangle Grid.Column="4" Fill="{StaticResource WaitingBrush}" StrokeThickness="1"></Rectangle>
+            </Grid>
+        </DataTemplate>
+
+
+
+        <DataTemplate x:Key="StartTime">
+            <TextBlock Text="{Binding Path=StartTime, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding Path=StartTimeColor, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="EndTime">
+            <TextBlock Text="{Binding Path=EndTime, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding Path=EndTimeColor, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50*"></RowDefinition>
+            <RowDefinition Height="4"></RowDefinition>
+            <RowDefinition Height="50*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="57*"></ColumnDefinition>
+            <ColumnDefinition Width="4"></ColumnDefinition>
+            <ColumnDefinition Width="43*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <GroupBox Grid.Row="0" Header="Programs">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Make RC Table" Command="{Binding Path=MakeRcTableCommand}" Margin="0,5,5,0" Width="120"></Button>
+                </StackPanel>
+                <ListView Grid.Row="1"
+                      x:Name="Programlist"
+      AlternationCount="2"
+      ItemContainerStyle="{StaticResource ListViewItemStyle}"
+      ItemsSource="{Binding Source={StaticResource programsCollectionViewSource}}"
+                      SelectedItem="{Binding Path=SelectedProgram, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+      >
+
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn 
+            Header="Id" 
+            DisplayMemberBinding="{Binding Path=Id}" 
+            />
+                            <GridViewColumn Width="100"
+            Header="Progress"
+                                CellTemplate="{StaticResource ProgressBar}"
+            />
+                            <GridViewColumn 
+            Header="Name" 
+            DisplayMemberBinding="{Binding Path=Name}" 
+            />
+                            <GridViewColumn 
+            Header="Battery Type" 
+            DisplayMemberBinding="{Binding Path=BatteryType}" 
+            />
+                            <GridViewColumn 
+            Header="Requester" 
+            DisplayMemberBinding="{Binding Path=Requester}" 
+            />
+                            <GridViewColumn 
+            Header="Request Time" 
+            DisplayMemberBinding="{Binding Path=RequestTime}" 
+            />
+                            <GridViewColumn 
+            Header="Start Time" 
+                                CellTemplate="{StaticResource StartTime}"
+            />
+                            <GridViewColumn 
+            Header="End Time" 
+                                CellTemplate="{StaticResource EndTime}"
+            />
+                            <!--<GridViewColumn 
+            Header="Duration" 
+            DisplayMemberBinding="{Binding Path=Duration}" 
+            />-->
+                            <!--<GridViewColumn 
+            Header="Description" 
+            DisplayMemberBinding="{Binding Path=Description}" 
+            />-->
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </DockPanel>
+        </GroupBox>
+        <GroupBox Grid.Row="0" Grid.Column="2" Header="Recipes">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                </StackPanel>
+                <ListView
+                      x:Name="Recipelist"
+      AlternationCount="2" 
+      ItemContainerStyle="{StaticResource ListViewItemStyle}"
+      ItemsSource="{Binding Source={StaticResource subsCollectionViewSource}}"
+                      SelectedItem="{Binding Path=SelectedRecipe, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+      >
+
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn 
+            Header="Id" 
+            DisplayMemberBinding="{Binding Path=Id}" 
+            />
+                            <GridViewColumn
+            Header="Progress"
+                                CellTemplate="{StaticResource ProgressBar}"
+            />
+                            <GridViewColumn 
+            Header="Name" 
+            DisplayMemberBinding="{Binding Path=Name}" 
+            />
+                            <GridViewColumn 
+            Header="Start Time" 
+                                CellTemplate="{StaticResource StartTime}"
+            />
+                            <GridViewColumn 
+            Header="End Time" 
+                                CellTemplate="{StaticResource EndTime}"
+            />
+                        </GridView>
+                </ListView.View>
+            </ListView>
+            </DockPanel>
+        </GroupBox>
+        <GroupBox Grid.Row="2" Grid.Column="0" Header="Test Records">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="_View" Command="{Binding Path=ViewCommand}" Margin="0,5,5,0" Width="60"></Button>
+                </StackPanel>
+                <ListView
+                      x:Name="TestRecordList"
+      AlternationCount="2" 
+      ItemContainerStyle="{StaticResource ListViewItemStyle}"
+      ItemsSource="{Binding Path=TestRecords}"
+                      SelectedItem="{Binding Path=SelectedTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+      >
+
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn 
+            Header="Id" 
+            DisplayMemberBinding="{Binding Path=Id}" 
+            />
+                            <GridViewColumn Width="40"
+            Header=""
+                                CellTemplate="{StaticResource ProgressBar}"
+            />
+                            <GridViewColumn 
+            Header="Status" 
+            DisplayMemberBinding="{Binding Path=Status}" 
+            />
+                            <GridViewColumn 
+            Header="BatteryType" 
+            DisplayMemberBinding="{Binding Path=BatteryTypeStr}" 
+            />
+                            <GridViewColumn 
+            Header="Battery" 
+            DisplayMemberBinding="{Binding Path=BatteryStr}" 
+            />
+                            <GridViewColumn 
+            Header="Chamber" 
+            DisplayMemberBinding="{Binding Path=ChamberStr}" 
+            />
+                            <GridViewColumn 
+            Header="Tester" 
+            DisplayMemberBinding="{Binding Path=TesterStr}" 
+            />
+                            <GridViewColumn 
+            Header="Channel" 
+            DisplayMemberBinding="{Binding Path=ChannelStr}" 
+            />
+                            <GridViewColumn 
+            Header="Execute Time" 
+            DisplayMemberBinding="{Binding Path=StartTime}" 
+            />
+                            <GridViewColumn 
+            Header="Commit Time" 
+            DisplayMemberBinding="{Binding Path=EndTime}" 
+            />
+                            <GridViewColumn 
+            Header="Duration" 
+            DisplayMemberBinding="{Binding Path=Duration}" 
+            />
+                            <GridViewColumn 
+            Header="New Cycle" 
+            DisplayMemberBinding="{Binding Path=NewCycle}" 
+            />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </DockPanel>
+        </GroupBox>
+        <GroupBox Grid.Row="2" Grid.Column="2" Header="Products">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="_View" Command="{Binding Path=ViewCommand}" Margin="0,5,5,0" Width="60"></Button>
+                </StackPanel>
+                <ListView
+                      x:Name="ProductList"
+      AlternationCount="2" 
+      ItemContainerStyle="{StaticResource ListViewItemStyle}"
+      ItemsSource="{Binding Path=TestRecords}"
+                      SelectedItem="{Binding Path=SelectedTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+      >
+
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn 
+            Header="Id" 
+            DisplayMemberBinding="{Binding Path=Id}" 
+            />
+                            <GridViewColumn 
+            Header="RC Table" 
+            DisplayMemberBinding="{Binding Path=Status}" 
+            />
+                            <GridViewColumn 
+            Header="Status" 
+            DisplayMemberBinding="{Binding Path=Status}" 
+            />
+                            <GridViewColumn 
+            Header="Evaluation Result" 
+            DisplayMemberBinding="{Binding Path=Status}" 
+            />
+                            <GridViewColumn 
+            Header="Status" 
+            DisplayMemberBinding="{Binding Path=Status}" 
+            />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </DockPanel></GroupBox>
+    </Grid>
+</UserControl>
