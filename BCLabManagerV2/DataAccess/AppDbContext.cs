@@ -24,7 +24,8 @@ namespace BCLabManager.DataAccess
         public DbSet<ProgramClass> Programs { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite($"Data Source={GlobalSettings.DbPath}");
+            //optionsBuilder.UseSqlite($"Data Source={GlobalSettings.DbPath}");
+            optionsBuilder.UseNpgsql(@"host=localhost;database=bclabmanager;user id=postgres;password=123456;");
         }
     }
 }

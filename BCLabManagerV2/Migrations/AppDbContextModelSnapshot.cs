@@ -4,6 +4,7 @@ using BCLabManager.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BCLabManager.Migrations
 {
@@ -14,26 +15,37 @@ namespace BCLabManager.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
+                .HasAnnotation("ProductVersion", "3.1.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("BCLabManager.Model.AssetUsageRecordClass", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("AssetUseCount");
+                    b.Property<int>("AssetUseCount")
+                        .HasColumnType("integer");
 
-                    b.Property<int?>("BatteryClassId");
+                    b.Property<int?>("BatteryClassId")
+                        .HasColumnType("integer");
 
-                    b.Property<int?>("ChamberClassId");
+                    b.Property<int?>("ChamberClassId")
+                        .HasColumnType("integer");
 
-                    b.Property<int?>("ChannelClassId");
+                    b.Property<int?>("ChannelClassId")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("ProgramName");
+                    b.Property<string>("ProgramName")
+                        .HasColumnType("text");
 
-                    b.Property<string>("RecipeName");
+                    b.Property<string>("RecipeName")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("Timestamp");
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -49,15 +61,21 @@ namespace BCLabManager.Migrations
             modelBuilder.Entity("BCLabManager.Model.BatteryClass", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("AssetUseCount");
+                    b.Property<int>("AssetUseCount")
+                        .HasColumnType("integer");
 
-                    b.Property<int?>("BatteryTypeId");
+                    b.Property<int?>("BatteryTypeId")
+                        .HasColumnType("integer");
 
-                    b.Property<double>("CycleCount");
+                    b.Property<double>("CycleCount")
+                        .HasColumnType("double precision");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -69,23 +87,33 @@ namespace BCLabManager.Migrations
             modelBuilder.Entity("BCLabManager.Model.BatteryTypeClass", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("CutoffDischargeVoltage");
+                    b.Property<int>("CutoffDischargeVoltage")
+                        .HasColumnType("integer");
 
-                    b.Property<int>("LimitedChargeVoltage");
+                    b.Property<int>("LimitedChargeVoltage")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Manufactor");
+                    b.Property<string>("Manufactor")
+                        .HasColumnType("text");
 
-                    b.Property<string>("Material");
+                    b.Property<string>("Material")
+                        .HasColumnType("text");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
-                    b.Property<int>("NominalVoltage");
+                    b.Property<int>("NominalVoltage")
+                        .HasColumnType("integer");
 
-                    b.Property<int>("RatedCapacity");
+                    b.Property<int>("RatedCapacity")
+                        .HasColumnType("integer");
 
-                    b.Property<int>("TypicalCapacity");
+                    b.Property<int>("TypicalCapacity")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -95,17 +123,24 @@ namespace BCLabManager.Migrations
             modelBuilder.Entity("BCLabManager.Model.ChamberClass", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("AssetUseCount");
+                    b.Property<int>("AssetUseCount")
+                        .HasColumnType("integer");
 
-                    b.Property<double>("HighestTemperature");
+                    b.Property<double>("HighestTemperature")
+                        .HasColumnType("double precision");
 
-                    b.Property<double>("LowestTemperature");
+                    b.Property<double>("LowestTemperature")
+                        .HasColumnType("double precision");
 
-                    b.Property<string>("Manufactor");
+                    b.Property<string>("Manufactor")
+                        .HasColumnType("text");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -115,13 +150,18 @@ namespace BCLabManager.Migrations
             modelBuilder.Entity("BCLabManager.Model.ChannelClass", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("AssetUseCount");
+                    b.Property<int>("AssetUseCount")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
-                    b.Property<int?>("TesterId");
+                    b.Property<int?>("TesterId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -133,29 +173,42 @@ namespace BCLabManager.Migrations
             modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int?>("BatteryTypeId");
+                    b.Property<int?>("BatteryTypeId")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
 
-                    b.Property<TimeSpan>("ED");
+                    b.Property<TimeSpan>("ED")
+                        .HasColumnType("interval");
 
-                    b.Property<DateTime>("EET");
+                    b.Property<DateTime>("EET")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<DateTime>("EST");
+                    b.Property<DateTime>("EST")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<DateTime>("EndTime");
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
-                    b.Property<ulong>("Order");
+                    b.Property<decimal>("Order")
+                        .HasColumnType("numeric(20,0)");
 
-                    b.Property<DateTime>("RequestTime");
+                    b.Property<DateTime>("RequestTime")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("Requester");
+                    b.Property<string>("Requester")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("StartTime");
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -167,13 +220,18 @@ namespace BCLabManager.Migrations
             modelBuilder.Entity("BCLabManager.Model.RawDataClass", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("FileName");
+                    b.Property<string>("FileName")
+                        .HasColumnType("text");
 
-                    b.Property<string>("MD5");
+                    b.Property<string>("MD5")
+                        .HasColumnType("text");
 
-                    b.Property<int?>("TestRecordClassId");
+                    b.Property<int?>("TestRecordClassId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -185,23 +243,33 @@ namespace BCLabManager.Migrations
             modelBuilder.Entity("BCLabManager.Model.RecipeClass", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<TimeSpan>("ED");
+                    b.Property<TimeSpan>("ED")
+                        .HasColumnType("interval");
 
-                    b.Property<DateTime>("EET");
+                    b.Property<DateTime>("EET")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<DateTime>("EST");
+                    b.Property<DateTime>("EST")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<DateTime>("EndTime");
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<bool>("IsAbandoned");
+                    b.Property<bool>("IsAbandoned")
+                        .HasColumnType("boolean");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
-                    b.Property<int?>("ProgramClassId");
+                    b.Property<int?>("ProgramClassId")
+                        .HasColumnType("integer");
 
-                    b.Property<DateTime>("StartTime");
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -213,9 +281,12 @@ namespace BCLabManager.Migrations
             modelBuilder.Entity("BCLabManager.Model.RecipeTemplate", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -225,17 +296,24 @@ namespace BCLabManager.Migrations
             modelBuilder.Entity("BCLabManager.Model.StepClass", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<ushort>("LoopCount");
+                    b.Property<int>("LoopCount")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("LoopLabel");
+                    b.Property<string>("LoopLabel")
+                        .HasColumnType("text");
 
-                    b.Property<string>("LoopTarget");
+                    b.Property<string>("LoopTarget")
+                        .HasColumnType("text");
 
-                    b.Property<int?>("RecipeTemplateId");
+                    b.Property<int?>("RecipeTemplateId")
+                        .HasColumnType("integer");
 
-                    b.Property<int?>("StepTemplateId");
+                    b.Property<int?>("StepTemplateId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -249,25 +327,36 @@ namespace BCLabManager.Migrations
             modelBuilder.Entity("BCLabManager.Model.StepRuntimeClass", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<double>("DesignCapacityInmAH");
+                    b.Property<double>("DesignCapacityInmAH")
+                        .HasColumnType("double precision");
 
-                    b.Property<TimeSpan>("Duration");
+                    b.Property<TimeSpan>("Duration")
+                        .HasColumnType("interval");
 
-                    b.Property<TimeSpan>("ED");
+                    b.Property<TimeSpan>("ED")
+                        .HasColumnType("interval");
 
-                    b.Property<DateTime>("EET");
+                    b.Property<DateTime>("EET")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<DateTime>("EST");
+                    b.Property<DateTime>("EST")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<DateTime>("EndTime");
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<int?>("RecipeClassId");
+                    b.Property<int?>("RecipeClassId")
+                        .HasColumnType("integer");
 
-                    b.Property<DateTime>("StartTime");
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<int?>("StepTemplateId");
+                    b.Property<int?>("StepTemplateId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -281,21 +370,30 @@ namespace BCLabManager.Migrations
             modelBuilder.Entity("BCLabManager.Model.StepTemplate", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<double>("CurrentInput");
+                    b.Property<double>("CurrentInput")
+                        .HasColumnType("double precision");
 
-                    b.Property<int>("CurrentUnit");
+                    b.Property<int>("CurrentUnit")
+                        .HasColumnType("integer");
 
-                    b.Property<int>("CutOffConditionType");
+                    b.Property<int>("CutOffConditionType")
+                        .HasColumnType("integer");
 
-                    b.Property<double>("CutOffConditionValue");
+                    b.Property<double>("CutOffConditionValue")
+                        .HasColumnType("double precision");
 
-                    b.Property<double>("Offset");
+                    b.Property<double>("Offset")
+                        .HasColumnType("double precision");
 
-                    b.Property<double>("Slope");
+                    b.Property<double>("Slope")
+                        .HasColumnType("double precision");
 
-                    b.Property<double>("Temperature");
+                    b.Property<double>("Temperature")
+                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
@@ -305,41 +403,60 @@ namespace BCLabManager.Migrations
             modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int?>("AssignedBatteryId");
+                    b.Property<int?>("AssignedBatteryId")
+                        .HasColumnType("integer");
 
-                    b.Property<int?>("AssignedChamberId");
+                    b.Property<int?>("AssignedChamberId")
+                        .HasColumnType("integer");
 
-                    b.Property<int?>("AssignedChannelId");
+                    b.Property<int?>("AssignedChannelId")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("BatteryStr");
+                    b.Property<string>("BatteryStr")
+                        .HasColumnType("text");
 
-                    b.Property<string>("BatteryTypeStr");
+                    b.Property<string>("BatteryTypeStr")
+                        .HasColumnType("text");
 
-                    b.Property<string>("ChamberStr");
+                    b.Property<string>("ChamberStr")
+                        .HasColumnType("text");
 
-                    b.Property<string>("ChannelStr");
+                    b.Property<string>("ChannelStr")
+                        .HasColumnType("text");
 
-                    b.Property<string>("Comment");
+                    b.Property<string>("Comment")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("EndTime");
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<double>("NewCycle");
+                    b.Property<double>("NewCycle")
+                        .HasColumnType("double precision");
 
-                    b.Property<string>("ProgramStr");
+                    b.Property<string>("ProgramStr")
+                        .HasColumnType("text");
 
-                    b.Property<int?>("RecipeClassId");
+                    b.Property<int?>("RecipeClassId")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("RecipeStr");
+                    b.Property<string>("RecipeStr")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("StartTime");
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("Status");
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Steps");
+                    b.Property<string>("Steps")
+                        .HasColumnType("text");
 
-                    b.Property<string>("TesterStr");
+                    b.Property<string>("TesterStr")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -357,11 +474,15 @@ namespace BCLabManager.Migrations
             modelBuilder.Entity("BCLabManager.Model.TesterClass", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("Manufactor");
+                    b.Property<string>("Manufactor")
+                        .HasColumnType("text");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -370,15 +491,15 @@ namespace BCLabManager.Migrations
 
             modelBuilder.Entity("BCLabManager.Model.AssetUsageRecordClass", b =>
                 {
-                    b.HasOne("BCLabManager.Model.BatteryClass")
+                    b.HasOne("BCLabManager.Model.BatteryClass", null)
                         .WithMany("Records")
                         .HasForeignKey("BatteryClassId");
 
-                    b.HasOne("BCLabManager.Model.ChamberClass")
+                    b.HasOne("BCLabManager.Model.ChamberClass", null)
                         .WithMany("Records")
                         .HasForeignKey("ChamberClassId");
 
-                    b.HasOne("BCLabManager.Model.ChannelClass")
+                    b.HasOne("BCLabManager.Model.ChannelClass", null)
                         .WithMany("Records")
                         .HasForeignKey("ChannelClassId");
                 });
@@ -406,21 +527,21 @@ namespace BCLabManager.Migrations
 
             modelBuilder.Entity("BCLabManager.Model.RawDataClass", b =>
                 {
-                    b.HasOne("BCLabManager.Model.TestRecordClass")
+                    b.HasOne("BCLabManager.Model.TestRecordClass", null)
                         .WithMany("RawDataList")
                         .HasForeignKey("TestRecordClassId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.RecipeClass", b =>
                 {
-                    b.HasOne("BCLabManager.Model.ProgramClass")
+                    b.HasOne("BCLabManager.Model.ProgramClass", null)
                         .WithMany("Recipes")
                         .HasForeignKey("ProgramClassId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.StepClass", b =>
                 {
-                    b.HasOne("BCLabManager.Model.RecipeTemplate")
+                    b.HasOne("BCLabManager.Model.RecipeTemplate", null)
                         .WithMany("Steps")
                         .HasForeignKey("RecipeTemplateId");
 
@@ -431,7 +552,7 @@ namespace BCLabManager.Migrations
 
             modelBuilder.Entity("BCLabManager.Model.StepRuntimeClass", b =>
                 {
-                    b.HasOne("BCLabManager.Model.RecipeClass")
+                    b.HasOne("BCLabManager.Model.RecipeClass", null)
                         .WithMany("StepRuntimes")
                         .HasForeignKey("RecipeClassId");
 
@@ -454,7 +575,7 @@ namespace BCLabManager.Migrations
                         .WithMany()
                         .HasForeignKey("AssignedChannelId");
 
-                    b.HasOne("BCLabManager.Model.RecipeClass")
+                    b.HasOne("BCLabManager.Model.RecipeClass", null)
                         .WithMany("TestRecords")
                         .HasForeignKey("RecipeClassId");
                 });
