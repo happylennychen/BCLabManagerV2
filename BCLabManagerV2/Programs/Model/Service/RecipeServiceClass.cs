@@ -75,13 +75,13 @@ namespace BCLabManager.Model
             }
         }
 
-        internal void UpdateEstimatedTime(RecipeClass item, ref DateTime time, ref double c)
+        internal void UpdateEstimatedTime(RecipeClass item, StepRuntimeClass startPoint, ref DateTime time, ref double c, ref bool isActive)
         {
             if (item.StartTime == DateTime.MinValue)
             {
                 item.EST = time;
                 foreach (var sr in item.StepRuntimes)
-                    StepRuntimeService.UpdateEstimatedTime(sr, ref time, ref c);
+                    StepRuntimeService.UpdateEstimatedTime(sr, startPoint, ref time, ref c, ref isActive);
                 item.EET = time;
             }
             else
@@ -90,7 +90,7 @@ namespace BCLabManager.Model
                 if (item.EndTime == DateTime.MinValue)
                 {
                     foreach (var sr in item.StepRuntimes)
-                        StepRuntimeService.UpdateEstimatedTime(sr, ref time, ref c);
+                        StepRuntimeService.UpdateEstimatedTime(sr, startPoint, ref time, ref c, ref isActive);
                     item.EET = time;
                 }
                 else

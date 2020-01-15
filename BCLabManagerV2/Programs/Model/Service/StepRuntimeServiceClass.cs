@@ -81,6 +81,22 @@ namespace BCLabManager.Model
             return (Cend - CBegin) / Current;
         }
 
+        internal void UpdateEstimatedTime(StepRuntimeClass item, StepRuntimeClass startPoint, ref DateTime time, ref double c, ref bool isActive)
+        {
+            if (isActive)
+            {
+                UpdateEstimatedTime(item, ref time, ref c);
+            }
+            else
+            {
+                if (item == startPoint)
+                {
+                    isActive = true;
+                    UpdateEstimatedTime(item, ref time, ref c);
+                }
+            }
+        }
+
         internal void UpdateEstimatedTime(StepRuntimeClass item, ref DateTime time, ref double c)
         {
             if (item.StartTime == DateTime.MinValue)

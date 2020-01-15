@@ -87,26 +87,6 @@ namespace BCLabManager.Model
             //edittarget.AssetUseCount = item.AssetUseCount;
             //edittarget.Records = item.Records;
         }
-
-        public void UpdateEstimatedTimeChain(List<ProgramClass> activeList, DateTime startTime)
-        {
-            if (activeList.Count == 0)
-                return;
-            //activeList.OrderBy(o => o.Order);
-            var time = startTime;
-            double c = 0;
-            foreach (var item in Items)
-            {
-                UpdateEstimatedTime(item, ref time, ref c);
-                SuperUpdate(item);                               //???这里的Update并不能将item中所有的修改都commit到db，所以只好用下面的foreach来补救
-                foreach (var recipe in item.Recipes)
-                {
-                    RecipeService.SuperUpdate(recipe);
-                    foreach (var sr in recipe.StepRuntimes)
-                        RecipeService.StepRuntimeService.Update(sr);
-                }
-            }
-        }
         public void UpdateEstimatedTimeChain()
         {
             if (Items.Count == 0)
@@ -114,11 +94,10 @@ namespace BCLabManager.Model
             Order();
             DateTime startTime;
             StepRuntimeClass startPoint = FindStartPoint(out startTime);
-            List<ProgramClass> activeList = GetActivePrograms(startPoint);
-            UpdateEstimatedTimeChain(activeList, startTime);
+            UpdateEstimatedTimeChain(startPoint, startTime);
 
         }
-        //找到最后一个有实际时间的step runtime
+        //找到最后一个有实际时间的step runtime，如果都没有，那就返回第一个
         private StepRuntimeClass FindStartPoint(out DateTime startTime)
         {
             StepRuntimeClass startPoint = null;
@@ -147,68 +126,40 @@ namespace BCLabManager.Model
             return startPoint;
         }
 
-        private List<ProgramClass> GetActivePrograms(StepRuntimeClass startPoint)
-        {
-            List<ProgramClass> activePrograms = new List<ProgramClass>();
-            bool inActiveArea = false;
-
-            foreach (var item in Items) //遍历programs
-            {
-                if (inActiveArea)
-                {
-                    activePrograms.Add(item);
-                }
-                else
-                {
-                    List<RecipeClass> activeRecipes = new List<RecipeClass>();
-                    foreach (var rec in item.Recipes) //遍历recipes
-                    {
-                        if(inActiveArea)
-                        {
-                            activeRecipes.Add(rec);
-                        }
-                        else
-                        {
-                            List<StepRuntimeClass> activeSteps = new List<StepRuntimeClass>();
-                            foreach (var step in rec.StepRuntimes) //遍历steps
-                            {
-                                if (inActiveArea)
-                                {
-                                    activeSteps.Add(step);
-                                }
-                                else
-                                {
-                                    if (step == startPoint)
-                                    {
-                                        inActiveArea = true;
-                                        activeSteps.Add(step);
-                                    }
-                                }
-                            }
-                            if (activeSteps.Count != 0)
-                            {
-                                var activeRecipe = new RecipeClass();
-                                activeRecipe.StepRuntimes = new ObservableCollection<StepRuntimeClass>(activeSteps);
-                            }
-                        }
-                    }
-                }
-            }
-
-        }
-
         public void Order()
         {
             Items.OrderBy(o => o.Order);
         }
 
-        public void UpdateEstimatedTime(ProgramClass item, ref DateTime time, ref double c)
+
+        public void UpdateEstimatedTimeChain(StepRuntimeClass startPoint, DateTime startTime)
+        {
+            //var time = startTime;
+            var time = Items[0].RequestTime;
+            double c = 0;
+            bool isActive = false;
+            foreach (var item in Items)
+            {
+                UpdateEstimatedTime(item, startPoint, ref time, ref c, ref isActive);
+                if (isActive)
+                {
+                    SuperUpdate(item);                               //???这里的Update并不能将item中所有的修改都commit到db，所以只好用下面的foreach来补救
+                    foreach (var recipe in item.Recipes)
+                    {
+                        RecipeService.SuperUpdate(recipe);
+                        foreach (var sr in recipe.StepRuntimes)
+                            RecipeService.StepRuntimeService.Update(sr);
+                    }
+                }
+            }
+        }
+        public void UpdateEstimatedTime(ProgramClass item, StepRuntimeClass startPoint, ref DateTime time, ref double c, ref bool isActive)
         {
             if (item.StartTime == DateTime.MinValue)
             {
                 item.EST = time;
                 foreach (var recipe in item.Recipes)
-                    RecipeService.UpdateEstimatedTime(recipe, ref time, ref c);
+                    RecipeService.UpdateEstimatedTime(recipe, startPoint, ref time, ref c, ref isActive);
                 item.EET = time;
             }
             else
@@ -217,7 +168,7 @@ namespace BCLabManager.Model
                 if (item.EndTime == DateTime.MinValue)
                 {
                     foreach (var recipe in item.Recipes)
-                        RecipeService.UpdateEstimatedTime(recipe, ref time, ref c);
+                        RecipeService.UpdateEstimatedTime(recipe, startPoint, ref time, ref c, ref isActive);
                     item.EET = time;
                 }
                 else
