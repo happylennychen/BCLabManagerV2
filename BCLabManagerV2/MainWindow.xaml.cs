@@ -95,7 +95,7 @@ namespace BCLabManager
             Navigator.Initialize(this);
         }
 
-        void InitializeConfiguration()
+        void InitializeConfiguration()  //Only used by SQLite
         {
             if (!File.Exists(GlobalSettings.ConfigurationFilePath))
             {
