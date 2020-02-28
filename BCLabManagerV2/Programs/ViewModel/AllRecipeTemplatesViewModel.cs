@@ -208,30 +208,31 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            //RecipeTemplate model = new RecipeTemplate();      //实例化一个新的model
-            //RecipeTemplateEditViewModel viewmodel =
-            //    new RecipeTemplateEditViewModel(
-            //        model//,
-            //        //_chargeTemperatures,
-            //        //_chargeCurrents,
-            //        //_dischargeTemperatures,
-            //        //_dischargeCurrents
-            //        );      //实例化一个新的view model
-            ////viewmodel.Name = _selectedItem.Name;
+            RecipeTemplate model = new RecipeTemplate();      //实例化一个新的model
+            model.Name = _selectedItem._recipeTemplate.Name;
+            foreach(var step in _selectedItem._recipeTemplate.Steps)
+            {
+                var m = new StepClass(step.StepTemplate);
+                model.Steps.Add(m);
+            }
+            RecipeTemplateEditViewModel viewmodel =
+                new RecipeTemplateEditViewModel(
+                    model,
+                    _stepTemplateService.Items
+                    //_chargeCurrents,
+                    //_dischargeTemperatures,
+                    //_dischargeCurrents
+                    );      //实例化一个新的view model
             //viewmodel.Id = _selectedItem.Id;
-            ////viewmodel.ChargeTemperature = viewmodel.AllChargeTemperatures.SingleOrDefault(o => o.Id == _selectedItem.ChargeTemperature.Id);
-            ////viewmodel.ChargeCurrent = viewmodel.AllChargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.ChargeCurrent.Id);
-            ////viewmodel.DischargeTemperature = viewmodel.AllDischargeTemperatures.SingleOrDefault(o => o.Id == _selectedItem.DischargeTemperature.Id);
-            ////viewmodel.DischargeCurrent = viewmodel.AllDischargeCurrents.SingleOrDefault(o => o.Id == _selectedItem.DischargeCurrent.Id);
-            ////viewmodel.DisplayName = "Recipe-Save As";
-            //viewmodel.commandType = CommandType.SaveAs;
-            //var RecipeViewInstance = new RecipeTemplateView();      //实例化一个新的view
-            //RecipeViewInstance.DataContext = viewmodel;
-            //RecipeViewInstance.ShowDialog();
-            //if (viewmodel.IsOK == true)
-            //{
-            //    _recipeTemplateServcie.SuperAdd(model);
-            //}
+            //viewmodel.DisplayName = "Recipe-Save As";
+            viewmodel.commandType = CommandType.SaveAs;
+            var RecipeViewInstance = new RecipeTemplateView();      //实例化一个新的view
+            RecipeViewInstance.DataContext = viewmodel;
+            RecipeViewInstance.ShowDialog();
+            if (viewmodel.IsOK == true)
+            {
+                _recipeTemplateServcie.SuperAdd(model);
+            }
         }
         private bool CanSaveAs
         {

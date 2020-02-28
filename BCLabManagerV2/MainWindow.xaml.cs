@@ -74,9 +74,6 @@ namespace BCLabManager
             try
             {
                 InitializeComponent();
-                InitializeConfiguration();
-                InitializeDatabase();
-                //_domainData = new DomainDataClass();
                 LoadFromDB();
                 InitializeNavigator();
                 CreateViewModels();
