@@ -266,6 +266,7 @@
     </ApplicationDefinition>
     <Compile Include="Assets\Model\AssetUsageRecordClass.cs" />
     <Compile Include="Assets\Model\IAsset.cs" />
+    <Compile Include="Assets\Model\ITester.cs" />
     <Compile Include="Assets\Model\Service\ChamberServieClass.cs" />
     <Compile Include="Assets\Model\Service\TesterServieClass.cs" />
     <Compile Include="Assets\Model\Service\ChannelServieClass.cs" />

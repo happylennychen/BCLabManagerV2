@@ -58,5 +58,10 @@ namespace BCLabManager.Model
             edittarget.Manufactor = item.Manufactor;
             edittarget.Name = item.Name;
         }
+
+        internal DateTime[] GetTimeFromRawData(ITester tester, ObservableCollection<string> fileList)
+        {
+            return tester.GetTimeFromRawData(fileList);
+        }
     }
 }

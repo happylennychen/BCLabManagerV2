@@ -650,7 +650,8 @@ namespace BCLabManager.ViewModel
                 _batteryService.Commit(testRecord.Record.AssignedBattery, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name, evm.NewCycle);
                 _channelService.Commit(testRecord.Record.AssignedChannel, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
                 _chamberService.Commit(testRecord.Record.AssignedChamber, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
-                _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
+                DateTime[] time = _testerService.GetTimeFromRawData(testRecord.Record.AssignedChannel.Tester, evm.FileList);
+                _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), time[0], time[1], SelectedProgram.Name, SelectedRecipe.Name);
             }
         }
 

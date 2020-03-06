@@ -85,10 +85,11 @@ namespace BCLabManager.Model
             DatabaseUpdate(testRecord);
         }
 
-        internal void Commit(TestRecordClass testRecord, string comment, List<RawDataClass> rawDataList, DateTime completeTime, string programName, string recipeName)
+        internal void Commit(TestRecordClass testRecord, string comment, List<RawDataClass> rawDataList, DateTime startTime, DateTime completeTime, string programName, string recipeName)
         {
             testRecord.Comment = comment;
             testRecord.RawDataList = rawDataList;
+            testRecord.StartTime = startTime;
             testRecord.EndTime = completeTime;
             testRecord.AssignedBattery = null;
             testRecord.AssignedChamber = null;
