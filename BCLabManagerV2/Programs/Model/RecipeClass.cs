@@ -85,38 +85,39 @@ namespace BCLabManager.Model
         {
             int targetIndex;
             List<int> numbers = new List<int>();
-            Dictionary<int, int> LoopCounts = new Dictionary<int, int>();
+            Dictionary<int, int> LoopCounts = new Dictionary<int, int>();   //前面一个是带有LoopLabel的位置，第二个是这个位置当前执行的次数
 
-            for (int i = 0; i < steps.Count; i++)
+            for (int i = 0; i < steps.Count; i++)   //初始化LoopCounts，其中存储了循环次数，用于控制下面的for循环
             {
                 if (steps[i].LoopLabel != null)
                 {
                     LoopCounts.Add(i, 1);
                 }
             }
-            for (int i = 0; i < steps.Count; i = targetIndex)
+
+            for (int i = 0; i < steps.Count; i = targetIndex)   //numbers里面放着展开后的序号
             {
                 numbers.Add(i);
-                if (steps[i].LoopTarget != null)
+                if (steps[i].LoopTarget != null)//有target
                 {
-                    int ti = FindTargetIndex(steps, steps[i].LoopTarget);
+                    int ti = FindTargetIndex(steps, steps[i].LoopTarget);//target所在位置
                     if (ti == -1)
                     {
                         MessageBox.Show("Wrong loop settings!");
                         return;
                     }
-                    if (LoopCounts[ti] < steps[i].LoopCount)
+                    if (LoopCounts[ti] < steps[i].LoopCount)//循环次数没到
                     {
                         LoopCounts[ti]++;
-                        targetIndex = ti;
+                        targetIndex = ti;//跳转到target
                     }
-                    else
+                    else//循环次数已到
                     {
-                        LoopCounts[ti] = 1;
-                        targetIndex = i + 1;
+                        LoopCounts[ti] = 1;//循环次数重置，以便再次进入此循环
+                        targetIndex = i + 1;//不跳转
                     }
                 }
-                else
+                else//没有target就不用跳转，直接往后执行
                 {
                     targetIndex = i + 1;
                 }

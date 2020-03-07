@@ -74,6 +74,7 @@ namespace BCLabManager
             try
             {
                 InitializeComponent();
+                InitializeDatabase();
                 LoadFromDB();
                 InitializeNavigator();
                 CreateViewModels();
@@ -106,15 +107,10 @@ namespace BCLabManager
         }
         void InitializeDatabase()
         {
-            //if (!File.Exists(GlobalSettings.DbPath))
-            //{
-                using (var dbContext = new AppDbContext())
-                {
+            using (var dbContext = new AppDbContext())
+            {
                 dbContext.Database.Migrate();
-                //dbContext.Database.EnsureCreated();   //用了这个，Migrate就不好使了
-                }
-                DatabasePopulator.PopulateHistoricData();
-            //}
+            }
         }
 
         private void ConfigureDBPath()
