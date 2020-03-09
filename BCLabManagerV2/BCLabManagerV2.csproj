@@ -144,6 +144,10 @@
     <Reference Include="Microsoft.Extensions.Primitives, Version=3.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Primitives.3.1.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -309,6 +313,14 @@
     <Compile Include="Migrations\20200113020227_Init.designer.cs">
       <DependentUpon>20200113020227_Init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200307123149_CompareMark.cs" />
+    <Compile Include="Migrations\20200307123149_CompareMark.designer.cs">
+      <DependentUpon>20200307123149_CompareMark.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200309035718_RenameCRate.cs" />
+    <Compile Include="Migrations\20200309035718_RenameCRate.designer.cs">
+      <DependentUpon>20200309035718_RenameCRate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
       <DependentUpon>AllProductsView.xaml</DependentUpon>
@@ -345,6 +357,7 @@
       <DependentUpon>StepTemplateView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\DatabasePopulator.cs" />
+    <Compile Include="Services\ExcelHelper.cs" />
     <Compile Include="Services\GlobalSettings.cs" />
     <Compile Include="Assets\Model\BatteryClass.cs" />
     <Compile Include="Assets\Model\BatteryTypeClass.cs" />
@@ -450,6 +463,7 @@
     <Compile Include="Assets\View\TesterView.xaml.cs">
       <DependentUpon>TesterView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\ReportLoader.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

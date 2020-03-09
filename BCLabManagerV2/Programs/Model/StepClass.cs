@@ -9,6 +9,11 @@ using Prism.Mvvm;
 
 namespace BCLabManager.Model
 {
+    public enum CompareMarkEnum
+    {
+        LargerThan,
+        SmallThan
+    }
     public class StepClass : BindableBase
     {
         public int Id { get; set; }
@@ -31,6 +36,18 @@ namespace BCLabManager.Model
         {
             get { return _loopCount; }
             set { SetProperty(ref _loopCount, value); }
+        }
+        private CompareMarkEnum _compareMark;
+        public CompareMarkEnum CompareMark
+        {
+            get { return _compareMark; }
+            set { SetProperty(ref _compareMark, value); }
+        }
+        private double _capacity;
+        public double CRate
+        {
+            get { return _capacity; }
+            set { SetProperty(ref _capacity, value); }
         }
         public StepClass()
         {

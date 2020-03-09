@@ -28,6 +28,14 @@
         <DataTemplate x:Key="LoopCount">
             <TextBox Text="{Binding Path=LoopCount}"></TextBox>
         </DataTemplate>
+
+        <DataTemplate x:Key="CompareMark">
+            <ComboBox Text="{Binding Path=CompareMark}"></ComboBox>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Capacity">
+            <TextBox Text="{Binding Path=Capacity}"></TextBox>
+        </DataTemplate>
     </Window.Resources>
     <DockPanel>
         <GroupBox Header="Recipe Template" DockPanel.Dock="Top">
@@ -123,6 +131,12 @@
                             <GridViewColumn 
             Header="Loop Count" 
                                 CellTemplate="{StaticResource LoopCount}"
+            />
+                            <GridViewColumn 
+            Header="Compare Mark" CellTemplate="{StaticResource CompareMark}"
+            />
+                            <GridViewColumn 
+            Header="Capacity" CellTemplate="{StaticResource Capacity}"
             />
                         </GridView>
                     </ListView.View>

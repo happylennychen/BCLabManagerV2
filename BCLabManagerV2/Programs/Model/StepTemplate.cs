@@ -67,6 +67,33 @@ namespace BCLabManager.Model
         {
         }
 
+        public double GetCurrentInmA(double typicalCapacity)
+        {
+            if (CurrentUnit == CurrentUnitEnum.mA)
+                return CurrentInput;
+            else if (CurrentUnit == CurrentUnitEnum.C)
+                return CurrentInput * typicalCapacity;
+            return 0;
+        }
+        public double GetEndCapacity(double typicalCapacity, double CBegin)
+        {
+            TimeSpan duration;
+            double Cend=0;
+            if (CutOffConditionType == CutOffConditionTypeEnum.Time_s)
+            {
+                duration = TimeSpan.FromSeconds(CutOffConditionValue);
+                Cend = CBegin + GetCurrentInmA(typicalCapacity) * duration.TotalHours;
+            }
+            else
+            {
+                if (CutOffConditionType == CutOffConditionTypeEnum.CRate)
+                    Cend = CutOffConditionValue * typicalCapacity;
+                else if (CutOffConditionType == CutOffConditionTypeEnum.C_mAH)
+                    Cend = CutOffConditionValue;
+            }
+            return Cend;
+        }
+
         public override string ToString()
         {
             return $"{Temperature} deg, {CurrentInput} {CurrentUnit}, {CutOffConditionValue} {CutOffConditionType}";

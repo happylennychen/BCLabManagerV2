@@ -95,26 +95,42 @@ namespace BCLabManager.Model
                 }
             }
 
+            double capacity = 0;//默认初始电量为0
             for (int i = 0; i < steps.Count; i = targetIndex)   //numbers里面放着展开后的序号
             {
                 numbers.Add(i);
+                capacity = steps[i].StepTemplate.GetEndCapacity(batteryType.TypicalCapacity, capacity);
                 if (steps[i].LoopTarget != null)//有target
                 {
                     int ti = FindTargetIndex(steps, steps[i].LoopTarget);//target所在位置
-                    if (ti == -1)
+                    if (steps[i].LoopCount != 0)//count跳转
                     {
-                        MessageBox.Show("Wrong loop settings!");
-                        return;
+                        if (ti == -1)
+                        {
+                            MessageBox.Show("Wrong loop settings!");
+                            return;
+                        }
+                        if (LoopCounts[ti] < steps[i].LoopCount)//循环次数没到
+                        {
+                            LoopCounts[ti]++;
+                            targetIndex = ti;//跳转到target
+                        }
+                        else//循环次数已到
+                        {
+                            LoopCounts[ti] = 1;//循环次数重置，以便再次进入此循环
+                            targetIndex = i + 1;//不跳转
+                        }
                     }
-                    if (LoopCounts[ti] < steps[i].LoopCount)//循环次数没到
+                    else//电量跳转
                     {
-                        LoopCounts[ti]++;
-                        targetIndex = ti;//跳转到target
-                    }
-                    else//循环次数已到
-                    {
-                        LoopCounts[ti] = 1;//循环次数重置，以便再次进入此循环
-                        targetIndex = i + 1;//不跳转
+                        if (ShouldJummp(capacity, steps[i].CompareMark, steps[i].CRate * batteryType.TypicalCapacity))//满足跳转条件
+                        {
+                            targetIndex = ti;//跳转到target
+                        }
+                        else
+                        {
+                            targetIndex = i + 1;//不跳转
+                        }
                     }
                 }
                 else//没有target就不用跳转，直接往后执行
@@ -130,6 +146,21 @@ namespace BCLabManager.Model
                 sr.DesignCapacityInmAH = batteryType.TypicalCapacity;
                 this.StepRuntimes.Add(sr);
             }
+        }
+
+        private bool ShouldJummp(double capacity1, CompareMarkEnum compareMark, double capacity2)
+        {
+            if (compareMark == CompareMarkEnum.LargerThan)
+            {
+                if (capacity1 > capacity2)
+                    return true;
+            }
+            else if (compareMark == CompareMarkEnum.SmallThan)
+            {
+                if (capacity1 < capacity2)
+                    return true;
+            }
+            return false;
         }
 
         private int FindTargetIndex(List<StepClass> steps, string loopTarget)

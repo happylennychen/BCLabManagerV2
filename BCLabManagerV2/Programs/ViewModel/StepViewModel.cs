@@ -108,6 +108,38 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public CompareMarkEnum CompareMark
+        {
+            get
+            {
+                return _step.CompareMark;
+            }
+            set
+            {
+                if (value == _step.CompareMark)
+                    return;
+                _step.CompareMark = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        public double Capacity
+        {
+            get
+            {
+                return _step.CRate;
+            }
+            set
+            {
+                if (value == _step.CRate)
+                    return;
+                _step.CRate = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
 
         #endregion // Customer Properties
     }

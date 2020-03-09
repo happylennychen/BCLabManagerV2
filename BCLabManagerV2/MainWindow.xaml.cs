@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define Seed
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -74,7 +75,9 @@ namespace BCLabManager
             try
             {
                 InitializeComponent();
+#if Seed
                 InitializeDatabase();
+#endif
                 LoadFromDB();
                 InitializeNavigator();
                 CreateViewModels();
@@ -111,6 +114,7 @@ namespace BCLabManager
             {
                 dbContext.Database.Migrate();
             }
+            DatabasePopulator.PopulateHistoricData();
         }
 
         private void ConfigureDBPath()

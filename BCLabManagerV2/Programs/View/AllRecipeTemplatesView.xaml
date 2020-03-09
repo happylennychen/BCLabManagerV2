@@ -86,6 +86,12 @@
                             <GridViewColumn 
             Header="Loop Count" DisplayMemberBinding="{Binding Path=LoopCount}"
             />
+                            <GridViewColumn 
+            Header="Compare Mark" DisplayMemberBinding="{Binding Path=CompareMark}"
+            />
+                            <GridViewColumn 
+            Header="Capacity" DisplayMemberBinding="{Binding Path=Capacity}"
+            />
                         </GridView>
                     </ListView.View>
                 </ListView>
