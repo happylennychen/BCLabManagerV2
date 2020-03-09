@@ -1296,13 +1296,13 @@ namespace BCLabManager
 
         private static void PopulateStepTemplates18()
         {
-                int restTime1 = 2400;
-                double t = 0;
-                double c = -1995;
+            int restTime1 = 2400;
+            double t = 0;
+            double c = -1995;
 
-                CreateStepTemplate(t, 0, CurrentUnitEnum.mA, restTime1, CutOffConditionTypeEnum.Time_s);
+            CreateStepTemplate(t, 0, CurrentUnitEnum.mA, restTime1, CutOffConditionTypeEnum.Time_s);
 
-                CreateStepTemplate(t, c, CurrentUnitEnum.mA, 0.2, CutOffConditionTypeEnum.CRate);
+            CreateStepTemplate(t, c, CurrentUnitEnum.mA, 0.2, CutOffConditionTypeEnum.CRate);
         }
 
         private static void PopulateRecipeTemplates18()
@@ -1356,7 +1356,7 @@ namespace BCLabManager
                 RecipeTemplate recTemp;
                 RecipeClass rec;
 
-                for (int i = 0; i < number; i++,index++)
+                for (int i = 0; i < number; i++, index++)
                 {
                     recTemp = GetRecipeTemplateById(dbContext, index);
                     rec = new RecipeClass(recTemp, bType);
@@ -1495,6 +1495,260 @@ namespace BCLabManager
                 pro.BatteryType = bType;
                 pro.Requester = "Francis";
                 pro.RequestTime = DateTime.Parse("2019/04/01");
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+
+
+                for (int i = 0; i < number; i++, index++)
+                {
+                    recTemp = GetRecipeTemplateById(dbContext, index);
+                    rec = new RecipeClass(recTemp, bType);
+                    pro.Recipes.Add(rec);
+                }
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+            using (var dbContext = new AppDbContext())//8
+            {
+                int number = 3;
+                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+                var pro = new ProgramClass();
+                pro.Name = "Composite Test";
+                pro.BatteryType = bType;
+                pro.Requester = "Francis";
+                pro.RequestTime = DateTime.Parse("2019/04/01");
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+
+
+                for (int i = 0; i < number; i++, index++)
+                {
+                    recTemp = GetRecipeTemplateById(dbContext, index);
+                    rec = new RecipeClass(recTemp, bType);
+                    pro.Recipes.Add(rec);
+                }
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+            using (var dbContext = new AppDbContext())//9
+            {
+                int number = 1;
+                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+                var pro = new ProgramClass();
+                pro.Name = "Oppo BLP663 Dynamic Test-3";
+                pro.BatteryType = bType;
+                pro.Requester = "Francis";
+                pro.RequestTime = DateTime.Parse("2019/05/07");
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+
+
+                for (int i = 0; i < number; i++, index++)
+                {
+                    recTemp = GetRecipeTemplateById(dbContext, index);
+                    rec = new RecipeClass(recTemp, bType);
+                    pro.Recipes.Add(rec);
+                }
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+            using (var dbContext = new AppDbContext())//10
+            {
+                int number = 1;
+                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+                var pro = new ProgramClass();
+                pro.Name = "Oppo BLP663 Dynamic Test-4";
+                pro.BatteryType = bType;
+                pro.Requester = "Francis";
+                pro.RequestTime = DateTime.Parse("2019/05/24");
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+
+
+                for (int i = 0; i < number; i++, index++)
+                {
+                    recTemp = GetRecipeTemplateById(dbContext, index);
+                    rec = new RecipeClass(recTemp, bType);
+                    pro.Recipes.Add(rec);
+                }
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+            using (var dbContext = new AppDbContext())//11
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+                var pro = new ProgramClass();
+                pro.Name = "2000mA Test";
+                pro.BatteryType = bType;
+                pro.Requester = "Jon";
+                pro.RequestTime = DateTime.Parse("2019/07/09");
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+
+                recTemp = GetRecipeTemplateById(dbContext, 23);
+                rec = new RecipeClass(recTemp, bType);
+                pro.Recipes.Add(rec);
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+            using (var dbContext = new AppDbContext())//12
+            {
+                int number = 1;
+                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+                var pro = new ProgramClass();
+                pro.Name = "Aging Factor";
+                pro.BatteryType = bType;
+                pro.Requester = "Francis";
+                pro.RequestTime = DateTime.Parse("2019/10/31");
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+
+
+                for (int i = 0; i < number; i++, index++)
+                {
+                    recTemp = GetRecipeTemplateById(dbContext, index);
+                    rec = new RecipeClass(recTemp, bType);
+                    pro.Recipes.Add(rec);
+                }
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+            using (var dbContext = new AppDbContext())//13
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+                var pro = new ProgramClass();
+                pro.Name = "Aging Factor 2";
+                pro.BatteryType = bType;
+                pro.Requester = "Jon";
+                pro.RequestTime = DateTime.Parse("2019/11/11");
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+
+                recTemp = GetRecipeTemplateById(dbContext, 35);
+                rec = new RecipeClass(recTemp, bType);
+                pro.Recipes.Add(rec);
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+            using (var dbContext = new AppDbContext())//14
+            {
+                int number = 1;
+                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+                var pro = new ProgramClass();
+                pro.Name = "Aging Factor 3";
+                pro.BatteryType = bType;
+                pro.Requester = "Jon";
+                pro.RequestTime = DateTime.Parse("2019/11/13");
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+
+
+                for (int i = 0; i < number; i++, index++)
+                {
+                    recTemp = GetRecipeTemplateById(dbContext, index);
+                    rec = new RecipeClass(recTemp, bType);
+                    pro.Recipes.Add(rec);
+                }
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+            using (var dbContext = new AppDbContext())//15
+            {
+                int number = 1;
+                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+                var pro = new ProgramClass();
+                pro.Name = "Aging Factor 4";
+                pro.BatteryType = bType;
+                pro.Requester = "Francis";
+                pro.RequestTime = DateTime.Parse("2019/11/14");
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+
+
+                for (int i = 0; i < number; i++, index++)
+                {
+                    recTemp = GetRecipeTemplateById(dbContext, index);
+                    rec = new RecipeClass(recTemp, bType);
+                    pro.Recipes.Add(rec);
+                }
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+            using (var dbContext = new AppDbContext())//16
+            {
+                int number = 1;
+                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+                var pro = new ProgramClass();
+                pro.Name = "Aging Factor 5";
+                pro.BatteryType = bType;
+                pro.Requester = "Francis";
+                pro.RequestTime = DateTime.Parse("2019/11/15");
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+
+
+                for (int i = 0; i < number; i++, index++)
+                {
+                    recTemp = GetRecipeTemplateById(dbContext, index);
+                    rec = new RecipeClass(recTemp, bType);
+                    pro.Recipes.Add(rec);
+                }
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+            using (var dbContext = new AppDbContext())//17
+            {
+                int number = 2;
+                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+                var pro = new ProgramClass();
+                pro.Name = "Aging Factor 6";
+                pro.BatteryType = bType;
+                pro.Requester = "Jon";
+                pro.RequestTime = DateTime.Parse("2019/11/25");
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+
+
+                for (int i = 0; i < number; i++, index++)
+                {
+                    recTemp = GetRecipeTemplateById(dbContext, index);
+                    rec = new RecipeClass(recTemp, bType);
+                    pro.Recipes.Add(rec);
+                }
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+            using (var dbContext = new AppDbContext())//18
+            {
+                int number = 1;
+                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+                var pro = new ProgramClass();
+                pro.Name = "Aging Factor 7";
+                pro.BatteryType = bType;
+                pro.Requester = "Jon";
+                pro.RequestTime = DateTime.Parse("2019/11/27");
 
                 RecipeTemplate recTemp;
                 RecipeClass rec;
