@@ -338,6 +338,8 @@ namespace BCLabManager
                                                                                         o.CutOffConditionValue == 600 &&
                                                                                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                         newStep.LoopTarget = "a";
+                        newStep.CompareMark = CompareMarkEnum.LargerThan;
+                        newStep.CRate = 0;
                         obj.Steps.Add(newStep);
 
                         dbContext.RecipeTemplates.Add(obj);
@@ -536,6 +538,8 @@ namespace BCLabManager
                                                                                         o.CutOffConditionValue == 600 &&
                                                                                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                         newStep.LoopTarget = "a";
+                        newStep.CompareMark = CompareMarkEnum.LargerThan;
+                        newStep.CRate = 0;
                         obj.Steps.Add(newStep);
 
                         dbContext.RecipeTemplates.Add(obj);
@@ -776,6 +780,8 @@ namespace BCLabManager
                                                                                         o.CutOffConditionValue == 600 &&
                                                                                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                         newStep.LoopTarget = "a";
+                        newStep.CompareMark = CompareMarkEnum.LargerThan;
+                        newStep.CRate = 0;
                         obj.Steps.Add(newStep);
 
                         newStep = new StepClass();

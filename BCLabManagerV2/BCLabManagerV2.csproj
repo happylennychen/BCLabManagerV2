@@ -321,6 +321,10 @@
     <Compile Include="Migrations\20200309035718_RenameCRate.designer.cs">
       <DependentUpon>20200309035718_RenameCRate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200309094423_CompareMarkNA.cs" />
+    <Compile Include="Migrations\20200309094423_CompareMarkNA.designer.cs">
+      <DependentUpon>20200309094423_CompareMarkNA.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
       <DependentUpon>AllProductsView.xaml</DependentUpon>
