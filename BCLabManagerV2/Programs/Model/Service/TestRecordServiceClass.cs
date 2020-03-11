@@ -100,11 +100,15 @@ namespace BCLabManager.Model
             SuperUpdate(testRecord);
         }
 
-        internal void Invalidate(TestRecordClass testRecord, string comment)
+        internal TestRecordClass Invalidate(TestRecordClass testRecord, string comment)
         {
             testRecord.Comment += "\r\n" + comment;
             testRecord.Status = TestStatus.Invalid;
             DatabaseUpdate(testRecord);
+            
+            var newTestRecord = new TestRecordClass();
+            SuperAdd(newTestRecord);
+            return newTestRecord;
         }
 
         internal void Abandon(TestRecordClass testRecord)

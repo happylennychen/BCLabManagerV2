@@ -131,7 +131,7 @@ namespace BCLabManager.ViewModel
                 ObservableCollection<BatteryClass> all = _batteries;
                 List<BatteryClass> allstring = (
                     from i in all
-                    where (i.BatteryType.Id == BatteryType.Id) && i.AssetUseCount == 0
+                    where (i.BatteryType.Id == BatteryType.Id) && i.AssetUseCount <= 0
                     select i).ToList();
 
                 AllBatteries = new ObservableCollection<BatteryClass>(allstring);

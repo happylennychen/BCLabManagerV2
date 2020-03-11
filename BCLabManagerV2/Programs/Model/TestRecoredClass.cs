@@ -111,7 +111,7 @@ namespace BCLabManager.Model
         public String Comment { get; set; }
         public List<RawDataClass> RawDataList { get; set; }
         //public Double NewCycle { get; set; }
-        private double _newCycle;
+        private double _newCycle = 1;
         public double NewCycle
         {
             get { return _newCycle; }
