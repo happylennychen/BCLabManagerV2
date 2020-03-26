@@ -30,7 +30,10 @@
         </DataTemplate>
 
         <DataTemplate x:Key="CompareMark">
-            <ComboBox Text="{Binding Path=CompareMark}"></ComboBox>
+            <!--<ComboBox Text="{Binding Path=CompareMark}"></ComboBox>-->
+            <ComboBox 
+            ItemsSource="{Binding Path=CompareMarkOptions, Mode=OneWay}"
+      SelectedItem="{Binding Path=CompareMark, ValidatesOnDataErrors=True}"></ComboBox>
         </DataTemplate>
 
         <DataTemplate x:Key="Capacity">

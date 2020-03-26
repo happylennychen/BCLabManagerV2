@@ -1,4 +1,4 @@
-﻿#define Seed
+﻿//#define Seed
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,15 +74,18 @@ namespace BCLabManager
         {
             try
             {
-                InitializeComponent();
 #if Seed
                 InitializeDatabase();
-#endif
+                MessageBox.Show("DB Data Seeding Completed!");
+                App.Current.Shutdown();
+#else
+                InitializeComponent();
                 LoadFromDB();
                 InitializeNavigator();
                 CreateViewModels();
                 BindingVMandView();
                 ProgramService.UpdateEstimatedTimeChain();
+#endif
             }
             catch (Exception e)
             {
@@ -114,6 +117,7 @@ namespace BCLabManager
             {
                 dbContext.Database.Migrate();
             }
+            MessageBox.Show("DB Data Migration Completed!");
             DatabasePopulator.PopulateHistoricData();
         }
 

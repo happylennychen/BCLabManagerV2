@@ -124,6 +124,19 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public List<CompareMarkEnum> CompareMarkOptions
+        {
+            get
+            {
+                List<CompareMarkEnum> all = new List<CompareMarkEnum>();
+                all.Add(CompareMarkEnum.NA);
+                all.Add(CompareMarkEnum.SmallThan);
+                all.Add(CompareMarkEnum.LargerThan);
+
+                return all;
+            }
+        }
+
         public double Capacity
         {
             get

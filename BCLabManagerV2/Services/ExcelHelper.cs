@@ -1,4 +1,5 @@
 ﻿using Microsoft.Office.Interop.Excel;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,17 @@ namespace BCLabManager.Services
 {
     public static class ExcelHelper
     {
-        private static string ExcelFilePath = @"Q:\807\Software\WH BC Lab\Report\BC Lab Report V4 20200226.xlsm";
+        //private static string ExcelFilePath = @"Q:\807\Software\WH BC Lab\Report\BC Lab Report V4 20200226.xlsm";
+        private static string ExcelFilePath = @"C:\BC Lab Report V4 20200226.xlsm";
         private static Workbook ExcelWKB = null;
         public static void Init()
         {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Title = "Select Excel File as the data source";
+            if (dlg.ShowDialog() == true)
+            {
+                ExcelFilePath = dlg.FileName;
+            }
             var excelApp = new Application();
             //_Worksheet excelSHEET = null;
             try

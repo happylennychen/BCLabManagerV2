@@ -14,7 +14,7 @@ namespace BCLabManager
 
         public static void PopulateHistoricData()
         {
-            ReportLoader.Init();
+            //ReportLoader.Init();
             PopulateAssets();
             PopulateProgram1(); //Tested
             PopulateProgram2(); //Tested
@@ -49,65 +49,140 @@ namespace BCLabManager
 
         private static void PopulateBatteryTypes()
         {
-            int bt_num = ReportLoader.GetBatteryTypeNumber();
-            for (int i = 0; i < bt_num; i++)
+            //int bt_num = ReportLoader.GetBatteryTypeNumber();
+            //for (int i = 0; i < bt_num; i++)
+            //{
+            //    using (var uow = new UnitOfWork(new AppDbContext()))
+            //    {
+            //        BatteryTypeClass bt = ReportLoader.LoadBatteryTypeByIndex(i);
+            //        if (bt != null)
+            //        {
+            //            uow.BatteryTypes.Insert(bt);
+            //            uow.Commit();
+            //        }
+            //    }
+            //}
+            BatteryTypeClass bt = new BatteryTypeClass();
+            bt.Name = "BLP663";
+            bt.Manufactor = "Oppo";
+            bt.Material = "Li-ion Plymer Battery";
+            bt.LimitedChargeVoltage = 4400;
+            bt.RatedCapacity = 3365;
+            bt.NominalVoltage = 3850;
+            bt.TypicalCapacity = 3450;
+            bt.CutoffDischargeVoltage = 3200;
+            PopulateOneBatteryType(bt);
+
+            bt = new BatteryTypeClass();
+            bt.Name = "32700-6000mAh";
+            bt.Manufactor = "FbTech";
+            bt.Material = "lithium-ion";
+            bt.LimitedChargeVoltage = 3650;
+            bt.RatedCapacity = 6000;
+            bt.NominalVoltage = 3200;
+            bt.TypicalCapacity = 6000;
+            bt.CutoffDischargeVoltage = 2000;
+            PopulateOneBatteryType(bt);
+
+            bt = new BatteryTypeClass();
+            bt.Name = "INR18650-25R";
+            bt.Manufactor = "SamSung SDI Co., Ltd";
+            bt.Material = "lithium-ion";
+            bt.LimitedChargeVoltage = 4200;
+            bt.RatedCapacity = 2500;
+            bt.NominalVoltage = 3600;
+            bt.TypicalCapacity = 2450;
+            bt.CutoffDischargeVoltage = 2500;
+            PopulateOneBatteryType(bt);
+        }
+
+        private static void PopulateOneBatteryType(BatteryTypeClass bt)
+        {
+            using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                using (var uow = new UnitOfWork(new AppDbContext()))
+                if (bt != null)
                 {
-                    BatteryTypeClass bt = ReportLoader.LoadBatteryTypeByIndex(i);
-                    if (bt != null)
-                    {
-                        uow.BatteryTypes.Insert(bt);
-                        uow.Commit();
-                    }
+                    uow.BatteryTypes.Insert(bt);
+                    uow.Commit();
                 }
             }
         }
 
         private static void PopulateBatteries()
         {
-            int bt_num = ReportLoader.GetBatteryNumber();
-            for (int i = 0; i < bt_num; i++)
+            //int bt_num = ReportLoader.GetBatteryNumber();
+            //for (int i = 0; i < bt_num; i++)
+            //{
+            //    using (var uow = new UnitOfWork(new AppDbContext()))
+            //    {
+            //        int btId = 0;
+            //        BatteryClass bat = ReportLoader.LoadBatteryByIndex(i, ref btId);
+            //        if (bat != null)
+            //        {
+            //            bat.BatteryType = uow.BatteryTypes.SingleOrDefault(o => o.Id == btId);
+            //            uow.Batteries.Insert(bat);
+            //            uow.Commit();
+            //        }
+            //    }
+            //}
+            BatteryClass b;
+            for (int i = 1; i < 5; i++)
             {
-                using (var uow = new UnitOfWork(new AppDbContext()))
+                b = new BatteryClass();
+                b.Name = "BLP663-" + i.ToString();
+                PopulateOneBattery(b, 1);
+            }
+            for (int i = 1; i < 9; i++)
+            {
+                b = new BatteryClass();
+                b.Name = "32700-6000-" + i.ToString();
+                PopulateOneBattery(b, 2);
+            }
+            for (int i = 1; i < 11; i++)
+            {
+                b = new BatteryClass();
+                b.Name = "INR18650-25R-" + i.ToString();
+                PopulateOneBattery(b, 3);
+            }
+        }
+
+        private static void PopulateOneBattery(BatteryClass b, int btId)
+        {
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                if (b != null)
                 {
-                    int btId = 0;
-                    BatteryClass bat = ReportLoader.LoadBatteryByIndex(i, ref btId);
-                    if (bat != null)
-                    {
-                        bat.BatteryType = uow.BatteryTypes.SingleOrDefault(o => o.Id == btId);
-                        uow.Batteries.Insert(bat);
-                        uow.Commit();
-                    }
+                    b.BatteryType = uow.BatteryTypes.SingleOrDefault(o => o.Id == btId);
+                    uow.Batteries.Insert(b);
+                    uow.Commit();
                 }
             }
         }
 
         private static void PopulateTesters()
         {
-            int tester_num = ReportLoader.GetTesterNumber();
-            for (int i = 0; i < tester_num; i++)
+            using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                using (var uow = new UnitOfWork(new AppDbContext()))
+                TesterClass tst = new TesterClass();
+                tst.Name = "17200";
+                tst.Manufactor = "Chroma";
+                if (tst != null)
                 {
-                    TesterClass tst = ReportLoader.LoadTesterByIndex(i);
-                    if (tst != null)
-                    {
-                        uow.Testers.Insert(tst);
-                        uow.Commit();
-                    }
+                    uow.Testers.Insert(tst);
+                    uow.Commit();
                 }
             }
         }
 
         private static void PopulateChannels()
         {
-            int ch_num = ReportLoader.GetChannelNumber();
+            int ch_num = 4;
             for (int i = 0; i < ch_num; i++)
             {
                 using (var uow = new UnitOfWork(new AppDbContext()))
                 {
-                    ChannelClass ch = ReportLoader.CreateChanel(i + 1);
+                    ChannelClass ch = new ChannelClass();
+                    ch.Name = "Channel " + (i + 1).ToString();
                     if (ch != null)
                     {
                         ch.Tester = uow.Testers.SingleOrDefault(o => o.Id == 1);
@@ -120,17 +195,17 @@ namespace BCLabManager
 
         private static void PopulateChambers()
         {
-            int chamber_num = ReportLoader.GetChamberNumber();
-            for (int i = 0; i < chamber_num; i++)
+            using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                using (var uow = new UnitOfWork(new AppDbContext()))
+                ChamberClass cmb = new ChamberClass();
+                cmb.Manufactor = "HongZhan";
+                cmb.Name = "PUL-80";
+                cmb.LowestTemperature = -40;
+                cmb.HighestTemperature = 150;
+                if (cmb != null)
                 {
-                    ChamberClass cmb = ReportLoader.LoadChamberByIndex(i);
-                    if (cmb != null)
-                    {
-                        uow.Chambers.Insert(cmb);
-                        uow.Commit();
-                    }
+                    uow.Chambers.Insert(cmb);
+                    uow.Commit();
                 }
             }
         }
