@@ -325,6 +325,10 @@
     <Compile Include="Migrations\20200309094423_CompareMarkNA.designer.cs">
       <DependentUpon>20200309094423_CompareMarkNA.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200326090404_AddOrder.cs" />
+    <Compile Include="Migrations\20200326090404_AddOrder.designer.cs">
+      <DependentUpon>20200326090404_AddOrder.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
       <DependentUpon>AllProductsView.xaml</DependentUpon>

@@ -210,6 +210,12 @@ namespace BCLabManager.ViewModel
         /// </summary>
         public void OK()
         {
+            int i = 0;
+            foreach (var step in _RecipeTemplate.Steps) //创建时设定Order
+            {
+                step.Order = i;
+                i++;
+            }
             IsOK = true;
         }
 

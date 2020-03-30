@@ -138,10 +138,12 @@ namespace BCLabManager.Model
                     targetIndex = i + 1;
                 }
             }
-
+            int order = 0;
             foreach (var index in numbers)
             {
                 StepRuntimeClass sr = new StepRuntimeClass();
+                sr.Order = order;
+                order++;
                 sr.StepTemplate = steps[index].StepTemplate;
                 sr.DesignCapacityInmAH = batteryType.TypicalCapacity;
                 this.StepRuntimes.Add(sr);

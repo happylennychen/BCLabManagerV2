@@ -181,12 +181,12 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ObservableCollection<StepRuntimeViewModel> StepRuntimes
+        public List<StepRuntimeViewModel> StepRuntimes
         {
             get
             {
                 if (_selectedRecipe != null)
-                    return _selectedRecipe.StepRuntimes;
+                    return _selectedRecipe.StepRuntimes.OrderBy(o=>o.StepRuntime.Order).ToList();
                 else
                     return null;
             }

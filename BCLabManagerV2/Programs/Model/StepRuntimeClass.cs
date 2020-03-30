@@ -55,6 +55,7 @@ namespace BCLabManager.Model
             get { return _ed; }
             set { SetProperty(ref _ed, value); }
         }
+        public int Order { get; set; }
         public StepRuntimeClass()
         {
         }

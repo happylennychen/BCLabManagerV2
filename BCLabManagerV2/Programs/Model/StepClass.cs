@@ -50,6 +50,7 @@ namespace BCLabManager.Model
             get { return _capacity; }
             set { SetProperty(ref _capacity, value); }
         }
+        public int Order { get; set; }
         public StepClass()
         {
         }
