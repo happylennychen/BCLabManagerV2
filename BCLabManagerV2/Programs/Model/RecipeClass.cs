@@ -54,10 +54,23 @@ namespace BCLabManager.Model
             get { return _ed; }
             set { SetProperty(ref _ed, value); }
         }
+        private double _current;
+        public double Current
+        {
+            get { return _current; }
+            set { SetProperty(ref _current, value); }
+        }
+        private double _temperature;
+        public double Temperature
+        {
+            get { return _temperature; }
+            set { SetProperty(ref _temperature, value); }
+        }
         //正常来说一个Recipe应该只包含一个TestRecord。但是考虑到有时候测试会无效，所以这里需要用一个List来处理。
         public ObservableCollection<TestRecordClass> TestRecords { get; set; } = new ObservableCollection<TestRecordClass>();
 
         public ObservableCollection<StepRuntimeClass> StepRuntimes { get; set; } = new ObservableCollection<StepRuntimeClass>();
+        public ObservableCollection<EvResultClass> EvResults { get; set; } = new ObservableCollection<EvResultClass>();
         public RecipeClass()
         {
         }

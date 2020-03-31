@@ -13,11 +13,11 @@ namespace BCLabManager.Model
         //public string FileName { get; set; }
         ////public byte[] BinaryData { get; set; }
         //public string MD5 { get; set; }
-        private string _fileName;
-        public string FileName
+        private string _filePath;
+        public string FilePath
         {
-            get { return _fileName; }
-            set { SetProperty(ref _fileName, value); }
+            get { return _filePath; }
+            set { SetProperty(ref _filePath, value); }
         }
         private string _md5;
         public string MD5

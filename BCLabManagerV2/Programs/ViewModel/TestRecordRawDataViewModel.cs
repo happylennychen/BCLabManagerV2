@@ -41,7 +41,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                return _record.RawDataList.Select(o=>o.FileName).ToList();
+                return _record.RawDataList.Select(o=>o.FilePath).ToList();
             }
         }
 

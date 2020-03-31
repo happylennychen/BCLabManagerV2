@@ -24,17 +24,17 @@ namespace BCLabManager.Model
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
-        private ulong _order;
-        public ulong Order
-        {
-            get { return _order; }
-            set { SetProperty(ref _order, value); }
-        }
         private BatteryTypeClass _batteryType;
         public BatteryTypeClass BatteryType
         {
             get { return _batteryType; }
             set { SetProperty(ref _batteryType, value); }
+        }
+        private ulong _order;
+        public ulong Order
+        {
+            get { return _order; }
+            set { SetProperty(ref _order, value); }
         }
         private string _requester;
         public string Requester
@@ -83,6 +83,24 @@ namespace BCLabManager.Model
         {
             get { return _description; }
             set { SetProperty(ref _description, value); }
+        }
+        private bool _isValid;
+        public bool IsValid
+        {
+            get { return _isValid; }
+            set { SetProperty(ref _isValid, value); }
+        }
+        private string _tableFilePath;
+        public string TableFilePath
+        {
+            get { return _tableFilePath; }
+            set { SetProperty(ref _tableFilePath, value); }
+        }
+        private string _type;
+        public string Type
+        {
+            get { return _type; }
+            set { SetProperty(ref _type, value); }
         }
         public ObservableCollection<RecipeClass> Recipes { get; set; } = new ObservableCollection<RecipeClass>();
 

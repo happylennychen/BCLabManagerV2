@@ -669,7 +669,7 @@ namespace BCLabManager.ViewModel
             {
                 var rd = new RawDataClass();
                 //rd.FileName = Path.GetFileName(filepath);
-                rd.FileName = filepath;
+                rd.FilePath = filepath;
                 //rd.BinaryData = File.ReadAllBytes(filepath);
                 output.Add(rd);
             }

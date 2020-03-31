@@ -117,6 +117,42 @@ namespace BCLabManager.Model
             get { return _newCycle; }
             set { SetProperty(ref _newCycle, value); }
         }
+        private double _measurementGain  ;
+        public double MeasurementGain
+        {
+            get { return _measurementGain; }
+            set { SetProperty(ref _measurementGain, value); }
+        }
+        private double _measurementOffset;
+        public double MeasurementOffset
+        {
+            get { return _measurementOffset; }
+            set { SetProperty(ref _measurementOffset, value); }
+        }
+        private double _traceResistance;
+        public double TraceResistance
+        {
+            get { return _traceResistance; }
+            set { SetProperty(ref _traceResistance, value); }
+        }
+        private double _capacityDifference;
+        public double CapacityDifference
+        {
+            get { return _capacityDifference; }
+            set { SetProperty(ref _capacityDifference, value); }
+        }
+        private string _testFilePath;
+        public string TestFilePath
+        {
+            get { return _testFilePath; }
+            set { SetProperty(ref _testFilePath, value); }
+        }
+        private string _operator;
+        public string Operator
+        {
+            get { return _operator; }
+            set { SetProperty(ref _operator, value); }
+        }
 
         #region Store the assets in use
         public BatteryClass AssignedBattery { get; set; }

@@ -22,11 +22,15 @@ namespace BCLabManager.DataAccess
         public DbSet<RecipeTemplate> RecipeTemplates { get; set; }
         public DbSet<RecipeClass> Recipes { get; set; }
         public DbSet<ProgramClass> Programs { get; set; }
+        public DbSet<ProjectClass> Projects { get; set; }
+        //public DbSet<EvResultClass> EvResults { get; set; }
+        //public DbSet<EvSettingClass> EvSettings { get; set; }
+        //public DbSet<ProjectProductClass> ProjectProducts { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseSqlite($"Data Source={GlobalSettings.DbPath}");
-            optionsBuilder.UseNpgsql(@"host=localhost;database=bclabmanager;user id=postgres;password=123456;");
-            //optionsBuilder.UseNpgsql(@"host=localhost;database=demo;user id=postgres;password=123456;");
+            //optionsBuilder.UseNpgsql(@"host=localhost;database=bclabmanager;user id=postgres;password=123456;");
+            optionsBuilder.UseNpgsql(@"host=localhost;database=demo;user id=postgres;password=123456;");
         }
     }
 }

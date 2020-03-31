@@ -38,12 +38,43 @@ namespace BCLabManager.Model
         //public String Manufactor { get { return _manufactor; } set { _manufactor = value;RaisePropertyChanged(); } }
         //public String Name { get; set; }
         //public String Material { get; set; }
-        public Int32 LimitedChargeVoltage { get; set; }
-        public Int32 RatedCapacity { get; set; }
-        public Int32 NominalVoltage { get; set; }
+        private Int32 _limitedChargeVoltage;
+        public Int32 LimitedChargeVoltage
+        {
+            get { return _limitedChargeVoltage; }
+            set { SetProperty(ref _limitedChargeVoltage, value); }
+        }
+        private Int32 _ratedCapacity;
+        public Int32 RatedCapacity
+        {
+            get { return _ratedCapacity; }
+            set { SetProperty(ref _ratedCapacity, value); }
+        }
+        private Int32 _nominalVoltage;
+        public Int32 NominalVoltage
+        {
+            get { return _nominalVoltage; }
+            set { SetProperty(ref _nominalVoltage, value); }
+        }
         //public Int32 TypicalCapacity { get; set; }
-        public Int32 CutoffDischargeVoltage { get; set; }
-
+        private Int32 _cutoffDischargeVoltage;
+        public Int32 CutoffDischargeVoltage
+        {
+            get { return _cutoffDischargeVoltage; }
+            set { SetProperty(ref _cutoffDischargeVoltage, value); }
+        }
+        private Int32 _fullyChargedEndCurrent;
+        public Int32 FullyChargedEndCurrent
+        {
+            get { return _fullyChargedEndCurrent; }
+            set { SetProperty(ref _fullyChargedEndCurrent, value); }
+        }
+        private Int32 _fullyChargedEndingTimeout;
+        public Int32 FullyChargedEndingTimeout
+        {
+            get { return _fullyChargedEndingTimeout; }
+            set { SetProperty(ref _fullyChargedEndingTimeout, value); }
+        }
         public BatteryTypeClass()
         { }
 

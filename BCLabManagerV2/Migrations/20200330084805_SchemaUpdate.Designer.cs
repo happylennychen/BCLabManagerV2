@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200113020227_Init")]
-    partial class Init
+    [Migration("20200330084805_SchemaUpdate")]
+    partial class SchemaUpdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -96,6 +96,12 @@ namespace BCLabManager.Migrations
                     b.Property<int>("CutoffDischargeVoltage")
                         .HasColumnType("integer");
 
+                    b.Property<int>("FullyChargedEndCurrent")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("FullyChargedEndingTimeout")
+                        .HasColumnType("integer");
+
                     b.Property<int>("LimitedChargeVoltage")
                         .HasColumnType("integer");
 
@@ -172,6 +178,55 @@ namespace BCLabManager.Migrations
                     b.ToTable("Channels");
                 });
 
+            modelBuilder.Entity("BCLabManager.Model.EvResultClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("RecipeClassId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeClassId");
+
+                    b.ToTable("EvResultClass");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.EvSettingClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("DischargeEndVoltage")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("FullyChargedEndCurrent")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("FullyChargedEndingTimeout")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ProjectClassId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TypicalCapacity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectClassId");
+
+                    b.ToTable("EvSettingClass");
+                });
+
             modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
                 {
                     b.Property<int>("Id")
@@ -197,11 +252,17 @@ namespace BCLabManager.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<bool>("IsValid")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.Property<decimal>("Order")
                         .HasColumnType("numeric(20,0)");
+
+                    b.Property<int?>("ProjectClassId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("RequestTime")
                         .HasColumnType("timestamp without time zone");
@@ -212,11 +273,77 @@ namespace BCLabManager.Migrations
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<string>("TableFilePath")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BatteryTypeId");
 
+                    b.HasIndex("ProjectClassId");
+
                     b.ToTable("Programs");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.ProjectClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int?>("BatteryTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Customer")
+                        .HasColumnType("text");
+
+                    b.Property<int>("CutoffDischargeVoltage")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<int>("LimitedChargeVoltage")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RatedCapacity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("VoltagePoints")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BatteryTypeId");
+
+                    b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.ProjectProductClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ProjectClassId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectClassId");
+
+                    b.ToTable("ProjectProductClass");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.RawDataClass", b =>
@@ -226,7 +353,7 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("FileName")
+                    b.Property<string>("FilePath")
                         .HasColumnType("text");
 
                     b.Property<string>("MD5")
@@ -248,6 +375,9 @@ namespace BCLabManager.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<double>("Current")
+                        .HasColumnType("double precision");
 
                     b.Property<TimeSpan>("ED")
                         .HasColumnType("interval");
@@ -272,6 +402,9 @@ namespace BCLabManager.Migrations
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<double>("Temperature")
+                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
@@ -302,6 +435,12 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<double>("CRate")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("CompareMark")
+                        .HasColumnType("integer");
+
                     b.Property<int>("LoopCount")
                         .HasColumnType("integer");
 
@@ -310,6 +449,9 @@ namespace BCLabManager.Migrations
 
                     b.Property<string>("LoopTarget")
                         .HasColumnType("text");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
 
                     b.Property<int?>("RecipeTemplateId")
                         .HasColumnType("integer");
@@ -350,6 +492,9 @@ namespace BCLabManager.Migrations
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
 
                     b.Property<int?>("RecipeClassId")
                         .HasColumnType("integer");
@@ -424,6 +569,9 @@ namespace BCLabManager.Migrations
                     b.Property<string>("BatteryTypeStr")
                         .HasColumnType("text");
 
+                    b.Property<double>("CapacityDifference")
+                        .HasColumnType("double precision");
+
                     b.Property<string>("ChamberStr")
                         .HasColumnType("text");
 
@@ -436,8 +584,17 @@ namespace BCLabManager.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<double>("MeasurementGain")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("MeasurementOffset")
+                        .HasColumnType("double precision");
+
                     b.Property<double>("NewCycle")
                         .HasColumnType("double precision");
+
+                    b.Property<string>("Operator")
+                        .HasColumnType("text");
 
                     b.Property<string>("ProgramStr")
                         .HasColumnType("text");
@@ -457,8 +614,14 @@ namespace BCLabManager.Migrations
                     b.Property<string>("Steps")
                         .HasColumnType("text");
 
+                    b.Property<string>("TestFilePath")
+                        .HasColumnType("text");
+
                     b.Property<string>("TesterStr")
                         .HasColumnType("text");
+
+                    b.Property<double>("TraceResistance")
+                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
@@ -520,11 +683,43 @@ namespace BCLabManager.Migrations
                         .HasForeignKey("TesterId");
                 });
 
+            modelBuilder.Entity("BCLabManager.Model.EvResultClass", b =>
+                {
+                    b.HasOne("BCLabManager.Model.RecipeClass", null)
+                        .WithMany("EvResults")
+                        .HasForeignKey("RecipeClassId");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.EvSettingClass", b =>
+                {
+                    b.HasOne("BCLabManager.Model.ProjectClass", null)
+                        .WithMany("EvSettings")
+                        .HasForeignKey("ProjectClassId");
+                });
+
             modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
                         .WithMany()
                         .HasForeignKey("BatteryTypeId");
+
+                    b.HasOne("BCLabManager.Model.ProjectClass", null)
+                        .WithMany("Programs")
+                        .HasForeignKey("ProjectClassId");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.ProjectClass", b =>
+                {
+                    b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
+                        .WithMany()
+                        .HasForeignKey("BatteryTypeId");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.ProjectProductClass", b =>
+                {
+                    b.HasOne("BCLabManager.Model.ProjectClass", null)
+                        .WithMany("ProjectProducts")
+                        .HasForeignKey("ProjectClassId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.RawDataClass", b =>

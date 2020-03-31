@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BCLabManager.Migrations
 {
-    public partial class Init : Migration
+    public partial class SchemaUpdate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,7 +21,9 @@ namespace BCLabManager.Migrations
                     LimitedChargeVoltage = table.Column<int>(nullable: false),
                     RatedCapacity = table.Column<int>(nullable: false),
                     NominalVoltage = table.Column<int>(nullable: false),
-                    CutoffDischargeVoltage = table.Column<int>(nullable: false)
+                    CutoffDischargeVoltage = table.Column<int>(nullable: false),
+                    FullyChargedEndCurrent = table.Column<int>(nullable: false),
+                    FullyChargedEndingTimeout = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -114,28 +116,24 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Programs",
+                name: "Projects",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(nullable: true),
-                    Order = table.Column<decimal>(nullable: false),
+                    Customer = table.Column<string>(nullable: true),
                     BatteryTypeId = table.Column<int>(nullable: true),
-                    Requester = table.Column<string>(nullable: true),
-                    RequestTime = table.Column<DateTime>(nullable: false),
-                    StartTime = table.Column<DateTime>(nullable: false),
-                    EndTime = table.Column<DateTime>(nullable: false),
-                    EST = table.Column<DateTime>(nullable: false),
-                    EET = table.Column<DateTime>(nullable: false),
-                    ED = table.Column<TimeSpan>(nullable: false),
-                    Description = table.Column<string>(nullable: true)
+                    Description = table.Column<string>(nullable: true),
+                    RatedCapacity = table.Column<int>(nullable: false),
+                    LimitedChargeVoltage = table.Column<int>(nullable: false),
+                    CutoffDischargeVoltage = table.Column<int>(nullable: false),
+                    VoltagePoints = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Programs", x => x.Id);
+                    table.PrimaryKey("PK_Projects", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Programs_BatteryTypes_BatteryTypeId",
+                        name: "FK_Projects_BatteryTypes_BatteryTypeId",
                         column: x => x.BatteryTypeId,
                         principalTable: "BatteryTypes",
                         principalColumn: "Id",
@@ -152,6 +150,9 @@ namespace BCLabManager.Migrations
                     LoopLabel = table.Column<string>(nullable: true),
                     LoopTarget = table.Column<string>(nullable: true),
                     LoopCount = table.Column<int>(nullable: false),
+                    CompareMark = table.Column<int>(nullable: false),
+                    CRate = table.Column<double>(nullable: false),
+                    Order = table.Column<int>(nullable: false),
                     RecipeTemplateId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -193,27 +194,84 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Recipes",
+                name: "EvSettingClass",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    IsAbandoned = table.Column<bool>(nullable: false),
+                    TypicalCapacity = table.Column<int>(nullable: false),
+                    FullyChargedEndCurrent = table.Column<int>(nullable: false),
+                    FullyChargedEndingTimeout = table.Column<int>(nullable: false),
+                    DischargeEndVoltage = table.Column<int>(nullable: false),
+                    ProjectClassId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EvSettingClass", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EvSettingClass_Projects_ProjectClassId",
+                        column: x => x.ProjectClassId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Programs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(nullable: true),
+                    BatteryTypeId = table.Column<int>(nullable: true),
+                    Order = table.Column<decimal>(nullable: false),
+                    Requester = table.Column<string>(nullable: true),
+                    RequestTime = table.Column<DateTime>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
                     EndTime = table.Column<DateTime>(nullable: false),
                     EST = table.Column<DateTime>(nullable: false),
                     EET = table.Column<DateTime>(nullable: false),
                     ED = table.Column<TimeSpan>(nullable: false),
-                    ProgramClassId = table.Column<int>(nullable: true)
+                    Description = table.Column<string>(nullable: true),
+                    IsValid = table.Column<bool>(nullable: false),
+                    TableFilePath = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(nullable: true),
+                    ProjectClassId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Recipes", x => x.Id);
+                    table.PrimaryKey("PK_Programs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Recipes_Programs_ProgramClassId",
-                        column: x => x.ProgramClassId,
-                        principalTable: "Programs",
+                        name: "FK_Programs_BatteryTypes_BatteryTypeId",
+                        column: x => x.BatteryTypeId,
+                        principalTable: "BatteryTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Programs_Projects_ProjectClassId",
+                        column: x => x.ProjectClassId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectProductClass",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FilePath = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(nullable: true),
+                    ProjectClassId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectProductClass", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectProductClass_Projects_ProjectClassId",
+                        column: x => x.ProjectClassId,
+                        principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -256,6 +314,54 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Recipes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IsAbandoned = table.Column<bool>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    StartTime = table.Column<DateTime>(nullable: false),
+                    EndTime = table.Column<DateTime>(nullable: false),
+                    EST = table.Column<DateTime>(nullable: false),
+                    EET = table.Column<DateTime>(nullable: false),
+                    ED = table.Column<TimeSpan>(nullable: false),
+                    Current = table.Column<double>(nullable: false),
+                    Temperature = table.Column<double>(nullable: false),
+                    ProgramClassId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Recipes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Recipes_Programs_ProgramClassId",
+                        column: x => x.ProgramClassId,
+                        principalTable: "Programs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EvResultClass",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(nullable: true),
+                    RecipeClassId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EvResultClass", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EvResultClass_Recipes_RecipeClassId",
+                        column: x => x.RecipeClassId,
+                        principalTable: "Recipes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "StepRuntimes",
                 columns: table => new
                 {
@@ -269,6 +375,7 @@ namespace BCLabManager.Migrations
                     EST = table.Column<DateTime>(nullable: false),
                     EET = table.Column<DateTime>(nullable: false),
                     ED = table.Column<TimeSpan>(nullable: false),
+                    Order = table.Column<int>(nullable: false),
                     RecipeClassId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -307,6 +414,12 @@ namespace BCLabManager.Migrations
                     Steps = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true),
                     NewCycle = table.Column<double>(nullable: false),
+                    MeasurementGain = table.Column<double>(nullable: false),
+                    MeasurementOffset = table.Column<double>(nullable: false),
+                    TraceResistance = table.Column<double>(nullable: false),
+                    CapacityDifference = table.Column<double>(nullable: false),
+                    TestFilePath = table.Column<string>(nullable: true),
+                    Operator = table.Column<string>(nullable: true),
                     AssignedBatteryId = table.Column<int>(nullable: true),
                     AssignedChamberId = table.Column<int>(nullable: true),
                     AssignedChannelId = table.Column<int>(nullable: true),
@@ -347,7 +460,7 @@ namespace BCLabManager.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    FileName = table.Column<string>(nullable: true),
+                    FilePath = table.Column<string>(nullable: true),
                     MD5 = table.Column<string>(nullable: true),
                     TestRecordClassId = table.Column<int>(nullable: true)
                 },
@@ -388,8 +501,33 @@ namespace BCLabManager.Migrations
                 column: "TesterId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EvResultClass_RecipeClassId",
+                table: "EvResultClass",
+                column: "RecipeClassId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EvSettingClass_ProjectClassId",
+                table: "EvSettingClass",
+                column: "ProjectClassId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Programs_BatteryTypeId",
                 table: "Programs",
+                column: "BatteryTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Programs_ProjectClassId",
+                table: "Programs",
+                column: "ProjectClassId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectProductClass_ProjectClassId",
+                table: "ProjectProductClass",
+                column: "ProjectClassId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_BatteryTypeId",
+                table: "Projects",
                 column: "BatteryTypeId");
 
             migrationBuilder.CreateIndex(
@@ -449,6 +587,15 @@ namespace BCLabManager.Migrations
                 name: "AssetUsageRecordClass");
 
             migrationBuilder.DropTable(
+                name: "EvResultClass");
+
+            migrationBuilder.DropTable(
+                name: "EvSettingClass");
+
+            migrationBuilder.DropTable(
+                name: "ProjectProductClass");
+
+            migrationBuilder.DropTable(
                 name: "RawDataClass");
 
             migrationBuilder.DropTable(
@@ -483,6 +630,9 @@ namespace BCLabManager.Migrations
 
             migrationBuilder.DropTable(
                 name: "Programs");
+
+            migrationBuilder.DropTable(
+                name: "Projects");
 
             migrationBuilder.DropTable(
                 name: "BatteryTypes");

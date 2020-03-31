@@ -309,30 +309,18 @@
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
-    <Compile Include="Migrations\20200113020227_Init.cs" />
-    <Compile Include="Migrations\20200113020227_Init.designer.cs">
-      <DependentUpon>20200113020227_Init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200307123149_CompareMark.cs" />
-    <Compile Include="Migrations\20200307123149_CompareMark.designer.cs">
-      <DependentUpon>20200307123149_CompareMark.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200309035718_RenameCRate.cs" />
-    <Compile Include="Migrations\20200309035718_RenameCRate.designer.cs">
-      <DependentUpon>20200309035718_RenameCRate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200309094423_CompareMarkNA.cs" />
-    <Compile Include="Migrations\20200309094423_CompareMarkNA.designer.cs">
-      <DependentUpon>20200309094423_CompareMarkNA.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200326090404_AddOrder.cs" />
-    <Compile Include="Migrations\20200326090404_AddOrder.designer.cs">
-      <DependentUpon>20200326090404_AddOrder.cs</DependentUpon>
+    <Compile Include="Migrations\20200330084805_SchemaUpdate.cs" />
+    <Compile Include="Migrations\20200330084805_SchemaUpdate.designer.cs">
+      <DependentUpon>20200330084805_SchemaUpdate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
       <DependentUpon>AllProductsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Programs\Model\EvSettingClass.cs" />
+    <Compile Include="Programs\Model\ProjectClass.cs" />
+    <Compile Include="Programs\Model\ProjectProductClass.cs" />
+    <Compile Include="Programs\Model\EvResultClass.cs" />
     <Compile Include="Programs\Model\Service\ProgramServiceClass.cs" />
     <Compile Include="Programs\Model\Service\RecipeTemplateServiceClass.cs" />
     <Compile Include="Programs\Model\Service\RawDataServiceClass.cs" />
