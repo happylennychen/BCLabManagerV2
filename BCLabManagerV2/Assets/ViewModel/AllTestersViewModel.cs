@@ -26,13 +26,13 @@ namespace BCLabManager.ViewModel
         RelayCommand _saveAsCommand;
         RelayCommand _deleteCommand;
         //ObservableCollection<TesterClass> _testers;
-        private TesterServieClass _testerService;
-        private ChannelServieClass _channelService;
+        private TesterServiceClass _testerService;
+        private ChannelServiceClass _channelService;
         #endregion // Fields
 
         #region Constructor
 
-        public AllTestersViewModel(TesterServieClass testerService, ChannelServieClass channelService)
+        public AllTestersViewModel(TesterServiceClass testerService, ChannelServiceClass channelService)
         {
             _testerService = testerService;
             _channelService = channelService;

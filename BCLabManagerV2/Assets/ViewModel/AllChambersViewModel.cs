@@ -27,13 +27,13 @@ namespace BCLabManager.ViewModel
         RelayCommand _saveAsCommand;
         RelayCommand _deleteCommand;
         //ObservableCollection<ChamberClass> _chambers;
-        private ChamberServieClass _chamberService;
+        private ChamberServiceClass _chamberService;
 
         #endregion // Fields
 
         #region Constructor
 
-        public AllChambersViewModel(ChamberServieClass chamberService)
+        public AllChambersViewModel(ChamberServiceClass chamberService)
         {
             _chamberService = chamberService;
             this.CreateAllChambers(_chamberService.Items);

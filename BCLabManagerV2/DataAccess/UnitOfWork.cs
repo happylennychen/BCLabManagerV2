@@ -12,6 +12,7 @@ namespace BCLabManager.DataAccess
         private readonly AppDbContext _context;
         public IBatteryRepository Batteries { get; private set; }
         public IBatteryTypeRepository BatteryTypes { get; private set; }
+        public IProjectRepository Projects { get; private set; }
         public ITesterRepository Testers { get; private set; }
         public IChannelRepository Channels { get; private set; }
         public IChamberRepository Chambers { get; private set; }
@@ -39,6 +40,7 @@ namespace BCLabManager.DataAccess
             RecipeTemplates = new RecipeTemplateRepository(_context);
             Recipies = new RecipeRepository(_context);
             Programs = new ProgramRepository(_context);
+            Projects = new ProjectRepository(_context);
         }
         public void Commit()
         {

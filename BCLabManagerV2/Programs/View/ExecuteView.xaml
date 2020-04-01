@@ -30,7 +30,7 @@
             </Grid.RowDefinitions>
 
             <!-- CUSTOMER TYPE -->
-            <Label 
+            <!--<Label 
       Grid.Row="0" Grid.Column="0" 
       Content="_Battery Type:" 
       HorizontalAlignment="Right"
@@ -43,7 +43,7 @@
       SelectedItem="{Binding Path=BatteryType, ValidatesOnDataErrors=True}"
       Validation.ErrorTemplate="{x:Null}"
       >
-            </ComboBox>
+            </ComboBox>-->
             <!-- CUSTOMER TYPE -->
             <Label 
       Grid.Row="2" Grid.Column="0" 

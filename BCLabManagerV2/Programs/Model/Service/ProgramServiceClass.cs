@@ -20,11 +20,12 @@ namespace BCLabManager.Model
             DomainAdd(item);
             UpdateEstimatedTimeChain();
         }
-        public void DatabaseAdd(ProgramClass item)
+        public void DatabaseAdd(ProgramClass item)  //不应该自建ID，应该给出order
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                item.BatteryType = uow.BatteryTypes.GetById(item.BatteryType.Id);
+                item.Project = uow.Projects.GetById(item.Project.Id);
+                //item.Project.BatteryType = uow.BatteryTypes.GetById(item.Project.BatteryType.Id);
 
                 var nextId = 1;
                 if (RecipeService.StepRuntimeService.Items.Count != 0)

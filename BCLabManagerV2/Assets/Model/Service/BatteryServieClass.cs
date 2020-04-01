@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class BatteryServieClass
+    public class BatteryServiceClass
     {
         public ObservableCollection<BatteryClass> Items { get; set; }
         public void SuperAdd(BatteryClass item)

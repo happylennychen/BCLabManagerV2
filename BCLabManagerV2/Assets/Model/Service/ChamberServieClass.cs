@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class ChamberServieClass
+    public class ChamberServiceClass
     {
         public ObservableCollection<ChamberClass> Items { get; set; }
         public void SuperAdd(ChamberClass item)

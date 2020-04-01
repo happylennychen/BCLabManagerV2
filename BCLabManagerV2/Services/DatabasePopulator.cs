@@ -34,7 +34,7 @@ namespace BCLabManager
             PopulateProgram16(); //Tested
             PopulateProgram17(); //Tested
             PopulateProgram18(); //Tested
-
+            PopulateProjects();
             PopulateTestPrograms();
         }
         #region Assets
@@ -108,6 +108,37 @@ namespace BCLabManager
             }
         }
 
+        private static void PopulateProjects()
+        {
+            ProjectClass proj = new ProjectClass();
+            proj.Name = "O2Micro-01";
+            proj.Customer = "O2Micro";
+            proj.Description = "";
+            proj.VoltagePoints = "";
+            PopulateOneProject(proj);
+        }
+        private static void PopulateOneProject(ProjectClass proj)
+        {
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                if (proj != null)
+                {
+                    proj.BatteryType = uow.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+                    proj.CutoffDischargeVoltage = proj.BatteryType.CutoffDischargeVoltage;
+                    proj.LimitedChargeVoltage = proj.BatteryType.LimitedChargeVoltage;
+                    proj.RatedCapacity = proj.BatteryType.RatedCapacity;
+                    var evSetting = new EvSettingClass();
+                    evSetting.DischargeEndVoltage = proj.BatteryType.CutoffDischargeVoltage;
+                    evSetting.FullyChargedEndCurrent = proj.BatteryType.FullyChargedEndCurrent;
+                    evSetting.FullyChargedEndingTimeout = proj.BatteryType.FullyChargedEndingTimeout;
+                    evSetting.LimitedChargeVoltage = proj.BatteryType.LimitedChargeVoltage;
+                    evSetting.TypicalCapacity = proj.BatteryType.TypicalCapacity;
+                    proj.EvSettings.Add(evSetting);
+                    uow.Projects.Insert(proj);
+                    uow.Commit();
+                }
+            }
+        }
         private static void PopulateBatteries()
         {
             //int bt_num = ReportLoader.GetBatteryNumber();
@@ -1536,7 +1567,7 @@ namespace BCLabManager
                 BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
                 var pro = new ProgramClass();
                 pro.Name = "Oppo BLP663 Static Test";
-                pro.BatteryType = bType;
+                pro.Project = dbContext.Projects.SingleOrDefault(o=>o.Customer == "O2Micro");
                 pro.Requester = "Francis";
                 pro.RequestTime = DateTime.Parse("2019/02/28");
 
@@ -1553,404 +1584,404 @@ namespace BCLabManager
                 dbContext.Programs.Add(pro);
                 dbContext.SaveChanges();
             }
-            using (var dbContext = new AppDbContext())//2
-            {
-                int number = 6;
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "Oppo BLP663 Dynamic Test";
-                pro.BatteryType = bType;
-                pro.Requester = "Francis";
-                pro.RequestTime = DateTime.Parse("2019/02/28");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-
-                for (int i = 0; i < number; i++, index++)
-                {
-                    recTemp = GetRecipeTemplateById(dbContext, index);
-                    rec = new RecipeClass(recTemp, bType);
-                    pro.Recipes.Add(rec);
-                }
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
-            using (var dbContext = new AppDbContext())//3
-            {
-                int number = 6;
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "Oppo BLP663 RC";
-                pro.BatteryType = bType;
-                pro.Requester = "Francis";
-                pro.RequestTime = DateTime.Parse("2019/02/28");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-
-                for (int i = 0; i < number; i++, index++)
-                {
-                    recTemp = GetRecipeTemplateById(dbContext, index);
-                    rec = new RecipeClass(recTemp, bType);
-                    pro.Recipes.Add(rec);
-                }
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
-            using (var dbContext = new AppDbContext())//4
-            {
-                int number = 3;
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "Oppo BLP663 Static Test-2";
-                pro.BatteryType = bType;
-                pro.Requester = "Francis";
-                pro.RequestTime = DateTime.Parse("2019/03/12");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-
-                for (int i = 0; i < number; i++, index++)
-                {
-                    recTemp = GetRecipeTemplateById(dbContext, index);
-                    rec = new RecipeClass(recTemp, bType);
-                    pro.Recipes.Add(rec);
-                }
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
-            using (var dbContext = new AppDbContext())//5
-            {
-                int number = 3;
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "Oppo BLP663 Dynamic Test-2";
-                pro.BatteryType = bType;
-                pro.Requester = "Francis";
-                pro.RequestTime = DateTime.Parse("2019/03/14");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-
-                for (int i = 0; i < number; i++, index++)
-                {
-                    recTemp = GetRecipeTemplateById(dbContext, index);
-                    rec = new RecipeClass(recTemp, bType);
-                    pro.Recipes.Add(rec);
-                }
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
-            using (var dbContext = new AppDbContext())//6
-            {
-                int number = 1;
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "Oppo BLP663 Static Test-3";
-                pro.BatteryType = bType;
-                pro.Requester = "Francis";
-                pro.RequestTime = DateTime.Parse("2019/03/14");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-
-                for (int i = 0; i < number; i++, index++)
-                {
-                    recTemp = GetRecipeTemplateById(dbContext, index);
-                    rec = new RecipeClass(recTemp, bType);
-                    pro.Recipes.Add(rec);
-                }
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
-            using (var dbContext = new AppDbContext())//7
-            {
-                int number = 1;
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "500 Cycles";
-                pro.BatteryType = bType;
-                pro.Requester = "Francis";
-                pro.RequestTime = DateTime.Parse("2019/04/01");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-
-                for (int i = 0; i < number; i++, index++)
-                {
-                    recTemp = GetRecipeTemplateById(dbContext, index);
-                    rec = new RecipeClass(recTemp, bType);
-                    pro.Recipes.Add(rec);
-                }
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
-            using (var dbContext = new AppDbContext())//8
-            {
-                int number = 3;
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "Composite Test";
-                pro.BatteryType = bType;
-                pro.Requester = "Francis";
-                pro.RequestTime = DateTime.Parse("2019/04/01");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-
-                for (int i = 0; i < number; i++, index++)
-                {
-                    recTemp = GetRecipeTemplateById(dbContext, index);
-                    rec = new RecipeClass(recTemp, bType);
-                    pro.Recipes.Add(rec);
-                }
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
-            using (var dbContext = new AppDbContext())//9
-            {
-                int number = 1;
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "Oppo BLP663 Dynamic Test-3";
-                pro.BatteryType = bType;
-                pro.Requester = "Francis";
-                pro.RequestTime = DateTime.Parse("2019/05/07");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-
-                for (int i = 0; i < number; i++, index++)
-                {
-                    recTemp = GetRecipeTemplateById(dbContext, index);
-                    rec = new RecipeClass(recTemp, bType);
-                    pro.Recipes.Add(rec);
-                }
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
-            using (var dbContext = new AppDbContext())//10
-            {
-                int number = 1;
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "Oppo BLP663 Dynamic Test-4";
-                pro.BatteryType = bType;
-                pro.Requester = "Francis";
-                pro.RequestTime = DateTime.Parse("2019/05/24");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-
-                for (int i = 0; i < number; i++, index++)
-                {
-                    recTemp = GetRecipeTemplateById(dbContext, index);
-                    rec = new RecipeClass(recTemp, bType);
-                    pro.Recipes.Add(rec);
-                }
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
-            using (var dbContext = new AppDbContext())//11
-            {
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "2000mA Test";
-                pro.BatteryType = bType;
-                pro.Requester = "Jon";
-                pro.RequestTime = DateTime.Parse("2019/07/09");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-                recTemp = GetRecipeTemplateById(dbContext, 23);
-                rec = new RecipeClass(recTemp, bType);
-                pro.Recipes.Add(rec);
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
-            using (var dbContext = new AppDbContext())//12
-            {
-                int number = 1;
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "Aging Factor";
-                pro.BatteryType = bType;
-                pro.Requester = "Francis";
-                pro.RequestTime = DateTime.Parse("2019/10/31");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-
-                for (int i = 0; i < number; i++, index++)
-                {
-                    recTemp = GetRecipeTemplateById(dbContext, index);
-                    rec = new RecipeClass(recTemp, bType);
-                    pro.Recipes.Add(rec);
-                }
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
-            using (var dbContext = new AppDbContext())//13
-            {
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "Aging Factor 2";
-                pro.BatteryType = bType;
-                pro.Requester = "Jon";
-                pro.RequestTime = DateTime.Parse("2019/11/11");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-                recTemp = GetRecipeTemplateById(dbContext, 35);
-                rec = new RecipeClass(recTemp, bType);
-                pro.Recipes.Add(rec);
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
-            using (var dbContext = new AppDbContext())//14
-            {
-                int number = 1;
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "Aging Factor 3";
-                pro.BatteryType = bType;
-                pro.Requester = "Jon";
-                pro.RequestTime = DateTime.Parse("2019/11/13");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-
-                for (int i = 0; i < number; i++, index++)
-                {
-                    recTemp = GetRecipeTemplateById(dbContext, index);
-                    rec = new RecipeClass(recTemp, bType);
-                    pro.Recipes.Add(rec);
-                }
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
-            using (var dbContext = new AppDbContext())//15
-            {
-                int number = 1;
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "Aging Factor 4";
-                pro.BatteryType = bType;
-                pro.Requester = "Francis";
-                pro.RequestTime = DateTime.Parse("2019/11/14");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-
-                for (int i = 0; i < number; i++, index++)
-                {
-                    recTemp = GetRecipeTemplateById(dbContext, index);
-                    rec = new RecipeClass(recTemp, bType);
-                    pro.Recipes.Add(rec);
-                }
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
-            using (var dbContext = new AppDbContext())//16
-            {
-                int number = 1;
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "Aging Factor 5";
-                pro.BatteryType = bType;
-                pro.Requester = "Francis";
-                pro.RequestTime = DateTime.Parse("2019/11/15");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-
-                for (int i = 0; i < number; i++, index++)
-                {
-                    recTemp = GetRecipeTemplateById(dbContext, index);
-                    rec = new RecipeClass(recTemp, bType);
-                    pro.Recipes.Add(rec);
-                }
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
-            using (var dbContext = new AppDbContext())//17
-            {
-                int number = 2;
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "Aging Factor 6";
-                pro.BatteryType = bType;
-                pro.Requester = "Jon";
-                pro.RequestTime = DateTime.Parse("2019/11/25");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-
-                for (int i = 0; i < number; i++, index++)
-                {
-                    recTemp = GetRecipeTemplateById(dbContext, index);
-                    rec = new RecipeClass(recTemp, bType);
-                    pro.Recipes.Add(rec);
-                }
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
-            using (var dbContext = new AppDbContext())//18
-            {
-                int number = 1;
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                var pro = new ProgramClass();
-                pro.Name = "Aging Factor 7";
-                pro.BatteryType = bType;
-                pro.Requester = "Jon";
-                pro.RequestTime = DateTime.Parse("2019/11/27");
-
-                RecipeTemplate recTemp;
-                RecipeClass rec;
-
-
-                for (int i = 0; i < number; i++, index++)
-                {
-                    recTemp = GetRecipeTemplateById(dbContext, index);
-                    rec = new RecipeClass(recTemp, bType);
-                    pro.Recipes.Add(rec);
-                }
-
-                dbContext.Programs.Add(pro);
-                dbContext.SaveChanges();
-            }
+            //        using (var dbContext = new AppDbContext())//2
+            //        {
+            //            int number = 6;
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "Oppo BLP663 Dynamic Test";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Francis";
+            //            pro.RequestTime = DateTime.Parse("2019/02/28");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+
+            //            for (int i = 0; i < number; i++, index++)
+            //            {
+            //                recTemp = GetRecipeTemplateById(dbContext, index);
+            //                rec = new RecipeClass(recTemp, bType);
+            //                pro.Recipes.Add(rec);
+            //            }
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
+            //        using (var dbContext = new AppDbContext())//3
+            //        {
+            //            int number = 6;
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "Oppo BLP663 RC";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Francis";
+            //            pro.RequestTime = DateTime.Parse("2019/02/28");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+
+            //            for (int i = 0; i < number; i++, index++)
+            //            {
+            //                recTemp = GetRecipeTemplateById(dbContext, index);
+            //                rec = new RecipeClass(recTemp, bType);
+            //                pro.Recipes.Add(rec);
+            //            }
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
+            //        using (var dbContext = new AppDbContext())//4
+            //        {
+            //            int number = 3;
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "Oppo BLP663 Static Test-2";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Francis";
+            //            pro.RequestTime = DateTime.Parse("2019/03/12");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+
+            //            for (int i = 0; i < number; i++, index++)
+            //            {
+            //                recTemp = GetRecipeTemplateById(dbContext, index);
+            //                rec = new RecipeClass(recTemp, bType);
+            //                pro.Recipes.Add(rec);
+            //            }
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
+            //        using (var dbContext = new AppDbContext())//5
+            //        {
+            //            int number = 3;
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "Oppo BLP663 Dynamic Test-2";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Francis";
+            //            pro.RequestTime = DateTime.Parse("2019/03/14");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+
+            //            for (int i = 0; i < number; i++, index++)
+            //            {
+            //                recTemp = GetRecipeTemplateById(dbContext, index);
+            //                rec = new RecipeClass(recTemp, bType);
+            //                pro.Recipes.Add(rec);
+            //            }
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
+            //        using (var dbContext = new AppDbContext())//6
+            //        {
+            //            int number = 1;
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "Oppo BLP663 Static Test-3";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Francis";
+            //            pro.RequestTime = DateTime.Parse("2019/03/14");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+
+            //            for (int i = 0; i < number; i++, index++)
+            //            {
+            //                recTemp = GetRecipeTemplateById(dbContext, index);
+            //                rec = new RecipeClass(recTemp, bType);
+            //                pro.Recipes.Add(rec);
+            //            }
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
+            //        using (var dbContext = new AppDbContext())//7
+            //        {
+            //            int number = 1;
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "500 Cycles";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Francis";
+            //            pro.RequestTime = DateTime.Parse("2019/04/01");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+
+            //            for (int i = 0; i < number; i++, index++)
+            //            {
+            //                recTemp = GetRecipeTemplateById(dbContext, index);
+            //                rec = new RecipeClass(recTemp, bType);
+            //                pro.Recipes.Add(rec);
+            //            }
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
+            //        using (var dbContext = new AppDbContext())//8
+            //        {
+            //            int number = 3;
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "Composite Test";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Francis";
+            //            pro.RequestTime = DateTime.Parse("2019/04/01");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+
+            //            for (int i = 0; i < number; i++, index++)
+            //            {
+            //                recTemp = GetRecipeTemplateById(dbContext, index);
+            //                rec = new RecipeClass(recTemp, bType);
+            //                pro.Recipes.Add(rec);
+            //            }
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
+            //        using (var dbContext = new AppDbContext())//9
+            //        {
+            //            int number = 1;
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "Oppo BLP663 Dynamic Test-3";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Francis";
+            //            pro.RequestTime = DateTime.Parse("2019/05/07");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+
+            //            for (int i = 0; i < number; i++, index++)
+            //            {
+            //                recTemp = GetRecipeTemplateById(dbContext, index);
+            //                rec = new RecipeClass(recTemp, bType);
+            //                pro.Recipes.Add(rec);
+            //            }
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
+            //        using (var dbContext = new AppDbContext())//10
+            //        {
+            //            int number = 1;
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "Oppo BLP663 Dynamic Test-4";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Francis";
+            //            pro.RequestTime = DateTime.Parse("2019/05/24");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+
+            //            for (int i = 0; i < number; i++, index++)
+            //            {
+            //                recTemp = GetRecipeTemplateById(dbContext, index);
+            //                rec = new RecipeClass(recTemp, bType);
+            //                pro.Recipes.Add(rec);
+            //            }
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
+            //        using (var dbContext = new AppDbContext())//11
+            //        {
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "2000mA Test";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Jon";
+            //            pro.RequestTime = DateTime.Parse("2019/07/09");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+            //            recTemp = GetRecipeTemplateById(dbContext, 23);
+            //            rec = new RecipeClass(recTemp, bType);
+            //            pro.Recipes.Add(rec);
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
+            //        using (var dbContext = new AppDbContext())//12
+            //        {
+            //            int number = 1;
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "Aging Factor";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Francis";
+            //            pro.RequestTime = DateTime.Parse("2019/10/31");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+
+            //            for (int i = 0; i < number; i++, index++)
+            //            {
+            //                recTemp = GetRecipeTemplateById(dbContext, index);
+            //                rec = new RecipeClass(recTemp, bType);
+            //                pro.Recipes.Add(rec);
+            //            }
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
+            //        using (var dbContext = new AppDbContext())//13
+            //        {
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "Aging Factor 2";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Jon";
+            //            pro.RequestTime = DateTime.Parse("2019/11/11");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+            //            recTemp = GetRecipeTemplateById(dbContext, 35);
+            //            rec = new RecipeClass(recTemp, bType);
+            //            pro.Recipes.Add(rec);
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
+            //        using (var dbContext = new AppDbContext())//14
+            //        {
+            //            int number = 1;
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "Aging Factor 3";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Jon";
+            //            pro.RequestTime = DateTime.Parse("2019/11/13");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+
+            //            for (int i = 0; i < number; i++, index++)
+            //            {
+            //                recTemp = GetRecipeTemplateById(dbContext, index);
+            //                rec = new RecipeClass(recTemp, bType);
+            //                pro.Recipes.Add(rec);
+            //            }
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
+            //        using (var dbContext = new AppDbContext())//15
+            //        {
+            //            int number = 1;
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "Aging Factor 4";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Francis";
+            //            pro.RequestTime = DateTime.Parse("2019/11/14");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+
+            //            for (int i = 0; i < number; i++, index++)
+            //            {
+            //                recTemp = GetRecipeTemplateById(dbContext, index);
+            //                rec = new RecipeClass(recTemp, bType);
+            //                pro.Recipes.Add(rec);
+            //            }
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
+            //        using (var dbContext = new AppDbContext())//16
+            //        {
+            //            int number = 1;
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "Aging Factor 5";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Francis";
+            //            pro.RequestTime = DateTime.Parse("2019/11/15");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+
+            //            for (int i = 0; i < number; i++, index++)
+            //            {
+            //                recTemp = GetRecipeTemplateById(dbContext, index);
+            //                rec = new RecipeClass(recTemp, bType);
+            //                pro.Recipes.Add(rec);
+            //            }
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
+            //        using (var dbContext = new AppDbContext())//17
+            //        {
+            //            int number = 2;
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "Aging Factor 6";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Jon";
+            //            pro.RequestTime = DateTime.Parse("2019/11/25");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+
+            //            for (int i = 0; i < number; i++, index++)
+            //            {
+            //                recTemp = GetRecipeTemplateById(dbContext, index);
+            //                rec = new RecipeClass(recTemp, bType);
+            //                pro.Recipes.Add(rec);
+            //            }
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
+            //        using (var dbContext = new AppDbContext())//18
+            //        {
+            //            int number = 1;
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            var pro = new ProgramClass();
+            //            pro.Name = "Aging Factor 7";
+            //            pro.BatteryType = bType;
+            //            pro.Requester = "Jon";
+            //            pro.RequestTime = DateTime.Parse("2019/11/27");
+
+            //            RecipeTemplate recTemp;
+            //            RecipeClass rec;
+
+
+            //            for (int i = 0; i < number; i++, index++)
+            //            {
+            //                recTemp = GetRecipeTemplateById(dbContext, index);
+            //                rec = new RecipeClass(recTemp, bType);
+            //                pro.Recipes.Add(rec);
+            //            }
+
+            //            dbContext.Programs.Add(pro);
+            //            dbContext.SaveChanges();
+            //        }
         }
-    }
+}
 }

@@ -38,11 +38,11 @@ namespace BCLabManager.ViewModel
         //ObservableCollection<ChannelClass> _channels;
         //ObservableCollection<ChamberClass> _chambers;
         //ObservableCollection<ProgramClass> _programs;
-        private BatteryServieClass _batteryService;
-        private BatteryTypeServieClass _batteryTypeService;
-        private TesterServieClass _testerService;
-        private ChannelServieClass _channelService;
-        private ChamberServieClass _chamberService;
+        private BatteryServiceClass _batteryService;
+        private ProjectServiceClass _projectService;
+        private TesterServiceClass _testerService;
+        private ChannelServiceClass _channelService;
+        private ChamberServiceClass _chamberService;
         private ProgramServiceClass _programService;
         private RecipeTemplateServiceClass _recipeTemplateService;
         #endregion // Fields
@@ -53,18 +53,18 @@ namespace BCLabManager.ViewModel
             (
             ProgramServiceClass programService,
             RecipeTemplateServiceClass recipeTemplateService,
-            BatteryTypeServieClass batteryTypeService,
-            BatteryServieClass batteryService,
-            TesterServieClass testerService,
-            ChannelServieClass channelService,
-            ChamberServieClass chamberService
+            ProjectServiceClass projectService,
+            BatteryServiceClass batteryService,
+            TesterServiceClass testerService,
+            ChannelServiceClass channelService,
+            ChamberServiceClass chamberService
             )
         {
             _recipeTemplateService = recipeTemplateService;
             _programService = programService;
             this.CreateAllPrograms(_programService.Items);
 
-            _batteryTypeService = batteryTypeService;
+            _projectService = projectService;
             _batteryService = batteryService;
             _testerService = testerService;
             _channelService = channelService;
@@ -369,7 +369,7 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             ProgramClass m = new ProgramClass();      //实例化一个新的model
-            ProgramEditViewModel evm = new ProgramEditViewModel(m, _batteryTypeService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
+            ProgramEditViewModel evm = new ProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
             //evm.DisplayName = "Program-Create";
             evm.commandType = CommandType.Create;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -393,7 +393,7 @@ namespace BCLabManager.ViewModel
             //    model.Description = oldpro.Description;
             //    model.Recipes = new ObservableCollection<RecipeClass>(oldsubs);          //这里并不希望在edit window里面修改原本的Recipes，而是想编辑一个新的Recipe,只是这个新的，是旧集合的浅复制
 
-            //    ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _batteryTypeService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
+            //    ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _projectService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
             //    //viewmodel.DisplayName = "Program-Edit";
             //    viewmodel.commandType = CommandType.Edit;
             //    var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -575,7 +575,7 @@ namespace BCLabManager.ViewModel
         private void SaveAs()
         {
             ProgramClass m = _selectedProgram._program.Clone();
-            ProgramEditViewModel evm = new ProgramEditViewModel(m, _batteryTypeService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
+            ProgramEditViewModel evm = new ProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
             ////evm.DisplayName = "Program-Save As";
             //evm.commandType = CommandType.SaveAs;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -609,7 +609,7 @@ namespace BCLabManager.ViewModel
                 (
                 //testRecord.Record,      //将model传给ExecuteViewModel      //??????????????????????????
                 model,
-                _batteryTypeService.Items,
+                SelectedProgram.Project.BatteryType,
                 _batteryService.Items,
                 _testerService.Items,
                 _channelService.Items,
@@ -621,7 +621,7 @@ namespace BCLabManager.ViewModel
             TestRecordViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _programService.RecipeService.TestRecordService.Execute(SelectedTestRecord.Record, evm.BatteryType.Name, evm.Battery, evm.Chamber, evm.Tester.Name, evm.Channel, evm.StartTime);
+                _programService.RecipeService.TestRecordService.Execute(SelectedTestRecord.Record, SelectedProgram.Project.BatteryType.Name, evm.Battery, evm.Chamber, evm.Tester.Name, evm.Channel, evm.StartTime);
                 _batteryService.Execute(evm.Battery, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
                 _channelService.Execute(evm.Channel, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
                 _chamberService.Execute(evm.Chamber, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);

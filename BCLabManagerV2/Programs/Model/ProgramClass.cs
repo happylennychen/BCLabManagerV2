@@ -24,12 +24,12 @@ namespace BCLabManager.Model
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
-        private BatteryTypeClass _batteryType;
-        public BatteryTypeClass BatteryType
-        {
-            get { return _batteryType; }
-            set { SetProperty(ref _batteryType, value); }
-        }
+        //private BatteryTypeClass _batteryType;
+        //public BatteryTypeClass BatteryType
+        //{
+        //    get { return _batteryType; }
+        //    set { SetProperty(ref _batteryType, value); }
+        //}
         private ulong _order;
         public ulong Order
         {
@@ -102,16 +102,22 @@ namespace BCLabManager.Model
             get { return _type; }
             set { SetProperty(ref _type, value); }
         }
+        private ProjectClass _project;
+        public ProjectClass Project
+        {
+            get { return _project; }
+            set { SetProperty(ref _project, value); }
+        }
         public ObservableCollection<RecipeClass> Recipes { get; set; } = new ObservableCollection<RecipeClass>();
 
         public ProgramClass()           //Create用到
         {
         }
 
-        public ProgramClass(String Name, BatteryTypeClass BatteryType, String Requester, DateTime RequestTime, String Description, ObservableCollection<RecipeClass> Recipes) //Clone用到
+        public ProgramClass(String Name, ProjectClass Project, String Requester, DateTime RequestTime, String Description, ObservableCollection<RecipeClass> Recipes) //Clone用到
         {
             this.Name = Name;
-            this.BatteryType = BatteryType;
+            this.Project = Project;
             this.Requester = Requester;
             this.RequestTime = RequestTime;
             this.Description = Description;
@@ -142,7 +148,7 @@ namespace BCLabManager.Model
                 (from sub in Recipes
                  select sub.Clone()).ToList();
             ObservableCollection<RecipeClass> clonelist = new ObservableCollection<RecipeClass>(all);
-            return new ProgramClass(this.Name, this.BatteryType, this.Requester, this.RequestTime, this.Description, clonelist);
+            return new ProgramClass(this.Name, this.Project, this.Requester, this.RequestTime, this.Description, clonelist);
         }
     }
 }

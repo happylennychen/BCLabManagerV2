@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200330084805_SchemaUpdate")]
+    [Migration("20200401015412_SchemaUpdate")]
     partial class SchemaUpdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -214,6 +214,9 @@ namespace BCLabManager.Migrations
                     b.Property<int>("FullyChargedEndingTimeout")
                         .HasColumnType("integer");
 
+                    b.Property<int>("LimitedChargeVoltage")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("ProjectClassId")
                         .HasColumnType("integer");
 
@@ -233,9 +236,6 @@ namespace BCLabManager.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int?>("BatteryTypeId")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -261,7 +261,7 @@ namespace BCLabManager.Migrations
                     b.Property<decimal>("Order")
                         .HasColumnType("numeric(20,0)");
 
-                    b.Property<int?>("ProjectClassId")
+                    b.Property<int?>("ProjectId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("RequestTime")
@@ -281,9 +281,7 @@ namespace BCLabManager.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BatteryTypeId");
-
-                    b.HasIndex("ProjectClassId");
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Programs");
                 });
@@ -309,6 +307,9 @@ namespace BCLabManager.Migrations
 
                     b.Property<int>("LimitedChargeVoltage")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
                     b.Property<int>("RatedCapacity")
                         .HasColumnType("integer");
@@ -699,13 +700,9 @@ namespace BCLabManager.Migrations
 
             modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
                 {
-                    b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
+                    b.HasOne("BCLabManager.Model.ProjectClass", "Project")
                         .WithMany()
-                        .HasForeignKey("BatteryTypeId");
-
-                    b.HasOne("BCLabManager.Model.ProjectClass", null)
-                        .WithMany("Programs")
-                        .HasForeignKey("ProjectClassId");
+                        .HasForeignKey("ProjectId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ProjectClass", b =>

@@ -39,5 +39,11 @@ namespace BCLabManager.Model
             get { return _dischargeEndVoltage; }
             set { SetProperty(ref _dischargeEndVoltage, value); }
         }
+        private Int32 _limitedChargeVoltage;
+        public Int32 LimitedChargeVoltage
+        {
+            get { return _limitedChargeVoltage; }
+            set { SetProperty(ref _limitedChargeVoltage, value); }
+        }
     }
 }

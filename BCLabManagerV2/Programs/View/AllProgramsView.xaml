@@ -124,7 +124,7 @@
             />
                             <GridViewColumn 
             Header="Battery Type" 
-            DisplayMemberBinding="{Binding Path=BatteryType}" 
+            DisplayMemberBinding="{Binding Path=Project}" 
             />
                             <GridViewColumn 
             Header="Requester" 

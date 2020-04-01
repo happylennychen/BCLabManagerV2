@@ -26,13 +26,13 @@ namespace BCLabManager.ViewModel
         RelayCommand _saveAsCommand;
         RelayCommand _deleteCommand;
         private BatteryTypeServieClass _batteryTypeService;
-        private BatteryServieClass _batteryService;
+        private BatteryServiceClass _batteryService;
 
         #endregion // Fields
 
         #region Constructor
 
-        public AllBatteryTypesViewModel(BatteryTypeServieClass batteryTypeService, BatteryServieClass batteryService)
+        public AllBatteryTypesViewModel(BatteryTypeServieClass batteryTypeService, BatteryServiceClass batteryService)
         {
             _batteryTypeService = batteryTypeService;
             _batteryService = batteryService;

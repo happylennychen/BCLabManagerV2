@@ -1,4 +1,5 @@
 ﻿using BCLabManager.DataAccess;
+using BCLabManager.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,26 +9,26 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class TesterServiceClass//:ModelService<TesterClass>
+    public class ProjectServiceClass
     {
-        public ObservableCollection<TesterClass> Items { get; set; }
-        public void SuperAdd(TesterClass item)
+        public ObservableCollection<ProjectClass> Items { get; set; }
+
+        public void SuperAdd(ProjectClass item)
         {
             DatabaseAdd(item);
             Items.Add(item);
         }
-        public void DatabaseAdd(TesterClass item)
+        public void DatabaseAdd(ProjectClass item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                uow.Testers.Insert(item);
+                uow.Projects.Insert(item);
                 uow.Commit();
             }
         }
         public void SuperRemove(int id)
         {
             DatabaseRemove(id);
-
             var item = Items.SingleOrDefault(o => o.Id == id);
             Items.Remove(item);
         }
@@ -35,33 +36,35 @@ namespace BCLabManager.Model
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                uow.Testers.Delete(id);
+                uow.Projects.Delete(id);
                 uow.Commit();
             }
         }
-        public void SuperUpdate(TesterClass item)
+        public void SuperUpdate(ProjectClass item)
         {
             DatabaseUpdate(item);
             DomainUpdate(item);
         }
-        public void DatabaseUpdate(TesterClass item)
+        public void DatabaseUpdate(ProjectClass item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                uow.Testers.Update(item);
+                uow.Projects.Update(item);
                 uow.Commit();
             }
         }
-        public void DomainUpdate(TesterClass item)
+        public void DomainUpdate(ProjectClass item)
         {
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
-            edittarget.Manufactor = item.Manufactor;
-            edittarget.Name = item.Name;
-        }
-
-        internal DateTime[] GetTimeFromRawData(ITester tester, ObservableCollection<string> fileList)
-        {
-            return tester.GetTimeFromRawData(fileList);
+            edittarget.BatteryType = item.BatteryType;
+            edittarget.Customer = item.Customer;
+            edittarget.CutoffDischargeVoltage = item.CutoffDischargeVoltage;
+            edittarget.Description = item.Description;
+            edittarget.EvSettings = item.EvSettings;
+            edittarget.LimitedChargeVoltage = item.LimitedChargeVoltage;
+            edittarget.ProjectProducts = item.ProjectProducts;
+            edittarget.RatedCapacity = item.RatedCapacity;
+            edittarget.VoltagePoints = item.VoltagePoints;
         }
     }
 }

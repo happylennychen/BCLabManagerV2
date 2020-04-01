@@ -104,17 +104,17 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public BatteryTypeClass BatteryType
+        public ProjectClass Project
         {
-            get { return _program.BatteryType; }
+            get { return _program.Project; }
             set
             {
-                if (value == _program.BatteryType)
+                if (value == _program.Project)
                     return;
 
-                _program.BatteryType = value;
+                _program.Project = value;
 
-                RaisePropertyChanged("BatteryType");
+                RaisePropertyChanged("Project");
             }
         }
 

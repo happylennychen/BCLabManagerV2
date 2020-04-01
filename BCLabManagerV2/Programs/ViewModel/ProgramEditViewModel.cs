@@ -19,7 +19,7 @@ namespace BCLabManager.ViewModel
         #region Fields
 
         public ProgramClass _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
-        ObservableCollection<BatteryTypeClass> _batteryTypes;
+        ObservableCollection<ProjectClass> _projects;
         RecipeTemplateViewModel _selectedRecipeTemplate;
         RecipeViewModel _selectedRecipe;
         RelayCommand _okCommand;
@@ -33,11 +33,11 @@ namespace BCLabManager.ViewModel
 
         public ProgramEditViewModel(
             ProgramClass programmodel,
-            ObservableCollection<BatteryTypeClass> batteryTypes,
+            ObservableCollection<ProjectClass> projects,
             ObservableCollection<RecipeTemplate> RecipeTemplates)
         {
             _program = programmodel;
-            _batteryTypes = batteryTypes;
+            _projects = projects;
             this.CreateAllRecipeTemplates(RecipeTemplates);
             this.CreateRecipes();
         }
@@ -95,32 +95,32 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public BatteryTypeClass BatteryType       //选中项
+        public ProjectClass Project       //选中项
         {
             get
             {
                 //if (_batteryType == null)
                 //return null;
-                return _program.BatteryType;
+                return _program.Project;
             }
             set
             {
-                if (value == _program.BatteryType)
+                if (value == _program.Project)
                     return;
 
-                _program.BatteryType = value;
+                _program.Project = value;
 
-                RaisePropertyChanged("BatteryType");
+                RaisePropertyChanged("Project");
             }
         }
 
-        public ObservableCollection<BatteryTypeClass> AllBatteryTypes //供选项
+        public ObservableCollection<ProjectClass> AllProjects //供选项
         {
             get
             {
-                ObservableCollection<BatteryTypeClass> all = _batteryTypes;
+                ObservableCollection<ProjectClass> all = _projects;
 
-                return new ObservableCollection<BatteryTypeClass>(all);
+                return new ObservableCollection<ProjectClass>(all);
             }
         }
         public string Requester
@@ -309,7 +309,7 @@ namespace BCLabManager.ViewModel
 
         public void Add()       //对于model来说，需要将选中的sub copy到_program.Recipes来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.Recipes里面去
         {
-            var model = new RecipeClass(SelectedRecipeTemplate._recipeTemplate, BatteryType);
+            var model = new RecipeClass(SelectedRecipeTemplate._recipeTemplate, Project.BatteryType);
             var viewmodel = new RecipeViewModel(model);
             _program.Recipes.Add(model);
             this.Recipes.Add(viewmodel);

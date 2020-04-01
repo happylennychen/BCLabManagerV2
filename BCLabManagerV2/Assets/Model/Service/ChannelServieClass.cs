@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class ChannelServieClass
+    public class ChannelServiceClass
     {
         public ObservableCollection<ChannelClass> Items { get; set; }
         public void SuperAdd(ChannelClass item)

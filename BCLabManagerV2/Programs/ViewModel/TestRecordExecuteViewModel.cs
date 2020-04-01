@@ -33,7 +33,6 @@ namespace BCLabManager.ViewModel
         //readonly ChamberRepository _chamberRepository;
         //readonly TesterRepository _testerRepository;
         //readonly ChannelRepository _channelRepository;
-        ObservableCollection<BatteryTypeClass> _batteryTypes;
         ObservableCollection<BatteryClass> _batteries;
         ObservableCollection<TesterClass> _testers;
         ObservableCollection<ChannelClass> _channels;
@@ -41,7 +40,7 @@ namespace BCLabManager.ViewModel
 
         //ObservableCollection<BatteryTypeClass> _allBatteryTypes;
         BatteryTypeClass _batteryType;
-        ObservableCollection<BatteryClass> _allBatteries;
+        List<BatteryClass> _allBatteries;
         BatteryClass _battery;
         //ObservableCollection<TesterClass> _allTesters;
         TesterClass _tester;
@@ -59,8 +58,8 @@ namespace BCLabManager.ViewModel
 
         public TestRecordExecuteViewModel(
             TestRecordClass record,
-            ObservableCollection<BatteryTypeClass> batteryTypes,
-            ObservableCollection<BatteryClass> batteries,
+        BatteryTypeClass batteryType,
+        ObservableCollection<BatteryClass> batteries,
             ObservableCollection<TesterClass> testers,
             ObservableCollection<ChannelClass> channels,
             ObservableCollection<ChamberClass> chambers
@@ -75,7 +74,7 @@ namespace BCLabManager.ViewModel
             //_chamberRepository = Repositories._chamberRepository;
             //_testerRepository = Repositories._testerRepository;
             //_channelRepository = Repositories._channelRepository;
-            _batteryTypes = batteryTypes;
+            _batteryType = batteryType;
             _batteries = batteries;
             _testers = testers;
             _channels = channels;
@@ -110,44 +109,6 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public BatteryTypeClass BatteryType       //选中项
-        {
-            get
-            {
-                //if (_batteryType == null)
-                //return null;
-                return _batteryType;
-            }
-            set
-            {
-                if (value == _batteryType)
-                    return;
-
-                _batteryType = value;
-
-                RaisePropertyChanged("BatteryType");
-
-
-                ObservableCollection<BatteryClass> all = _batteries;
-                List<BatteryClass> allstring = (
-                    from i in all
-                    where (i.BatteryType.Id == BatteryType.Id) && i.AssetUseCount <= 0
-                    select i).ToList();
-
-                AllBatteries = new ObservableCollection<BatteryClass>(allstring);
-            }
-        }
-
-        public ObservableCollection<BatteryTypeClass> AllBatteryTypes //供选项
-        {
-            get
-            {
-                ObservableCollection<BatteryTypeClass> all = _batteryTypes;
-
-                return new ObservableCollection<BatteryTypeClass>(all);
-            }
-        }
-
         public BatteryClass Battery   //选中项
         {
             get
@@ -167,22 +128,24 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ObservableCollection<BatteryClass> AllBatteries    //供选项
+        public List<BatteryClass> AllBatteries    //供选项
         {
             get
             {
                 if (_allBatteries == null)
-                    _allBatteries = new ObservableCollection<BatteryClass>();
+                {
+                    _allBatteries = _batteries.Where(o=>o.BatteryType == _batteryType).ToList();
+                }
                 return _allBatteries;
             }
-            set
-            {
-                if (value != _allBatteries)
-                {
-                    _allBatteries = value;
-                    RaisePropertyChanged("AllBatteries");
-                }
-            }
+            //set
+            //{
+            //    if (value != _allBatteries)
+            //    {
+            //        _allBatteries = value;
+            //        RaisePropertyChanged("AllBatteries");
+            //    }
+            //}
         }
 
         public ChamberClass Chamber   //选中项

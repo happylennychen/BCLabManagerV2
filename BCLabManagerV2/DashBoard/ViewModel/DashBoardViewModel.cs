@@ -20,9 +20,9 @@ namespace BCLabManager.ViewModel
         //ObservableCollection<ChannelClass> _channelService.Items;
         //ObservableCollection<ChamberClass> _chamberService.Items;
         //ObservableCollection<ProgramClass> _programService.Items;
-        private BatteryServieClass _batteryService;
-        private ChannelServieClass _channelService;
-        private ChamberServieClass _chamberService;
+        private BatteryServiceClass _batteryService;
+        private ChannelServiceClass _channelService;
+        private ChamberServiceClass _chamberService;
         private ProgramServiceClass _programService;
         #endregion // Fields
 
@@ -34,9 +34,9 @@ namespace BCLabManager.ViewModel
             //ObservableCollection<BatteryClass> batteries,
             //ObservableCollection<ChannelClass> channels,
             //ObservableCollection<ChamberClass> chambers        
-            BatteryServieClass batteryService,
-         ChannelServieClass channelService,
-         ChamberServieClass chamberService,
+            BatteryServiceClass batteryService,
+         ChannelServiceClass channelService,
+         ChamberServiceClass chamberService,
          ProgramServiceClass programService
             )
         {

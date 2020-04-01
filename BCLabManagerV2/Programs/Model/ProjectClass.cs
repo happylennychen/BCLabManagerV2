@@ -18,6 +18,12 @@ namespace BCLabManager.Model
         //public String Requester { get; set; }
         //public DateTime RequestTime { get; set; }
         //public String Description { get; set; }
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set { SetProperty(ref _name, value); }
+        }
         private string _customer;
         public string Customer
         {
@@ -62,11 +68,14 @@ namespace BCLabManager.Model
         }
         public ObservableCollection<ProjectProductClass> ProjectProducts { get; set; } = new ObservableCollection<ProjectProductClass>();
 
-        public ObservableCollection<ProgramClass> Programs { get; set; } = new ObservableCollection<ProgramClass>();
         public ObservableCollection<EvSettingClass> EvSettings { get; set; } = new ObservableCollection<EvSettingClass>();
 
         public ProjectClass()           //Create用到
         {
+        }
+        public override string ToString()
+        {
+            return this.Name;
         }
 
         //public ProjectClass(String Name, BatteryTypeClass BatteryType, String Requester, DateTime RequestTime, String Description, ObservableCollection<RecipeClass> Recipes) //Clone用到

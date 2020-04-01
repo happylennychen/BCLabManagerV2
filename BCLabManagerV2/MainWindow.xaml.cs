@@ -1,4 +1,5 @@
-﻿#define Seed
+﻿//#define Seed
+#define Show
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,15 +61,16 @@ namespace BCLabManager
         //private DomainDataClass _domainData;
 
         public BatteryTypeServieClass BatteryTypeService { get; set; } = new BatteryTypeServieClass();
-        public BatteryServieClass BatteryService { get; set; } = new BatteryServieClass();
-        public TesterServieClass TesterService { get; set; } = new TesterServieClass();
-        public ChannelServieClass ChannelService { get; set; } = new ChannelServieClass();
-        public ChamberServieClass ChamberService { get; set; } = new ChamberServieClass();
+        public BatteryServiceClass BatteryService { get; set; } = new BatteryServiceClass();
+        public TesterServiceClass TesterService { get; set; } = new TesterServiceClass();
+        public ChannelServiceClass ChannelService { get; set; } = new ChannelServiceClass();
+        public ChamberServiceClass ChamberService { get; set; } = new ChamberServiceClass();
         //public TestRecordServiceClass TestRecordService { get; set; } = new TestRecordServiceClass();
         public RecipeTemplateServiceClass RecipeTemplateService { get; set; } = new RecipeTemplateServiceClass();
         public StepServiceClass StepService { get; set; } = new StepServiceClass();
         public StepTemplateServiceClass StepTemplateService { get; set; } = new StepTemplateServiceClass();
         public ProgramServiceClass ProgramService { get; set; } = new ProgramServiceClass();
+        public ProjectServiceClass ProjectService { get; set; } = new ProjectServiceClass();
 
         public MainWindow()
         {
@@ -77,14 +79,16 @@ namespace BCLabManager
 #if Seed
                 InitializeDatabase();
                 MessageBox.Show("DB Data Seeding Completed!");
-                App.Current.Shutdown();
-#else
+#endif
+#if Show
                 InitializeComponent();
                 LoadFromDB();
                 InitializeNavigator();
                 CreateViewModels();
                 BindingVMandView();
                 ProgramService.UpdateEstimatedTimeChain();
+#else
+                App.Current.Shutdown();
 #endif
             }
             catch (Exception e)
@@ -170,6 +174,7 @@ namespace BCLabManager
                 ProgramService.RecipeService.TestRecordService.Items = new ObservableCollection<TestRecordClass>(uow.TestRecords.GetAll());
                 ProgramService.RecipeService.TestRecordService.RawDataService.Items = new ObservableCollection<RawDataClass>(uow.RawDataList.GetAll());
                 ProgramService.RecipeService.StepRuntimeService.Items = new ObservableCollection<StepRuntimeClass>(uow.StepRuntimes.GetAll());
+                ProjectService.Items = new ObservableCollection<ProjectClass>(uow.Projects.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
             }
@@ -200,7 +205,7 @@ namespace BCLabManager
                 (
                 ProgramService,
                 RecipeTemplateService,
-                BatteryTypeService,
+                ProjectService,
                 BatteryService,
                 TesterService,
                 ChannelService,

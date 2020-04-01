@@ -121,6 +121,7 @@ namespace BCLabManager.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(nullable: true),
                     Customer = table.Column<string>(nullable: true),
                     BatteryTypeId = table.Column<int>(nullable: true),
                     Description = table.Column<string>(nullable: true),
@@ -203,6 +204,7 @@ namespace BCLabManager.Migrations
                     FullyChargedEndCurrent = table.Column<int>(nullable: false),
                     FullyChargedEndingTimeout = table.Column<int>(nullable: false),
                     DischargeEndVoltage = table.Column<int>(nullable: false),
+                    LimitedChargeVoltage = table.Column<int>(nullable: false),
                     ProjectClassId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -223,7 +225,6 @@ namespace BCLabManager.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(nullable: true),
-                    BatteryTypeId = table.Column<int>(nullable: true),
                     Order = table.Column<decimal>(nullable: false),
                     Requester = table.Column<string>(nullable: true),
                     RequestTime = table.Column<DateTime>(nullable: false),
@@ -236,20 +237,14 @@ namespace BCLabManager.Migrations
                     IsValid = table.Column<bool>(nullable: false),
                     TableFilePath = table.Column<string>(nullable: true),
                     Type = table.Column<string>(nullable: true),
-                    ProjectClassId = table.Column<int>(nullable: true)
+                    ProjectId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Programs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Programs_BatteryTypes_BatteryTypeId",
-                        column: x => x.BatteryTypeId,
-                        principalTable: "BatteryTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Programs_Projects_ProjectClassId",
-                        column: x => x.ProjectClassId,
+                        name: "FK_Programs_Projects_ProjectId",
+                        column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -511,14 +506,9 @@ namespace BCLabManager.Migrations
                 column: "ProjectClassId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Programs_BatteryTypeId",
+                name: "IX_Programs_ProjectId",
                 table: "Programs",
-                column: "BatteryTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Programs_ProjectClassId",
-                table: "Programs",
-                column: "ProjectClassId");
+                column: "ProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectProductClass_ProjectClassId",

@@ -281,6 +281,7 @@
     <Compile Include="DataAccess\AppDbContext.cs" />
     <Compile Include="DataAccess\ChannelRepository.cs" />
     <Compile Include="DataAccess\ChamberRepository.cs" />
+    <Compile Include="DataAccess\IProjectRepository.cs" />
     <Compile Include="DataAccess\IChannelRepository.cs" />
     <Compile Include="DataAccess\IChamberRepository.cs" />
     <Compile Include="DataAccess\IProgramRepository.cs" />
@@ -290,6 +291,7 @@
     <Compile Include="DataAccess\IStepTemplateRepository.cs" />
     <Compile Include="DataAccess\IStepRuntimeRepository.cs" />
     <Compile Include="DataAccess\IRawDataRepository.cs" />
+    <Compile Include="DataAccess\ProjectRepository.cs" />
     <Compile Include="DataAccess\ProgramRepository.cs" />
     <Compile Include="DataAccess\RecipeTemplateRepository.cs" />
     <Compile Include="DataAccess\RecipeRepository.cs" />
@@ -309,9 +311,9 @@
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
-    <Compile Include="Migrations\20200330084805_SchemaUpdate.cs" />
-    <Compile Include="Migrations\20200330084805_SchemaUpdate.designer.cs">
-      <DependentUpon>20200330084805_SchemaUpdate.cs</DependentUpon>
+    <Compile Include="Migrations\20200401015412_SchemaUpdate.cs" />
+    <Compile Include="Migrations\20200401015412_SchemaUpdate.designer.cs">
+      <DependentUpon>20200401015412_SchemaUpdate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
@@ -321,6 +323,7 @@
     <Compile Include="Programs\Model\ProjectClass.cs" />
     <Compile Include="Programs\Model\ProjectProductClass.cs" />
     <Compile Include="Programs\Model\EvResultClass.cs" />
+    <Compile Include="Programs\Model\Service\ProjectServiceClass.cs" />
     <Compile Include="Programs\Model\Service\ProgramServiceClass.cs" />
     <Compile Include="Programs\Model\Service\RecipeTemplateServiceClass.cs" />
     <Compile Include="Programs\Model\Service\RawDataServiceClass.cs" />
