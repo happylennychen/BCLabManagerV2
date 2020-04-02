@@ -67,6 +67,36 @@ namespace BCLabManager.ViewModel
             get { return _batterytype.TypicalCapacity; }
         }
 
+        public int CutoffDischargeVoltage
+        {
+            get { return _batterytype.CutoffDischargeVoltage; }
+        }
+
+        public int FullyChargedEndCurrent
+        {
+            get { return _batterytype.FullyChargedEndCurrent; }
+        }
+
+        public int FullyChargedEndingTimeout
+        {
+            get { return _batterytype.FullyChargedEndingTimeout; }
+        }
+
+        public int LimitedChargeVoltage
+        {
+            get { return _batterytype.LimitedChargeVoltage; }
+        }
+
+        public int NominalVoltage
+        {
+            get { return _batterytype.NominalVoltage; }
+        }
+
+        public int RatedCapacity
+        {
+            get { return _batterytype.RatedCapacity; }
+        }
+
         #endregion // Customer Properties
     }
 }

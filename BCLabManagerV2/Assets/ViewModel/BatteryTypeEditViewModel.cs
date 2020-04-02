@@ -110,6 +110,90 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public int LimitedChargeVoltage
+        {
+            get { return _batterytype.LimitedChargeVoltage; }
+            set
+            {
+                if (value == _batterytype.LimitedChargeVoltage)
+                    return;
+
+                _batterytype.LimitedChargeVoltage = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        public int RatedCapacity
+        {
+            get { return _batterytype.RatedCapacity; }
+            set
+            {
+                if (value == _batterytype.RatedCapacity)
+                    return;
+
+                _batterytype.RatedCapacity = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        public int NominalVoltage
+        {
+            get { return _batterytype.NominalVoltage; }
+            set
+            {
+                if (value == _batterytype.NominalVoltage)
+                    return;
+
+                _batterytype.NominalVoltage = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        public int CutoffDischargeVoltage
+        {
+            get { return _batterytype.CutoffDischargeVoltage; }
+            set
+            {
+                if (value == _batterytype.CutoffDischargeVoltage)
+                    return;
+
+                _batterytype.CutoffDischargeVoltage = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        public int FullyChargedEndCurrent
+        {
+            get { return _batterytype.FullyChargedEndCurrent; }
+            set
+            {
+                if (value == _batterytype.FullyChargedEndCurrent)
+                    return;
+
+                _batterytype.FullyChargedEndCurrent = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        public int FullyChargedEndingTimeout
+        {
+            get { return _batterytype.FullyChargedEndingTimeout; }
+            set
+            {
+                if (value == _batterytype.FullyChargedEndingTimeout)
+                    return;
+
+                _batterytype.FullyChargedEndingTimeout = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
         #endregion // Customer Properties
 
         #region Presentation Properties

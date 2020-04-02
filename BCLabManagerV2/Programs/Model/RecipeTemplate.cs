@@ -17,6 +17,18 @@ namespace BCLabManager.Model
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
+        private double _current;
+        public double Current
+        {
+            get { return _current; }
+            set { SetProperty(ref _current, value); }
+        }
+        private double _temperature;
+        public double Temperature
+        {
+            get { return _temperature; }
+            set { SetProperty(ref _temperature, value); }
+        }
 
         public ObservableCollection<StepClass> Steps { get; set; } = new ObservableCollection<StepClass>();
 

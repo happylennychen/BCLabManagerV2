@@ -25,6 +25,7 @@ namespace BCLabManager.ViewModel
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
+        RelayCommand _programInvalidateCommand;
         RelayCommand _abandonCommand;
         RelayCommand _executeCommand;
         RelayCommand _commitCommand;
@@ -186,7 +187,7 @@ namespace BCLabManager.ViewModel
             get
             {
                 if (_selectedRecipe != null)
-                    return _selectedRecipe.StepRuntimes.OrderBy(o=>o.StepRuntime.Order).ToList();
+                    return _selectedRecipe.StepRuntimes.OrderBy(o => o.StepRuntime.Order).ToList();
                 else
                     return null;
             }
@@ -261,6 +262,20 @@ namespace BCLabManager.ViewModel
                         );
                 }
                 return _saveAsCommand;
+            }
+        }
+        public ICommand ProgramInvalidateCommand
+        {
+            get
+            {
+                if (_programInvalidateCommand == null)
+                {
+                    _programInvalidateCommand = new RelayCommand(
+                        param => { this.ProgramInvalidate(); },
+                        param => this.CanSaveAs
+                        );
+                }
+                return _programInvalidateCommand;
             }
         }
         public ICommand AbandonCommand
@@ -568,7 +583,7 @@ namespace BCLabManager.ViewModel
             //    }
             //        */
         }
-    private bool CanEdit
+        private bool CanEdit
         {
             get { return _selectedProgram != null; }
         }
@@ -584,6 +599,13 @@ namespace BCLabManager.ViewModel
             if (evm.IsOK == true)
             {
                 _programService.SuperAdd(m);
+            }
+        }
+        private void ProgramInvalidate()
+        {
+            if (MessageBox.Show("Are you sure?", "Invalidate Program", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                _programService.Invalidate(_selectedProgram._program);
             }
         }
         private bool CanSaveAs

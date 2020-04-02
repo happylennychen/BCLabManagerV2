@@ -20,7 +20,7 @@ namespace BCLabManager.ViewModel
     public class AllBatteriesViewModel : BindableBase
     {
         #region Fields
-        private BatteryTypeServieClass _batteryTypeServie;
+        private BatteryTypeServiceClass _batteryTypeServie;
         private BatteryServiceClass _batteryService;
         BatteryViewModel _selectedItem;
         RelayCommand _createCommand;
@@ -32,7 +32,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllBatteriesViewModel(BatteryServiceClass batteryService, BatteryTypeServieClass batteryTypeServie)
+        public AllBatteriesViewModel(BatteryServiceClass batteryService, BatteryTypeServiceClass batteryTypeServie)
         {
             _batteryTypeServie = batteryTypeServie;
             _batteryService = batteryService;

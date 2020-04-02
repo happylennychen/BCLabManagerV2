@@ -31,6 +31,7 @@ namespace BCLabManager
         //private Repositories _repositories = new Repositories();    //model实例全部放在这里。viewmodel和database的source
 
         public AllBatteryTypesViewModel allBatteryTypesViewModel { get; set; }  //其中需要显示BatteryTypes和Batteries
+        public AllProjectsViewModel allProjectsViewModel { get; set; }  //其中需要显示Projects
         public AllBatteriesViewModel allBatteriesViewModel { get; set; }  //其中需要显示Batteries和Records
 
         public AllTestersViewModel allTestersViewModel { get; set; }  //其中需要显示Testers和Channels
@@ -60,7 +61,7 @@ namespace BCLabManager
 
         //private DomainDataClass _domainData;
 
-        public BatteryTypeServieClass BatteryTypeService { get; set; } = new BatteryTypeServieClass();
+        public BatteryTypeServiceClass BatteryTypeService { get; set; } = new BatteryTypeServiceClass();
         public BatteryServiceClass BatteryService { get; set; } = new BatteryServiceClass();
         public TesterServiceClass TesterService { get; set; } = new TesterServiceClass();
         public ChannelServiceClass ChannelService { get; set; } = new ChannelServiceClass();
@@ -183,6 +184,8 @@ namespace BCLabManager
         {
             allBatteryTypesViewModel = new AllBatteryTypesViewModel(BatteryTypeService, BatteryService);    //ViewModel初始化
 
+            allProjectsViewModel = new AllProjectsViewModel(ProjectService, BatteryTypeService);    //ViewModel初始化
+
             allBatteriesViewModel = new AllBatteriesViewModel(BatteryService, BatteryTypeService);    //ViewModel初始化
 
             allTestersViewModel = new AllTestersViewModel(TesterService, ChannelService);    //ViewModel初始化
@@ -217,7 +220,9 @@ namespace BCLabManager
         void BindingVMandView()
         {
 
-            this.AllBatteryTypesViewInstance.DataContext = allBatteryTypesViewModel;                                                            //ViewModel跟View绑定
+            this.AllBatteryTypesViewInstance.DataContext = allBatteryTypesViewModel;
+
+            this.AllProjectsViewInstance.DataContext = allProjectsViewModel;                                                           //ViewModel跟View绑定
 
 
             this.AllBatteriesViewInstance.DataContext = allBatteriesViewModel;                                                            //ViewModel跟View绑定

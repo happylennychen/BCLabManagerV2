@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200401015412_SchemaUpdate")]
-    partial class SchemaUpdate
+    [Migration("20200402081831_isinvalid")]
+    partial class isinvalid
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -252,7 +252,7 @@ namespace BCLabManager.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<bool>("IsValid")
+                    b.Property<bool>("IsInvalid")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
@@ -421,8 +421,14 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<double>("Current")
+                        .HasColumnType("double precision");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
+
+                    b.Property<double>("Temperature")
+                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 

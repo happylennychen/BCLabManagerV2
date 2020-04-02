@@ -57,7 +57,7 @@
                 <!-- CUSTOMER TYPE -->
                 <Label 
       Grid.Row="2" Grid.Column="0" 
-      Content="_Battery Type:" 
+      Content="_Project:" 
       HorizontalAlignment="Right"
       />
                 <ComboBox 

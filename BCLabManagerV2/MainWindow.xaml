@@ -23,9 +23,19 @@
                     <GroupBox Header="Battery Types" Grid.Column="0" BorderBrush="Black" BorderThickness="1">
                         <v:AllBatteryTypesView x:Name="AllBatteryTypesViewInstance"></v:AllBatteryTypesView>
                     </GroupBox>
-                    <GroupBox Header="Testers" Grid.Column="2" BorderBrush="Black" BorderThickness="1">
-                        <v:AllTestersView x:Name="AllTestersViewInstance"></v:AllTestersView>
-                    </GroupBox>
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50*"></RowDefinition>
+                            <RowDefinition Height="4"></RowDefinition>
+                            <RowDefinition Height="50*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <GroupBox Header="Projects" BorderBrush="Black" BorderThickness="1">
+                            <v:AllProjectsView x:Name="AllProjectsViewInstance"></v:AllProjectsView>
+                        </GroupBox>
+                        <GroupBox Header="Testers" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
+                            <v:AllTestersView x:Name="AllTestersViewInstance"></v:AllTestersView>
+                        </GroupBox>
+                    </Grid>
                     <Grid Grid.Column="4">
                         <Grid.RowDefinitions>
                             <RowDefinition></RowDefinition>

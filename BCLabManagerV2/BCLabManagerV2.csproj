@@ -271,13 +271,22 @@
     <Compile Include="Assets\Model\AssetUsageRecordClass.cs" />
     <Compile Include="Assets\Model\IAsset.cs" />
     <Compile Include="Assets\Model\ITester.cs" />
-    <Compile Include="Assets\Model\Service\ChamberServieClass.cs" />
-    <Compile Include="Assets\Model\Service\TesterServieClass.cs" />
-    <Compile Include="Assets\Model\Service\ChannelServieClass.cs" />
+    <Compile Include="Assets\Model\Service\ChamberServiceClass.cs" />
+    <Compile Include="Assets\Model\Service\TesterServiceClass.cs" />
+    <Compile Include="Assets\Model\Service\ChannelServiceClass.cs" />
     <Compile Include="Assets\Model\Service\BatteryServieClass.cs" />
-    <Compile Include="Assets\Model\Service\BatteryTypeServieClass.cs" />
+    <Compile Include="Assets\Model\Service\BatteryTypeServiceClass.cs" />
     <Compile Include="Assets\Model\Service\IModelService.cs" />
     <Compile Include="Assets\Model\Service\ModelService.cs" />
+    <Compile Include="Assets\ViewModel\AllProjectsViewModel.cs" />
+    <Compile Include="Assets\ViewModel\ProjectEditViewModel.cs" />
+    <Compile Include="Assets\ViewModel\ProjectViewModel.cs" />
+    <Compile Include="Assets\View\AllBatteryTypesView.xaml.cs">
+      <DependentUpon>AllBatteryTypesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Assets\View\ProjectView.xaml.cs">
+      <DependentUpon>ProjectView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DataAccess\AppDbContext.cs" />
     <Compile Include="DataAccess\ChannelRepository.cs" />
     <Compile Include="DataAccess\ChamberRepository.cs" />
@@ -311,9 +320,13 @@
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
-    <Compile Include="Migrations\20200401015412_SchemaUpdate.cs" />
-    <Compile Include="Migrations\20200401015412_SchemaUpdate.designer.cs">
-      <DependentUpon>20200401015412_SchemaUpdate.cs</DependentUpon>
+    <Compile Include="Migrations\20200402073506_init.cs" />
+    <Compile Include="Migrations\20200402073506_init.designer.cs">
+      <DependentUpon>20200402073506_init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200402081831_isinvalid.cs" />
+    <Compile Include="Migrations\20200402081831_isinvalid.designer.cs">
+      <DependentUpon>20200402081831_isinvalid.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
@@ -413,8 +426,8 @@
       <DependentUpon>BatteryView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Assets\View\AllBatteryTypesView.xaml.cs">
-      <DependentUpon>AllBatteryTypesView.xaml</DependentUpon>
+    <Compile Include="Assets\View\AllProjectsView.xaml.cs">
+      <DependentUpon>AllProjectsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Assets\View\AllChannelsView.xaml.cs">
       <DependentUpon>AllChannelsView.xaml</DependentUpon>
@@ -463,6 +476,14 @@
       <DependentUpon>TesterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\ReportLoader.cs" />
+    <Page Include="Assets\View\AllBatteryTypesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\View\ProjectView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -493,7 +514,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Assets\View\AllBatteryTypesView.xaml">
+    <Page Include="Assets\View\AllProjectsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

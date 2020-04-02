@@ -16,16 +16,18 @@ namespace BCLabManager.Model
         public RecipeServiceClass RecipeService { get; set; } = new RecipeServiceClass();
         public void SuperAdd(ProgramClass item)
         {
-            DatabaseAdd(item);
             DomainAdd(item);
+            DatabaseAdd(item);
             UpdateEstimatedTimeChain();
         }
         public void DatabaseAdd(ProgramClass item)  //不应该自建ID，应该给出order
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                item.Project = uow.Projects.GetById(item.Project.Id);
-                //item.Project.BatteryType = uow.BatteryTypes.GetById(item.Project.BatteryType.Id);
+                int pid = item.Project.Id;
+                int btid = item.Project.BatteryType.Id;
+                item.Project = uow.Projects.GetById(pid);
+                item.Project.BatteryType = uow.BatteryTypes.GetById(btid);
 
                 var nextId = 1;
                 if (RecipeService.StepRuntimeService.Items.Count != 0)
@@ -205,6 +207,16 @@ namespace BCLabManager.Model
             }
 
             UpdateEstimatedTimeChain();
+        }
+
+        internal void Invalidate(ProgramClass program)
+        {
+            program.IsInvalid = true;
+            foreach (var rec in program.Recipes)
+            {
+                RecipeService.Abandon(rec);
+            }
+            DatabaseUpdate(program);
         }
     }
 }

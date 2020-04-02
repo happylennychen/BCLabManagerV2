@@ -84,11 +84,11 @@ namespace BCLabManager.Model
             get { return _description; }
             set { SetProperty(ref _description, value); }
         }
-        private bool _isValid;
-        public bool IsValid
+        private bool _isInvalid = false;
+        public bool IsInvalid
         {
-            get { return _isValid; }
-            set { SetProperty(ref _isValid, value); }
+            get { return _isInvalid; }
+            set { SetProperty(ref _isInvalid, value); }
         }
         private string _tableFilePath;
         public string TableFilePath

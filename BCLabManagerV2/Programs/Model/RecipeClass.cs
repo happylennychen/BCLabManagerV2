@@ -78,6 +78,8 @@ namespace BCLabManager.Model
         public RecipeClass(RecipeTemplate template, BatteryTypeClass batteryType)
         {
             Name = template.Name;
+            Current = template.Current;
+            Temperature = template.Temperature;
             //foreach (var step in template.Steps)
             //{
             //    StepRuntimeClass sr = new StepRuntimeClass();

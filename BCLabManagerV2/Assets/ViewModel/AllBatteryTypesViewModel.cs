@@ -25,14 +25,14 @@ namespace BCLabManager.ViewModel
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
         RelayCommand _deleteCommand;
-        private BatteryTypeServieClass _batteryTypeService;
+        private BatteryTypeServiceClass _batteryTypeService;
         private BatteryServiceClass _batteryService;
 
         #endregion // Fields
 
         #region Constructor
 
-        public AllBatteryTypesViewModel(BatteryTypeServieClass batteryTypeService, BatteryServiceClass batteryService)
+        public AllBatteryTypesViewModel(BatteryTypeServiceClass batteryTypeService, BatteryServiceClass batteryService)
         {
             _batteryTypeService = batteryTypeService;
             _batteryService = batteryService;
@@ -215,6 +215,13 @@ namespace BCLabManager.ViewModel
             btevm.Manufactor = _selectedItem.Manufactor;
             btevm.Material = _selectedItem.Material;
             btevm.Name = _selectedItem.Name;
+            btevm.CutoffDischargeVoltage = _selectedItem.CutoffDischargeVoltage;
+            btevm.FullyChargedEndCurrent = _selectedItem.FullyChargedEndCurrent;
+            btevm.FullyChargedEndingTimeout = _selectedItem.FullyChargedEndingTimeout;
+            btevm.LimitedChargeVoltage = _selectedItem.LimitedChargeVoltage;
+            btevm.NominalVoltage = _selectedItem.NominalVoltage;
+            btevm.RatedCapacity = _selectedItem.RatedCapacity;
+            btevm.TypicalCapacity = _selectedItem.TypicalCapacity;
             //btevm.DisplayName = "Battery Type-Save As";
             var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
             BatteryTypeViewInstance.DataContext = btevm;

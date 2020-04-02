@@ -22,6 +22,7 @@ namespace BCLabManager.Model
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
+                item.BatteryType = uow.BatteryTypes.GetById(item.BatteryType.Id);
                 uow.Projects.Insert(item);
                 uow.Commit();
             }

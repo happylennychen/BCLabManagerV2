@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BCLabManager.View.AllBatteryTypesView"
+﻿<UserControl x:Class="BCLabManager.View.AllProjectsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -20,61 +20,20 @@
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
     </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40*"></RowDefinition>
-            <RowDefinition Height="4"></RowDefinition>
-            <RowDefinition Height="40*"></RowDefinition>
-        </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="Battery Type">
-            <DockPanel>
-                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="_Create" Command="{Binding Path=CreateCommand}" Margin="0,5,5,0" Width="60"></Button>
-                    <Button Content="_Edit" Command="{Binding Path=EditCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
-                    <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60"></Button>
-                    <Button Content="_Delete" Command="{Binding Path=DeleteCommand}" Margin="0,5,5,0" Width="60"></Button>
-                </StackPanel>
-                <ListView Grid.Row="1"
-                      x:Name="BatteryTypelist"
-      AlternationCount="2" 
-      ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=AllBatteryTypes}"
-                      SelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
-      >
-
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn 
-            Header="Id" 
-            DisplayMemberBinding="{Binding Path=Id}" 
-            />
-                            <GridViewColumn 
-            Header="Name" 
-            DisplayMemberBinding="{Binding Path=Name}" 
-            />
-                            <GridViewColumn 
-            Header="Manufactor" 
-            DisplayMemberBinding="{Binding Path=Manufactor}" 
-            />
-                            <GridViewColumn 
-            Header="Material" 
-            DisplayMemberBinding="{Binding Path=Material}" 
-            />
-                            <GridViewColumn 
-            Header="Typical Capacity" 
-            DisplayMemberBinding="{Binding Path=TypicalCapacity}" 
-            />
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </DockPanel>
-        </GroupBox>
-        <GroupBox Grid.Row="2" Header="Batteries of Selected Type">
-
+    <GroupBox Header="Project">
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="_Create" Command="{Binding Path=CreateCommand}" Margin="0,5,5,0" Width="60"></Button>
+                <Button Content="_Edit" Command="{Binding Path=EditCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
+                <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60"></Button>
+                <Button Content="_Delete" Command="{Binding Path=DeleteCommand}" Margin="0,5,5,0" Width="60"></Button>
+            </StackPanel>
             <ListView Grid.Row="1"
+                      x:Name="Projectlist"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=Batteries}"
+      ItemsSource="{Binding Path=AllProjects}"
+                      SelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 
                 <ListView.View>
@@ -88,16 +47,32 @@
             DisplayMemberBinding="{Binding Path=Name}" 
             />
                         <GridViewColumn 
-            Header="Cycle" 
-            DisplayMemberBinding="{Binding Path=CycleCount}" 
+            Header="Customer" 
+            DisplayMemberBinding="{Binding Path=Customer}" 
             />
                         <GridViewColumn 
-            Header="Use Count" 
-            DisplayMemberBinding="{Binding Path=AssetUseCount}" 
+            Header="Battery Type" 
+            DisplayMemberBinding="{Binding Path=BatteryType}" 
+            />
+                        <GridViewColumn 
+            Header="Rated Capacity" 
+            DisplayMemberBinding="{Binding Path=RatedCapacity}" 
+            />
+                        <GridViewColumn 
+            Header="Limited Charge Voltage" 
+            DisplayMemberBinding="{Binding Path=LimitedChargeVoltage}" 
+            />
+                        <GridViewColumn 
+            Header="Cut-off Discharge Voltage" 
+            DisplayMemberBinding="{Binding Path=CutoffDischargeVoltage}" 
+            />
+                        <GridViewColumn 
+            Header="Voltage Points" 
+            DisplayMemberBinding="{Binding Path=VoltagePoints}" 
             />
                     </GridView>
                 </ListView.View>
             </ListView>
-        </GroupBox>
-    </Grid>
+        </DockPanel>
+    </GroupBox>
 </UserControl>
