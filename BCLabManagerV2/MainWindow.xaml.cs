@@ -1,5 +1,5 @@
-﻿//#define Seed
-#define Show
+﻿#define Seed
+//#define Show
 using System;
 using System.Collections.Generic;
 using System.Linq;

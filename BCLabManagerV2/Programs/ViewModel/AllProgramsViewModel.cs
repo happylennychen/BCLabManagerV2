@@ -643,10 +643,13 @@ namespace BCLabManager.ViewModel
             TestRecordViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _programService.RecipeService.TestRecordService.Execute(SelectedTestRecord.Record, SelectedProgram.Project.BatteryType.Name, evm.Battery, evm.Chamber, evm.Tester.Name, evm.Channel, evm.StartTime);
-                _batteryService.Execute(evm.Battery, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
-                _channelService.Execute(evm.Channel, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
-                _chamberService.Execute(evm.Chamber, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
+                _programService.RecipeService.TestRecordService.Execute(SelectedTestRecord.Record, SelectedProgram.Project.BatteryType.Name, evm.Battery, evm.Chamber, evm.Tester.Name, evm.Channel, evm.StartTime, evm.MeasurementGain, evm.MeasurementOffset, evm.TraceResistance, evm.CapacityDifference, evm.Operator);
+                if (!evm.IsSkip)
+                {
+                    _batteryService.Execute(evm.Battery, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
+                    _channelService.Execute(evm.Channel, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
+                    _chamberService.Execute(evm.Chamber, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
+                }
             }
         }
         private bool CanExecute
@@ -669,9 +672,12 @@ namespace BCLabManager.ViewModel
             TestRecordCommitViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _batteryService.Commit(testRecord.Record.AssignedBattery, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name, evm.NewCycle);
-                _channelService.Commit(testRecord.Record.AssignedChannel, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
-                _chamberService.Commit(testRecord.Record.AssignedChamber, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
+                if (!evm.IsSkip)
+                {
+                    _batteryService.Commit(testRecord.Record.AssignedBattery, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name, evm.NewCycle);
+                    _channelService.Commit(testRecord.Record.AssignedChannel, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
+                    _chamberService.Commit(testRecord.Record.AssignedChamber, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
+                }
                 try
                 {
                     DateTime[] time = _testerService.GetTimeFromRawData(testRecord.Record.AssignedChannel.Tester, evm.FileList);

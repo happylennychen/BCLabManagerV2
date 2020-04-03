@@ -112,6 +112,23 @@ namespace BCLabManager.ViewModel
         }
 
 
+        private bool _isSkip = false;
+        public bool IsSkip
+        {
+            get
+            {
+                return _isSkip;
+            }
+            set
+            {
+                if (value == _isSkip)
+                    return;
+
+                _isSkip = value;
+
+                RaisePropertyChanged("IsSkip");
+            }
+        }
         #endregion // Presentation Properties
 
 
@@ -169,7 +186,7 @@ namespace BCLabManager.ViewModel
                 {
                     _openFilesCommand = new RelayCommand(
                         param => { this.OpenFiles(); }//,
-                                               //param => this.CanExecute
+                                                      //param => this.CanExecute
                         );
                 }
                 return _openFilesCommand;

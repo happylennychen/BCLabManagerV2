@@ -328,6 +328,10 @@
     <Compile Include="Migrations\20200402081831_isinvalid.designer.cs">
       <DependentUpon>20200402081831_isinvalid.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200402132627_RemoveStep.cs" />
+    <Compile Include="Migrations\20200402132627_RemoveStep.designer.cs">
+      <DependentUpon>20200402132627_RemoveStep.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
       <DependentUpon>AllProductsView.xaml</DependentUpon>

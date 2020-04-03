@@ -248,22 +248,6 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("Comment");
             }
         }
-        public String Steps
-        {
-            get
-            {
-                return _record.Steps;
-            }
-            set
-            {
-                if (value == _record.Steps)
-                    return;
-
-                _record.Steps = value;
-
-                RaisePropertyChanged("Steps");
-            }
-        }
 
         public double NewCycle
         {
@@ -279,6 +263,90 @@ namespace BCLabManager.ViewModel
                 _record.NewCycle = value;
 
                 RaisePropertyChanged("NewCycle");
+            }
+        }
+
+        public double MeasurementGain
+        {
+            get
+            {
+                return _record.MeasurementGain;
+            }
+            set
+            {
+                if (value == _record.MeasurementGain)
+                    return;
+
+                _record.MeasurementGain = value;
+
+                RaisePropertyChanged("MeasurementGain");
+            }
+        }
+
+        public double MeasurementOffset
+        {
+            get
+            {
+                return _record.MeasurementOffset;
+            }
+            set
+            {
+                if (value == _record.MeasurementOffset)
+                    return;
+
+                _record.MeasurementOffset = value;
+
+                RaisePropertyChanged("MeasurementOffset");
+            }
+        }
+
+        public double TraceResistance
+        {
+            get
+            {
+                return _record.TraceResistance;
+            }
+            set
+            {
+                if (value == _record.TraceResistance)
+                    return;
+
+                _record.TraceResistance = value;
+
+                RaisePropertyChanged("TraceResistance");
+            }
+        }
+
+        public double CapacityDifference
+        {
+            get
+            {
+                return _record.CapacityDifference;
+            }
+            set
+            {
+                if (value == _record.CapacityDifference)
+                    return;
+
+                _record.CapacityDifference = value;
+
+                RaisePropertyChanged("CapacityDifference");
+            }
+        }
+        public String Operator
+        {
+            get
+            {
+                return _record.Operator;
+            }
+            set
+            {
+                if (value == _record.Operator)
+                    return;
+
+                _record.Operator = value;
+
+                RaisePropertyChanged("Operator");
             }
         }
         #endregion // Presentation Properties

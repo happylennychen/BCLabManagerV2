@@ -107,7 +107,6 @@ namespace BCLabManager.Model
             get => _endTime;
             set { SetProperty(ref _endTime, value); }
         }
-        public String Steps { get; set; }
         public String Comment { get; set; }
         public List<RawDataClass> RawDataList { get; set; }
         //public Double NewCycle { get; set; }
@@ -185,7 +184,6 @@ namespace BCLabManager.Model
             this.RecipeStr = String.Empty;
             this.StartTime = DateTime.MinValue;
             this.EndTime = DateTime.MinValue;
-            this.Steps = String.Empty;
             this.Comment = String.Empty;
             this.RawDataList = new List<RawDataClass>();
             //this.RawData = ??

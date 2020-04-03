@@ -74,6 +74,12 @@
       Text="{Binding Path=Comment, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
       Validation.ErrorTemplate="{x:Null}"
       />
+            <CheckBox 
+      Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="3" 
+                Content="DO NOT create assets usage record"
+      HorizontalAlignment="Center"
+                IsChecked="{Binding Path=IsSkip}"
+      />
 
             <!-- SAVE BUTTON -->
             <Button 

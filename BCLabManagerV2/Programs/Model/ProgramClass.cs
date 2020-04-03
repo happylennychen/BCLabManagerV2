@@ -96,12 +96,12 @@ namespace BCLabManager.Model
             get { return _tableFilePath; }
             set { SetProperty(ref _tableFilePath, value); }
         }
-        private string _type;
-        public string Type
-        {
-            get { return _type; }
-            set { SetProperty(ref _type, value); }
-        }
+        //private string _type;
+        //public string Type
+        //{
+        //    get { return _type; }
+        //    set { SetProperty(ref _type, value); }
+        //}
         private ProjectClass _project;
         public ProjectClass Project
         {

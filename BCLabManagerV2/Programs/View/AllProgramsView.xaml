@@ -262,6 +262,26 @@
             Header="New Cycle" 
             DisplayMemberBinding="{Binding Path=NewCycle}" 
             />
+                            <GridViewColumn 
+            Header="Measurement Gain" 
+            DisplayMemberBinding="{Binding Path=MeasurementGain}" 
+            />
+                            <GridViewColumn 
+            Header="Measurement Offset" 
+            DisplayMemberBinding="{Binding Path=MeasurementOffset}" 
+            />
+                            <GridViewColumn 
+            Header="Trace Resistance" 
+            DisplayMemberBinding="{Binding Path=TraceResistance}" 
+            />
+                            <GridViewColumn 
+            Header="Capacity Difference" 
+            DisplayMemberBinding="{Binding Path=CapacityDifference}" 
+            />
+                            <GridViewColumn 
+            Header="Operator" 
+            DisplayMemberBinding="{Binding Path=Operator}" 
+            />
                         </GridView>
                     </ListView.View>
                 </ListView>
