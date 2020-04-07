@@ -90,7 +90,7 @@ namespace BCLabManager.Model
             DatabaseUpdate(testRecord);
         }
 
-        internal void Commit(TestRecordClass testRecord, string comment, List<RawDataClass> rawDataList, DateTime startTime, DateTime completeTime, string programName, string recipeName)
+        internal void Commit(TestRecordClass testRecord, string comment, List<RawDataClass> rawDataList, DateTime startTime, DateTime completeTime, string batteryType, string projectName, string programName, string recipeName)
         {
             testRecord.Comment = comment;
             testRecord.RawDataList = rawDataList;
@@ -99,10 +99,29 @@ namespace BCLabManager.Model
             testRecord.AssignedBattery = null;
             testRecord.AssignedChamber = null;
             testRecord.AssignedChannel = null;
+            testRecord.ProjectStr = projectName;
             testRecord.ProgramStr = programName;
             testRecord.RecipeStr = recipeName;
             testRecord.Status = TestStatus.Completed;
+            testRecord.TestFilePath = CreateTestFile(rawDataList, batteryType, projectName);
             SuperUpdate(testRecord);
+        }
+
+        private string CreateTestFile(List<RawDataClass> rawDataList, string batteryType, string projectName)
+        {
+            if (rawDataList.Count == 1)
+            {
+                return rawDataList[0].FilePath;
+            }
+            else
+            {
+                string filename = string.Empty ;
+                foreach (var raw in rawDataList)
+                {
+                    filename += raw.FilePath;
+                }
+                return $@"Q:\807\Software\WH BC Lab\Data\{batteryType}\{projectName}\Test Data\";
+            }
         }
 
         internal TestRecordClass Invalidate(TestRecordClass testRecord, string comment)
@@ -110,7 +129,7 @@ namespace BCLabManager.Model
             testRecord.Comment += "\r\n" + comment;
             testRecord.Status = TestStatus.Invalid;
             DatabaseUpdate(testRecord);
-            
+
             var newTestRecord = new TestRecordClass();
             SuperAdd(newTestRecord);
             return newTestRecord;
