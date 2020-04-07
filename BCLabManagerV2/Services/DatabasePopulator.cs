@@ -35,7 +35,7 @@ namespace BCLabManager
             PopulateProgram17(); //Tested
             PopulateProgram18(); //Tested
             PopulateProjects();
-            PopulateTestPrograms();
+            //PopulateTestPrograms();
         }
         #region Assets
         private static void PopulateAssets()
