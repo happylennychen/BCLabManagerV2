@@ -320,21 +320,9 @@
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
-    <Compile Include="Migrations\20200402073506_init.cs" />
-    <Compile Include="Migrations\20200402073506_init.designer.cs">
-      <DependentUpon>20200402073506_init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200402081831_isinvalid.cs" />
-    <Compile Include="Migrations\20200402081831_isinvalid.designer.cs">
-      <DependentUpon>20200402081831_isinvalid.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200402132627_RemoveStep.cs" />
-    <Compile Include="Migrations\20200402132627_RemoveStep.designer.cs">
-      <DependentUpon>20200402132627_RemoveStep.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200410092559_MoveCandT.cs" />
-    <Compile Include="Migrations\20200410092559_MoveCandT.designer.cs">
-      <DependentUpon>20200410092559_MoveCandT.cs</DependentUpon>
+    <Compile Include="Migrations\20200411074859_Init.cs" />
+    <Compile Include="Migrations\20200411074859_Init.designer.cs">
+      <DependentUpon>20200411074859_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
