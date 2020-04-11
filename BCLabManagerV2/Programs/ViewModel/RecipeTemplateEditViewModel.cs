@@ -90,32 +90,32 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("Name");
             }
         }
-        public double Current
-        {
-            get { return _RecipeTemplate.Current; }
-            set
-            {
-                if (value == _RecipeTemplate.Current)
-                    return;
+        //public double Current
+        //{
+        //    get { return _RecipeTemplate.Current; }
+        //    set
+        //    {
+        //        if (value == _RecipeTemplate.Current)
+        //            return;
 
-                _RecipeTemplate.Current = value;
+        //        _RecipeTemplate.Current = value;
 
-                RaisePropertyChanged("Current");
-            }
-        }
-        public double Temperature
-        {
-            get { return _RecipeTemplate.Temperature; }
-            set
-            {
-                if (value == _RecipeTemplate.Temperature)
-                    return;
+        //        RaisePropertyChanged("Current");
+        //    }
+        //}
+        //public double Temperature
+        //{
+        //    get { return _RecipeTemplate.Temperature; }
+        //    set
+        //    {
+        //        if (value == _RecipeTemplate.Temperature)
+        //            return;
 
-                _RecipeTemplate.Temperature = value;
+        //        _RecipeTemplate.Temperature = value;
 
-                RaisePropertyChanged("Temperature");
-            }
-        }
+        //        RaisePropertyChanged("Temperature");
+        //    }
+        //}
         public ObservableCollection<StepTemplateViewModel> StepTemplates { get; set; }
 
         public ObservableCollection<StepViewModel> Steps { get; set; }

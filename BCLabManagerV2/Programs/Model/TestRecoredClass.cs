@@ -116,7 +116,7 @@ namespace BCLabManager.Model
             get { return _newCycle; }
             set { SetProperty(ref _newCycle, value); }
         }
-        private double _measurementGain  ;
+        private double _measurementGain = 1;
         public double MeasurementGain
         {
             get { return _measurementGain; }
@@ -151,6 +151,18 @@ namespace BCLabManager.Model
         {
             get { return _operator; }
             set { SetProperty(ref _operator, value); }
+        }
+        private double _current;
+        public double Current
+        {
+            get { return _current; }
+            set { SetProperty(ref _current, value); }
+        }
+        private double _temperature;
+        public double Temperature
+        {
+            get { return _temperature; }
+            set { SetProperty(ref _temperature, value); }
         }
 
         #region Store the assets in use

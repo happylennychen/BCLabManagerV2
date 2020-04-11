@@ -342,6 +342,40 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public double Current
+        {
+            get
+            {
+                return _record.Current;
+            }
+            set
+            {
+                if (value == _record.Current)
+                    return;
+
+                _record.Current = value;
+
+                RaisePropertyChanged("Current");
+            }
+        }
+
+        public double Temperature
+        {
+            get
+            {
+                return _record.Temperature;
+            }
+            set
+            {
+                if (value == _record.Temperature)
+                    return;
+
+                _record.Temperature = value;
+
+                RaisePropertyChanged("Temperature");
+            }
+        }
+
         private bool _isSkip = false;
         public bool IsSkip
         {

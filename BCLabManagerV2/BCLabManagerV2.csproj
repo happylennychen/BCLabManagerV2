@@ -332,6 +332,10 @@
     <Compile Include="Migrations\20200402132627_RemoveStep.designer.cs">
       <DependentUpon>20200402132627_RemoveStep.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200410092559_MoveCandT.cs" />
+    <Compile Include="Migrations\20200410092559_MoveCandT.designer.cs">
+      <DependentUpon>20200410092559_MoveCandT.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
       <DependentUpon>AllProductsView.xaml</DependentUpon>

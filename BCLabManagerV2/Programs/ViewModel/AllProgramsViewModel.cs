@@ -643,7 +643,7 @@ namespace BCLabManager.ViewModel
             TestRecordViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _programService.RecipeService.TestRecordService.Execute(SelectedTestRecord.Record, SelectedProgram.Project.BatteryType.Name, evm.Battery, evm.Chamber, evm.Tester.Name, evm.Channel, evm.StartTime, evm.MeasurementGain, evm.MeasurementOffset, evm.TraceResistance, evm.CapacityDifference, evm.Operator);
+                _programService.RecipeService.TestRecordService.Execute(SelectedTestRecord.Record, SelectedProgram.Project.BatteryType.Name, evm.Battery, evm.Chamber, evm.Tester.Name, evm.Channel, evm.Current, evm.Temperature, evm.StartTime, evm.MeasurementGain, evm.MeasurementOffset, evm.TraceResistance, evm.CapacityDifference, evm.Operator);
                 if (!evm.IsSkip)
                 {
                     _batteryService.Execute(evm.Battery, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);

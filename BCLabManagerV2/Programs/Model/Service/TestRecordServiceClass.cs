@@ -70,13 +70,15 @@ namespace BCLabManager.Model
             edittarget.Status = item.Status;
             edittarget.TesterStr = item.TesterStr;
         }
-        public void Execute(TestRecordClass testRecord, string batteryTypeStr, BatteryClass battery, ChamberClass chamber, string testerStr, ChannelClass channel, DateTime startTime, double measurementGain, double measurementOffset, double traceResistance, double capacityDifference, string @operator)
+        public void Execute(TestRecordClass testRecord, string batteryTypeStr, BatteryClass battery, ChamberClass chamber, string testerStr, ChannelClass channel, double current, double temperature, DateTime startTime, double measurementGain, double measurementOffset, double traceResistance, double capacityDifference, string @operator)
         {
             testRecord.BatteryTypeStr = batteryTypeStr;
             testRecord.BatteryStr = battery.Name;
             testRecord.ChamberStr = chamber.Name;
             testRecord.TesterStr = testerStr;
             testRecord.ChannelStr = channel.Name;
+            testRecord.Current = current;
+            testRecord.Temperature = temperature;
             testRecord.StartTime = startTime;
             testRecord.MeasurementGain = measurementGain;
             testRecord.MeasurementOffset = measurementOffset;
