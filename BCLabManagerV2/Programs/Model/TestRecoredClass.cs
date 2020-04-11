@@ -93,6 +93,13 @@ namespace BCLabManager.Model
             get { return _programStr; }
             set { SetProperty(ref _programStr, value); }
         }
+        //public String ProgramStr { get; set; }
+        private string _projectStr;
+        public string ProjectStr
+        {
+            get { return _projectStr; }
+            set { SetProperty(ref _projectStr, value); }
+        }
 
         private DateTime _startTime;
         public DateTime StartTime

@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BCLabManager.Model
 {
@@ -92,7 +94,7 @@ namespace BCLabManager.Model
             DatabaseUpdate(testRecord);
         }
 
-        internal void Commit(TestRecordClass testRecord, string comment, List<RawDataClass> rawDataList, DateTime startTime, DateTime completeTime, string programName, string recipeName)
+        internal void Commit(TestRecordClass testRecord, string comment, List<RawDataClass> rawDataList, DateTime startTime, DateTime completeTime, string batteryType, string projectName, string programName, string recipeName)
         {
             testRecord.Comment = comment;
             testRecord.RawDataList = rawDataList;
@@ -101,10 +103,56 @@ namespace BCLabManager.Model
             testRecord.AssignedBattery = null;
             testRecord.AssignedChamber = null;
             testRecord.AssignedChannel = null;
+            testRecord.ProjectStr = projectName;
             testRecord.ProgramStr = programName;
             testRecord.RecipeStr = recipeName;
             testRecord.Status = TestStatus.Completed;
+            testRecord.TestFilePath = CreateTestFile(rawDataList, batteryType, projectName);
             SuperUpdate(testRecord);
+        }
+
+        private string CreateTestFile(List<RawDataClass> rawDataList, string batteryType, string projectName)   //默认按顺序导入
+        {
+            if (rawDataList.Count == 1)
+            {
+                return rawDataList[0].FilePath;
+            }
+            else
+            {
+                string filename = string.Empty ;
+                StringBuilder sb = new StringBuilder();
+                foreach (var raw in rawDataList)
+                {
+                    filename += Path.GetFileName(raw.FilePath) +"__";
+                }
+                filename = filename.Substring(0, filename.Length - 2);
+                var filepath = $@"Q:\807\Software\WH BC Lab\Data\{batteryType}\{projectName}\Test Data\{filename}";
+
+                bool isFirst = true;
+                foreach (var raw in rawDataList)
+                {
+                    if (isFirst)
+                    {
+                        isFirst = false;
+                        //File.WriteAllText(filename, File.ReadAllText(raw.FilePath));
+                        try
+                        {
+                            File.Copy(raw.FilePath, filepath);
+                        }
+                        catch(Exception e)
+                        {
+                            MessageBox.Show(e.Message);
+                        }
+                    }
+                    else
+                    {
+                        var lines = File.ReadAllLines(raw.FilePath).ToList();
+                        lines.RemoveRange(0, 10);
+                        File.AppendAllLines(filepath, lines);
+                    }
+                }
+                return filepath;
+            }
         }
 
         internal TestRecordClass Invalidate(TestRecordClass testRecord, string comment)
@@ -112,7 +160,7 @@ namespace BCLabManager.Model
             testRecord.Comment += "\r\n" + comment;
             testRecord.Status = TestStatus.Invalid;
             DatabaseUpdate(testRecord);
-            
+
             var newTestRecord = new TestRecordClass();
             SuperAdd(newTestRecord);
             return newTestRecord;

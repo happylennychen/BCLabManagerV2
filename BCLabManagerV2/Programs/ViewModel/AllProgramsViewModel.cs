@@ -681,11 +681,11 @@ namespace BCLabManager.ViewModel
                 try
                 {
                     DateTime[] time = _testerService.GetTimeFromRawData(testRecord.Record.AssignedChannel.Tester, evm.FileList);
-                    _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), time[0], time[1], SelectedProgram.Name, SelectedRecipe.Name);
+                    _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), time[0], time[1], SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, SelectedProgram.Name, SelectedRecipe.Name);
                 }
                 catch
                 {
-                    _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), DateTime.MinValue, DateTime.MinValue, SelectedProgram.Name, SelectedRecipe.Name);
+                    _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), DateTime.MinValue, DateTime.MinValue, SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, SelectedProgram.Name, SelectedRecipe.Name);
                 }
             }
         }

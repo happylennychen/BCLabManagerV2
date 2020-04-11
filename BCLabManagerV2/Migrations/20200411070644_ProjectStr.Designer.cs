@@ -3,15 +3,17 @@ using System;
 using BCLabManager.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200411070644_ProjectStr")]
+    partial class ProjectStr
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -372,6 +374,9 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<double>("Current")
+                        .HasColumnType("double precision");
+
                     b.Property<TimeSpan>("ED")
                         .HasColumnType("interval");
 
@@ -396,6 +401,9 @@ namespace BCLabManager.Migrations
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<double>("Temperature")
+                        .HasColumnType("double precision");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProgramClassId");
@@ -410,8 +418,14 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<double>("Current")
+                        .HasColumnType("double precision");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
+
+                    b.Property<double>("Temperature")
+                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
@@ -571,9 +585,6 @@ namespace BCLabManager.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("text");
 
-                    b.Property<double>("Current")
-                        .HasColumnType("double precision");
-
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp without time zone");
 
@@ -606,9 +617,6 @@ namespace BCLabManager.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
-
-                    b.Property<double>("Temperature")
-                        .HasColumnType("double precision");
 
                     b.Property<string>("TestFilePath")
                         .HasColumnType("text");
