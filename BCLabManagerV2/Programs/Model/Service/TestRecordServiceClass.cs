@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BCLabManager.Model
 {
@@ -107,7 +109,7 @@ namespace BCLabManager.Model
             SuperUpdate(testRecord);
         }
 
-        private string CreateTestFile(List<RawDataClass> rawDataList, string batteryType, string projectName)
+        private string CreateTestFile(List<RawDataClass> rawDataList, string batteryType, string projectName)   //默认按顺序导入
         {
             if (rawDataList.Count == 1)
             {
@@ -116,11 +118,38 @@ namespace BCLabManager.Model
             else
             {
                 string filename = string.Empty ;
+                StringBuilder sb = new StringBuilder();
                 foreach (var raw in rawDataList)
                 {
-                    filename += raw.FilePath;
+                    filename += Path.GetFileName(raw.FilePath) +"__";
                 }
-                return $@"Q:\807\Software\WH BC Lab\Data\{batteryType}\{projectName}\Test Data\";
+                filename = filename.Substring(0, filename.Length - 2);
+                var filepath = $@"Q:\807\Software\WH BC Lab\Data\{batteryType}\{projectName}\Test Data\{filename}";
+
+                bool isFirst = true;
+                foreach (var raw in rawDataList)
+                {
+                    if (isFirst)
+                    {
+                        isFirst = false;
+                        //File.WriteAllText(filename, File.ReadAllText(raw.FilePath));
+                        try
+                        {
+                            File.Copy(raw.FilePath, filepath);
+                        }
+                        catch(Exception e)
+                        {
+                            MessageBox.Show(e.Message);
+                        }
+                    }
+                    else
+                    {
+                        var lines = File.ReadAllLines(raw.FilePath).ToList();
+                        lines.RemoveRange(0, 10);
+                        File.AppendAllLines(filepath, lines);
+                    }
+                }
+                return filepath;
             }
         }
 
