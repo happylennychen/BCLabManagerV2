@@ -72,9 +72,10 @@ namespace BCLabManager.Model
             edittarget.Status = item.Status;
             edittarget.TesterStr = item.TesterStr;
         }
-        public void Execute(TestRecordClass testRecord, string batteryTypeStr, BatteryClass battery, ChamberClass chamber, string testerStr, ChannelClass channel, double current, double temperature, DateTime startTime, double measurementGain, double measurementOffset, double traceResistance, double capacityDifference, string @operator)
+        public void Execute(TestRecordClass testRecord, string batteryTypeStr, string projectName, BatteryClass battery, ChamberClass chamber, string testerStr, ChannelClass channel, double current, double temperature, DateTime startTime, double measurementGain, double measurementOffset, double traceResistance, double capacityDifference, string @operator, string programName, string recipeName)
         {
             testRecord.BatteryTypeStr = batteryTypeStr;
+            testRecord.ProjectStr = projectName;
             testRecord.BatteryStr = battery.Name;
             testRecord.ChamberStr = chamber.Name;
             testRecord.TesterStr = testerStr;
@@ -87,6 +88,8 @@ namespace BCLabManager.Model
             testRecord.TraceResistance = traceResistance;
             testRecord.CapacityDifference = capacityDifference;
             testRecord.Operator = @operator;
+            testRecord.ProgramStr = programName;
+            testRecord.RecipeStr = recipeName;
             testRecord.AssignedBattery = battery;
             testRecord.AssignedChamber = chamber;
             testRecord.AssignedChannel = channel;
@@ -94,7 +97,7 @@ namespace BCLabManager.Model
             DatabaseUpdate(testRecord);
         }
 
-        internal void Commit(TestRecordClass testRecord, string comment, List<RawDataClass> rawDataList, DateTime startTime, DateTime completeTime, string batteryType, string projectName, string programName, string recipeName)
+        internal void Commit(TestRecordClass testRecord, string comment, List<RawDataClass> rawDataList, DateTime startTime, DateTime completeTime, string batteryType, string projectName)
         {
             testRecord.Comment = comment;
             testRecord.RawDataList = rawDataList;
@@ -103,9 +106,6 @@ namespace BCLabManager.Model
             testRecord.AssignedBattery = null;
             testRecord.AssignedChamber = null;
             testRecord.AssignedChannel = null;
-            testRecord.ProjectStr = projectName;
-            testRecord.ProgramStr = programName;
-            testRecord.RecipeStr = recipeName;
             testRecord.Status = TestStatus.Completed;
             testRecord.TestFilePath = CreateTestFile(rawDataList, batteryType, projectName);
             SuperUpdate(testRecord);
