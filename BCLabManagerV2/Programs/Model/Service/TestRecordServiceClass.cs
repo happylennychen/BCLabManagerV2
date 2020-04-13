@@ -97,7 +97,7 @@ namespace BCLabManager.Model
             DatabaseUpdate(testRecord);
         }
 
-        internal void Commit(TestRecordClass testRecord, string comment, List<RawDataClass> rawDataList, DateTime startTime, DateTime completeTime, string batteryType, string projectName)
+        internal void Commit(TestRecordClass testRecord, string comment, List<RawDataClass> rawDataList, DateTime startTime, DateTime completeTime, string batteryType, string projectName, Header header)
         {
             testRecord.Comment = comment;
             testRecord.RawDataList = rawDataList;
@@ -107,11 +107,54 @@ namespace BCLabManager.Model
             testRecord.AssignedChamber = null;
             testRecord.AssignedChannel = null;
             testRecord.Status = TestStatus.Completed;
-            testRecord.TestFilePath = CreateTestFile(rawDataList, batteryType, projectName);
+            string root = $@"Q:\807\Software\WH BC Lab\Data\{ batteryType}\{ projectName}";
+            testRecord.TestFilePath = CreateTestFile(rawDataList, root);
+            string headerFilePath = CreateHeaderFile(
+                root,
+                Path.GetFileName(testRecord.TestFilePath), 
+                header
+                );
+            CreateSourceFile(root, headerFilePath, testRecord.TestFilePath);
             SuperUpdate(testRecord);
         }
 
-        private string CreateTestFile(List<RawDataClass> rawDataList, string batteryType, string projectName)   //默认按顺序导入
+        private void CreateSourceFile(string root, string headerFilePath, string testFilePath)
+        {
+            string sourceFilePath = $@"{root}\Source Data\{Path.GetFileName(testFilePath)}";
+            File.Copy(headerFilePath, sourceFilePath);
+            File.AppendAllLines(sourceFilePath, File.ReadAllLines(testFilePath));
+        }
+
+        private string CreateHeaderFile(string root, string testFileName, Header header)
+        {
+            string headerFilePath = Path.ChangeExtension($@"{root}\Header\{ testFileName}", "HDR");
+            
+            List<string> lines = new List<string>();
+            lines.Add($"Type,{header.Type}");
+            lines.Add($"Test Time,{header.TestTime}");
+            lines.Add($"Equipment,{header.Equipment}");
+            lines.Add($"Manufacture Factory,{header.ManufactureFactory}");
+            lines.Add($"Battery Model,{header.BatteryModel}");
+            lines.Add($"Cycle Count,{header.CycleCount}");
+            lines.Add($"Temperature(DegC),{header.Temperature}");
+            lines.Add($"Current(mA),{header.Current}");
+            lines.Add($"Measurement Gain,{header.MeasurementGain}");
+            lines.Add($"Measurement Offset(mV),{header.MeasurementOffset}");
+            lines.Add($"Trace Resistance(mohm),{header.TraceResistance}");
+            lines.Add($"Capacity Difference(mAH),{header.CapacityDifference}");
+            lines.Add($"Absolute Max Capacity(mAH),{header.AbsoluteMaxCapacity}");
+            lines.Add($"Limited Charge Voltage(mV),{header.LimitedChargeVoltage}");
+            lines.Add($"Cut-off Discharge Voltage(mV),{header.CutoffDischargeVoltage}");
+            lines.Add($"Tester,{header.Tester}");
+            for (int i = 0; i < 9; i++)
+            {
+                lines.Add("");
+            }
+            File.WriteAllLines(headerFilePath, lines);
+            return headerFilePath;
+        }
+
+        private string CreateTestFile(List<RawDataClass> rawDataList, string root)   //默认按顺序导入
         {
             if (rawDataList.Count == 1)
             {
@@ -126,7 +169,7 @@ namespace BCLabManager.Model
                     filename += Path.GetFileName(raw.FilePath) +"__";
                 }
                 filename = filename.Substring(0, filename.Length - 2);
-                var filepath = $@"Q:\807\Software\WH BC Lab\Data\{batteryType}\{projectName}\Test Data\{filename}";
+                var filepath = $@"{root}\Test Data\{filename}";
 
                 bool isFirst = true;
                 foreach (var raw in rawDataList)
