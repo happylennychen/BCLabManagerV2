@@ -643,7 +643,23 @@ namespace BCLabManager.ViewModel
             TestRecordViewInstance.ShowDialog();
             if (evm.IsOK == true)
             {
-                _programService.RecipeService.TestRecordService.Execute(SelectedTestRecord.Record, SelectedProgram.Project.BatteryType.Name, evm.Battery, evm.Chamber, evm.Tester.Name, evm.Channel, evm.StartTime, evm.MeasurementGain, evm.MeasurementOffset, evm.TraceResistance, evm.CapacityDifference, evm.Operator);
+                _programService.RecipeService.TestRecordService.Execute(
+                    SelectedTestRecord.Record,
+                    SelectedProgram.Project.BatteryType.Name,
+                    SelectedProgram.Project.Name,
+                    evm.Battery, evm.Chamber,
+                    evm.Tester.Name,
+                    evm.Channel,
+                    evm.Current,
+                    evm.Temperature,
+                    evm.StartTime,
+                    evm.MeasurementGain,
+                    evm.MeasurementOffset,
+                    evm.TraceResistance,
+                    evm.CapacityDifference,
+                    evm.Operator,
+                    SelectedProgram.Name,
+                    SelectedRecipe.Name);
                 if (!evm.IsSkip)
                 {
                     _batteryService.Execute(evm.Battery, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
@@ -661,6 +677,8 @@ namespace BCLabManager.ViewModel
         {
             TestRecordViewModel testRecord = SelectedTestRecord;
             TestRecordClass m = new TestRecordClass();
+            m.BatteryTypeStr = testRecord.Record.BatteryTypeStr;
+            m.ProjectStr = testRecord.Record.ProjectStr;
             TestRecordCommitViewModel evm = new TestRecordCommitViewModel
                 (
                 //testRecord.Record      //??????????????????????????
@@ -681,11 +699,28 @@ namespace BCLabManager.ViewModel
                 try
                 {
                     DateTime[] time = _testerService.GetTimeFromRawData(testRecord.Record.AssignedChannel.Tester, evm.FileList);
-                    _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), time[0], time[1], SelectedProgram.Name, SelectedRecipe.Name);
+                    Header header = new Header();
+                    header.Type = SelectedProgram.Description;
+                    header.TestTime = time[0].ToString("yyyy-MM-dd");
+                    header.Equipment = testRecord.TesterStr;
+                    header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufactor;
+                    header.BatteryModel = SelectedProgram.Project.BatteryType.Name;
+                    header.CycleCount = evm.NewCycle.ToString();
+                    header.Temperature = testRecord.Record.Temperature.ToString();
+                    header.Current = testRecord.Record.Current.ToString();
+                    header.MeasurementGain = testRecord.MeasurementGain.ToString();
+                    header.MeasurementOffset = testRecord.MeasurementOffset.ToString();
+                    header.TraceResistance = testRecord.TraceResistance.ToString();
+                    header.CapacityDifference = testRecord.CapacityDifference.ToString();
+                    header.AbsoluteMaxCapacity = SelectedProgram.Project.RatedCapacity.ToString();//.BatteryType.TypicalCapacity.ToString();
+                    header.LimitedChargeVoltage = SelectedProgram.Project.LimitedChargeVoltage.ToString();
+                    header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
+                    header.Tester = testRecord.Operator;
+                    _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), time[0], time[1], SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
                 }
                 catch
                 {
-                    _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), DateTime.MinValue, DateTime.MinValue, SelectedProgram.Name, SelectedRecipe.Name);
+                    //_programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), DateTime.MinValue, DateTime.MinValue, SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, SelectedProgram.Description);
                 }
             }
         }

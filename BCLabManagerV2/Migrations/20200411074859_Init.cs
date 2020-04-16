@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BCLabManager.Migrations
 {
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -53,9 +53,7 @@ namespace BCLabManager.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(nullable: true),
-                    Current = table.Column<double>(nullable: false),
-                    Temperature = table.Column<double>(nullable: false)
+                    Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -236,9 +234,8 @@ namespace BCLabManager.Migrations
                     EET = table.Column<DateTime>(nullable: false),
                     ED = table.Column<TimeSpan>(nullable: false),
                     Description = table.Column<string>(nullable: true),
-                    IsValid = table.Column<bool>(nullable: false),
+                    IsInvalid = table.Column<bool>(nullable: false),
                     TableFilePath = table.Column<string>(nullable: true),
-                    Type = table.Column<string>(nullable: true),
                     ProjectId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -323,8 +320,6 @@ namespace BCLabManager.Migrations
                     EST = table.Column<DateTime>(nullable: false),
                     EET = table.Column<DateTime>(nullable: false),
                     ED = table.Column<TimeSpan>(nullable: false),
-                    Current = table.Column<double>(nullable: false),
-                    Temperature = table.Column<double>(nullable: false),
                     ProgramClassId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -406,9 +401,9 @@ namespace BCLabManager.Migrations
                     ChamberStr = table.Column<string>(nullable: true),
                     RecipeStr = table.Column<string>(nullable: true),
                     ProgramStr = table.Column<string>(nullable: true),
+                    ProjectStr = table.Column<string>(nullable: true),
                     StartTime = table.Column<DateTime>(nullable: false),
                     EndTime = table.Column<DateTime>(nullable: false),
-                    Steps = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true),
                     NewCycle = table.Column<double>(nullable: false),
                     MeasurementGain = table.Column<double>(nullable: false),
@@ -417,6 +412,8 @@ namespace BCLabManager.Migrations
                     CapacityDifference = table.Column<double>(nullable: false),
                     TestFilePath = table.Column<string>(nullable: true),
                     Operator = table.Column<string>(nullable: true),
+                    Current = table.Column<double>(nullable: false),
+                    Temperature = table.Column<double>(nullable: false),
                     AssignedBatteryId = table.Column<int>(nullable: true),
                     AssignedChamberId = table.Column<int>(nullable: true),
                     AssignedChannelId = table.Column<int>(nullable: true),

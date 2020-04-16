@@ -70,27 +70,6 @@
       Text="{Binding Path=Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
       Validation.ErrorTemplate="{x:Null}"
       />
-                <Label 
-      Grid.Row="2" Grid.Column="0" 
-      Content="_Current(mA):" 
-      HorizontalAlignment="Right"
-      />
-                <TextBox 
-      Grid.Row="2" Grid.Column="2" 
-      Text="{Binding Path=Current, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
-      Validation.ErrorTemplate="{x:Null}"
-      />
-                <Label 
-      Grid.Row="4" Grid.Column="0" 
-      Content="Temperature(celcius):" 
-      HorizontalAlignment="Right"
-      />
-                <TextBox 
-      Grid.Row="4" Grid.Column="2" 
-      Text="{Binding Path=Temperature, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
-      Validation.ErrorTemplate="{x:Null}"
-      />
-
             </Grid>
         </GroupBox>
 
