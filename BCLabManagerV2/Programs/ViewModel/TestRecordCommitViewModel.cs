@@ -197,7 +197,8 @@ namespace BCLabManager.ViewModel
             var dialog = new OpenFileDialog();
             dialog.Multiselect = true;
             //dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.NetworkShortcuts); No use, cannot see network driver
-            dialog.InitialDirectory = $@"Q:\807\Software\WH BC Lab\Data\{_record.BatteryTypeStr}\{_record.ProjectStr}\Raw Data";
+            //dialog.InitialDirectory = $@"Q:\807\Software\WH BC Lab\Data\{_record.BatteryTypeStr}\{_record.ProjectStr}\Raw Data";
+            dialog.InitialDirectory = $@"Q:\807\Software\WH BC Lab\Data\{_record.BatteryTypeStr}\High Power\Raw Data";
             if (dialog.ShowDialog() == true)
             {
                 FileList = new ObservableCollection<string>(dialog.FileNames.ToList());

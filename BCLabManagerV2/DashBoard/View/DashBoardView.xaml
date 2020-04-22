@@ -118,7 +118,7 @@
             </GroupBox>
             <GroupBox Header="Test Summary" Grid.Row="0" Grid.Column="2">
                 <DockPanel LastChildFill="True">
-                    <Grid Grid.Column="1" Margin="0,10" Width="110" Height="150" DockPanel.Dock="Right">
+                    <Grid Grid.Column="1" Margin="0,10" Width="140" Height="150" DockPanel.Dock="Right">
                         <Grid.RowDefinitions>
                             <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
