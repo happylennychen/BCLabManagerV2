@@ -336,11 +336,16 @@
     <Compile Include="Migrations\20200416080303_MergeHeader.designer.cs">
       <DependentUpon>20200416080303_MergeHeader.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200428063152_AddType.cs" />
+    <Compile Include="Migrations\20200428063152_AddType.designer.cs">
+      <DependentUpon>20200428063152_AddType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
       <DependentUpon>AllProductsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Programs\Model\EvSettingClass.cs" />
+    <Compile Include="Programs\Model\ProgramTypeClass.cs" />
     <Compile Include="Programs\Model\ProjectClass.cs" />
     <Compile Include="Programs\Model\ProjectProductClass.cs" />
     <Compile Include="Programs\Model\EvResultClass.cs" />

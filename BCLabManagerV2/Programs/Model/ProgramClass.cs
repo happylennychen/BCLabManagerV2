@@ -78,6 +78,12 @@ namespace BCLabManager.Model
             get { return _ed; }
             set { SetProperty(ref _ed, value); }
         }
+        private ProgramTypeClass _type;
+        public ProgramTypeClass Type
+        {
+            get { return _type; }
+            set { SetProperty(ref _type, value); }
+        }
         private string _description;
         public string Description
         {

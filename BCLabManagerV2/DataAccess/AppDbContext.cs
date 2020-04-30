@@ -22,6 +22,7 @@ namespace BCLabManager.DataAccess
         public DbSet<RecipeTemplate> RecipeTemplates { get; set; }
         public DbSet<RecipeClass> Recipes { get; set; }
         public DbSet<ProgramClass> Programs { get; set; }
+        public DbSet<ProgramTypeClass> ProgramTypes { get; set; }
         public DbSet<ProjectClass> Projects { get; set; }
         //public DbSet<EvResultClass> EvResults { get; set; }
         //public DbSet<EvSettingClass> EvSettings { get; set; }
