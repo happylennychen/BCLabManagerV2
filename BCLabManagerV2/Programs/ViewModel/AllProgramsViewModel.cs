@@ -718,9 +718,10 @@ namespace BCLabManager.ViewModel
                     header.Tester = testRecord.Operator;
                     _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), time[0], time[1], SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
                 }
-                catch
+                catch(Exception e)
                 {
                     //_programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), DateTime.MinValue, DateTime.MinValue, SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, SelectedProgram.Description);
+                    MessageBox.Show(e.Message);
                 }
             }
         }

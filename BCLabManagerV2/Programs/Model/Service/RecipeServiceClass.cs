@@ -59,7 +59,9 @@ namespace BCLabManager.Model
 
         internal void Invalidate(RecipeClass recipe, TestRecordClass testRecord, string comment)
         {
-            var newTestRecord = TestRecordService.Invalidate(testRecord, comment);
+            TestRecordService.Invalidate(testRecord, comment);
+
+            var newTestRecord = new TestRecordClass();
             recipe.TestRecords.Add(newTestRecord);
             SuperUpdate(recipe);
         }
