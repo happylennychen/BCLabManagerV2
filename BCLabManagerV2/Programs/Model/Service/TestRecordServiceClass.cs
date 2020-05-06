@@ -107,14 +107,15 @@ namespace BCLabManager.Model
             testRecord.AssignedChamber = null;
             testRecord.AssignedChannel = null;
             testRecord.Status = TestStatus.Completed;
-            string root = $@"{GlobalSettings.RootPath}{ batteryType}\{ projectName}";
+            string root = $@"{GlobalSettings.RootPath}{batteryType}\{projectName}";
             testRecord.TestFilePath = CreateTestFile(rawDataList, root);
-            string headerFilePath = CreateHeaderFile(
-                root,
-                Path.GetFileName(testRecord.TestFilePath), 
-                header
-                );
-            CreateSourceFile(root, headerFilePath, testRecord.TestFilePath);
+
+            string headerFilePath = Path.ChangeExtension($@"{root}\Header\{Path.GetFileName(testRecord.TestFilePath)}", "HDR");
+            if (!File.Exists(headerFilePath))
+            {
+                CreateHeaderFile(headerFilePath, header);
+                CreateSourceFile(root, headerFilePath, testRecord.TestFilePath);
+            }
             SuperUpdate(testRecord);
         }
 
@@ -125,10 +126,8 @@ namespace BCLabManager.Model
             File.AppendAllLines(sourceFilePath, File.ReadAllLines(testFilePath));
         }
 
-        private string CreateHeaderFile(string root, string testFileName, Header header)
+        private void CreateHeaderFile(string headerFilePath, Header header)
         {
-            string headerFilePath = Path.ChangeExtension($@"{root}\Header\{ testFileName}", "HDR");
-            
             List<string> lines = new List<string>();
             lines.Add($"Type,{header.Type}");
             lines.Add($"Test Time,{header.TestTime}");
@@ -151,7 +150,6 @@ namespace BCLabManager.Model
                 lines.Add("");
             }
             File.WriteAllLines(headerFilePath, lines);
-            return headerFilePath;
         }
 
         private string CreateTestFile(List<RawDataClass> rawDataList, string root)   //默认按顺序导入
@@ -162,11 +160,11 @@ namespace BCLabManager.Model
             }
             else
             {
-                string filename = string.Empty ;
+                string filename = string.Empty;
                 StringBuilder sb = new StringBuilder();
                 foreach (var raw in rawDataList)
                 {
-                    filename += Path.GetFileName(raw.FilePath) +"__";
+                    filename += Path.GetFileName(raw.FilePath) + "__";
                 }
                 filename = filename.Substring(0, filename.Length - 2);
                 var filepath = $@"{root}\Test Data\{filename}";
@@ -182,7 +180,7 @@ namespace BCLabManager.Model
                         {
                             File.Copy(raw.FilePath, filepath);
                         }
-                        catch(Exception e)
+                        catch (Exception e)
                         {
                             MessageBox.Show(e.Message);
                         }
