@@ -134,7 +134,7 @@ namespace BCLabManager.ViewModel
             {
                 if (_allBatteries == null)
                 {
-                    _allBatteries = _batteries.Where(o=>o.BatteryType == _batteryType).ToList();
+                    _allBatteries = _batteries.Where(o=>o.BatteryType.Id == _batteryType.Id).ToList();
                 }
                 return _allBatteries;
             }

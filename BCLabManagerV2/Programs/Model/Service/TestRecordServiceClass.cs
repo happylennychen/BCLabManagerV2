@@ -107,7 +107,7 @@ namespace BCLabManager.Model
             testRecord.AssignedChamber = null;
             testRecord.AssignedChannel = null;
             testRecord.Status = TestStatus.Completed;
-            string root = $@"Q:\807\Software\WH BC Lab\Data\{ batteryType}\{ projectName}";
+            string root = $@"{GlobalSettings.RootPath}{ batteryType}\{ projectName}";
             testRecord.TestFilePath = CreateTestFile(rawDataList, root);
             string headerFilePath = CreateHeaderFile(
                 root,
