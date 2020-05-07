@@ -48,18 +48,6 @@
       Validation.ErrorTemplate="{x:Null}"
       >
             </ComboBox>
-            
-            <Label 
-      Grid.Row="4" Grid.Column="0" 
-      Content="Temperature:" 
-      HorizontalAlignment="Right"
-      />
-            <TextBox 
-      Grid.Row="4" Grid.Column="2" 
-      Text="{Binding Path=Temperature, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
-      Validation.ErrorTemplate="{x:Null}"
-      >
-            </TextBox>
 
             <Label 
       Grid.Row="6" Grid.Column="0" 

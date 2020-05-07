@@ -23,6 +23,13 @@ namespace BCLabManager.Model
             set { SetProperty(ref _name, value); }
         }
 
+        private double _temperature;
+        public double Temperature
+        {
+            get { return _temperature; }
+            set { SetProperty(ref _temperature, value); }
+        }
+
         private DateTime _startTime;
         public DateTime StartTime
         {

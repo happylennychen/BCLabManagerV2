@@ -1,4 +1,5 @@
-﻿//#define Seed
+﻿//#define Migrate
+//#define Seed
 #define Show
 using System;
 using System.Collections.Generic;
@@ -77,10 +78,7 @@ namespace BCLabManager
         {
             try
             {
-#if Seed
                 InitializeDatabase();
-                MessageBox.Show("DB Data Seeding Completed!");
-#endif
 #if Show
                 InitializeComponent();
                 LoadFromDB();
@@ -118,12 +116,17 @@ namespace BCLabManager
         }
         void InitializeDatabase()
         {
+#if Migrate
             using (var dbContext = new AppDbContext())
             {
                 dbContext.Database.Migrate();
             }
             MessageBox.Show("DB Data Migration Completed!");
+#endif
+#if Seed
             DatabasePopulator.PopulateHistoricData();
+            MessageBox.Show("DB Data Seeding Completed!");
+#endif
         }
 
         private void ConfigureDBPath()

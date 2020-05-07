@@ -168,7 +168,6 @@ namespace BCLabManager.ViewModel
             viewmodel.CurrentUnit = _selectedItem.CurrentUnit;
             viewmodel.CutOffConditionValue = _selectedItem.CutOffConditionValue;
             viewmodel.CutOffConditionType = _selectedItem.CutOffConditionType;
-            viewmodel.Temperature = _selectedItem.Temperature;
             //viewmodel.DisplayName = "Step-Edit";
             viewmodel.commandType = CommandType.Edit;
             var StepViewInstance = new StepTemplateView();      //实例化一个新的view
@@ -196,7 +195,6 @@ namespace BCLabManager.ViewModel
             viewmodel.CurrentUnit = _selectedItem.CurrentUnit;
             viewmodel.CutOffConditionValue = _selectedItem.CutOffConditionValue;
             viewmodel.CutOffConditionType = _selectedItem.CutOffConditionType;
-            viewmodel.Temperature = _selectedItem.Temperature;
             //viewmodel.DisplayName = "Step-Save As";
             viewmodel.commandType = CommandType.SaveAs;
             var StepViewInstance = new StepTemplateView();      //实例化一个新的view

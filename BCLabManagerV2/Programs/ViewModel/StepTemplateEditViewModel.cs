@@ -75,16 +75,6 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public double Temperature
-        {
-            get { return _stepTemplate.Temperature; }
-            set
-            {
-                _stepTemplate.Temperature = value;
-                RaisePropertyChanged();
-            }
-        }
-
         public double CutOffConditionValue
         {
             get { return _stepTemplate.CutOffConditionValue; }

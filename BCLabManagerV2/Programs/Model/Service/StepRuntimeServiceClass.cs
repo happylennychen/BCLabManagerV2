@@ -66,7 +66,7 @@ namespace BCLabManager.Model
                 else if (st.CutOffConditionType == CutOffConditionTypeEnum.C_mAH)
                     Cend = st.CutOffConditionValue;
 
-                duration = TimeSpan.FromHours(GetTimeInSecondsWithParameters(Cend, CBegin, sr.GetCurrentInmA(), sr.StepTemplate.Slope, sr.StepTemplate.Offset));
+                duration = TimeSpan.FromHours(GetTimeInSecondsWithParameters(Cend, CBegin, sr.GetCurrentInmA(), sr.StepTemplate.Coefficient.Slope, sr.StepTemplate.Coefficient.Offset));
             }
             CBegin = Cend;
             return duration;

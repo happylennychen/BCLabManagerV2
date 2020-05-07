@@ -340,6 +340,14 @@
     <Compile Include="Migrations\20200428063152_AddType.designer.cs">
       <DependentUpon>20200428063152_AddType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200507064711_StepTemplateUpdate.cs" />
+    <Compile Include="Migrations\20200507064711_StepTemplateUpdate.designer.cs">
+      <DependentUpon>20200507064711_StepTemplateUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200507072119_RecipeUpdate.cs" />
+    <Compile Include="Migrations\20200507072119_RecipeUpdate.designer.cs">
+      <DependentUpon>20200507072119_RecipeUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
       <DependentUpon>AllProductsView.xaml</DependentUpon>
@@ -361,6 +369,7 @@
     <Compile Include="Programs\Model\Service\RecipeServiceClass.cs" />
     <Compile Include="Programs\Model\RawDataClass.cs" />
     <Compile Include="Programs\Model\StepRuntimeClass.cs" />
+    <Compile Include="Programs\Model\CoefficientClass.cs" />
     <Compile Include="Programs\Model\StepTemplate.cs" />
     <Compile Include="Programs\Model\StepClass.cs" />
     <Compile Include="Programs\ViewModel\AllStepTemplatesViewModel.cs" />

@@ -17,6 +17,10 @@
       -->
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
+
+        <DataTemplate x:Key="Temperature">
+            <TextBox Text="{Binding Path=Temperature}"></TextBox>
+        </DataTemplate>
     </Window.Resources>
     <DockPanel>
         <GroupBox Header="Program" DockPanel.Dock="Top">
@@ -162,6 +166,10 @@
                             <GridViewColumn 
             Header="Name" 
             DisplayMemberBinding="{Binding Path=Name}" 
+            />
+                            <GridViewColumn 
+            Header="Temperature" 
+                                CellTemplate="{StaticResource Temperature}"
             />
                         </GridView>
                     </ListView.View>

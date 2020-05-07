@@ -44,10 +44,6 @@
             DisplayMemberBinding="{Binding Path=Id}" 
             />
                             <GridViewColumn 
-            Header="Temperature" 
-            DisplayMemberBinding="{Binding Path=Temperature}" 
-            />
-                            <GridViewColumn 
             Header="Current Value" 
             DisplayMemberBinding="{Binding Path=CurrentInput}" 
             />

@@ -180,6 +180,10 @@
                                 CellTemplate="{StaticResource ProgressBar}"
             />
                             <GridViewColumn 
+            Header="Temperature" 
+            DisplayMemberBinding="{Binding Path=Temperature}" 
+            />
+                            <GridViewColumn 
             Header="Name" 
             DisplayMemberBinding="{Binding Path=Name}" 
             />

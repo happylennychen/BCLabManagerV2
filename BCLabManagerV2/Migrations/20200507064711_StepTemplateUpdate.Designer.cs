@@ -3,15 +3,17 @@ using System;
 using BCLabManager.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200507064711_StepTemplateUpdate")]
+    partial class StepTemplateUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -436,9 +438,6 @@ namespace BCLabManager.Migrations
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<double>("Temperature")
-                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 

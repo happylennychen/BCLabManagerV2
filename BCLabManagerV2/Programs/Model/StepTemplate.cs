@@ -21,11 +21,11 @@ namespace BCLabManager.Model
     public class StepTemplate : BindableBase    //不需要跳转比较符
     {
         public int Id { get; set; }
-        private double _temperatureDeg;
-        public double Temperature
+        private CoefficientClass _coef = new CoefficientClass();
+        public CoefficientClass Coefficient
         {
-            get { return _temperatureDeg; }
-            set { SetProperty(ref _temperatureDeg, value); }
+            get { return _coef; }
+            set { SetProperty(ref _coef, value); }
         }
         private double _currentInput;
         public double CurrentInput
@@ -50,18 +50,6 @@ namespace BCLabManager.Model
         {
             get { return _cutOffConditionType; }
             set { SetProperty(ref _cutOffConditionType, value); }
-        }
-        private double _slope = 1;
-        public double Slope
-        {
-            get { return _slope; }
-            set { SetProperty(ref _slope, value); }
-        }
-        private double _offset = 0;
-        public double Offset
-        {
-            get { return _offset; }
-            set { SetProperty(ref _offset, value); }
         }
         public StepTemplate()
         {
@@ -96,7 +84,7 @@ namespace BCLabManager.Model
 
         public override string ToString()
         {
-            return $"{Temperature} deg, {CurrentInput} {CurrentUnit}, {CutOffConditionValue} {CutOffConditionType}";
+            return $"{CurrentInput} {CurrentUnit}, {CutOffConditionValue} {CutOffConditionType}";
         }
     }
 }

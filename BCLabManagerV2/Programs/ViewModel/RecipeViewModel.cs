@@ -191,6 +191,22 @@ namespace BCLabManager.ViewModel
                 return _recipe.Name;
             }
         }
+        public double Temperature
+        {
+            get
+            {
+                return _recipe.Temperature;
+            }
+            set
+            {
+                if (value == _recipe.Temperature)
+                    return;
+
+                _recipe.Temperature = value;
+
+                RaisePropertyChanged("Temperature");
+            }
+        }
         #region Presentation logic
         public string WaitingPercentage
         {
