@@ -115,7 +115,6 @@ namespace BCLabManager.Model
             set { SetProperty(ref _endTime, value); }
         }
         public String Comment { get; set; }
-        public List<RawDataClass> RawDataList { get; set; }
         //public Double NewCycle { get; set; }
         private double _newCycle = 1;
         public double NewCycle
@@ -204,7 +203,7 @@ namespace BCLabManager.Model
             this.StartTime = DateTime.MinValue;
             this.EndTime = DateTime.MinValue;
             this.Comment = String.Empty;
-            this.RawDataList = new List<RawDataClass>();
+            this.TestFilePath = string.Empty;
             //this.RawData = ??
             //this.NewCycle = ??
         }

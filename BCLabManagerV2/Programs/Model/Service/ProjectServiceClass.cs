@@ -23,15 +23,12 @@ namespace BCLabManager.Model
 
         private void CreateFolder(string batteryType, string project)
         {
-            string rawDataPath = $@"{GlobalSettings.RootPath}{batteryType}\{project}\{GlobalSettings.RawDataFolderName}";
             string testFilePath = $@"{GlobalSettings.RootPath}{batteryType}\{project}\{GlobalSettings.TestDataFolderName}";
             string evResultPath = $@"{GlobalSettings.RootPath}{batteryType}\{project}\{GlobalSettings.EvResultFolderName}";
             string productPath = $@"{GlobalSettings.RootPath}{batteryType}\{project}\{GlobalSettings.ProductFolderName}";
             string sourceFilePath = $@"{GlobalSettings.RootPath}{batteryType}\{project}\{GlobalSettings.SourceDataFolderName}";
             string headerPath = $@"{GlobalSettings.RootPath}{batteryType}\{project}\{GlobalSettings.HeaderFolderName}";
 
-            if (!Directory.Exists(rawDataPath))
-                Directory.CreateDirectory(rawDataPath);
             if (!Directory.Exists(testFilePath))
                 Directory.CreateDirectory(testFilePath);
             if (!Directory.Exists(evResultPath))

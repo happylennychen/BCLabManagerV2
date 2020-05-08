@@ -497,23 +497,6 @@ namespace BCLabManager.ViewModel
         {
             return tr.Status == TestStatus.Completed;
         }
-        public int CollectedRawDataNumber
-        {
-            get
-            {
-                int i = 0;
-                foreach (var pro in _programService.Items)
-                {
-                    foreach (var sub in pro.Recipes)
-                    {
-                        foreach (var tr in sub.TestRecords)
-                            if (IsTestCompleted(tr))
-                                i += tr.RawDataList.Count;
-                    }
-                }
-                return i;
-            }
-        }
         #endregion
         #endregion // Public Interface
     }

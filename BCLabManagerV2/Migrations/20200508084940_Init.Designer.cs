@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200402081831_isinvalid")]
-    partial class isinvalid
+    [Migration("20200508084940_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -178,6 +178,27 @@ namespace BCLabManager.Migrations
                     b.ToTable("Channels");
                 });
 
+            modelBuilder.Entity("BCLabManager.Model.CoefficientClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<double>("Offset")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Slope")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Temperature")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CoefficientClass");
+                });
+
             modelBuilder.Entity("BCLabManager.Model.EvResultClass", b =>
                 {
                     b.Property<int>("Id")
@@ -276,14 +297,31 @@ namespace BCLabManager.Migrations
                     b.Property<string>("TableFilePath")
                         .HasColumnType("text");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("text");
+                    b.Property<int?>("TypeId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
 
+                    b.HasIndex("TypeId");
+
                     b.ToTable("Programs");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.ProgramTypeClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProgramTypes");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ProjectClass", b =>
@@ -347,38 +385,12 @@ namespace BCLabManager.Migrations
                     b.ToTable("ProjectProductClass");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.RawDataClass", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("FilePath")
-                        .HasColumnType("text");
-
-                    b.Property<string>("MD5")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("TestRecordClassId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TestRecordClassId");
-
-                    b.ToTable("RawDataClass");
-                });
-
             modelBuilder.Entity("BCLabManager.Model.RecipeClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<double>("Current")
-                        .HasColumnType("double precision");
 
                     b.Property<TimeSpan>("ED")
                         .HasColumnType("interval");
@@ -421,14 +433,8 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<double>("Current")
-                        .HasColumnType("double precision");
-
                     b.Property<string>("Name")
                         .HasColumnType("text");
-
-                    b.Property<double>("Temperature")
-                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
@@ -528,6 +534,9 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<int?>("CoefficientId")
+                        .HasColumnType("integer");
+
                     b.Property<double>("CurrentInput")
                         .HasColumnType("double precision");
 
@@ -540,16 +549,9 @@ namespace BCLabManager.Migrations
                     b.Property<double>("CutOffConditionValue")
                         .HasColumnType("double precision");
 
-                    b.Property<double>("Offset")
-                        .HasColumnType("double precision");
-
-                    b.Property<double>("Slope")
-                        .HasColumnType("double precision");
-
-                    b.Property<double>("Temperature")
-                        .HasColumnType("double precision");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("CoefficientId");
 
                     b.ToTable("StepTemplates");
                 });
@@ -588,6 +590,9 @@ namespace BCLabManager.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("text");
 
+                    b.Property<double>("Current")
+                        .HasColumnType("double precision");
+
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp without time zone");
 
@@ -606,6 +611,9 @@ namespace BCLabManager.Migrations
                     b.Property<string>("ProgramStr")
                         .HasColumnType("text");
 
+                    b.Property<string>("ProjectStr")
+                        .HasColumnType("text");
+
                     b.Property<int?>("RecipeClassId")
                         .HasColumnType("integer");
 
@@ -618,8 +626,8 @@ namespace BCLabManager.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Steps")
-                        .HasColumnType("text");
+                    b.Property<double>("Temperature")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("TestFilePath")
                         .HasColumnType("text");
@@ -709,6 +717,10 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.ProjectClass", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId");
+
+                    b.HasOne("BCLabManager.Model.ProgramTypeClass", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ProjectClass", b =>
@@ -723,13 +735,6 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.ProjectClass", null)
                         .WithMany("ProjectProducts")
                         .HasForeignKey("ProjectClassId");
-                });
-
-            modelBuilder.Entity("BCLabManager.Model.RawDataClass", b =>
-                {
-                    b.HasOne("BCLabManager.Model.TestRecordClass", null)
-                        .WithMany("RawDataList")
-                        .HasForeignKey("TestRecordClassId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.RecipeClass", b =>
@@ -759,6 +764,13 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.StepTemplate", "StepTemplate")
                         .WithMany()
                         .HasForeignKey("StepTemplateId");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.StepTemplate", b =>
+                {
+                    b.HasOne("BCLabManager.Model.CoefficientClass", "Coefficient")
+                        .WithMany()
+                        .HasForeignKey("CoefficientId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>

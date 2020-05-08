@@ -16,9 +16,9 @@ namespace BCLabManager.View
     /// <summary>
     /// Interaction logic for ChannelView.xaml
     /// </summary>
-    public partial class RawDataView : Window
+    public partial class TestDataView : Window
     {
-        public RawDataView()
+        public TestDataView()
         {
             InitializeComponent();
         }

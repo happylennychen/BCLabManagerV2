@@ -383,29 +383,6 @@ namespace BCLabManager.Migrations
                     b.ToTable("ProjectProductClass");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.RawDataClass", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("FilePath")
-                        .HasColumnType("text");
-
-                    b.Property<string>("MD5")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("TestRecordClassId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TestRecordClassId");
-
-                    b.ToTable("RawDataClass");
-                });
-
             modelBuilder.Entity("BCLabManager.Model.RecipeClass", b =>
                 {
                     b.Property<int>("Id")
@@ -756,13 +733,6 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.ProjectClass", null)
                         .WithMany("ProjectProducts")
                         .HasForeignKey("ProjectClassId");
-                });
-
-            modelBuilder.Entity("BCLabManager.Model.RawDataClass", b =>
-                {
-                    b.HasOne("BCLabManager.Model.TestRecordClass", null)
-                        .WithMany("RawDataList")
-                        .HasForeignKey("TestRecordClassId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.RecipeClass", b =>

@@ -1,4 +1,4 @@
-﻿//#define Migrate
+﻿#define Migrate
 //#define Seed
 #define Show
 using System;
@@ -176,7 +176,6 @@ namespace BCLabManager
                 ProgramService.Items = new ObservableCollection<ProgramClass>(uow.Programs.GetAll());
                 ProgramService.RecipeService.Items = new ObservableCollection<RecipeClass>(uow.Recipies.GetAll());
                 ProgramService.RecipeService.TestRecordService.Items = new ObservableCollection<TestRecordClass>(uow.TestRecords.GetAll());
-                ProgramService.RecipeService.TestRecordService.RawDataService.Items = new ObservableCollection<RawDataClass>(uow.RawDataList.GetAll());
                 ProgramService.RecipeService.StepRuntimeService.Items = new ObservableCollection<StepRuntimeClass>(uow.StepRuntimes.GetAll());
                 ProjectService.Items = new ObservableCollection<ProjectClass>(uow.Projects.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());

@@ -13,7 +13,6 @@ namespace BCLabManager.Model
     public class TestRecordServiceClass
     {
         public ObservableCollection<TestRecordClass> Items { get; set; }
-        public RawDataServiceClass RawDataService { get; set; } = new RawDataServiceClass();
         public void SuperAdd(TestRecordClass item)
         {
             DatabaseAdd(item);
@@ -66,7 +65,6 @@ namespace BCLabManager.Model
             edittarget.EndTime = item.EndTime;
             edittarget.NewCycle = item.NewCycle;
             edittarget.ProgramStr = item.ProgramStr;
-            edittarget.RawDataList = item.RawDataList;
             edittarget.RecipeStr = item.RecipeStr;
             edittarget.StartTime = item.StartTime;
             edittarget.Status = item.Status;
@@ -97,10 +95,9 @@ namespace BCLabManager.Model
             DatabaseUpdate(testRecord);
         }
 
-        internal void Commit(TestRecordClass testRecord, string comment, List<RawDataClass> rawDataList, bool isRename, string newName, DateTime startTime, DateTime completeTime, string batteryType, string projectName, Header header)
+        internal void Commit(TestRecordClass testRecord, string comment, List<string> rawDataList, bool isRename, string newName, DateTime startTime, DateTime completeTime, string batteryType, string projectName, Header header)
         {
             testRecord.Comment = comment;
-            testRecord.RawDataList = rawDataList;
             testRecord.StartTime = startTime;
             testRecord.EndTime = completeTime;
             testRecord.AssignedBattery = null;
@@ -108,11 +105,21 @@ namespace BCLabManager.Model
             testRecord.AssignedChannel = null;
             testRecord.Status = TestStatus.Completed;
             string root = $@"{GlobalSettings.RootPath}{batteryType}\{projectName}";
-            if (isRename)
+            if (rawDataList.Count > 1)
             {
-                RenameRawData(rawDataList,root, newName);
+                testRecord.TestFilePath = CreateTestFile(rawDataList, root, newName);
             }
-            testRecord.TestFilePath = CreateTestFile(rawDataList, root, isRename, newName);
+            else
+            {
+                if (isRename)
+                {
+                    testRecord.TestFilePath = RenameRawDataAndCopyToFolder(rawDataList[0], root, newName);
+                }
+                else
+                {
+                    testRecord.TestFilePath = CopyToFolder(rawDataList[0], root);
+                }
+            }
 
             string headerFilePath = Path.ChangeExtension($@"{root}\{GlobalSettings.HeaderFolderName}\{Path.GetFileName(testRecord.TestFilePath)}", "HDR");
             if (!File.Exists(headerFilePath))
@@ -123,23 +130,32 @@ namespace BCLabManager.Model
             SuperUpdate(testRecord);
         }
 
-        private void RenameRawData(List<RawDataClass> rawDataList, string root, string newName)
+        private string CopyToFolder(string filepath, string root)
         {
-            if (rawDataList.Count > 1)
+            var newPath = Path.Combine($@"{root}\{GlobalSettings.TestDataFolderName}",Path.GetFileName(filepath));
+            File.Copy(filepath, newPath);
+            //rawDataName[0] = newPath;
+            return newPath;
+        }
+
+        private string RenameRawDataAndCopyToFolder(string rawDataName, string root, string newName)
+        {
+            //if (rawDataName.Count > 1)
+            //{
+            //    int i = 1;
+            //    foreach (var rawData in rawDataName)
+            //    {
+            //        var newPath = Path.GetDirectoryName(rawData.FilePath) + newName + "_" + i.ToString() + Path.GetExtension(rawData.FilePath);
+            //        File.Copy(rawData.FilePath, newPath);
+            //        rawData.FilePath = newPath;
+            //    }
+            //}
+            //else
             {
-                int i = 1;
-                foreach (var rawData in rawDataList)
-                {
-                    var newPath = Path.GetDirectoryName(rawData.FilePath) + newName + "_" + i.ToString() + Path.GetExtension(rawData.FilePath);
-                    File.Copy(rawData.FilePath, newPath);
-                    rawData.FilePath = newPath;
-                }
-            }
-            else
-            {
-                var newPath = Path.Combine($@"{root}\{GlobalSettings.RawDataFolderName}", newName + Path.GetExtension(rawDataList[0].FilePath));
-                File.Move(rawDataList[0].FilePath, newPath);
-                rawDataList[0].FilePath = newPath;
+                var newPath = Path.Combine($@"{root}\{GlobalSettings.TestDataFolderName}", newName + Path.GetExtension(rawDataName));
+                File.Copy(rawDataName, newPath);
+                //rawDataName[0] = newPath;
+                return newPath;
             }
         }
 
@@ -176,55 +192,37 @@ namespace BCLabManager.Model
             File.WriteAllLines(headerFilePath, lines);
         }
 
-        private string CreateTestFile(List<RawDataClass> rawDataList, string root, bool isRename, string newName)   //默认按顺序导入
+        private string CreateTestFile(List<string> rawDataList, string root, string newName)   //默认按顺序导入
         {
-            if (rawDataList.Count == 1)
+            string filename = string.Empty;
+            StringBuilder sb = new StringBuilder();
+                filename = newName;
+            var filepath = $@"{root}\{GlobalSettings.TestDataFolderName}\{filename}";
+
+            bool isFirst = true;
+            foreach (var raw in rawDataList)
             {
-                return rawDataList[0].FilePath;
-            }
-            else
-            {
-                string filename = string.Empty;
-                StringBuilder sb = new StringBuilder();
-                if (isRename)
+                if (isFirst)
                 {
-                    filename = newName;
+                    isFirst = false;
+                    //File.WriteAllText(filename, File.ReadAllText(raw.FilePath));
+                    try
+                    {
+                        File.Copy(raw, filepath);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message);
+                    }
                 }
                 else
                 {
-                    foreach (var raw in rawDataList)
-                    {
-                        filename += Path.GetFileName(raw.FilePath) + "__";
-                    }
-                    filename = filename.Substring(0, filename.Length - 2);
+                    var lines = File.ReadAllLines(raw).ToList();
+                    lines.RemoveRange(0, 10);
+                    File.AppendAllLines(filepath, lines);
                 }
-                var filepath = $@"{root}\{GlobalSettings.TestDataFolderName}\{filename}";
-
-                bool isFirst = true;
-                foreach (var raw in rawDataList)
-                {
-                    if (isFirst)
-                    {
-                        isFirst = false;
-                        //File.WriteAllText(filename, File.ReadAllText(raw.FilePath));
-                        try
-                        {
-                            File.Copy(raw.FilePath, filepath);
-                        }
-                        catch (Exception e)
-                        {
-                            MessageBox.Show(e.Message);
-                        }
-                    }
-                    else
-                    {
-                        var lines = File.ReadAllLines(raw.FilePath).ToList();
-                        lines.RemoveRange(0, 10);
-                        File.AppendAllLines(filepath, lines);
-                    }
-                }
-                return filepath;
             }
+            return filepath;
         }
 
         internal void Invalidate(TestRecordClass testRecord, string comment)

@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BCLabManager.Migrations
 {
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,37 +48,44 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RecipeTemplates",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(nullable: true),
-                    Current = table.Column<double>(nullable: false),
-                    Temperature = table.Column<double>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RecipeTemplates", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StepTemplates",
+                name: "CoefficientClass",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Temperature = table.Column<double>(nullable: false),
-                    CurrentInput = table.Column<double>(nullable: false),
-                    CurrentUnit = table.Column<int>(nullable: false),
-                    CutOffConditionValue = table.Column<double>(nullable: false),
-                    CutOffConditionType = table.Column<int>(nullable: false),
                     Slope = table.Column<double>(nullable: false),
                     Offset = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StepTemplates", x => x.Id);
+                    table.PrimaryKey("PK_CoefficientClass", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProgramTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProgramTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RecipeTemplates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RecipeTemplates", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -144,33 +151,24 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Steps",
+                name: "StepTemplates",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    StepTemplateId = table.Column<int>(nullable: true),
-                    LoopLabel = table.Column<string>(nullable: true),
-                    LoopTarget = table.Column<string>(nullable: true),
-                    LoopCount = table.Column<int>(nullable: false),
-                    CompareMark = table.Column<int>(nullable: false),
-                    CRate = table.Column<double>(nullable: false),
-                    Order = table.Column<int>(nullable: false),
-                    RecipeTemplateId = table.Column<int>(nullable: true)
+                    CoefficientId = table.Column<int>(nullable: true),
+                    CurrentInput = table.Column<double>(nullable: false),
+                    CurrentUnit = table.Column<int>(nullable: false),
+                    CutOffConditionValue = table.Column<double>(nullable: false),
+                    CutOffConditionType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Steps", x => x.Id);
+                    table.PrimaryKey("PK_StepTemplates", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Steps_RecipeTemplates_RecipeTemplateId",
-                        column: x => x.RecipeTemplateId,
-                        principalTable: "RecipeTemplates",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Steps_StepTemplates_StepTemplateId",
-                        column: x => x.StepTemplateId,
-                        principalTable: "StepTemplates",
+                        name: "FK_StepTemplates_CoefficientClass_CoefficientId",
+                        column: x => x.CoefficientId,
+                        principalTable: "CoefficientClass",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -235,10 +233,10 @@ namespace BCLabManager.Migrations
                     EST = table.Column<DateTime>(nullable: false),
                     EET = table.Column<DateTime>(nullable: false),
                     ED = table.Column<TimeSpan>(nullable: false),
+                    TypeId = table.Column<int>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    IsValid = table.Column<bool>(nullable: false),
+                    IsInvalid = table.Column<bool>(nullable: false),
                     TableFilePath = table.Column<string>(nullable: true),
-                    Type = table.Column<string>(nullable: true),
                     ProjectId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -248,6 +246,12 @@ namespace BCLabManager.Migrations
                         name: "FK_Programs_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Programs_ProgramTypes_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "ProgramTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -269,6 +273,38 @@ namespace BCLabManager.Migrations
                         name: "FK_ProjectProductClass_Projects_ProjectClassId",
                         column: x => x.ProjectClassId,
                         principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Steps",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    StepTemplateId = table.Column<int>(nullable: true),
+                    LoopLabel = table.Column<string>(nullable: true),
+                    LoopTarget = table.Column<string>(nullable: true),
+                    LoopCount = table.Column<int>(nullable: false),
+                    CompareMark = table.Column<int>(nullable: false),
+                    CRate = table.Column<double>(nullable: false),
+                    Order = table.Column<int>(nullable: false),
+                    RecipeTemplateId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Steps", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Steps_RecipeTemplates_RecipeTemplateId",
+                        column: x => x.RecipeTemplateId,
+                        principalTable: "RecipeTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Steps_StepTemplates_StepTemplateId",
+                        column: x => x.StepTemplateId,
+                        principalTable: "StepTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -318,13 +354,12 @@ namespace BCLabManager.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     IsAbandoned = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(nullable: true),
+                    Temperature = table.Column<double>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
                     EndTime = table.Column<DateTime>(nullable: false),
                     EST = table.Column<DateTime>(nullable: false),
                     EET = table.Column<DateTime>(nullable: false),
                     ED = table.Column<TimeSpan>(nullable: false),
-                    Current = table.Column<double>(nullable: false),
-                    Temperature = table.Column<double>(nullable: false),
                     ProgramClassId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -406,9 +441,9 @@ namespace BCLabManager.Migrations
                     ChamberStr = table.Column<string>(nullable: true),
                     RecipeStr = table.Column<string>(nullable: true),
                     ProgramStr = table.Column<string>(nullable: true),
+                    ProjectStr = table.Column<string>(nullable: true),
                     StartTime = table.Column<DateTime>(nullable: false),
                     EndTime = table.Column<DateTime>(nullable: false),
-                    Steps = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true),
                     NewCycle = table.Column<double>(nullable: false),
                     MeasurementGain = table.Column<double>(nullable: false),
@@ -417,6 +452,8 @@ namespace BCLabManager.Migrations
                     CapacityDifference = table.Column<double>(nullable: false),
                     TestFilePath = table.Column<string>(nullable: true),
                     Operator = table.Column<string>(nullable: true),
+                    Current = table.Column<double>(nullable: false),
+                    Temperature = table.Column<double>(nullable: false),
                     AssignedBatteryId = table.Column<int>(nullable: true),
                     AssignedChamberId = table.Column<int>(nullable: true),
                     AssignedChannelId = table.Column<int>(nullable: true),
@@ -447,27 +484,6 @@ namespace BCLabManager.Migrations
                         name: "FK_TestRecords_Recipes_RecipeClassId",
                         column: x => x.RecipeClassId,
                         principalTable: "Recipes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RawDataClass",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    FilePath = table.Column<string>(nullable: true),
-                    MD5 = table.Column<string>(nullable: true),
-                    TestRecordClassId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RawDataClass", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_RawDataClass_TestRecords_TestRecordClassId",
-                        column: x => x.TestRecordClassId,
-                        principalTable: "TestRecords",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -513,6 +529,11 @@ namespace BCLabManager.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Programs_TypeId",
+                table: "Programs",
+                column: "TypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProjectProductClass_ProjectClassId",
                 table: "ProjectProductClass",
                 column: "ProjectClassId");
@@ -521,11 +542,6 @@ namespace BCLabManager.Migrations
                 name: "IX_Projects_BatteryTypeId",
                 table: "Projects",
                 column: "BatteryTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RawDataClass_TestRecordClassId",
-                table: "RawDataClass",
-                column: "TestRecordClassId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recipes_ProgramClassId",
@@ -551,6 +567,11 @@ namespace BCLabManager.Migrations
                 name: "IX_Steps_StepTemplateId",
                 table: "Steps",
                 column: "StepTemplateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StepTemplates_CoefficientId",
+                table: "StepTemplates",
+                column: "CoefficientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TestRecords_AssignedBatteryId",
@@ -588,9 +609,6 @@ namespace BCLabManager.Migrations
                 name: "ProjectProductClass");
 
             migrationBuilder.DropTable(
-                name: "RawDataClass");
-
-            migrationBuilder.DropTable(
                 name: "StepRuntimes");
 
             migrationBuilder.DropTable(
@@ -618,6 +636,9 @@ namespace BCLabManager.Migrations
                 name: "Recipes");
 
             migrationBuilder.DropTable(
+                name: "CoefficientClass");
+
+            migrationBuilder.DropTable(
                 name: "Testers");
 
             migrationBuilder.DropTable(
@@ -625,6 +646,9 @@ namespace BCLabManager.Migrations
 
             migrationBuilder.DropTable(
                 name: "Projects");
+
+            migrationBuilder.DropTable(
+                name: "ProgramTypes");
 
             migrationBuilder.DropTable(
                 name: "BatteryTypes");

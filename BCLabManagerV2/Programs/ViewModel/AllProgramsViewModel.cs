@@ -685,7 +685,7 @@ namespace BCLabManager.ViewModel
             TestRecordCommitViewModel evm = new TestRecordCommitViewModel
                 (
                 testRecord.Record      //??????????????????????????
-                //m
+                                       //m
                 );
             //evm.DisplayName = "Test-Commit";
             var TestRecordCommitViewInstance = new CommitView();
@@ -719,28 +719,14 @@ namespace BCLabManager.ViewModel
                     header.LimitedChargeVoltage = SelectedProgram.Project.LimitedChargeVoltage.ToString();
                     header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
                     header.Tester = testRecord.Operator;
-                    _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList),evm.IsRename, evm.NewName, time[0], time[1], SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
+                    _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, evm.FileList.ToList(), evm.IsRename, evm.NewName, time[0], time[1], SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     //_programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), DateTime.MinValue, DateTime.MinValue, SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, SelectedProgram.Description);
                     MessageBox.Show(e.Message);
                 }
             }
-        }
-
-        private List<RawDataClass> CreateRawDataList(ObservableCollection<string> fileList)
-        {
-            List<RawDataClass> output = new List<RawDataClass>();
-            foreach (var filepath in fileList)
-            {
-                var rd = new RawDataClass();
-                //rd.FileName = Path.GetFileName(filepath);
-                rd.FilePath = filepath;
-                //rd.BinaryData = File.ReadAllBytes(filepath);
-                output.Add(rd);
-            }
-            return output;
         }
         private bool CanCommit
         {
@@ -766,18 +752,18 @@ namespace BCLabManager.ViewModel
         private void View()
         {
             TestRecordViewModel testRecordVM = SelectedTestRecord;
-            TestRecordRawDataViewModel evm = new TestRecordRawDataViewModel
+            TestRecordTestDataViewModel evm = new TestRecordTestDataViewModel
                 (
                 testRecordVM.Record      //??????????????????????????
                 );
             //evm.DisplayName = "Test-View Raw Data";
-            var TestRecordRawDataViewInstance = new RawDataView();
+            var TestRecordRawDataViewInstance = new TestDataView();
             TestRecordRawDataViewInstance.DataContext = evm;
             TestRecordRawDataViewInstance.ShowDialog();
         }
         private bool CanView
         {
-            get { return _selectedTestRecord != null && (_selectedTestRecord.Record.RawDataList.Count != 0); }
+            get { return _selectedTestRecord != null && (_selectedTestRecord.Record.TestFilePath != string.Empty); }
         }
         private void Start()
         {

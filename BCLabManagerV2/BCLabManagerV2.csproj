@@ -299,7 +299,6 @@
     <Compile Include="DataAccess\IStepRepository.cs" />
     <Compile Include="DataAccess\IStepTemplateRepository.cs" />
     <Compile Include="DataAccess\IStepRuntimeRepository.cs" />
-    <Compile Include="DataAccess\IRawDataRepository.cs" />
     <Compile Include="DataAccess\ProjectRepository.cs" />
     <Compile Include="DataAccess\ProgramRepository.cs" />
     <Compile Include="DataAccess\RecipeTemplateRepository.cs" />
@@ -307,7 +306,6 @@
     <Compile Include="DataAccess\StepRepository.cs" />
     <Compile Include="DataAccess\StepTemplateRepository.cs" />
     <Compile Include="DataAccess\StepRuntimeRepository.cs" />
-    <Compile Include="DataAccess\RawDataRepository.cs" />
     <Compile Include="DataAccess\TestRecordRepository.cs" />
     <Compile Include="DataAccess\ITestRecordRepository.cs" />
     <Compile Include="DataAccess\TesterRepository.cs" />
@@ -320,33 +318,9 @@
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
-    <Compile Include="Migrations\20200402073506_init.cs" />
-    <Compile Include="Migrations\20200402073506_init.Designer.cs">
-      <DependentUpon>20200402073506_init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200402081831_isinvalid.cs" />
-    <Compile Include="Migrations\20200402081831_isinvalid.Designer.cs">
-      <DependentUpon>20200402081831_isinvalid.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200402132627_RemoveStep.cs" />
-    <Compile Include="Migrations\20200402132627_RemoveStep.Designer.cs">
-      <DependentUpon>20200402132627_RemoveStep.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200416080303_MergeHeader.cs" />
-    <Compile Include="Migrations\20200416080303_MergeHeader.designer.cs">
-      <DependentUpon>20200416080303_MergeHeader.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200428063152_AddType.cs" />
-    <Compile Include="Migrations\20200428063152_AddType.designer.cs">
-      <DependentUpon>20200428063152_AddType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200507064711_StepTemplateUpdate.cs" />
-    <Compile Include="Migrations\20200507064711_StepTemplateUpdate.designer.cs">
-      <DependentUpon>20200507064711_StepTemplateUpdate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200507072119_RecipeUpdate.cs" />
-    <Compile Include="Migrations\20200507072119_RecipeUpdate.designer.cs">
-      <DependentUpon>20200507072119_RecipeUpdate.cs</DependentUpon>
+    <Compile Include="Migrations\20200508084940_Init.cs" />
+    <Compile Include="Migrations\20200508084940_Init.designer.cs">
+      <DependentUpon>20200508084940_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
@@ -361,13 +335,11 @@
     <Compile Include="Programs\Model\Service\ProjectServiceClass.cs" />
     <Compile Include="Programs\Model\Service\ProgramServiceClass.cs" />
     <Compile Include="Programs\Model\Service\RecipeTemplateServiceClass.cs" />
-    <Compile Include="Programs\Model\Service\RawDataServiceClass.cs" />
     <Compile Include="Programs\Model\Service\StepTemplateServiceClass.cs" />
     <Compile Include="Programs\Model\Service\StepServiceClass.cs" />
     <Compile Include="Programs\Model\Service\StepRuntimeServiceClass.cs" />
     <Compile Include="Programs\Model\Service\TestRecordServiceClass.cs" />
     <Compile Include="Programs\Model\Service\RecipeServiceClass.cs" />
-    <Compile Include="Programs\Model\RawDataClass.cs" />
     <Compile Include="Programs\Model\StepRuntimeClass.cs" />
     <Compile Include="Programs\Model\CoefficientClass.cs" />
     <Compile Include="Programs\Model\StepTemplate.cs" />
@@ -423,7 +395,7 @@
     <Compile Include="Programs\ViewModel\ProgramEditViewModel.cs" />
     <Compile Include="Programs\ViewModel\RecipeTemplateEditViewModel.cs" />
     <Compile Include="Programs\ViewModel\RecipeTemplateViewModel.cs" />
-    <Compile Include="Programs\ViewModel\TestRecordRawDataViewModel.cs" />
+    <Compile Include="Programs\ViewModel\TestRecordTestDataViewModel.cs" />
     <Compile Include="Programs\ViewModel\TestRecordInvalidateViewModel.cs" />
     <Compile Include="Programs\ViewModel\TestRecordCommitViewModel.cs" />
     <Compile Include="Programs\ViewModel\TestRecordExecuteViewModel.cs" />
@@ -477,8 +449,8 @@
     <Compile Include="Programs\View\AllProgramsView.xaml.cs">
       <DependentUpon>AllProgramsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Programs\View\RawDataView.xaml.cs">
-      <DependentUpon>RawDataView.xaml</DependentUpon>
+    <Compile Include="Programs\View\TestDataView.xaml.cs">
+      <DependentUpon>TestDataView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Programs\View\InvalidateView.xaml.cs">
       <DependentUpon>InvalidateView.xaml</DependentUpon>
@@ -589,7 +561,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Programs\View\RawDataView.xaml">
+    <Page Include="Programs\View\TestDataView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

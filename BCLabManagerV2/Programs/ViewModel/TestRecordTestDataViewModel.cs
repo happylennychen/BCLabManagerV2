@@ -14,7 +14,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class TestRecordRawDataViewModel : BindableBase//, IDataErrorInfo
+    public class TestRecordTestDataViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
         readonly TestRecordClass _record;
@@ -23,7 +23,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public TestRecordRawDataViewModel(
+        public TestRecordTestDataViewModel(
             TestRecordClass record
             )     //
         {
@@ -37,11 +37,11 @@ namespace BCLabManager.ViewModel
 
         #region Presentation Properties
 
-        public List<String> FileList
+        public String FilePath
         {
             get
             {
-                return _record.RawDataList.Select(o=>o.FilePath).ToList();
+                return _record.TestFilePath;
             }
         }
 
