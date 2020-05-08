@@ -129,6 +129,44 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("IsSkip");
             }
         }
+
+
+        private bool _isRename = true;
+        public bool IsRename
+        {
+            get
+            {
+                return _isRename;
+            }
+            set
+            {
+                if (value == _isRename)
+                    return;
+
+                _isRename = value;
+
+                RaisePropertyChanged("IsRename");
+            }
+        }
+
+
+        private string _newName;
+        public string NewName
+        {
+            get
+            {
+                return _newName;
+            }
+            set
+            {
+                if (value == _newName)
+                    return;
+
+                _newName = value;
+
+                RaisePropertyChanged("NewName");
+            }
+        }
         #endregion // Presentation Properties
 
 
@@ -199,10 +237,13 @@ namespace BCLabManager.ViewModel
             //dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.NetworkShortcuts); No use, cannot see network driver
             //dialog.InitialDirectory = $@"Q:\807\Software\WH BC Lab\Data\{_record.BatteryTypeStr}\{_record.ProjectStr}\Raw Data";
             //dialog.InitialDirectory = $@"Q:\807\Software\WH BC Lab\Data\{_record.BatteryTypeStr}\High Power\Raw Data";
-            dialog.InitialDirectory = $@"{GlobalSettings.RootPath}{_record.BatteryTypeStr}\High Power\Raw Data";
+            dialog.InitialDirectory = $@"{GlobalSettings.RootPath}{_record.BatteryTypeStr}\High Power\{GlobalSettings.RawDataFolderName}";
             if (dialog.ShowDialog() == true)
             {
                 FileList = new ObservableCollection<string>(dialog.FileNames.ToList());
+                TesterServiceClass _testerService = new TesterServiceClass();
+                DateTime[] time = _testerService.GetTimeFromRawData(_record.AssignedChannel.Tester, FileList);
+                NewName = $@"{_record.ProgramStr}_{_record.RecipeStr}_{time[0].ToString("yyyyMMddHHmmss")}";
             }
         }
     }

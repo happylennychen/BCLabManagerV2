@@ -228,7 +228,7 @@ namespace BCLabManager.ViewModel
 
                 _record.RecipeStr = value;
 
-                RaisePropertyChanged("ProgramStr");
+                RaisePropertyChanged("RecipeStr");
             }
         }
 

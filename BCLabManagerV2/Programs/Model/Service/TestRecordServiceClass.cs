@@ -97,7 +97,7 @@ namespace BCLabManager.Model
             DatabaseUpdate(testRecord);
         }
 
-        internal void Commit(TestRecordClass testRecord, string comment, List<RawDataClass> rawDataList, DateTime startTime, DateTime completeTime, string batteryType, string projectName, Header header)
+        internal void Commit(TestRecordClass testRecord, string comment, List<RawDataClass> rawDataList, bool isRename, string newName, DateTime startTime, DateTime completeTime, string batteryType, string projectName, Header header)
         {
             testRecord.Comment = comment;
             testRecord.RawDataList = rawDataList;
@@ -108,9 +108,13 @@ namespace BCLabManager.Model
             testRecord.AssignedChannel = null;
             testRecord.Status = TestStatus.Completed;
             string root = $@"{GlobalSettings.RootPath}{batteryType}\{projectName}";
-            testRecord.TestFilePath = CreateTestFile(rawDataList, root);
+            if (isRename)
+            {
+                RenameRawData(rawDataList,root, newName);
+            }
+            testRecord.TestFilePath = CreateTestFile(rawDataList, root, isRename, newName);
 
-            string headerFilePath = Path.ChangeExtension($@"{root}\Header\{Path.GetFileName(testRecord.TestFilePath)}", "HDR");
+            string headerFilePath = Path.ChangeExtension($@"{root}\{GlobalSettings.HeaderFolderName}\{Path.GetFileName(testRecord.TestFilePath)}", "HDR");
             if (!File.Exists(headerFilePath))
             {
                 CreateHeaderFile(headerFilePath, header);
@@ -119,9 +123,29 @@ namespace BCLabManager.Model
             SuperUpdate(testRecord);
         }
 
+        private void RenameRawData(List<RawDataClass> rawDataList, string root, string newName)
+        {
+            if (rawDataList.Count > 1)
+            {
+                int i = 1;
+                foreach (var rawData in rawDataList)
+                {
+                    var newPath = Path.GetDirectoryName(rawData.FilePath) + newName + "_" + i.ToString() + Path.GetExtension(rawData.FilePath);
+                    File.Copy(rawData.FilePath, newPath);
+                    rawData.FilePath = newPath;
+                }
+            }
+            else
+            {
+                var newPath = Path.Combine($@"{root}\{GlobalSettings.RawDataFolderName}", newName + Path.GetExtension(rawDataList[0].FilePath));
+                File.Move(rawDataList[0].FilePath, newPath);
+                rawDataList[0].FilePath = newPath;
+            }
+        }
+
         private void CreateSourceFile(string root, string headerFilePath, string testFilePath)
         {
-            string sourceFilePath = $@"{root}\Source Data\{Path.GetFileName(testFilePath)}";
+            string sourceFilePath = $@"{root}\{GlobalSettings.SourceDataFolderName}\{Path.GetFileName(testFilePath)}";
             File.Copy(headerFilePath, sourceFilePath);
             File.AppendAllLines(sourceFilePath, File.ReadAllLines(testFilePath));
         }
@@ -152,7 +176,7 @@ namespace BCLabManager.Model
             File.WriteAllLines(headerFilePath, lines);
         }
 
-        private string CreateTestFile(List<RawDataClass> rawDataList, string root)   //默认按顺序导入
+        private string CreateTestFile(List<RawDataClass> rawDataList, string root, bool isRename, string newName)   //默认按顺序导入
         {
             if (rawDataList.Count == 1)
             {
@@ -162,12 +186,19 @@ namespace BCLabManager.Model
             {
                 string filename = string.Empty;
                 StringBuilder sb = new StringBuilder();
-                foreach (var raw in rawDataList)
+                if (isRename)
                 {
-                    filename += Path.GetFileName(raw.FilePath) + "__";
+                    filename = newName;
                 }
-                filename = filename.Substring(0, filename.Length - 2);
-                var filepath = $@"{root}\Test Data\{filename}";
+                else
+                {
+                    foreach (var raw in rawDataList)
+                    {
+                        filename += Path.GetFileName(raw.FilePath) + "__";
+                    }
+                    filename = filename.Substring(0, filename.Length - 2);
+                }
+                var filepath = $@"{root}\{GlobalSettings.TestDataFolderName}\{filename}";
 
                 bool isFirst = true;
                 foreach (var raw in rawDataList)

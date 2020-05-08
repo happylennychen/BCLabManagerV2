@@ -659,7 +659,8 @@ namespace BCLabManager.ViewModel
                     evm.CapacityDifference,
                     evm.Operator,
                     SelectedProgram.Name,
-                    SelectedRecipe.Name);
+                    $"{SelectedRecipe.Temperature}Deg-{SelectedRecipe.Name}"    //Use this to represent RecipeStr
+                    );
                 if (!evm.IsSkip)
                 {
                     _batteryService.Execute(evm.Battery, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
@@ -676,13 +677,15 @@ namespace BCLabManager.ViewModel
         //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
         {
             TestRecordViewModel testRecord = SelectedTestRecord;
-            TestRecordClass m = new TestRecordClass();
-            m.BatteryTypeStr = testRecord.Record.BatteryTypeStr;
-            m.ProjectStr = testRecord.Record.ProjectStr;
+            //TestRecordClass m = new TestRecordClass();
+            //m.BatteryTypeStr = testRecord.Record.BatteryTypeStr;
+            //m.ProjectStr = testRecord.Record.ProjectStr;
+            //m.ProgramStr = testRecord.Record.ProgramStr;
+            //m.RecipeStr = testRecord.Record.RecipeStr;
             TestRecordCommitViewModel evm = new TestRecordCommitViewModel
                 (
-                //testRecord.Record      //??????????????????????????
-                m
+                testRecord.Record      //??????????????????????????
+                //m
                 );
             //evm.DisplayName = "Test-Commit";
             var TestRecordCommitViewInstance = new CommitView();
@@ -716,7 +719,7 @@ namespace BCLabManager.ViewModel
                     header.LimitedChargeVoltage = SelectedProgram.Project.LimitedChargeVoltage.ToString();
                     header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
                     header.Tester = testRecord.Operator;
-                    _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), time[0], time[1], SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
+                    _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList),evm.IsRename, evm.NewName, time[0], time[1], SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
                 }
                 catch(Exception e)
                 {
