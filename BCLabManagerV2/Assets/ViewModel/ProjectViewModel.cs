@@ -77,9 +77,9 @@ namespace BCLabManager.ViewModel
             get { return _project.LimitedChargeVoltage; }
         }
 
-        public int RatedCapacity
+        public int AbsoluteMaxCapacity
         {
-            get { return _project.RatedCapacity; }
+            get { return _project.AbsoluteMaxCapacity; }
         }
 
         public string VoltagePoints

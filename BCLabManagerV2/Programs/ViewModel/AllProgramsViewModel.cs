@@ -715,7 +715,7 @@ namespace BCLabManager.ViewModel
                     header.MeasurementOffset = testRecord.MeasurementOffset.ToString();
                     header.TraceResistance = testRecord.TraceResistance.ToString();
                     header.CapacityDifference = testRecord.CapacityDifference.ToString();
-                    header.AbsoluteMaxCapacity = SelectedProgram.Project.RatedCapacity.ToString();//.BatteryType.TypicalCapacity.ToString();
+                    header.AbsoluteMaxCapacity = SelectedProgram.Project.AbsoluteMaxCapacity.ToString();//.BatteryType.TypicalCapacity.ToString();
                     header.LimitedChargeVoltage = SelectedProgram.Project.LimitedChargeVoltage.ToString();
                     header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
                     header.Tester = testRecord.Operator;

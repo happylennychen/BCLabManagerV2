@@ -87,7 +87,7 @@ namespace BCLabManager.Model
             edittarget.EvSettings = item.EvSettings;
             edittarget.LimitedChargeVoltage = item.LimitedChargeVoltage;
             edittarget.ProjectProducts = item.ProjectProducts;
-            edittarget.RatedCapacity = item.RatedCapacity;
+            edittarget.AbsoluteMaxCapacity = item.AbsoluteMaxCapacity;
             edittarget.VoltagePoints = item.VoltagePoints;
         }
     }

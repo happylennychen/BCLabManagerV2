@@ -112,15 +112,15 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("LimitedChargeVoltage");
             }
         }
-        public int RatedCapacity
+        public int AbsoluteMaxCapacity
         {
-            get { return _project.RatedCapacity; }
+            get { return _project.AbsoluteMaxCapacity; }
             set
             {
-                if (value == _project.RatedCapacity)
+                if (value == _project.AbsoluteMaxCapacity)
                     return;
 
-                _project.RatedCapacity = value;
+                _project.AbsoluteMaxCapacity = value;
 
                 RaisePropertyChanged("RatedCapacity");
             }

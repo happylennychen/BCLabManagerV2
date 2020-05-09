@@ -42,11 +42,11 @@ namespace BCLabManager.Model
             get { return _description; }
             set { SetProperty(ref _description, value); }
         }
-        private Int32 _ratedCapacity;
-        public Int32 RatedCapacity
+        private Int32 _absoluteMaxCapacity;
+        public Int32 AbsoluteMaxCapacity
         {
-            get { return _ratedCapacity; }
-            set { SetProperty(ref _ratedCapacity, value); }
+            get { return _absoluteMaxCapacity; }
+            set { SetProperty(ref _absoluteMaxCapacity, value); }
         }
         private Int32 _limitedChargeVoltage;
         public Int32 LimitedChargeVoltage

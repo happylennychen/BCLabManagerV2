@@ -15,11 +15,11 @@ namespace BCLabManager.Model
 
         public int Id { get; set; }
 
-        private Int32 _typicalCapacity;
-        public Int32 TypicalCapacity
+        private Int32 _designCapacity;
+        public Int32 DesignCapacity
         {
-            get { return _typicalCapacity; }
-            set { SetProperty(ref _typicalCapacity, value); }
+            get { return _designCapacity; }
+            set { SetProperty(ref _designCapacity, value); }
         }
         private Int32 _fullyChargedEndCurrent;
         public Int32 FullyChargedEndCurrent

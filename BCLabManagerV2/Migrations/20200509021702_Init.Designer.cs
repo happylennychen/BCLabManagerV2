@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200508084940_Init")]
+    [Migration("20200509021702_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -226,6 +226,9 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<int>("DesignCapacity")
+                        .HasColumnType("integer");
+
                     b.Property<int>("DischargeEndVoltage")
                         .HasColumnType("integer");
 
@@ -239,9 +242,6 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int?>("ProjectClassId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TypicalCapacity")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -331,6 +331,9 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<int>("AbsoluteMaxCapacity")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("BatteryTypeId")
                         .HasColumnType("integer");
 
@@ -348,9 +351,6 @@ namespace BCLabManager.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
-
-                    b.Property<int>("RatedCapacity")
-                        .HasColumnType("integer");
 
                     b.Property<string>("VoltagePoints")
                         .HasColumnType("text");

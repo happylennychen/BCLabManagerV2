@@ -318,9 +318,9 @@
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
-    <Compile Include="Migrations\20200508084940_Init.cs" />
-    <Compile Include="Migrations\20200508084940_Init.designer.cs">
-      <DependentUpon>20200508084940_Init.cs</DependentUpon>
+    <Compile Include="Migrations\20200509021702_Init.cs" />
+    <Compile Include="Migrations\20200509021702_Init.designer.cs">
+      <DependentUpon>20200509021702_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">

@@ -178,7 +178,7 @@ namespace BCLabManager.ViewModel
             projevm.Description = _selectedItem.Description;
             projevm.CutoffDischargeVoltage = _selectedItem.CutoffDischargeVoltage;
             projevm.LimitedChargeVoltage = _selectedItem.LimitedChargeVoltage;
-            projevm.RatedCapacity = _selectedItem.RatedCapacity;
+            projevm.AbsoluteMaxCapacity = _selectedItem.AbsoluteMaxCapacity;
             projevm.VoltagePoints = _selectedItem.VoltagePoints;
 
             var ProjectEditViewInstance = new ProjectView();      //实例化一个新的view
@@ -203,7 +203,7 @@ namespace BCLabManager.ViewModel
             projevm.Description = _selectedItem.Description;
             projevm.CutoffDischargeVoltage = _selectedItem.CutoffDischargeVoltage;
             projevm.LimitedChargeVoltage = _selectedItem.LimitedChargeVoltage;
-            projevm.RatedCapacity = _selectedItem.RatedCapacity;
+            projevm.AbsoluteMaxCapacity = _selectedItem.AbsoluteMaxCapacity;
             projevm.VoltagePoints = _selectedItem.VoltagePoints;
 
             var ProjectEditViewInstance = new ProjectView();      //实例化一个新的view

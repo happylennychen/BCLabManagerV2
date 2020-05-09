@@ -12,7 +12,7 @@ namespace BCLabManager
         public static string ConfigurationFilePath { get; set; } = "BCLabConfiguration.cfg";
 
         //public static string RootPath { get; set; } = @"Q:\807\Software\WH BC Lab\Data\";
-        public static string RootPath { get; set; } = @"D:\Issues\Open\BC_Lab\Data\";
+        public static string RootPath { get; set; } = @"D:\Issues\Open\BC_Lab\Data V2\";
         public static string TestDataFolderName { get; set; } = "Test Data";
         public static string HeaderFolderName { get; set; } = "Header";
         public static string SourceDataFolderName { get; set; } = "Source Data";

@@ -134,7 +134,7 @@ namespace BCLabManager.Migrations
                     Customer = table.Column<string>(nullable: true),
                     BatteryTypeId = table.Column<int>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    RatedCapacity = table.Column<int>(nullable: false),
+                    AbsoluteMaxCapacity = table.Column<int>(nullable: false),
                     LimitedChargeVoltage = table.Column<int>(nullable: false),
                     CutoffDischargeVoltage = table.Column<int>(nullable: false),
                     VoltagePoints = table.Column<string>(nullable: true)
@@ -200,7 +200,7 @@ namespace BCLabManager.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    TypicalCapacity = table.Column<int>(nullable: false),
+                    DesignCapacity = table.Column<int>(nullable: false),
                     FullyChargedEndCurrent = table.Column<int>(nullable: false),
                     FullyChargedEndingTimeout = table.Column<int>(nullable: false),
                     DischargeEndVoltage = table.Column<int>(nullable: false),

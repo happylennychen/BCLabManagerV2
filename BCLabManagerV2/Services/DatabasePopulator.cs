@@ -16,26 +16,34 @@ namespace BCLabManager
         {
             //ReportLoader.Init();
             PopulateAssets();
-            PopulateProgram1(); //Tested
-            PopulateProgram2(); //Tested
-            PopulateProgram3(); //Tested
-            PopulateProgram4(); //Tested
-            PopulateProgram5(); //Tested
-            PopulateProgram6(); //Tested
-            PopulateProgram7(); //Tested
-            PopulateProgram8(); //Tested
-            PopulateProgram9(); //Tested
-            PopulateProgram10(); //Tested
-                                 //PopulateProgram11();
-            PopulateProgram12(); //Tested
-            //PopulateProgram13();
-            PopulateProgram14(); //Tested
-            PopulateProgram15(); //Tested
-            PopulateProgram16(); //Tested
-            PopulateProgram17(); //Tested
-            PopulateProgram18(); //Tested
-            PopulateProjects();
+            #region blp663
+            //PopulateProgram1(); //Tested
+            //PopulateProgram2(); //Tested
+            //PopulateProgram3(); //Tested
+            //PopulateProgram4(); //Tested
+            //PopulateProgram5(); //Tested
+            //PopulateProgram6(); //Tested
+            //PopulateProgram7(); //Tested
+            //PopulateProgram8(); //Tested
+            //PopulateProgram9(); //Tested
+            //PopulateProgram10(); //Tested
+            //                     //PopulateProgram11();
+            //PopulateProgram12(); //Tested
+            ////PopulateProgram13();
+            //PopulateProgram14(); //Tested
+            //PopulateProgram15(); //Tested
+            //PopulateProgram16(); //Tested
+            //PopulateProgram17(); //Tested
+            //PopulateProgram18(); //Tested
+            //PopulateProjects();
             //PopulateTestPrograms();
+            #endregion
+
+            #region HG2
+            PopulateProjects();
+            CreateStepTemplates();
+            CreateRecipeTemplates();
+            #endregion
         }
         #region Assets
         private static void PopulateAssets()
@@ -94,6 +102,32 @@ namespace BCLabManager
             bt.TypicalCapacity = 2450;
             bt.CutoffDischargeVoltage = 2500;
             PopulateOneBatteryType(bt);
+
+            bt = new BatteryTypeClass();
+            bt.Name = "H26";
+            bt.Manufactor = "LG";
+            bt.Material = "lithium-ion";
+            bt.LimitedChargeVoltage = 4200;
+            bt.RatedCapacity = 2600;
+            bt.TypicalCapacity = 2600;
+            bt.NominalVoltage = 3600;
+            bt.CutoffDischargeVoltage = 2500;
+            bt.FullyChargedEndCurrent = 50;
+            bt.FullyChargedEndingTimeout = 0;
+            PopulateOneBatteryType(bt);
+
+            bt = new BatteryTypeClass();
+            bt.Name = "HG2";
+            bt.Manufactor = "LG";
+            bt.Material = "lithium-ion";
+            bt.LimitedChargeVoltage = 4200;
+            bt.RatedCapacity = 3000;
+            bt.TypicalCapacity = 3000;
+            bt.NominalVoltage = 3600;
+            bt.CutoffDischargeVoltage = 2500;
+            bt.FullyChargedEndCurrent = 50;
+            bt.FullyChargedEndingTimeout = 0;
+            PopulateOneBatteryType(bt);
         }
 
         private static void PopulateOneBatteryType(BatteryTypeClass bt)
@@ -110,33 +144,31 @@ namespace BCLabManager
 
         private static void PopulateProjects()
         {
-            ProjectClass proj = new ProjectClass();
-            proj.Name = "O2Micro-01";
-            proj.Customer = "O2Micro";
-            proj.Description = "";
-            proj.VoltagePoints = "";
-            PopulateOneProject(proj);
+            PopulateOneProject("High Power", "HG2", "O2Micro", "", "");
+            //PopulateOneProject("High Power 2", "HG2", "O2Micro", "Change Cut off voltage from 2.5v to 3v", "");
         }
-        private static void PopulateOneProject(ProjectClass proj)
+        private static void PopulateOneProject(string name, string batteryType, string customer, string description, string voltagePoints)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                if (proj != null)
-                {
-                    proj.BatteryType = uow.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
-                    proj.CutoffDischargeVoltage = proj.BatteryType.CutoffDischargeVoltage;
-                    proj.LimitedChargeVoltage = proj.BatteryType.LimitedChargeVoltage;
-                    proj.RatedCapacity = proj.BatteryType.RatedCapacity;
-                    var evSetting = new EvSettingClass();
-                    evSetting.DischargeEndVoltage = proj.BatteryType.CutoffDischargeVoltage;
-                    evSetting.FullyChargedEndCurrent = proj.BatteryType.FullyChargedEndCurrent;
-                    evSetting.FullyChargedEndingTimeout = proj.BatteryType.FullyChargedEndingTimeout;
-                    evSetting.LimitedChargeVoltage = proj.BatteryType.LimitedChargeVoltage;
-                    evSetting.TypicalCapacity = proj.BatteryType.TypicalCapacity;
-                    proj.EvSettings.Add(evSetting);
-                    uow.Projects.Insert(proj);
-                    uow.Commit();
-                }
+                ProjectClass proj = new ProjectClass();
+                proj.Name = name;
+                proj.Customer = customer;
+                proj.Description = description;
+                proj.VoltagePoints = voltagePoints;
+                proj.BatteryType = uow.BatteryTypes.SingleOrDefault(o => o.Name == batteryType);
+                proj.CutoffDischargeVoltage = proj.BatteryType.CutoffDischargeVoltage;
+                proj.LimitedChargeVoltage = proj.BatteryType.LimitedChargeVoltage;
+                proj.AbsoluteMaxCapacity = proj.BatteryType.RatedCapacity;
+                var evSetting = new EvSettingClass();
+                evSetting.DischargeEndVoltage = proj.BatteryType.CutoffDischargeVoltage;
+                evSetting.FullyChargedEndCurrent = proj.BatteryType.FullyChargedEndCurrent;
+                evSetting.FullyChargedEndingTimeout = proj.BatteryType.FullyChargedEndingTimeout;
+                evSetting.LimitedChargeVoltage = proj.BatteryType.LimitedChargeVoltage;
+                evSetting.DesignCapacity = proj.BatteryType.TypicalCapacity;
+                proj.EvSettings.Add(evSetting);
+                uow.Projects.Insert(proj);
+                uow.Commit();
             }
         }
         private static void PopulateBatteries()
@@ -174,6 +206,18 @@ namespace BCLabManager
                 b = new BatteryClass();
                 b.Name = "INR18650-25R-" + i.ToString();
                 PopulateOneBattery(b, 3);
+            }
+            for (int i = 1; i < 4; i++)
+            {
+                b = new BatteryClass();
+                b.Name = "H26-" + i.ToString();
+                PopulateOneBattery(b, 4);
+            }
+            for (int i = 1; i < 11; i++)
+            {
+                b = new BatteryClass();
+                b.Name = "HG2-" + i.ToString();
+                PopulateOneBattery(b, 5);
             }
         }
 
@@ -213,7 +257,7 @@ namespace BCLabManager
                 using (var uow = new UnitOfWork(new AppDbContext()))
                 {
                     ChannelClass ch = new ChannelClass();
-                    ch.Name = "Channel " + (i + 1).ToString();
+                    ch.Name = "Ch " + (i + 1).ToString();
                     if (ch != null)
                     {
                         ch.Tester = uow.Testers.SingleOrDefault(o => o.Id == 1);
@@ -241,7 +285,8 @@ namespace BCLabManager
             }
         }
         #endregion
-
+        /*
+        #region blp663 programs
         #region program 1
         private static void PopulateProgram1()
         {
@@ -253,41 +298,13 @@ namespace BCLabManager
         {
             double chargeRate = 0.2;
             int restTime = 3600;
-            CreateStepTemplate(25, chargeRate, CurrentUnitEnum.C, 1, CutOffConditionTypeEnum.CRate);
+            CreateStepTemplate(chargeRate, CurrentUnitEnum.C, 1, CutOffConditionTypeEnum.CRate);
 
-            CreateStepTemplate(25, 0, CurrentUnitEnum.mA, restTime, CutOffConditionTypeEnum.Time_s);
+            CreateStepTemplate(0, CurrentUnitEnum.mA, restTime, CutOffConditionTypeEnum.Time_s);
 
             List<double> cPoints = new List<double>() { -500, -1700, -3000 };
-            List<double> tPoints = new List<double>() { -5, 25, 35 };
-            CreateRCStepTemplates(cPoints, tPoints);
-        }
-
-        private static void CreateRCStepTemplates(List<double> cPoints, List<double> tPoints)
-        {
-            foreach (var t in tPoints)
-            {
-                foreach (var c in cPoints)
-                {
-                    CreateStepTemplate(t, c, CurrentUnitEnum.mA, 0, CutOffConditionTypeEnum.C_mAH);
-                }
-            }
-        }
-
-        private static void CreateStepTemplate(double temp, double ci, CurrentUnitEnum cu, double cocv, CutOffConditionTypeEnum coct)
-        {
-            using (var dbContext = new AppDbContext())
-            {
-                StepTemplate output = new StepTemplate();
-                output.Coefficient.Temperature = temp;
-                output.CurrentInput = ci;
-                output.CurrentUnit = cu;
-                output.CutOffConditionValue = cocv;
-                output.CutOffConditionType = coct;
-                output.Coefficient.Slope = 1;
-                output.Coefficient.Offset = 0;
-                dbContext.StepTemplates.Add(output);
-                dbContext.SaveChanges();
-            }
+            //List<double> tPoints = new List<double>() { -5, 25, 35 };
+            CreateStepTemplatesByCurrents(cPoints);
         }
 
         private static void PopulateRecipeTemplates()
@@ -328,22 +345,6 @@ namespace BCLabManager
                     }
                 }
             }
-        }
-
-        private static RecipeTemplate GetRecipeTemplateById(AppDbContext dbContext, int id)
-        {
-            var subtemplate = dbContext.RecipeTemplates.SingleOrDefault(o => o.Id == id);
-            dbContext.Entry(subtemplate)
-                .Collection(o => o.Steps)
-                .Load();
-
-            foreach (var step in subtemplate.Steps)
-            {
-                dbContext.Entry(step)
-                    .Reference(o => o.StepTemplate)
-                    .Load();
-            }
-            return subtemplate;
         }
         #endregion
         #region program 2
@@ -1567,7 +1568,7 @@ namespace BCLabManager
                 BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
                 var pro = new ProgramClass();
                 pro.Name = "Oppo BLP663 Static Test";
-                pro.Project = dbContext.Projects.SingleOrDefault(o=>o.Customer == "O2Micro");
+                pro.Project = dbContext.Projects.SingleOrDefault(o => o.Customer == "O2Micro");
                 pro.Requester = "Francis";
                 pro.RequestTime = DateTime.Parse("2019/02/28");
 
@@ -1983,5 +1984,232 @@ namespace BCLabManager
             //            dbContext.SaveChanges();
             //        }
         }
-}
+        #endregion
+        */
+        #region HG2
+        private static void CreateStepTemplates()
+        {
+            CreateStepTemplate(0.5, CurrentUnitEnum.C, 1, CutOffConditionTypeEnum.CRate);
+            CreateStepTemplate(0, CurrentUnitEnum.C, 1800, CutOffConditionTypeEnum.Time_s);
+            //CreateStepTemplate(-1, CurrentUnitEnum.C, 0, CutOffConditionTypeEnum.CRate);
+            CreateStepTemplate(-600, CurrentUnitEnum.mA, 0, CutOffConditionTypeEnum.CRate);
+
+            //List<double> cPoints = new List<double>() { -2000, -3000, -6000, -10000, -14000, -17000, -19000};
+            CreateDischargeStepTemplatesByCurrents(new List<double>() { -2000, -3000, -6000, -10000, -14000, -17000, -19000 });
+            CreateStepTemplate(0, CurrentUnitEnum.C, 600, CutOffConditionTypeEnum.Time_s);
+            CreateDischargeStepTemplatesByCurrents(new List<double>() { -2800, -9000, -11000, -15000 });
+            CreateDischargeStepTemplatesByCurrentsAndTime(new List<double>() { -2800, -9000, -11000, -15000 }, 600);
+            CreateStepTemplate(0, CurrentUnitEnum.C, 60, CutOffConditionTypeEnum.Time_s);
+
+            CreateDischargeStepTemplatesByCurrentsAndTime(new List<double>() { -3000, -11000, -17000 }, 300);
+
+            CreateStepTemplate(-0.3, CurrentUnitEnum.C, 0, CutOffConditionTypeEnum.CRate);
+
+            CreateDischargeStepTemplatesByCurrentsAndTime(new List<double>() { -3000, -11000, -17000 }, 120);
+
+            CreateStepTemplate(-2050, CurrentUnitEnum.mA, 0, CutOffConditionTypeEnum.CRate);
+            CreateStepTemplate(-2050, CurrentUnitEnum.mA, 600, CutOffConditionTypeEnum.Time_s);
+        }
+        private static void CreateRecipeTemplateGroup(List<double> cPoints, int restTime, double chargeRate)
+        {
+            foreach (var c in cPoints)
+            {
+                using (var dbContext = new AppDbContext())
+                {
+                    RecipeTemplate obj = new RecipeTemplate();
+                    obj.Name = $"{c / -1000.0}A";
+
+                    var newStep = new StepClass();
+                    //newStep.Order = order++;
+                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    //newStep.Order = order++;
+                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    //newStep.Order = order++;
+                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    obj.Steps.Add(newStep);
+
+                    dbContext.RecipeTemplates.Add(obj);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+        private static void CreateStaticRecipeTemplateGroup(string recipeName, List<double> cPoints, ushort loop)
+        {
+            foreach (var c in cPoints)
+            {
+                using (var dbContext = new AppDbContext())
+                {
+                    RecipeTemplate obj = new RecipeTemplate();
+                    obj.Name = $"{recipeName}-{c / -1000.0}A";
+
+                    var newStep = new StepClass();
+                    //newStep.Order = order++;
+                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == 0.5 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    if (loop > 1)
+                        newStep.LoopLabel = "a";
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == 0 && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    //newStep.Order = order++;
+                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == 0 && o.CutOffConditionValue == 60 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    if (loop > 1)
+                    {
+                        newStep.LoopTarget = "a";
+                        newStep.LoopCount = loop;
+                    }
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    //newStep.Order = order++;
+                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    obj.Steps.Add(newStep);
+
+                    dbContext.RecipeTemplates.Add(obj);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+        private static void CreateRecipeTemplates()
+        {
+            CreateRecipeTemplateGroup(new List<double>() { -600, -900, -2000, -3000, -6000, -10000, -14000, -17000, -19000 }, 1800, 0.5);
+            CreateRecipeTemplateGroup(new List<double>() { -2800, -9000, -11000, -15000 }, 600, 0.5);
+            CreateStaticRecipeTemplateGroup("Static2", new List<double>() { -2800, -9000, -11000, -15000 },5);   //static2
+            CreateDynamicRecipeTemplateGroup("Dynamic1", new List<List<double>>() { new List<double>() { -3000, -11000, -17000 }, new List<double>() { -17000, -11000, -3000 }, new List<double>() { -11000, -17000, -3000 }, new List<double>() { -3000, -17000, -11000 } }, 5);
+            CreateDynamicRecipeTemplateGroup("Dynamic2", new List<List<double>>() { new List<double>() { -3000, -11000, -17000 }, new List<double>() { -17000, -11000, -3000 }, new List<double>() { -11000, -17000, -3000 }, new List<double>() { -3000, -17000, -11000 } }, 1);
+            CreateStaticRecipeTemplateGroup("Static4", new List<double>() { -2800, -9000, -11000, -15000 }, 1);   //static2
+        }
+
+        private static void CreateDynamicRecipeTemplateGroup(string recipeName, List<List<double>> list, ushort loop)
+        {
+            foreach (var cPoints in list)
+            {
+                using (var dbContext = new AppDbContext())
+                {
+                    RecipeTemplate obj = new RecipeTemplate();
+                    obj.Name = $"{recipeName}-{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
+
+
+                    var newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(
+                        o => o.CurrentInput == 0 &&
+                        o.CutOffConditionValue == 600 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    if (loop > 1)
+                        newStep.LoopLabel = "a";
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(
+                        o => o.CurrentInput == 0.5 &&
+                        o.CurrentUnit == CurrentUnitEnum.C &&
+                        o.CutOffConditionValue == 1 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(
+                        o => o.CurrentInput == 0 &&
+                        o.CutOffConditionValue == 600 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(
+                        o => o.CurrentInput == cPoints[0] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 300 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(
+                        o => o.CurrentInput == cPoints[1] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 300 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(
+                        o => o.CurrentInput == cPoints[2] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 0 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    if (loop > 1)
+                    {
+                        newStep.LoopTarget = "a";
+                        newStep.LoopCount = 5;
+                    }
+                    obj.Steps.Add(newStep);
+
+                    dbContext.RecipeTemplates.Add(obj);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+        #endregion
+
+        private static void CreateStepTemplate(double ci, CurrentUnitEnum cu, double cocv, CutOffConditionTypeEnum coct)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                if (!dbContext.StepTemplates.Any(o => o.CurrentInput == ci && o.CurrentUnit == cu && o.CutOffConditionValue == cocv && o.CutOffConditionType == coct))
+                {
+                    StepTemplate output = new StepTemplate();
+                    output.CurrentInput = ci;
+                    output.CurrentUnit = cu;
+                    output.CutOffConditionValue = cocv;
+                    output.CutOffConditionType = coct;
+                    dbContext.StepTemplates.Add(output);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+
+        private static void CreateDischargeStepTemplatesByCurrents(List<double> cPoints)
+        {
+            foreach (var c in cPoints)
+            {
+                CreateStepTemplate(c, CurrentUnitEnum.mA, 0, CutOffConditionTypeEnum.CRate);
+            }
+        }
+
+        private static void CreateDischargeStepTemplatesByCurrentsAndTime(List<double> cPoints, double time)
+        {
+            foreach (var c in cPoints)
+            {
+                CreateStepTemplate(c, CurrentUnitEnum.mA, time, CutOffConditionTypeEnum.Time_s);
+            }
+        }
+
+        private static RecipeTemplate GetRecipeTemplateById(AppDbContext dbContext, int id)
+        {
+            var subtemplate = dbContext.RecipeTemplates.SingleOrDefault(o => o.Id == id);
+            dbContext.Entry(subtemplate)
+                .Collection(o => o.Steps)
+                .Load();
+
+            foreach (var step in subtemplate.Steps)
+            {
+                dbContext.Entry(step)
+                    .Reference(o => o.StepTemplate)
+                    .Load();
+            }
+            return subtemplate;
+        }
+    }
 }
