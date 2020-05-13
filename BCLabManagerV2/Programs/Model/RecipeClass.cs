@@ -98,7 +98,7 @@ namespace BCLabManager.Model
             BuildStepRuntimesBasedOnSteps(template.Steps.ToList(), batteryType);
             var tr = new TestRecordClass();
             //tr.ProgramStr = ProgramStr;
-            tr.RecipeStr = $"{this.Temperature}Deg-{this.Name}";
+            tr.RecipeStr = $"{this.Temperature}Deg-{this.Name}-{this.Id}";
             tr.StatusChanged += this.TestRecord_StatusChanged;
             this.TestRecords.Add(tr);
         }
@@ -210,7 +210,7 @@ namespace BCLabManager.Model
 
             var tr = new TestRecordClass();
             tr.ProgramStr = ProgramStr;
-            tr.RecipeStr = $"{this.Temperature}Deg-{this.Name}";
+            tr.RecipeStr = $"{this.Temperature}Deg-{this.Name}-{this.Id}";
             tr.StatusChanged += this.TestRecord_StatusChanged;
             this.TestRecords.Add(tr);
         }
