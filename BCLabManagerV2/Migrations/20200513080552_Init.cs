@@ -354,6 +354,7 @@ namespace BCLabManager.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     IsAbandoned = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(nullable: true),
+                    TemplateId = table.Column<int>(nullable: true),
                     Temperature = table.Column<double>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
                     EndTime = table.Column<DateTime>(nullable: false),
@@ -369,6 +370,12 @@ namespace BCLabManager.Migrations
                         name: "FK_Recipes_Programs_ProgramClassId",
                         column: x => x.ProgramClassId,
                         principalTable: "Programs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Recipes_RecipeTemplates_TemplateId",
+                        column: x => x.TemplateId,
+                        principalTable: "RecipeTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -549,6 +556,11 @@ namespace BCLabManager.Migrations
                 column: "ProgramClassId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Recipes_TemplateId",
+                table: "Recipes",
+                column: "TemplateId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StepRuntimes_RecipeClassId",
                 table: "StepRuntimes",
                 column: "RecipeClassId");
@@ -618,9 +630,6 @@ namespace BCLabManager.Migrations
                 name: "TestRecords");
 
             migrationBuilder.DropTable(
-                name: "RecipeTemplates");
-
-            migrationBuilder.DropTable(
                 name: "StepTemplates");
 
             migrationBuilder.DropTable(
@@ -643,6 +652,9 @@ namespace BCLabManager.Migrations
 
             migrationBuilder.DropTable(
                 name: "Programs");
+
+            migrationBuilder.DropTable(
+                name: "RecipeTemplates");
 
             migrationBuilder.DropTable(
                 name: "Projects");

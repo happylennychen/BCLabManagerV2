@@ -21,7 +21,7 @@ namespace BCLabManager.Model
             CreateFolder(item.BatteryType.Name, item.Name);
         }
 
-        private void CreateFolder(string batteryType, string project)
+        public void CreateFolder(string batteryType, string project)
         {
             string testFilePath = $@"{GlobalSettings.RootPath}{batteryType}\{project}\{GlobalSettings.TestDataFolderName}";
             string evResultPath = $@"{GlobalSettings.RootPath}{batteryType}\{project}\{GlobalSettings.EvResultFolderName}";

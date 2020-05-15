@@ -23,6 +23,13 @@ namespace BCLabManager.Model
             set { SetProperty(ref _name, value); }
         }
 
+        private RecipeTemplate _template;
+        public RecipeTemplate Template
+        {
+            get { return _template; }
+            set { SetProperty(ref _template, value); }
+        }
+
         private double _temperature;
         public double Temperature
         {
@@ -85,6 +92,7 @@ namespace BCLabManager.Model
         public RecipeClass(RecipeTemplate template, BatteryTypeClass batteryType)
         {
             Name = template.Name;
+            this.Template = template;
             //Current = template.Current;
             //Temperature = template.Temperature;
             //foreach (var step in template.Steps)
@@ -98,7 +106,7 @@ namespace BCLabManager.Model
             BuildStepRuntimesBasedOnSteps(template.Steps.ToList(), batteryType);
             var tr = new TestRecordClass();
             //tr.ProgramStr = ProgramStr;
-            tr.RecipeStr = $"{this.Temperature}Deg-{this.Name}-{this.Id}";
+            tr.RecipeStr = $"{this.Temperature}Deg-{this.Name}-ID{this.Template.Id}";
             tr.StatusChanged += this.TestRecord_StatusChanged;
             this.TestRecords.Add(tr);
         }
@@ -200,6 +208,7 @@ namespace BCLabManager.Model
         public RecipeClass(RecipeTemplate template, string ProgramStr, BatteryTypeClass batteryType)  //Only used by populator
         {
             this.Name = template.Name;
+            this.Template = template;
             foreach (var step in template.Steps)
             {
                 StepRuntimeClass sr = new StepRuntimeClass();
@@ -210,7 +219,7 @@ namespace BCLabManager.Model
 
             var tr = new TestRecordClass();
             tr.ProgramStr = ProgramStr;
-            tr.RecipeStr = $"{this.Temperature}Deg-{this.Name}-{this.Id}";
+            tr.RecipeStr = $"{this.Temperature}Deg-{this.Name}-ID{this.Template.Id}";
             tr.StatusChanged += this.TestRecord_StatusChanged;
             this.TestRecords.Add(tr);
         }

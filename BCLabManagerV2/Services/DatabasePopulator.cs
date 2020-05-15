@@ -43,6 +43,7 @@ namespace BCLabManager
             PopulateProjects();
             CreateStepTemplates();
             CreateRecipeTemplates();
+            CreatePrograms();
             #endregion
         }
         #region Assets
@@ -160,16 +161,18 @@ namespace BCLabManager
                 proj.CutoffDischargeVoltage = proj.BatteryType.CutoffDischargeVoltage;
                 proj.LimitedChargeVoltage = proj.BatteryType.LimitedChargeVoltage;
                 proj.AbsoluteMaxCapacity = proj.BatteryType.RatedCapacity;
-                var evSetting = new EvSettingClass();
-                evSetting.DischargeEndVoltage = proj.BatteryType.CutoffDischargeVoltage;
-                evSetting.FullyChargedEndCurrent = proj.BatteryType.FullyChargedEndCurrent;
-                evSetting.FullyChargedEndingTimeout = proj.BatteryType.FullyChargedEndingTimeout;
-                evSetting.LimitedChargeVoltage = proj.BatteryType.LimitedChargeVoltage;
-                evSetting.DesignCapacity = proj.BatteryType.TypicalCapacity;
-                proj.EvSettings.Add(evSetting);
+                //var evSetting = new EvSettingClass();
+                //evSetting.DischargeEndVoltage = proj.BatteryType.CutoffDischargeVoltage;
+                //evSetting.FullyChargedEndCurrent = proj.BatteryType.FullyChargedEndCurrent;
+                //evSetting.FullyChargedEndingTimeout = proj.BatteryType.FullyChargedEndingTimeout;
+                //evSetting.LimitedChargeVoltage = proj.BatteryType.LimitedChargeVoltage;
+                //evSetting.DesignCapacity = proj.BatteryType.TypicalCapacity;
+                //proj.EvSettings.Add(evSetting);
                 uow.Projects.Insert(proj);
                 uow.Commit();
             }
+            var service = new ProjectServiceClass();
+            service.CreateFolder(batteryType, name);
         }
         private static void PopulateBatteries()
         {
@@ -182,7 +185,7 @@ namespace BCLabManager
             //        BatteryClass bat = ReportLoader.LoadBatteryByIndex(i, ref btId);
             //        if (bat != null)
             //        {
-            //            bat.BatteryType = uow.BatteryTypes.SingleOrDefault(o => o.Id == btId);
+            //            bat.BatteryType = uow.BatteryTypes.Single(o => o.Id == btId);
             //            uow.Batteries.Insert(bat);
             //            uow.Commit();
             //        }
@@ -326,17 +329,17 @@ namespace BCLabManager
 
                         var newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                         obj.Steps.Add(newStep);
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                         obj.Steps.Add(newStep);
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
                         obj.Steps.Add(newStep);
 
                         dbContext.RecipeTemplates.Add(obj);
@@ -399,7 +402,7 @@ namespace BCLabManager
 
                         var newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 &&
                                                                                         o.CurrentInput == chargeRate &&
                                                                                         o.CurrentUnit == CurrentUnitEnum.C &&
                                                                                         o.CutOffConditionValue == 1 &&
@@ -408,7 +411,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 &&
                                                                                         o.CurrentInput == 0 &&
                                                                                         o.CutOffConditionValue == restTime &&
                                                                                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
@@ -416,7 +419,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t &&
                                                                                         o.CurrentInput == dic[c][0] &&
                                                                                         o.CurrentUnit == CurrentUnitEnum.mA &&
                                                                                         o.CutOffConditionValue == 900 &&
@@ -426,7 +429,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 &&
                                                                                         o.CurrentInput == 0 &&
                                                                                         o.CutOffConditionValue == restTime &&
                                                                                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
@@ -434,7 +437,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t &&
                                                                                         o.CurrentInput == dic[c][1] &&
                                                                                         o.CurrentUnit == CurrentUnitEnum.mA &&
                                                                                         o.CutOffConditionValue == 1200 &&
@@ -443,7 +446,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 &&
                                                                                         o.CurrentInput == 0 &&
                                                                                         o.CutOffConditionValue == restTime &&
                                                                                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
@@ -451,7 +454,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t &&
                                                                                         o.CurrentInput == dic[c][2] &&
                                                                                         o.CurrentUnit == CurrentUnitEnum.mA &&
                                                                                         o.CutOffConditionValue == 600 &&
@@ -501,17 +504,17 @@ namespace BCLabManager
 
                         var newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                         obj.Steps.Add(newStep);
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                         obj.Steps.Add(newStep);
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
                         obj.Steps.Add(newStep);
 
                         dbContext.RecipeTemplates.Add(obj);
@@ -554,17 +557,17 @@ namespace BCLabManager
 
                         var newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                         obj.Steps.Add(newStep);
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                         obj.Steps.Add(newStep);
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
                         obj.Steps.Add(newStep);
 
                         dbContext.RecipeTemplates.Add(obj);
@@ -615,7 +618,7 @@ namespace BCLabManager
 
                         var newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 &&
                                                                                         o.CurrentInput == chargeRate &&
                                                                                         o.CurrentUnit == CurrentUnitEnum.C &&
                                                                                         o.CutOffConditionValue == 1 &&
@@ -624,7 +627,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 &&
                                                                                         o.CurrentInput == 0 &&
                                                                                         o.CutOffConditionValue == restTime &&
                                                                                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
@@ -632,7 +635,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t &&
                                                                                         o.CurrentInput == dic[c][0] &&
                                                                                         o.CurrentUnit == CurrentUnitEnum.mA &&
                                                                                         o.CutOffConditionValue == 900 &&
@@ -642,7 +645,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 &&
                                                                                         o.CurrentInput == 0 &&
                                                                                         o.CutOffConditionValue == restTime &&
                                                                                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
@@ -650,7 +653,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t &&
                                                                                         o.CurrentInput == dic[c][1] &&
                                                                                         o.CurrentUnit == CurrentUnitEnum.mA &&
                                                                                         o.CutOffConditionValue == 1200 &&
@@ -659,7 +662,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 &&
                                                                                         o.CurrentInput == 0 &&
                                                                                         o.CutOffConditionValue == restTime &&
                                                                                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
@@ -667,7 +670,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t &&
                                                                                         o.CurrentInput == dic[c][2] &&
                                                                                         o.CurrentUnit == CurrentUnitEnum.mA &&
                                                                                         o.CutOffConditionValue == 600 &&
@@ -717,17 +720,17 @@ namespace BCLabManager
 
                         var newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                         obj.Steps.Add(newStep);
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                         obj.Steps.Add(newStep);
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
                         obj.Steps.Add(newStep);
 
                         dbContext.RecipeTemplates.Add(obj);
@@ -766,18 +769,18 @@ namespace BCLabManager
 
                 var newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 newStep.LoopLabel = "a";
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 0);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 0);
                 newStep.LoopTarget = "a";
                 newStep.LoopCount = loop;
                 obj.Steps.Add(newStep);
@@ -812,16 +815,16 @@ namespace BCLabManager
                 obj.Name = $"25 deg {chargeRate}C charge, 25 deg {curr}mA discharge *{loop}";
 
                 var newStep = new StepClass();
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 newStep.LoopLabel = "a";
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == curr && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == curr && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
                 newStep.LoopTarget = "a";
                 newStep.LoopCount = loop;
                 obj.Steps.Add(newStep);
@@ -836,16 +839,16 @@ namespace BCLabManager
                 obj.Name = $"25 deg {chargeRate}C charge, 25 deg {curr}mA discharge *{loop}";
 
                 var newStep = new StepClass();
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 newStep.LoopLabel = "a";
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == curr && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == curr && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
                 newStep.LoopTarget = "a";
                 newStep.LoopCount = loop;
                 obj.Steps.Add(newStep);
@@ -872,7 +875,7 @@ namespace BCLabManager
 
                         var newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 &&
                                                                                         o.CurrentInput == chargeRate &&
                                                                                         o.CurrentUnit == CurrentUnitEnum.C &&
                                                                                         o.CutOffConditionValue == 1 &&
@@ -882,7 +885,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 &&
                                                                                         o.CurrentInput == 0 &&
                                                                                         o.CutOffConditionValue == restTime &&
                                                                                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
@@ -890,7 +893,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t &&
                                                                                         o.CurrentInput == dic[c][0] &&
                                                                                         o.CurrentUnit == CurrentUnitEnum.mA &&
                                                                                         o.CutOffConditionValue == 900 &&
@@ -900,7 +903,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 &&
                                                                                         o.CurrentInput == 0 &&
                                                                                         o.CutOffConditionValue == restTime &&
                                                                                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
@@ -908,7 +911,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t &&
                                                                                         o.CurrentInput == dic[c][1] &&
                                                                                         o.CurrentUnit == CurrentUnitEnum.mA &&
                                                                                         o.CutOffConditionValue == 1200 &&
@@ -917,7 +920,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 &&
                                                                                         o.CurrentInput == 0 &&
                                                                                         o.CutOffConditionValue == restTime &&
                                                                                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
@@ -925,7 +928,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t &&
                                                                                         o.CurrentInput == dic[c][2] &&
                                                                                         o.CurrentUnit == CurrentUnitEnum.mA &&
                                                                                         o.CutOffConditionValue == 600 &&
@@ -937,7 +940,7 @@ namespace BCLabManager
 
                         newStep = new StepClass();
                         newStep.Order = order++;
-                        newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 &&
+                        newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 &&
                                                                                         o.CurrentInput == 0 &&
                                                                                         o.CutOffConditionValue == restTime &&
                                                                                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
@@ -986,18 +989,18 @@ namespace BCLabManager
 
                 var newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 newStep.LoopLabel = "a";
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 0 && o.CurrentInput == 0 && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 0 && o.CurrentInput == 0 && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 newStep.LoopLabel = "b";
                 obj.Steps.Add(newStep);
 
@@ -1005,7 +1008,7 @@ namespace BCLabManager
                 {
                     newStep = new StepClass();
                     newStep.Order = order++;
-                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 60 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 60 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     newStep.LoopTarget = "c";
                     newStep.CompareMark = CompareMarkEnum.SmallThan;
                     newStep.CRate = 0;
@@ -1014,7 +1017,7 @@ namespace BCLabManager
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 0 && o.CurrentInput == 0 && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 0 && o.CurrentInput == 0 && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 newStep.LoopTarget = "b";
                 newStep.CompareMark = CompareMarkEnum.LargerThan;
                 newStep.CRate = 0;
@@ -1022,7 +1025,7 @@ namespace BCLabManager
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 0 && o.CurrentInput == 0 && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 0 && o.CurrentInput == 0 && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 newStep.LoopTarget = "a";
                 newStep.LoopLabel = "c";
                 newStep.LoopCount = loop;
@@ -1064,28 +1067,28 @@ namespace BCLabManager
 
                 var newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate1 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate1 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == -2000 && o.CutOffConditionValue == 300 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == -2000 && o.CutOffConditionValue == 300 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 newStep.LoopLabel = "a";
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == -200 && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == -200 && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == -1000 && o.CutOffConditionValue == 300 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == -1000 && o.CutOffConditionValue == 300 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 newStep.LoopTarget = "a";
                 newStep.CompareMark = CompareMarkEnum.LargerThan;
                 newStep.CRate = 0.2;
@@ -1094,23 +1097,23 @@ namespace BCLabManager
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate2 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate2 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == -800 && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == -800 && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 newStep.LoopLabel = "b";
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == -2000 && o.CutOffConditionValue == 300 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == -2000 && o.CutOffConditionValue == 300 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == -500 && o.CutOffConditionValue == 900 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == -500 && o.CutOffConditionValue == 900 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 newStep.LoopTarget = "b";
                 newStep.CompareMark = CompareMarkEnum.LargerThan;
                 newStep.CRate = 0.2;
@@ -1120,23 +1123,23 @@ namespace BCLabManager
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate2 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate2 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == -1500 && o.CutOffConditionValue == 300 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == -1500 && o.CutOffConditionValue == 300 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 newStep.LoopLabel = "c";
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == -200 && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == -200 && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == -2000 && o.CutOffConditionValue == 300 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == -2000 && o.CutOffConditionValue == 300 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 newStep.LoopTarget = "c";
                 newStep.CompareMark = CompareMarkEnum.LargerThan;
                 newStep.CRate = 0.2;
@@ -1183,28 +1186,28 @@ namespace BCLabManager
 
                 var newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime1 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime1 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 newStep.LoopLabel = "a";
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 0.2);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 0.2);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 newStep.LoopTarget = "a";
                 newStep.LoopCount = loop;
                 obj.Steps.Add(newStep);
@@ -1242,28 +1245,28 @@ namespace BCLabManager
                 obj.Name = $"25 deg {chargeRate}C charge, {t} deg {c}C discharge *{loop}";
 
                 var newStep = new StepClass();
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime1 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime1 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
                 newStep.Order = order++;
 
                 newStep = new StepClass();
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 newStep.LoopLabel = "a";
                 obj.Steps.Add(newStep);
                 newStep.Order = order++;
 
                 newStep = new StepClass();
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
                 newStep.Order = order++;
 
                 newStep = new StepClass();
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0.2);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0.2);
                 obj.Steps.Add(newStep);
                 newStep.Order = order++;
 
                 newStep = new StepClass();
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 newStep.LoopTarget = "a";
                 newStep.LoopCount = loop;
                 obj.Steps.Add(newStep);
@@ -1303,33 +1306,33 @@ namespace BCLabManager
 
                 var newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t1 && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0.2);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t1 && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0.2);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t1 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime1 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t1 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime1 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t1 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t1 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 newStep.LoopLabel = "a";
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t1 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t1 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t2 && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0.2);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t2 && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0.2);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t1 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t1 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 newStep.LoopTarget = "a";
                 newStep.LoopCount = loop;
                 obj.Steps.Add(newStep);
@@ -1372,34 +1375,34 @@ namespace BCLabManager
 
                 var newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0.2);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0.2);
                 obj.Steps.Add(newStep);
 
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == 0 && o.CutOffConditionValue == restTime1 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == 0 && o.CutOffConditionValue == restTime1 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == chargeCurrent && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == chargeCurrent && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 newStep.LoopLabel = "a";
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0.2);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0.2);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 newStep.LoopTarget = "a";
                 newStep.LoopCount = loop;
                 obj.Steps.Add(newStep);
@@ -1449,22 +1452,22 @@ namespace BCLabManager
 
                 var newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime1 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime1 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t1 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t1 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t1 && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0.2);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t1 && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0.2);
                 obj.Steps.Add(newStep);
 
                 dbContext.RecipeTemplates.Add(obj);
@@ -1478,22 +1481,22 @@ namespace BCLabManager
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime1 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime1 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t2 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t2 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t2 && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0.2);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t2 && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0.2);
                 obj.Steps.Add(newStep);
 
                 dbContext.RecipeTemplates.Add(obj);
@@ -1534,22 +1537,22 @@ namespace BCLabManager
 
                 var newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime1 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == 25 && o.CurrentInput == 0 && o.CutOffConditionValue == restTime1 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == 0 && o.CutOffConditionValue == restTime2 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
                 newStep = new StepClass();
                 newStep.Order = order++;
-                newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0.2);
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.Coefficient.Temperature == t && o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0.2);
                 obj.Steps.Add(newStep);
 
                 dbContext.RecipeTemplates.Add(obj);
@@ -1565,10 +1568,10 @@ namespace BCLabManager
             using (var dbContext = new AppDbContext())//1
             {
                 int number = 9;
-                BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
                 var pro = new ProgramClass();
                 pro.Name = "Oppo BLP663 Static Test";
-                pro.Project = dbContext.Projects.SingleOrDefault(o => o.Customer == "O2Micro");
+                pro.Project = dbContext.Projects.Single(o => o.Customer == "O2Micro");
                 pro.Requester = "Francis";
                 pro.RequestTime = DateTime.Parse("2019/02/28");
 
@@ -1588,7 +1591,7 @@ namespace BCLabManager
             //        using (var dbContext = new AppDbContext())//2
             //        {
             //            int number = 6;
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "Oppo BLP663 Dynamic Test";
             //            pro.BatteryType = bType;
@@ -1612,7 +1615,7 @@ namespace BCLabManager
             //        using (var dbContext = new AppDbContext())//3
             //        {
             //            int number = 6;
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "Oppo BLP663 RC";
             //            pro.BatteryType = bType;
@@ -1636,7 +1639,7 @@ namespace BCLabManager
             //        using (var dbContext = new AppDbContext())//4
             //        {
             //            int number = 3;
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "Oppo BLP663 Static Test-2";
             //            pro.BatteryType = bType;
@@ -1660,7 +1663,7 @@ namespace BCLabManager
             //        using (var dbContext = new AppDbContext())//5
             //        {
             //            int number = 3;
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "Oppo BLP663 Dynamic Test-2";
             //            pro.BatteryType = bType;
@@ -1684,7 +1687,7 @@ namespace BCLabManager
             //        using (var dbContext = new AppDbContext())//6
             //        {
             //            int number = 1;
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "Oppo BLP663 Static Test-3";
             //            pro.BatteryType = bType;
@@ -1708,7 +1711,7 @@ namespace BCLabManager
             //        using (var dbContext = new AppDbContext())//7
             //        {
             //            int number = 1;
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "500 Cycles";
             //            pro.BatteryType = bType;
@@ -1732,7 +1735,7 @@ namespace BCLabManager
             //        using (var dbContext = new AppDbContext())//8
             //        {
             //            int number = 3;
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "Composite Test";
             //            pro.BatteryType = bType;
@@ -1756,7 +1759,7 @@ namespace BCLabManager
             //        using (var dbContext = new AppDbContext())//9
             //        {
             //            int number = 1;
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "Oppo BLP663 Dynamic Test-3";
             //            pro.BatteryType = bType;
@@ -1780,7 +1783,7 @@ namespace BCLabManager
             //        using (var dbContext = new AppDbContext())//10
             //        {
             //            int number = 1;
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "Oppo BLP663 Dynamic Test-4";
             //            pro.BatteryType = bType;
@@ -1803,7 +1806,7 @@ namespace BCLabManager
             //        }
             //        using (var dbContext = new AppDbContext())//11
             //        {
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "2000mA Test";
             //            pro.BatteryType = bType;
@@ -1823,7 +1826,7 @@ namespace BCLabManager
             //        using (var dbContext = new AppDbContext())//12
             //        {
             //            int number = 1;
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "Aging Factor";
             //            pro.BatteryType = bType;
@@ -1846,7 +1849,7 @@ namespace BCLabManager
             //        }
             //        using (var dbContext = new AppDbContext())//13
             //        {
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "Aging Factor 2";
             //            pro.BatteryType = bType;
@@ -1866,7 +1869,7 @@ namespace BCLabManager
             //        using (var dbContext = new AppDbContext())//14
             //        {
             //            int number = 1;
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "Aging Factor 3";
             //            pro.BatteryType = bType;
@@ -1890,7 +1893,7 @@ namespace BCLabManager
             //        using (var dbContext = new AppDbContext())//15
             //        {
             //            int number = 1;
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "Aging Factor 4";
             //            pro.BatteryType = bType;
@@ -1914,7 +1917,7 @@ namespace BCLabManager
             //        using (var dbContext = new AppDbContext())//16
             //        {
             //            int number = 1;
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "Aging Factor 5";
             //            pro.BatteryType = bType;
@@ -1938,7 +1941,7 @@ namespace BCLabManager
             //        using (var dbContext = new AppDbContext())//17
             //        {
             //            int number = 2;
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "Aging Factor 6";
             //            pro.BatteryType = bType;
@@ -1962,7 +1965,7 @@ namespace BCLabManager
             //        using (var dbContext = new AppDbContext())//18
             //        {
             //            int number = 1;
-            //            BatteryTypeClass bType = dbContext.BatteryTypes.SingleOrDefault(o => o.Name == "BLP663");
+            //            BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "BLP663");
             //            var pro = new ProgramClass();
             //            pro.Name = "Aging Factor 7";
             //            pro.BatteryType = bType;
@@ -1993,6 +1996,7 @@ namespace BCLabManager
             CreateStepTemplate(0, CurrentUnitEnum.C, 1800, CutOffConditionTypeEnum.Time_s);
             //CreateStepTemplate(-1, CurrentUnitEnum.C, 0, CutOffConditionTypeEnum.CRate);
             CreateStepTemplate(-600, CurrentUnitEnum.mA, 0, CutOffConditionTypeEnum.CRate);
+            CreateStepTemplate(-900, CurrentUnitEnum.mA, 0, CutOffConditionTypeEnum.CRate);
 
             //List<double> cPoints = new List<double>() { -2000, -3000, -6000, -10000, -14000, -17000, -19000};
             CreateDischargeStepTemplatesByCurrents(new List<double>() { -2000, -3000, -6000, -10000, -14000, -17000, -19000 });
@@ -2008,7 +2012,15 @@ namespace BCLabManager
             CreateDischargeStepTemplatesByCurrentsAndTime(new List<double>() { -3000, -11000, -17000 }, 120);
 
             CreateStepTemplate(-2050, CurrentUnitEnum.mA, 0, CutOffConditionTypeEnum.CRate);
+            CreateStepTemplate(-2050, CurrentUnitEnum.mA, 300, CutOffConditionTypeEnum.Time_s);
             CreateStepTemplate(-2050, CurrentUnitEnum.mA, 600, CutOffConditionTypeEnum.Time_s);
+
+
+            CreateStepTemplate(-17000, CurrentUnitEnum.mA, 0.2, CutOffConditionTypeEnum.CRate);
+            CreateStepTemplate(-11000, CurrentUnitEnum.mA, 0.2, CutOffConditionTypeEnum.CRate);
+            CreateStepTemplate(-3000, CurrentUnitEnum.mA, 60, CutOffConditionTypeEnum.Time_s);
+            CreateStepTemplate(-11000, CurrentUnitEnum.mA, 60, CutOffConditionTypeEnum.Time_s);
+            CreateStepTemplate(-17000, CurrentUnitEnum.mA, 60, CutOffConditionTypeEnum.Time_s);
         }
         private static void CreateRecipeTemplateGroup(List<double> cPoints, int restTime, double chargeRate)
         {
@@ -2021,17 +2033,17 @@ namespace BCLabManager
 
                     var newStep = new StepClass();
                     //newStep.Order = order++;
-                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
                     //newStep.Order = order++;
-                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
                     //newStep.Order = order++;
-                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
                     dbContext.RecipeTemplates.Add(obj);
@@ -2039,33 +2051,33 @@ namespace BCLabManager
                 }
             }
         }
-        private static void CreateStaticRecipeTemplateGroup(string recipeName, List<double> cPoints, ushort loop)
+        private static void CreateStaticRecipeTemplateGroup(List<double> cPoints, ushort loop)
         {
             foreach (var c in cPoints)
             {
                 using (var dbContext = new AppDbContext())
                 {
                     RecipeTemplate obj = new RecipeTemplate();
-                    obj.Name = $"{recipeName}-{c / -1000.0}A";
+                    obj.Name = $"{c / -1000.0}A";
 
                     var newStep = new StepClass();
                     //newStep.Order = order++;
-                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == 0.5 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0.5 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     if (loop > 1)
                         newStep.LoopLabel = "a";
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
-                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == 0 && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
                     //newStep.Order = order++;
-                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
-                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == 0 && o.CutOffConditionValue == 60 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 60 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     if (loop > 1)
                     {
                         newStep.LoopTarget = "a";
@@ -2075,7 +2087,7 @@ namespace BCLabManager
 
                     newStep = new StepClass();
                     //newStep.Order = order++;
-                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
                     dbContext.RecipeTemplates.Add(obj);
@@ -2087,24 +2099,30 @@ namespace BCLabManager
         {
             CreateRecipeTemplateGroup(new List<double>() { -600, -900, -2000, -3000, -6000, -10000, -14000, -17000, -19000 }, 1800, 0.5);
             CreateRecipeTemplateGroup(new List<double>() { -2800, -9000, -11000, -15000 }, 600, 0.5);
-            CreateStaticRecipeTemplateGroup("Static2", new List<double>() { -2800, -9000, -11000, -15000 },5);   //static2
-            CreateDynamicRecipeTemplateGroup("Dynamic1", new List<List<double>>() { new List<double>() { -3000, -11000, -17000 }, new List<double>() { -17000, -11000, -3000 }, new List<double>() { -11000, -17000, -3000 }, new List<double>() { -3000, -17000, -11000 } }, 5);
-            CreateDynamicRecipeTemplateGroup("Dynamic2", new List<List<double>>() { new List<double>() { -3000, -11000, -17000 }, new List<double>() { -17000, -11000, -3000 }, new List<double>() { -11000, -17000, -3000 }, new List<double>() { -3000, -17000, -11000 } }, 1);
-            CreateStaticRecipeTemplateGroup("Static4", new List<double>() { -2800, -9000, -11000, -15000 }, 1);   //static2
+            CreateStaticRecipeTemplateGroup(new List<double>() { -2800, -9000, -11000, -15000 }, 5);   //static2
+            CreateDynamicRecipeTemplateGroup(new List<List<double>>() { new List<double>() { -3000, -11000, -17000 }, new List<double>() { -17000, -11000, -3000 }, new List<double>() { -11000, -17000, -3000 }, new List<double>() { -3000, -17000, -11000 } }, 5);
+            CreateDynamicRecipeTemplateGroup(new List<List<double>>() { new List<double>() { -3000, -11000, -17000 }, new List<double>() { -17000, -11000, -3000 }, new List<double>() { -11000, -17000, -3000 }, new List<double>() { -3000, -17000, -11000 } }, 1);
+            CreateStaticRecipeTemplateGroup(new List<double>() { -2800, -9000, -11000, -15000 }, 1);   //static4
+
+            CreateDynamic3RecipeTemplateGroup(new List<List<double>>() { new List<double>() { -3000, -11000, -17000 }, new List<double>() { -17000, -11000, -3000 }, new List<double>() { -11000, -17000, -3000 }, new List<double>() { -3000, -17000, -11000 } });
+            CreateDynamic4RecipeTemplateGroup(new List<List<double>>() { new List<double>() { -3000, -11000, -17000 }, new List<double>() { -17000, -11000, -3000 }, new List<double>() { -11000, -17000, -3000 }, new List<double>() { -3000, -17000, -11000 } });
+            CreateDynamic5RecipeTemplateGroup(new List<List<double>>() { new List<double>() { -3000, -11000, -17000 }, new List<double>() { -17000, -11000, -3000 }, new List<double>() { -11000, -17000, -3000 }, new List<double>() { -3000, -17000, -11000 } });
+
+            CreateDynamic6RecipeTemplateGroup(new List<List<double>>() { new List<double>() { -17000, -3000 }, new List<double>() { -11000, -3000 }, new List<double>() { -11000, -11000 }, new List<double>() { -17000, -17000 } });
         }
 
-        private static void CreateDynamicRecipeTemplateGroup(string recipeName, List<List<double>> list, ushort loop)
+        private static void CreateDynamicRecipeTemplateGroup(List<List<double>> list, ushort loop)
         {
             foreach (var cPoints in list)
             {
                 using (var dbContext = new AppDbContext())
                 {
                     RecipeTemplate obj = new RecipeTemplate();
-                    obj.Name = $"{recipeName}-{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
+                    obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
 
 
                     var newStep = new StepClass();
-                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
                         o.CutOffConditionValue == 600 &&
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
@@ -2113,7 +2131,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
-                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0.5 &&
                         o.CurrentUnit == CurrentUnitEnum.C &&
                         o.CutOffConditionValue == 1 &&
@@ -2121,14 +2139,14 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
-                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
                         o.CutOffConditionValue == 600 &&
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
-                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[0] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
                         o.CutOffConditionValue == 300 &&
@@ -2136,7 +2154,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
-                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[1] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
                         o.CutOffConditionValue == 300 &&
@@ -2144,7 +2162,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
-                    newStep.StepTemplate = dbContext.StepTemplates.SingleOrDefault(
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[2] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
                         o.CutOffConditionValue == 0 &&
@@ -2161,8 +2179,451 @@ namespace BCLabManager
                 }
             }
         }
-        #endregion
+        private static void CreateDynamic3RecipeTemplateGroup(List<List<double>> list)
+        {
+            foreach (var cPoints in list)
+            {
+                using (var dbContext = new AppDbContext())
+                {
+                    RecipeTemplate obj = new RecipeTemplate();
+                    obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
 
+
+                    var newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0 &&
+                        o.CutOffConditionValue == 600 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0.5 &&
+                        o.CurrentUnit == CurrentUnitEnum.C &&
+                        o.CutOffConditionValue == 1 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0 &&
+                        o.CutOffConditionValue == 600 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == cPoints[0] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 300 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == cPoints[1] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 300 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == cPoints[2] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 0 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == -2050 &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 0 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    obj.Steps.Add(newStep);
+
+                    dbContext.RecipeTemplates.Add(obj);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+        private static void CreateDynamic4RecipeTemplateGroup(List<List<double>> list)
+        {
+            foreach (var cPoints in list)
+            {
+                using (var dbContext = new AppDbContext())
+                {
+                    RecipeTemplate obj = new RecipeTemplate();
+                    obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
+
+
+                    var newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0 &&
+                        o.CutOffConditionValue == 600 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0.5 &&
+                        o.CurrentUnit == CurrentUnitEnum.C &&
+                        o.CutOffConditionValue == 1 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0 &&
+                        o.CutOffConditionValue == 600 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == -2050 &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 300 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == cPoints[0] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 300 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == cPoints[1] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 300 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == cPoints[2] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 0 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == -2050 &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 0 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    obj.Steps.Add(newStep);
+
+                    dbContext.RecipeTemplates.Add(obj);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+        private static void CreateDynamic5RecipeTemplateGroup(List<List<double>> list)
+        {
+            foreach (var cPoints in list)
+            {
+                using (var dbContext = new AppDbContext())
+                {
+                    RecipeTemplate obj = new RecipeTemplate();
+                    obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
+
+
+                    var newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0 &&
+                        o.CutOffConditionValue == 600 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0.5 &&
+                        o.CurrentUnit == CurrentUnitEnum.C &&
+                        o.CutOffConditionValue == 1 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0 &&
+                        o.CutOffConditionValue == 600 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == -2050 &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 600 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == cPoints[0] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 300 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == cPoints[1] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 300 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == cPoints[2] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 0 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    obj.Steps.Add(newStep);
+
+                    dbContext.RecipeTemplates.Add(obj);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+        private static void CreateDynamic6RecipeTemplateGroup(List<List<double>> list)
+        {
+            foreach (var cPoints in list)
+            {
+                using (var dbContext = new AppDbContext())
+                {
+                    RecipeTemplate obj = new RecipeTemplate();
+                    obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A";
+
+
+                    var newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0 &&
+                        o.CutOffConditionValue == 600 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0.5 &&
+                        o.CurrentUnit == CurrentUnitEnum.C &&
+                        o.CutOffConditionValue == 1 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0 &&
+                        o.CutOffConditionValue == 600 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == cPoints[0] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 0.2 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0 &&
+                        o.CurrentUnit == CurrentUnitEnum.C &&
+                        o.CutOffConditionValue == 60 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    newStep.LoopLabel = "a";
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == cPoints[1] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == 300 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    newStep.LoopTarget = "a";
+                    newStep.CompareMark = CompareMarkEnum.LargerThan;
+                    newStep.CRate = 0;
+                    obj.Steps.Add(newStep);
+
+                    dbContext.RecipeTemplates.Add(obj);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+        private static void Create_HG2_HighPower_MISC_Battery_Initial()
+        {
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "MISC-Battery-Initial";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                recTemp = GetRecipeTemplateByName(dbContext, "3A");
+                rec = new RecipeClass(recTemp, bType);
+                rec.Temperature = 25;
+                pro.Recipes.Add(rec);
+                rec = new RecipeClass(recTemp, bType);
+                rec.Temperature = 25;
+                pro.Recipes.Add(rec);
+                rec = new RecipeClass(recTemp, bType);
+                rec.Temperature = 25;
+                pro.Recipes.Add(rec);
+                rec = new RecipeClass(recTemp, bType);
+                rec.Temperature = 25;
+                pro.Recipes.Add(rec);
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_RC_02()
+        {
+            var tPoints = new List<double>() { -10, -2.5, 5, 15, 25, 35, 45, 55 };
+            var cPoints = new List<string>() { "2A", "3A", "6A", "10A", "14A", "17A", "19A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "RC-01";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+
+                        recTemp = GetRecipeTemplateByName(dbContext, c);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Static_01()
+        {
+            var tPoints = new List<double>() { -5, -2.5, 7, 10, 20, 28, 33 };
+            var cPoints = new List<string>() { "2.8A", "9A", "11A", "15A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Static-01";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, c).Min();
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Static_02()
+        {
+            var tPoints = new List<double>() { 7, 10, 20, 28, 33 };
+            var cPoints = new List<string>() { "2.8A", "9A", "11A", "15A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Static-02";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, c)[1];
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Dynamic_01()
+        {
+            var tPoints = new List<double>() { 7, 10, 20, 28, 33 };
+            var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Static-02";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, c).Min();
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void CreatePrograms()
+        {
+            Create_HG2_HighPower_MISC_Battery_Initial();
+            Create_HG2_HighPower_RC_02();
+            Create_HG2_HighPower_EV_Static_01();
+            Create_HG2_HighPower_EV_Static_02();
+            Create_HG2_HighPower_EV_Dynamic_01();
+        }
+        #endregion
+        #region Common
         private static void CreateStepTemplate(double ci, CurrentUnitEnum cu, double cocv, CutOffConditionTypeEnum coct)
         {
             using (var dbContext = new AppDbContext())
@@ -2198,7 +2659,7 @@ namespace BCLabManager
 
         private static RecipeTemplate GetRecipeTemplateById(AppDbContext dbContext, int id)
         {
-            var subtemplate = dbContext.RecipeTemplates.SingleOrDefault(o => o.Id == id);
+            var subtemplate = dbContext.RecipeTemplates.Single(o => o.Id == id);
             dbContext.Entry(subtemplate)
                 .Collection(o => o.Steps)
                 .Load();
@@ -2211,5 +2672,27 @@ namespace BCLabManager
             }
             return subtemplate;
         }
+
+        private static RecipeTemplate GetRecipeTemplateByName(AppDbContext dbContext, string name)
+        {
+            var subtemplate = dbContext.RecipeTemplates.Single(o => o.Name == name);
+            dbContext.Entry(subtemplate)
+                .Collection(o => o.Steps)
+                .Load();
+
+            foreach (var step in subtemplate.Steps)
+            {
+                dbContext.Entry(step)
+                    .Reference(o => o.StepTemplate)
+                    .Load();
+            }
+            return subtemplate;
+        }
+
+        private static List<int> GetRecipeTemplateIdByName(AppDbContext dbContext, string name)
+        {
+            return dbContext.RecipeTemplates.Where(o => o.Name == name).Select(o=>o.Id).ToList();
+        }
+        #endregion
     }
 }

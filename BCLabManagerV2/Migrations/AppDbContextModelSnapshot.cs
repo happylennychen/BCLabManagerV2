@@ -417,9 +417,14 @@ namespace BCLabManager.Migrations
                     b.Property<double>("Temperature")
                         .HasColumnType("double precision");
 
+                    b.Property<int?>("TemplateId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProgramClassId");
+
+                    b.HasIndex("TemplateId");
 
                     b.ToTable("Recipes");
                 });
@@ -740,6 +745,10 @@ namespace BCLabManager.Migrations
                     b.HasOne("BCLabManager.Model.ProgramClass", null)
                         .WithMany("Recipes")
                         .HasForeignKey("ProgramClassId");
+
+                    b.HasOne("BCLabManager.Model.RecipeTemplate", "Template")
+                        .WithMany()
+                        .HasForeignKey("TemplateId");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.StepClass", b =>
