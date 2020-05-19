@@ -21,6 +21,7 @@ namespace BCLabManager.ViewModel
         readonly TestRecordClass _record;
         RelayCommand _okCommand;
         RelayCommand _openFilesCommand;
+        RelayCommand _splitterCommand;
         bool _isOK;
 
         #endregion // Fields
@@ -245,6 +246,26 @@ namespace BCLabManager.ViewModel
                 DateTime[] time = _testerService.GetTimeFromRawData(_record.AssignedChannel.Tester, FileList);
                 NewName = $@"{_record.ProgramStr}_{_record.RecipeStr}_{time[0].ToString("yyyyMMddHHmmss")}";
             }
+        }
+
+        public ICommand SplitterCommand
+        {
+            get
+            {
+                if (_splitterCommand == null)
+                {
+                    _splitterCommand = new RelayCommand(
+                        param => { this.Splitter(); }
+                        );
+                }
+                return _splitterCommand;
+            }
+        }
+        public void Splitter()
+        {
+            var SplitterViewInstance = new SplitterView();
+            SplitterViewInstance.DataContext = new SplitterViewModel();
+            SplitterViewInstance.ShowDialog();
         }
     }
 }

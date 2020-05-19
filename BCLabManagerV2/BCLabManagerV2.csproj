@@ -351,8 +351,12 @@
     <Compile Include="Programs\ViewModel\StepTemplateEditViewModel.cs" />
     <Compile Include="Programs\ViewModel\StepRuntimeViewModel.cs" />
     <Compile Include="Programs\ViewModel\StepStartViewModel.cs" />
+    <Compile Include="Programs\ViewModel\SplitterViewModel.cs" />
     <Compile Include="Programs\View\AllStepTemplatesView.xaml.cs">
       <DependentUpon>AllStepTemplatesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Programs\View\SplitterView.xaml.cs">
+      <DependentUpon>SplitterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Programs\View\EndView.xaml.cs">
       <DependentUpon>EndView.xaml</DependentUpon>
@@ -550,6 +554,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Programs\View\AllProgramsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Programs\View\SplitterView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
