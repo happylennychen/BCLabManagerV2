@@ -132,7 +132,7 @@
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <ListView Grid.Column="0"
+                <!--<ListView Grid.Column="0"
                       x:Name="LeftRecipelist"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
@@ -152,8 +152,16 @@
             />
                         </GridView>
                     </ListView.View>
-                </ListView>
-                <ListView Grid.Column="2"
+                </ListView>-->
+                <DataGrid GridLinesVisibility="None" x:Name="LeftRecipelist" AutoGenerateColumns="False"  Grid.Column="0"
+                          ItemsSource="{Binding Path=AllRecipeTemplates}" Background="White"
+                          SelectedItem="{Binding Path=SelectedRecipeTemplate, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <!--<ListView Grid.Column="2"
                       x:Name="RightRecipelist"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
@@ -173,12 +181,20 @@
             />
                         </GridView>
                     </ListView.View>
-                </ListView>
+                </ListView>-->
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                     <Button Command="{Binding Path=AddCommand}">=></Button>
                     <Border Height="10"></Border>
                     <Button Command="{Binding Path=RemoveCommand}">&lt;=</Button>
                 </StackPanel>
+                <DataGrid GridLinesVisibility="None" x:Name="RightRecipelist" AutoGenerateColumns="False"  Grid.Column="2"
+                          ItemsSource="{Binding Path=Recipes}" Background="White" CanUserSortColumns="False"
+                          SelectedItem="{Binding Path=SelectedRecipe, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Temperature" CellTemplate="{StaticResource Temperature}"></DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
         </GroupBox>
     </DockPanel>

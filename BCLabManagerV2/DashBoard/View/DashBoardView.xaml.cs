@@ -40,6 +40,20 @@ namespace BCLabManager.View
                 }
             }
         }
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DataGridRow item = sender as DataGridRow;
+            if (item != null)
+            {
+                TestRecordViewModel tr = item.Item as TestRecordViewModel;
+                if (tr != null)
+                {
+                    Navigator.SetMainTabIndex(3);
+                    Navigator.SetSelectedTestRecord(tr.Id);
+                }
+            }
+        }
     }
 
     public class HeightMultiConverter : IMultiValueConverter

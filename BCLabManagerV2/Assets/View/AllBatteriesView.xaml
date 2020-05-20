@@ -42,7 +42,7 @@
                     <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60"></Button>
                     <Button Content="_Delete" Command="{Binding Path=DeleteCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
-                <ListView Grid.Row="1"
+                <!--<ListView Grid.Row="1"
                       x:Name="Batterylist"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
@@ -73,12 +73,24 @@
             />
                         </GridView>
                     </ListView.View>
-                </ListView>
+                </ListView>-->
+                <DataGrid GridLinesVisibility="None" Background="White"
+                          x:Name="Batterylist" AutoGenerateColumns="False"
+                          ItemsSource="{Binding Source={StaticResource batteriesCollectionViewSource}}"
+                          SelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Path=BatteryType.Name}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Cycle" IsReadOnly="True" Binding="{Binding Path=CycleCount}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Use Count" IsReadOnly="True" Binding="{Binding Path=AssetUseCount}"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </DockPanel>
         </GroupBox>
         <GroupBox Grid.Column="2" Header="Battery Using Record">
 
-            <ListView Grid.Row="1"
+            <!--<ListView Grid.Row="1"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
       ItemsSource="{Binding Path=Records}"
@@ -107,7 +119,17 @@
             />
                     </GridView>
                 </ListView.View>
-            </ListView>
+            </ListView>-->
+            <DataGrid GridLinesVisibility="None" AutoGenerateColumns="False" CanUserSortColumns="False"
+                      ItemsSource="{Binding Path=Records}" Background="White">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Use Count" IsReadOnly="True" Binding="{Binding Path=AssetUseCount}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Program" IsReadOnly="True" Binding="{Binding Path=ProgramName}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Recipe" IsReadOnly="True" Binding="{Binding Path=RecipeName}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Time" IsReadOnly="True" Binding="{Binding Path=Time}"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </GroupBox>
     </Grid>
 </UserControl>

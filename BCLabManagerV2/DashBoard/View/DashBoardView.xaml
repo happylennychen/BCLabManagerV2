@@ -86,6 +86,16 @@
             <Setter Property="Cursor" Value="14"></Setter>
             <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"></EventSetter>
         </Style>
+
+        <Style x:Key="DataGridItemStyle" TargetType="{x:Type DataGridRow}">
+            <!-- 
+      Stretch the content of each cell so that we can 
+      right-align text in the Total Sales column. 
+      -->
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Cursor" Value="14"></Setter>
+            <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"></EventSetter>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -218,6 +228,15 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
+                    <!--<DataGrid GridLinesVisibility="None" x:Name="WaitingTestList" AutoGenerateColumns="False" 
+                              ItemContainerStyle="{StaticResource DataGridItemStyle}"
+                              ItemsSource="{Binding Path=WaitingTestRecords}" Background="White">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Program" IsReadOnly="True" Binding="{Binding Path=ProgramStr}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Recipe" IsReadOnly="True" Binding="{Binding Path=RecipeStr}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>-->
                 </TabItem>
                 <TabItem Header="Executing">
                     <ListView
@@ -261,6 +280,19 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
+                    <!--<DataGrid GridLinesVisibility="None" x:Name="ExecutingTestList" AutoGenerateColumns="False" 
+                              ItemContainerStyle="{StaticResource DataGridItemStyle}"
+                              ItemsSource="{Binding Path=ExecutingTestRecords}" Background="White">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="BatteryTypeStr" IsReadOnly="True" Binding="{Binding Path=BatteryTypeStr}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="BatteryStr" IsReadOnly="True" Binding="{Binding Path=BatteryStr}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="ChamberStr" IsReadOnly="True" Binding="{Binding Path=ChamberStr}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="TesterStr" IsReadOnly="True" Binding="{Binding Path=TesterStr}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="ChannelStr" IsReadOnly="True" Binding="{Binding Path=ChannelStr}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="StartTime" IsReadOnly="True" Binding="{Binding Path=StartTime}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>-->
                 </TabItem>
             </TabControl>
         </GroupBox>

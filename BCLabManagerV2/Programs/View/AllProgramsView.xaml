@@ -73,18 +73,8 @@
         </DataTemplate>
 
 
-
         <DataTemplate x:Key="StartTime">
             <TextBlock Text="{Binding Path=StartTime, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding Path=StartTimeColor, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
-        </DataTemplate>
-
-
-
-
-
-        <DataTemplate x:Key="IdTemplate">
-            <TextBlock 
-            Text="{Binding Path=Id, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
         </DataTemplate>
 
         <DataTemplate x:Key="EndTime">
@@ -163,13 +153,13 @@
                         </GridView>
                     </ListView.View>
                 </ListView>-->
-                <DataGrid GridLinesVisibility="None"
-                      x:Name="Programlist" AutoGenerateColumns="False"
-                        ItemsSource="{Binding Source={StaticResource programsCollectionViewSource}}"
-                      SelectedItem="{Binding Path=SelectedProgram, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                <DataGrid GridLinesVisibility="None" Background="White"
+                          x:Name="Programlist" AutoGenerateColumns="False"
+                          ItemsSource="{Binding Source={StaticResource programsCollectionViewSource}}"
+                          SelectedItem="{Binding Path=SelectedProgram, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
-                        <DataGridTemplateColumn Header="Progress" CellTemplate="{StaticResource ProgressBar}"></DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Progress" CellTemplate="{StaticResource ProgressBar}" Width="100"></DataGridTemplateColumn>
                         <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Project" IsReadOnly="True" Binding="{Binding Path=Project}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Path=Type}"></DataGridTextColumn>
@@ -186,7 +176,7 @@
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="_Abandon" Command="{Binding Path=AbandonCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
-                <ListView
+                <!--<ListView
                       x:Name="Recipelist"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
@@ -222,7 +212,20 @@
             />
                         </GridView>
                 </ListView.View>
-            </ListView>
+            </ListView>-->
+                <DataGrid GridLinesVisibility="None" Background="White"
+                          x:Name="Recipelist" AutoGenerateColumns="False"
+                          ItemsSource="{Binding Source={StaticResource subsCollectionViewSource}}"
+                          SelectedItem="{Binding Path=SelectedRecipe, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Progress" CellTemplate="{StaticResource ProgressBar}"></DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Temperature" IsReadOnly="True" Binding="{Binding Path=Temperature}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Start Time" CellTemplate="{StaticResource StartTime}"></DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="End Time" CellTemplate="{StaticResource EndTime}"></DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </DockPanel>
         </GroupBox>
         <GroupBox Grid.Row="2" Grid.Column="0" Header="Test Records">
@@ -233,7 +236,7 @@
                     <Button Content="_Invalidate" Command="{Binding Path=InvalidateCommand}" Margin="0,5,5,0" Width="60"></Button>
                     <Button Content="_View Data" Command="{Binding Path=ViewCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
-                <ListView
+                <!--<ListView
                       x:Name="TestRecordList"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
@@ -313,7 +316,26 @@
             />
                         </GridView>
                     </ListView.View>
-                </ListView>
+                </ListView>-->
+                <DataGrid GridLinesVisibility="None" CanUserSortColumns="False" Background="White"
+                          x:Name="TestRecordList" AutoGenerateColumns="False"
+                          ItemsSource="{Binding Path=TestRecords}"
+                          SelectedItem="{Binding Path=SelectedTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Progress" CellTemplate="{StaticResource ProgressBar}"></DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Status" IsReadOnly="True" Binding="{Binding Path=Status}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="BatteryType" IsReadOnly="True" Binding="{Binding Path=BatteryTypeStr}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Battery" IsReadOnly="True" Binding="{Binding Path=BatteryStr}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Chamber" IsReadOnly="True" Binding="{Binding Path=ChamberStr}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Tester" IsReadOnly="True" Binding="{Binding Path=TesterStr}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Channel" IsReadOnly="True" Binding="{Binding Path=ChannelStr}"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Start Time" CellTemplate="{StaticResource StartTime}"></DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="End Time" CellTemplate="{StaticResource EndTime}"></DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Duration" IsReadOnly="True" Binding="{Binding Path=Duration}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="New Cycle" IsReadOnly="True" Binding="{Binding Path=NewCycle}"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </DockPanel>
         </GroupBox>
         <GroupBox Grid.Row="2" Grid.Column="2" Header="Steps">
@@ -322,7 +344,7 @@
                     <Button Content="_Start" Command="{Binding Path=StartCommand}" Margin="0,5,5,0" Width="60"></Button>
                     <Button Content="_End" Command="{Binding Path=EndCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
-                <ListView
+                <!--<ListView
                       x:Name="StepRuntimeList"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
@@ -350,7 +372,18 @@
             />
                         </GridView>
                     </ListView.View>
-                </ListView>
+                </ListView>-->
+                <DataGrid GridLinesVisibility="None" CanUserSortColumns="False" Background="White"
+                          x:Name="StepRuntimeList" AutoGenerateColumns="False"
+                          ItemsSource="{Binding Path=StepRuntimes}"
+                          SelectedItem="{Binding Path=SelectedStepRuntime, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Step" IsReadOnly="True" Binding="{Binding Path=Step}"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Start Time" CellTemplate="{StaticResource StartTime}"></DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="End Time" CellTemplate="{StaticResource EndTime}"></DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </DockPanel>
         </GroupBox>
     </Grid>
