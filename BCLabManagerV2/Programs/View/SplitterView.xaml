@@ -48,7 +48,7 @@
       />
             <DataGrid  Height="80" Width="200" CanUserAddRows="True"
       Grid.Row="6" Grid.Column="2" 
-                Name="EListGrid" ItemsSource="{Binding Path=SplitterList, Mode=TwoWay}"/>
+                Name="EListGrid" ItemsSource="{Binding Path=SplitterList, Mode=TwoWay}" ColumnWidth="*" CanUserReorderColumns="False"/>
 
             <!-- SAVE BUTTON -->
             <Button 

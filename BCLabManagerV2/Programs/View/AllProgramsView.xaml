@@ -77,7 +77,16 @@
         <DataTemplate x:Key="StartTime">
             <TextBlock Text="{Binding Path=StartTime, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding Path=StartTimeColor, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
         </DataTemplate>
-        
+
+
+
+
+
+        <DataTemplate x:Key="IdTemplate">
+            <TextBlock 
+            Text="{Binding Path=Id, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+        </DataTemplate>
+
         <DataTemplate x:Key="EndTime">
             <TextBlock Text="{Binding Path=EndTime, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding Path=EndTimeColor, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
         </DataTemplate>
@@ -101,7 +110,7 @@
                     <Button Content="_Edit" Command="{Binding Path=EditCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
                     <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
-                <ListView Grid.Row="1"
+                <!--<ListView Grid.Row="1"
                       x:Name="Programlist"
       AlternationCount="2"
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
@@ -143,17 +152,33 @@
             Header="End Time" 
                                 CellTemplate="{StaticResource EndTime}"
             />
-                            <!--<GridViewColumn 
+                            --><!--<GridViewColumn 
             Header="Duration" 
             DisplayMemberBinding="{Binding Path=Duration}" 
             />-->
                             <!--<GridViewColumn 
             Header="Description" 
             DisplayMemberBinding="{Binding Path=Description}" 
-            />-->
+            />--><!--
                         </GridView>
                     </ListView.View>
-                </ListView>
+                </ListView>-->
+                <DataGrid GridLinesVisibility="None"
+                      x:Name="Programlist" AutoGenerateColumns="False"
+                        ItemsSource="{Binding Source={StaticResource programsCollectionViewSource}}"
+                      SelectedItem="{Binding Path=SelectedProgram, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Progress" CellTemplate="{StaticResource ProgressBar}"></DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Project" IsReadOnly="True" Binding="{Binding Path=Project}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Path=Type}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Requester" IsReadOnly="True" Binding="{Binding Path=Requester}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Request Time" IsReadOnly="True" Binding="{Binding Path=RequestTime}"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Start Time" CellTemplate="{StaticResource StartTime}"></DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="End Time" CellTemplate="{StaticResource EndTime}"></DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </DockPanel>
         </GroupBox>
         <GroupBox Grid.Row="0" Grid.Column="2" Header="Recipes">
