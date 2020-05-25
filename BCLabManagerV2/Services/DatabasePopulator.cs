@@ -2028,21 +2028,22 @@ namespace BCLabManager
             {
                 using (var dbContext = new AppDbContext())
                 {
+                    int order = 1;
                     RecipeTemplate obj = new RecipeTemplate();
                     obj.Name = $"{c / -1000.0}A";
 
                     var newStep = new StepClass();
-                    //newStep.Order = order++;
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
-                    //newStep.Order = order++;
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
-                    //newStep.Order = order++;
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
@@ -2057,26 +2058,29 @@ namespace BCLabManager
             {
                 using (var dbContext = new AppDbContext())
                 {
+                    int order = 1;
                     RecipeTemplate obj = new RecipeTemplate();
                     obj.Name = $"{c / -1000.0}A";
 
                     var newStep = new StepClass();
-                    //newStep.Order = order++;
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0.5 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     if (loop > 1)
                         newStep.LoopLabel = "a";
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
-                    //newStep.Order = order++;
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 60 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     if (loop > 1)
                     {
@@ -2086,7 +2090,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
-                    //newStep.Order = order++;
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
@@ -2117,11 +2121,13 @@ namespace BCLabManager
             {
                 using (var dbContext = new AppDbContext())
                 {
+                    int order = 1;
                     RecipeTemplate obj = new RecipeTemplate();
                     obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
 
 
                     var newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
                         o.CutOffConditionValue == 600 &&
@@ -2131,6 +2137,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0.5 &&
                         o.CurrentUnit == CurrentUnitEnum.C &&
@@ -2139,6 +2146,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
                         o.CutOffConditionValue == 600 &&
@@ -2146,6 +2154,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[0] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2154,6 +2163,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[1] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2162,6 +2172,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[2] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2185,11 +2196,13 @@ namespace BCLabManager
             {
                 using (var dbContext = new AppDbContext())
                 {
+                    int order = 1;
                     RecipeTemplate obj = new RecipeTemplate();
                     obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
 
 
                     var newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
                         o.CutOffConditionValue == 600 &&
@@ -2197,6 +2210,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0.5 &&
                         o.CurrentUnit == CurrentUnitEnum.C &&
@@ -2205,6 +2219,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
                         o.CutOffConditionValue == 600 &&
@@ -2212,6 +2227,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[0] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2220,6 +2236,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[1] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2228,6 +2245,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[2] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2236,6 +2254,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == -2050 &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2254,11 +2273,13 @@ namespace BCLabManager
             {
                 using (var dbContext = new AppDbContext())
                 {
+                    int order = 1;
                     RecipeTemplate obj = new RecipeTemplate();
                     obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
 
 
                     var newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
                         o.CutOffConditionValue == 600 &&
@@ -2266,6 +2287,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0.5 &&
                         o.CurrentUnit == CurrentUnitEnum.C &&
@@ -2274,6 +2296,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
                         o.CutOffConditionValue == 600 &&
@@ -2281,6 +2304,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == -2050 &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2289,6 +2313,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[0] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2297,6 +2322,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[1] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2305,6 +2331,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[2] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2313,6 +2340,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == -2050 &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2331,11 +2359,13 @@ namespace BCLabManager
             {
                 using (var dbContext = new AppDbContext())
                 {
+                    int order = 1;
                     RecipeTemplate obj = new RecipeTemplate();
                     obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
 
 
                     var newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
                         o.CutOffConditionValue == 600 &&
@@ -2343,6 +2373,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0.5 &&
                         o.CurrentUnit == CurrentUnitEnum.C &&
@@ -2351,6 +2382,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
                         o.CutOffConditionValue == 600 &&
@@ -2358,6 +2390,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == -2050 &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2366,6 +2399,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[0] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2374,6 +2408,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[1] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2382,6 +2417,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[2] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2400,11 +2436,13 @@ namespace BCLabManager
             {
                 using (var dbContext = new AppDbContext())
                 {
+                    int order = 1;
                     RecipeTemplate obj = new RecipeTemplate();
                     obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A";
 
 
                     var newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
                         o.CutOffConditionValue == 600 &&
@@ -2412,6 +2450,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0.5 &&
                         o.CurrentUnit == CurrentUnitEnum.C &&
@@ -2420,6 +2459,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
                         o.CutOffConditionValue == 600 &&
@@ -2427,6 +2467,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[0] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&
@@ -2435,6 +2476,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
                         o.CurrentUnit == CurrentUnitEnum.C &&
@@ -2444,6 +2486,7 @@ namespace BCLabManager
                     obj.Steps.Add(newStep);
 
                     newStep = new StepClass();
+                    newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[1] &&
                         o.CurrentUnit == CurrentUnitEnum.mA &&

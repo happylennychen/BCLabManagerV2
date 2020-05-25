@@ -63,6 +63,10 @@ namespace BCLabManager.Model
                             .ThenInclude(step => step.StepTemplate)
                         .ToList();
                 }
+                foreach (var rec in rectemplist)
+                {
+                    rec.Steps = new ObservableCollection<StepClass>( rec.Steps.OrderBy(o => o.Order));
+                }
                 var rectemp = rectemplist.SingleOrDefault(o => o.Steps.Count == 3 &&
                o.Steps[0].StepTemplate.CurrentInput == chargeCurrent &&
                o.Steps[0].StepTemplate.CurrentUnit == CurrentUnitEnum.C &&
@@ -190,18 +194,21 @@ namespace BCLabManager.Model
                         //    uow.Commit();
                         //}
                     }
-
+                    int order = 1;
                     RecipeTemplate output;
                     output = new RecipeTemplate() { Name = $"{curr / -1000}A" };
                     var step = new StepClass();
+                    step.Order = order++;
                     step.StepTemplate = chargesteptemp;
                     output.Steps.Add(step);
 
                     step = new StepClass();
+                    step.Order = order++;
                     step.StepTemplate = idlesteptemp;
                     output.Steps.Add(step);
 
                     step = new StepClass();
+                    step.Order = order++;
                     step.StepTemplate = dsgsteptemp;
                     output.Steps.Add(step);
                     dbContext.RecipeTemplates.Add(output);

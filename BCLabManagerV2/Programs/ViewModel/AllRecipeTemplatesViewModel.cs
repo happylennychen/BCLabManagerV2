@@ -88,7 +88,7 @@ namespace BCLabManager.ViewModel
                     return null;
                 //return SelectedItem._recipeTemplate.Steps;
                 var output = new ObservableCollection<StepViewModel>();
-                foreach(var step in SelectedItem._recipeTemplate.Steps)
+                foreach(var step in SelectedItem._recipeTemplate.Steps.OrderBy(o=>o.Order))
                 {
                     output.Add(new StepViewModel(step));
                 }
@@ -172,6 +172,12 @@ namespace BCLabManager.ViewModel
             RecipeViewInstance.ShowDialog();                   //设置viewmodel属性
             if (viewmodel.IsOK == true)
             {
+                foreach (var step in model.Steps)
+                {
+                    int order = 1;
+                    step.Order = order++;
+                }
+
                 _recipeTemplateServcie.SuperAdd(model);
             }
         }
