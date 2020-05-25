@@ -691,7 +691,7 @@ namespace BCLabManager.ViewModel
                     evm.CapacityDifference,
                     evm.Operator,
                     SelectedProgram.Name,
-                    $"{SelectedRecipe.Temperature}Deg-{SelectedRecipe.Name}-ID{SelectedRecipe._recipe.Template.Id}"    //Use this to represent RecipeStr
+                    $"{SelectedRecipe.Temperature}Deg-{SelectedRecipe.Name}-{SelectedRecipe.Id}"    //Use this to represent RecipeStr
                     );
                 if (!evm.IsSkip)
                 {
