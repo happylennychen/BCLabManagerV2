@@ -1,5 +1,5 @@
-﻿#define Migrate
-//#define Seed
+﻿//#define Migrate
+//define Seed
 #define Show
 using System;
 using System.Collections.Generic;

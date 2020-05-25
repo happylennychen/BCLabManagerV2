@@ -420,11 +420,7 @@ namespace BCLabManager.ViewModel
             RCProgramViewInstance.ShowDialog();                   //设置viewmodel属性
             if (evm.IsOK == true)
             {
-
-                var recRuntime = new RecipeClass(_recipeTemplateService.Items[0], m.Project.BatteryType);
-                m.Recipes.Add(recRuntime);
-                _programService.SuperAdd(m);
-                //_programService.RCSuperAdd(m, evm.Currents.Select(o=>o.Data).ToList(), evm.Temperatures.Select(o => o.Data).ToList(), _recipeTemplateService.Items);
+                _programService.RCSuperAdd(m, evm.Currents.Select(o=>o.Data).ToList(), evm.Temperatures.Select(o => o.Data).ToList(), _recipeTemplateService.Items);
             }
         }
         private void Edit()

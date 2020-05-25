@@ -24,17 +24,17 @@ namespace BCLabManager.Model
         }
         public void RCSuperAdd(ProgramClass item, List<double> currents, List<double> temperatures, ObservableCollection<RecipeTemplate> recTemplates)
         {
-            //var rectemplist = GetRCRecipeTemplatesByCurrents(currents);
-            //foreach (var temp in temperatures)
-            //{
-            //    foreach (var rectemp in rectemplist)
-            //    {
-                    var rec = recTemplates[0];
-                    var recRuntime = new RecipeClass(rec, item.Project.BatteryType);
-                    recRuntime.Temperature = 25;
+            var rectemplist = GetRCRecipeTemplatesByCurrents(currents);
+            foreach (var temp in temperatures)
+            {
+                foreach (var rectemp in rectemplist)
+                {
+                    var recRuntime = new RecipeClass(rectemp, item.Project.BatteryType);
+                    recRuntime.Temperature = temp;
                     item.Recipes.Add(recRuntime);
-            //    }
-            //}
+                }
+            }
+            DomainAdd(item);
             DatabaseAdd(item);
         }
 
