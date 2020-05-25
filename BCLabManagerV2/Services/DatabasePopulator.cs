@@ -2624,7 +2624,7 @@ namespace BCLabManager
         }
         #endregion
         #region Common
-        private static void CreateStepTemplate(double ci, CurrentUnitEnum cu, double cocv, CutOffConditionTypeEnum coct)
+        public static void CreateStepTemplate(double ci, CurrentUnitEnum cu, double cocv, CutOffConditionTypeEnum coct)
         {
             using (var dbContext = new AppDbContext())
             {

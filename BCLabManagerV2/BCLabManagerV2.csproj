@@ -345,6 +345,7 @@
     <Compile Include="Programs\Model\StepTemplate.cs" />
     <Compile Include="Programs\Model\StepClass.cs" />
     <Compile Include="Programs\ViewModel\AllStepTemplatesViewModel.cs" />
+    <Compile Include="Programs\ViewModel\RCProgramEditViewModel.cs" />
     <Compile Include="Programs\ViewModel\StepViewModel.cs" />
     <Compile Include="Programs\ViewModel\StepEndViewModel.cs" />
     <Compile Include="Programs\ViewModel\StepTemplateViewModel.cs" />
@@ -354,6 +355,9 @@
     <Compile Include="Programs\ViewModel\SplitterViewModel.cs" />
     <Compile Include="Programs\View\AllStepTemplatesView.xaml.cs">
       <DependentUpon>AllStepTemplatesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Programs\View\RCProgramView.xaml.cs">
+      <DependentUpon>RCProgramView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Programs\View\SplitterView.xaml.cs">
       <DependentUpon>SplitterView.xaml</DependentUpon>
@@ -554,6 +558,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Programs\View\AllProgramsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Programs\View\RCProgramView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

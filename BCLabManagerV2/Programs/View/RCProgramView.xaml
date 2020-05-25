@@ -1,0 +1,145 @@
+﻿<Window x:Class="BCLabManager.View.RCProgramView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="{Binding Path=DisplayName}" Height="600" Width="700" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+
+        <LinearGradientBrush x:Key="Brush_HeaderBackground" StartPoint="0.5,0" EndPoint="0.5,1">
+            <GradientStop Color="#66000088" Offset="0" />
+            <GradientStop Color="#BB000088" Offset="1" />
+        </LinearGradientBrush>
+
+        <Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}">
+            <!-- 
+      Stretch the content of each cell so that we can 
+      right-align text in the Total Sales column. 
+      -->
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+
+        <DataTemplate x:Key="Temperature">
+            <TextBox Text="{Binding Path=Temperature}"></TextBox>
+        </DataTemplate>
+    </Window.Resources>
+    <DockPanel>
+        <GroupBox Header="Program" DockPanel.Dock="Top">
+        <Grid Margin="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="6" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                </Grid.RowDefinitions>
+
+            <!-- CUSTOMER TYPE -->
+            <Label 
+      Grid.Row="0" Grid.Column="0" 
+      Content="_Name:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=NameTxt}" 
+      />
+            <TextBox 
+      x:Name="NameTxt"
+      Grid.Row="0" Grid.Column="2" 
+      Text="{Binding Path=Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />
+
+                <!-- CUSTOMER TYPE -->
+                <Label 
+      Grid.Row="2" Grid.Column="0" 
+      Content="_Project:" 
+      HorizontalAlignment="Right"
+      />
+                <ComboBox 
+      x:Name="BatteryTypeCmb"
+      Grid.Row="2" Grid.Column="2" 
+      ItemsSource="{Binding Path=AllProjects, Mode=OneWay}"
+      SelectedItem="{Binding Path=Project, ValidatesOnDataErrors=True}"
+      Validation.ErrorTemplate="{x:Null}"
+      />
+
+                <Label 
+      Grid.Row="4" Grid.Column="0" 
+      Content="_Requester:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=RequesterTxt}" 
+      />
+            <TextBox 
+      x:Name="RequesterTxt"
+      Grid.Row="4" Grid.Column="2" 
+      Text="{Binding Path=Requester, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />
+
+            <Label 
+      Grid.Row="6" Grid.Column="0" 
+      Content="_Request Date:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=RequestDat}" 
+      />
+                <xctk:DateTimePicker 
+      x:Name="RequestDat"
+      Grid.Row="6" Grid.Column="2"  ShowButtonSpinner="False" ShowDropDownButton="False" TextAlignment="Center"
+      Text="{Binding Path=RequestDate, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />
+
+                <Label 
+      Grid.Row="8" Grid.Column="0" 
+      Content="_Description:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=DescriptionTxt}" 
+      />
+            <TextBox 
+      x:Name="DescriptionTxt" AcceptsReturn="True"
+      Grid.Row="8" Grid.RowSpan="2" Grid.Column="2" 
+      Text="{Binding Path=Description, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />
+
+            </Grid>
+        </GroupBox>
+
+        <!-- SAVE BUTTON -->
+        <Button DockPanel.Dock="Bottom"
+      Command="{Binding Path=OKCommand}"
+                Click="Button_Click"
+      Content="_OK"
+      HorizontalAlignment="Right"
+      Margin="4,2" 
+      MinWidth="60" 
+      />
+        
+        <GroupBox Header="Recipes">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="40"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <DataGrid GridLinesVisibility="None" x:Name="Currentlist"  Grid.Column="0" CanUserAddRows="True" AutoGenerateColumns="True"
+                          ItemsSource="{Binding Path=Currents, Mode=TwoWay}" ColumnWidth="*">
+                    <DataGrid.Columns>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <DataGrid GridLinesVisibility="None" x:Name="Tempraturelist"  Grid.Column="2" CanUserAddRows="True"
+                          ItemsSource="{Binding Path=Temperatures, Mode=TwoWay}" ColumnWidth="*">
+                </DataGrid>
+            </Grid>
+        </GroupBox>
+    </DockPanel>
+</Window>

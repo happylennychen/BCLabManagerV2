@@ -23,6 +23,7 @@ namespace BCLabManager.ViewModel
         TestRecordViewModel _selectedTestRecord;
         StepRuntimeViewModel _selectedStepRuntime;
         RelayCommand _createCommand;
+        RelayCommand _createRCProgramCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
         RelayCommand _programInvalidateCommand;
@@ -236,6 +237,20 @@ namespace BCLabManager.ViewModel
                 return _createCommand;
             }
         }
+
+        public ICommand CreateRCProgramCommand
+        {
+            get
+            {
+                if (_createRCProgramCommand == null)
+                {
+                    _createRCProgramCommand = new RelayCommand(
+                        param => { this.CreateRCProgram(); }
+                        );
+                }
+                return _createRCProgramCommand;
+            }
+        }
         public ICommand EditCommand
         {
             get
@@ -393,6 +408,23 @@ namespace BCLabManager.ViewModel
             if (evm.IsOK == true)
             {
                 _programService.SuperAdd(m);
+            }
+        }
+        private void CreateRCProgram()
+        {
+            ProgramClass m = new ProgramClass();      //实例化一个新的model
+            RCProgramEditViewModel evm = new RCProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
+            //evm.DisplayName = "Program-Create";
+            var RCProgramViewInstance = new RCProgramView();      //实例化一个新的view
+            RCProgramViewInstance.DataContext = evm;
+            RCProgramViewInstance.ShowDialog();                   //设置viewmodel属性
+            if (evm.IsOK == true)
+            {
+
+                var recRuntime = new RecipeClass(_recipeTemplateService.Items[0], m.Project.BatteryType);
+                m.Recipes.Add(recRuntime);
+                _programService.SuperAdd(m);
+                //_programService.RCSuperAdd(m, evm.Currents.Select(o=>o.Data).ToList(), evm.Temperatures.Select(o => o.Data).ToList(), _recipeTemplateService.Items);
             }
         }
         private void Edit()

@@ -1,4 +1,4 @@
-﻿//#define Migrate
+﻿#define Migrate
 //#define Seed
 #define Show
 using System;
