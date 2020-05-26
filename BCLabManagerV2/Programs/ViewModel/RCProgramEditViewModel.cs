@@ -29,8 +29,7 @@ namespace BCLabManager.ViewModel
 
         public RCProgramEditViewModel(
             ProgramClass programmodel,
-            ObservableCollection<ProjectClass> projects,
-            ObservableCollection<RecipeTemplate> RecipeTemplates)
+            ObservableCollection<ProjectClass> projects)
         {
             _program = programmodel;
             _projects = projects;
@@ -122,14 +121,26 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("RequestDate");
             }
         }
-        private ObservableCollection<DoubleProperty> _currents = new ObservableCollection<DoubleProperty>();
-        public ObservableCollection<DoubleProperty> Currents
+        private double _chargeRate;
+        public double ChargeRate
+        {
+            get { return _chargeRate; }
+            set { SetProperty(ref _chargeRate, value); }
+        }
+        private double _idleTime;
+        public double IdleTime
+        {
+            get { return _idleTime; }
+            set { SetProperty(ref _idleTime, value); }
+        }
+        private ObservableCollection<CurrentPoint> _currents = new ObservableCollection<CurrentPoint>();
+        public ObservableCollection<CurrentPoint> Currents
         {
             get { return _currents; }
             set { SetProperty(ref _currents, value); }
         }
-        private ObservableCollection<DoubleProperty> _temperatures = new ObservableCollection<DoubleProperty>();
-        public ObservableCollection<DoubleProperty> Temperatures
+        private ObservableCollection<TemperaturePoint> _temperatures = new ObservableCollection<TemperaturePoint>();
+        public ObservableCollection<TemperaturePoint> Temperatures
         {
             get { return _temperatures; }
             set { SetProperty(ref _temperatures, value); }
@@ -211,13 +222,23 @@ namespace BCLabManager.ViewModel
         #endregion // Private Helpers
     }
 
-    public class DoubleProperty : BindableBase
+    public class CurrentPoint : BindableBase
     {
-        private double _data;
-        public double Data
+        private double _current;
+        public double Current
         {
-            get { return _data; }
-            set { SetProperty(ref _data, value); }
+            get { return _current; }
+            set { SetProperty(ref _current, value); }
+        }
+    }
+
+    public class TemperaturePoint : BindableBase
+    {
+        private double _temperature;
+        public double Temperature
+        {
+            get { return _temperature; }
+            set { SetProperty(ref _temperature, value); }
         }
     }
 }

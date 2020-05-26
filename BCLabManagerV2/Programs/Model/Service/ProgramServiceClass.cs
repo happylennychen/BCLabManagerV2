@@ -22,9 +22,9 @@ namespace BCLabManager.Model
             DatabaseAdd(item);
             UpdateEstimatedTimeChain();
         }
-        public void RCSuperAdd(ProgramClass item, List<double> currents, List<double> temperatures, ObservableCollection<RecipeTemplate> recTemplates)
+        public void RCSuperAdd(ProgramClass item, double chargeRate, double idleTime, List<double> currents, List<double> temperatures, RecipeTemplateServiceClass recipeTemplateService, StepTemplateServiceClass stepTemplateService)
         {
-            var rectemplist = GetRCRecipeTemplatesByCurrents(currents);
+            var rectemplist = GetRCRecipeTemplatesByCurrents(chargeRate, idleTime, currents, recipeTemplateService, stepTemplateService);
             foreach (var temp in temperatures)
             {
                 foreach (var rectemp in rectemplist)
@@ -34,40 +34,39 @@ namespace BCLabManager.Model
                     item.Recipes.Add(recRuntime);
                 }
             }
+            //item.Type = RC //To be implemented
             DomainAdd(item);
             DatabaseAdd(item);
         }
 
-        private List<RecipeTemplate> GetRCRecipeTemplatesByCurrents(List<double> currents)
+        private List<RecipeTemplate> GetRCRecipeTemplatesByCurrents(double chargeRate, double idleTime, List<double> currents, RecipeTemplateServiceClass recipeTemplateService, StepTemplateServiceClass stepTemplateService)
         {
             var output = new List<RecipeTemplate>();
-            double chargeCurrent = 0.5;
-            double idleTime = 1800;
             foreach (var curr in currents)
             {
-                var rectemp = GetRCRecipeTempate(chargeCurrent, idleTime, curr);
+                var rectemp = GetRCRecipeTempate(chargeRate, idleTime, curr, recipeTemplateService, stepTemplateService);
                 output.Add(rectemp);
             }
             return output;
         }
 
-        private RecipeTemplate GetRCRecipeTempate(double chargeCurrent, double idleTime, double curr)
+        private RecipeTemplate GetRCRecipeTempate(double chargeCurrent, double idleTime, double curr, RecipeTemplateServiceClass recipeTemplateService, StepTemplateServiceClass stepTemplateService)
         {
             try
             {
-                List<RecipeTemplate> rectemplist;
-                using (var dbContext = new AppDbContext())
+                List<RecipeTemplate> recTemplates = recipeTemplateService.Items.ToList();
+                //using (var dbContext = new AppDbContext())
+                //{
+                //    rectemplist = dbContext.RecipeTemplates
+                //        .Include(recipeTemplate => recipeTemplate.Steps)
+                //            .ThenInclude(step => step.StepTemplate)
+                //        .ToList();
+                //}
+                foreach (var rec in recTemplates)
                 {
-                    rectemplist = dbContext.RecipeTemplates
-                        .Include(recipeTemplate => recipeTemplate.Steps)
-                            .ThenInclude(step => step.StepTemplate)
-                        .ToList();
+                    rec.Steps = new ObservableCollection<StepClass>(rec.Steps.OrderBy(o => o.Order));
                 }
-                foreach (var rec in rectemplist)
-                {
-                    rec.Steps = new ObservableCollection<StepClass>( rec.Steps.OrderBy(o => o.Order));
-                }
-                var rectemp = rectemplist.SingleOrDefault(o => o.Steps.Count == 3 &&
+                var rectemp = recTemplates.SingleOrDefault(o => o.Steps.Count == 3 &&
                o.Steps[0].StepTemplate.CurrentInput == chargeCurrent &&
                o.Steps[0].StepTemplate.CurrentUnit == CurrentUnitEnum.C &&
                o.Steps[0].StepTemplate.CutOffConditionValue == 1 &&
@@ -90,7 +89,7 @@ namespace BCLabManager.Model
                     return rectemp;
 
                 //没找到，需要创建这个recipe template
-                rectemp = CreateRCRecipeTemplate(chargeCurrent, idleTime, curr);
+                rectemp = CreateRCRecipeTemplate(chargeCurrent, idleTime, curr, recipeTemplateService, stepTemplateService);
                 return rectemp;
             }
             catch (Exception e)
@@ -100,66 +99,52 @@ namespace BCLabManager.Model
             }
         }
 
-        private RecipeTemplate CreateRCRecipeTemplate(double chargeCurrent, double idleTime, double curr)
+        private RecipeTemplate CreateRCRecipeTemplate(double chargeCurrent, double idleTime, double curr, RecipeTemplateServiceClass recipeTemplateService, StepTemplateServiceClass stepTemplateService)
         {
             try
             {
-                //List<StepTemplate> steptemplist;
-                /*using (var uow = new UnitOfWork(new AppDbContext()))
+
+                //using (var uow = new UnitOfWork(new AppDbContext()))
+                //{
+                List<StepTemplate> stepTemplates = stepTemplateService.Items.ToList();
+                var chargesteptemp = stepTemplates.SingleOrDefault(o => o.CurrentInput == chargeCurrent && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                if (chargesteptemp == null)
                 {
-                    steptemplist = uow.StepTemplates.GetAll().ToList();
-                    var chargesteptemp = steptemplist.SingleOrDefault(o => o.CurrentInput == chargeCurrent && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
-                    if (chargesteptemp == null)
-                    {
-                        //using (var uow = new UnitOfWork(new AppDbContext()))
-                        //{
-                        chargesteptemp = new StepTemplate() { CurrentInput = chargeCurrent, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate };
-                        //    uow.StepTemplates.Insert(chargesteptemp);
-                        //    uow.Commit();
-                        //}
-                    }
+                    chargesteptemp = CreateRCStepTemplate(chargeCurrent, CurrentUnitEnum.C, 1, CutOffConditionTypeEnum.CRate, stepTemplateService);
+                    //new StepTemplate() { CurrentInput = chargeCurrent, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate };
+                }
 
-                    var idlesteptemp = steptemplist.SingleOrDefault(o => o.CurrentInput == 0 && o.CutOffConditionValue == idleTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
-                    if (idlesteptemp == null)
-                    {
-                        //using (var uow = new UnitOfWork(new AppDbContext()))
-                        //{
-                        idlesteptemp = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = idleTime, CutOffConditionType = CutOffConditionTypeEnum.Time_s };
-                        //    uow.StepTemplates.Insert(idlesteptemp);
-                        //    uow.Commit();
-                        //}
-                    }
+                var idlesteptemp = stepTemplates.SingleOrDefault(o => o.CurrentInput == 0 && o.CutOffConditionValue == idleTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                if (idlesteptemp == null)
+                {
+                    idlesteptemp = CreateRCStepTemplate(0, CurrentUnitEnum.mA, idleTime, CutOffConditionTypeEnum.Time_s, stepTemplateService);
+                        //new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = idleTime, CutOffConditionType = CutOffConditionTypeEnum.Time_s };
+                }
 
-                    var dsgsteptemp = steptemplist.SingleOrDefault(o => o.CurrentInput == curr && o.CutOffConditionValue == 0);
-                    if (dsgsteptemp == null)
-                    {
-                        //using (var uow = new UnitOfWork(new AppDbContext()))
-                        //{
-                        dsgsteptemp = new StepTemplate() { CurrentInput = curr, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = 0, CutOffConditionType = CutOffConditionTypeEnum.CRate };
-                        //    uow.StepTemplates.Insert(dsgsteptemp);
-                        //    uow.Commit();
-                        //}
-                    }
+                var dsgsteptemp = stepTemplates.SingleOrDefault(o => o.CurrentInput == curr && o.CutOffConditionValue == 0);
+                if (dsgsteptemp == null)
+                {
+                    dsgsteptemp = CreateRCStepTemplate(curr, CurrentUnitEnum.mA, 0, CutOffConditionTypeEnum.CRate, stepTemplateService);
+                    //new StepTemplate() { CurrentInput = curr, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = 0, CutOffConditionType = CutOffConditionTypeEnum.CRate };
+                }
 
-                    RecipeTemplate output;
-                    output = new RecipeTemplate() { Name = $"{curr / -1000}A" };
-                    var step = new StepClass();
-                    step.StepTemplate = chargesteptemp;
-                    output.Steps.Add(step);
+                RecipeTemplate output;
+                output = new RecipeTemplate() { Name = $"{curr / -1000}A" };
+                var step = new StepClass(chargesteptemp);
+                output.Steps.Add(step);
 
-                    step = new StepClass();
-                    step.StepTemplate = idlesteptemp;
-                    output.Steps.Add(step);
+                step = new StepClass(idlesteptemp);
+                output.Steps.Add(step);
 
-                    step = new StepClass();
-                    step.StepTemplate = dsgsteptemp;
-                    output.Steps.Add(step);
-                    uow.RecipeTemplates.Insert(output);
-                    uow.Commit();
+                step = new StepClass(dsgsteptemp);
+                output.Steps.Add(step);
 
-                    return output;
-                }*/
-                using (var dbContext = new AppDbContext())
+                recipeTemplateService.SuperAdd(output);
+
+
+                return output;
+                //}
+                /*using (var dbContext = new AppDbContext())
                 {
                     //steptemplist = dbContext.StepTemplates.GetAll().ToList();
                     var chargesteptemp = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == chargeCurrent && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
@@ -215,13 +200,20 @@ namespace BCLabManager.Model
                     dbContext.SaveChanges();
 
                     return output;
-                }
+                }*/
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message, "Create RC RecipeTemplate Error!");
                 return null;
             }
+        }
+
+        private StepTemplate CreateRCStepTemplate(double currentInput, CurrentUnitEnum currentUnit, double cutOffConditionValue, CutOffConditionTypeEnum cutOffConditionType, StepTemplateServiceClass stepTemplateService)
+        {
+            var output = new StepTemplate() { CurrentInput = currentInput , CurrentUnit = currentUnit, CutOffConditionValue = cutOffConditionValue, CutOffConditionType = cutOffConditionType};
+            stepTemplateService.SuperAdd(output);
+            return output;
         }
 
         public void DatabaseAdd(ProgramClass item)  //不应该自建ID，应该给出order

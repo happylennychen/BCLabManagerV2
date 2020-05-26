@@ -210,6 +210,7 @@ namespace BCLabManager
                 (
                 ProgramService,
                 RecipeTemplateService,
+                StepTemplateService,
                 ProjectService,
                 BatteryService,
                 TesterService,

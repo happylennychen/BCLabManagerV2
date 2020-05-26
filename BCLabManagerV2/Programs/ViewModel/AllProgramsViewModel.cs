@@ -47,6 +47,7 @@ namespace BCLabManager.ViewModel
         private ChamberServiceClass _chamberService;
         private ProgramServiceClass _programService;
         private RecipeTemplateServiceClass _recipeTemplateService;
+        private StepTemplateServiceClass _stepTemplateService;
         #endregion // Fields
 
         #region Constructor
@@ -55,6 +56,7 @@ namespace BCLabManager.ViewModel
             (
             ProgramServiceClass programService,
             RecipeTemplateServiceClass recipeTemplateService,
+            StepTemplateServiceClass stepTemplateService,
             ProjectServiceClass projectService,
             BatteryServiceClass batteryService,
             TesterServiceClass testerService,
@@ -63,6 +65,7 @@ namespace BCLabManager.ViewModel
             )
         {
             _recipeTemplateService = recipeTemplateService;
+            _stepTemplateService = stepTemplateService;
             _programService = programService;
             this.CreateAllPrograms(_programService.Items);
 
@@ -413,14 +416,14 @@ namespace BCLabManager.ViewModel
         private void CreateRCProgram()
         {
             ProgramClass m = new ProgramClass();      //实例化一个新的model
-            RCProgramEditViewModel evm = new RCProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
+            RCProgramEditViewModel evm = new RCProgramEditViewModel(m, _projectService.Items);      //实例化一个新的view model
             //evm.DisplayName = "Program-Create";
             var RCProgramViewInstance = new RCProgramView();      //实例化一个新的view
             RCProgramViewInstance.DataContext = evm;
             RCProgramViewInstance.ShowDialog();                   //设置viewmodel属性
             if (evm.IsOK == true)
             {
-                _programService.RCSuperAdd(m, evm.Currents.Select(o=>o.Data).ToList(), evm.Temperatures.Select(o => o.Data).ToList(), _recipeTemplateService.Items);
+                _programService.RCSuperAdd(m, evm.ChargeRate, evm.IdleTime, evm.Currents.Select(o => o.Current).ToList(), evm.Temperatures.Select(o => o.Temperature).ToList(), _recipeTemplateService, _stepTemplateService);
             }
         }
         private void Edit()

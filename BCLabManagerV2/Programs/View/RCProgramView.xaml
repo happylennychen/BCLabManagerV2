@@ -124,19 +124,31 @@
       MinWidth="60" 
       />
         
-        <GroupBox Header="Recipes">
+        <GroupBox Header="Creation Options">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition Width="40"></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <DataGrid GridLinesVisibility="None" x:Name="Currentlist"  Grid.Column="0" CanUserAddRows="True" AutoGenerateColumns="True"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <DockPanel Grid.Row="0"  Grid.Column="0" LastChildFill="True" VerticalAlignment="Center">
+                    <Label DockPanel.Dock="Left">Charge Rate(C):</Label>
+                    <TextBox Text="{Binding Path=ChargeRate}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"></TextBox>
+                </DockPanel>
+                <DockPanel Grid.Row="0"  Grid.Column="2" LastChildFill="True" VerticalAlignment="Center">
+                    <Label DockPanel.Dock="Left">Idle Time(s):</Label>
+                    <TextBox Text="{Binding Path=IdleTime}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"></TextBox>
+                </DockPanel>
+                <DataGrid GridLinesVisibility="None" x:Name="Currentlist" Grid.Row="1"  Grid.Column="0" CanUserAddRows="True" AutoGenerateColumns="True" Background="White"
                           ItemsSource="{Binding Path=Currents, Mode=TwoWay}" ColumnWidth="*">
                     <DataGrid.Columns>
                     </DataGrid.Columns>
                 </DataGrid>
-                <DataGrid GridLinesVisibility="None" x:Name="Tempraturelist"  Grid.Column="2" CanUserAddRows="True"
+                <DataGrid GridLinesVisibility="None" x:Name="Tempraturelist" Grid.Row="1"  Grid.Column="2" CanUserAddRows="True" Background="White"
                           ItemsSource="{Binding Path=Temperatures, Mode=TwoWay}" ColumnWidth="*">
                 </DataGrid>
             </Grid>
