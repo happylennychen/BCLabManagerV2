@@ -16,6 +16,7 @@ namespace BCLabManager.DataAccess
         public ITesterRepository Testers { get; private set; }
         public IChannelRepository Channels { get; private set; }
         public IChamberRepository Chambers { get; private set; }
+        public IProgramTypeRepository ProgramTypes { get; private set; }
         public ITestRecordRepository TestRecords { get; private set; }
         public IStepTemplateRepository StepTemplates { get; private set; }
         public IStepRepository Steps { get; private set; }
@@ -39,6 +40,7 @@ namespace BCLabManager.DataAccess
             Recipies = new RecipeRepository(_context);
             Programs = new ProgramRepository(_context);
             Projects = new ProjectRepository(_context);
+            ProgramTypes = new ProgramTypeRepository(_context);
         }
         public void Commit()
         {

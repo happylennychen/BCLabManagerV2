@@ -54,6 +54,7 @@ namespace BCLabManager
             PopulateTesters();
             PopulateChannels();
             PopulateChambers();
+            PopulateProgramTypes();
         }
 
         private static void PopulateBatteryTypes()
@@ -145,10 +146,11 @@ namespace BCLabManager
 
         private static void PopulateProjects()
         {
-            PopulateOneProject("High Power", "HG2", "O2Micro", "", "");
+            PopulateOneProject("High Power 0", "HG2", "O2Micro", "", "", 2500);
+            PopulateOneProject("High Power", "HG2", "O2Micro", "", "", 3000);
             //PopulateOneProject("High Power 2", "HG2", "O2Micro", "Change Cut off voltage from 2.5v to 3v", "");
         }
-        private static void PopulateOneProject(string name, string batteryType, string customer, string description, string voltagePoints)
+        private static void PopulateOneProject(string name, string batteryType, string customer, string description, string voltagePoints, int codv)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -158,9 +160,10 @@ namespace BCLabManager
                 proj.Description = description;
                 proj.VoltagePoints = voltagePoints;
                 proj.BatteryType = uow.BatteryTypes.SingleOrDefault(o => o.Name == batteryType);
-                proj.CutoffDischargeVoltage = proj.BatteryType.CutoffDischargeVoltage;
+                //proj.CutoffDischargeVoltage = proj.BatteryType.CutoffDischargeVoltage;
+                proj.CutoffDischargeVoltage = codv;
                 proj.LimitedChargeVoltage = proj.BatteryType.LimitedChargeVoltage;
-                proj.AbsoluteMaxCapacity = proj.BatteryType.RatedCapacity;
+                //proj.AbsoluteMaxCapacity = proj.BatteryType.RatedCapacity;    //应该是实验之后才知道
                 //var evSetting = new EvSettingClass();
                 //evSetting.DischargeEndVoltage = proj.BatteryType.CutoffDischargeVoltage;
                 //evSetting.FullyChargedEndCurrent = proj.BatteryType.FullyChargedEndCurrent;
@@ -285,6 +288,41 @@ namespace BCLabManager
                     uow.Chambers.Insert(cmb);
                     uow.Commit();
                 }
+            }
+        }
+        private static void PopulateProgramTypes()
+        {
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                ProgramTypeClass pt = new ProgramTypeClass();
+                pt.Name = "RC";
+                pt.Description = "Standard RC Program";
+                uow.ProgramTypes.Insert(pt);
+                uow.Commit();
+            }
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                ProgramTypeClass pt = new ProgramTypeClass();
+                pt.Name = "OCV";
+                pt.Description = "Standard OCV Program";
+                uow.ProgramTypes.Insert(pt);
+                uow.Commit();
+            }
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                ProgramTypeClass pt = new ProgramTypeClass();
+                pt.Name = "EV";
+                pt.Description = "EV Program, used by Emulator";
+                uow.ProgramTypes.Insert(pt);
+                uow.Commit();
+            }
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                ProgramTypeClass pt = new ProgramTypeClass();
+                pt.Name = "MISC";
+                pt.Description = "Miscellaneous Program";
+                uow.ProgramTypes.Insert(pt);
+                uow.Commit();
             }
         }
         #endregion
@@ -2021,6 +2059,14 @@ namespace BCLabManager
             CreateStepTemplate(-3000, CurrentUnitEnum.mA, 60, CutOffConditionTypeEnum.Time_s);
             CreateStepTemplate(-11000, CurrentUnitEnum.mA, 60, CutOffConditionTypeEnum.Time_s);
             CreateStepTemplate(-17000, CurrentUnitEnum.mA, 60, CutOffConditionTypeEnum.Time_s);
+
+            CreateStepTemplate(0.5, CurrentUnitEnum.C, 0.8, CutOffConditionTypeEnum.CRate);
+
+            CreateStepTemplate(-17000, CurrentUnitEnum.mA, 60, CutOffConditionTypeEnum.Time_s);
+            CreateStepTemplate(-3000, CurrentUnitEnum.mA, 60, CutOffConditionTypeEnum.Time_s);
+            CreateStepTemplate(-11000, CurrentUnitEnum.mA, 60, CutOffConditionTypeEnum.Time_s);
+            CreateStepTemplate(-17000, CurrentUnitEnum.mA, 30, CutOffConditionTypeEnum.Time_s);
+            CreateStepTemplate(-3000, CurrentUnitEnum.mA, 30, CutOffConditionTypeEnum.Time_s);
         }
         private static void CreateRecipeTemplateGroup(List<double> cPoints, int restTime, double chargeRate)
         {
@@ -2052,7 +2098,7 @@ namespace BCLabManager
                 }
             }
         }
-        private static void CreateStaticRecipeTemplateGroup(List<double> cPoints, ushort loop)
+        private static void CreateStaticRecipeTemplateGroup(List<double> cPoints, ushort loop, int index)
         {
             foreach (var c in cPoints)
             {
@@ -2060,7 +2106,7 @@ namespace BCLabManager
                 {
                     int order = 1;
                     RecipeTemplate obj = new RecipeTemplate();
-                    obj.Name = $"{c / -1000.0}A";
+                    obj.Name = $"{c / -1000.0}A-N{index}";
 
                     var newStep = new StepClass();
                     newStep.Order = order++;
@@ -2099,23 +2145,63 @@ namespace BCLabManager
                 }
             }
         }
+
+        private static void CreateExtraTemplate()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                int order = 1;
+                RecipeTemplate obj = new RecipeTemplate();
+                obj.Name = $"Extra";
+
+                var newStep = new StepClass();
+                newStep.Order = order++;
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0.5 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                obj.Steps.Add(newStep);
+
+                newStep = new StepClass();
+                newStep.Order = order++;
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                obj.Steps.Add(newStep);
+
+                newStep = new StepClass();
+                newStep.Order = order++;
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == -3000 && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                obj.Steps.Add(newStep);
+
+                newStep = new StepClass();
+                newStep.Order = order++;
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                obj.Steps.Add(newStep);
+
+                newStep = new StepClass();
+                newStep.Order = order++;
+                newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0.5 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 0.8 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                obj.Steps.Add(newStep);
+
+                dbContext.RecipeTemplates.Add(obj);
+                dbContext.SaveChanges();
+            }
+        }
         private static void CreateRecipeTemplates()
         {
-            CreateRecipeTemplateGroup(new List<double>() { -600, -900, -2000, -3000, -6000, -10000, -14000, -17000, -19000 }, 1800, 0.5);
-            CreateRecipeTemplateGroup(new List<double>() { -2800, -9000, -11000, -15000 }, 600, 0.5);
-            CreateStaticRecipeTemplateGroup(new List<double>() { -2800, -9000, -11000, -15000 }, 5);   //static2
-            CreateDynamicRecipeTemplateGroup(new List<List<double>>() { new List<double>() { -3000, -11000, -17000 }, new List<double>() { -17000, -11000, -3000 }, new List<double>() { -11000, -17000, -3000 }, new List<double>() { -3000, -17000, -11000 } }, 5);
-            CreateDynamicRecipeTemplateGroup(new List<List<double>>() { new List<double>() { -3000, -11000, -17000 }, new List<double>() { -17000, -11000, -3000 }, new List<double>() { -11000, -17000, -3000 }, new List<double>() { -3000, -17000, -11000 } }, 1);
-            CreateStaticRecipeTemplateGroup(new List<double>() { -2800, -9000, -11000, -15000 }, 1);   //static4
+            CreateRecipeTemplateGroup(new List<double>() { -600, -900, -2000, -3000, -6000, -10000, -14000, -17000, -19000 }, 1800, 0.5); //RC-01 OCV
+            CreateRecipeTemplateGroup(new List<double>() { -2800, -9000, -11000, -15000 }, 600, 0.5);   //static 1
+            CreateStaticRecipeTemplateGroup(new List<double>() { -2800, -9000, -11000, -15000 }, 5, 2);   //static2 3
+            CreateDynamicRecipeTemplateGroup(new List<List<double>>() { new List<double>() { -3000, -11000, -17000 }, new List<double>() { -17000, -11000, -3000 }, new List<double>() { -11000, -17000, -3000 }, new List<double>() { -3000, -17000, -11000 } }, 5, 1);   //dynamic 1
+            CreateExtraTemplate();
+            CreateDynamicRecipeTemplateGroup(new List<List<double>>() { new List<double>() { -3000, -11000, -17000 }, new List<double>() { -17000, -11000, -3000 }, new List<double>() { -11000, -17000, -3000 }, new List<double>() { -3000, -17000, -11000 } }, 1, 2);   //dynamic 2
+            CreateStaticRecipeTemplateGroup(new List<double>() { -2800, -9000, -11000, -15000 }, 1, 3);   //static4
 
             CreateDynamic3RecipeTemplateGroup(new List<List<double>>() { new List<double>() { -3000, -11000, -17000 }, new List<double>() { -17000, -11000, -3000 }, new List<double>() { -11000, -17000, -3000 }, new List<double>() { -3000, -17000, -11000 } });
             CreateDynamic4RecipeTemplateGroup(new List<List<double>>() { new List<double>() { -3000, -11000, -17000 }, new List<double>() { -17000, -11000, -3000 }, new List<double>() { -11000, -17000, -3000 }, new List<double>() { -3000, -17000, -11000 } });
             CreateDynamic5RecipeTemplateGroup(new List<List<double>>() { new List<double>() { -3000, -11000, -17000 }, new List<double>() { -17000, -11000, -3000 }, new List<double>() { -11000, -17000, -3000 }, new List<double>() { -3000, -17000, -11000 } });
 
             CreateDynamic6RecipeTemplateGroup(new List<List<double>>() { new List<double>() { -17000, -3000 }, new List<double>() { -11000, -3000 }, new List<double>() { -11000, -11000 }, new List<double>() { -17000, -17000 } });
+            CreateDynamic12RecipeTemplateGroup(new List<List<double>>() { new List<double>() { -17000, -3000, 60 }, new List<double>() { -11000, -3000, 60 }, new List<double>() { -17000, -11000, 60 }, new List<double>() { -17000, -3000, 30 } });
         }
 
-        private static void CreateDynamicRecipeTemplateGroup(List<List<double>> list, ushort loop)
+        private static void CreateDynamicRecipeTemplateGroup(List<List<double>> list, ushort loop, int index)
         {
             foreach (var cPoints in list)
             {
@@ -2123,7 +2209,10 @@ namespace BCLabManager
                 {
                     int order = 1;
                     RecipeTemplate obj = new RecipeTemplate();
-                    obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
+                    if (index == 1)
+                        obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
+                    else
+                        obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A-N{index}";
 
 
                     var newStep = new StepClass();
@@ -2198,7 +2287,7 @@ namespace BCLabManager
                 {
                     int order = 1;
                     RecipeTemplate obj = new RecipeTemplate();
-                    obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
+                    obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A-2.05A";
 
 
                     var newStep = new StepClass();
@@ -2275,7 +2364,7 @@ namespace BCLabManager
                 {
                     int order = 1;
                     RecipeTemplate obj = new RecipeTemplate();
-                    obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
+                    obj.Name = $"2.05A-{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A-2.05A";
 
 
                     var newStep = new StepClass();
@@ -2361,7 +2450,7 @@ namespace BCLabManager
                 {
                     int order = 1;
                     RecipeTemplate obj = new RecipeTemplate();
-                    obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
+                    obj.Name = $"2.05A-{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
 
 
                     var newStep = new StepClass();
@@ -2502,13 +2591,79 @@ namespace BCLabManager
                 }
             }
         }
-        private static void Create_HG2_HighPower_MISC_Battery_Initial()
+        private static void CreateDynamic12RecipeTemplateGroup(List<List<double>> list)
+        {
+            foreach (var cPoints in list)
+            {
+                using (var dbContext = new AppDbContext())
+                {
+                    int order = 1;
+                    RecipeTemplate obj = new RecipeTemplate();
+                    obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2]}S";
+
+
+                    var newStep = new StepClass();
+                    newStep.Order = order++;
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0 &&
+                        o.CutOffConditionValue == 600 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.Order = order++;
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0.5 &&
+                        o.CurrentUnit == CurrentUnitEnum.C &&
+                        o.CutOffConditionValue == 1 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.Order = order++;
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0 &&
+                        o.CutOffConditionValue == 600 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.Order = order++;
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == cPoints[0] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == cPoints[2] &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    newStep.LoopLabel = "a";
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.Order = order++;
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == cPoints[1] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == cPoints[2] &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    newStep.LoopTarget = "a";
+                    newStep.CompareMark = CompareMarkEnum.LargerThan;
+                    newStep.CRate = 0;
+                    obj.Steps.Add(newStep);
+
+                    dbContext.RecipeTemplates.Add(obj);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+        private static void Create_HG2_HighPower_MISC_Battery_Initial(int index)
         {
             using (var dbContext = new AppDbContext())//1
             {
                 BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
                 var pro = new ProgramClass();
-                pro.Name = "MISC-Battery-Initial";
+                if (index == 1)
+                    pro.Name = "MISC-Battery-Initial";
+                else
+                    pro.Name = $"MISC-Battery-Initial-T{index}";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
@@ -2533,7 +2688,29 @@ namespace BCLabManager
                 dbContext.SaveChanges();
             }
         }
-        private static void Create_HG2_HighPower_RC_02()
+        private static void Create_HG2_HighPower_OCV_02C()
+        {
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "OCV-0.2C";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                recTemp = GetRecipeTemplateByName(dbContext, "0.6A");
+                rec = new RecipeClass(recTemp, bType);
+                rec.Temperature = 25;
+                pro.Recipes.Add(rec);
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_RC(int index)
         {
             var tPoints = new List<double>() { -10, -2.5, 5, 15, 25, 35, 45, 55 };
             var cPoints = new List<string>() { "2A", "3A", "6A", "10A", "14A", "17A", "19A" };
@@ -2541,7 +2718,10 @@ namespace BCLabManager
             {
                 BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
                 var pro = new ProgramClass();
-                pro.Name = "RC-01";
+                if (index == 1)
+                    pro.Name = "RC";
+                else
+                    pro.Name = $"RC-N{index}";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
@@ -2572,7 +2752,7 @@ namespace BCLabManager
             {
                 BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
                 var pro = new ProgramClass();
-                pro.Name = "EV-Static-01";
+                pro.Name = "EV-Static-N1";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
@@ -2583,7 +2763,7 @@ namespace BCLabManager
                 {
                     foreach (var c in cPoints)
                     {
-                        var id = GetRecipeTemplateIdByName(dbContext, c).Min();
+                        var id = GetRecipeTemplateIdByName(dbContext, c);
                         recTemp = GetRecipeTemplateById(dbContext, id);
                         rec = new RecipeClass(recTemp, bType);
                         rec.Temperature = t;
@@ -2603,7 +2783,38 @@ namespace BCLabManager
             {
                 BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
                 var pro = new ProgramClass();
-                pro.Name = "EV-Static-02";
+                pro.Name = "EV-Static-N2";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power 0" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, $"{c}-N2");
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Static_03()
+        {
+            var tPoints = new List<double>() { 7, 10, 20, 28, 33 };
+            var cPoints = new List<string>() { "2.8A", "9A", "11A", "15A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Static-N3";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
@@ -2614,7 +2825,7 @@ namespace BCLabManager
                 {
                     foreach (var c in cPoints)
                     {
-                        var id = GetRecipeTemplateIdByName(dbContext, c)[1];
+                        var id = GetRecipeTemplateIdByName(dbContext, $"{c}-N2");
                         recTemp = GetRecipeTemplateById(dbContext, id);
                         rec = new RecipeClass(recTemp, bType);
                         rec.Temperature = t;
@@ -2634,7 +2845,7 @@ namespace BCLabManager
             {
                 BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
                 var pro = new ProgramClass();
-                pro.Name = "EV-Static-02";
+                pro.Name = "EV-Dynamic-N1";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
@@ -2645,7 +2856,500 @@ namespace BCLabManager
                 {
                     foreach (var c in cPoints)
                     {
-                        var id = GetRecipeTemplateIdByName(dbContext, c).Min();
+                        var id = GetRecipeTemplateIdByName(dbContext, c);
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_MISC_EXTRA_01()
+        {
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "MISC-Extra";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                recTemp = GetRecipeTemplateByName(dbContext, "Extra");
+                rec = new RecipeClass(recTemp, bType);
+                rec.Temperature = 28;
+                pro.Recipes.Add(rec);
+                rec = new RecipeClass(recTemp, bType);
+                rec.Temperature = 28;
+                pro.Recipes.Add(rec);
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Dynamic_02()
+        {
+            var tPoints = new List<double>() { 7, 10, 20, 28, 33 };
+            var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Dynamic-N2";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, $"{c}-N2");
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Static_04()
+        {
+            var tPoints = new List<double>() { 7, 10, 20, 28, 33 };
+            var cPoints = new List<string>() { "2.8A", "9A", "11A", "15A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Static-N4";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, $"{c}-N3");
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_OCV_03C(int index)
+        {
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                if (index == 1)
+                    pro.Name = "OCV-0.3C";
+                else
+                    pro.Name = $"OCV-0.3C-N{index}";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                recTemp = GetRecipeTemplateByName(dbContext, "0.9A");
+                rec = new RecipeClass(recTemp, bType);
+                rec.Temperature = 25;
+                pro.Recipes.Add(rec);
+                rec = new RecipeClass(recTemp, bType);
+                rec.Temperature = 25;
+                pro.Recipes.Add(rec);
+                rec = new RecipeClass(recTemp, bType);
+                rec.Temperature = 25;
+                pro.Recipes.Add(rec);
+                rec = new RecipeClass(recTemp, bType);
+                rec.Temperature = 25;
+                pro.Recipes.Add(rec);
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Dynamic_03()
+        {
+            var tPoints = new List<double>() { 7, 10, 20, 28, 33 };
+            var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Dynamic-N3";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, $"{c}-2.05A");
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Dynamic_04()
+        {
+            var tPoints = new List<double>() { 7, 10, 20, 28, 33 };
+            var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Dynamic-N4";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, $"2.05A-{c}-2.05A");
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Dynamic_05()
+        {
+            var tPoints = new List<double>() { 7, 10, 20, 28, 33 };
+            var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Dynamic-N5";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, $"2.05A-{c}");
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Dynamic_06()
+        {
+            var tPoints = new List<double>() { 7, 10, 20, 28, 33 };
+            var cPoints = new List<string>() { "17A-3A", "11A-3A", "11A-11A", "17A-17A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Dynamic-N6";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, $"{c}");
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Dynamic_05_N2()
+        {
+            var tPoints = new List<double>() { 7, 10, 20, 28, 33 };
+            var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Dynamic-N5-N2";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, $"2.05A-{c}");
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Static_05()
+        {
+            var tPoints = new List<double>() { -5, 2.5 };
+            var cPoints = new List<string>() { "2.8A", "9A", "11A", "15A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Static-N5";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, $"{c}-N3");
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Dynamic_07()
+        {
+            var tPoints = new List<double>() { -5, 2.5 };
+            var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Dynamic-N7";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, $"{c}-N2");
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Dynamic_08()
+        {
+            var tPoints = new List<double>() { -5, 2.5 };
+            var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Dynamic-N8";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, $"{c}-2.05A");
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Dynamic_09()
+        {
+            var tPoints = new List<double>() { -5, 2.5 };
+            var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Dynamic-N9";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, $"2.05A-{c}-2.05A");
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Dynamic_10()
+        {
+            var tPoints = new List<double>() { -5, 2.5 };
+            var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Dynamic-N10";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, $"2.05A-{c}");
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Dynamic_11()
+        {
+            var tPoints = new List<double>() { -5, 2.5 };
+            var cPoints = new List<string>() { "17A-3A", "11A-3A", "11A-11A", "17A-17A" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Dynamic-N11";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, $"{c}");
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_HG2_HighPower_EV_Dynamic_12()
+        {
+            var tPoints = new List<double>() { -5, 2.5, 7, 10, 20, 28, 33 };
+            var cPoints = new List<string>() { "17A-3A-60S", "11A-3A-60S", "17A-11A-60S", "17A-3A-30S" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Dynamic-N12";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, $"{c}");
                         recTemp = GetRecipeTemplateById(dbContext, id);
                         rec = new RecipeClass(recTemp, bType);
                         rec.Temperature = t;
@@ -2659,11 +3363,32 @@ namespace BCLabManager
         }
         private static void CreatePrograms()
         {
-            Create_HG2_HighPower_MISC_Battery_Initial();
-            Create_HG2_HighPower_RC_02();
+            Create_HG2_HighPower_MISC_Battery_Initial(1);
+            Create_HG2_HighPower_OCV_02C();
+            Create_HG2_HighPower_RC(1);
             Create_HG2_HighPower_EV_Static_01();
             Create_HG2_HighPower_EV_Static_02();
+            Create_HG2_HighPower_EV_Static_03();
             Create_HG2_HighPower_EV_Dynamic_01();
+            Create_HG2_HighPower_MISC_EXTRA_01();
+            Create_HG2_HighPower_EV_Dynamic_02();
+            Create_HG2_HighPower_EV_Static_04();
+            Create_HG2_HighPower_OCV_03C(1);
+            Create_HG2_HighPower_EV_Dynamic_03();
+            Create_HG2_HighPower_EV_Dynamic_04();
+            Create_HG2_HighPower_EV_Dynamic_05();
+            Create_HG2_HighPower_EV_Dynamic_06();
+            Create_HG2_HighPower_EV_Dynamic_05_N2();
+            Create_HG2_HighPower_MISC_Battery_Initial(2);
+            Create_HG2_HighPower_OCV_03C(2);
+            Create_HG2_HighPower_RC(2);
+            Create_HG2_HighPower_EV_Static_05();
+            Create_HG2_HighPower_EV_Dynamic_07();
+            Create_HG2_HighPower_EV_Dynamic_08();
+            Create_HG2_HighPower_EV_Dynamic_09();
+            Create_HG2_HighPower_EV_Dynamic_10();
+            Create_HG2_HighPower_EV_Dynamic_11();
+            Create_HG2_HighPower_EV_Dynamic_12();
         }
         #endregion
         #region Common
@@ -2732,9 +3457,9 @@ namespace BCLabManager
             return subtemplate;
         }
 
-        private static List<int> GetRecipeTemplateIdByName(AppDbContext dbContext, string name)
+        private static int GetRecipeTemplateIdByName(AppDbContext dbContext, string name)
         {
-            return dbContext.RecipeTemplates.Where(o => o.Name == name).Select(o=>o.Id).ToList();
+            return dbContext.RecipeTemplates.SingleOrDefault(o => o.Name == name).Id;
         }
         #endregion
     }

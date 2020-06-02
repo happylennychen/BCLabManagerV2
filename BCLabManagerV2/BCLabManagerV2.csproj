@@ -278,8 +278,11 @@
     <Compile Include="Assets\Model\Service\BatteryTypeServiceClass.cs" />
     <Compile Include="Assets\Model\Service\IModelService.cs" />
     <Compile Include="Assets\Model\Service\ModelService.cs" />
+    <Compile Include="Assets\ViewModel\AllProgramTypesViewModel.cs" />
     <Compile Include="Assets\ViewModel\AllProjectsViewModel.cs" />
+    <Compile Include="Assets\ViewModel\ProgramTypeEditViewModel.cs" />
     <Compile Include="Assets\ViewModel\ProjectEditViewModel.cs" />
+    <Compile Include="Assets\ViewModel\ProgramTypeViewModel.cs" />
     <Compile Include="Assets\ViewModel\ProjectViewModel.cs" />
     <Compile Include="Assets\View\AllBatteryTypesView.xaml.cs">
       <DependentUpon>AllBatteryTypesView.xaml</DependentUpon>
@@ -290,6 +293,7 @@
     <Compile Include="DataAccess\AppDbContext.cs" />
     <Compile Include="DataAccess\ChannelRepository.cs" />
     <Compile Include="DataAccess\ChamberRepository.cs" />
+    <Compile Include="DataAccess\IProgramTypeRepository.cs" />
     <Compile Include="DataAccess\IProjectRepository.cs" />
     <Compile Include="DataAccess\IChannelRepository.cs" />
     <Compile Include="DataAccess\IChamberRepository.cs" />
@@ -299,6 +303,7 @@
     <Compile Include="DataAccess\IStepRepository.cs" />
     <Compile Include="DataAccess\IStepTemplateRepository.cs" />
     <Compile Include="DataAccess\IStepRuntimeRepository.cs" />
+    <Compile Include="DataAccess\ProgramTypeRepository.cs" />
     <Compile Include="DataAccess\ProjectRepository.cs" />
     <Compile Include="DataAccess\ProgramRepository.cs" />
     <Compile Include="DataAccess\RecipeTemplateRepository.cs" />
@@ -322,6 +327,10 @@
     <Compile Include="Migrations\20200525064234_Init.designer.cs">
       <DependentUpon>20200525064234_Init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200602012504_AddDescription2ProgramType.cs" />
+    <Compile Include="Migrations\20200602012504_AddDescription2ProgramType.designer.cs">
+      <DependentUpon>20200602012504_AddDescription2ProgramType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
       <DependentUpon>AllProductsView.xaml</DependentUpon>
@@ -332,6 +341,7 @@
     <Compile Include="Programs\Model\ProjectProductClass.cs" />
     <Compile Include="Programs\Model\EvResultClass.cs" />
     <Compile Include="Programs\Model\Service\Header.cs" />
+    <Compile Include="Programs\Model\Service\ProgramTypeServiceClass.cs" />
     <Compile Include="Programs\Model\Service\ProjectServiceClass.cs" />
     <Compile Include="Programs\Model\Service\ProgramServiceClass.cs" />
     <Compile Include="Programs\Model\Service\RecipeTemplateServiceClass.cs" />
@@ -353,6 +363,9 @@
     <Compile Include="Programs\ViewModel\StepRuntimeViewModel.cs" />
     <Compile Include="Programs\ViewModel\StepStartViewModel.cs" />
     <Compile Include="Programs\ViewModel\SplitterViewModel.cs" />
+    <Compile Include="Assets\View\AllProgramTypesView.xaml.cs">
+      <DependentUpon>AllProgramTypesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Programs\View\AllStepTemplatesView.xaml.cs">
       <DependentUpon>AllStepTemplatesView.xaml</DependentUpon>
     </Compile>
@@ -367,6 +380,9 @@
     </Compile>
     <Compile Include="Programs\View\StartView.xaml.cs">
       <DependentUpon>StartView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Assets\View\ProgramTypeView.xaml.cs">
+      <DependentUpon>ProgramTypeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Programs\View\StepTemplateView.xaml.cs">
       <DependentUpon>StepTemplateView.xaml</DependentUpon>
@@ -549,6 +565,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Assets\View\AllProgramTypesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Programs\View\AllStepTemplatesView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -574,6 +594,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Programs\View\StartView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\View\ProgramTypeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -19,6 +19,13 @@ namespace BCLabManager.Model
             set { SetProperty(ref _name, value); }
         }
 
+        private string _description;
+        public string Description
+        {
+            get { return _description; }
+            set { SetProperty(ref _description, value); }
+        }
+
         public ProgramTypeClass()           //Create用到
         {
         }

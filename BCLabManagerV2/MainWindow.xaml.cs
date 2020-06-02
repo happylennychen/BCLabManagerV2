@@ -1,5 +1,5 @@
-﻿//#define Migrate
-//#define Seed
+﻿#define Migrate
+#define Seed
 #define Show
 using System;
 using System.Collections.Generic;
@@ -33,6 +33,7 @@ namespace BCLabManager
 
         public AllBatteryTypesViewModel allBatteryTypesViewModel { get; set; }  //其中需要显示BatteryTypes和Batteries
         public AllProjectsViewModel allProjectsViewModel { get; set; }  //其中需要显示Projects
+        public AllProgramTypesViewModel allProgramTypesViewModel { get; set; }  //其中需要显示Projects
         public AllBatteriesViewModel allBatteriesViewModel { get; set; }  //其中需要显示Batteries和Records
 
         public AllTestersViewModel allTestersViewModel { get; set; }  //其中需要显示Testers和Channels
@@ -73,6 +74,7 @@ namespace BCLabManager
         public StepTemplateServiceClass StepTemplateService { get; set; } = new StepTemplateServiceClass();
         public ProgramServiceClass ProgramService { get; set; } = new ProgramServiceClass();
         public ProjectServiceClass ProjectService { get; set; } = new ProjectServiceClass();
+        public ProgramTypeServiceClass ProgramTypeService { get; set; } = new ProgramTypeServiceClass();
 
         public MainWindow()
         {
@@ -101,60 +103,26 @@ namespace BCLabManager
         {
             Navigator.Initialize(this);
         }
-
-        void InitializeConfiguration()  //Only used by SQLite
-        {
-            if (!File.Exists(GlobalSettings.ConfigurationFilePath))
-            {
-                ConfigureDBPath();
-                CreateConfigurationFile();
-            }
-            else
-            {
-                LoadDBPathFromConfigurationFile();
-            }
-        }
         void InitializeDatabase()
         {
 #if Migrate
-            using (var dbContext = new AppDbContext())
+            if (MessageBox.Show("Do you want to re-build DB?", "Warning", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                dbContext.Database.Migrate();
+                using (var dbContext = new AppDbContext())
+                {
+                    dbContext.Database.EnsureDeleted();
+                    dbContext.Database.Migrate();
+                }
+                MessageBox.Show("DB Data Migration Completed!");
             }
-            MessageBox.Show("DB Data Migration Completed!");
 #endif
 #if Seed
-            DatabasePopulator.PopulateHistoricData();
-            MessageBox.Show("DB Data Seeding Completed!");
-#endif
-        }
-
-        private void ConfigureDBPath()
-        {
-            DBConfigureWindow dBConfigureWindow = new DBConfigureWindow();
-            //dBConfigureWindow.Owner = this;
-            dBConfigureWindow.ShowDialog();
-            if (dBConfigureWindow.DialogResult == false)
+            if (MessageBox.Show("Do you want to populate DB?", "Warning", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                throw new Exception("Database is not ready.");
+                DatabasePopulator.PopulateHistoricData();
+                MessageBox.Show("DB Data Seeding Completed!");
             }
-
-        }
-
-        private void CreateConfigurationFile()
-        {
-            var fs = File.Create(GlobalSettings.ConfigurationFilePath);
-            var sw = new StreamWriter(fs);
-            sw.WriteLine(GlobalSettings.DbPath);
-            sw.Close();
-            fs.Close();
-        }
-
-        private void LoadDBPathFromConfigurationFile()
-        {
-            var fs = new FileStream(GlobalSettings.ConfigurationFilePath, FileMode.Open);
-            var sr = new StreamReader(fs);
-            GlobalSettings.DbPath = sr.ReadLine();
+#endif
         }
 
         void LoadFromDB()
@@ -178,6 +146,7 @@ namespace BCLabManager
                 ProgramService.RecipeService.TestRecordService.Items = new ObservableCollection<TestRecordClass>(uow.TestRecords.GetAll());
                 ProgramService.RecipeService.StepRuntimeService.Items = new ObservableCollection<StepRuntimeClass>(uow.StepRuntimes.GetAll());
                 ProjectService.Items = new ObservableCollection<ProjectClass>(uow.Projects.GetAll());
+                ProgramTypeService.Items = new ObservableCollection<ProgramTypeClass>(uow.ProgramTypes.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
             }
@@ -187,6 +156,8 @@ namespace BCLabManager
             allBatteryTypesViewModel = new AllBatteryTypesViewModel(BatteryTypeService, BatteryService);    //ViewModel初始化
 
             allProjectsViewModel = new AllProjectsViewModel(ProjectService, BatteryTypeService);    //ViewModel初始化
+
+            allProgramTypesViewModel = new AllProgramTypesViewModel(ProgramTypeService);    //ViewModel初始化
 
             allBatteriesViewModel = new AllBatteriesViewModel(BatteryService, BatteryTypeService);    //ViewModel初始化
 
@@ -226,6 +197,8 @@ namespace BCLabManager
             this.AllBatteryTypesViewInstance.DataContext = allBatteryTypesViewModel;
 
             this.AllProjectsViewInstance.DataContext = allProjectsViewModel;                                                           //ViewModel跟View绑定
+
+            this.AllProgramTypesViewInstance.DataContext = allProgramTypesViewModel;                                                           //ViewModel跟View绑定
 
 
             this.AllBatteriesViewInstance.DataContext = allBatteriesViewModel;                                                            //ViewModel跟View绑定

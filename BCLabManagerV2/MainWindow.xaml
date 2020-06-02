@@ -27,12 +27,17 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50*"></RowDefinition>
                             <RowDefinition Height="4"></RowDefinition>
+                            <RowDefinition Height="30*"></RowDefinition>
+                            <RowDefinition Height="4"></RowDefinition>
                             <RowDefinition Height="50*"></RowDefinition>
                         </Grid.RowDefinitions>
                         <GroupBox Header="Projects" BorderBrush="Black" BorderThickness="1">
                             <v:AllProjectsView x:Name="AllProjectsViewInstance"></v:AllProjectsView>
                         </GroupBox>
-                        <GroupBox Header="Testers" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
+                        <GroupBox Header="Program Types" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
+                            <v:AllProgramTypesView x:Name="AllProgramTypesViewInstance"></v:AllProgramTypesView>
+                        </GroupBox>
+                        <GroupBox Header="Testers" Grid.Row="4" BorderBrush="Black" BorderThickness="1">
                             <v:AllTestersView x:Name="AllTestersViewInstance"></v:AllTestersView>
                         </GroupBox>
                     </Grid>
@@ -59,20 +64,12 @@
             <TabItem Header="Templates">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="29*"></ColumnDefinition>
-                        <ColumnDefinition Width="589*"/>
+                        <!--<ColumnDefinition Width="29*"></ColumnDefinition>-->
+                        <ColumnDefinition Width="149*"/>
+                        <ColumnDefinition Width="451*"/>
                         <ColumnDefinition Width="16*"></ColumnDefinition>
-                        <ColumnDefinition Width="952*"></ColumnDefinition>
+                        <ColumnDefinition Width="970*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.ColumnSpan="2">
-                        <!--<Grid.RowDefinitions>
-                            <RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                        </Grid.RowDefinitions>-->
-                        <!--<v:AllChargeCurrentsView x:Name="AllChargeCurrentsViewInstance" Grid.Row="1"></v:AllChargeCurrentsView>-->
-                    </Grid>
                     <v:AllStepTemplatesView Grid.Column="0" x:Name="AllStepTemplateViewInstance" Grid.ColumnSpan="2"></v:AllStepTemplatesView>
                     <v:AllRecipeTemplatesView Grid.Column="3" x:Name="AllRecipeTemplatesViewInstance"></v:AllRecipeTemplatesView>
                 </Grid>
