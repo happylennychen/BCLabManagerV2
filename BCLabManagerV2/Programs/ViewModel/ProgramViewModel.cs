@@ -118,6 +118,20 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public ProgramTypeClass Type
+        {
+            get { return _program.Type; }
+            set
+            {
+                if (value == _program.Type)
+                    return;
+
+                _program.Type = value;
+
+                RaisePropertyChanged("Type");
+            }
+        }
+
         public string Requester
         {
             get { return _program.Requester; }

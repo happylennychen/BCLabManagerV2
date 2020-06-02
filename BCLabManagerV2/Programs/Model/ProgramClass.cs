@@ -120,10 +120,11 @@ namespace BCLabManager.Model
         {
         }
 
-        public ProgramClass(String Name, ProjectClass Project, String Requester, DateTime RequestTime, String Description, ObservableCollection<RecipeClass> Recipes) //Clone用到
+        public ProgramClass(String Name, ProjectClass Project, ProgramTypeClass Type, String Requester, DateTime RequestTime, String Description, ObservableCollection<RecipeClass> Recipes) //Clone用到
         {
             this.Name = Name;
             this.Project = Project;
+            this.Type = Type;
             this.Requester = Requester;
             this.RequestTime = RequestTime;
             this.Description = Description;
@@ -154,7 +155,7 @@ namespace BCLabManager.Model
                 (from sub in Recipes
                  select sub.Clone()).ToList();
             ObservableCollection<RecipeClass> clonelist = new ObservableCollection<RecipeClass>(all);
-            return new ProgramClass(this.Name, this.Project, this.Requester, this.RequestTime, this.Description, clonelist);
+            return new ProgramClass(this.Name, this.Project, this.Type, this.Requester, this.RequestTime, this.Description, clonelist);
         }
     }
 }

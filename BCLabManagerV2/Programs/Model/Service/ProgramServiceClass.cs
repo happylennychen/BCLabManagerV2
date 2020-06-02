@@ -221,8 +221,10 @@ namespace BCLabManager.Model
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 int pid = item.Project.Id;
+                int ptid = item.Type.Id;
                 int btid = item.Project.BatteryType.Id;
                 item.Project = uow.Projects.GetById(pid);
+                item.Type = uow.ProgramTypes.GetById(ptid);
                 item.Project.BatteryType = uow.BatteryTypes.GetById(btid);
 
                 var nextId = 1;

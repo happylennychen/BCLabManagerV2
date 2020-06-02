@@ -323,13 +323,9 @@
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
-    <Compile Include="Migrations\20200525064234_Init.cs" />
-    <Compile Include="Migrations\20200525064234_Init.designer.cs">
-      <DependentUpon>20200525064234_Init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200602012504_AddDescription2ProgramType.cs" />
-    <Compile Include="Migrations\20200602012504_AddDescription2ProgramType.designer.cs">
-      <DependentUpon>20200602012504_AddDescription2ProgramType.cs</DependentUpon>
+    <Compile Include="Migrations\20200602031818_Init.cs" />
+    <Compile Include="Migrations\20200602031818_Init.designer.cs">
+      <DependentUpon>20200602031818_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">

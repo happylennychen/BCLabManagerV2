@@ -183,6 +183,7 @@ namespace BCLabManager
                 RecipeTemplateService,
                 StepTemplateService,
                 ProjectService,
+                ProgramTypeService,
                 BatteryService,
                 TesterService,
                 ChannelService,

@@ -20,6 +20,7 @@ namespace BCLabManager.ViewModel
 
         public ProgramClass _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
         ObservableCollection<ProjectClass> _projects;
+        ObservableCollection<ProgramTypeClass> _programTypes;
         RecipeTemplateViewModel _selectedRecipeTemplate;
         RecipeViewModel _selectedRecipe;
         RelayCommand _okCommand;
@@ -34,10 +35,12 @@ namespace BCLabManager.ViewModel
         public ProgramEditViewModel(
             ProgramClass programmodel,
             ObservableCollection<ProjectClass> projects,
-            ObservableCollection<RecipeTemplate> RecipeTemplates)
+            ObservableCollection<RecipeTemplate> RecipeTemplates,
+            ObservableCollection<ProgramTypeClass> programTypes)
         {
             _program = programmodel;
             _projects = projects;
+            _programTypes = programTypes;
             this.CreateAllRecipeTemplates(RecipeTemplates);
             this.CreateRecipes();
         }
@@ -121,6 +124,35 @@ namespace BCLabManager.ViewModel
                 ObservableCollection<ProjectClass> all = _projects;
 
                 return new ObservableCollection<ProjectClass>(all);
+            }
+        }
+
+        public ProgramTypeClass ProgramType       //选中项
+        {
+            get
+            {
+                //if (_batteryType == null)
+                //return null;
+                return _program.Type;
+            }
+            set
+            {
+                if (value == _program.Type)
+                    return;
+
+                _program.Type = value;
+
+                RaisePropertyChanged("Type");
+            }
+        }
+
+        public ObservableCollection<ProgramTypeClass> AllProgramTypes //供选项
+        {
+            get
+            {
+                ObservableCollection<ProgramTypeClass> all = _programTypes;
+
+                return new ObservableCollection<ProgramTypeClass>(all);
             }
         }
         public string Requester

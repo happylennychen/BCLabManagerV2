@@ -2665,6 +2665,7 @@ namespace BCLabManager
                 else
                     pro.Name = $"MISC-Battery-Initial-T{index}";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "MISC");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -2696,6 +2697,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "OCV-0.2C";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "OCV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -2723,6 +2725,7 @@ namespace BCLabManager
                 else
                     pro.Name = $"RC-N{index}";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "RC");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -2754,6 +2757,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Static-N1";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -2785,6 +2789,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Static-N2";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power 0" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -2816,6 +2821,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Static-N3";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -2847,6 +2853,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Dynamic-N1";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -2876,6 +2883,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "MISC-Extra";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -2903,6 +2911,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Dynamic-N2";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -2934,6 +2943,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Static-N4";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -2966,6 +2976,7 @@ namespace BCLabManager
                 else
                     pro.Name = $"OCV-0.3C-N{index}";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "OCV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -2999,6 +3010,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Dynamic-N3";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -3030,6 +3042,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Dynamic-N4";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -3061,6 +3074,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Dynamic-N5";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -3092,6 +3106,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Dynamic-N6";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -3123,6 +3138,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Dynamic-N5-N2";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -3154,6 +3170,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Static-N5";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -3185,6 +3202,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Dynamic-N7";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -3216,6 +3234,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Dynamic-N8";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -3247,6 +3266,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Dynamic-N9";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -3278,6 +3298,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Dynamic-N10";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -3309,6 +3330,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Dynamic-N11";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 
@@ -3340,6 +3362,7 @@ namespace BCLabManager
                 var pro = new ProgramClass();
                 pro.Name = "EV-Dynamic-N12";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
                 pro.Requester = "Jim";
                 pro.RequestTime = DateTime.Now;
 

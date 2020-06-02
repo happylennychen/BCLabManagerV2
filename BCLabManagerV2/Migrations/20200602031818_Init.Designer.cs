@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200602012504_AddDescription2ProgramType")]
-    partial class AddDescription2ProgramType
+    [Migration("20200602031818_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

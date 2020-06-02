@@ -25,6 +25,10 @@ namespace BCLabManager.Model
             get { return _description; }
             set { SetProperty(ref _description, value); }
         }
+        public override string ToString()
+        {
+            return this.Name;
+        }
 
         public ProgramTypeClass()           //Create用到
         {

@@ -42,6 +42,7 @@ namespace BCLabManager.ViewModel
         //ObservableCollection<ProgramClass> _programs;
         private BatteryServiceClass _batteryService;
         private ProjectServiceClass _projectService;
+        private ProgramTypeServiceClass _programTypeService;
         private TesterServiceClass _testerService;
         private ChannelServiceClass _channelService;
         private ChamberServiceClass _chamberService;
@@ -58,6 +59,7 @@ namespace BCLabManager.ViewModel
             RecipeTemplateServiceClass recipeTemplateService,
             StepTemplateServiceClass stepTemplateService,
             ProjectServiceClass projectService,
+            ProgramTypeServiceClass programTypeService,
             BatteryServiceClass batteryService,
             TesterServiceClass testerService,
             ChannelServiceClass channelService,
@@ -70,6 +72,7 @@ namespace BCLabManager.ViewModel
             this.CreateAllPrograms(_programService.Items);
 
             _projectService = projectService;
+            _programTypeService = programTypeService;
             _batteryService = batteryService;
             _testerService = testerService;
             _channelService = channelService;
@@ -402,7 +405,7 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             ProgramClass m = new ProgramClass();      //实例化一个新的model
-            ProgramEditViewModel evm = new ProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
+            ProgramEditViewModel evm = new ProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items, _programTypeService.Items);      //实例化一个新的view model
             //evm.DisplayName = "Program-Create";
             evm.commandType = CommandType.Create;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -416,6 +419,7 @@ namespace BCLabManager.ViewModel
         private void CreateRCProgram()
         {
             ProgramClass m = new ProgramClass();      //实例化一个新的model
+            m.Type = _programTypeService.Items.SingleOrDefault(o => o.Name == "RC");
             RCProgramEditViewModel evm = new RCProgramEditViewModel(m, _projectService.Items);      //实例化一个新的view model
             //evm.DisplayName = "Program-Create";
             var RCProgramViewInstance = new RCProgramView();      //实例化一个新的view
@@ -621,7 +625,7 @@ namespace BCLabManager.ViewModel
         private void SaveAs()
         {
             ProgramClass m = _selectedProgram._program.Clone();
-            ProgramEditViewModel evm = new ProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
+            ProgramEditViewModel evm = new ProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items, _programTypeService.Items);      //实例化一个新的view model
             ////evm.DisplayName = "Program-Save As";
             //evm.commandType = CommandType.SaveAs;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
