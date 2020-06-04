@@ -120,14 +120,17 @@ namespace BCLabManager.Model
                     testRecord.TestFilePath = CopyToFolder(rawDataList[0], root);
                 }
             }
-
-            string headerFilePath = Path.ChangeExtension($@"{root}\{GlobalSettings.HeaderFolderName}\{Path.GetFileName(testRecord.TestFilePath)}", "HDR");
-            if (!File.Exists(headerFilePath))
-            {
-                CreateHeaderFile(headerFilePath, header);
-                CreateSourceFile(root, headerFilePath, testRecord.TestFilePath);
-            }
             SuperUpdate(testRecord);
+
+            if (header.Type == "RC" || header.Type == "OCV")
+            {
+                string headerFilePath = Path.ChangeExtension($@"{root}\{GlobalSettings.HeaderFolderName}\{Path.GetFileName(testRecord.TestFilePath)}", "HDR");
+                if (!File.Exists(headerFilePath))
+                {
+                    CreateHeaderFile(headerFilePath, header);
+                    CreateSourceFile(root, headerFilePath, testRecord.TestFilePath);
+                }
+            }
         }
 
         private string CopyToFolder(string filepath, string root)

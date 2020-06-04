@@ -694,7 +694,7 @@ namespace BCLabManager.ViewModel
                     evm.CapacityDifference,
                     evm.Operator,
                     SelectedProgram.Name,
-                    $"{SelectedRecipe.Temperature}Deg-{SelectedRecipe.Name}-{SelectedRecipe.Id}"    //Use this to represent RecipeStr
+                    $"{SelectedRecipe.Temperature}Deg-{SelectedRecipe.Name}"    //Use this to represent RecipeStr
                     );
                 if (!evm.IsSkip)
                 {
@@ -738,7 +738,7 @@ namespace BCLabManager.ViewModel
                 {
                     DateTime[] time = _testerService.GetTimeFromRawData(testRecord.Record.AssignedChannel.Tester, evm.FileList);
                     Header header = new Header();
-                    header.Type = SelectedProgram.Description;
+                    header.Type = SelectedProgram.Type.ToString();
                     header.TestTime = time[0].ToString("yyyy-MM-dd");
                     header.Equipment = testRecord.TesterStr;
                     header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufactor;
