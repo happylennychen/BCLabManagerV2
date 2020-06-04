@@ -77,7 +77,7 @@ namespace BCLabManager.Model
         public ObservableCollection<TestRecordClass> TestRecords { get; set; } = new ObservableCollection<TestRecordClass>();
 
         public ObservableCollection<StepRuntimeClass> StepRuntimes { get; set; } = new ObservableCollection<StepRuntimeClass>();
-        public ObservableCollection<EmulatorResultClass> EvResults { get; set; } = new ObservableCollection<EmulatorResultClass>();
+        public ObservableCollection<EmulatorResultClass> EmulatorResults { get; set; } = new ObservableCollection<EmulatorResultClass>();
         public RecipeClass()
         {
         }

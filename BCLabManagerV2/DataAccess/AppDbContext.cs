@@ -28,8 +28,10 @@ namespace BCLabManager.DataAccess
         public DbSet<ProjectProductClass> ProjectProducts { get; set; }
         public DbSet<ProjectProductTypeClass> ProjectProductTypes { get; set; }
         public DbSet<CoefficientClass> Coefficients { get; set; }
-        public DbSet<EmulatorSettingClass> EmulatorSettings { get; set; }
+        public DbSet<EmulatorSettingClass> ProjectSettings { get; set; }
         public DbSet<EmulatorResultClass> EmulatorResults { get; set; }
+        public DbSet<LibFGClass> lib_fgs { get; set; }
+        public DbSet<ReleasePackageClass> ReleasePackages { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseSqlite($"Data Source={GlobalSettings.DbPath}");

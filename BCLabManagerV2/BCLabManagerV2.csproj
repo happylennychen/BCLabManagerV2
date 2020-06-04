@@ -336,10 +336,16 @@
     <Compile Include="Migrations\20200604064021_Init.designer.cs">
       <DependentUpon>20200604064021_Init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200604092832_v1.cs" />
+    <Compile Include="Migrations\20200604092832_v1.designer.cs">
+      <DependentUpon>20200604092832_v1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
       <DependentUpon>AllProductsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Programs\Model\LibFGClass.cs" />
+    <Compile Include="Programs\Model\ReleasePackageClass.cs" />
     <Compile Include="Programs\Model\EmulatorSettingClass.cs" />
     <Compile Include="Programs\Model\ProgramTypeClass.cs" />
     <Compile Include="Programs\Model\ProjectClass.cs" />
