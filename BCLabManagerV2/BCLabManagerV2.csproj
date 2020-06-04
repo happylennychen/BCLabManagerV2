@@ -336,6 +336,7 @@
     <Compile Include="Programs\Model\ProjectClass.cs" />
     <Compile Include="Programs\Model\ProjectProductClass.cs" />
     <Compile Include="Programs\Model\EvResultClass.cs" />
+    <Compile Include="Programs\Model\ProjectProductTypeClass.cs" />
     <Compile Include="Programs\Model\Service\Header.cs" />
     <Compile Include="Programs\Model\Service\ProgramTypeServiceClass.cs" />
     <Compile Include="Programs\Model\Service\ProjectServiceClass.cs" />

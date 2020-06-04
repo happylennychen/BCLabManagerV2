@@ -10,8 +10,8 @@ namespace BCLabManager.Model
             get { return _filePath; }
             set { SetProperty(ref _filePath, value); }
         }
-        private string _type;
-        public string Type
+        private ProjectProductTypeClass _type;
+        public ProjectProductTypeClass Type
         {
             get { return _type; }
             set { SetProperty(ref _type, value); }
