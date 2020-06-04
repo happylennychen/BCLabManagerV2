@@ -10,11 +10,11 @@ namespace BCLabManager.Model
     public class BatteryTypeClass : BindableBase
     {
         public int Id { get; set; }
-        private string _manufactor;
-        public string Manufactor
+        private string _manufacturor;
+        public string Manufacturor
         {
-            get { return _manufactor; }
-            set { SetProperty(ref _manufactor, value); }
+            get { return _manufacturor; }
+            set { SetProperty(ref _manufacturor, value); }
         }
         private string _name;
         public string Name
@@ -34,8 +34,8 @@ namespace BCLabManager.Model
             get { return _typicalCapacity; }
             set { SetProperty(ref _typicalCapacity, value); }
         }
-        //private string _manufactor;
-        //public String Manufactor { get { return _manufactor; } set { _manufactor = value;RaisePropertyChanged(); } }
+        //private string _manufacturor;
+        //public String Manufacturor { get { return _manufacturor; } set { _manufacturor = value;RaisePropertyChanged(); } }
         //public String Name { get; set; }
         //public String Material { get; set; }
         private Int32 _limitedChargeVoltage;
@@ -78,9 +78,9 @@ namespace BCLabManager.Model
         public BatteryTypeClass()
         { }
 
-        //public BatteryTypeClass(String Manufactor, String Name, String Material, Int32 LimitedChargeVoltage, Int32 RatedCapacity, Int32 NominalVoltage, Int32 TypicalCapacity, Int32 CutoffDischargeVoltage)
+        //public BatteryTypeClass(String Manufacturor, String Name, String Material, Int32 LimitedChargeVoltage, Int32 RatedCapacity, Int32 NominalVoltage, Int32 TypicalCapacity, Int32 CutoffDischargeVoltage)
         //{
-        //    this.Manufactor = Manufactor;
+        //    this.Manufacturor = Manufacturor;
         //    this.Name = Name;
         //    this.Material = Material;
         //    this.LimitedChargeVoltage = LimitedChargeVoltage;
@@ -89,9 +89,9 @@ namespace BCLabManager.Model
         //    this.TypicalCapacity = TypicalCapacity;
         //    this.CutoffDischargeVoltage = CutoffDischargeVoltage;
         //}
-        //public void Update(String Manufactor, String Name, String Material, Int32 LimitedChargeVoltage, Int32 RatedCapacity, Int32 NominalVoltage, Int32 TypicalCapacity, Int32 CutoffDischargeVoltage)
+        //public void Update(String Manufacturor, String Name, String Material, Int32 LimitedChargeVoltage, Int32 RatedCapacity, Int32 NominalVoltage, Int32 TypicalCapacity, Int32 CutoffDischargeVoltage)
         //{
-        //    this.Manufactor = Manufactor;
+        //    this.Manufacturor = Manufacturor;
         //    this.Name = Name;
         //    this.Material = Material;
         //    this.LimitedChargeVoltage = LimitedChargeVoltage;

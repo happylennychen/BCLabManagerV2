@@ -741,7 +741,7 @@ namespace BCLabManager.ViewModel
                     header.Type = SelectedProgram.Type.ToString();
                     header.TestTime = time[0].ToString("yyyy-MM-dd");
                     header.Equipment = testRecord.TesterStr;
-                    header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufactor;
+                    header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufacturor;
                     header.BatteryModel = SelectedProgram.Project.BatteryType.Name;
                     header.CycleCount = evm.NewCycle.ToString();
                     header.Temperature = testRecord.Record.Temperature.ToString();

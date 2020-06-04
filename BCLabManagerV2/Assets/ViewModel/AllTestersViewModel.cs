@@ -192,7 +192,7 @@ namespace BCLabManager.ViewModel
             TesterClass m = new TesterClass();      //实例化一个新的model
             TesterEditViewModel evm = new TesterEditViewModel(m);      //实例化一个新的view model
             evm.Id = SelectedItem.Id;
-            evm.Manufactor = _selectedItem.Manufactor;
+            evm.Manufacturor = _selectedItem.Manufacturor;
             evm.Name = _selectedItem.Name;
             //evm.DisplayName = "Tester-Edit";
             var TesterViewInstance = new TesterView();      //实例化一个新的view
@@ -211,7 +211,7 @@ namespace BCLabManager.ViewModel
         {
             TesterClass m = new TesterClass();      //实例化一个新的model
             TesterEditViewModel evm = new TesterEditViewModel(m);      //实例化一个新的view model
-            evm.Manufactor = _selectedItem.Manufactor;
+            evm.Manufacturor = _selectedItem.Manufacturor;
             evm.Name = _selectedItem.Name;
             //evm.DisplayName = "Tester-Save As";
             var TesterViewInstance = new TesterView();      //实例化一个新的view

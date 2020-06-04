@@ -52,17 +52,17 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("Id");
             }
         }
-        public string Manufactor
+        public string Manufacturor
         {
-            get { return _tester.Manufactor; }
+            get { return _tester.Manufacturor; }
             set
             {
-                if (value == _tester.Manufactor)
+                if (value == _tester.Manufacturor)
                     return;
 
-                _tester.Manufactor = value;
+                _tester.Manufacturor = value;
 
-                RaisePropertyChanged("Manufactor");
+                RaisePropertyChanged("Manufacturor");
             }
         }
 

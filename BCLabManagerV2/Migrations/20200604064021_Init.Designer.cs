@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200602031818_Init")]
+    [Migration("20200604064021_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,781 +18,1062 @@ namespace BCLabManager.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.0")
+                .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("BCLabManager.Model.AssetUsageRecordClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("AssetUseCount")
+                        .HasColumnName("asset_use_count")
                         .HasColumnType("integer");
 
                     b.Property<int?>("BatteryClassId")
+                        .HasColumnName("battery_class_id")
                         .HasColumnType("integer");
 
                     b.Property<int?>("ChamberClassId")
+                        .HasColumnName("chamber_class_id")
                         .HasColumnType("integer");
 
                     b.Property<int?>("ChannelClassId")
+                        .HasColumnName("channel_class_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("ProgramName")
+                        .HasColumnName("program_name")
                         .HasColumnType("text");
 
                     b.Property<string>("RecipeName")
+                        .HasColumnName("recipe_name")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Timestamp")
+                        .HasColumnName("timestamp")
                         .HasColumnType("timestamp without time zone");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_asset_usage_records");
 
-                    b.HasIndex("BatteryClassId");
+                    b.HasIndex("BatteryClassId")
+                        .HasName("ix_asset_usage_records_battery_class_id");
 
-                    b.HasIndex("ChamberClassId");
+                    b.HasIndex("ChamberClassId")
+                        .HasName("ix_asset_usage_records_chamber_class_id");
 
-                    b.HasIndex("ChannelClassId");
+                    b.HasIndex("ChannelClassId")
+                        .HasName("ix_asset_usage_records_channel_class_id");
 
-                    b.ToTable("AssetUsageRecordClass");
+                    b.ToTable("asset_usage_records");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.BatteryClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("AssetUseCount")
+                        .HasColumnName("asset_use_count")
                         .HasColumnType("integer");
 
                     b.Property<int?>("BatteryTypeId")
+                        .HasColumnName("battery_type_id")
                         .HasColumnType("integer");
 
                     b.Property<double>("CycleCount")
+                        .HasColumnName("cycle_count")
                         .HasColumnType("double precision");
 
                     b.Property<string>("Name")
+                        .HasColumnName("name")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_batteries");
 
-                    b.HasIndex("BatteryTypeId");
+                    b.HasIndex("BatteryTypeId")
+                        .HasName("ix_batteries_battery_type_id");
 
-                    b.ToTable("Batteries");
+                    b.ToTable("batteries");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.BatteryTypeClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("CutoffDischargeVoltage")
+                        .HasColumnName("cutoff_discharge_voltage")
                         .HasColumnType("integer");
 
                     b.Property<int>("FullyChargedEndCurrent")
+                        .HasColumnName("fully_charged_end_current")
                         .HasColumnType("integer");
 
                     b.Property<int>("FullyChargedEndingTimeout")
+                        .HasColumnName("fully_charged_ending_timeout")
                         .HasColumnType("integer");
 
                     b.Property<int>("LimitedChargeVoltage")
+                        .HasColumnName("limited_charge_voltage")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Manufactor")
+                    b.Property<string>("Manufacturor")
+                        .HasColumnName("manufacturor")
                         .HasColumnType("text");
 
                     b.Property<string>("Material")
+                        .HasColumnName("material")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
+                        .HasColumnName("name")
                         .HasColumnType("text");
 
                     b.Property<int>("NominalVoltage")
+                        .HasColumnName("nominal_voltage")
                         .HasColumnType("integer");
 
                     b.Property<int>("RatedCapacity")
+                        .HasColumnName("rated_capacity")
                         .HasColumnType("integer");
 
                     b.Property<int>("TypicalCapacity")
+                        .HasColumnName("typical_capacity")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_battery_types");
 
-                    b.ToTable("BatteryTypes");
+                    b.ToTable("battery_types");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ChamberClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("AssetUseCount")
+                        .HasColumnName("asset_use_count")
                         .HasColumnType("integer");
 
                     b.Property<double>("HighestTemperature")
+                        .HasColumnName("highest_temperature")
                         .HasColumnType("double precision");
 
                     b.Property<double>("LowestTemperature")
+                        .HasColumnName("lowest_temperature")
                         .HasColumnType("double precision");
 
-                    b.Property<string>("Manufactor")
+                    b.Property<string>("Manufacturor")
+                        .HasColumnName("manufacturor")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
+                        .HasColumnName("name")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_chambers");
 
-                    b.ToTable("Chambers");
+                    b.ToTable("chambers");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ChannelClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("AssetUseCount")
+                        .HasColumnName("asset_use_count")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
+                        .HasColumnName("name")
                         .HasColumnType("text");
 
                     b.Property<int?>("TesterId")
+                        .HasColumnName("tester_id")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_channels");
 
-                    b.HasIndex("TesterId");
+                    b.HasIndex("TesterId")
+                        .HasName("ix_channels_tester_id");
 
-                    b.ToTable("Channels");
+                    b.ToTable("channels");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.CoefficientClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<double>("Offset")
+                        .HasColumnName("offset")
                         .HasColumnType("double precision");
 
                     b.Property<double>("Slope")
+                        .HasColumnName("slope")
                         .HasColumnType("double precision");
 
                     b.Property<double>("Temperature")
+                        .HasColumnName("temperature")
                         .HasColumnType("double precision");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_coefficients");
 
-                    b.ToTable("CoefficientClass");
+                    b.ToTable("coefficients");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.EvResultClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.EmulatorResultClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Name")
+                        .HasColumnName("name")
                         .HasColumnType("text");
 
                     b.Property<int?>("RecipeClassId")
+                        .HasColumnName("recipe_class_id")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_emulator_results");
 
-                    b.HasIndex("RecipeClassId");
+                    b.HasIndex("RecipeClassId")
+                        .HasName("ix_emulator_results_recipe_class_id");
 
-                    b.ToTable("EvResultClass");
+                    b.ToTable("emulator_results");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.EvSettingClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.EmulatorSettingClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("DesignCapacity")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("DischargeEndVoltage")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("FullyChargedEndCurrent")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("FullyChargedEndingTimeout")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("LimitedChargeVoltage")
-                        .HasColumnType("integer");
-
                     b.Property<int?>("ProjectClassId")
+                        .HasColumnName("project_class_id")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.Property<int>("accumulated_capacity_mahr")
+                        .HasColumnName("accumulated_capacity_mahr")
+                        .HasColumnType("integer");
 
-                    b.HasIndex("ProjectClassId");
+                    b.Property<int>("design_capacity_mahr")
+                        .HasColumnName("design_capacity_mahr")
+                        .HasColumnType("integer");
 
-                    b.ToTable("EvSettingClass");
+                    b.Property<int>("discharge_end_voltage_mv")
+                        .HasColumnName("discharge_end_voltage_mv")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("dsg_low_temp_01dc")
+                        .HasColumnName("dsg_low_temp_01dc")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("dsg_low_volt_mv")
+                        .HasColumnName("dsg_low_volt_mv")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("fully_charged_end_current_ma")
+                        .HasColumnName("fully_charged_end_current_ma")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("fully_charged_ending_time_ms")
+                        .HasColumnName("fully_charged_ending_time_ms")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("initial_ratio_fcc")
+                        .HasColumnName("initial_ratio_fcc")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("initial_soc_start_ocv")
+                        .HasColumnName("initial_soc_start_ocv")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("is_valid")
+                        .HasColumnName("is_valid")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("limited_charge_voltage_mv")
+                        .HasColumnName("limited_charge_voltage_mv")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("system_line_impedance")
+                        .HasColumnName("system_line_impedance")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("threshold_1st_facc_mv")
+                        .HasColumnName("threshold_1st_facc_mv")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("threshold_2nd_facc_mv")
+                        .HasColumnName("threshold_2nd_facc_mv")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("threshold_3rd_facc_mv")
+                        .HasColumnName("threshold_3rd_facc_mv")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("threshold_4th_facc_mv")
+                        .HasColumnName("threshold_4th_facc_mv")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id")
+                        .HasName("pk_emulator_settings");
+
+                    b.HasIndex("ProjectClassId")
+                        .HasName("ix_emulator_settings_project_class_id");
+
+                    b.ToTable("emulator_settings");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Description")
+                        .HasColumnName("description")
                         .HasColumnType("text");
 
                     b.Property<TimeSpan>("ED")
+                        .HasColumnName("ed")
                         .HasColumnType("interval");
 
                     b.Property<DateTime>("EET")
+                        .HasColumnName("eet")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("EST")
+                        .HasColumnName("est")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("EndTime")
+                        .HasColumnName("end_time")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("IsInvalid")
+                        .HasColumnName("is_invalid")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
+                        .HasColumnName("name")
                         .HasColumnType("text");
 
                     b.Property<decimal>("Order")
+                        .HasColumnName("order")
                         .HasColumnType("numeric(20,0)");
 
                     b.Property<int?>("ProjectId")
+                        .HasColumnName("project_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("RequestTime")
+                        .HasColumnName("request_time")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Requester")
+                        .HasColumnName("requester")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("StartTime")
+                        .HasColumnName("start_time")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("TableFilePath")
+                        .HasColumnName("table_file_path")
                         .HasColumnType("text");
 
                     b.Property<int?>("TypeId")
+                        .HasColumnName("type_id")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_programs");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("ProjectId")
+                        .HasName("ix_programs_project_id");
 
-                    b.HasIndex("TypeId");
+                    b.HasIndex("TypeId")
+                        .HasName("ix_programs_type_id");
 
-                    b.ToTable("Programs");
+                    b.ToTable("programs");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ProgramTypeClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Description")
+                        .HasColumnName("description")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
+                        .HasColumnName("name")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_program_types");
 
-                    b.ToTable("ProgramTypes");
+                    b.ToTable("program_types");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ProjectClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("AbsoluteMaxCapacity")
+                        .HasColumnName("absolute_max_capacity")
                         .HasColumnType("integer");
 
                     b.Property<int?>("BatteryTypeId")
+                        .HasColumnName("battery_type_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("Customer")
+                        .HasColumnName("customer")
                         .HasColumnType("text");
 
                     b.Property<int>("CutoffDischargeVoltage")
+                        .HasColumnName("cutoff_discharge_voltage")
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
+                        .HasColumnName("description")
                         .HasColumnType("text");
 
                     b.Property<int>("LimitedChargeVoltage")
+                        .HasColumnName("limited_charge_voltage")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
+                        .HasColumnName("name")
                         .HasColumnType("text");
 
                     b.Property<string>("VoltagePoints")
+                        .HasColumnName("voltage_points")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_projects");
 
-                    b.HasIndex("BatteryTypeId");
+                    b.HasIndex("BatteryTypeId")
+                        .HasName("ix_projects_battery_type_id");
 
-                    b.ToTable("Projects");
+                    b.ToTable("projects");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ProjectProductClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("FilePath")
+                        .HasColumnName("file_path")
                         .HasColumnType("text");
 
                     b.Property<int?>("ProjectClassId")
+                        .HasColumnName("project_class_id")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Type")
+                    b.Property<int?>("TypeId")
+                        .HasColumnName("type_id")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id")
+                        .HasName("pk_project_products");
+
+                    b.HasIndex("ProjectClassId")
+                        .HasName("ix_project_products_project_class_id");
+
+                    b.HasIndex("TypeId")
+                        .HasName("ix_project_products_type_id");
+
+                    b.ToTable("project_products");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.ProjectProductTypeClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnName("description")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.Property<string>("Name")
+                        .HasColumnName("name")
+                        .HasColumnType("text");
 
-                    b.HasIndex("ProjectClassId");
+                    b.HasKey("Id")
+                        .HasName("pk_project_product_types");
 
-                    b.ToTable("ProjectProductClass");
+                    b.ToTable("project_product_types");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.RecipeClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<TimeSpan>("ED")
+                        .HasColumnName("ed")
                         .HasColumnType("interval");
 
                     b.Property<DateTime>("EET")
+                        .HasColumnName("eet")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("EST")
+                        .HasColumnName("est")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("EndTime")
+                        .HasColumnName("end_time")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("IsAbandoned")
+                        .HasColumnName("is_abandoned")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
+                        .HasColumnName("name")
                         .HasColumnType("text");
 
                     b.Property<int?>("ProgramClassId")
+                        .HasColumnName("program_class_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("StartTime")
+                        .HasColumnName("start_time")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<double>("Temperature")
+                        .HasColumnName("temperature")
                         .HasColumnType("double precision");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_recipes");
 
-                    b.HasIndex("ProgramClassId");
+                    b.HasIndex("ProgramClassId")
+                        .HasName("ix_recipes_program_class_id");
 
-                    b.ToTable("Recipes");
+                    b.ToTable("recipes");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.RecipeTemplate", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Name")
+                        .HasColumnName("name")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_recipe_templates");
 
-                    b.ToTable("RecipeTemplates");
+                    b.ToTable("recipe_templates");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.StepClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<double>("CRate")
+                        .HasColumnName("c_rate")
                         .HasColumnType("double precision");
 
                     b.Property<int>("CompareMark")
+                        .HasColumnName("compare_mark")
                         .HasColumnType("integer");
 
                     b.Property<int>("LoopCount")
+                        .HasColumnName("loop_count")
                         .HasColumnType("integer");
 
                     b.Property<string>("LoopLabel")
+                        .HasColumnName("loop_label")
                         .HasColumnType("text");
 
                     b.Property<string>("LoopTarget")
+                        .HasColumnName("loop_target")
                         .HasColumnType("text");
 
                     b.Property<int>("Order")
+                        .HasColumnName("order")
                         .HasColumnType("integer");
 
                     b.Property<int?>("RecipeTemplateId")
+                        .HasColumnName("recipe_template_id")
                         .HasColumnType("integer");
 
                     b.Property<int?>("StepTemplateId")
+                        .HasColumnName("step_template_id")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_steps");
 
-                    b.HasIndex("RecipeTemplateId");
+                    b.HasIndex("RecipeTemplateId")
+                        .HasName("ix_steps_recipe_template_id");
 
-                    b.HasIndex("StepTemplateId");
+                    b.HasIndex("StepTemplateId")
+                        .HasName("ix_steps_step_template_id");
 
-                    b.ToTable("Steps");
+                    b.ToTable("steps");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.StepRuntimeClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<double>("DesignCapacityInmAH")
+                        .HasColumnName("design_capacity_inm_ah")
                         .HasColumnType("double precision");
 
                     b.Property<TimeSpan>("Duration")
+                        .HasColumnName("duration")
                         .HasColumnType("interval");
 
                     b.Property<TimeSpan>("ED")
+                        .HasColumnName("ed")
                         .HasColumnType("interval");
 
                     b.Property<DateTime>("EET")
+                        .HasColumnName("eet")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("EST")
+                        .HasColumnName("est")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("EndTime")
+                        .HasColumnName("end_time")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("Order")
+                        .HasColumnName("order")
                         .HasColumnType("integer");
 
                     b.Property<int?>("RecipeClassId")
+                        .HasColumnName("recipe_class_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("StartTime")
+                        .HasColumnName("start_time")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<int?>("StepTemplateId")
+                        .HasColumnName("step_template_id")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_step_runtimes");
 
-                    b.HasIndex("RecipeClassId");
+                    b.HasIndex("RecipeClassId")
+                        .HasName("ix_step_runtimes_recipe_class_id");
 
-                    b.HasIndex("StepTemplateId");
+                    b.HasIndex("StepTemplateId")
+                        .HasName("ix_step_runtimes_step_template_id");
 
-                    b.ToTable("StepRuntimes");
+                    b.ToTable("step_runtimes");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.StepTemplate", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int?>("CoefficientId")
+                        .HasColumnName("coefficient_id")
                         .HasColumnType("integer");
 
                     b.Property<double>("CurrentInput")
+                        .HasColumnName("current_input")
                         .HasColumnType("double precision");
 
                     b.Property<int>("CurrentUnit")
+                        .HasColumnName("current_unit")
                         .HasColumnType("integer");
 
                     b.Property<int>("CutOffConditionType")
+                        .HasColumnName("cut_off_condition_type")
                         .HasColumnType("integer");
 
                     b.Property<double>("CutOffConditionValue")
+                        .HasColumnName("cut_off_condition_value")
                         .HasColumnType("double precision");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_step_templates");
 
-                    b.HasIndex("CoefficientId");
+                    b.HasIndex("CoefficientId")
+                        .HasName("ix_step_templates_coefficient_id");
 
-                    b.ToTable("StepTemplates");
+                    b.ToTable("step_templates");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int?>("AssignedBatteryId")
+                        .HasColumnName("assigned_battery_id")
                         .HasColumnType("integer");
 
                     b.Property<int?>("AssignedChamberId")
+                        .HasColumnName("assigned_chamber_id")
                         .HasColumnType("integer");
 
                     b.Property<int?>("AssignedChannelId")
+                        .HasColumnName("assigned_channel_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("BatteryStr")
+                        .HasColumnName("battery_str")
                         .HasColumnType("text");
 
                     b.Property<string>("BatteryTypeStr")
+                        .HasColumnName("battery_type_str")
                         .HasColumnType("text");
 
                     b.Property<double>("CapacityDifference")
+                        .HasColumnName("capacity_difference")
                         .HasColumnType("double precision");
 
                     b.Property<string>("ChamberStr")
+                        .HasColumnName("chamber_str")
                         .HasColumnType("text");
 
                     b.Property<string>("ChannelStr")
+                        .HasColumnName("channel_str")
                         .HasColumnType("text");
 
                     b.Property<string>("Comment")
+                        .HasColumnName("comment")
                         .HasColumnType("text");
 
                     b.Property<double>("Current")
+                        .HasColumnName("current")
                         .HasColumnType("double precision");
 
                     b.Property<DateTime>("EndTime")
+                        .HasColumnName("end_time")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<double>("MeasurementGain")
+                        .HasColumnName("measurement_gain")
                         .HasColumnType("double precision");
 
                     b.Property<double>("MeasurementOffset")
+                        .HasColumnName("measurement_offset")
                         .HasColumnType("double precision");
 
                     b.Property<double>("NewCycle")
+                        .HasColumnName("new_cycle")
                         .HasColumnType("double precision");
 
                     b.Property<string>("Operator")
+                        .HasColumnName("operator")
                         .HasColumnType("text");
 
                     b.Property<string>("ProgramStr")
+                        .HasColumnName("program_str")
                         .HasColumnType("text");
 
                     b.Property<string>("ProjectStr")
+                        .HasColumnName("project_str")
                         .HasColumnType("text");
 
                     b.Property<int?>("RecipeClassId")
+                        .HasColumnName("recipe_class_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("RecipeStr")
+                        .HasColumnName("recipe_str")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("StartTime")
+                        .HasColumnName("start_time")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("Status")
+                        .HasColumnName("status")
                         .HasColumnType("integer");
 
                     b.Property<double>("Temperature")
+                        .HasColumnName("temperature")
                         .HasColumnType("double precision");
 
                     b.Property<string>("TestFilePath")
+                        .HasColumnName("test_file_path")
                         .HasColumnType("text");
 
                     b.Property<string>("TesterStr")
+                        .HasColumnName("tester_str")
                         .HasColumnType("text");
 
                     b.Property<double>("TraceResistance")
+                        .HasColumnName("trace_resistance")
                         .HasColumnType("double precision");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_test_records");
 
-                    b.HasIndex("AssignedBatteryId");
+                    b.HasIndex("AssignedBatteryId")
+                        .HasName("ix_test_records_assigned_battery_id");
 
-                    b.HasIndex("AssignedChamberId");
+                    b.HasIndex("AssignedChamberId")
+                        .HasName("ix_test_records_assigned_chamber_id");
 
-                    b.HasIndex("AssignedChannelId");
+                    b.HasIndex("AssignedChannelId")
+                        .HasName("ix_test_records_assigned_channel_id");
 
-                    b.HasIndex("RecipeClassId");
+                    b.HasIndex("RecipeClassId")
+                        .HasName("ix_test_records_recipe_class_id");
 
-                    b.ToTable("TestRecords");
+                    b.ToTable("test_records");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.TesterClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("Manufactor")
+                    b.Property<string>("Manufacturor")
+                        .HasColumnName("manufacturor")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
+                        .HasColumnName("name")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_testers");
 
-                    b.ToTable("Testers");
+                    b.ToTable("testers");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.AssetUsageRecordClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.BatteryClass", null)
                         .WithMany("Records")
-                        .HasForeignKey("BatteryClassId");
+                        .HasForeignKey("BatteryClassId")
+                        .HasConstraintName("fk_asset_usage_records_batteries_battery_class_id");
 
                     b.HasOne("BCLabManager.Model.ChamberClass", null)
                         .WithMany("Records")
-                        .HasForeignKey("ChamberClassId");
+                        .HasForeignKey("ChamberClassId")
+                        .HasConstraintName("fk_asset_usage_records_chambers_chamber_class_id");
 
                     b.HasOne("BCLabManager.Model.ChannelClass", null)
                         .WithMany("Records")
-                        .HasForeignKey("ChannelClassId");
+                        .HasForeignKey("ChannelClassId")
+                        .HasConstraintName("fk_asset_usage_records_channels_channel_class_id");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.BatteryClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
                         .WithMany()
-                        .HasForeignKey("BatteryTypeId");
+                        .HasForeignKey("BatteryTypeId")
+                        .HasConstraintName("fk_batteries_battery_types_battery_type_id");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ChannelClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.TesterClass", "Tester")
                         .WithMany()
-                        .HasForeignKey("TesterId");
+                        .HasForeignKey("TesterId")
+                        .HasConstraintName("fk_channels_testers_tester_id");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.EvResultClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.EmulatorResultClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.RecipeClass", null)
                         .WithMany("EvResults")
-                        .HasForeignKey("RecipeClassId");
+                        .HasForeignKey("RecipeClassId")
+                        .HasConstraintName("fk_emulator_results_recipes_recipe_class_id");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.EvSettingClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.EmulatorSettingClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.ProjectClass", null)
                         .WithMany("EvSettings")
-                        .HasForeignKey("ProjectClassId");
+                        .HasForeignKey("ProjectClassId")
+                        .HasConstraintName("fk_emulator_settings_projects_project_class_id");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.ProjectClass", "Project")
                         .WithMany()
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .HasConstraintName("fk_programs_projects_project_id");
 
                     b.HasOne("BCLabManager.Model.ProgramTypeClass", "Type")
                         .WithMany()
-                        .HasForeignKey("TypeId");
+                        .HasForeignKey("TypeId")
+                        .HasConstraintName("fk_programs_program_types_type_id");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ProjectClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
                         .WithMany()
-                        .HasForeignKey("BatteryTypeId");
+                        .HasForeignKey("BatteryTypeId")
+                        .HasConstraintName("fk_projects_battery_types_battery_type_id");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ProjectProductClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.ProjectClass", null)
                         .WithMany("ProjectProducts")
-                        .HasForeignKey("ProjectClassId");
+                        .HasForeignKey("ProjectClassId")
+                        .HasConstraintName("fk_project_products_projects_project_class_id");
+
+                    b.HasOne("BCLabManager.Model.ProjectProductTypeClass", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId")
+                        .HasConstraintName("fk_project_products_project_product_types_type_id");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.RecipeClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.ProgramClass", null)
                         .WithMany("Recipes")
-                        .HasForeignKey("ProgramClassId");
+                        .HasForeignKey("ProgramClassId")
+                        .HasConstraintName("fk_recipes_programs_program_class_id");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.StepClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.RecipeTemplate", null)
                         .WithMany("Steps")
-                        .HasForeignKey("RecipeTemplateId");
+                        .HasForeignKey("RecipeTemplateId")
+                        .HasConstraintName("fk_steps_recipe_templates_recipe_template_id");
 
                     b.HasOne("BCLabManager.Model.StepTemplate", "StepTemplate")
                         .WithMany()
-                        .HasForeignKey("StepTemplateId");
+                        .HasForeignKey("StepTemplateId")
+                        .HasConstraintName("fk_steps_step_templates_step_template_id");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.StepRuntimeClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.RecipeClass", null)
                         .WithMany("StepRuntimes")
-                        .HasForeignKey("RecipeClassId");
+                        .HasForeignKey("RecipeClassId")
+                        .HasConstraintName("fk_step_runtimes_recipes_recipe_class_id");
 
                     b.HasOne("BCLabManager.Model.StepTemplate", "StepTemplate")
                         .WithMany()
-                        .HasForeignKey("StepTemplateId");
+                        .HasForeignKey("StepTemplateId")
+                        .HasConstraintName("fk_step_runtimes_step_templates_step_template_id");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.StepTemplate", b =>
                 {
                     b.HasOne("BCLabManager.Model.CoefficientClass", "Coefficient")
                         .WithMany()
-                        .HasForeignKey("CoefficientId");
+                        .HasForeignKey("CoefficientId")
+                        .HasConstraintName("fk_step_templates_coefficients_coefficient_id");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.BatteryClass", "AssignedBattery")
                         .WithMany()
-                        .HasForeignKey("AssignedBatteryId");
+                        .HasForeignKey("AssignedBatteryId")
+                        .HasConstraintName("fk_test_records_batteries_assigned_battery_id");
 
                     b.HasOne("BCLabManager.Model.ChamberClass", "AssignedChamber")
                         .WithMany()
-                        .HasForeignKey("AssignedChamberId");
+                        .HasForeignKey("AssignedChamberId")
+                        .HasConstraintName("fk_test_records_chambers_assigned_chamber_id");
 
                     b.HasOne("BCLabManager.Model.ChannelClass", "AssignedChannel")
                         .WithMany()
-                        .HasForeignKey("AssignedChannelId");
+                        .HasForeignKey("AssignedChannelId")
+                        .HasConstraintName("fk_test_records_channels_assigned_channel_id");
 
                     b.HasOne("BCLabManager.Model.RecipeClass", null)
                         .WithMany("TestRecords")
-                        .HasForeignKey("RecipeClassId");
+                        .HasForeignKey("RecipeClassId")
+                        .HasConstraintName("fk_test_records_recipes_recipe_class_id");
                 });
 #pragma warning restore 612, 618
         }

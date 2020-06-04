@@ -54,17 +54,17 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("Id");
             }
         }
-        public string Manufactor
+        public string Manufacturor
         {
-            get { return _batterytype.Manufactor; }
+            get { return _batterytype.Manufacturor; }
             set
             {
-                if (value == _batterytype.Manufactor)
+                if (value == _batterytype.Manufacturor)
                     return;
 
-                _batterytype.Manufactor = value;
+                _batterytype.Manufacturor = value;
 
-                RaisePropertyChanged("Manufactor");
+                RaisePropertyChanged("Manufacturor");
             }
         }
 

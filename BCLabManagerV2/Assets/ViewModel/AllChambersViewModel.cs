@@ -197,7 +197,7 @@ namespace BCLabManager.ViewModel
             ChamberEditViewModel evm = new ChamberEditViewModel(edititem);      //实例化一个新的view model
             evm.Id = SelectedItem.Id;
             evm.Name = _selectedItem.Name;
-            evm.Manufactor = _selectedItem.Manufactor;
+            evm.Manufacturor = _selectedItem.Manufacturor;
             evm.LowTemp = _selectedItem.LowTemp;
             evm.HighTemp = _selectedItem.HighTemp;
             //evm.DisplayName = "Chamber-Edit";
@@ -219,7 +219,7 @@ namespace BCLabManager.ViewModel
             ChamberClass m = new ChamberClass();      //实例化一个新的model
             ChamberEditViewModel evm = new ChamberEditViewModel(m);      //实例化一个新的view model
             evm.Name = _selectedItem.Name;
-            evm.Manufactor = _selectedItem.Manufactor;
+            evm.Manufacturor = _selectedItem.Manufacturor;
             evm.LowTemp = _selectedItem.LowTemp;
             evm.HighTemp = _selectedItem.HighTemp;
             //evm.DisplayName = "Chamber-Save As";

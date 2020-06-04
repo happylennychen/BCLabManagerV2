@@ -74,7 +74,7 @@ namespace BCLabManager
             //}
             BatteryTypeClass bt = new BatteryTypeClass();
             bt.Name = "BLP663";
-            bt.Manufactor = "Oppo";
+            bt.Manufacturor = "Oppo";
             bt.Material = "Li-ion Plymer Battery";
             bt.LimitedChargeVoltage = 4400;
             bt.RatedCapacity = 3365;
@@ -85,7 +85,7 @@ namespace BCLabManager
 
             bt = new BatteryTypeClass();
             bt.Name = "32700-6000mAh";
-            bt.Manufactor = "FbTech";
+            bt.Manufacturor = "FbTech";
             bt.Material = "lithium-ion";
             bt.LimitedChargeVoltage = 3650;
             bt.RatedCapacity = 6000;
@@ -96,7 +96,7 @@ namespace BCLabManager
 
             bt = new BatteryTypeClass();
             bt.Name = "INR18650-25R";
-            bt.Manufactor = "SamSung SDI Co., Ltd";
+            bt.Manufacturor = "SamSung SDI Co., Ltd";
             bt.Material = "lithium-ion";
             bt.LimitedChargeVoltage = 4200;
             bt.RatedCapacity = 2500;
@@ -107,7 +107,7 @@ namespace BCLabManager
 
             bt = new BatteryTypeClass();
             bt.Name = "H26";
-            bt.Manufactor = "LG";
+            bt.Manufacturor = "LG";
             bt.Material = "lithium-ion";
             bt.LimitedChargeVoltage = 4200;
             bt.RatedCapacity = 2600;
@@ -120,7 +120,7 @@ namespace BCLabManager
 
             bt = new BatteryTypeClass();
             bt.Name = "HG2";
-            bt.Manufactor = "LG";
+            bt.Manufacturor = "LG";
             bt.Material = "lithium-ion";
             bt.LimitedChargeVoltage = 4200;
             bt.RatedCapacity = 3000;
@@ -246,7 +246,7 @@ namespace BCLabManager
             {
                 TesterClass tst = new TesterClass();
                 tst.Name = "17200";
-                tst.Manufactor = "Chroma";
+                tst.Manufacturor = "Chroma";
                 if (tst != null)
                 {
                     uow.Testers.Insert(tst);
@@ -279,7 +279,7 @@ namespace BCLabManager
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 ChamberClass cmb = new ChamberClass();
-                cmb.Manufactor = "HongZhan";
+                cmb.Manufacturor = "HongZhan";
                 cmb.Name = "PUL-80";
                 cmb.LowestTemperature = -40;
                 cmb.HighestTemperature = 150;

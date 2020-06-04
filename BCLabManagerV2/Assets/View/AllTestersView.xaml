@@ -53,8 +53,8 @@
             DisplayMemberBinding="{Binding Path=Name}" 
             />
                             <GridViewColumn 
-            Header="Manufactor" 
-            DisplayMemberBinding="{Binding Path=Manufactor}" 
+            Header="Manufacturor" 
+            DisplayMemberBinding="{Binding Path=Manufacturor}" 
             />
                         </GridView>
                     </ListView.View>
@@ -65,7 +65,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
-                        <DataGridTextColumn Header="Manufactor" IsReadOnly="True" Binding="{Binding Path=Manufactor}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Manufacturor" IsReadOnly="True" Binding="{Binding Path=Manufacturor}"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>

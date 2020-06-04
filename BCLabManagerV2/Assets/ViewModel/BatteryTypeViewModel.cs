@@ -47,9 +47,9 @@ namespace BCLabManager.ViewModel
         {
             get { return _batterytype.Id; }
         }
-        public string Manufactor
+        public string Manufacturor
         {
-            get { return _batterytype.Manufactor; }
+            get { return _batterytype.Manufacturor; }
         }
 
         public string Name

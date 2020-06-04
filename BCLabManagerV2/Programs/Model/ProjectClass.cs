@@ -68,7 +68,7 @@ namespace BCLabManager.Model
         }
         public ObservableCollection<ProjectProductClass> ProjectProducts { get; set; } = new ObservableCollection<ProjectProductClass>();
 
-        public ObservableCollection<EvSettingClass> EvSettings { get; set; } = new ObservableCollection<EvSettingClass>();
+        public ObservableCollection<EmulatorSettingClass> EvSettings { get; set; } = new ObservableCollection<EmulatorSettingClass>();
 
         public ProjectClass()           //Create用到
         {

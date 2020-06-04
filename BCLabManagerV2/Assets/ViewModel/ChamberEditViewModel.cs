@@ -64,17 +64,17 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public string Manufactor
+        public string Manufacturor
         {
-            get { return _chamber.Manufactor; }
+            get { return _chamber.Manufacturor; }
             set
             {
-                if (value == _chamber.Manufactor)
+                if (value == _chamber.Manufacturor)
                     return;
 
-                _chamber.Manufactor = value;
+                _chamber.Manufacturor = value;
 
-                RaisePropertyChanged("Manufactor");
+                RaisePropertyChanged("Manufacturor");
             }
         }
 
