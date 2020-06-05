@@ -332,13 +332,9 @@
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
-    <Compile Include="Migrations\20200604064021_Init.cs" />
-    <Compile Include="Migrations\20200604064021_Init.designer.cs">
-      <DependentUpon>20200604064021_Init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200604092832_v1.cs" />
-    <Compile Include="Migrations\20200604092832_v1.designer.cs">
-      <DependentUpon>20200604092832_v1.cs</DependentUpon>
+    <Compile Include="Migrations\20200605064458_Init.cs" />
+    <Compile Include="Migrations\20200605064458_Init.designer.cs">
+      <DependentUpon>20200605064458_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
@@ -346,12 +342,12 @@
     </Compile>
     <Compile Include="Programs\Model\LibFGClass.cs" />
     <Compile Include="Programs\Model\ReleasePackageClass.cs" />
-    <Compile Include="Programs\Model\EmulatorSettingClass.cs" />
+    <Compile Include="Programs\Model\ProjectSettingClass.cs" />
     <Compile Include="Programs\Model\ProgramTypeClass.cs" />
     <Compile Include="Programs\Model\ProjectClass.cs" />
-    <Compile Include="Programs\Model\ProjectProductClass.cs" />
+    <Compile Include="Programs\Model\TableMakerProductClass.cs" />
     <Compile Include="Programs\Model\EmulatorResultClass.cs" />
-    <Compile Include="Programs\Model\ProjectProductTypeClass.cs" />
+    <Compile Include="Programs\Model\TableMakerProductTypeClass.cs" />
     <Compile Include="Programs\Model\Service\Header.cs" />
     <Compile Include="Programs\Model\Service\ProgramTypeServiceClass.cs" />
     <Compile Include="Programs\Model\Service\ProjectServiceClass.cs" />

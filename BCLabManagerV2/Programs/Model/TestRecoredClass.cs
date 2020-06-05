@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
@@ -170,6 +171,7 @@ namespace BCLabManager.Model
             get { return _temperature; }
             set { SetProperty(ref _temperature, value); }
         }
+        public ObservableCollection<EmulatorResultClass> EmulatorResults { get; set; } = new ObservableCollection<EmulatorResultClass>();
 
         #region Store the assets in use
         public BatteryClass AssignedBattery { get; set; }

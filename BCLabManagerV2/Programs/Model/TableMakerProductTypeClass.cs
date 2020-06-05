@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class ProjectProductTypeClass : BindableBase
+    public class TableMakerProductTypeClass : BindableBase
     {
 
         public int Id { get; set; }
@@ -30,7 +30,7 @@ namespace BCLabManager.Model
             return this.Name;
         }
 
-        public ProjectProductTypeClass()           //Create用到
+        public TableMakerProductTypeClass()           //Create用到
         {
         }
     }

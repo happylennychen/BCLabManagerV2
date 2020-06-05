@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200604092832_v1")]
-    partial class v1
+    [Migration("20200605064458_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -256,8 +256,8 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int?>("RecipeClassId")
-                        .HasColumnName("recipe_class_id")
+                    b.Property<int?>("ProjectClassId")
+                        .HasColumnName("project_class_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("em_current")
@@ -284,6 +284,10 @@ namespace BCLabManager.Migrations
                         .HasColumnName("is_valid")
                         .HasColumnType("boolean");
 
+                    b.Property<int?>("lib_fgId")
+                        .HasColumnName("lib_fg_id")
+                        .HasColumnType("integer");
+
                     b.Property<string>("log_file_path")
                         .HasColumnName("log_file_path")
                         .HasColumnType("text");
@@ -292,9 +296,17 @@ namespace BCLabManager.Migrations
                         .HasColumnName("package_file_path")
                         .HasColumnType("text");
 
+                    b.Property<int?>("project_settingId")
+                        .HasColumnName("project_setting_id")
+                        .HasColumnType("integer");
+
                     b.Property<string>("rsoc_png_file_path")
                         .HasColumnName("rsoc_png_file_path")
                         .HasColumnType("text");
+
+                    b.Property<int?>("test_recordId")
+                        .HasColumnName("test_record_id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("tte_png_file_path")
                         .HasColumnName("tte_png_file_path")
@@ -303,95 +315,19 @@ namespace BCLabManager.Migrations
                     b.HasKey("Id")
                         .HasName("pk_emulator_results");
 
-                    b.HasIndex("RecipeClassId")
-                        .HasName("ix_emulator_results_recipe_class_id");
+                    b.HasIndex("ProjectClassId")
+                        .HasName("ix_emulator_results_project_class_id");
+
+                    b.HasIndex("lib_fgId")
+                        .HasName("ix_emulator_results_lib_fg_id");
+
+                    b.HasIndex("project_settingId")
+                        .HasName("ix_emulator_results_project_setting_id");
+
+                    b.HasIndex("test_recordId")
+                        .HasName("ix_emulator_results_test_record_id");
 
                     b.ToTable("emulator_results");
-                });
-
-            modelBuilder.Entity("BCLabManager.Model.EmulatorSettingClass", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int?>("ProjectClassId")
-                        .HasColumnName("project_class_id")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("accumulated_capacity_mahr")
-                        .HasColumnName("accumulated_capacity_mahr")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("design_capacity_mahr")
-                        .HasColumnName("design_capacity_mahr")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("discharge_end_voltage_mv")
-                        .HasColumnName("discharge_end_voltage_mv")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("dsg_low_temp_01dc")
-                        .HasColumnName("dsg_low_temp_01dc")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("dsg_low_volt_mv")
-                        .HasColumnName("dsg_low_volt_mv")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("fully_charged_end_current_ma")
-                        .HasColumnName("fully_charged_end_current_ma")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("fully_charged_ending_time_ms")
-                        .HasColumnName("fully_charged_ending_time_ms")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("initial_ratio_fcc")
-                        .HasColumnName("initial_ratio_fcc")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("initial_soc_start_ocv")
-                        .HasColumnName("initial_soc_start_ocv")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("is_valid")
-                        .HasColumnName("is_valid")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("limited_charge_voltage_mv")
-                        .HasColumnName("limited_charge_voltage_mv")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("system_line_impedance")
-                        .HasColumnName("system_line_impedance")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("threshold_1st_facc_mv")
-                        .HasColumnName("threshold_1st_facc_mv")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("threshold_2nd_facc_mv")
-                        .HasColumnName("threshold_2nd_facc_mv")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("threshold_3rd_facc_mv")
-                        .HasColumnName("threshold_3rd_facc_mv")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("threshold_4th_facc_mv")
-                        .HasColumnName("threshold_4th_facc_mv")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id")
-                        .HasName("pk_project_settings");
-
-                    b.HasIndex("ProjectClassId")
-                        .HasName("ix_project_settings_project_class_id");
-
-                    b.ToTable("project_settings");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.LibFGClass", b =>
@@ -579,58 +515,89 @@ namespace BCLabManager.Migrations
                     b.ToTable("projects");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.ProjectProductClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.ProjectSettingClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("FilePath")
-                        .HasColumnName("file_path")
-                        .HasColumnType("text");
 
                     b.Property<int?>("ProjectClassId")
                         .HasColumnName("project_class_id")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("TypeId")
-                        .HasColumnName("type_id")
+                    b.Property<int>("accumulated_capacity_mahr")
+                        .HasColumnName("accumulated_capacity_mahr")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("design_capacity_mahr")
+                        .HasColumnName("design_capacity_mahr")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("discharge_end_voltage_mv")
+                        .HasColumnName("discharge_end_voltage_mv")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("dsg_low_temp_01dc")
+                        .HasColumnName("dsg_low_temp_01dc")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("dsg_low_volt_mv")
+                        .HasColumnName("dsg_low_volt_mv")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("fully_charged_end_current_ma")
+                        .HasColumnName("fully_charged_end_current_ma")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("fully_charged_ending_time_ms")
+                        .HasColumnName("fully_charged_ending_time_ms")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("initial_ratio_fcc")
+                        .HasColumnName("initial_ratio_fcc")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("initial_soc_start_ocv")
+                        .HasColumnName("initial_soc_start_ocv")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("is_valid")
+                        .HasColumnName("is_valid")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("limited_charge_voltage_mv")
+                        .HasColumnName("limited_charge_voltage_mv")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("system_line_impedance")
+                        .HasColumnName("system_line_impedance")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("threshold_1st_facc_mv")
+                        .HasColumnName("threshold_1st_facc_mv")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("threshold_2nd_facc_mv")
+                        .HasColumnName("threshold_2nd_facc_mv")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("threshold_3rd_facc_mv")
+                        .HasColumnName("threshold_3rd_facc_mv")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("threshold_4th_facc_mv")
+                        .HasColumnName("threshold_4th_facc_mv")
                         .HasColumnType("integer");
 
                     b.HasKey("Id")
-                        .HasName("pk_project_products");
+                        .HasName("pk_project_settings");
 
                     b.HasIndex("ProjectClassId")
-                        .HasName("ix_project_products_project_class_id");
+                        .HasName("ix_project_settings_project_class_id");
 
-                    b.HasIndex("TypeId")
-                        .HasName("ix_project_products_type_id");
-
-                    b.ToTable("project_products");
-                });
-
-            modelBuilder.Entity("BCLabManager.Model.ProjectProductTypeClass", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnName("description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnName("name")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id")
-                        .HasName("pk_project_product_types");
-
-                    b.ToTable("project_product_types");
+                    b.ToTable("project_settings");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.RecipeClass", b =>
@@ -712,6 +679,10 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<int?>("ProjectClassId")
+                        .HasColumnName("project_class_id")
+                        .HasColumnType("integer");
+
                     b.Property<string>("emulator_info")
                         .HasColumnName("emulator_info")
                         .HasColumnType("text");
@@ -728,9 +699,17 @@ namespace BCLabManager.Migrations
                         .HasColumnName("is_valid")
                         .HasColumnType("boolean");
 
+                    b.Property<int?>("lib_fgId")
+                        .HasColumnName("lib_fg_id")
+                        .HasColumnType("integer");
+
                     b.Property<string>("package_file_path")
                         .HasColumnName("package_file_path")
                         .HasColumnType("text");
+
+                    b.Property<int?>("project_settingId")
+                        .HasColumnName("project_setting_id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("result_file_path")
                         .HasColumnName("result_file_path")
@@ -738,6 +717,15 @@ namespace BCLabManager.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_release_packages");
+
+                    b.HasIndex("ProjectClassId")
+                        .HasName("ix_release_packages_project_class_id");
+
+                    b.HasIndex("lib_fgId")
+                        .HasName("ix_release_packages_lib_fg_id");
+
+                    b.HasIndex("project_settingId")
+                        .HasName("ix_release_packages_project_setting_id");
 
                     b.ToTable("release_packages");
                 });
@@ -889,6 +877,60 @@ namespace BCLabManager.Migrations
                         .HasName("ix_step_templates_coefficient_id");
 
                     b.ToTable("step_templates");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.TableMakerProductClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("FilePath")
+                        .HasColumnName("file_path")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ProjectClassId")
+                        .HasColumnName("project_class_id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("TypeId")
+                        .HasColumnName("type_id")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id")
+                        .HasName("pk_table_maker_products");
+
+                    b.HasIndex("ProjectClassId")
+                        .HasName("ix_table_maker_products_project_class_id");
+
+                    b.HasIndex("TypeId")
+                        .HasName("ix_table_maker_products_type_id");
+
+                    b.ToTable("table_maker_products");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.TableMakerProductTypeClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnName("description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnName("name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id")
+                        .HasName("pk_table_maker_product_types");
+
+                    b.ToTable("table_maker_product_types");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>
@@ -1075,18 +1117,25 @@ namespace BCLabManager.Migrations
 
             modelBuilder.Entity("BCLabManager.Model.EmulatorResultClass", b =>
                 {
-                    b.HasOne("BCLabManager.Model.RecipeClass", null)
-                        .WithMany("EmulatorResults")
-                        .HasForeignKey("RecipeClassId")
-                        .HasConstraintName("fk_emulator_results_recipes_recipe_class_id");
-                });
-
-            modelBuilder.Entity("BCLabManager.Model.EmulatorSettingClass", b =>
-                {
                     b.HasOne("BCLabManager.Model.ProjectClass", null)
-                        .WithMany("EmulatorSettings")
+                        .WithMany("EmulatorResults")
                         .HasForeignKey("ProjectClassId")
-                        .HasConstraintName("fk_project_settings_projects_project_class_id");
+                        .HasConstraintName("fk_emulator_results_projects_project_class_id");
+
+                    b.HasOne("BCLabManager.Model.LibFGClass", "lib_fg")
+                        .WithMany()
+                        .HasForeignKey("lib_fgId")
+                        .HasConstraintName("fk_emulator_results_lib_fgs_lib_fg_id");
+
+                    b.HasOne("BCLabManager.Model.ProjectSettingClass", "project_setting")
+                        .WithMany()
+                        .HasForeignKey("project_settingId")
+                        .HasConstraintName("fk_emulator_results_project_settings_project_setting_id");
+
+                    b.HasOne("BCLabManager.Model.TestRecordClass", "test_record")
+                        .WithMany("EmulatorResults")
+                        .HasForeignKey("test_recordId")
+                        .HasConstraintName("fk_emulator_results_test_records_test_record_id");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
@@ -1110,17 +1159,12 @@ namespace BCLabManager.Migrations
                         .HasConstraintName("fk_projects_battery_types_battery_type_id");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.ProjectProductClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.ProjectSettingClass", b =>
                 {
                     b.HasOne("BCLabManager.Model.ProjectClass", null)
-                        .WithMany("ProjectProducts")
+                        .WithMany("ProjectSettings")
                         .HasForeignKey("ProjectClassId")
-                        .HasConstraintName("fk_project_products_projects_project_class_id");
-
-                    b.HasOne("BCLabManager.Model.ProjectProductTypeClass", "Type")
-                        .WithMany()
-                        .HasForeignKey("TypeId")
-                        .HasConstraintName("fk_project_products_project_product_types_type_id");
+                        .HasConstraintName("fk_project_settings_projects_project_class_id");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.RecipeClass", b =>
@@ -1129,6 +1173,24 @@ namespace BCLabManager.Migrations
                         .WithMany("Recipes")
                         .HasForeignKey("ProgramClassId")
                         .HasConstraintName("fk_recipes_programs_program_class_id");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.ReleasePackageClass", b =>
+                {
+                    b.HasOne("BCLabManager.Model.ProjectClass", null)
+                        .WithMany("ReleasePackages")
+                        .HasForeignKey("ProjectClassId")
+                        .HasConstraintName("fk_release_packages_projects_project_class_id");
+
+                    b.HasOne("BCLabManager.Model.LibFGClass", "lib_fg")
+                        .WithMany()
+                        .HasForeignKey("lib_fgId")
+                        .HasConstraintName("fk_release_packages_lib_fgs_lib_fg_id");
+
+                    b.HasOne("BCLabManager.Model.ProjectSettingClass", "project_setting")
+                        .WithMany()
+                        .HasForeignKey("project_settingId")
+                        .HasConstraintName("fk_release_packages_project_settings_project_setting_id");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.StepClass", b =>
@@ -1163,6 +1225,19 @@ namespace BCLabManager.Migrations
                         .WithMany()
                         .HasForeignKey("CoefficientId")
                         .HasConstraintName("fk_step_templates_coefficients_coefficient_id");
+                });
+
+            modelBuilder.Entity("BCLabManager.Model.TableMakerProductClass", b =>
+                {
+                    b.HasOne("BCLabManager.Model.ProjectClass", null)
+                        .WithMany("TableMakerProducts")
+                        .HasForeignKey("ProjectClassId")
+                        .HasConstraintName("fk_table_maker_products_projects_project_class_id");
+
+                    b.HasOne("BCLabManager.Model.TableMakerProductTypeClass", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId")
+                        .HasConstraintName("fk_table_maker_products_table_maker_product_types_type_id");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>

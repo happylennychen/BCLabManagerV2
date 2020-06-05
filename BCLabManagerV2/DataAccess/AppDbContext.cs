@@ -25,10 +25,10 @@ namespace BCLabManager.DataAccess
         public DbSet<ProgramClass> Programs { get; set; }
         public DbSet<ProgramTypeClass> ProgramTypes { get; set; }
         public DbSet<ProjectClass> Projects { get; set; }
-        public DbSet<ProjectProductClass> ProjectProducts { get; set; }
-        public DbSet<ProjectProductTypeClass> ProjectProductTypes { get; set; }
+        public DbSet<TableMakerProductClass> TableMakerProducts { get; set; }
+        public DbSet<TableMakerProductTypeClass> TableMakerProductTypes { get; set; }
         public DbSet<CoefficientClass> Coefficients { get; set; }
-        public DbSet<EmulatorSettingClass> ProjectSettings { get; set; }
+        public DbSet<ProjectSettingClass> ProjectSettings { get; set; }
         public DbSet<EmulatorResultClass> EmulatorResults { get; set; }
         public DbSet<LibFGClass> lib_fgs { get; set; }
         public DbSet<ReleasePackageClass> ReleasePackages { get; set; }

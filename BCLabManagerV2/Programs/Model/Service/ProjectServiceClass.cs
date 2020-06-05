@@ -84,9 +84,9 @@ namespace BCLabManager.Model
             edittarget.Customer = item.Customer;
             edittarget.CutoffDischargeVoltage = item.CutoffDischargeVoltage;
             edittarget.Description = item.Description;
-            edittarget.EmulatorSettings = item.EmulatorSettings;
+            edittarget.ProjectSettings = item.ProjectSettings;
             edittarget.LimitedChargeVoltage = item.LimitedChargeVoltage;
-            edittarget.ProjectProducts = item.ProjectProducts;
+            edittarget.TableMakerProducts = item.TableMakerProducts;
             edittarget.AbsoluteMaxCapacity = item.AbsoluteMaxCapacity;
             edittarget.VoltagePoints = item.VoltagePoints;
         }

@@ -10,7 +10,7 @@ using Prism.Mvvm;
 
 namespace BCLabManager.Model
 {
-    public class EmulatorSettingClass : BindableBase
+    public class ProjectSettingClass : BindableBase
     {
 
         public int Id { get; set; }

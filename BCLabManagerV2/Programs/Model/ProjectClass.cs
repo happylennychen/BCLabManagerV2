@@ -66,9 +66,10 @@ namespace BCLabManager.Model
             get { return _voltagePoints; }
             set { SetProperty(ref _voltagePoints, value); }
         }
-        public ObservableCollection<ProjectProductClass> ProjectProducts { get; set; } = new ObservableCollection<ProjectProductClass>();
-
-        public ObservableCollection<EmulatorSettingClass> EmulatorSettings { get; set; } = new ObservableCollection<EmulatorSettingClass>();
+        public ObservableCollection<TableMakerProductClass> TableMakerProducts { get; set; } = new ObservableCollection<TableMakerProductClass>();
+        public ObservableCollection<ProjectSettingClass> ProjectSettings { get; set; } = new ObservableCollection<ProjectSettingClass>();
+        public ObservableCollection<EmulatorResultClass> EmulatorResults { get; set; } = new ObservableCollection<EmulatorResultClass>();
+        public ObservableCollection<ReleasePackageClass> ReleasePackages { get; set; } = new ObservableCollection<ReleasePackageClass>();
 
         public ProjectClass()           //Create用到
         {

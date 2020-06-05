@@ -15,6 +15,20 @@ namespace BCLabManager.Model
 
         public int Id { get; set; }
 
+        private ProjectSettingClass _project_setting;
+        public ProjectSettingClass project_setting
+        {
+            get { return _project_setting; }
+            set { SetProperty(ref _project_setting, value); }
+        }
+
+        private LibFGClass _lib_fg;
+        public LibFGClass lib_fg
+        {
+            get { return _lib_fg; }
+            set { SetProperty(ref _lib_fg, value); }
+        }
+
         private string _error_rsoc;
         public string error_rsoc
         {

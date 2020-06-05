@@ -15,6 +15,27 @@ namespace BCLabManager.Model
 
         public int Id { get; set; }
 
+        private TestRecordClass _test_record;
+        public TestRecordClass test_record
+        {
+            get { return _test_record; }
+            set { SetProperty(ref _test_record, value); }
+        }
+
+        private ProjectSettingClass _project_setting;
+        public ProjectSettingClass project_setting
+        {
+            get { return _project_setting; }
+            set { SetProperty(ref _project_setting, value); }
+        }
+
+        private LibFGClass _lib_fg;
+        public LibFGClass lib_fg
+        {
+            get { return _lib_fg; }
+            set { SetProperty(ref _lib_fg, value); }
+        }
+
         private string _em_temperature;
         public string em_temperature
         {

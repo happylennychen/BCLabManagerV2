@@ -63,6 +63,24 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "lib_fgs",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    libfg_model_code = table.Column<int>(nullable: false),
+                    libfg_version = table.Column<int>(nullable: false),
+                    libfg_sample_file_path = table.Column<string>(nullable: true),
+                    libfg_dev_pack_file_path = table.Column<string>(nullable: true),
+                    libfg_dll_path = table.Column<string>(nullable: true),
+                    is_valid = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_lib_fgs", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "program_types",
                 columns: table => new
                 {
@@ -77,20 +95,6 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "project_product_types",
-                columns: table => new
-                {
-                    id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(nullable: true),
-                    description = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_project_product_types", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "recipe_templates",
                 columns: table => new
                 {
@@ -101,6 +105,20 @@ namespace BCLabManager.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_recipe_templates", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "table_maker_product_types",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(nullable: true),
+                    description = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_table_maker_product_types", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -210,41 +228,6 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "emulator_settings",
-                columns: table => new
-                {
-                    id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    design_capacity_mahr = table.Column<int>(nullable: false),
-                    limited_charge_voltage_mv = table.Column<int>(nullable: false),
-                    fully_charged_end_current_ma = table.Column<int>(nullable: false),
-                    fully_charged_ending_time_ms = table.Column<int>(nullable: false),
-                    discharge_end_voltage_mv = table.Column<int>(nullable: false),
-                    threshold_1st_facc_mv = table.Column<int>(nullable: false),
-                    threshold_2nd_facc_mv = table.Column<int>(nullable: false),
-                    threshold_3rd_facc_mv = table.Column<int>(nullable: false),
-                    threshold_4th_facc_mv = table.Column<int>(nullable: false),
-                    initial_ratio_fcc = table.Column<int>(nullable: false),
-                    accumulated_capacity_mahr = table.Column<int>(nullable: false),
-                    dsg_low_volt_mv = table.Column<int>(nullable: false),
-                    dsg_low_temp_01dc = table.Column<int>(nullable: false),
-                    initial_soc_start_ocv = table.Column<int>(nullable: false),
-                    system_line_impedance = table.Column<int>(nullable: false),
-                    is_valid = table.Column<bool>(nullable: false),
-                    project_class_id = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_emulator_settings", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_emulator_settings_projects_project_class_id",
-                        column: x => x.project_class_id,
-                        principalTable: "projects",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "programs",
                 columns: table => new
                 {
@@ -283,7 +266,42 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "project_products",
+                name: "project_settings",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    design_capacity_mahr = table.Column<int>(nullable: false),
+                    limited_charge_voltage_mv = table.Column<int>(nullable: false),
+                    fully_charged_end_current_ma = table.Column<int>(nullable: false),
+                    fully_charged_ending_time_ms = table.Column<int>(nullable: false),
+                    discharge_end_voltage_mv = table.Column<int>(nullable: false),
+                    threshold_1st_facc_mv = table.Column<int>(nullable: false),
+                    threshold_2nd_facc_mv = table.Column<int>(nullable: false),
+                    threshold_3rd_facc_mv = table.Column<int>(nullable: false),
+                    threshold_4th_facc_mv = table.Column<int>(nullable: false),
+                    initial_ratio_fcc = table.Column<int>(nullable: false),
+                    accumulated_capacity_mahr = table.Column<int>(nullable: false),
+                    dsg_low_volt_mv = table.Column<int>(nullable: false),
+                    dsg_low_temp_01dc = table.Column<int>(nullable: false),
+                    initial_soc_start_ocv = table.Column<int>(nullable: false),
+                    system_line_impedance = table.Column<int>(nullable: false),
+                    is_valid = table.Column<bool>(nullable: false),
+                    project_class_id = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_project_settings", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_project_settings_projects_project_class_id",
+                        column: x => x.project_class_id,
+                        principalTable: "projects",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "table_maker_products",
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
@@ -294,17 +312,17 @@ namespace BCLabManager.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_project_products", x => x.id);
+                    table.PrimaryKey("pk_table_maker_products", x => x.id);
                     table.ForeignKey(
-                        name: "fk_project_products_projects_project_class_id",
+                        name: "fk_table_maker_products_projects_project_class_id",
                         column: x => x.project_class_id,
                         principalTable: "projects",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "fk_project_products_project_product_types_type_id",
+                        name: "fk_table_maker_products_table_maker_product_types_type_id",
                         column: x => x.type_id,
-                        principalTable: "project_product_types",
+                        principalTable: "table_maker_product_types",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -406,21 +424,40 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "emulator_results",
+                name: "release_packages",
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(nullable: true),
-                    recipe_class_id = table.Column<int>(nullable: true)
+                    project_setting_id = table.Column<int>(nullable: true),
+                    lib_fg_id = table.Column<int>(nullable: true),
+                    error_rsoc = table.Column<string>(nullable: true),
+                    error_tte = table.Column<string>(nullable: true),
+                    result_file_path = table.Column<string>(nullable: true),
+                    package_file_path = table.Column<string>(nullable: true),
+                    emulator_info = table.Column<string>(nullable: true),
+                    is_valid = table.Column<bool>(nullable: false),
+                    project_class_id = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_emulator_results", x => x.id);
+                    table.PrimaryKey("pk_release_packages", x => x.id);
                     table.ForeignKey(
-                        name: "fk_emulator_results_recipes_recipe_class_id",
-                        column: x => x.recipe_class_id,
-                        principalTable: "recipes",
+                        name: "fk_release_packages_projects_project_class_id",
+                        column: x => x.project_class_id,
+                        principalTable: "projects",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "fk_release_packages_lib_fgs_lib_fg_id",
+                        column: x => x.lib_fg_id,
+                        principalTable: "lib_fgs",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "fk_release_packages_project_settings_project_setting_id",
+                        column: x => x.project_setting_id,
+                        principalTable: "project_settings",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -520,6 +557,56 @@ namespace BCLabManager.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "emulator_results",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    test_record_id = table.Column<int>(nullable: true),
+                    project_setting_id = table.Column<int>(nullable: true),
+                    lib_fg_id = table.Column<int>(nullable: true),
+                    em_temperature = table.Column<string>(nullable: true),
+                    em_current = table.Column<string>(nullable: true),
+                    error_rsoc = table.Column<string>(nullable: true),
+                    error_tte = table.Column<string>(nullable: true),
+                    log_file_path = table.Column<string>(nullable: true),
+                    package_file_path = table.Column<string>(nullable: true),
+                    rsoc_png_file_path = table.Column<string>(nullable: true),
+                    tte_png_file_path = table.Column<string>(nullable: true),
+                    emulator_info = table.Column<string>(nullable: true),
+                    is_valid = table.Column<bool>(nullable: false),
+                    project_class_id = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_emulator_results", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_emulator_results_projects_project_class_id",
+                        column: x => x.project_class_id,
+                        principalTable: "projects",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "fk_emulator_results_lib_fgs_lib_fg_id",
+                        column: x => x.lib_fg_id,
+                        principalTable: "lib_fgs",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "fk_emulator_results_project_settings_project_setting_id",
+                        column: x => x.project_setting_id,
+                        principalTable: "project_settings",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "fk_emulator_results_test_records_test_record_id",
+                        column: x => x.test_record_id,
+                        principalTable: "test_records",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "ix_asset_usage_records_battery_class_id",
                 table: "asset_usage_records",
@@ -546,14 +633,24 @@ namespace BCLabManager.Migrations
                 column: "tester_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_emulator_results_recipe_class_id",
+                name: "ix_emulator_results_project_class_id",
                 table: "emulator_results",
-                column: "recipe_class_id");
+                column: "project_class_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_emulator_settings_project_class_id",
-                table: "emulator_settings",
-                column: "project_class_id");
+                name: "ix_emulator_results_lib_fg_id",
+                table: "emulator_results",
+                column: "lib_fg_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_emulator_results_project_setting_id",
+                table: "emulator_results",
+                column: "project_setting_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_emulator_results_test_record_id",
+                table: "emulator_results",
+                column: "test_record_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_programs_project_id",
@@ -566,14 +663,9 @@ namespace BCLabManager.Migrations
                 column: "type_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_project_products_project_class_id",
-                table: "project_products",
+                name: "ix_project_settings_project_class_id",
+                table: "project_settings",
                 column: "project_class_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_project_products_type_id",
-                table: "project_products",
-                column: "type_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_projects_battery_type_id",
@@ -584,6 +676,21 @@ namespace BCLabManager.Migrations
                 name: "ix_recipes_program_class_id",
                 table: "recipes",
                 column: "program_class_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_release_packages_project_class_id",
+                table: "release_packages",
+                column: "project_class_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_release_packages_lib_fg_id",
+                table: "release_packages",
+                column: "lib_fg_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_release_packages_project_setting_id",
+                table: "release_packages",
+                column: "project_setting_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_step_runtimes_recipe_class_id",
@@ -609,6 +716,16 @@ namespace BCLabManager.Migrations
                 name: "ix_steps_step_template_id",
                 table: "steps",
                 column: "step_template_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_table_maker_products_project_class_id",
+                table: "table_maker_products",
+                column: "project_class_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_table_maker_products_type_id",
+                table: "table_maker_products",
+                column: "type_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_test_records_assigned_battery_id",
@@ -640,10 +757,7 @@ namespace BCLabManager.Migrations
                 name: "emulator_results");
 
             migrationBuilder.DropTable(
-                name: "emulator_settings");
-
-            migrationBuilder.DropTable(
-                name: "project_products");
+                name: "release_packages");
 
             migrationBuilder.DropTable(
                 name: "step_runtimes");
@@ -652,16 +766,25 @@ namespace BCLabManager.Migrations
                 name: "steps");
 
             migrationBuilder.DropTable(
+                name: "table_maker_products");
+
+            migrationBuilder.DropTable(
                 name: "test_records");
 
             migrationBuilder.DropTable(
-                name: "project_product_types");
+                name: "lib_fgs");
+
+            migrationBuilder.DropTable(
+                name: "project_settings");
 
             migrationBuilder.DropTable(
                 name: "recipe_templates");
 
             migrationBuilder.DropTable(
                 name: "step_templates");
+
+            migrationBuilder.DropTable(
+                name: "table_maker_product_types");
 
             migrationBuilder.DropTable(
                 name: "batteries");
