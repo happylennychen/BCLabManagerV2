@@ -277,7 +277,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Assets\Model\AssetUsageRecordClass.cs" />
+    <Compile Include="Assets\Model\AssetUsageRecord.cs" />
     <Compile Include="Assets\Model\IAsset.cs" />
     <Compile Include="Assets\Model\ITester.cs" />
     <Compile Include="Assets\Model\Service\ChamberServiceClass.cs" />
@@ -332,22 +332,22 @@
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
-    <Compile Include="Migrations\20200609021252_Init.cs" />
-    <Compile Include="Migrations\20200609021252_Init.designer.cs">
-      <DependentUpon>20200609021252_Init.cs</DependentUpon>
+    <Compile Include="Migrations\20200609031253_Init.cs" />
+    <Compile Include="Migrations\20200609031253_Init.designer.cs">
+      <DependentUpon>20200609031253_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
       <DependentUpon>AllProductsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Programs\Model\LibFGClass.cs" />
-    <Compile Include="Programs\Model\ReleasePackageClass.cs" />
-    <Compile Include="Programs\Model\ProjectSettingClass.cs" />
-    <Compile Include="Programs\Model\ProgramTypeClass.cs" />
-    <Compile Include="Programs\Model\ProjectClass.cs" />
-    <Compile Include="Programs\Model\TableMakerProductClass.cs" />
-    <Compile Include="Programs\Model\EmulatorResultClass.cs" />
-    <Compile Include="Programs\Model\TableMakerProductTypeClass.cs" />
+    <Compile Include="Programs\Model\LibFG.cs" />
+    <Compile Include="Programs\Model\ReleasePackage.cs" />
+    <Compile Include="Programs\Model\ProjectSetting.cs" />
+    <Compile Include="Programs\Model\ProgramType.cs" />
+    <Compile Include="Programs\Model\Project.cs" />
+    <Compile Include="Programs\Model\TableMakerProduct.cs" />
+    <Compile Include="Programs\Model\EmulatorResult.cs" />
+    <Compile Include="Programs\Model\TableMakerProductType.cs" />
     <Compile Include="Programs\Model\Service\Header.cs" />
     <Compile Include="Programs\Model\Service\ProgramTypeServiceClass.cs" />
     <Compile Include="Programs\Model\Service\ProjectServiceClass.cs" />
@@ -358,10 +358,10 @@
     <Compile Include="Programs\Model\Service\StepRuntimeServiceClass.cs" />
     <Compile Include="Programs\Model\Service\TestRecordServiceClass.cs" />
     <Compile Include="Programs\Model\Service\RecipeServiceClass.cs" />
-    <Compile Include="Programs\Model\StepRuntimeClass.cs" />
-    <Compile Include="Programs\Model\CoefficientClass.cs" />
+    <Compile Include="Programs\Model\StepRuntime.cs" />
+    <Compile Include="Programs\Model\Coefficient.cs" />
     <Compile Include="Programs\Model\StepTemplate.cs" />
-    <Compile Include="Programs\Model\StepClass.cs" />
+    <Compile Include="Programs\Model\Step.cs" />
     <Compile Include="Programs\ViewModel\AllStepTemplatesViewModel.cs" />
     <Compile Include="Programs\ViewModel\RCProgramEditViewModel.cs" />
     <Compile Include="Programs\ViewModel\StepViewModel.cs" />
@@ -398,14 +398,14 @@
     <Compile Include="Services\DatabasePopulator.cs" />
     <Compile Include="Services\ExcelHelper.cs" />
     <Compile Include="Services\GlobalSettings.cs" />
-    <Compile Include="Assets\Model\BatteryClass.cs" />
-    <Compile Include="Assets\Model\BatteryTypeClass.cs" />
-    <Compile Include="Assets\Model\ChamberClass.cs" />
-    <Compile Include="Assets\Model\ChannelClass.cs" />
-    <Compile Include="Assets\Model\TesterClass.cs" />
-    <Compile Include="Programs\Model\ProgramClass.cs" />
+    <Compile Include="Assets\Model\Battery.cs" />
+    <Compile Include="Assets\Model\BatteryType.cs" />
+    <Compile Include="Assets\Model\Chamber.cs" />
+    <Compile Include="Assets\Model\Channel.cs" />
+    <Compile Include="Assets\Model\Tester.cs" />
+    <Compile Include="Programs\Model\Program.cs" />
     <Compile Include="Programs\Model\RecipeTemplate.cs" />
-    <Compile Include="Programs\Model\RecipeClass.cs" />
+    <Compile Include="Programs\Model\Recipe.cs" />
     <Compile Include="DashBoard\ViewModel\DashBoardViewModel.cs" />
     <Compile Include="Assets\ViewModel\AllChannelsViewModel.cs">
       <SubType>Code</SubType>
@@ -519,8 +519,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Assets\Model\AssetClass.cs" />
-    <Compile Include="Programs\Model\TestRecoredClass.cs" />
+    <Compile Include="Assets\Model\Asset.cs" />
+    <Compile Include="Programs\Model\TestRecored.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

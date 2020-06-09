@@ -13,23 +13,23 @@ namespace BCLabManager.Model
 {
     public class ProgramServiceClass
     {
-        public ObservableCollection<ProgramClass> Items { get; set; }
+        public ObservableCollection<Program> Items { get; set; }
 
         public RecipeServiceClass RecipeService { get; set; } = new RecipeServiceClass();
-        public void SuperAdd(ProgramClass item)
+        public void SuperAdd(Program item)
         {
             DomainAdd(item);
             DatabaseAdd(item);
             UpdateEstimatedTimeChain();
         }
-        public void RCSuperAdd(ProgramClass item, double chargeRate, double idleTime, List<double> currents, List<double> temperatures, RecipeTemplateServiceClass recipeTemplateService, StepTemplateServiceClass stepTemplateService)
+        public void RCSuperAdd(Program item, double chargeRate, double idleTime, List<double> currents, List<double> temperatures, RecipeTemplateServiceClass recipeTemplateService, StepTemplateServiceClass stepTemplateService)
         {
             var rectemplist = GetRCRecipeTemplatesByCurrents(chargeRate, idleTime, currents, recipeTemplateService, stepTemplateService);
             foreach (var temp in temperatures)
             {
                 foreach (var rectemp in rectemplist)
                 {
-                    var recRuntime = new RecipeClass(rectemp, item.Project.BatteryType);
+                    var recRuntime = new Recipe(rectemp, item.Project.BatteryType);
                     recRuntime.Temperature = temp;
                     item.Recipes.Add(recRuntime);
                 }
@@ -64,7 +64,7 @@ namespace BCLabManager.Model
                 //}
                 foreach (var rec in recTemplates)
                 {
-                    rec.Steps = new ObservableCollection<StepClass>(rec.Steps.OrderBy(o => o.Order));
+                    rec.Steps = new ObservableCollection<Step>(rec.Steps.OrderBy(o => o.Order));
                 }
                 var rectemp = recTemplates.SingleOrDefault(o => o.Steps.Count == 3 &&
                o.Steps[0].StepTemplate.CurrentInput == chargeCurrent &&
@@ -130,13 +130,13 @@ namespace BCLabManager.Model
 
                 RecipeTemplate output;
                 output = new RecipeTemplate() { Name = $"{curr / -1000}A" };
-                var step = new StepClass(chargesteptemp);
+                var step = new Step(chargesteptemp);
                 output.Steps.Add(step);
 
-                step = new StepClass(idlesteptemp);
+                step = new Step(idlesteptemp);
                 output.Steps.Add(step);
 
-                step = new StepClass(dsgsteptemp);
+                step = new Step(dsgsteptemp);
                 output.Steps.Add(step);
 
                 recipeTemplateService.SuperAdd(output);
@@ -216,7 +216,7 @@ namespace BCLabManager.Model
             return output;
         }
 
-        public void DatabaseAdd(ProgramClass item)  //不应该自建ID，应该给出order
+        public void DatabaseAdd(Program item)  //不应该自建ID，应该给出order
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -243,7 +243,7 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void DomainAdd(ProgramClass item)
+        public void DomainAdd(Program item)
         {
             Items.Add(item);
             foreach (var recipe in item.Recipes)
@@ -266,12 +266,12 @@ namespace BCLabManager.Model
         //var item = Items.SingleOrDefault(o => o.Id == id);
         //Items.Remove(item);
         //}
-        public void SuperUpdate(ProgramClass item)
+        public void SuperUpdate(Program item)
         {
             DatabaseUpdate(item);
             DomainUpdate(item);
         }
-        public void DatabaseUpdate(ProgramClass item)
+        public void DatabaseUpdate(Program item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -279,7 +279,7 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void DomainUpdate(ProgramClass item)
+        public void DomainUpdate(Program item)
         {
             //var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             //edittarget.BatteryType = item.BatteryType;
@@ -299,9 +299,9 @@ namespace BCLabManager.Model
 
         }
         //找到最后一个有实际时间的step runtime，如果都没有，那就返回第一个
-        private StepRuntimeClass FindStartPoint(out DateTime startTime)
+        private StepRuntime FindStartPoint(out DateTime startTime)
         {
-            StepRuntimeClass startPoint = null;
+            StepRuntime startPoint = null;
             startTime = Items[0].RequestTime;
             foreach (var item in Items)
             {
@@ -333,7 +333,7 @@ namespace BCLabManager.Model
         }
 
 
-        public void UpdateEstimatedTimeChain(StepRuntimeClass startPoint, DateTime startTime)
+        public void UpdateEstimatedTimeChain(StepRuntime startPoint, DateTime startTime)
         {
             ////var time = startTime;
             //var time = Items[0].RequestTime;
@@ -354,7 +354,7 @@ namespace BCLabManager.Model
             //    }
             //}
         }
-        public void UpdateEstimatedTime(ProgramClass item, StepRuntimeClass startPoint, ref DateTime time, ref double c, ref bool isActive)
+        public void UpdateEstimatedTime(Program item, StepRuntime startPoint, ref DateTime time, ref double c, ref bool isActive)
         {
             if (item.StartTime == DateTime.MinValue)
             {
@@ -379,7 +379,7 @@ namespace BCLabManager.Model
             }
         }
 
-        internal void StepStart(ProgramClass program, RecipeClass recipe, StepRuntimeClass stepRuntime, DateTime startTime)
+        internal void StepStart(Program program, Recipe recipe, StepRuntime stepRuntime, DateTime startTime)
         {
             if (program.StartTime == DateTime.MinValue)
                 program.StartTime = startTime;
@@ -392,7 +392,7 @@ namespace BCLabManager.Model
             UpdateEstimatedTimeChain();
         }
 
-        internal void StepEnd(ProgramClass program, RecipeClass recipe, StepRuntimeClass stepRuntime, DateTime endTime)
+        internal void StepEnd(Program program, Recipe recipe, StepRuntime stepRuntime, DateTime endTime)
         {
             stepRuntime.EndTime = endTime;
 
@@ -407,7 +407,7 @@ namespace BCLabManager.Model
             UpdateEstimatedTimeChain();
         }
 
-        internal void Invalidate(ProgramClass program)
+        internal void Invalidate(Program program)
         {
             program.IsInvalid = true;
             foreach (var rec in program.Recipes)

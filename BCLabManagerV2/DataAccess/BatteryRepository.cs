@@ -7,7 +7,7 @@ using BCLabManager.Model;
 
 namespace BCLabManager.DataAccess
 {
-    public class BatteryRepository : Repository<BatteryClass>, IBatteryRepository
+    public class BatteryRepository : Repository<Battery>, IBatteryRepository
     {
         public BatteryRepository(AppDbContext context)
             : base(context)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class CoefficientClass : BindableBase    //不需要跳转比较符
+    public class Coefficient : BindableBase    //不需要跳转比较符
     {
         public int Id { get; set; }
         private double _temperatureDeg;
@@ -28,7 +28,7 @@ namespace BCLabManager.Model
             get { return _offset; }
             set { SetProperty(ref _offset, value); }
         }
-        public CoefficientClass()
+        public Coefficient()
         {
         }
     }

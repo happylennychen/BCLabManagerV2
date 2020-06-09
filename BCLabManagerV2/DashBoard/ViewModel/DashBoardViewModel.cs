@@ -17,7 +17,7 @@ namespace BCLabManager.ViewModel
         #region Fields
 
         //ObservableCollection<BatteryClass> _batteryService.Items;
-        //ObservableCollection<ChannelClass> _channelService.Items;
+        //ObservableCollection<Channel> _channelService.Items;
         //ObservableCollection<ChamberClass> _chamberService.Items;
         //ObservableCollection<ProgramClass> _programService.Items;
         private BatteryServiceClass _batteryService;
@@ -32,7 +32,7 @@ namespace BCLabManager.ViewModel
             (
             //ObservableCollection<ProgramClass> programs,
             //ObservableCollection<BatteryClass> batteries,
-            //ObservableCollection<ChannelClass> channels,
+            //ObservableCollection<Channel> channels,
             //ObservableCollection<ChamberClass> chambers        
             BatteryServiceClass batteryService,
          ChannelServiceClass channelService,
@@ -442,7 +442,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        private bool IsProgramCompleted(ProgramClass pro)
+        private bool IsProgramCompleted(Program pro)
         {
             foreach (var sub in pro.Recipes)
             {
@@ -468,7 +468,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        private bool IsRecipeCompleted(RecipeClass sub)
+        private bool IsRecipeCompleted(Recipe sub)
         {
             foreach (var tr in sub.TestRecords)
                 if (IsTestCompleted(tr) == false)
@@ -493,7 +493,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        private bool IsTestCompleted(TestRecordClass tr)
+        private bool IsTestCompleted(TestRecord tr)
         {
             return tr.Status == TestStatus.Completed;
         }

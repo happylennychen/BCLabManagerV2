@@ -19,13 +19,13 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        readonly ChannelClass _channel;
+        readonly Channel _channel;
 
         #endregion // Fields
 
         #region Constructor
 
-        public ChannelViewModel(ChannelClass channel)
+        public ChannelViewModel(Channel channel)
         {
             _channel = channel;
             _channel.PropertyChanged += _channel_PropertyChanged;
@@ -54,7 +54,7 @@ namespace BCLabManager.ViewModel
         {
             get { return _channel.AssetUseCount; }
         }
-        public TesterClass Tester
+        public Tester Tester
         {
             get { return _channel.Tester; }
         }

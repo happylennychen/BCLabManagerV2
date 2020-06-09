@@ -10,7 +10,7 @@ namespace BCLabManager.Model
 {
     public class RecipeServiceClass
     {
-        public ObservableCollection<RecipeClass> Items { get; set; }
+        public ObservableCollection<Recipe> Items { get; set; }
         public TestRecordServiceClass TestRecordService { get; set; } = new TestRecordServiceClass();
         public StepRuntimeServiceClass StepRuntimeService { get; set; } = new StepRuntimeServiceClass();
         //public void Add(RecipeClass item)
@@ -34,12 +34,12 @@ namespace BCLabManager.Model
         //var item = Items.SingleOrDefault(o => o.Id == id);
         //Items.Remove(item);
         //}
-        public void SuperUpdate(RecipeClass item)
+        public void SuperUpdate(Recipe item)
         {
             DatabaseUpdate(item);
             DomainUpdate(item);
         }
-        public void DatabaseUpdate(RecipeClass item)
+        public void DatabaseUpdate(Recipe item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -47,7 +47,7 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void DomainUpdate(RecipeClass item)
+        public void DomainUpdate(Recipe item)
         {
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             edittarget.EndTime = item.EndTime;
@@ -57,16 +57,16 @@ namespace BCLabManager.Model
             edittarget.Name = item.Name;
         }
 
-        internal void Invalidate(RecipeClass recipe, TestRecordClass testRecord, string comment)
+        internal void Invalidate(Recipe recipe, TestRecord testRecord, string comment)
         {
             TestRecordService.Invalidate(testRecord, comment);
 
-            var newTestRecord = new TestRecordClass();
+            var newTestRecord = new TestRecord();
             recipe.TestRecords.Add(newTestRecord);
             SuperUpdate(recipe);
         }
 
-        internal void Abandon(RecipeClass recipe)
+        internal void Abandon(Recipe recipe)
         {
             recipe.IsAbandoned = true;
             foreach (var testRecord in recipe.TestRecords)
@@ -75,7 +75,7 @@ namespace BCLabManager.Model
             }
         }
 
-        internal void UpdateEstimatedTime(RecipeClass item, StepRuntimeClass startPoint, ref DateTime time, ref double c, ref bool isActive)
+        internal void UpdateEstimatedTime(Recipe item, StepRuntime startPoint, ref DateTime time, ref double c, ref bool isActive)
         {
             if (item.StartTime == DateTime.MinValue)
             {

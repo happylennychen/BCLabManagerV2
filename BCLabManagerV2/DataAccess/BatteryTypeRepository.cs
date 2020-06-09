@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.DataAccess
 {
-    public class BatteryTypeRepository:Repository<BatteryTypeClass>, IBatteryTypeRepository
+    public class BatteryTypeRepository:Repository<BatteryType>, IBatteryTypeRepository
     {
         public BatteryTypeRepository(AppDbContext context)
             :base(context)

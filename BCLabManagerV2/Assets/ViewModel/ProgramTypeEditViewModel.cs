@@ -19,7 +19,7 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        readonly ProgramTypeClass _programType;
+        readonly ProgramType _programType;
         RelayCommand _okCommand;
         bool _isOK;
 
@@ -27,7 +27,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public ProgramTypeEditViewModel(ProgramTypeClass programType)
+        public ProgramTypeEditViewModel(ProgramType programType)
         {
             if (programType == null)
                 throw new ArgumentNullException("project");

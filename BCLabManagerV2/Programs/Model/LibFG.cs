@@ -10,7 +10,7 @@ using Prism.Mvvm;
 
 namespace BCLabManager.Model
 {
-    public class LibFGClass : BindableBase
+    public class LibFG : BindableBase
     {
 
         public int Id { get; set; }

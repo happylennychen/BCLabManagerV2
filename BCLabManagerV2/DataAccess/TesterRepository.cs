@@ -7,7 +7,7 @@ using BCLabManager.Model;
 
 namespace BCLabManager.DataAccess
 {
-    public class TesterRepository : Repository<TesterClass>, ITesterRepository
+    public class TesterRepository : Repository<Tester>, ITesterRepository
     {
         public TesterRepository(AppDbContext context)
             : base(context)

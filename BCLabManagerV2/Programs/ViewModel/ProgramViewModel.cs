@@ -21,13 +21,13 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        public ProgramClass _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
+        public Program _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
 
         #endregion // Fields
 
         #region Constructor
 
-        public ProgramViewModel(ProgramClass program)
+        public ProgramViewModel(Program program)
         {
 
             _program = program;
@@ -104,7 +104,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ProjectClass Project
+        public Project Project
         {
             get { return _program.Project; }
             set
@@ -118,7 +118,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ProgramTypeClass Type
+        public ProgramType Type
         {
             get { return _program.Type; }
             set
@@ -304,7 +304,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TestRecordClass> alltr = GetAllTestRecords(_program);
+                List<TestRecord> alltr = GetAllTestRecords(_program);
                 return ((double)alltr.Count(o => o.Status == TestStatus.Waiting) / (double)alltr.Count).ToString() + "*";
             }
         }
@@ -313,7 +313,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TestRecordClass> alltr = GetAllTestRecords(_program);
+                List<TestRecord> alltr = GetAllTestRecords(_program);
                 return ((double)alltr.Count(o => o.Status == TestStatus.Executing) / (double)alltr.Count).ToString() + "*";
             }
         }
@@ -321,7 +321,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TestRecordClass> alltr = GetAllTestRecords(_program);
+                List<TestRecord> alltr = GetAllTestRecords(_program);
                 return ((double)alltr.Count(o => o.Status == TestStatus.Completed) / (double)alltr.Count).ToString() + "*";
             }
         }
@@ -329,7 +329,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TestRecordClass> alltr = GetAllTestRecords(_program);
+                List<TestRecord> alltr = GetAllTestRecords(_program);
                 return ((double)alltr.Count(o => o.Status == TestStatus.Invalid) / (double)alltr.Count).ToString() + "*";
             }
         }
@@ -337,15 +337,15 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TestRecordClass> alltr = GetAllTestRecords(_program);
+                List<TestRecord> alltr = GetAllTestRecords(_program);
                 return ((double)alltr.Count(o => o.Status == TestStatus.Abandoned) / (double)alltr.Count).ToString() + "*";
             }
         }
         #endregion
 
-        private List<TestRecordClass> GetAllTestRecords(ProgramClass program)
+        private List<TestRecord> GetAllTestRecords(Program program)
         {
-            List<TestRecordClass> output = new List<TestRecordClass>();
+            List<TestRecord> output = new List<TestRecord>();
             foreach (var sub in program.Recipes)
             {
                 foreach (var tr in sub.TestRecords)

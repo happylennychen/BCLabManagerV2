@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class ChannelClass : AssetClass
+    public class Channel : Asset
     {
         public int Id { get; set; }
-        //public TesterClass Tester { get; set; }
+        //public Tester Tester { get; set; }
         //public String Name { get; set; }
         private string _name;
         public string Name
@@ -17,23 +17,23 @@ namespace BCLabManager.Model
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
-        private TesterClass _tester;
-        public TesterClass Tester
+        private Tester _tester;
+        public Tester Tester
         {
             get { return _tester; }
             set { SetProperty(ref _tester, value); }
         }
 
-        public ChannelClass()
+        public Channel()
         { }
 
-        //public ChannelClass(String Name, TesterClass Tester)
+        //public Channel(String Name, Tester Tester)
         //{
         //    this.Tester = Tester;
         //    this.Name = Name;
         //}
 
-        //public void Update(String Name, TesterClass Tester)
+        //public void Update(String Name, Tester Tester)
         //{
         //    this.Tester = Tester;
         //    this.Name = Name;

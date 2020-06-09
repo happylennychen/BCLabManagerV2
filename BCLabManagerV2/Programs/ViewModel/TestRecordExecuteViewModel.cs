@@ -27,27 +27,27 @@ namespace BCLabManager.ViewModel
         #region Fields
         //string _programName;
         //string _RecipeName;
-        readonly TestRecordClass _record;
+        readonly TestRecord _record;
         //readonly BatteryTypeRepository _batterytypeRepository;
         //readonly BatteryRepository _batteryRepository;
         //readonly ChamberRepository _chamberRepository;
         //readonly TesterRepository _testerRepository;
         //readonly ChannelRepository _channelRepository;
-        ObservableCollection<BatteryClass> _batteries;
-        ObservableCollection<TesterClass> _testers;
-        ObservableCollection<ChannelClass> _channels;
-        ObservableCollection<ChamberClass> _chambers;
+        ObservableCollection<Battery> _batteries;
+        ObservableCollection<Tester> _testers;
+        ObservableCollection<Channel> _channels;
+        ObservableCollection<Chamber> _chambers;
 
         //ObservableCollection<BatteryTypeClass> _allBatteryTypes;
-        BatteryTypeClass _batteryType;
-        List<BatteryClass> _allBatteries;
-        BatteryClass _battery;
-        //ObservableCollection<TesterClass> _allTesters;
-        TesterClass _tester;
-        ObservableCollection<ChannelClass> _allChannels;
-        ChannelClass _channel;
+        BatteryType _batteryType;
+        List<Battery> _allBatteries;
+        Battery _battery;
+        //ObservableCollection<Tester> _allTesters;
+        Tester _tester;
+        ObservableCollection<Channel> _allChannels;
+        Channel _channel;
         //ObservableCollection<ChamberClass> _allChambers;
-        ChamberClass _chamber;
+        Chamber _chamber;
         //RelayCommand _executeCommand;
         RelayCommand _okCommand;
         bool _isOK;
@@ -57,12 +57,12 @@ namespace BCLabManager.ViewModel
         #region Constructor
 
         public TestRecordExecuteViewModel(
-            TestRecordClass record,
-        BatteryTypeClass batteryType,
-        ObservableCollection<BatteryClass> batteries,
-            ObservableCollection<TesterClass> testers,
-            ObservableCollection<ChannelClass> channels,
-            ObservableCollection<ChamberClass> chambers
+            TestRecord record,
+        BatteryType batteryType,
+        ObservableCollection<Battery> batteries,
+            ObservableCollection<Tester> testers,
+            ObservableCollection<Channel> channels,
+            ObservableCollection<Chamber> chambers
             )     //
         {
             if (record == null)
@@ -109,7 +109,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public BatteryClass Battery   //选中项
+        public Battery Battery   //选中项
         {
             get
             {
@@ -128,7 +128,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public List<BatteryClass> AllBatteries    //供选项
+        public List<Battery> AllBatteries    //供选项
         {
             get
             {
@@ -148,7 +148,7 @@ namespace BCLabManager.ViewModel
             //}
         }
 
-        public ChamberClass Chamber   //选中项
+        public Chamber Chamber   //选中项
         {
             get
             {
@@ -169,21 +169,21 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ObservableCollection<ChamberClass> AllChambers    //供选项
+        public ObservableCollection<Chamber> AllChambers    //供选项
         {
             get
             {
-                ObservableCollection<ChamberClass> all = _chambers;
-                List<ChamberClass> allstring = (
+                ObservableCollection<Chamber> all = _chambers;
+                List<Chamber> allstring = (
                     from i in all
                     //where i.Status == AssetStatusEnum.IDLE    //正在使用的chamber也可能被选来使用
                     select i).ToList();
 
-                return new ObservableCollection<ChamberClass>(allstring);
+                return new ObservableCollection<Chamber>(allstring);
             }
         }
 
-        public TesterClass Tester
+        public Tester Tester
         {
             get
             {
@@ -201,27 +201,27 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("Tester");
 
 
-                ObservableCollection<ChannelClass> all = _channels;
-                List<ChannelClass> allstring = (
+                ObservableCollection<Channel> all = _channels;
+                List<Channel> allstring = (
                     from i in all
                     where (i.Tester.Id == Tester.Id) && i.AssetUseCount == 0
                     select i).ToList();
 
-                AllChannels = new ObservableCollection<ChannelClass>(allstring);
+                AllChannels = new ObservableCollection<Channel>(allstring);
             }
         }
 
-        public ObservableCollection<TesterClass> AllTesters    //供选项
+        public ObservableCollection<Tester> AllTesters    //供选项
         {
             get
             {
-                ObservableCollection<TesterClass> all = _testers;
+                ObservableCollection<Tester> all = _testers;
 
-                return new ObservableCollection<TesterClass>(all);
+                return new ObservableCollection<Tester>(all);
             }
         }
 
-        public ChannelClass Channel
+        public Channel Channel
         {
             get
             {
@@ -240,12 +240,12 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ObservableCollection<ChannelClass> AllChannels    //供选项
+        public ObservableCollection<Channel> AllChannels    //供选项
         {
             get
             {
                 if (_allChannels == null)
-                    _allChannels = new ObservableCollection<ChannelClass>();
+                    _allChannels = new ObservableCollection<Channel>();
                 return _allChannels;
             }
             set

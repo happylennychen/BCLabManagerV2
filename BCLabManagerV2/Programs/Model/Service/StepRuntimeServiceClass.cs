@@ -10,7 +10,7 @@ namespace BCLabManager.Model
 {
     public class StepRuntimeServiceClass
     {
-        public ObservableCollection<StepRuntimeClass> Items { get; set; }
+        public ObservableCollection<StepRuntime> Items { get; set; }
         //public StepServiceClass StepService { get; set; } = new StepServiceClass();
         //public StepTemplateServiceClass StepTemplateService { get; set; } = new StepTemplateServiceClass();
         //public void Add(StepRuntimeClass item)
@@ -34,7 +34,7 @@ namespace BCLabManager.Model
         //var item = Items.SingleOrDefault(o => o.Id == id);
         //Items.Remove(item);
         //}
-        public void Update(StepRuntimeClass item)
+        public void Update(StepRuntime item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -49,7 +49,7 @@ namespace BCLabManager.Model
             //edittarget.TestRecords = item.TestRecords;
             //edittarget.Name = item.Name;
         }
-        internal TimeSpan GetDuration(StepRuntimeClass sr, ref double CBegin)       //计算Duration，并且为下一个sr更新CBegin
+        internal TimeSpan GetDuration(StepRuntime sr, ref double CBegin)       //计算Duration，并且为下一个sr更新CBegin
         {
             double Cend = 0;
             TimeSpan duration;
@@ -81,7 +81,7 @@ namespace BCLabManager.Model
             return (Cend - CBegin) / Current;
         }
 
-        internal void UpdateEstimatedTime(StepRuntimeClass item, StepRuntimeClass startPoint, ref DateTime time, ref double c, ref bool isActive)
+        internal void UpdateEstimatedTime(StepRuntime item, StepRuntime startPoint, ref DateTime time, ref double c, ref bool isActive)
         {
             if (isActive)
             {
@@ -97,7 +97,7 @@ namespace BCLabManager.Model
             }
         }
 
-        internal void UpdateEstimatedTime(StepRuntimeClass item, ref DateTime time, ref double c)
+        internal void UpdateEstimatedTime(StepRuntime item, ref DateTime time, ref double c)
         {
             if (item.StartTime == DateTime.MinValue)
             {

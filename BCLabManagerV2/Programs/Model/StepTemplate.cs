@@ -21,8 +21,8 @@ namespace BCLabManager.Model
     public class StepTemplate : BindableBase    //不需要跳转比较符
     {
         public int Id { get; set; }
-        private CoefficientClass _coef = new CoefficientClass();
-        public CoefficientClass Coefficient
+        private Coefficient _coef = new Coefficient();
+        public Coefficient Coefficient
         {
             get { return _coef; }
             set { SetProperty(ref _coef, value); }

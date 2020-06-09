@@ -26,7 +26,7 @@ namespace BCLabManager.Model
 
         public TestStatus Status { get; private set; }
     }
-    public class TestRecordClass : BindableBase
+    public class TestRecord : BindableBase
     {
         public int Id { get; set; }
         private TestStatus status = TestStatus.Waiting;
@@ -171,12 +171,12 @@ namespace BCLabManager.Model
             get { return _temperature; }
             set { SetProperty(ref _temperature, value); }
         }
-        public ObservableCollection<EmulatorResultClass> EmulatorResults { get; set; } = new ObservableCollection<EmulatorResultClass>();
+        public ObservableCollection<EmulatorResult> EmulatorResults { get; set; } = new ObservableCollection<EmulatorResult>();
 
         #region Store the assets in use
-        public BatteryClass AssignedBattery { get; set; }
-        public ChamberClass AssignedChamber { get; set; }
-        public ChannelClass AssignedChannel { get; set; }
+        public Battery AssignedBattery { get; set; }
+        public Chamber AssignedChamber { get; set; }
+        public Channel AssignedChannel { get; set; }
         #endregion
 
         public event EventHandler<StatusChangedEventArgs> StatusChanged;
@@ -192,7 +192,7 @@ namespace BCLabManager.Model
             }
         }
 
-        public TestRecordClass(/*RecipeClass RecipeStr*/)
+        public TestRecord(/*RecipeClass RecipeStr*/)
         {
             this.Status = TestStatus.Waiting;
             this.BatteryTypeStr = String.Empty;
@@ -217,13 +217,13 @@ namespace BCLabManager.Model
     }
     public class TestRecordAddedEventArgs : EventArgs
     {
-        public TestRecordAddedEventArgs(TestRecordClass newTestRecord, bool isFirst)
+        public TestRecordAddedEventArgs(TestRecord newTestRecord, bool isFirst)
         {
             this.NewTestRecord = newTestRecord;
             this.IsFirst = isFirst;
         }
 
-        public TestRecordClass NewTestRecord { get; private set; }
+        public TestRecord NewTestRecord { get; private set; }
         public bool IsFirst { get; private set; }
     }
 

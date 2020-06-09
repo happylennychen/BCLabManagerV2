@@ -15,7 +15,7 @@ namespace BCLabManager.Model
         LargerThan,
         SmallThan
     }
-    public class StepClass : BindableBase
+    public class Step : BindableBase
     {
         public int Id { get; set; }
         public StepTemplate StepTemplate { get; set; }
@@ -51,11 +51,11 @@ namespace BCLabManager.Model
             set { SetProperty(ref _capacity, value); }
         }
         public int Order { get; set; }
-        public StepClass()
+        public Step()
         {
         }
 
-        public StepClass(StepTemplate stepTemplate)
+        public Step(StepTemplate stepTemplate)
         {
             StepTemplate = stepTemplate;
         }

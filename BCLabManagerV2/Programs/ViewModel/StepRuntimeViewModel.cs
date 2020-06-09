@@ -19,9 +19,9 @@ namespace BCLabManager.ViewModel
     public class StepRuntimeViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
-        private StepRuntimeClass _stepRuntime;
+        private StepRuntime _stepRuntime;
 
-        public StepRuntimeClass StepRuntime
+        public StepRuntime StepRuntime
         {
             get { return _stepRuntime; }
             set { _stepRuntime = value; }
@@ -33,7 +33,7 @@ namespace BCLabManager.ViewModel
         #region Constructor
 
         public StepRuntimeViewModel(
-            StepRuntimeClass stepRuntime)     //
+            StepRuntime stepRuntime)     //
         {
             _stepRuntime = stepRuntime;
             _stepRuntime.PropertyChanged += _stepRuntime_PropertyChanged;

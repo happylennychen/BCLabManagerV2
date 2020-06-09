@@ -10,27 +10,27 @@ using Prism.Mvvm;
 
 namespace BCLabManager.Model
 {
-    public class EmulatorResultClass : BindableBase
+    public class EmulatorResult : BindableBase
     {
 
         public int Id { get; set; }
 
-        private TestRecordClass _test_record;
-        public TestRecordClass test_record
+        private TestRecord _test_record;
+        public TestRecord test_record
         {
             get { return _test_record; }
             set { SetProperty(ref _test_record, value); }
         }
 
-        private ProjectSettingClass _project_setting;
-        public ProjectSettingClass project_setting
+        private ProjectSetting _project_setting;
+        public ProjectSetting project_setting
         {
             get { return _project_setting; }
             set { SetProperty(ref _project_setting, value); }
         }
 
-        private LibFGClass _lib_fg;
-        public LibFGClass lib_fg
+        private LibFG _lib_fg;
+        public LibFG lib_fg
         {
             get { return _lib_fg; }
             set { SetProperty(ref _lib_fg, value); }
@@ -72,7 +72,7 @@ namespace BCLabManager.Model
         }
 
         private string _excel_file_path;
-        public string package_file_path
+        public string excel_file_path
         {
             get { return _excel_file_path; }
             set { SetProperty(ref _excel_file_path, value); }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.DataAccess
 {
-    public interface IRecipeRepository:IRepository<RecipeClass>
+    public interface IRecipeRepository:IRepository<Recipe>
     {
     }
 }

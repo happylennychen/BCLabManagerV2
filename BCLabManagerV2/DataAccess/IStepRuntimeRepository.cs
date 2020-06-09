@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.DataAccess
 {
-    public interface IStepRuntimeRepository:IRepository<StepRuntimeClass>
+    public interface IStepRuntimeRepository:IRepository<StepRuntime>
     {
     }
 }

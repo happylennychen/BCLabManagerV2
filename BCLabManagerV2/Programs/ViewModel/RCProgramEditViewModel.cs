@@ -18,8 +18,8 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        public ProgramClass _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
-        ObservableCollection<ProjectClass> _projects;
+        public Program _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
+        ObservableCollection<Project> _projects;
         RelayCommand _okCommand;
         bool _isOK;
 
@@ -28,8 +28,8 @@ namespace BCLabManager.ViewModel
         #region Constructor
 
         public RCProgramEditViewModel(
-            ProgramClass programmodel,
-            ObservableCollection<ProjectClass> projects)
+            Program programmodel,
+            ObservableCollection<Project> projects)
         {
             _program = programmodel;
             _projects = projects;
@@ -52,7 +52,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ProjectClass Project       //选中项
+        public Project Project       //选中项
         {
             get
             {
@@ -71,13 +71,13 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ObservableCollection<ProjectClass> AllProjects //供选项
+        public ObservableCollection<Project> AllProjects //供选项
         {
             get
             {
-                ObservableCollection<ProjectClass> all = _projects;
+                ObservableCollection<Project> all = _projects;
 
-                return new ObservableCollection<ProjectClass>(all);
+                return new ObservableCollection<Project>(all);
             }
         }
         public string Requester

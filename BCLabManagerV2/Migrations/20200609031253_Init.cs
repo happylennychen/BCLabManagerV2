@@ -113,7 +113,6 @@ namespace BCLabManager.Migrations
                 {
                     id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(nullable: true),
                     description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -287,14 +286,14 @@ namespace BCLabManager.Migrations
                     initial_soc_start_ocv = table.Column<int>(nullable: false),
                     system_line_impedance = table.Column<int>(nullable: false),
                     is_valid = table.Column<bool>(nullable: false),
-                    project_class_id = table.Column<int>(nullable: true)
+                    project_id = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_project_settings", x => x.id);
                     table.ForeignKey(
-                        name: "fk_project_settings_projects_project_class_id",
-                        column: x => x.project_class_id,
+                        name: "fk_project_settings_projects_project_id",
+                        column: x => x.project_id,
                         principalTable: "projects",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
@@ -308,14 +307,15 @@ namespace BCLabManager.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     file_path = table.Column<string>(nullable: true),
                     type_id = table.Column<int>(nullable: true),
-                    project_class_id = table.Column<int>(nullable: true)
+                    is_valid = table.Column<bool>(nullable: false),
+                    project_id = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_table_maker_products", x => x.id);
                     table.ForeignKey(
-                        name: "fk_table_maker_products_projects_project_class_id",
-                        column: x => x.project_class_id,
+                        name: "fk_table_maker_products_projects_project_id",
+                        column: x => x.project_id,
                         principalTable: "projects",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
@@ -369,28 +369,28 @@ namespace BCLabManager.Migrations
                     asset_use_count = table.Column<int>(nullable: false),
                     program_name = table.Column<string>(nullable: true),
                     recipe_name = table.Column<string>(nullable: true),
-                    battery_class_id = table.Column<int>(nullable: true),
-                    chamber_class_id = table.Column<int>(nullable: true),
-                    channel_class_id = table.Column<int>(nullable: true)
+                    battery_id = table.Column<int>(nullable: true),
+                    chamber_id = table.Column<int>(nullable: true),
+                    channel_id = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_asset_usage_records", x => x.id);
                     table.ForeignKey(
-                        name: "fk_asset_usage_records_batteries_battery_class_id",
-                        column: x => x.battery_class_id,
+                        name: "fk_asset_usage_records_batteries_battery_id",
+                        column: x => x.battery_id,
                         principalTable: "batteries",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "fk_asset_usage_records_chambers_chamber_class_id",
-                        column: x => x.chamber_class_id,
+                        name: "fk_asset_usage_records_chambers_chamber_id",
+                        column: x => x.chamber_id,
                         principalTable: "chambers",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "fk_asset_usage_records_channels_channel_class_id",
-                        column: x => x.channel_class_id,
+                        name: "fk_asset_usage_records_channels_channel_id",
+                        column: x => x.channel_id,
                         principalTable: "channels",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
@@ -410,14 +410,14 @@ namespace BCLabManager.Migrations
                     est = table.Column<DateTime>(nullable: false),
                     eet = table.Column<DateTime>(nullable: false),
                     ed = table.Column<TimeSpan>(nullable: false),
-                    program_class_id = table.Column<int>(nullable: true)
+                    program_id = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_recipes", x => x.id);
                     table.ForeignKey(
-                        name: "fk_recipes_programs_program_class_id",
-                        column: x => x.program_class_id,
+                        name: "fk_recipes_programs_program_id",
+                        column: x => x.program_id,
                         principalTable: "programs",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
@@ -436,15 +436,16 @@ namespace BCLabManager.Migrations
                     result_file_path = table.Column<string>(nullable: true),
                     package_file_path = table.Column<string>(nullable: true),
                     emulator_info = table.Column<string>(nullable: true),
+                    comment = table.Column<string>(nullable: true),
                     is_valid = table.Column<bool>(nullable: false),
-                    project_class_id = table.Column<int>(nullable: true)
+                    project_id = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_release_packages", x => x.id);
                     table.ForeignKey(
-                        name: "fk_release_packages_projects_project_class_id",
-                        column: x => x.project_class_id,
+                        name: "fk_release_packages_projects_project_id",
+                        column: x => x.project_id,
                         principalTable: "projects",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
@@ -477,14 +478,14 @@ namespace BCLabManager.Migrations
                     eet = table.Column<DateTime>(nullable: false),
                     ed = table.Column<TimeSpan>(nullable: false),
                     order = table.Column<int>(nullable: false),
-                    recipe_class_id = table.Column<int>(nullable: true)
+                    recipe_id = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_step_runtimes", x => x.id);
                     table.ForeignKey(
-                        name: "fk_step_runtimes_recipes_recipe_class_id",
-                        column: x => x.recipe_class_id,
+                        name: "fk_step_runtimes_recipes_recipe_id",
+                        column: x => x.recipe_id,
                         principalTable: "recipes",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
@@ -526,7 +527,7 @@ namespace BCLabManager.Migrations
                     assigned_battery_id = table.Column<int>(nullable: true),
                     assigned_chamber_id = table.Column<int>(nullable: true),
                     assigned_channel_id = table.Column<int>(nullable: true),
-                    recipe_class_id = table.Column<int>(nullable: true)
+                    recipe_id = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -550,8 +551,8 @@ namespace BCLabManager.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "fk_test_records_recipes_recipe_class_id",
-                        column: x => x.recipe_class_id,
+                        name: "fk_test_records_recipes_recipe_id",
+                        column: x => x.recipe_id,
                         principalTable: "recipes",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
@@ -571,19 +572,19 @@ namespace BCLabManager.Migrations
                     error_rsoc = table.Column<string>(nullable: true),
                     error_tte = table.Column<string>(nullable: true),
                     log_file_path = table.Column<string>(nullable: true),
-                    package_file_path = table.Column<string>(nullable: true),
+                    excel_file_path = table.Column<string>(nullable: true),
                     rsoc_png_file_path = table.Column<string>(nullable: true),
                     tte_png_file_path = table.Column<string>(nullable: true),
                     emulator_info = table.Column<string>(nullable: true),
                     is_valid = table.Column<bool>(nullable: false),
-                    project_class_id = table.Column<int>(nullable: true)
+                    project_id = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_emulator_results", x => x.id);
                     table.ForeignKey(
-                        name: "fk_emulator_results_projects_project_class_id",
-                        column: x => x.project_class_id,
+                        name: "fk_emulator_results_projects_project_id",
+                        column: x => x.project_id,
                         principalTable: "projects",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
@@ -608,19 +609,19 @@ namespace BCLabManager.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_asset_usage_records_battery_class_id",
+                name: "ix_asset_usage_records_battery_id",
                 table: "asset_usage_records",
-                column: "battery_class_id");
+                column: "battery_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_asset_usage_records_chamber_class_id",
+                name: "ix_asset_usage_records_chamber_id",
                 table: "asset_usage_records",
-                column: "chamber_class_id");
+                column: "chamber_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_asset_usage_records_channel_class_id",
+                name: "ix_asset_usage_records_channel_id",
                 table: "asset_usage_records",
-                column: "channel_class_id");
+                column: "channel_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_batteries_battery_type_id",
@@ -633,9 +634,9 @@ namespace BCLabManager.Migrations
                 column: "tester_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_emulator_results_project_class_id",
+                name: "ix_emulator_results_project_id",
                 table: "emulator_results",
-                column: "project_class_id");
+                column: "project_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_emulator_results_lib_fg_id",
@@ -663,9 +664,9 @@ namespace BCLabManager.Migrations
                 column: "type_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_project_settings_project_class_id",
+                name: "ix_project_settings_project_id",
                 table: "project_settings",
-                column: "project_class_id");
+                column: "project_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_projects_battery_type_id",
@@ -673,14 +674,14 @@ namespace BCLabManager.Migrations
                 column: "battery_type_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_recipes_program_class_id",
+                name: "ix_recipes_program_id",
                 table: "recipes",
-                column: "program_class_id");
+                column: "program_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_release_packages_project_class_id",
+                name: "ix_release_packages_project_id",
                 table: "release_packages",
-                column: "project_class_id");
+                column: "project_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_release_packages_lib_fg_id",
@@ -693,9 +694,9 @@ namespace BCLabManager.Migrations
                 column: "project_setting_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_step_runtimes_recipe_class_id",
+                name: "ix_step_runtimes_recipe_id",
                 table: "step_runtimes",
-                column: "recipe_class_id");
+                column: "recipe_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_step_runtimes_step_template_id",
@@ -718,9 +719,9 @@ namespace BCLabManager.Migrations
                 column: "step_template_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_table_maker_products_project_class_id",
+                name: "ix_table_maker_products_project_id",
                 table: "table_maker_products",
-                column: "project_class_id");
+                column: "project_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_table_maker_products_type_id",
@@ -743,9 +744,9 @@ namespace BCLabManager.Migrations
                 column: "assigned_channel_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_test_records_recipe_class_id",
+                name: "ix_test_records_recipe_id",
                 table: "test_records",
-                column: "recipe_class_id");
+                column: "recipe_id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

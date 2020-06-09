@@ -19,13 +19,13 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        readonly ChamberClass _chamber;
+        readonly Chamber _chamber;
 
         #endregion // Fields
 
         #region Constructor
 
-        public ChamberViewModel(ChamberClass chamber)
+        public ChamberViewModel(Chamber chamber)
         {
             _chamber = chamber;
             _chamber.PropertyChanged += _chamber_PropertyChanged;

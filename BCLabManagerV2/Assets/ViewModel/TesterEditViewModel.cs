@@ -19,7 +19,7 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        readonly TesterClass _tester;
+        readonly Tester _tester;
         RelayCommand _okCommand;
         bool _isOK;
 
@@ -27,7 +27,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public TesterEditViewModel(TesterClass tester)  //构造函数里面之所以要testerrepository,是因为IsNewBattery需要用此进行判断
+        public TesterEditViewModel(Tester tester)  //构造函数里面之所以要testerrepository,是因为IsNewBattery需要用此进行判断
         {
             if (tester == null)
                 throw new ArgumentNullException("tester");

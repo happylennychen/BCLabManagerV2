@@ -45,14 +45,14 @@ namespace BCLabManager.ViewModel
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems)
                     {
-                        var programType = item as ProgramTypeClass;
+                        var programType = item as ProgramType;
                         this.AllProgramTypes.Add(new ProgramTypeViewModel(programType));
                     }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
                     foreach (var item in e.OldItems)
                     {
-                        var programType = item as ProgramTypeClass;
+                        var programType = item as ProgramType;
                         var deletetarget = this.AllProgramTypes.SingleOrDefault(o => o.Id == programType.Id);
                         this.AllProgramTypes.Remove(deletetarget);
                     }
@@ -60,7 +60,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        void CreateAllProgramTypes(ObservableCollection<ProgramTypeClass> programTypes)
+        void CreateAllProgramTypes(ObservableCollection<ProgramType> programTypes)
         {
             List<ProgramTypeViewModel> all =
                 (from proT in programTypes
@@ -154,7 +154,7 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            ProgramTypeClass proT = new ProgramTypeClass();      //实例化一个新的model
+            ProgramType proT = new ProgramType();      //实例化一个新的model
             ProgramTypeEditViewModel proTevm = new ProgramTypeEditViewModel(proT);      //实例化一个新的view model
             //btevm.DisplayName = "Battery Type-Create";
             var ProgramTypeEditViewInstance = new ProgramTypeView();      //实例化一个新的view
@@ -167,7 +167,7 @@ namespace BCLabManager.ViewModel
         }
         private void Edit()
         {
-            ProgramTypeClass proT = new ProgramTypeClass();      //实例化一个新的model
+            ProgramType proT = new ProgramType();      //实例化一个新的model
             ProgramTypeEditViewModel proTevm = new ProgramTypeEditViewModel(proT);      //实例化一个新的view model
             proTevm.Id = _selectedItem.Id;
             proTevm.Name = _selectedItem.Name;
@@ -187,7 +187,7 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            ProgramTypeClass proT = new ProgramTypeClass();      //实例化一个新的model
+            ProgramType proT = new ProgramType();      //实例化一个新的model
             ProgramTypeEditViewModel proTevm = new ProgramTypeEditViewModel(proT);      //实例化一个新的view model
             proTevm.Name = _selectedItem.Name;
             proTevm.Description = _selectedItem.Description;

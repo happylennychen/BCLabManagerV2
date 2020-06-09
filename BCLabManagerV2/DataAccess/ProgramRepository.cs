@@ -7,7 +7,7 @@ using BCLabManager.Model;
 
 namespace BCLabManager.DataAccess
 {
-    public class ProgramRepository : Repository<ProgramClass>, IProgramRepository
+    public class ProgramRepository : Repository<Program>, IProgramRepository
     {
         public ProgramRepository(AppDbContext context)
             : base(context)

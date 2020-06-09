@@ -10,7 +10,7 @@ namespace BCLabManager.Model
 {
     public class StepServiceClass
     {
-        public ObservableCollection<StepClass> Items { get; set; }
+        public ObservableCollection<Step> Items { get; set; }
         //public StepTemplateServiceClass StepTemplateService { get; set; } = new StepTemplateServiceClass();
     }
 }

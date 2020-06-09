@@ -20,13 +20,13 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        readonly AssetUsageRecordClass _record;
+        readonly AssetUsageRecord _record;
 
         #endregion // Fields
 
         #region Constructor
 
-        public AssetUsageRecordViewModel(AssetUsageRecordClass record/*, BatteryRepository batteryRepository*/)     //AllBatteriesView需要
+        public AssetUsageRecordViewModel(AssetUsageRecord record/*, BatteryRepository batteryRepository*/)     //AllBatteriesView需要
         {
             if (record == null)
                 throw new ArgumentNullException("record");

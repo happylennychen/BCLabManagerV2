@@ -12,9 +12,9 @@ namespace BCLabManager.Model
 {
     public class ProjectServiceClass
     {
-        public ObservableCollection<ProjectClass> Items { get; set; }
+        public ObservableCollection<Project> Items { get; set; }
 
-        public void SuperAdd(ProjectClass item)
+        public void SuperAdd(Project item)
         {
             DatabaseAdd(item);
             Items.Add(item);
@@ -47,7 +47,7 @@ namespace BCLabManager.Model
                 Directory.CreateDirectory(headerPath);
         }
 
-        public void DatabaseAdd(ProjectClass item)
+        public void DatabaseAdd(Project item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -70,12 +70,12 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void SuperUpdate(ProjectClass item)
+        public void SuperUpdate(Project item)
         {
             DatabaseUpdate(item);
             DomainUpdate(item);
         }
-        public void DatabaseUpdate(ProjectClass item)
+        public void DatabaseUpdate(Project item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -83,7 +83,7 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void DomainUpdate(ProjectClass item)
+        public void DomainUpdate(Project item)
         {
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             edittarget.BatteryType = item.BatteryType;

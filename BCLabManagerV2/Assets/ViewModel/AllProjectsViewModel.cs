@@ -47,14 +47,14 @@ namespace BCLabManager.ViewModel
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems)
                     {
-                        var project = item as ProjectClass;
+                        var project = item as Project;
                         this.AllProjects.Add(new ProjectViewModel(project));
                     }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
                     foreach (var item in e.OldItems)
                     {
-                        var project = item as ProjectClass;
+                        var project = item as Project;
                         var deletetarget = this.AllProjects.SingleOrDefault(o => o.Id == project.Id);
                         this.AllProjects.Remove(deletetarget);
                     }
@@ -62,7 +62,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        void CreateAllProjects(ObservableCollection<ProjectClass> projects)
+        void CreateAllProjects(ObservableCollection<Project> projects)
         {
             List<ProjectViewModel> all =
                 (from proj in projects
@@ -156,7 +156,7 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            ProjectClass proj = new ProjectClass();      //实例化一个新的model
+            Project proj = new Project();      //实例化一个新的model
             ProjectEditViewModel projevm = new ProjectEditViewModel(proj, _batteryTypeService.Items);      //实例化一个新的view model
             //btevm.DisplayName = "Battery Type-Create";
             var ProjectEditViewInstance = new ProjectView();      //实例化一个新的view
@@ -169,7 +169,7 @@ namespace BCLabManager.ViewModel
         }
         private void Edit()
         {
-            ProjectClass proj = new ProjectClass();      //实例化一个新的model
+            Project proj = new Project();      //实例化一个新的model
             ProjectEditViewModel projevm = new ProjectEditViewModel(proj, _batteryTypeService.Items);      //实例化一个新的view model
             projevm.Id = _selectedItem.Id;
             projevm.Name = _selectedItem.Name;
@@ -195,7 +195,7 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            ProjectClass proj = new ProjectClass();      //实例化一个新的model
+            Project proj = new Project();      //实例化一个新的model
             ProjectEditViewModel projevm = new ProjectEditViewModel(proj, _batteryTypeService.Items);      //实例化一个新的view model
             projevm.Name = _selectedItem.Name;
             projevm.Customer = _selectedItem.Customer;

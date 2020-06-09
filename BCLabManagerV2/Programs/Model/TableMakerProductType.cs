@@ -8,16 +8,10 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class ProgramTypeClass : BindableBase
+    public class TableMakerProductType : BindableBase
     {
 
         public int Id { get; set; }
-        private string _name;
-        public string Name
-        {
-            get { return _name; }
-            set { SetProperty(ref _name, value); }
-        }
 
         private string _description;
         public string Description
@@ -27,10 +21,10 @@ namespace BCLabManager.Model
         }
         public override string ToString()
         {
-            return this.Name;
+            return this.Description;
         }
 
-        public ProgramTypeClass()           //Create用到
+        public TableMakerProductType()           //Create用到
         {
         }
     }

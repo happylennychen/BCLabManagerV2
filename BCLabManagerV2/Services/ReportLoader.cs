@@ -26,10 +26,10 @@ namespace BCLabManager.Services
         }
         #region battery type
 
-        public static BatteryTypeClass LoadBatteryTypeByIndex(int index)
+        public static BatteryType LoadBatteryTypeByIndex(int index)
         {
             var row_number = index + 2;
-            BatteryTypeClass output = new BatteryTypeClass();
+            BatteryType output = new BatteryType();
             output.Manufacturer = ExcelHelper.GetStringFromCell(BatteryTypeSheet, row_number, 2);
             output.Name = ExcelHelper.GetStringFromCell(BatteryTypeSheet, row_number, 3);
             output.Material = ExcelHelper.GetStringFromCell(BatteryTypeSheet, row_number, 4);
@@ -48,10 +48,10 @@ namespace BCLabManager.Services
         #endregion
         #region Battery
 
-        public static BatteryClass LoadBatteryByIndex(int index, ref int btId)
+        public static Battery LoadBatteryByIndex(int index, ref int btId)
         {
             var row_number = index + 2;
-            BatteryClass output = new BatteryClass();
+            Battery output = new Battery();
             output.Name = ExcelHelper.GetStringFromCell(BatterySheet, row_number, 3);
             btId = Convert.ToInt32(ExcelHelper.GetStringFromCell(BatterySheet, row_number, 2));
             return output;
@@ -64,10 +64,10 @@ namespace BCLabManager.Services
         #endregion
         #region Tester
 
-        public static TesterClass LoadTesterByIndex(int index)
+        public static Tester LoadTesterByIndex(int index)
         {
             int row_number = index + 2;
-            TesterClass output = new TesterClass();
+            Tester output = new Tester();
             output.Manufacturer = ExcelHelper.GetStringFromCell(TesterSheet, row_number, 2);
             output.Name = ExcelHelper.GetStringFromCell(TesterSheet, row_number, 3);
             return output;
@@ -80,9 +80,9 @@ namespace BCLabManager.Services
         #endregion
         #region Channel
 
-        public static ChannelClass CreateChanel(int id)
+        public static Channel CreateChanel(int id)
         {
-            ChannelClass output = new ChannelClass();
+            Channel output = new Channel();
             output.Name = "Channel " + id.ToString();
             return output;
         }
@@ -95,10 +95,10 @@ namespace BCLabManager.Services
         #region Chamber
         private static _Worksheet ChamberSheet = null;
 
-        public static ChamberClass LoadChamberByIndex(int index)
+        public static Chamber LoadChamberByIndex(int index)
         {
             int row_number = index + 2;
-            ChamberClass output = new ChamberClass();
+            Chamber output = new Chamber();
             output.Manufacturer = ExcelHelper.GetStringFromCell(ChamberSheet, row_number, 2);
             output.Name = ExcelHelper.GetStringFromCell(ChamberSheet, row_number, 3);
             output.LowestTemperature = Convert.ToInt32(ExcelHelper.GetStringFromCell(ChamberSheet, row_number, 4));

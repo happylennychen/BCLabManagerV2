@@ -220,7 +220,7 @@ namespace BCLabManager.ViewModel
             //model.Temperature = _selectedItem._recipeTemplate.Temperature;
             foreach (var step in _selectedItem._recipeTemplate.Steps)
             {
-                var m = new StepClass(step.StepTemplate);
+                var m = new Step(step.StepTemplate);
                 model.Steps.Add(m);
             }
             RecipeTemplateEditViewModel viewmodel =

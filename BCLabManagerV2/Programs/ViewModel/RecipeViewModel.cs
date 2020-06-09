@@ -18,13 +18,13 @@ namespace BCLabManager.ViewModel
     public class RecipeViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
-        public readonly RecipeClass _recipe;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
+        public readonly Recipe _recipe;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
 
         #endregion // Fields
 
         #region Constructor
 
-        public RecipeViewModel(RecipeClass Recipe)
+        public RecipeViewModel(Recipe Recipe)
         {
             _recipe = Recipe;
             this.CreateTestRecords();
@@ -212,7 +212,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TestRecordClass> alltr = GetAllTestRecords(_recipe);
+                List<TestRecord> alltr = GetAllTestRecords(_recipe);
                 return ((double)alltr.Count(o => o.Status == TestStatus.Waiting) / (double)alltr.Count).ToString() + "*";
             }
         }
@@ -221,7 +221,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TestRecordClass> alltr = GetAllTestRecords(_recipe);
+                List<TestRecord> alltr = GetAllTestRecords(_recipe);
                 return ((double)alltr.Count(o => o.Status == TestStatus.Executing) / (double)alltr.Count).ToString() + "*";
             }
         }
@@ -229,7 +229,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TestRecordClass> alltr = GetAllTestRecords(_recipe);
+                List<TestRecord> alltr = GetAllTestRecords(_recipe);
                 return ((double)alltr.Count(o => o.Status == TestStatus.Completed) / (double)alltr.Count).ToString() + "*";
             }
         }
@@ -237,7 +237,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TestRecordClass> alltr = GetAllTestRecords(_recipe);
+                List<TestRecord> alltr = GetAllTestRecords(_recipe);
                 return ((double)alltr.Count(o => o.Status == TestStatus.Invalid) / (double)alltr.Count).ToString() + "*";
             }
         }
@@ -245,23 +245,23 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                List<TestRecordClass> alltr = GetAllTestRecords(_recipe);
+                List<TestRecord> alltr = GetAllTestRecords(_recipe);
                 return ((double)alltr.Count(o => o.Status == TestStatus.Abandoned) / (double)alltr.Count).ToString() + "*";
             }
         }
         #endregion
 
-        private List<TestRecordClass> GetAllTestRecords(RecipeClass sub)
+        private List<TestRecord> GetAllTestRecords(Recipe sub)
         {
-            List<TestRecordClass> output = new List<TestRecordClass>();
+            List<TestRecord> output = new List<TestRecord>();
             foreach (var tr in sub.TestRecords)
                 output.Add(tr);
             return output;
         }
 
-        private List<StepRuntimeClass> GetAllStepRuntimes(RecipeClass sub)
+        private List<StepRuntime> GetAllStepRuntimes(Recipe sub)
         {
-            List<StepRuntimeClass> output = new List<StepRuntimeClass>();
+            List<StepRuntime> output = new List<StepRuntime>();
             foreach (var tr in sub.StepRuntimes)
                 output.Add(tr);
             return output;

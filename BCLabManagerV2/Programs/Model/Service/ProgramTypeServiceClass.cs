@@ -12,15 +12,15 @@ namespace BCLabManager.Model
 {
     public class ProgramTypeServiceClass
     {
-        public ObservableCollection<ProgramTypeClass> Items { get; set; }
+        public ObservableCollection<ProgramType> Items { get; set; }
 
-        public void SuperAdd(ProgramTypeClass item)
+        public void SuperAdd(ProgramType item)
         {
             DatabaseAdd(item);
             Items.Add(item);
         }
 
-        public void DatabaseAdd(ProgramTypeClass item)
+        public void DatabaseAdd(ProgramType item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -42,12 +42,12 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void SuperUpdate(ProgramTypeClass item)
+        public void SuperUpdate(ProgramType item)
         {
             DatabaseUpdate(item);
             DomainUpdate(item);
         }
-        public void DatabaseUpdate(ProgramTypeClass item)
+        public void DatabaseUpdate(ProgramType item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -55,7 +55,7 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void DomainUpdate(ProgramTypeClass item)
+        public void DomainUpdate(ProgramType item)
         {
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             edittarget.Name = item.Name;

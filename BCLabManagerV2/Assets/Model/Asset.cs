@@ -7,7 +7,7 @@ using System.Text;
 
 namespace BCLabManager.Model
 {
-    public class AssetClass : BindableBase, IAsset
+    public class Asset : BindableBase, IAsset
     {
         private int assetUseCount = 0;
         public int AssetUseCount
@@ -36,17 +36,17 @@ namespace BCLabManager.Model
         //    }
         //}
 
-        public ObservableCollection<AssetUsageRecordClass> Records { get; set; }
+        public ObservableCollection<AssetUsageRecord> Records { get; set; }
 
-        public AssetClass()
+        public Asset()
         {
             this.AssetUseCount = 0;
-            Records = new ObservableCollection<AssetUsageRecordClass>();
+            Records = new ObservableCollection<AssetUsageRecord>();
         }
 
         public void AddRecord(DateTime Timestamp, int AssetUseCount, String ProgramName, String RecipeName)
         {
-            Records.Add(new AssetUsageRecordClass(Timestamp, AssetUseCount, ProgramName, RecipeName));
+            Records.Add(new AssetUsageRecord(Timestamp, AssetUseCount, ProgramName, RecipeName));
         }
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class ProgramClass : BindableBase
+    public class Program : BindableBase
     {
 
         public int Id { get; set; }
@@ -78,8 +78,8 @@ namespace BCLabManager.Model
             get { return _ed; }
             set { SetProperty(ref _ed, value); }
         }
-        private ProgramTypeClass _type;
-        public ProgramTypeClass Type
+        private ProgramType _type;
+        public ProgramType Type
         {
             get { return _type; }
             set { SetProperty(ref _type, value); }
@@ -108,19 +108,19 @@ namespace BCLabManager.Model
         //    get { return _type; }
         //    set { SetProperty(ref _type, value); }
         //}
-        private ProjectClass _project;
-        public ProjectClass Project
+        private Project _project;
+        public Project Project
         {
             get { return _project; }
             set { SetProperty(ref _project, value); }
         }
-        public ObservableCollection<RecipeClass> Recipes { get; set; } = new ObservableCollection<RecipeClass>();
+        public ObservableCollection<Recipe> Recipes { get; set; } = new ObservableCollection<Recipe>();
 
-        public ProgramClass()           //Create用到
+        public Program()           //Create用到
         {
         }
 
-        public ProgramClass(String Name, ProjectClass Project, ProgramTypeClass Type, String Requester, DateTime RequestTime, String Description, ObservableCollection<RecipeClass> Recipes) //Clone用到
+        public Program(String Name, Project Project, ProgramType Type, String Requester, DateTime RequestTime, String Description, ObservableCollection<Recipe> Recipes) //Clone用到
         {
             this.Name = Name;
             this.Project = Project;
@@ -149,13 +149,13 @@ namespace BCLabManager.Model
         //    this.Recipes = model.Recipes;
         //}
 
-        public ProgramClass Clone() //Edit Save As用到
+        public Program Clone() //Edit Save As用到
         {
-            List<RecipeClass> all =
+            List<Recipe> all =
                 (from sub in Recipes
                  select sub.Clone()).ToList();
-            ObservableCollection<RecipeClass> clonelist = new ObservableCollection<RecipeClass>(all);
-            return new ProgramClass(this.Name, this.Project, this.Type, this.Requester, this.RequestTime, this.Description, clonelist);
+            ObservableCollection<Recipe> clonelist = new ObservableCollection<Recipe>(all);
+            return new Program(this.Name, this.Project, this.Type, this.Requester, this.RequestTime, this.Description, clonelist);
         }
     }
 }

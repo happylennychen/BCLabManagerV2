@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.DataAccess
 {
-    public interface IChannelRepository:IRepository<ChannelClass>
+    public interface IChannelRepository:IRepository<Channel>
     {
     }
 }

@@ -53,14 +53,14 @@ namespace BCLabManager.ViewModel
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems)
                     {
-                        var chamber = item as ChamberClass;
+                        var chamber = item as Chamber;
                         this.AllChambers.Add(new ChamberViewModel(chamber));
                     }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
                     foreach (var item in e.OldItems)
                     {
-                        var chamber = item as ChamberClass;
+                        var chamber = item as Chamber;
                         var deletetarget = this.AllChambers.SingleOrDefault(o => o.Id == chamber.Id);
                         this.AllChambers.Remove(deletetarget);
                     }
@@ -68,7 +68,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        void CreateAllChambers(ObservableCollection<ChamberClass> chambers)
+        void CreateAllChambers(ObservableCollection<Chamber> chambers)
         {
             List<ChamberViewModel> all =
                 (from cmb in chambers
@@ -179,7 +179,7 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            ChamberClass edititem = new ChamberClass();      //实例化一个新的model
+            Chamber edititem = new Chamber();      //实例化一个新的model
             ChamberEditViewModel evm = new ChamberEditViewModel(edititem);      //实例化一个新的view model
             //evm.DisplayName = "Chamber-Create";
             evm.commandType = CommandType.Create;
@@ -193,7 +193,7 @@ namespace BCLabManager.ViewModel
         }
         private void Edit()
         {
-            ChamberClass edititem = new ChamberClass();      //实例化一个新的model
+            Chamber edititem = new Chamber();      //实例化一个新的model
             ChamberEditViewModel evm = new ChamberEditViewModel(edititem);      //实例化一个新的view model
             evm.Id = SelectedItem.Id;
             evm.Name = _selectedItem.Name;
@@ -216,7 +216,7 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            ChamberClass m = new ChamberClass();      //实例化一个新的model
+            Chamber m = new Chamber();      //实例化一个新的model
             ChamberEditViewModel evm = new ChamberEditViewModel(m);      //实例化一个新的view model
             evm.Name = _selectedItem.Name;
             evm.Manufacturer = _selectedItem.Manufacturer;

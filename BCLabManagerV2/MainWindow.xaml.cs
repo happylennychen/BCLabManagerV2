@@ -51,8 +51,8 @@ namespace BCLabManager
 
         //public ObservableCollection<BatteryTypeClass> BatteryTypes { get; set; }
         //public ObservableCollection<BatteryClass> Batteries { get; set; }
-        //public ObservableCollection<TesterClass> Testers { get; set; }
-        //public ObservableCollection<ChannelClass> Channels { get; set; }
+        //public ObservableCollection<Tester> Testers { get; set; }
+        //public ObservableCollection<Channel> Channels { get; set; }
         //public ObservableCollection<ChamberClass> Chambers { get; set; }
         //public List<RecipeTemplate> RecipeTemplates { get; set; }
         //public List<ChargeTemperatureClass> ChargeTemperatures { get; set; }
@@ -129,24 +129,24 @@ namespace BCLabManager
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                BatteryTypeService.Items = new ObservableCollection<BatteryTypeClass>(uow.BatteryTypes.GetAll());
-                BatteryService.Items = new ObservableCollection<BatteryClass>(uow.Batteries.GetAll("BatteryType,Records"));
+                BatteryTypeService.Items = new ObservableCollection<BatteryType>(uow.BatteryTypes.GetAll());
+                BatteryService.Items = new ObservableCollection<Battery>(uow.Batteries.GetAll("BatteryType,Records"));
 
-                TesterService.Items = new ObservableCollection<TesterClass>(uow.Testers.GetAll());
-                ChannelService.Items = new ObservableCollection<ChannelClass>(uow.Channels.GetAll("Tester,Records"));
+                TesterService.Items = new ObservableCollection<Tester>(uow.Testers.GetAll());
+                ChannelService.Items = new ObservableCollection<Channel>(uow.Channels.GetAll("Tester,Records"));
 
-                ChamberService.Items = new ObservableCollection<ChamberClass>(uow.Chambers.GetAll("Records"));
+                ChamberService.Items = new ObservableCollection<Chamber>(uow.Chambers.GetAll("Records"));
 
                 RecipeTemplateService.Items = new ObservableCollection<RecipeTemplate>(uow.RecipeTemplates.GetAll());
-                StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
+                StepService.Items = new ObservableCollection<Step>(uow.Steps.GetAll());
                 StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
 
-                ProgramService.Items = new ObservableCollection<ProgramClass>(uow.Programs.GetAll());
-                ProgramService.RecipeService.Items = new ObservableCollection<RecipeClass>(uow.Recipies.GetAll());
-                ProgramService.RecipeService.TestRecordService.Items = new ObservableCollection<TestRecordClass>(uow.TestRecords.GetAll());
-                ProgramService.RecipeService.StepRuntimeService.Items = new ObservableCollection<StepRuntimeClass>(uow.StepRuntimes.GetAll());
-                ProjectService.Items = new ObservableCollection<ProjectClass>(uow.Projects.GetAll());
-                ProgramTypeService.Items = new ObservableCollection<ProgramTypeClass>(uow.ProgramTypes.GetAll());
+                ProgramService.Items = new ObservableCollection<Program>(uow.Programs.GetAll());
+                ProgramService.RecipeService.Items = new ObservableCollection<Recipe>(uow.Recipies.GetAll());
+                ProgramService.RecipeService.TestRecordService.Items = new ObservableCollection<TestRecord>(uow.TestRecords.GetAll());
+                ProgramService.RecipeService.StepRuntimeService.Items = new ObservableCollection<StepRuntime>(uow.StepRuntimes.GetAll());
+                ProjectService.Items = new ObservableCollection<Project>(uow.Projects.GetAll());
+                ProgramTypeService.Items = new ObservableCollection<ProgramType>(uow.ProgramTypes.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
             }

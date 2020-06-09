@@ -19,8 +19,8 @@ namespace BCLabManager.ViewModel
     public class AllChannelsViewModel : BindableBase
     {
         #region Fields
-        //ObservableCollection<ChannelClass> _channels;
-        //ObservableCollection<TesterClass> _testers;
+        //ObservableCollection<Channel> _channels;
+        //ObservableCollection<Tester> _testers;
         private ChannelServiceClass _channelService;
         private TesterServiceClass _testerService;
         ChannelViewModel _selectedItem;
@@ -56,21 +56,21 @@ namespace BCLabManager.ViewModel
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems)
                     {
-                        var channel = item as ChannelClass;
+                        var channel = item as Channel;
                         this.AllChannels.Add(new ChannelViewModel(channel));
                     }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
                     foreach (var item in e.OldItems)
                     {
-                        var channel = item as ChannelClass;
+                        var channel = item as Channel;
                         var deletetarget = this.AllChannels.SingleOrDefault(o => o.Id == channel.Id);
                         this.AllChannels.Remove(deletetarget);
                     }
                     break;
             }
         }
-        void CreateAllChannels(ObservableCollection<ChannelClass> channels)
+        void CreateAllChannels(ObservableCollection<Channel> channels)
         {
             List<ChannelViewModel> all =
                 (from c in channels
@@ -181,7 +181,7 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            ChannelClass m = new ChannelClass();      //实例化一个新的model
+            Channel m = new Channel();      //实例化一个新的model
             ChannelEditViewModel evm = new ChannelEditViewModel(m, _testerService.Items);      //实例化一个新的view model
             //evm.DisplayName = "Channel-Create";
             evm.commandType = CommandType.Create;
@@ -195,7 +195,7 @@ namespace BCLabManager.ViewModel
         }
         private void Edit()
         {
-            ChannelClass m = new ChannelClass();      //实例化一个新的model
+            Channel m = new Channel();      //实例化一个新的model
             ChannelEditViewModel evm = new ChannelEditViewModel(m, _testerService.Items);      //实例化一个新的view model
             evm.Id = SelectedItem.Id;
             evm.Name = _selectedItem.Name;
@@ -217,7 +217,7 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            ChannelClass m = new ChannelClass();      //实例化一个新的model
+            Channel m = new Channel();      //实例化一个新的model
             ChannelEditViewModel evm = new ChannelEditViewModel(m, _testerService.Items);      //实例化一个新的view model
             evm.Name = _selectedItem.Name;
             //evm.Tester = _selectedItem.Tester;

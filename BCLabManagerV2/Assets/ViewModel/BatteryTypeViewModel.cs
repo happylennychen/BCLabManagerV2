@@ -19,13 +19,13 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        readonly BatteryTypeClass _batterytype;
+        readonly BatteryType _batterytype;
 
         #endregion // Fields
 
         #region Constructor
 
-        public BatteryTypeViewModel(BatteryTypeClass batterytype)  //构造函数里面之所以要batterytyperepository,是因为IsNewBattery需要用此进行判断
+        public BatteryTypeViewModel(BatteryType batterytype)  //构造函数里面之所以要batterytyperepository,是因为IsNewBattery需要用此进行判断
         {
             if (batterytype == null)
                 throw new ArgumentNullException("batterytype");

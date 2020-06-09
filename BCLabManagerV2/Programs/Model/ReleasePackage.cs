@@ -10,20 +10,20 @@ using Prism.Mvvm;
 
 namespace BCLabManager.Model
 {
-    public class ReleasePackageClass : BindableBase
+    public class ReleasePackage : BindableBase
     {
 
         public int Id { get; set; }
 
-        private ProjectSettingClass _project_setting;
-        public ProjectSettingClass project_setting
+        private ProjectSetting _project_setting;
+        public ProjectSetting project_setting
         {
             get { return _project_setting; }
             set { SetProperty(ref _project_setting, value); }
         }
 
-        private LibFGClass _lib_fg;
-        public LibFGClass lib_fg
+        private LibFG _lib_fg;
+        public LibFG lib_fg
         {
             get { return _lib_fg; }
             set { SetProperty(ref _lib_fg, value); }
@@ -62,6 +62,13 @@ namespace BCLabManager.Model
         {
             get { return _emulator_info; }
             set { SetProperty(ref _emulator_info, value); }
+        }
+
+        private string _comment;
+        public string comment
+        {
+            get { return _comment; }
+            set { SetProperty(ref _comment, value); }
         }
         private bool _isvalid;
         public bool is_valid

@@ -19,7 +19,7 @@ namespace BCLabManager.Migrations
                 .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("BCLabManager.Model.AssetUsageRecordClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.AssetUsageRecord", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -31,16 +31,16 @@ namespace BCLabManager.Migrations
                         .HasColumnName("asset_use_count")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("BatteryClassId")
-                        .HasColumnName("battery_class_id")
+                    b.Property<int?>("BatteryId")
+                        .HasColumnName("battery_id")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("ChamberClassId")
-                        .HasColumnName("chamber_class_id")
+                    b.Property<int?>("ChamberId")
+                        .HasColumnName("chamber_id")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("ChannelClassId")
-                        .HasColumnName("channel_class_id")
+                    b.Property<int?>("ChannelId")
+                        .HasColumnName("channel_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("ProgramName")
@@ -58,19 +58,19 @@ namespace BCLabManager.Migrations
                     b.HasKey("Id")
                         .HasName("pk_asset_usage_records");
 
-                    b.HasIndex("BatteryClassId")
-                        .HasName("ix_asset_usage_records_battery_class_id");
+                    b.HasIndex("BatteryId")
+                        .HasName("ix_asset_usage_records_battery_id");
 
-                    b.HasIndex("ChamberClassId")
-                        .HasName("ix_asset_usage_records_chamber_class_id");
+                    b.HasIndex("ChamberId")
+                        .HasName("ix_asset_usage_records_chamber_id");
 
-                    b.HasIndex("ChannelClassId")
-                        .HasName("ix_asset_usage_records_channel_class_id");
+                    b.HasIndex("ChannelId")
+                        .HasName("ix_asset_usage_records_channel_id");
 
                     b.ToTable("asset_usage_records");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.BatteryClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.Battery", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -103,7 +103,7 @@ namespace BCLabManager.Migrations
                     b.ToTable("batteries");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.BatteryTypeClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.BatteryType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -157,7 +157,7 @@ namespace BCLabManager.Migrations
                     b.ToTable("battery_types");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.ChamberClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.Chamber", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -191,7 +191,7 @@ namespace BCLabManager.Migrations
                     b.ToTable("chambers");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.ChannelClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.Channel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -220,7 +220,7 @@ namespace BCLabManager.Migrations
                     b.ToTable("channels");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.CoefficientClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.Coefficient", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -246,7 +246,7 @@ namespace BCLabManager.Migrations
                     b.ToTable("coefficients");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.EmulatorResultClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.EmulatorResult", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -254,8 +254,8 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int?>("ProjectClassId")
-                        .HasColumnName("project_class_id")
+                    b.Property<int?>("ProjectId")
+                        .HasColumnName("project_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("em_current")
@@ -278,6 +278,10 @@ namespace BCLabManager.Migrations
                         .HasColumnName("error_tte")
                         .HasColumnType("text");
 
+                    b.Property<string>("excel_file_path")
+                        .HasColumnName("excel_file_path")
+                        .HasColumnType("text");
+
                     b.Property<bool>("is_valid")
                         .HasColumnName("is_valid")
                         .HasColumnType("boolean");
@@ -288,10 +292,6 @@ namespace BCLabManager.Migrations
 
                     b.Property<string>("log_file_path")
                         .HasColumnName("log_file_path")
-                        .HasColumnType("text");
-
-                    b.Property<string>("package_file_path")
-                        .HasColumnName("package_file_path")
                         .HasColumnType("text");
 
                     b.Property<int?>("project_settingId")
@@ -313,8 +313,8 @@ namespace BCLabManager.Migrations
                     b.HasKey("Id")
                         .HasName("pk_emulator_results");
 
-                    b.HasIndex("ProjectClassId")
-                        .HasName("ix_emulator_results_project_class_id");
+                    b.HasIndex("ProjectId")
+                        .HasName("ix_emulator_results_project_id");
 
                     b.HasIndex("lib_fgId")
                         .HasName("ix_emulator_results_lib_fg_id");
@@ -328,7 +328,7 @@ namespace BCLabManager.Migrations
                     b.ToTable("emulator_results");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.LibFGClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.LibFG", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -366,7 +366,7 @@ namespace BCLabManager.Migrations
                     b.ToTable("lib_fgs");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.Program", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -442,7 +442,7 @@ namespace BCLabManager.Migrations
                     b.ToTable("programs");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.ProgramTypeClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.ProgramType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -464,7 +464,7 @@ namespace BCLabManager.Migrations
                     b.ToTable("program_types");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.ProjectClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.Project", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -513,7 +513,7 @@ namespace BCLabManager.Migrations
                     b.ToTable("projects");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.ProjectSettingClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.ProjectSetting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -521,8 +521,8 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int?>("ProjectClassId")
-                        .HasColumnName("project_class_id")
+                    b.Property<int?>("ProjectId")
+                        .HasColumnName("project_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("accumulated_capacity_mahr")
@@ -592,13 +592,13 @@ namespace BCLabManager.Migrations
                     b.HasKey("Id")
                         .HasName("pk_project_settings");
 
-                    b.HasIndex("ProjectClassId")
-                        .HasName("ix_project_settings_project_class_id");
+                    b.HasIndex("ProjectId")
+                        .HasName("ix_project_settings_project_id");
 
                     b.ToTable("project_settings");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.RecipeClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.Recipe", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -630,8 +630,8 @@ namespace BCLabManager.Migrations
                         .HasColumnName("name")
                         .HasColumnType("text");
 
-                    b.Property<int?>("ProgramClassId")
-                        .HasColumnName("program_class_id")
+                    b.Property<int?>("ProgramId")
+                        .HasColumnName("program_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("StartTime")
@@ -645,8 +645,8 @@ namespace BCLabManager.Migrations
                     b.HasKey("Id")
                         .HasName("pk_recipes");
 
-                    b.HasIndex("ProgramClassId")
-                        .HasName("ix_recipes_program_class_id");
+                    b.HasIndex("ProgramId")
+                        .HasName("ix_recipes_program_id");
 
                     b.ToTable("recipes");
                 });
@@ -669,7 +669,7 @@ namespace BCLabManager.Migrations
                     b.ToTable("recipe_templates");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.ReleasePackageClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.ReleasePackage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -677,9 +677,13 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int?>("ProjectClassId")
-                        .HasColumnName("project_class_id")
+                    b.Property<int?>("ProjectId")
+                        .HasColumnName("project_id")
                         .HasColumnType("integer");
+
+                    b.Property<string>("comment")
+                        .HasColumnName("comment")
+                        .HasColumnType("text");
 
                     b.Property<string>("emulator_info")
                         .HasColumnName("emulator_info")
@@ -716,8 +720,8 @@ namespace BCLabManager.Migrations
                     b.HasKey("Id")
                         .HasName("pk_release_packages");
 
-                    b.HasIndex("ProjectClassId")
-                        .HasName("ix_release_packages_project_class_id");
+                    b.HasIndex("ProjectId")
+                        .HasName("ix_release_packages_project_id");
 
                     b.HasIndex("lib_fgId")
                         .HasName("ix_release_packages_lib_fg_id");
@@ -728,7 +732,7 @@ namespace BCLabManager.Migrations
                     b.ToTable("release_packages");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.StepClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.Step", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -780,7 +784,7 @@ namespace BCLabManager.Migrations
                     b.ToTable("steps");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.StepRuntimeClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.StepRuntime", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -816,8 +820,8 @@ namespace BCLabManager.Migrations
                         .HasColumnName("order")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("RecipeClassId")
-                        .HasColumnName("recipe_class_id")
+                    b.Property<int?>("RecipeId")
+                        .HasColumnName("recipe_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("StartTime")
@@ -831,8 +835,8 @@ namespace BCLabManager.Migrations
                     b.HasKey("Id")
                         .HasName("pk_step_runtimes");
 
-                    b.HasIndex("RecipeClassId")
-                        .HasName("ix_step_runtimes_recipe_class_id");
+                    b.HasIndex("RecipeId")
+                        .HasName("ix_step_runtimes_recipe_id");
 
                     b.HasIndex("StepTemplateId")
                         .HasName("ix_step_runtimes_step_template_id");
@@ -877,7 +881,7 @@ namespace BCLabManager.Migrations
                     b.ToTable("step_templates");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.TableMakerProductClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.TableMakerProduct", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -889,19 +893,23 @@ namespace BCLabManager.Migrations
                         .HasColumnName("file_path")
                         .HasColumnType("text");
 
-                    b.Property<int?>("ProjectClassId")
-                        .HasColumnName("project_class_id")
+                    b.Property<int?>("ProjectId")
+                        .HasColumnName("project_id")
                         .HasColumnType("integer");
 
                     b.Property<int?>("TypeId")
                         .HasColumnName("type_id")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("is_valid")
+                        .HasColumnName("is_valid")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id")
                         .HasName("pk_table_maker_products");
 
-                    b.HasIndex("ProjectClassId")
-                        .HasName("ix_table_maker_products_project_class_id");
+                    b.HasIndex("ProjectId")
+                        .HasName("ix_table_maker_products_project_id");
 
                     b.HasIndex("TypeId")
                         .HasName("ix_table_maker_products_type_id");
@@ -909,7 +917,7 @@ namespace BCLabManager.Migrations
                     b.ToTable("table_maker_products");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.TableMakerProductTypeClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.TableMakerProductType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -921,17 +929,13 @@ namespace BCLabManager.Migrations
                         .HasColumnName("description")
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
-                        .HasColumnName("name")
-                        .HasColumnType("text");
-
                     b.HasKey("Id")
                         .HasName("pk_table_maker_product_types");
 
                     b.ToTable("table_maker_product_types");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.TestRecord", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1007,8 +1011,8 @@ namespace BCLabManager.Migrations
                         .HasColumnName("project_str")
                         .HasColumnType("text");
 
-                    b.Property<int?>("RecipeClassId")
-                        .HasColumnName("recipe_class_id")
+                    b.Property<int?>("RecipeId")
+                        .HasColumnName("recipe_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("RecipeStr")
@@ -1051,13 +1055,13 @@ namespace BCLabManager.Migrations
                     b.HasIndex("AssignedChannelId")
                         .HasName("ix_test_records_assigned_channel_id");
 
-                    b.HasIndex("RecipeClassId")
-                        .HasName("ix_test_records_recipe_class_id");
+                    b.HasIndex("RecipeId")
+                        .HasName("ix_test_records_recipe_id");
 
                     b.ToTable("test_records");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.TesterClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.Tester", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1079,119 +1083,119 @@ namespace BCLabManager.Migrations
                     b.ToTable("testers");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.AssetUsageRecordClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.AssetUsageRecord", b =>
                 {
-                    b.HasOne("BCLabManager.Model.BatteryClass", null)
+                    b.HasOne("BCLabManager.Model.Battery", null)
                         .WithMany("Records")
-                        .HasForeignKey("BatteryClassId")
-                        .HasConstraintName("fk_asset_usage_records_batteries_battery_class_id");
+                        .HasForeignKey("BatteryId")
+                        .HasConstraintName("fk_asset_usage_records_batteries_battery_id");
 
-                    b.HasOne("BCLabManager.Model.ChamberClass", null)
+                    b.HasOne("BCLabManager.Model.Chamber", null)
                         .WithMany("Records")
-                        .HasForeignKey("ChamberClassId")
-                        .HasConstraintName("fk_asset_usage_records_chambers_chamber_class_id");
+                        .HasForeignKey("ChamberId")
+                        .HasConstraintName("fk_asset_usage_records_chambers_chamber_id");
 
-                    b.HasOne("BCLabManager.Model.ChannelClass", null)
+                    b.HasOne("BCLabManager.Model.Channel", null)
                         .WithMany("Records")
-                        .HasForeignKey("ChannelClassId")
-                        .HasConstraintName("fk_asset_usage_records_channels_channel_class_id");
+                        .HasForeignKey("ChannelId")
+                        .HasConstraintName("fk_asset_usage_records_channels_channel_id");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.BatteryClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.Battery", b =>
                 {
-                    b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
+                    b.HasOne("BCLabManager.Model.BatteryType", "BatteryType")
                         .WithMany()
                         .HasForeignKey("BatteryTypeId")
                         .HasConstraintName("fk_batteries_battery_types_battery_type_id");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.ChannelClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.Channel", b =>
                 {
-                    b.HasOne("BCLabManager.Model.TesterClass", "Tester")
+                    b.HasOne("BCLabManager.Model.Tester", "Tester")
                         .WithMany()
                         .HasForeignKey("TesterId")
                         .HasConstraintName("fk_channels_testers_tester_id");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.EmulatorResultClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.EmulatorResult", b =>
                 {
-                    b.HasOne("BCLabManager.Model.ProjectClass", null)
+                    b.HasOne("BCLabManager.Model.Project", null)
                         .WithMany("EmulatorResults")
-                        .HasForeignKey("ProjectClassId")
-                        .HasConstraintName("fk_emulator_results_projects_project_class_id");
+                        .HasForeignKey("ProjectId")
+                        .HasConstraintName("fk_emulator_results_projects_project_id");
 
-                    b.HasOne("BCLabManager.Model.LibFGClass", "lib_fg")
+                    b.HasOne("BCLabManager.Model.LibFG", "lib_fg")
                         .WithMany()
                         .HasForeignKey("lib_fgId")
                         .HasConstraintName("fk_emulator_results_lib_fgs_lib_fg_id");
 
-                    b.HasOne("BCLabManager.Model.ProjectSettingClass", "project_setting")
+                    b.HasOne("BCLabManager.Model.ProjectSetting", "project_setting")
                         .WithMany()
                         .HasForeignKey("project_settingId")
                         .HasConstraintName("fk_emulator_results_project_settings_project_setting_id");
 
-                    b.HasOne("BCLabManager.Model.TestRecordClass", "test_record")
+                    b.HasOne("BCLabManager.Model.TestRecord", "test_record")
                         .WithMany("EmulatorResults")
                         .HasForeignKey("test_recordId")
                         .HasConstraintName("fk_emulator_results_test_records_test_record_id");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.ProgramClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.Program", b =>
                 {
-                    b.HasOne("BCLabManager.Model.ProjectClass", "Project")
+                    b.HasOne("BCLabManager.Model.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
                         .HasConstraintName("fk_programs_projects_project_id");
 
-                    b.HasOne("BCLabManager.Model.ProgramTypeClass", "Type")
+                    b.HasOne("BCLabManager.Model.ProgramType", "Type")
                         .WithMany()
                         .HasForeignKey("TypeId")
                         .HasConstraintName("fk_programs_program_types_type_id");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.ProjectClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.Project", b =>
                 {
-                    b.HasOne("BCLabManager.Model.BatteryTypeClass", "BatteryType")
+                    b.HasOne("BCLabManager.Model.BatteryType", "BatteryType")
                         .WithMany()
                         .HasForeignKey("BatteryTypeId")
                         .HasConstraintName("fk_projects_battery_types_battery_type_id");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.ProjectSettingClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.ProjectSetting", b =>
                 {
-                    b.HasOne("BCLabManager.Model.ProjectClass", null)
+                    b.HasOne("BCLabManager.Model.Project", null)
                         .WithMany("ProjectSettings")
-                        .HasForeignKey("ProjectClassId")
-                        .HasConstraintName("fk_project_settings_projects_project_class_id");
+                        .HasForeignKey("ProjectId")
+                        .HasConstraintName("fk_project_settings_projects_project_id");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.RecipeClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.Recipe", b =>
                 {
-                    b.HasOne("BCLabManager.Model.ProgramClass", null)
+                    b.HasOne("BCLabManager.Model.Program", null)
                         .WithMany("Recipes")
-                        .HasForeignKey("ProgramClassId")
-                        .HasConstraintName("fk_recipes_programs_program_class_id");
+                        .HasForeignKey("ProgramId")
+                        .HasConstraintName("fk_recipes_programs_program_id");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.ReleasePackageClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.ReleasePackage", b =>
                 {
-                    b.HasOne("BCLabManager.Model.ProjectClass", null)
+                    b.HasOne("BCLabManager.Model.Project", null)
                         .WithMany("ReleasePackages")
-                        .HasForeignKey("ProjectClassId")
-                        .HasConstraintName("fk_release_packages_projects_project_class_id");
+                        .HasForeignKey("ProjectId")
+                        .HasConstraintName("fk_release_packages_projects_project_id");
 
-                    b.HasOne("BCLabManager.Model.LibFGClass", "lib_fg")
+                    b.HasOne("BCLabManager.Model.LibFG", "lib_fg")
                         .WithMany()
                         .HasForeignKey("lib_fgId")
                         .HasConstraintName("fk_release_packages_lib_fgs_lib_fg_id");
 
-                    b.HasOne("BCLabManager.Model.ProjectSettingClass", "project_setting")
+                    b.HasOne("BCLabManager.Model.ProjectSetting", "project_setting")
                         .WithMany()
                         .HasForeignKey("project_settingId")
                         .HasConstraintName("fk_release_packages_project_settings_project_setting_id");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.StepClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.Step", b =>
                 {
                     b.HasOne("BCLabManager.Model.RecipeTemplate", null)
                         .WithMany("Steps")
@@ -1204,12 +1208,12 @@ namespace BCLabManager.Migrations
                         .HasConstraintName("fk_steps_step_templates_step_template_id");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.StepRuntimeClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.StepRuntime", b =>
                 {
-                    b.HasOne("BCLabManager.Model.RecipeClass", null)
+                    b.HasOne("BCLabManager.Model.Recipe", null)
                         .WithMany("StepRuntimes")
-                        .HasForeignKey("RecipeClassId")
-                        .HasConstraintName("fk_step_runtimes_recipes_recipe_class_id");
+                        .HasForeignKey("RecipeId")
+                        .HasConstraintName("fk_step_runtimes_recipes_recipe_id");
 
                     b.HasOne("BCLabManager.Model.StepTemplate", "StepTemplate")
                         .WithMany()
@@ -1219,46 +1223,46 @@ namespace BCLabManager.Migrations
 
             modelBuilder.Entity("BCLabManager.Model.StepTemplate", b =>
                 {
-                    b.HasOne("BCLabManager.Model.CoefficientClass", "Coefficient")
+                    b.HasOne("BCLabManager.Model.Coefficient", "Coefficient")
                         .WithMany()
                         .HasForeignKey("CoefficientId")
                         .HasConstraintName("fk_step_templates_coefficients_coefficient_id");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.TableMakerProductClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.TableMakerProduct", b =>
                 {
-                    b.HasOne("BCLabManager.Model.ProjectClass", null)
+                    b.HasOne("BCLabManager.Model.Project", null)
                         .WithMany("TableMakerProducts")
-                        .HasForeignKey("ProjectClassId")
-                        .HasConstraintName("fk_table_maker_products_projects_project_class_id");
+                        .HasForeignKey("ProjectId")
+                        .HasConstraintName("fk_table_maker_products_projects_project_id");
 
-                    b.HasOne("BCLabManager.Model.TableMakerProductTypeClass", "Type")
+                    b.HasOne("BCLabManager.Model.TableMakerProductType", "Type")
                         .WithMany()
                         .HasForeignKey("TypeId")
                         .HasConstraintName("fk_table_maker_products_table_maker_product_types_type_id");
                 });
 
-            modelBuilder.Entity("BCLabManager.Model.TestRecordClass", b =>
+            modelBuilder.Entity("BCLabManager.Model.TestRecord", b =>
                 {
-                    b.HasOne("BCLabManager.Model.BatteryClass", "AssignedBattery")
+                    b.HasOne("BCLabManager.Model.Battery", "AssignedBattery")
                         .WithMany()
                         .HasForeignKey("AssignedBatteryId")
                         .HasConstraintName("fk_test_records_batteries_assigned_battery_id");
 
-                    b.HasOne("BCLabManager.Model.ChamberClass", "AssignedChamber")
+                    b.HasOne("BCLabManager.Model.Chamber", "AssignedChamber")
                         .WithMany()
                         .HasForeignKey("AssignedChamberId")
                         .HasConstraintName("fk_test_records_chambers_assigned_chamber_id");
 
-                    b.HasOne("BCLabManager.Model.ChannelClass", "AssignedChannel")
+                    b.HasOne("BCLabManager.Model.Channel", "AssignedChannel")
                         .WithMany()
                         .HasForeignKey("AssignedChannelId")
                         .HasConstraintName("fk_test_records_channels_assigned_channel_id");
 
-                    b.HasOne("BCLabManager.Model.RecipeClass", null)
+                    b.HasOne("BCLabManager.Model.Recipe", null)
                         .WithMany("TestRecords")
-                        .HasForeignKey("RecipeClassId")
-                        .HasConstraintName("fk_test_records_recipes_recipe_class_id");
+                        .HasForeignKey("RecipeId")
+                        .HasConstraintName("fk_test_records_recipes_recipe_id");
                 });
 #pragma warning restore 612, 618
         }

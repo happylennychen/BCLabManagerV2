@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class BatteryClass : AssetClass
+    public class Battery : Asset
     {
         public int Id { get; set; }
         //public String Name { get; set; }
@@ -18,8 +18,8 @@ namespace BCLabManager.Model
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
-        private BatteryTypeClass _batteryType;
-        public BatteryTypeClass BatteryType
+        private BatteryType _batteryType;
+        public BatteryType BatteryType
         {
             get { return _batteryType; }
             set { SetProperty(ref _batteryType, value); }
@@ -31,7 +31,7 @@ namespace BCLabManager.Model
             set { SetProperty(ref _cycleCount, value); }
         }
 
-        public BatteryClass()
+        public Battery()
         { }
 
         //public BatteryClass(String Name, BatteryTypeClass BatteryType, Double CycleCount = 0)

@@ -19,7 +19,7 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        readonly ChannelClass _channel;
+        readonly Channel _channel;
         RelayCommand _okCommand;
         bool _isOK;
 
@@ -27,7 +27,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public ChannelEditViewModel(ChannelClass channel, ObservableCollection<TesterClass> testers)
+        public ChannelEditViewModel(Channel channel, ObservableCollection<Tester> testers)
         {
             _channel = channel;
             _channel.PropertyChanged += _channel_PropertyChanged;
@@ -39,7 +39,7 @@ namespace BCLabManager.ViewModel
             RaisePropertyChanged(e.PropertyName);
         }
 
-        void CreateAllTesters(ObservableCollection<TesterClass> testers)
+        void CreateAllTesters(ObservableCollection<Tester> testers)
         {
             this.AllTesters = testers;
         }
@@ -95,7 +95,7 @@ namespace BCLabManager.ViewModel
         #region Presentation Properties
 
 
-        public TesterClass Tester
+        public Tester Tester
         {
             get { return _channel.Tester; }
             set
@@ -109,7 +109,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ObservableCollection<TesterClass> AllTesters { get; set; }
+        public ObservableCollection<Tester> AllTesters { get; set; }
 
         /// <summary>
         /// Returns a command that saves the customer.

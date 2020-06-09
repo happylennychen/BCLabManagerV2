@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.DataAccess
 {
-    public interface IProgramRepository:IRepository<ProgramClass>
+    public interface IProgramRepository:IRepository<Program>
     {
     }
 }

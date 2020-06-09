@@ -18,9 +18,9 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        public ProgramClass _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
-        ObservableCollection<ProjectClass> _projects;
-        ObservableCollection<ProgramTypeClass> _programTypes;
+        public Program _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
+        ObservableCollection<Project> _projects;
+        ObservableCollection<ProgramType> _programTypes;
         RecipeTemplateViewModel _selectedRecipeTemplate;
         RecipeViewModel _selectedRecipe;
         RelayCommand _okCommand;
@@ -33,10 +33,10 @@ namespace BCLabManager.ViewModel
         #region Constructor
 
         public ProgramEditViewModel(
-            ProgramClass programmodel,
-            ObservableCollection<ProjectClass> projects,
+            Program programmodel,
+            ObservableCollection<Project> projects,
             ObservableCollection<RecipeTemplate> RecipeTemplates,
-            ObservableCollection<ProgramTypeClass> programTypes)
+            ObservableCollection<ProgramType> programTypes)
         {
             _program = programmodel;
             _projects = projects;
@@ -98,7 +98,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ProjectClass Project       //选中项
+        public Project Project       //选中项
         {
             get
             {
@@ -117,17 +117,17 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ObservableCollection<ProjectClass> AllProjects //供选项
+        public ObservableCollection<Project> AllProjects //供选项
         {
             get
             {
-                ObservableCollection<ProjectClass> all = _projects;
+                ObservableCollection<Project> all = _projects;
 
-                return new ObservableCollection<ProjectClass>(all);
+                return new ObservableCollection<Project>(all);
             }
         }
 
-        public ProgramTypeClass ProgramType       //选中项
+        public ProgramType ProgramType       //选中项
         {
             get
             {
@@ -146,13 +146,13 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ObservableCollection<ProgramTypeClass> AllProgramTypes //供选项
+        public ObservableCollection<ProgramType> AllProgramTypes //供选项
         {
             get
             {
-                ObservableCollection<ProgramTypeClass> all = _programTypes;
+                ObservableCollection<ProgramType> all = _programTypes;
 
-                return new ObservableCollection<ProgramTypeClass>(all);
+                return new ObservableCollection<ProgramType>(all);
             }
         }
         public string Requester
@@ -341,7 +341,7 @@ namespace BCLabManager.ViewModel
 
         public void Add()       //对于model来说，需要将选中的sub copy到_program.Recipes来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.Recipes里面去
         {
-            var model = new RecipeClass(SelectedRecipeTemplate._recipeTemplate, Project.BatteryType);
+            var model = new Recipe(SelectedRecipeTemplate._recipeTemplate, Project.BatteryType);
             var viewmodel = new RecipeViewModel(model);
             _program.Recipes.Add(model);
             this.Recipes.Add(viewmodel);

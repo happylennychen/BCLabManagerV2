@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BCLabManager.Model
 {
-    public class AssetUsageRecordClass : BindableBase
+    public class AssetUsageRecord : BindableBase
     {
         private DateTime _timestamp;
         public DateTime Timestamp
@@ -41,7 +41,7 @@ namespace BCLabManager.Model
         //{
 
         //}
-        public AssetUsageRecordClass(DateTime Timestamp, int AssetUseCount, String ProgramName, String RecipeName)
+        public AssetUsageRecord(DateTime Timestamp, int AssetUseCount, String ProgramName, String RecipeName)
         {
             this.Timestamp = Timestamp;
             this.AssetUseCount = AssetUseCount;

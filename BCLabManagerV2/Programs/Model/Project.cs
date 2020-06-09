@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class ProjectClass : BindableBase
+    public class Project : BindableBase
     {
 
         public int Id { get; set; }
@@ -30,8 +30,8 @@ namespace BCLabManager.Model
             get { return _customer; }
             set { SetProperty(ref _customer, value); }
         }
-        private BatteryTypeClass _batteryType;
-        public BatteryTypeClass BatteryType
+        private BatteryType _batteryType;
+        public BatteryType BatteryType
         {
             get { return _batteryType; }
             set { SetProperty(ref _batteryType, value); }
@@ -66,12 +66,12 @@ namespace BCLabManager.Model
             get { return _voltagePoints; }
             set { SetProperty(ref _voltagePoints, value); }
         }
-        public ObservableCollection<TableMakerProductClass> TableMakerProducts { get; set; } = new ObservableCollection<TableMakerProductClass>();
-        public ObservableCollection<ProjectSettingClass> ProjectSettings { get; set; } = new ObservableCollection<ProjectSettingClass>();
-        public ObservableCollection<EmulatorResultClass> EmulatorResults { get; set; } = new ObservableCollection<EmulatorResultClass>();
-        public ObservableCollection<ReleasePackageClass> ReleasePackages { get; set; } = new ObservableCollection<ReleasePackageClass>();
+        public ObservableCollection<TableMakerProduct> TableMakerProducts { get; set; } = new ObservableCollection<TableMakerProduct>();
+        public ObservableCollection<ProjectSetting> ProjectSettings { get; set; } = new ObservableCollection<ProjectSetting>();
+        public ObservableCollection<EmulatorResult> EmulatorResults { get; set; } = new ObservableCollection<EmulatorResult>();
+        public ObservableCollection<ReleasePackage> ReleasePackages { get; set; } = new ObservableCollection<ReleasePackage>();
 
-        public ProjectClass()           //Create用到
+        public Project()           //Create用到
         {
         }
         public override string ToString()

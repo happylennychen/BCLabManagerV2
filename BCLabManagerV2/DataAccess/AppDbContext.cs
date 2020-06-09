@@ -10,28 +10,28 @@ namespace BCLabManager.DataAccess
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<BatteryTypeClass> BatteryTypes { get; set; }
-        public DbSet<AssetUsageRecordClass> AssetUsageRecords { get; set; }
-        public DbSet<BatteryClass> Batteries { get; set; }
-        public DbSet<TesterClass> Testers { get; set; }
-        public DbSet<ChannelClass> Channels { get; set; }
-        public DbSet<ChamberClass> Chambers { get; set; }
-        public DbSet<TestRecordClass> TestRecords { get; set; }
+        public DbSet<BatteryType> BatteryTypes { get; set; }
+        public DbSet<AssetUsageRecord> AssetUsageRecords { get; set; }
+        public DbSet<Battery> Batteries { get; set; }
+        public DbSet<Tester> Testers { get; set; }
+        public DbSet<Channel> Channels { get; set; }
+        public DbSet<Chamber> Chambers { get; set; }
+        public DbSet<TestRecord> TestRecords { get; set; }
         public DbSet<StepTemplate> StepTemplates { get; set; }
-        public DbSet<StepClass> Steps { get; set; }
-        public DbSet<StepRuntimeClass> StepRuntimes { get; set; }
+        public DbSet<Step> Steps { get; set; }
+        public DbSet<StepRuntime> StepRuntimes { get; set; }
         public DbSet<RecipeTemplate> RecipeTemplates { get; set; }
-        public DbSet<RecipeClass> Recipes { get; set; }
-        public DbSet<ProgramClass> Programs { get; set; }
-        public DbSet<ProgramTypeClass> ProgramTypes { get; set; }
-        public DbSet<ProjectClass> Projects { get; set; }
-        public DbSet<TableMakerProductClass> TableMakerProducts { get; set; }
-        public DbSet<TableMakerProductTypeClass> TableMakerProductTypes { get; set; }
-        public DbSet<CoefficientClass> Coefficients { get; set; }
-        public DbSet<ProjectSettingClass> ProjectSettings { get; set; }
-        public DbSet<EmulatorResultClass> EmulatorResults { get; set; }
-        public DbSet<LibFGClass> lib_fgs { get; set; }
-        public DbSet<ReleasePackageClass> ReleasePackages { get; set; }
+        public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<Program> Programs { get; set; }
+        public DbSet<ProgramType> ProgramTypes { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<TableMakerProduct> TableMakerProducts { get; set; }
+        public DbSet<TableMakerProductType> TableMakerProductTypes { get; set; }
+        public DbSet<Coefficient> Coefficients { get; set; }
+        public DbSet<ProjectSetting> ProjectSettings { get; set; }
+        public DbSet<EmulatorResult> EmulatorResults { get; set; }
+        public DbSet<LibFG> lib_fgs { get; set; }
+        public DbSet<ReleasePackage> ReleasePackages { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseSqlite($"Data Source={GlobalSettings.DbPath}");

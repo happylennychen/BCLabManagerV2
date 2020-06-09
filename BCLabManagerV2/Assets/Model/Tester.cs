@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class TesterClass : BindableBase, ITester
+    public class Tester : BindableBase, ITester
     {
         public int Id { get; set; }
         //public String Manufacturer { get; set; }
@@ -27,10 +27,10 @@ namespace BCLabManager.Model
             set { SetProperty(ref _name, value); }
         }
 
-        public TesterClass()
+        public Tester()
         { }
 
-        //public TesterClass(String Manufacturer, String Name)
+        //public Tester(String Manufacturer, String Name)
         //{
         //    //this.TesterID = NextID;
         //    this.Manufacturer = Manufacturer;

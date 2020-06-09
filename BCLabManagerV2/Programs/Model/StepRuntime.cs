@@ -9,7 +9,7 @@ using Prism.Mvvm;
 
 namespace BCLabManager.Model
 {
-    public class StepRuntimeClass : BindableBase
+    public class StepRuntime : BindableBase
     {
         public int Id { get; set; }
         public StepTemplate StepTemplate { get; set; }
@@ -56,7 +56,7 @@ namespace BCLabManager.Model
             set { SetProperty(ref _ed, value); }
         }
         public int Order { get; set; }
-        public StepRuntimeClass()
+        public StepRuntime()
         {
         }
 

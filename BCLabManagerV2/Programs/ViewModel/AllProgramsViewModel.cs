@@ -36,8 +36,8 @@ namespace BCLabManager.ViewModel
         RelayCommand _endCommand;
 
         //ObservableCollection<BatteryTypeClass> _batteryTypes;
-        //ObservableCollection<TesterClass> _testers;
-        //ObservableCollection<ChannelClass> _channels;
+        //ObservableCollection<Tester> _testers;
+        //ObservableCollection<Channel> _channels;
         //ObservableCollection<ChamberClass> _chambers;
         //ObservableCollection<ProgramClass> _programs;
         private BatteryServiceClass _batteryService;
@@ -91,7 +91,7 @@ namespace BCLabManager.ViewModel
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems)
                     {
-                        var program = item as ProgramClass;
+                        var program = item as Program;
                         this.AllPrograms.Add(new ProgramViewModel(program));
                     }
                     break;
@@ -105,14 +105,14 @@ namespace BCLabManager.ViewModel
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems)
                     {
-                        var testRecord = item as TestRecordClass;
+                        var testRecord = item as TestRecord;
                         SelectedRecipe.TestRecords.Add(new TestRecordViewModel(testRecord));
                     }
                     break;
             }
         }
 
-        void CreateAllPrograms(ObservableCollection<ProgramClass> programClasses)
+        void CreateAllPrograms(ObservableCollection<Program> programClasses)
         {
             List<ProgramViewModel> all =
                 (from program in programClasses
@@ -404,7 +404,7 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            ProgramClass m = new ProgramClass();      //实例化一个新的model
+            Program m = new Program();      //实例化一个新的model
             ProgramEditViewModel evm = new ProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items, _programTypeService.Items);      //实例化一个新的view model
             //evm.DisplayName = "Program-Create";
             evm.commandType = CommandType.Create;
@@ -418,7 +418,7 @@ namespace BCLabManager.ViewModel
         }
         private void CreateRCProgram()
         {
-            ProgramClass m = new ProgramClass();      //实例化一个新的model
+            Program m = new Program();      //实例化一个新的model
             m.Type = _programTypeService.Items.SingleOrDefault(o => o.Name == "RC");
             RCProgramEditViewModel evm = new RCProgramEditViewModel(m, _projectService.Items);      //实例化一个新的view model
             //evm.DisplayName = "Program-Create";
@@ -624,7 +624,7 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            ProgramClass m = _selectedProgram._program.Clone();
+            Program m = _selectedProgram._program.Clone();
             ProgramEditViewModel evm = new ProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items, _programTypeService.Items);      //实例化一个新的view model
             ////evm.DisplayName = "Program-Save As";
             //evm.commandType = CommandType.SaveAs;
@@ -661,7 +661,7 @@ namespace BCLabManager.ViewModel
         private void Execute()
         //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
         {
-            var model = new TestRecordClass();
+            var model = new TestRecord();
             TestRecordExecuteViewModel evm = new TestRecordExecuteViewModel
                 (
                 //testRecord.Record,      //将model传给ExecuteViewModel      //??????????????????????????

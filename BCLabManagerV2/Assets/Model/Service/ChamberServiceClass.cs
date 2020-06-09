@@ -10,13 +10,13 @@ namespace BCLabManager.Model
 {
     public class ChamberServiceClass
     {
-        public ObservableCollection<ChamberClass> Items { get; set; }
-        public void SuperAdd(ChamberClass item)
+        public ObservableCollection<Chamber> Items { get; set; }
+        public void SuperAdd(Chamber item)
         {
             DatabaseAdd(item);
             Items.Add(item);
         }
-        public void DatabaseAdd(ChamberClass item)
+        public void DatabaseAdd(Chamber item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -38,12 +38,12 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void SuperUpdate(ChamberClass item)
+        public void SuperUpdate(Chamber item)
         {
             DatabaseUpdate(item);
             DomainUpdate(item);
         }
-        public void DatabaseUpdate(ChamberClass item)
+        public void DatabaseUpdate(Chamber item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -51,7 +51,7 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void DomainUpdate(ChamberClass item)
+        public void DomainUpdate(Chamber item)
         {
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             edittarget.HighestTemperature = item.HighestTemperature;
@@ -61,17 +61,17 @@ namespace BCLabManager.Model
             edittarget.AssetUseCount = item.AssetUseCount;
             edittarget.Records = item.Records;
         }
-        public void Execute(ChamberClass item, DateTime startTime, string programName, string recipeName)
+        public void Execute(Chamber item, DateTime startTime, string programName, string recipeName)
         {
             item.AssetUseCount++;
-            item.Records.Add(new AssetUsageRecordClass(startTime, item.AssetUseCount, programName, recipeName));
+            item.Records.Add(new AssetUsageRecord(startTime, item.AssetUseCount, programName, recipeName));
 
             SuperUpdate(item);
         }
-        public void Commit(ChamberClass item, DateTime endTime, string programName, string recipeName)
+        public void Commit(Chamber item, DateTime endTime, string programName, string recipeName)
         {
             item.AssetUseCount--;
-            item.Records.Add(new AssetUsageRecordClass(endTime, item.AssetUseCount, programName, recipeName));
+            item.Records.Add(new AssetUsageRecord(endTime, item.AssetUseCount, programName, recipeName));
 
             SuperUpdate(item);
         }

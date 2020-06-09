@@ -17,14 +17,14 @@ namespace BCLabManager.ViewModel
     public class TestRecordTestDataViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
-        readonly TestRecordClass _record;
+        readonly TestRecord _record;
 
         #endregion // Fields
 
         #region Constructor
 
         public TestRecordTestDataViewModel(
-            TestRecordClass record
+            TestRecord record
             )     //
         {
             if (record == null)

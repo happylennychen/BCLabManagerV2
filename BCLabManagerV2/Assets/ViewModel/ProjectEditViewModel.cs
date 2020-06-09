@@ -19,7 +19,7 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        readonly ProjectClass _project;
+        readonly Project _project;
         RelayCommand _okCommand;
         bool _isOK;
 
@@ -27,7 +27,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public ProjectEditViewModel(ProjectClass project, ObservableCollection<BatteryTypeClass> batteryTypes)
+        public ProjectEditViewModel(Project project, ObservableCollection<BatteryType> batteryTypes)
         {
             if (project == null)
                 throw new ArgumentNullException("project");
@@ -37,7 +37,7 @@ namespace BCLabManager.ViewModel
             CreateAllBatteryTypes(batteryTypes);
         }
 
-        void CreateAllBatteryTypes(ObservableCollection<BatteryTypeClass> batteryTypes)
+        void CreateAllBatteryTypes(ObservableCollection<BatteryType> batteryTypes)
         {
 
             this.AllBatteryTypes = batteryTypes;
@@ -156,7 +156,7 @@ namespace BCLabManager.ViewModel
 
         #region Presentation Properties
 
-        public BatteryTypeClass BatteryType
+        public BatteryType BatteryType
         {
             get { return _project.BatteryType; }
             set
@@ -170,7 +170,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ObservableCollection<BatteryTypeClass> AllBatteryTypes
+        public ObservableCollection<BatteryType> AllBatteryTypes
         {
             get;set;
         }

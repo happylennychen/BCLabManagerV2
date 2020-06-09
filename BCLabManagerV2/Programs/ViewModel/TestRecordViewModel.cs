@@ -18,9 +18,9 @@ namespace BCLabManager.ViewModel
     public class TestRecordViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
-        private TestRecordClass _record;
+        private TestRecord _record;
 
-        public TestRecordClass Record
+        public TestRecord Record
         {
             get { return _record; }
             set { _record = value; }
@@ -32,7 +32,7 @@ namespace BCLabManager.ViewModel
         #region Constructor
 
         public TestRecordViewModel(
-            TestRecordClass record)     //
+            TestRecord record)     //
         {
             _record = record;
             _record.PropertyChanged += _record_PropertyChanged;

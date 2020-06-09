@@ -7,7 +7,7 @@ using BCLabManager.Model;
 
 namespace BCLabManager.DataAccess
 {
-    public class ChamberRepository : Repository<ChamberClass>, IChamberRepository
+    public class ChamberRepository : Repository<Chamber>, IChamberRepository
     {
         public ChamberRepository(AppDbContext context)
             : base(context)

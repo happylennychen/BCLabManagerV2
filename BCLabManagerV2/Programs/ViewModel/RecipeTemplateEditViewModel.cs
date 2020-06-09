@@ -247,7 +247,7 @@ namespace BCLabManager.ViewModel
 
         public void Add()       //对于model来说，需要将选中的sub copy到_program.Recipes来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.Recipes里面去
         {
-            var m = new StepClass(SelectedStepTemplate._stepTemplate);
+            var m = new Step(SelectedStepTemplate._stepTemplate);
             var vm = new StepViewModel(m);
             _RecipeTemplate.Steps.Add(m);
             this.Steps.Add(vm);

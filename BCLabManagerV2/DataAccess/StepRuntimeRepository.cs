@@ -7,7 +7,7 @@ using BCLabManager.Model;
 
 namespace BCLabManager.DataAccess
 {
-    public class StepRuntimeRepository : Repository<StepRuntimeClass>, IStepRuntimeRepository
+    public class StepRuntimeRepository : Repository<StepRuntime>, IStepRuntimeRepository
     {
         public StepRuntimeRepository(AppDbContext context)
             : base(context)

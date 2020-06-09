@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class TesterServiceClass//:ModelService<TesterClass>
+    public class TesterServiceClass//:ModelService<Tester>
     {
-        public ObservableCollection<TesterClass> Items { get; set; }
-        public void SuperAdd(TesterClass item)
+        public ObservableCollection<Tester> Items { get; set; }
+        public void SuperAdd(Tester item)
         {
             DatabaseAdd(item);
             Items.Add(item);
         }
-        public void DatabaseAdd(TesterClass item)
+        public void DatabaseAdd(Tester item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -39,12 +39,12 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void SuperUpdate(TesterClass item)
+        public void SuperUpdate(Tester item)
         {
             DatabaseUpdate(item);
             DomainUpdate(item);
         }
-        public void DatabaseUpdate(TesterClass item)
+        public void DatabaseUpdate(Tester item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -52,7 +52,7 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void DomainUpdate(TesterClass item)
+        public void DomainUpdate(Tester item)
         {
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             edittarget.Manufacturer = item.Manufacturer;

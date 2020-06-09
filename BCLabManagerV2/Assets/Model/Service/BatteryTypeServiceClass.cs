@@ -10,13 +10,13 @@ namespace BCLabManager.Model
 {
     public class BatteryTypeServiceClass//:ModelService<BatteryTypeClass>
     {
-        public ObservableCollection<BatteryTypeClass> Items { get; set; }
-        public void SuperAdd(BatteryTypeClass item)
+        public ObservableCollection<BatteryType> Items { get; set; }
+        public void SuperAdd(BatteryType item)
         {
             DatabaseAdd(item);
             Items.Add(item);
         }
-        public void DatabaseAdd(BatteryTypeClass item)
+        public void DatabaseAdd(BatteryType item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -38,12 +38,12 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void SuperUpdate(BatteryTypeClass item)
+        public void SuperUpdate(BatteryType item)
         {
             DatabaseUpdate(item);
             DomainUpdate(item);
         }
-        public void DatabaseUpdate(BatteryTypeClass item)
+        public void DatabaseUpdate(BatteryType item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -51,7 +51,7 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void DomainUpdate(BatteryTypeClass item)
+        public void DomainUpdate(BatteryType item)
         {
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             edittarget.LimitedChargeVoltage = item.LimitedChargeVoltage;

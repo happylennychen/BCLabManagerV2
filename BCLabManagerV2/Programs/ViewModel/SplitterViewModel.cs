@@ -19,7 +19,7 @@ namespace BCLabManager.ViewModel
     public class SplitterViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
-        readonly TestRecordClass _record;
+        readonly TestRecord _record;
         RelayCommand _okCommand;
         RelayCommand _openFilesCommand;
 

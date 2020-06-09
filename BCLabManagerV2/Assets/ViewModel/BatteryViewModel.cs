@@ -20,13 +20,13 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        readonly BatteryClass _battery;
+        readonly Battery _battery;
 
         #endregion // Fields
 
         #region Constructor
 
-        public BatteryViewModel(BatteryClass battery)
+        public BatteryViewModel(Battery battery)
         {
             if (battery == null)
                 throw new ArgumentNullException("batterymodel");
@@ -63,7 +63,7 @@ namespace BCLabManager.ViewModel
         {
             get { return _battery.AssetUseCount; }
         }
-        public BatteryTypeClass BatteryType
+        public BatteryType BatteryType
         {
             get { return _battery.BatteryType; }
         }

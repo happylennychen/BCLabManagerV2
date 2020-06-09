@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class BatteryTypeClass : BindableBase
+    public class BatteryType : BindableBase
     {
         public int Id { get; set; }
         private string _manufacturer;
@@ -75,7 +75,7 @@ namespace BCLabManager.Model
             get { return _fullyChargedEndingTimeout; }
             set { SetProperty(ref _fullyChargedEndingTimeout, value); }
         }
-        public BatteryTypeClass()
+        public BatteryType()
         { }
 
         //public BatteryTypeClass(String Manufacturer, String Name, String Material, Int32 LimitedChargeVoltage, Int32 RatedCapacity, Int32 NominalVoltage, Int32 TypicalCapacity, Int32 CutoffDischargeVoltage)

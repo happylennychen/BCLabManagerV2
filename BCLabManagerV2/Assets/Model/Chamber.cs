@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class ChamberClass : AssetClass
+    public class Chamber : Asset
     {
         public int Id { get; set; }
         //public String Manufacturer { get; set; }
@@ -38,7 +38,7 @@ namespace BCLabManager.Model
             set { SetProperty(ref _highestTemperature, value); }
         }
 
-        public ChamberClass()
+        public Chamber()
         { }
 
         //public ChamberClass(String Manufacturer, String Name, String TemperatureRange)

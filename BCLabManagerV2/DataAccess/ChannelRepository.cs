@@ -7,7 +7,7 @@ using BCLabManager.Model;
 
 namespace BCLabManager.DataAccess
 {
-    public class ChannelRepository : Repository<ChannelClass>, IChannelRepository
+    public class ChannelRepository : Repository<Channel>, IChannelRepository
     {
         public ChannelRepository(AppDbContext context)
             : base(context)

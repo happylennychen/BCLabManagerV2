@@ -18,7 +18,7 @@ namespace BCLabManager.ViewModel
     public class TestRecordCommitViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
-        readonly TestRecordClass _record;
+        readonly TestRecord _record;
         RelayCommand _okCommand;
         RelayCommand _openFilesCommand;
         RelayCommand _splitterCommand;
@@ -29,7 +29,7 @@ namespace BCLabManager.ViewModel
         #region Constructor
 
         public TestRecordCommitViewModel(
-            TestRecordClass record
+            TestRecord record
             )     //
         {
             _record = record ?? throw new ArgumentNullException("record");

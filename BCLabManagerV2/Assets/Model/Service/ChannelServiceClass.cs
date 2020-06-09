@@ -10,13 +10,13 @@ namespace BCLabManager.Model
 {
     public class ChannelServiceClass
     {
-        public ObservableCollection<ChannelClass> Items { get; set; }
-        public void SuperAdd(ChannelClass item)
+        public ObservableCollection<Channel> Items { get; set; }
+        public void SuperAdd(Channel item)
         {
             DatabaseAdd(item);
             Items.Add(item);
         }
-        public void DatabaseAdd(ChannelClass item)
+        public void DatabaseAdd(Channel item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -40,12 +40,12 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void SuperUpdate(ChannelClass item)
+        public void SuperUpdate(Channel item)
         {
             DatabaseUpdate(item);
             DomainUpdate(item);
         }
-        public void DatabaseUpdate(ChannelClass item)
+        public void DatabaseUpdate(Channel item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -53,7 +53,7 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void DomainUpdate(ChannelClass item)
+        public void DomainUpdate(Channel item)
         {
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             edittarget.Tester = item.Tester;
@@ -61,17 +61,17 @@ namespace BCLabManager.Model
             edittarget.AssetUseCount = item.AssetUseCount;
             edittarget.Records = item.Records;
         }
-        public void Execute(ChannelClass item, DateTime startTime, string programName, string recipeName)
+        public void Execute(Channel item, DateTime startTime, string programName, string recipeName)
         {
             item.AssetUseCount++;
-            item.Records.Add(new AssetUsageRecordClass(startTime, item.AssetUseCount, programName, recipeName));
+            item.Records.Add(new AssetUsageRecord(startTime, item.AssetUseCount, programName, recipeName));
 
             SuperUpdate(item);
         }
-        public void Commit(ChannelClass item, DateTime endTime, string programName, string recipeName)
+        public void Commit(Channel item, DateTime endTime, string programName, string recipeName)
         {
             item.AssetUseCount--;
-            item.Records.Add(new AssetUsageRecordClass(endTime, item.AssetUseCount, programName, recipeName));
+            item.Records.Add(new AssetUsageRecord(endTime, item.AssetUseCount, programName, recipeName));
 
             SuperUpdate(item);
         }

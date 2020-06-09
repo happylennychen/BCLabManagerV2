@@ -10,17 +10,17 @@ namespace BCLabManager.DataAccess
 {
     public class DomainDataClass
     {
-        public ObservableCollection<BatteryTypeClass> BatteryTypes { get; set; }
-        public ObservableCollection<BatteryClass> Batteries { get; set; }
-        public ObservableCollection<TesterClass> Testers { get; set; }
-        public ObservableCollection<ChannelClass> Channels { get; set; }
-        public ObservableCollection<ChamberClass> Chambers { get; set; }
+        public ObservableCollection<BatteryType> BatteryTypes { get; set; }
+        public ObservableCollection<Battery> Batteries { get; set; }
+        public ObservableCollection<Tester> Testers { get; set; }
+        public ObservableCollection<Channel> Channels { get; set; }
+        public ObservableCollection<Chamber> Chambers { get; set; }
         public ObservableCollection<RecipeTemplate> RecipeTemplates { get; set; }
         //public ObservableCollection<ChargeTemperatureClass> ChargeTemperatures { get; set; }
         //public ObservableCollection<ChargeCurrentClass> ChargeCurrents { get; set; }
         //public ObservableCollection<DischargeTemperatureClass> DischargeTemperatures { get; set; }
         //public ObservableCollection<DischargeCurrentClass> DischargeCurrents { get; set; }
-        public ObservableCollection<ProgramClass> Programs { get; set; }
+        public ObservableCollection<Program> Programs { get; set; }
         public DomainDataClass()
         {
             LoadFromDB();
@@ -30,9 +30,9 @@ namespace BCLabManager.DataAccess
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                BatteryTypes = new ObservableCollection<BatteryTypeClass>(uow.BatteryTypes.GetAll());
-                Batteries = new ObservableCollection<BatteryClass>(uow.Batteries.GetAll("BatteryType,Records"));
-                Testers = new ObservableCollection<TesterClass>(uow.Testers.GetAll());
+                BatteryTypes = new ObservableCollection<BatteryType>(uow.BatteryTypes.GetAll());
+                Batteries = new ObservableCollection<Battery>(uow.Batteries.GetAll("BatteryType,Records"));
+                Testers = new ObservableCollection<Tester>(uow.Testers.GetAll());
             }
         }
 
@@ -53,7 +53,7 @@ namespace BCLabManager.DataAccess
 
         private void Battery_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            BatteryClass battery = sender as BatteryClass;
+            Battery battery = sender as Battery;
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 uow.Batteries.Update(battery);
@@ -68,7 +68,7 @@ namespace BCLabManager.DataAccess
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     foreach(var item in e.NewItems)
                     {
-                        var battery = item as BatteryClass;
+                        var battery = item as Battery;
                         battery.PropertyChanged += Battery_PropertyChanged;
                         using(var uow = new UnitOfWork(new AppDbContext()))
                         {
@@ -80,7 +80,7 @@ namespace BCLabManager.DataAccess
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
                     foreach(var item in e.OldItems)
                     {
-                        var battery = item as BatteryClass;
+                        var battery = item as Battery;
                         using(var uow = new UnitOfWork(new AppDbContext()))
                         {
                             uow.Batteries.Delete(battery);
@@ -93,7 +93,7 @@ namespace BCLabManager.DataAccess
 
         private void BatteryType_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            BatteryTypeClass batteryType = sender as BatteryTypeClass;
+            BatteryType batteryType = sender as BatteryType;
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 uow.BatteryTypes.Update(batteryType);
@@ -108,7 +108,7 @@ namespace BCLabManager.DataAccess
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems)
                     {
-                        var batteryType = item as BatteryTypeClass;
+                        var batteryType = item as BatteryType;
                         batteryType.PropertyChanged += BatteryType_PropertyChanged;
                         using (var uow = new UnitOfWork(new AppDbContext()))
                         {
@@ -120,7 +120,7 @@ namespace BCLabManager.DataAccess
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
                     foreach (var item in e.OldItems)
                     {
-                        var batteryType = item as BatteryTypeClass;
+                        var batteryType = item as BatteryType;
                         using (var uow = new UnitOfWork(new AppDbContext()))
                         {
                             uow.BatteryTypes.Delete(batteryType);

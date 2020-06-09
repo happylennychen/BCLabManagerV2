@@ -12,13 +12,13 @@ namespace BCLabManager.Model
 {
     public class TestRecordServiceClass
     {
-        public ObservableCollection<TestRecordClass> Items { get; set; }
-        public void SuperAdd(TestRecordClass item)
+        public ObservableCollection<TestRecord> Items { get; set; }
+        public void SuperAdd(TestRecord item)
         {
             DatabaseAdd(item);
             DomainAdd(item);
         }
-        public void DatabaseAdd(TestRecordClass item)
+        public void DatabaseAdd(TestRecord item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -26,7 +26,7 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void DomainAdd(TestRecordClass item)
+        public void DomainAdd(TestRecord item)
         {
             Items.Add(item);
         }
@@ -41,12 +41,12 @@ namespace BCLabManager.Model
             //var item = Items.SingleOrDefault(o => o.Id == id);
             //Items.Remove(item);
         }
-        public void SuperUpdate(TestRecordClass item)
+        public void SuperUpdate(TestRecord item)
         {
             DatabaseUpdate(item);
             DomainUpdate(item);
         }
-        public void DatabaseUpdate(TestRecordClass item)
+        public void DatabaseUpdate(TestRecord item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -54,7 +54,7 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
-        public void DomainUpdate(TestRecordClass item)
+        public void DomainUpdate(TestRecord item)
         {
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             edittarget.BatteryStr = item.BatteryStr;
@@ -70,7 +70,7 @@ namespace BCLabManager.Model
             edittarget.Status = item.Status;
             edittarget.TesterStr = item.TesterStr;
         }
-        public void Execute(TestRecordClass testRecord, string batteryTypeStr, string projectName, BatteryClass battery, ChamberClass chamber, string testerStr, ChannelClass channel, double current, double temperature, DateTime startTime, double measurementGain, double measurementOffset, double traceResistance, double capacityDifference, string @operator, string programName, string recipeName)
+        public void Execute(TestRecord testRecord, string batteryTypeStr, string projectName, Battery battery, Chamber chamber, string testerStr, Channel channel, double current, double temperature, DateTime startTime, double measurementGain, double measurementOffset, double traceResistance, double capacityDifference, string @operator, string programName, string recipeName)
         {
             testRecord.BatteryTypeStr = batteryTypeStr;
             testRecord.ProjectStr = projectName;
@@ -95,7 +95,7 @@ namespace BCLabManager.Model
             DatabaseUpdate(testRecord);
         }
 
-        internal void Commit(TestRecordClass testRecord, string comment, List<string> rawDataList, bool isRename, string newName, DateTime startTime, DateTime completeTime, string batteryType, string projectName, Header header)
+        internal void Commit(TestRecord testRecord, string comment, List<string> rawDataList, bool isRename, string newName, DateTime startTime, DateTime completeTime, string batteryType, string projectName, Header header)
         {
             testRecord.Comment = comment;
             testRecord.StartTime = startTime;
@@ -227,14 +227,14 @@ namespace BCLabManager.Model
             return filepath;
         }
 
-        internal void Invalidate(TestRecordClass testRecord, string comment)
+        internal void Invalidate(TestRecord testRecord, string comment)
         {
             testRecord.Comment += "\r\n" + comment;
             testRecord.Status = TestStatus.Invalid;
             DatabaseUpdate(testRecord);
         }
 
-        internal void Abandon(TestRecordClass testRecord)
+        internal void Abandon(TestRecord testRecord)
         {
             testRecord.Status = TestStatus.Abandoned;
             DatabaseUpdate(testRecord);

@@ -10,7 +10,7 @@ using Prism.Mvvm;
 
 namespace BCLabManager.Model
 {
-    public class RecipeClass : BindableBase
+    public class Recipe : BindableBase
     {
 
         public int Id { get; set; }
@@ -74,14 +74,14 @@ namespace BCLabManager.Model
         //    set { SetProperty(ref _temperature, value); }
         //}
         //正常来说一个Recipe应该只包含一个TestRecord。但是考虑到有时候测试会无效，所以这里需要用一个List来处理。
-        public ObservableCollection<TestRecordClass> TestRecords { get; set; } = new ObservableCollection<TestRecordClass>();
+        public ObservableCollection<TestRecord> TestRecords { get; set; } = new ObservableCollection<TestRecord>();
 
-        public ObservableCollection<StepRuntimeClass> StepRuntimes { get; set; } = new ObservableCollection<StepRuntimeClass>();
-        public RecipeClass()
+        public ObservableCollection<StepRuntime> StepRuntimes { get; set; } = new ObservableCollection<StepRuntime>();
+        public Recipe()
         {
         }
 
-        public RecipeClass(RecipeTemplate template, BatteryTypeClass batteryType)
+        public Recipe(RecipeTemplate template, BatteryType batteryType)
         {
             Name = template.Name;
             //Current = template.Current;
@@ -95,14 +95,14 @@ namespace BCLabManager.Model
             //    this.StepRuntimes.Add(sr);
             //}
             BuildStepRuntimesBasedOnSteps(template.Steps.ToList(), batteryType);
-            var tr = new TestRecordClass();
+            var tr = new TestRecord();
             //tr.ProgramStr = ProgramStr;
             tr.RecipeStr = $"{this.Temperature}Deg-{this.Name}";
             tr.StatusChanged += this.TestRecord_StatusChanged;
             this.TestRecords.Add(tr);
         }
 
-        private void BuildStepRuntimesBasedOnSteps(List<StepClass> steps, BatteryTypeClass batteryType)
+        private void BuildStepRuntimesBasedOnSteps(List<Step> steps, BatteryType batteryType)
         {
             int targetIndex;
             List<int> numbers = new List<int>();
@@ -162,7 +162,7 @@ namespace BCLabManager.Model
             int order = 0;
             foreach (var index in numbers)
             {
-                StepRuntimeClass sr = new StepRuntimeClass();
+                StepRuntime sr = new StepRuntime();
                 sr.Order = order;
                 order++;
                 sr.StepTemplate = steps[index].StepTemplate;
@@ -186,7 +186,7 @@ namespace BCLabManager.Model
             return false;
         }
 
-        private int FindTargetIndex(List<StepClass> steps, string loopTarget)
+        private int FindTargetIndex(List<Step> steps, string loopTarget)
         {
             foreach (var step in steps)
             {
@@ -196,18 +196,18 @@ namespace BCLabManager.Model
             return -1;
         }
 
-        public RecipeClass(RecipeTemplate template, string ProgramStr, BatteryTypeClass batteryType)  //Only used by populator
+        public Recipe(RecipeTemplate template, string ProgramStr, BatteryType batteryType)  //Only used by populator
         {
             this.Name = template.Name;
             foreach (var step in template.Steps)
             {
-                StepRuntimeClass sr = new StepRuntimeClass();
+                StepRuntime sr = new StepRuntime();
                 sr.StepTemplate = step.StepTemplate;
                 sr.DesignCapacityInmAH = batteryType.TypicalCapacity;
                 this.StepRuntimes.Add(sr);
             }
 
-            var tr = new TestRecordClass();
+            var tr = new TestRecord();
             tr.ProgramStr = ProgramStr;
             tr.RecipeStr = $"{this.Temperature}Deg-{this.Name}";
             tr.StatusChanged += this.TestRecord_StatusChanged;
@@ -221,14 +221,14 @@ namespace BCLabManager.Model
         //    this.Loop = Loop;
         //}
 
-        public void AssociateEvent(TestRecordClass testRecord)
+        public void AssociateEvent(TestRecord testRecord)
         {
             testRecord.StatusChanged += this.TestRecord_StatusChanged;
         }
 
         private void TestRecord_StatusChanged(object sender, StatusChangedEventArgs e)
         {
-            TestRecordClass tr = sender as TestRecordClass; //被改变的Test Record
+            TestRecord tr = sender as TestRecord; //被改变的Test Record
             if (e.Status == TestStatus.Invalid)
             {
                 var dbContext = new AppDbContext();
@@ -239,7 +239,7 @@ namespace BCLabManager.Model
                 dbContext.Entry(sub)
                     .Collection(i => i.TestRecords)
                     .Load();
-                var newTestRecord = new TestRecordClass();
+                var newTestRecord = new TestRecord();
                 newTestRecord.StatusChanged += this.TestRecord_StatusChanged;
                 TestRecords.Add(newTestRecord);
                 OnRasieTestRecordAddedEvent(newTestRecord, true);
@@ -251,7 +251,7 @@ namespace BCLabManager.Model
         #region event   //Used by viewmodel
         public event EventHandler<TestRecordAddedEventArgs> TestRecordAdded;
 
-        protected virtual void OnRasieTestRecordAddedEvent(TestRecordClass tr, bool isFirst)
+        protected virtual void OnRasieTestRecordAddedEvent(TestRecord tr, bool isFirst)
         {
             EventHandler<TestRecordAddedEventArgs> handler = TestRecordAdded;
             TestRecordAddedEventArgs arg = new TestRecordAddedEventArgs(tr, isFirst);
@@ -271,18 +271,18 @@ namespace BCLabManager.Model
                 tr.Abandon();
             }
         }
-        public RecipeClass Clone()  //Clone Name and Test Count, and create testrecords list
+        public Recipe Clone()  //Clone Name and Test Count, and create testrecords list
         {
-            var newsub = new RecipeClass();
+            var newsub = new Recipe();
             newsub.Name = this.Name;
-            newsub.TestRecords = new ObservableCollection<TestRecordClass>();
-            var tr = new TestRecordClass();
+            newsub.TestRecords = new ObservableCollection<TestRecord>();
+            var tr = new TestRecord();
             tr.StatusChanged += newsub.TestRecord_StatusChanged;
             newsub.TestRecords.Add(tr);
 
             foreach (var stepRuntime in this.StepRuntimes)
             {
-                StepRuntimeClass sr = new StepRuntimeClass();
+                StepRuntime sr = new StepRuntime();
                 sr.StepTemplate = stepRuntime.StepTemplate;
                 sr.DesignCapacityInmAH = stepRuntime.DesignCapacityInmAH;
                 newsub.StepRuntimes.Add(sr);

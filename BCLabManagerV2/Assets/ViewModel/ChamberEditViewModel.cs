@@ -19,7 +19,7 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        readonly ChamberClass _chamber;
+        readonly Chamber _chamber;
         RelayCommand _okCommand;
         bool _isOK;
 
@@ -27,7 +27,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public ChamberEditViewModel(ChamberClass chamber)
+        public ChamberEditViewModel(Chamber chamber)
         {
             _chamber = chamber;
             _isOK = false;

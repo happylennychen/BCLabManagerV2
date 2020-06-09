@@ -53,14 +53,14 @@ namespace BCLabManager.ViewModel
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems)
                     {
-                        var batteryType = item as BatteryTypeClass;
+                        var batteryType = item as BatteryType;
                         this.AllBatteryTypes.Add(new BatteryTypeViewModel(batteryType));
                     }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
                     foreach (var item in e.OldItems)
                     {
-                        var batteryType = item as BatteryTypeClass;
+                        var batteryType = item as BatteryType;
                         var deletetarget = this.AllBatteryTypes.SingleOrDefault(o => o.Id == batteryType.Id);
                         this.AllBatteryTypes.Remove(deletetarget);
                     }
@@ -68,7 +68,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        void CreateAllBatteryTypes(ObservableCollection<BatteryTypeClass> batteryTypes)
+        void CreateAllBatteryTypes(ObservableCollection<BatteryType> batteryTypes)
         {
             List<BatteryTypeViewModel> all =
                 (from batT in batteryTypes
@@ -176,7 +176,7 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            BatteryTypeClass btc = new BatteryTypeClass();      //实例化一个新的model
+            BatteryType btc = new BatteryType();      //实例化一个新的model
             BatteryTypeEditViewModel btevm = new BatteryTypeEditViewModel(btc);      //实例化一个新的view model
             //btevm.DisplayName = "Battery Type-Create";
             var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
@@ -189,7 +189,7 @@ namespace BCLabManager.ViewModel
         }
         private void Edit()
         {
-            BatteryTypeClass btc = new BatteryTypeClass();      //实例化一个新的model
+            BatteryType btc = new BatteryType();      //实例化一个新的model
             BatteryTypeEditViewModel btevm = new BatteryTypeEditViewModel(btc);      //实例化一个新的view model
             btevm.Id = _selectedItem.Id;
             btevm.Manufacturer = _selectedItem.Manufacturer;
@@ -210,7 +210,7 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            BatteryTypeClass btc = new BatteryTypeClass();      //实例化一个新的model
+            BatteryType btc = new BatteryType();      //实例化一个新的model
             BatteryTypeEditViewModel btevm = new BatteryTypeEditViewModel(btc);      //实例化一个新的view model
             btevm.Manufacturer = _selectedItem.Manufacturer;
             btevm.Material = _selectedItem.Material;

@@ -74,7 +74,7 @@ namespace BCLabManager
             //        }
             //    }
             //}
-            BatteryTypeClass bt = new BatteryTypeClass();
+            BatteryType bt = new BatteryType();
             bt.Name = "BLP663";
             bt.Manufacturer = "Oppo";
             bt.Material = "Li-ion Plymer Battery";
@@ -85,7 +85,7 @@ namespace BCLabManager
             bt.CutoffDischargeVoltage = 3200;
             PopulateOneBatteryType(bt);
 
-            bt = new BatteryTypeClass();
+            bt = new BatteryType();
             bt.Name = "32700-6000mAh";
             bt.Manufacturer = "FbTech";
             bt.Material = "lithium-ion";
@@ -96,7 +96,7 @@ namespace BCLabManager
             bt.CutoffDischargeVoltage = 2000;
             PopulateOneBatteryType(bt);
 
-            bt = new BatteryTypeClass();
+            bt = new BatteryType();
             bt.Name = "INR18650-25R";
             bt.Manufacturer = "SamSung SDI Co., Ltd";
             bt.Material = "lithium-ion";
@@ -107,7 +107,7 @@ namespace BCLabManager
             bt.CutoffDischargeVoltage = 2500;
             PopulateOneBatteryType(bt);
 
-            bt = new BatteryTypeClass();
+            bt = new BatteryType();
             bt.Name = "H26";
             bt.Manufacturer = "LG";
             bt.Material = "lithium-ion";
@@ -120,7 +120,7 @@ namespace BCLabManager
             bt.FullyChargedEndingTimeout = 0;
             PopulateOneBatteryType(bt);
 
-            bt = new BatteryTypeClass();
+            bt = new BatteryType();
             bt.Name = "HG2";
             bt.Manufacturer = "LG";
             bt.Material = "lithium-ion";
@@ -133,7 +133,7 @@ namespace BCLabManager
             bt.FullyChargedEndingTimeout = 0;
             PopulateOneBatteryType(bt);
 
-            bt = new BatteryTypeClass();
+            bt = new BatteryType();
             bt.Name = "M26";
             bt.Manufacturer = "LG";
             bt.Material = "lithium-ion";
@@ -147,7 +147,7 @@ namespace BCLabManager
             PopulateOneBatteryType(bt);
         }
 
-        private static void PopulateOneBatteryType(BatteryTypeClass bt)
+        private static void PopulateOneBatteryType(BatteryType bt)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -170,7 +170,7 @@ namespace BCLabManager
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                ProjectClass proj = new ProjectClass();
+                Project proj = new Project();
                 proj.Name = name;
                 proj.Customer = customer;
                 proj.Description = description;
@@ -210,46 +210,46 @@ namespace BCLabManager
             //        }
             //    }
             //}
-            BatteryClass b;
+            Battery b;
             for (int i = 1; i < 5; i++)
             {
-                b = new BatteryClass();
+                b = new Battery();
                 b.Name = "BLP663-" + i.ToString();
                 PopulateOneBattery(b, 1);
             }
             for (int i = 1; i < 9; i++)
             {
-                b = new BatteryClass();
+                b = new Battery();
                 b.Name = "32700-6000-" + i.ToString();
                 PopulateOneBattery(b, 2);
             }
             for (int i = 1; i < 11; i++)
             {
-                b = new BatteryClass();
+                b = new Battery();
                 b.Name = "INR18650-25R-" + i.ToString();
                 PopulateOneBattery(b, 3);
             }
             for (int i = 1; i < 4; i++)
             {
-                b = new BatteryClass();
+                b = new Battery();
                 b.Name = "H26-" + i.ToString();
                 PopulateOneBattery(b, 4);
             }
             for (int i = 1; i < 15; i++)
             {
-                b = new BatteryClass();
+                b = new Battery();
                 b.Name = "HG2-" + i.ToString();
                 PopulateOneBattery(b, 5);
             }
             for (int i = 1; i < 11; i++)
             {
-                b = new BatteryClass();
+                b = new Battery();
                 b.Name = "M26-" + i.ToString();
                 PopulateOneBattery(b, 6);
             }
         }
 
-        private static void PopulateOneBattery(BatteryClass b, int btId)
+        private static void PopulateOneBattery(Battery b, int btId)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
@@ -266,7 +266,7 @@ namespace BCLabManager
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                TesterClass tst = new TesterClass();
+                Tester tst = new Tester();
                 tst.Name = "17200";
                 tst.Manufacturer = "Chroma";
                 if (tst != null)
@@ -284,7 +284,7 @@ namespace BCLabManager
             {
                 using (var uow = new UnitOfWork(new AppDbContext()))
                 {
-                    ChannelClass ch = new ChannelClass();
+                    Channel ch = new Channel();
                     ch.Name = "Ch " + (i + 1).ToString();
                     if (ch != null)
                     {
@@ -300,7 +300,7 @@ namespace BCLabManager
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                ChamberClass cmb = new ChamberClass();
+                Chamber cmb = new Chamber();
                 cmb.Manufacturer = "HongZhan";
                 cmb.Name = "PUL-80";
                 cmb.LowestTemperature = -40;
@@ -316,7 +316,7 @@ namespace BCLabManager
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                ProgramTypeClass pt = new ProgramTypeClass();
+                ProgramType pt = new ProgramType();
                 pt.Name = "RC";
                 pt.Description = "Standard RC Program";
                 uow.ProgramTypes.Insert(pt);
@@ -324,7 +324,7 @@ namespace BCLabManager
             }
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                ProgramTypeClass pt = new ProgramTypeClass();
+                ProgramType pt = new ProgramType();
                 pt.Name = "OCV";
                 pt.Description = "Standard OCV Program";
                 uow.ProgramTypes.Insert(pt);
@@ -332,7 +332,7 @@ namespace BCLabManager
             }
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                ProgramTypeClass pt = new ProgramTypeClass();
+                ProgramType pt = new ProgramType();
                 pt.Name = "EV";
                 pt.Description = "EV Program, used by Emulator";
                 uow.ProgramTypes.Insert(pt);
@@ -340,7 +340,7 @@ namespace BCLabManager
             }
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                ProgramTypeClass pt = new ProgramTypeClass();
+                ProgramType pt = new ProgramType();
                 pt.Name = "MISC";
                 pt.Description = "Miscellaneous Program";
                 uow.ProgramTypes.Insert(pt);
@@ -2100,17 +2100,17 @@ namespace BCLabManager
                     RecipeTemplate obj = new RecipeTemplate();
                     obj.Name = $"{c / -1000.0}A";
 
-                    var newStep = new StepClass();
+                    var newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == chargeRate && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == restTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
@@ -2130,24 +2130,24 @@ namespace BCLabManager
                     RecipeTemplate obj = new RecipeTemplate();
                     obj.Name = $"{c / -1000.0}A-N{index}";
 
-                    var newStep = new StepClass();
+                    var newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0.5 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     if (loop > 1)
                         newStep.LoopLabel = "a";
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 60 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     if (loop > 1)
@@ -2157,7 +2157,7 @@ namespace BCLabManager
                     }
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == c && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
@@ -2176,27 +2176,27 @@ namespace BCLabManager
                 RecipeTemplate obj = new RecipeTemplate();
                 obj.Name = $"Extra";
 
-                var newStep = new StepClass();
+                var newStep = new Step();
                 newStep.Order = order++;
                 newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0.5 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 obj.Steps.Add(newStep);
 
-                newStep = new StepClass();
+                newStep = new Step();
                 newStep.Order = order++;
                 newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
-                newStep = new StepClass();
+                newStep = new Step();
                 newStep.Order = order++;
                 newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == -3000 && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 obj.Steps.Add(newStep);
 
-                newStep = new StepClass();
+                newStep = new Step();
                 newStep.Order = order++;
                 newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 600 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                 obj.Steps.Add(newStep);
 
-                newStep = new StepClass();
+                newStep = new Step();
                 newStep.Order = order++;
                 newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0.5 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 0.8 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                 obj.Steps.Add(newStep);
@@ -2238,7 +2238,7 @@ namespace BCLabManager
                         obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A-N{index}";
 
 
-                    var newStep = new StepClass();
+                    var newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
@@ -2248,7 +2248,7 @@ namespace BCLabManager
                         newStep.LoopLabel = "a";
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0.5 &&
@@ -2257,7 +2257,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
@@ -2265,7 +2265,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[0] &&
@@ -2274,7 +2274,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[1] &&
@@ -2283,7 +2283,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[2] &&
@@ -2313,7 +2313,7 @@ namespace BCLabManager
                     obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A-2.05A";
 
 
-                    var newStep = new StepClass();
+                    var newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
@@ -2321,7 +2321,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0.5 &&
@@ -2330,7 +2330,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
@@ -2338,7 +2338,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[0] &&
@@ -2347,7 +2347,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[1] &&
@@ -2356,7 +2356,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[2] &&
@@ -2365,7 +2365,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == -2050 &&
@@ -2390,7 +2390,7 @@ namespace BCLabManager
                     obj.Name = $"2.05A-{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A-2.05A";
 
 
-                    var newStep = new StepClass();
+                    var newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
@@ -2398,7 +2398,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0.5 &&
@@ -2407,7 +2407,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
@@ -2415,7 +2415,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == -2050 &&
@@ -2424,7 +2424,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[0] &&
@@ -2433,7 +2433,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[1] &&
@@ -2442,7 +2442,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[2] &&
@@ -2451,7 +2451,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == -2050 &&
@@ -2476,7 +2476,7 @@ namespace BCLabManager
                     obj.Name = $"2.05A-{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2] / -1000.0}A";
 
 
-                    var newStep = new StepClass();
+                    var newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
@@ -2484,7 +2484,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0.5 &&
@@ -2493,7 +2493,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
@@ -2501,7 +2501,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == -2050 &&
@@ -2510,7 +2510,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[0] &&
@@ -2519,7 +2519,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[1] &&
@@ -2528,7 +2528,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[2] &&
@@ -2553,7 +2553,7 @@ namespace BCLabManager
                     obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A";
 
 
-                    var newStep = new StepClass();
+                    var newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
@@ -2561,7 +2561,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0.5 &&
@@ -2570,7 +2570,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
@@ -2578,7 +2578,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[0] &&
@@ -2587,7 +2587,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
@@ -2597,7 +2597,7 @@ namespace BCLabManager
                     newStep.LoopLabel = "a";
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[1] &&
@@ -2630,7 +2630,7 @@ namespace BCLabManager
                     obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2]}S";
 
 
-                    var newStep = new StepClass();
+                    var newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
@@ -2638,7 +2638,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0.5 &&
@@ -2647,7 +2647,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
@@ -2655,7 +2655,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[0] &&
@@ -2665,7 +2665,7 @@ namespace BCLabManager
                     newStep.LoopLabel = "a";
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[1] &&
@@ -2698,7 +2698,7 @@ namespace BCLabManager
                     obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2]}S";
 
 
-                    var newStep = new StepClass();
+                    var newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
@@ -2706,7 +2706,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0.5 &&
@@ -2715,7 +2715,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == 0 &&
@@ -2723,7 +2723,7 @@ namespace BCLabManager
                         o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[0] &&
@@ -2733,7 +2733,7 @@ namespace BCLabManager
                     newStep.LoopLabel = "a";
                     obj.Steps.Add(newStep);
 
-                    newStep = new StepClass();
+                    newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate = dbContext.StepTemplates.Single(
                         o => o.CurrentInput == cPoints[1] &&
@@ -2754,8 +2754,8 @@ namespace BCLabManager
         {
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 if (index == 1)
                     pro.Name = "MISC-Battery-Initial";
                 else
@@ -2766,18 +2766,18 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 recTemp = GetRecipeTemplateByName(dbContext, "3A");
-                rec = new RecipeClass(recTemp, bType);
+                rec = new Recipe(recTemp, bType);
                 rec.Temperature = 25;
                 pro.Recipes.Add(rec);
-                rec = new RecipeClass(recTemp, bType);
+                rec = new Recipe(recTemp, bType);
                 rec.Temperature = 25;
                 pro.Recipes.Add(rec);
-                rec = new RecipeClass(recTemp, bType);
+                rec = new Recipe(recTemp, bType);
                 rec.Temperature = 25;
                 pro.Recipes.Add(rec);
-                rec = new RecipeClass(recTemp, bType);
+                rec = new Recipe(recTemp, bType);
                 rec.Temperature = 25;
                 pro.Recipes.Add(rec);
 
@@ -2789,8 +2789,8 @@ namespace BCLabManager
         {
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "OCV-0.2C";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "OCV");
@@ -2798,9 +2798,9 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 recTemp = GetRecipeTemplateByName(dbContext, "0.6A");
-                rec = new RecipeClass(recTemp, bType);
+                rec = new Recipe(recTemp, bType);
                 rec.Temperature = 25;
                 pro.Recipes.Add(rec);
 
@@ -2814,8 +2814,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "2A", "3A", "6A", "10A", "14A", "17A", "19A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 if (index == 1)
                     pro.Name = "RC";
                 else
@@ -2826,14 +2826,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
 
                         recTemp = GetRecipeTemplateByName(dbContext, c);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -2849,8 +2849,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "2.8A", "9A", "11A", "15A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Static-N1";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -2858,14 +2858,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, c);
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -2881,8 +2881,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "2.8A", "9A", "11A", "15A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Static-N2";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power 0" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -2890,14 +2890,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"{c}-N2");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -2913,8 +2913,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "2.8A", "9A", "11A", "15A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Static-N3";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -2922,14 +2922,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"{c}-N2");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -2945,8 +2945,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Dynamic-N1";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -2954,14 +2954,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, c);
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -2975,8 +2975,8 @@ namespace BCLabManager
         {
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "MISC-Extra";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -2984,12 +2984,12 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 recTemp = GetRecipeTemplateByName(dbContext, "Extra");
-                rec = new RecipeClass(recTemp, bType);
+                rec = new Recipe(recTemp, bType);
                 rec.Temperature = 28;
                 pro.Recipes.Add(rec);
-                rec = new RecipeClass(recTemp, bType);
+                rec = new Recipe(recTemp, bType);
                 rec.Temperature = 28;
                 pro.Recipes.Add(rec);
 
@@ -3003,8 +3003,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Dynamic-N2";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3012,14 +3012,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"{c}-N2");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3035,8 +3035,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "2.8A", "9A", "11A", "15A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Static-N4";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3044,14 +3044,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"{c}-N3");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3065,8 +3065,8 @@ namespace BCLabManager
         {
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 if (index == 1)
                     pro.Name = "OCV-0.3C";
                 else
@@ -3077,18 +3077,18 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 recTemp = GetRecipeTemplateByName(dbContext, "0.9A");
-                rec = new RecipeClass(recTemp, bType);
+                rec = new Recipe(recTemp, bType);
                 rec.Temperature = 25;
                 pro.Recipes.Add(rec);
-                rec = new RecipeClass(recTemp, bType);
+                rec = new Recipe(recTemp, bType);
                 rec.Temperature = 25;
                 pro.Recipes.Add(rec);
-                rec = new RecipeClass(recTemp, bType);
+                rec = new Recipe(recTemp, bType);
                 rec.Temperature = 25;
                 pro.Recipes.Add(rec);
-                rec = new RecipeClass(recTemp, bType);
+                rec = new Recipe(recTemp, bType);
                 rec.Temperature = 25;
                 pro.Recipes.Add(rec);
 
@@ -3102,8 +3102,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Dynamic-N3";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3111,14 +3111,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"{c}-2.05A");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3134,8 +3134,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Dynamic-N4";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3143,14 +3143,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"2.05A-{c}-2.05A");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3166,8 +3166,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Dynamic-N5";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3175,14 +3175,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"2.05A-{c}");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3198,8 +3198,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "17A-3A", "11A-3A", "11A-11A", "17A-17A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Dynamic-N6";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3207,14 +3207,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"{c}");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3230,8 +3230,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Dynamic-N5-N2";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3239,14 +3239,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"2.05A-{c}");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3262,8 +3262,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "2.8A", "9A", "11A", "15A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Static-N5";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3271,14 +3271,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"{c}-N3");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3294,8 +3294,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Dynamic-N7";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3303,14 +3303,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"{c}-N2");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3326,8 +3326,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Dynamic-N8";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3335,14 +3335,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"{c}-2.05A");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3358,8 +3358,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Dynamic-N9";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3367,14 +3367,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"2.05A-{c}-2.05A");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3390,8 +3390,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "3A-11A-17A", "17A-11A-3A", "11A-17A-3A", "3A-17A-11A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Dynamic-N10";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3399,14 +3399,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"2.05A-{c}");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3422,8 +3422,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "17A-3A", "11A-3A", "11A-11A", "17A-17A" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Dynamic-N11";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3431,14 +3431,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"{c}");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3454,8 +3454,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "17A-3A-60S", "11A-3A-60S", "17A-11A-60S", "17A-3A-30S" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Dynamic-N12";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3463,14 +3463,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"{c}");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3486,8 +3486,8 @@ namespace BCLabManager
             var cPoints = new List<string>() { "17A-3A-10S", "17A-3A-5S", "6A-3A-10S", "6A-3A-5S" };
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new Program();
                 pro.Name = "EV-Dynamic-N13";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3495,14 +3495,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in cPoints)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, $"{c}");
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3519,10 +3519,10 @@ namespace BCLabManager
             RecipeTemplate rt = new RecipeTemplate();
             int order = 1;
             rt.Name = $"2.5A";
-            rt.Steps.Add(new StepClass() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
-            rt.Steps.Add(new StepClass() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = 0.5, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
-            rt.Steps.Add(new StepClass() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
-            rt.Steps.Add(new StepClass() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = -2500, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = 0, CutOffConditionType = CutOffConditionTypeEnum.CRate }});
+            rt.Steps.Add(new Step() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
+            rt.Steps.Add(new Step() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = 0.5, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
+            rt.Steps.Add(new Step() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
+            rt.Steps.Add(new Step() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = -2500, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = 0, CutOffConditionType = CutOffConditionTypeEnum.CRate }});
             var recipeName = (SuperCreateRecipeTemplate(rt));
             //CreateStepTemplate(-2500, CurrentUnitEnum.mA, 0, CutOffConditionTypeEnum.CRate);
             //using (var dbContext = new AppDbContext())//1
@@ -3555,8 +3555,8 @@ namespace BCLabManager
             //}
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "M26");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "M26");
+                var pro = new Program();
                 if (index == 1)
                     pro.Name = "MISC-Battery-Initial";
                 else
@@ -3567,18 +3567,18 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 recTemp = GetRecipeTemplateByName(dbContext, "2.5A");
-                rec = new RecipeClass(recTemp, bType);
+                rec = new Recipe(recTemp, bType);
                 rec.Temperature = 25;
                 pro.Recipes.Add(rec);
-                rec = new RecipeClass(recTemp, bType);
+                rec = new Recipe(recTemp, bType);
                 rec.Temperature = 25;
                 pro.Recipes.Add(rec);
-                rec = new RecipeClass(recTemp, bType);
+                rec = new Recipe(recTemp, bType);
                 rec.Temperature = 25;
                 pro.Recipes.Add(rec);
-                rec = new RecipeClass(recTemp, bType);
+                rec = new Recipe(recTemp, bType);
                 rec.Temperature = 25;
                 pro.Recipes.Add(rec);
 
@@ -3643,15 +3643,15 @@ namespace BCLabManager
                 RecipeTemplate rt = new RecipeTemplate();
                 int order = 1;
                 rt.Name = $"{cpoint/-1000.0}A";
-                rt.Steps.Add(new StepClass() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = 0.5, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
-                rt.Steps.Add(new StepClass() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
-                rt.Steps.Add(new StepClass() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = cpoint, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = 0, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
+                rt.Steps.Add(new Step() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = 0.5, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
+                rt.Steps.Add(new Step() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
+                rt.Steps.Add(new Step() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = cpoint, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = 0, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
                 recipeNames.Add(SuperCreateRecipeTemplate(rt));
             }
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "M26");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "M26");
+                var pro = new Program();
                 pro.Name = "OCV-0.2C-0.3C";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "O2Sim1" && o.BatteryType.Name == "M26");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "OCV");
@@ -3661,18 +3661,18 @@ namespace BCLabManager
                 foreach (var recname in recipeNames)
                 {
                     RecipeTemplate recTemp;
-                    RecipeClass rec;
+                    Recipe rec;
                     recTemp = GetRecipeTemplateByName(dbContext, recname);
-                    rec = new RecipeClass(recTemp, bType);
+                    rec = new Recipe(recTemp, bType);
                     rec.Temperature = 25;
                     pro.Recipes.Add(rec);
-                    rec = new RecipeClass(recTemp, bType);
+                    rec = new Recipe(recTemp, bType);
                     rec.Temperature = 25;
                     pro.Recipes.Add(rec);
-                    rec = new RecipeClass(recTemp, bType);
+                    rec = new Recipe(recTemp, bType);
                     rec.Temperature = 25;
                     pro.Recipes.Add(rec);
-                    rec = new RecipeClass(recTemp, bType);
+                    rec = new Recipe(recTemp, bType);
                     rec.Temperature = 25;
                     pro.Recipes.Add(rec);
                 }
@@ -3764,15 +3764,15 @@ namespace BCLabManager
                 RecipeTemplate rt = new RecipeTemplate();
                 int o = 1;
                 rt.Name = $"{cpoint / -1000.0}A";
-                rt.Steps.Add(new StepClass() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = 0.5, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
-                rt.Steps.Add(new StepClass() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
-                rt.Steps.Add(new StepClass() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = cpoint, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = 0, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
+                rt.Steps.Add(new Step() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = 0.5, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
+                rt.Steps.Add(new Step() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
+                rt.Steps.Add(new Step() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = cpoint, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = 0, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
                 recipeNames.Add(SuperCreateRecipeTemplate(rt));
             }
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "M26");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "M26");
+                var pro = new Program();
                 pro.Name = "RC";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "O2Sim1" && o.BatteryType.Name == "M26");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "RC");
@@ -3780,14 +3780,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in recipeNames)
                     {
 
                         recTemp = GetRecipeTemplateByName(dbContext, c);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3807,16 +3807,16 @@ namespace BCLabManager
             {
                 RecipeTemplate rt = new RecipeTemplate();
                 rt.Name = $"{cpoint / -1000.0}A";
-                rt.Steps.Add(new StepClass() { Order = 1, StepTemplate = new StepTemplate() { CurrentInput = 0.5, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
-                rt.Steps.Add(new StepClass() { Order = 2, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
-                rt.Steps.Add(new StepClass() { Order = 3, StepTemplate = new StepTemplate() { CurrentInput = cpoint, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = 0, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
-                rt.Steps.Add(new StepClass() { Order = 4, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 60, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
+                rt.Steps.Add(new Step() { Order = 1, StepTemplate = new StepTemplate() { CurrentInput = 0.5, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
+                rt.Steps.Add(new Step() { Order = 2, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
+                rt.Steps.Add(new Step() { Order = 3, StepTemplate = new StepTemplate() { CurrentInput = cpoint, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = 0, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
+                rt.Steps.Add(new Step() { Order = 4, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 60, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
                 recipeNames.Add(SuperCreateRecipeTemplate(rt));
             }
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "M26");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "M26");
+                var pro = new Program();
                 pro.Name = "EV-Static-N1";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "O2Sim1" && o.BatteryType.Name == "M26");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3824,14 +3824,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in recipeNames)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, c);
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -3861,17 +3861,17 @@ namespace BCLabManager
                 RecipeTemplate rt = new RecipeTemplate();
                 int o = 1;
                 rt.Name = $"{cpoints[0] / -1000.0}A-{cpoints[1] / -1000.0}A-{cpoints[2]}S";
-                rt.Steps.Add(new StepClass() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
-                rt.Steps.Add(new StepClass() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = 0.5, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
-                rt.Steps.Add(new StepClass() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
-                rt.Steps.Add(new StepClass() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = cpoints[0], CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = cpoints[2], CutOffConditionType = CutOffConditionTypeEnum.Time_s }, LoopLabel = "a" });
-                rt.Steps.Add(new StepClass() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = cpoints[1], CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = cpoints[2], CutOffConditionType = CutOffConditionTypeEnum.Time_s }, CompareMark = CompareMarkEnum.LargerThan, CRate = 0, LoopTarget = "a" });
+                rt.Steps.Add(new Step() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
+                rt.Steps.Add(new Step() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = 0.5, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
+                rt.Steps.Add(new Step() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
+                rt.Steps.Add(new Step() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = cpoints[0], CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = cpoints[2], CutOffConditionType = CutOffConditionTypeEnum.Time_s }, LoopLabel = "a" });
+                rt.Steps.Add(new Step() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = cpoints[1], CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = cpoints[2], CutOffConditionType = CutOffConditionTypeEnum.Time_s }, CompareMark = CompareMarkEnum.LargerThan, CRate = 0, LoopTarget = "a" });
                 recipeNames.Add(SuperCreateRecipeTemplate(rt));
             }
             using (var dbContext = new AppDbContext())//1
             {
-                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "M26");
-                var pro = new ProgramClass();
+                BatteryType bType = dbContext.BatteryTypes.Single(o => o.Name == "M26");
+                var pro = new Program();
                 pro.Name = "EV-Dynamic-N1";
                 pro.Project = dbContext.Projects.Single(o => o.Name == "O2Sim1" && o.BatteryType.Name == "M26");
                 pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
@@ -3879,14 +3879,14 @@ namespace BCLabManager
                 pro.RequestTime = DateTime.Now;
 
                 RecipeTemplate recTemp;
-                RecipeClass rec;
+                Recipe rec;
                 foreach (var t in tPoints)
                 {
                     foreach (var c in recipeNames)
                     {
                         var id = GetRecipeTemplateIdByName(dbContext, c);
                         recTemp = GetRecipeTemplateById(dbContext, id);
-                        rec = new RecipeClass(recTemp, bType);
+                        rec = new Recipe(recTemp, bType);
                         rec.Temperature = t;
                         pro.Recipes.Add(rec);
 
@@ -4033,7 +4033,7 @@ namespace BCLabManager
 
                 foreach (var step in rt.Steps)
                 {
-                    var newStep = new StepClass();
+                    var newStep = new Step();
                     newStep.Order = order++;
                     newStep.StepTemplate =
                         dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == step.StepTemplate.CurrentInput
@@ -4095,7 +4095,7 @@ namespace BCLabManager
             }
         }
 
-        private static bool StepsCompare(ObservableCollection<StepClass> steps1, ObservableCollection<StepClass> steps2)
+        private static bool StepsCompare(ObservableCollection<Step> steps1, ObservableCollection<Step> steps2)
         {
             if (steps1.Count != steps2.Count)
                 return false;
@@ -4109,7 +4109,7 @@ namespace BCLabManager
             return true;
         }
 
-        private static bool StepCompare(StepClass step1, StepClass step2)
+        private static bool StepCompare(Step step1, Step step2)
         {
             return step1.Order == step2.Order
                 && StepTemplateCompare(step1.StepTemplate, step2.StepTemplate)

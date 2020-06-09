@@ -18,13 +18,13 @@ namespace BCLabManager.ViewModel
     public class StepViewModel : BindableBase//, IDataErrorInfo
     {
         #region Fields
-        public readonly StepClass _step;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
+        public readonly Step _step;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
 
         #endregion // Fields
 
         #region Constructor
 
-        public StepViewModel(StepClass step)
+        public StepViewModel(Step step)
         {
             _step = step;
             _step.PropertyChanged += _Step_PropertyChanged;

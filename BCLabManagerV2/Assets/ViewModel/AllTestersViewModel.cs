@@ -25,7 +25,7 @@ namespace BCLabManager.ViewModel
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
         RelayCommand _deleteCommand;
-        //ObservableCollection<TesterClass> _testers;
+        //ObservableCollection<Tester> _testers;
         private TesterServiceClass _testerService;
         private ChannelServiceClass _channelService;
         #endregion // Fields
@@ -53,14 +53,14 @@ namespace BCLabManager.ViewModel
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems)
                     {
-                        var tester = item as TesterClass;
+                        var tester = item as Tester;
                         this.AllTesters.Add(new TesterViewModel(tester));
                     }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
                     foreach (var item in e.OldItems)
                     {
-                        var tester = item as TesterClass;
+                        var tester = item as Tester;
                         var deletetarget = this.AllTesters.SingleOrDefault(o => o.Id == tester.Id);
                         this.AllTesters.Remove(deletetarget);
                     }
@@ -68,7 +68,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        void CreateAllTesters(ObservableCollection<TesterClass> testers)
+        void CreateAllTesters(ObservableCollection<Tester> testers)
         {
             List<TesterViewModel> all =
                 (from tster in testers
@@ -176,7 +176,7 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void Create()
         {
-            TesterClass m = new TesterClass();      //实例化一个新的model
+            Tester m = new Tester();      //实例化一个新的model
             TesterEditViewModel evm = new TesterEditViewModel(m);      //实例化一个新的view model
             //evm.DisplayName = "Tester-Create";
             var TesterViewInstance = new TesterView();      //实例化一个新的view
@@ -189,7 +189,7 @@ namespace BCLabManager.ViewModel
         }
         private void Edit()
         {
-            TesterClass m = new TesterClass();      //实例化一个新的model
+            Tester m = new Tester();      //实例化一个新的model
             TesterEditViewModel evm = new TesterEditViewModel(m);      //实例化一个新的view model
             evm.Id = SelectedItem.Id;
             evm.Manufacturer = _selectedItem.Manufacturer;
@@ -209,7 +209,7 @@ namespace BCLabManager.ViewModel
         }
         private void SaveAs()
         {
-            TesterClass m = new TesterClass();      //实例化一个新的model
+            Tester m = new Tester();      //实例化一个新的model
             TesterEditViewModel evm = new TesterEditViewModel(m);      //实例化一个新的view model
             evm.Manufacturer = _selectedItem.Manufacturer;
             evm.Name = _selectedItem.Name;

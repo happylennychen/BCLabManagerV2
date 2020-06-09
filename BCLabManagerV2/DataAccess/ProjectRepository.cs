@@ -7,7 +7,7 @@ using BCLabManager.Model;
 
 namespace BCLabManager.DataAccess
 {
-    public class ProjectRepository : Repository<ProjectClass>, IProjectRepository
+    public class ProjectRepository : Repository<Project>, IProjectRepository
     {
         public ProjectRepository(AppDbContext context)
             : base(context)

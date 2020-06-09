@@ -30,7 +30,7 @@ namespace BCLabManager.Model
         //    set { SetProperty(ref _temperature, value); }
         //}
 
-        public ObservableCollection<StepClass> Steps { get; set; } = new ObservableCollection<StepClass>();
+        public ObservableCollection<Step> Steps { get; set; } = new ObservableCollection<Step>();
 
         public RecipeTemplate()
         {

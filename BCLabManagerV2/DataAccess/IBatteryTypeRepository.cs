@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.DataAccess
 {
-    public interface IBatteryTypeRepository:IRepository<BatteryTypeClass>
+    public interface IBatteryTypeRepository:IRepository<BatteryType>
     {
     }
 }
