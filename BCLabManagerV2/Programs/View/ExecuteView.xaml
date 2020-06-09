@@ -123,20 +123,20 @@
             <Label 
       Grid.Row="10" Grid.Column="0" 
       Content="_Current(mA):" 
-      HorizontalAlignment="Right"
+      HorizontalAlignment="Right" IsEnabled="{Binding Path=ShowCurrentAndTemperature}"
       />
             <TextBox 
-      Grid.Row="10" Grid.Column="2" 
+      Grid.Row="10" Grid.Column="2"  IsEnabled="{Binding Path=ShowCurrentAndTemperature}"
       Text="{Binding Path=Current, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
       Validation.ErrorTemplate="{x:Null}"
       />
             <Label 
       Grid.Row="12" Grid.Column="0" 
       Content="Temperature(celcius):" 
-      HorizontalAlignment="Right"
+      HorizontalAlignment="Right" IsEnabled="{Binding Path=ShowCurrentAndTemperature}"
       />
             <TextBox 
-      Grid.Row="12" Grid.Column="2" 
+      Grid.Row="12" Grid.Column="2"  IsEnabled="{Binding Path=ShowCurrentAndTemperature}"
       Text="{Binding Path=Temperature, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
       Validation.ErrorTemplate="{x:Null}"
       />

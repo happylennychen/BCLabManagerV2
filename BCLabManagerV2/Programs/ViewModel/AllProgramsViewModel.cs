@@ -670,8 +670,25 @@ namespace BCLabManager.ViewModel
                 _batteryService.Items,
                 _testerService.Items,
                 _channelService.Items,
-                _chamberService.Items
+                _chamberService.Items,
+                _selectedProgram.Type
                 );
+            evm.Temperature = _selectedRecipe.Temperature;
+            var index = _selectedRecipe.Name.IndexOf('A');
+            if (index != -1)
+            {
+                var currStr = _selectedRecipe.Name.Remove(index);
+                try
+                {
+                    var currInA = Convert.ToDouble(currStr);
+                    evm.Current = currInA * 1000;
+                }
+                catch (Exception e)
+                {
+                    //MessageBox.Show("Error when converting");
+                    //return;
+                }
+            }
             //evm.DisplayName = "Test-Execute";
             var TestRecordViewInstance = new ExecuteView();
             TestRecordViewInstance.DataContext = evm;

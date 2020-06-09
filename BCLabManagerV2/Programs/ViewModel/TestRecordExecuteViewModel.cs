@@ -37,6 +37,7 @@ namespace BCLabManager.ViewModel
         ObservableCollection<Tester> _testers;
         ObservableCollection<Channel> _channels;
         ObservableCollection<Chamber> _chambers;
+        ProgramType _type;
 
         //ObservableCollection<BatteryTypeClass> _allBatteryTypes;
         BatteryType _batteryType;
@@ -63,7 +64,8 @@ namespace BCLabManager.ViewModel
             ObservableCollection<Tester> testers,
             ObservableCollection<Channel> channels,
             ObservableCollection<Chamber> chambers
-            )     //
+,
+            ProgramType type)     //
         {
             if (record == null)
                 throw new ArgumentNullException("record");
@@ -79,6 +81,7 @@ namespace BCLabManager.ViewModel
             _testers = testers;
             _channels = channels;
             _chambers = chambers;
+            _type = type;
 
             //_record.PropertyChanged += _record_PropertyChanged;
         }
@@ -164,8 +167,8 @@ namespace BCLabManager.ViewModel
                 _chamber = value;
 
                 RaisePropertyChanged("Chamber");
-                if (_chamber.AssetUseCount > 0)
-                    MessageBox.Show("Please note that this one is in use by another test");
+                //if (_chamber.AssetUseCount > 0)
+                //    MessageBox.Show("Please note that this one is in use by another test");
             }
         }
 
@@ -356,6 +359,14 @@ namespace BCLabManager.ViewModel
                 _record.Current = value;
 
                 RaisePropertyChanged("Current");
+            }
+        }
+
+        public bool ShowCurrentAndTemperature
+        {
+            get
+            {
+                return _type.Name == "RC" || _type.Name == "OCV";
             }
         }
 

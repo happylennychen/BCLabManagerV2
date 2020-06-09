@@ -111,7 +111,8 @@ namespace BCLabManager.Model
             {
                 temptestfilepath = CreateTestFile(rawDataList, temproot, newName);
                 testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
-                File.Copy(temptestfilepath, testRecord.TestFilePath);
+                CopyToServer(temptestfilepath, testRecord.TestFilePath);
+                //File.Copy(temptestfilepath, testRecord.TestFilePath);
             }
             else
             {
@@ -119,13 +120,15 @@ namespace BCLabManager.Model
                 {
                     temptestfilepath = RenameRawDataAndCopyToFolder(rawDataList[0], temproot, newName);
                     testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
-                    File.Copy(temptestfilepath, testRecord.TestFilePath);
+                    //File.Copy(temptestfilepath, testRecord.TestFilePath);
+                    CopyToServer(temptestfilepath, testRecord.TestFilePath);
                 }
                 else
                 {
                     temptestfilepath = CopyToFolder(rawDataList[0], temproot);
                     testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
-                    File.Copy(temptestfilepath, testRecord.TestFilePath);
+                    //File.Copy(temptestfilepath, testRecord.TestFilePath);
+                    CopyToServer(temptestfilepath, testRecord.TestFilePath);
                 }
             }
             SuperUpdate(testRecord);
@@ -137,12 +140,19 @@ namespace BCLabManager.Model
                 if (!File.Exists(tempheaderFilePath))
                 {
                     CreateHeaderFile(tempheaderFilePath, header);
-                    File.Copy(tempheaderFilePath, headerFilePath);
+                    //File.Copy(tempheaderFilePath, headerFilePath);
+                    CopyToServer(tempheaderFilePath, headerFilePath);
                     var tempSourceFilePath = CreateSourceFile(temproot, tempheaderFilePath, temptestfilepath);
                     string sourceFilePath = $@"{root}\{GlobalSettings.SourceDataFolderName}\{Path.GetFileName(temptestfilepath)}";
-                    File.Copy(tempSourceFilePath, sourceFilePath);
+                    //File.Copy(tempSourceFilePath, sourceFilePath);
+                    CopyToServer(tempSourceFilePath, sourceFilePath);
                 }
             }
+        }
+
+        private void CopyToServer(string tempPath, string serverPath)
+        {
+            //File.Copy(tempPath, serverPath);
         }
 
         private string CopyToFolder(string filepath, string root)
