@@ -120,7 +120,7 @@
                         <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-                <!--<ListView Grid.Column="2"
+                <ListView Grid.Column="2"
                       x:Name="Steps"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
@@ -154,8 +154,8 @@
             />
                         </GridView>
                     </ListView.View>
-                </ListView>-->
-                <DataGrid GridLinesVisibility="None" x:Name="Steps" AutoGenerateColumns="False"  Grid.Column="2"
+                </ListView>
+                <!--<DataGrid GridLinesVisibility="None" x:Name="Steps" AutoGenerateColumns="False"  Grid.Column="2"
                           ItemsSource="{Binding Path=Steps}" Background="White" CanUserSortColumns="False"
                           SelectedItem="{Binding Path=SelectedStep, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
                     <DataGrid.Columns>
@@ -166,7 +166,7 @@
                         <DataGridTemplateColumn Header="CompareMark" CellTemplate="{StaticResource CompareMark}"></DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="Capacity" CellTemplate="{StaticResource Capacity}"></DataGridTemplateColumn>
                     </DataGrid.Columns>
-                </DataGrid>
+                </DataGrid>-->
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                     <Button Command="{Binding Path=AddCommand}">=></Button>
                     <Border Height="10"></Border>
