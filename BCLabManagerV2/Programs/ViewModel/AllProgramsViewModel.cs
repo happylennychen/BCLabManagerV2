@@ -752,7 +752,8 @@ namespace BCLabManager.ViewModel
                     header.CapacityDifference = testRecord.CapacityDifference.ToString();
                     header.AbsoluteMaxCapacity = SelectedProgram.Project.AbsoluteMaxCapacity.ToString();//.BatteryType.TypicalCapacity.ToString();
                     header.LimitedChargeVoltage = SelectedProgram.Project.LimitedChargeVoltage.ToString();
-                    header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
+                    //header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
+                    header.CutoffDischargeVoltage = SelectedProgram.Project.BatteryType.CutoffDischargeVoltage.ToString();
                     header.Tester = testRecord.Operator;
                     _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, evm.FileList.ToList(), evm.IsRename, evm.NewName, time[0], time[1], SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
                 }
