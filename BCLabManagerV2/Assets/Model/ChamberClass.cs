@@ -9,15 +9,15 @@ namespace BCLabManager.Model
     public class ChamberClass : AssetClass
     {
         public int Id { get; set; }
-        //public String Manufacturor { get; set; }
+        //public String Manufacturer { get; set; }
         //public String Name { get; set; }
         //public Double LowestTemperature { get; set; }
         //public Double HighestTemperature { get; set; }
-        private string _manufacturor;
-        public string Manufacturor
+        private string _manufacturer;
+        public string Manufacturer
         {
-            get { return _manufacturor; }
-            set { SetProperty(ref _manufacturor, value); }
+            get { return _manufacturer; }
+            set { SetProperty(ref _manufacturer, value); }
         }
         private string _name;
         public string Name
@@ -41,17 +41,17 @@ namespace BCLabManager.Model
         public ChamberClass()
         { }
 
-        //public ChamberClass(String Manufacturor, String Name, String TemperatureRange)
+        //public ChamberClass(String Manufacturer, String Name, String TemperatureRange)
         //{
-        //    this.Manufacturor = Manufacturor;
+        //    this.Manufacturer = Manufacturer;
         //    this.Name = Name;
         //    this.LowestTemperature = LowestTemperature;
         //    this.HighestTemperature = HighestTemperature;
         //}
 
-        //public void Update(String Manufacturor, String Name, String TemperatureRange)
+        //public void Update(String Manufacturer, String Name, String TemperatureRange)
         //{
-        //    this.Manufacturor = Manufacturor;
+        //    this.Manufacturer = Manufacturer;
         //    this.Name = Name;
         //    this.LowestTemperature = LowestTemperature;
         //    this.HighestTemperature = HighestTemperature;

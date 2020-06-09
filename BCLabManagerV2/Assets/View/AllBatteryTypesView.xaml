@@ -53,8 +53,8 @@
             DisplayMemberBinding="{Binding Path=Name}" 
             />
                             <GridViewColumn 
-            Header="Manufacturor" 
-            DisplayMemberBinding="{Binding Path=Manufacturor}" 
+            Header="Manufacturer" 
+            DisplayMemberBinding="{Binding Path=Manufacturer}" 
             />
                             <GridViewColumn 
             Header="Material" 
@@ -97,7 +97,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
-                        <DataGridTextColumn Header="Manufacturor" IsReadOnly="True" Binding="{Binding Path=Manufacturor}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Manufacturer" IsReadOnly="True" Binding="{Binding Path=Manufacturer}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Material" IsReadOnly="True" Binding="{Binding Path=Material}"></DataGridTextColumn>
                         <DataGridTextColumn Header="TypicalCapacity" IsReadOnly="True" Binding="{Binding Path=TypicalCapacity}"></DataGridTextColumn>
                         <DataGridTextColumn Header="CutoffDischargeVoltage" IsReadOnly="True" Binding="{Binding Path=CutoffDischargeVoltage}"></DataGridTextColumn>

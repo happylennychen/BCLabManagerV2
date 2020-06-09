@@ -55,7 +55,7 @@ namespace BCLabManager.Model
         {
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             edittarget.LimitedChargeVoltage = item.LimitedChargeVoltage;
-            edittarget.Manufacturor = item.Manufacturor;
+            edittarget.Manufacturer = item.Manufacturer;
             edittarget.Material = item.Material;
             edittarget.Name = item.Name;
             edittarget.NominalVoltage = item.NominalVoltage;

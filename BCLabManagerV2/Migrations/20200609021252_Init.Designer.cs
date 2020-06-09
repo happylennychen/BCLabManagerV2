@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200605064458_Init")]
+    [Migration("20200609021252_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -129,8 +129,8 @@ namespace BCLabManager.Migrations
                         .HasColumnName("limited_charge_voltage")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Manufacturor")
-                        .HasColumnName("manufacturor")
+                    b.Property<string>("Manufacturer")
+                        .HasColumnName("manufacturer")
                         .HasColumnType("text");
 
                     b.Property<string>("Material")
@@ -179,8 +179,8 @@ namespace BCLabManager.Migrations
                         .HasColumnName("lowest_temperature")
                         .HasColumnType("double precision");
 
-                    b.Property<string>("Manufacturor")
-                        .HasColumnName("manufacturor")
+                    b.Property<string>("Manufacturer")
+                        .HasColumnName("manufacturer")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -1067,8 +1067,8 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("Manufacturor")
-                        .HasColumnName("manufacturor")
+                    b.Property<string>("Manufacturer")
+                        .HasColumnName("manufacturer")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")

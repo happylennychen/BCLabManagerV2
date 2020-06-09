@@ -127,8 +127,8 @@ namespace BCLabManager.Migrations
                         .HasColumnName("limited_charge_voltage")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Manufacturor")
-                        .HasColumnName("manufacturor")
+                    b.Property<string>("Manufacturer")
+                        .HasColumnName("manufacturer")
                         .HasColumnType("text");
 
                     b.Property<string>("Material")
@@ -177,8 +177,8 @@ namespace BCLabManager.Migrations
                         .HasColumnName("lowest_temperature")
                         .HasColumnType("double precision");
 
-                    b.Property<string>("Manufacturor")
-                        .HasColumnName("manufacturor")
+                    b.Property<string>("Manufacturer")
+                        .HasColumnName("manufacturer")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -1065,8 +1065,8 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("Manufacturor")
-                        .HasColumnName("manufacturor")
+                    b.Property<string>("Manufacturer")
+                        .HasColumnName("manufacturer")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")

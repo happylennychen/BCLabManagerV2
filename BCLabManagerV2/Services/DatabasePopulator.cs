@@ -1,8 +1,10 @@
 ﻿using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using BCLabManager.Services;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -74,7 +76,7 @@ namespace BCLabManager
             //}
             BatteryTypeClass bt = new BatteryTypeClass();
             bt.Name = "BLP663";
-            bt.Manufacturor = "Oppo";
+            bt.Manufacturer = "Oppo";
             bt.Material = "Li-ion Plymer Battery";
             bt.LimitedChargeVoltage = 4400;
             bt.RatedCapacity = 3365;
@@ -85,7 +87,7 @@ namespace BCLabManager
 
             bt = new BatteryTypeClass();
             bt.Name = "32700-6000mAh";
-            bt.Manufacturor = "FbTech";
+            bt.Manufacturer = "FbTech";
             bt.Material = "lithium-ion";
             bt.LimitedChargeVoltage = 3650;
             bt.RatedCapacity = 6000;
@@ -96,7 +98,7 @@ namespace BCLabManager
 
             bt = new BatteryTypeClass();
             bt.Name = "INR18650-25R";
-            bt.Manufacturor = "SamSung SDI Co., Ltd";
+            bt.Manufacturer = "SamSung SDI Co., Ltd";
             bt.Material = "lithium-ion";
             bt.LimitedChargeVoltage = 4200;
             bt.RatedCapacity = 2500;
@@ -107,7 +109,7 @@ namespace BCLabManager
 
             bt = new BatteryTypeClass();
             bt.Name = "H26";
-            bt.Manufacturor = "LG";
+            bt.Manufacturer = "LG";
             bt.Material = "lithium-ion";
             bt.LimitedChargeVoltage = 4200;
             bt.RatedCapacity = 2600;
@@ -120,13 +122,26 @@ namespace BCLabManager
 
             bt = new BatteryTypeClass();
             bt.Name = "HG2";
-            bt.Manufacturor = "LG";
+            bt.Manufacturer = "LG";
             bt.Material = "lithium-ion";
             bt.LimitedChargeVoltage = 4200;
             bt.RatedCapacity = 3000;
             bt.TypicalCapacity = 3000;
             bt.NominalVoltage = 3600;
             bt.CutoffDischargeVoltage = 2500;
+            bt.FullyChargedEndCurrent = 50;
+            bt.FullyChargedEndingTimeout = 0;
+            PopulateOneBatteryType(bt);
+
+            bt = new BatteryTypeClass();
+            bt.Name = "M26";
+            bt.Manufacturer = "LG";
+            bt.Material = "lithium-ion";
+            bt.LimitedChargeVoltage = 4200;
+            bt.RatedCapacity = 2600;
+            bt.TypicalCapacity = 2500;
+            bt.NominalVoltage = 3650;
+            bt.CutoffDischargeVoltage = 2750;
             bt.FullyChargedEndCurrent = 50;
             bt.FullyChargedEndingTimeout = 0;
             PopulateOneBatteryType(bt);
@@ -148,6 +163,7 @@ namespace BCLabManager
         {
             PopulateOneProject("High Power 0", "HG2", "O2Micro", "", "", 2500);
             PopulateOneProject("High Power", "HG2", "O2Micro", "", "", 3000);
+            PopulateOneProject("O2Sim1", "M26", "O2Micro", "", "", 3000);
             //PopulateOneProject("High Power 2", "HG2", "O2Micro", "Change Cut off voltage from 2.5v to 3v", "");
         }
         private static void PopulateOneProject(string name, string batteryType, string customer, string description, string voltagePoints, int codv)
@@ -219,11 +235,17 @@ namespace BCLabManager
                 b.Name = "H26-" + i.ToString();
                 PopulateOneBattery(b, 4);
             }
-            for (int i = 1; i < 11; i++)
+            for (int i = 1; i < 15; i++)
             {
                 b = new BatteryClass();
                 b.Name = "HG2-" + i.ToString();
                 PopulateOneBattery(b, 5);
+            }
+            for (int i = 1; i < 11; i++)
+            {
+                b = new BatteryClass();
+                b.Name = "M26-" + i.ToString();
+                PopulateOneBattery(b, 6);
             }
         }
 
@@ -246,7 +268,7 @@ namespace BCLabManager
             {
                 TesterClass tst = new TesterClass();
                 tst.Name = "17200";
-                tst.Manufacturor = "Chroma";
+                tst.Manufacturer = "Chroma";
                 if (tst != null)
                 {
                     uow.Testers.Insert(tst);
@@ -279,7 +301,7 @@ namespace BCLabManager
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
                 ChamberClass cmb = new ChamberClass();
-                cmb.Manufacturor = "HongZhan";
+                cmb.Manufacturer = "HongZhan";
                 cmb.Name = "PUL-80";
                 cmb.LowestTemperature = -40;
                 cmb.HighestTemperature = 150;
@@ -2027,7 +2049,7 @@ namespace BCLabManager
         }
         #endregion
         */
-        #region HG2
+        #region HG2 & M26
         private static void CreateStepTemplates()
         {
             CreateStepTemplate(0.5, CurrentUnitEnum.C, 1, CutOffConditionTypeEnum.CRate);
@@ -2062,11 +2084,11 @@ namespace BCLabManager
 
             CreateStepTemplate(0.5, CurrentUnitEnum.C, 0.8, CutOffConditionTypeEnum.CRate);
 
-            CreateStepTemplate(-17000, CurrentUnitEnum.mA, 60, CutOffConditionTypeEnum.Time_s);
-            CreateStepTemplate(-3000, CurrentUnitEnum.mA, 60, CutOffConditionTypeEnum.Time_s);
-            CreateStepTemplate(-11000, CurrentUnitEnum.mA, 60, CutOffConditionTypeEnum.Time_s);
-            CreateStepTemplate(-17000, CurrentUnitEnum.mA, 30, CutOffConditionTypeEnum.Time_s);
-            CreateStepTemplate(-3000, CurrentUnitEnum.mA, 30, CutOffConditionTypeEnum.Time_s);
+            //CreateStepTemplate(-17000, CurrentUnitEnum.mA, 60, CutOffConditionTypeEnum.Time_s);
+            //CreateStepTemplate(-3000, CurrentUnitEnum.mA, 60, CutOffConditionTypeEnum.Time_s);
+            //CreateStepTemplate(-11000, CurrentUnitEnum.mA, 60, CutOffConditionTypeEnum.Time_s);
+            //CreateStepTemplate(-17000, CurrentUnitEnum.mA, 30, CutOffConditionTypeEnum.Time_s);
+            //CreateStepTemplate(-3000, CurrentUnitEnum.mA, 30, CutOffConditionTypeEnum.Time_s);
         }
         private static void CreateRecipeTemplateGroup(List<double> cPoints, int restTime, double chargeRate)
         {
@@ -2199,6 +2221,7 @@ namespace BCLabManager
 
             CreateDynamic6RecipeTemplateGroup(new List<List<double>>() { new List<double>() { -17000, -3000 }, new List<double>() { -11000, -3000 }, new List<double>() { -11000, -11000 }, new List<double>() { -17000, -17000 } });
             CreateDynamic12RecipeTemplateGroup(new List<List<double>>() { new List<double>() { -17000, -3000, 60 }, new List<double>() { -11000, -3000, 60 }, new List<double>() { -17000, -11000, 60 }, new List<double>() { -17000, -3000, 30 } });
+            CreateDynamic13RecipeTemplateGroup(new List<List<double>>() { new List<double>() { -17000, -3000, 10 }, new List<double>() { -17000, -3000, 5 }, new List<double>() { -6000, -3000, 10 }, new List<double>() { -6000, -3000, 5 } });
         }
 
         private static void CreateDynamicRecipeTemplateGroup(List<List<double>> list, ushort loop, int index)
@@ -2595,6 +2618,79 @@ namespace BCLabManager
         {
             foreach (var cPoints in list)
             {
+                CreateStepTemplate(cPoints[0], CurrentUnitEnum.mA, cPoints[2], CutOffConditionTypeEnum.Time_s);
+                CreateStepTemplate(cPoints[1], CurrentUnitEnum.mA, cPoints[2], CutOffConditionTypeEnum.Time_s);
+            }
+            foreach (var cPoints in list)
+            {
+                using (var dbContext = new AppDbContext())
+                {
+                    int order = 1;
+                    RecipeTemplate obj = new RecipeTemplate();
+                    obj.Name = $"{cPoints[0] / -1000.0}A-{cPoints[1] / -1000.0}A-{cPoints[2]}S";
+
+
+                    var newStep = new StepClass();
+                    newStep.Order = order++;
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0 &&
+                        o.CutOffConditionValue == 600 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.Order = order++;
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0.5 &&
+                        o.CurrentUnit == CurrentUnitEnum.C &&
+                        o.CutOffConditionValue == 1 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.Order = order++;
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == 0 &&
+                        o.CutOffConditionValue == 600 &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.Order = order++;
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == cPoints[0] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == cPoints[2] &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    newStep.LoopLabel = "a";
+                    obj.Steps.Add(newStep);
+
+                    newStep = new StepClass();
+                    newStep.Order = order++;
+                    newStep.StepTemplate = dbContext.StepTemplates.Single(
+                        o => o.CurrentInput == cPoints[1] &&
+                        o.CurrentUnit == CurrentUnitEnum.mA &&
+                        o.CutOffConditionValue == cPoints[2] &&
+                        o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+                    newStep.LoopTarget = "a";
+                    newStep.CompareMark = CompareMarkEnum.LargerThan;
+                    newStep.CRate = 0;
+                    obj.Steps.Add(newStep);
+
+                    dbContext.RecipeTemplates.Add(obj);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+        private static void CreateDynamic13RecipeTemplateGroup(List<List<double>> list)
+        {
+            foreach (var cPoints in list)
+            {
+                CreateStepTemplate(cPoints[0], CurrentUnitEnum.mA, cPoints[2], CutOffConditionTypeEnum.Time_s);
+                CreateStepTemplate(cPoints[1], CurrentUnitEnum.mA, cPoints[2], CutOffConditionTypeEnum.Time_s);
+            }
+            foreach (var cPoints in list)
+            {
                 using (var dbContext = new AppDbContext())
                 {
                     int order = 1;
@@ -2749,7 +2845,7 @@ namespace BCLabManager
         }
         private static void Create_HG2_HighPower_EV_Static_01()
         {
-            var tPoints = new List<double>() { -5, -2.5, 7, 10, 20, 28, 33 };
+            var tPoints = new List<double>() { -5, 2.5, 7, 10, 20, 28, 33 };
             var cPoints = new List<string>() { "2.8A", "9A", "11A", "15A" };
             using (var dbContext = new AppDbContext())//1
             {
@@ -3384,6 +3480,422 @@ namespace BCLabManager
                 dbContext.SaveChanges();
             }
         }
+        private static void Create_HG2_HighPower_EV_Dynamic_13()
+        {
+            var tPoints = new List<double>() { 2.5 };
+            var cPoints = new List<string>() { "17A-3A-10S", "17A-3A-5S", "6A-3A-10S", "6A-3A-5S" };
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "HG2");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Dynamic-N13";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "High Power" && o.BatteryType.Name == "HG2");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in cPoints)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, $"{c}");
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+
+
+        private static void Create_M26_O2Sim1_MISC_Battery_Initial(int index)
+        {
+            RecipeTemplate rt = new RecipeTemplate();
+            int order = 1;
+            rt.Name = $"2.5A";
+            rt.Steps.Add(new StepClass() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
+            rt.Steps.Add(new StepClass() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = 0.5, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
+            rt.Steps.Add(new StepClass() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
+            rt.Steps.Add(new StepClass() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = -2500, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = 0, CutOffConditionType = CutOffConditionTypeEnum.CRate }});
+            var recipeName = (SuperCreateRecipeTemplate(rt));
+            //CreateStepTemplate(-2500, CurrentUnitEnum.mA, 0, CutOffConditionTypeEnum.CRate);
+            //using (var dbContext = new AppDbContext())//1
+            //{
+            //    RecipeTemplate rt = new RecipeTemplate();
+            //    int order = 1;
+            //    rt.Name = "2.5A";
+            //    var newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 60 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+            //    rt.Steps.Add(newStep);
+
+            //    newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0.5 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+            //    rt.Steps.Add(newStep);
+
+            //    newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 60 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+            //    rt.Steps.Add(newStep);
+
+            //    newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == -2500 && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
+            //    rt.Steps.Add(newStep);
+
+            //    dbContext.RecipeTemplates.Add(rt);
+            //    dbContext.SaveChanges();
+            //}
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "M26");
+                var pro = new ProgramClass();
+                if (index == 1)
+                    pro.Name = "MISC-Battery-Initial";
+                else
+                    pro.Name = $"MISC-Battery-Initial-T{index}";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "O2Sim1" && o.BatteryType.Name == "M26");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "MISC");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                recTemp = GetRecipeTemplateByName(dbContext, "2.5A");
+                rec = new RecipeClass(recTemp, bType);
+                rec.Temperature = 25;
+                pro.Recipes.Add(rec);
+                rec = new RecipeClass(recTemp, bType);
+                rec.Temperature = 25;
+                pro.Recipes.Add(rec);
+                rec = new RecipeClass(recTemp, bType);
+                rec.Temperature = 25;
+                pro.Recipes.Add(rec);
+                rec = new RecipeClass(recTemp, bType);
+                rec.Temperature = 25;
+                pro.Recipes.Add(rec);
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_M26_O2Sim1_OCV02()
+        {
+            //CreateStepTemplate(-500, CurrentUnitEnum.mA, 0, CutOffConditionTypeEnum.CRate);
+            //CreateStepTemplate(-750, CurrentUnitEnum.mA, 0, CutOffConditionTypeEnum.CRate);
+            //using (var dbContext = new AppDbContext())//1
+            //{
+            //    RecipeTemplate rt = new RecipeTemplate();
+            //    int order = 1;
+            //    rt.Name = "0.5A";
+            //    var newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0.5 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+            //    rt.Steps.Add(newStep);
+
+            //    newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 60 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+            //    rt.Steps.Add(newStep);
+
+            //    newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == -500 && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
+            //    rt.Steps.Add(newStep);
+
+            //    dbContext.RecipeTemplates.Add(rt);
+            //    dbContext.SaveChanges();
+            //}
+            //using (var dbContext = new AppDbContext())//1
+            //{
+            //    RecipeTemplate rt = new RecipeTemplate();
+            //    int order = 1;
+            //    rt.Name = "0.75A";
+            //    var newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0.5 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+            //    rt.Steps.Add(newStep);
+
+            //    newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 60 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+            //    rt.Steps.Add(newStep);
+
+            //    newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == -750 && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
+            //    rt.Steps.Add(newStep);
+
+            //    dbContext.RecipeTemplates.Add(rt);
+            //    dbContext.SaveChanges();
+            //}
+            List<string> recipeNames = new List<string>();
+            List<double> cpoints = new List<double>() { -500, -750 };
+            foreach (var cpoint in cpoints)
+            {
+                RecipeTemplate rt = new RecipeTemplate();
+                int order = 1;
+                rt.Name = $"{cpoint/-1000.0}A";
+                rt.Steps.Add(new StepClass() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = 0.5, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
+                rt.Steps.Add(new StepClass() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
+                rt.Steps.Add(new StepClass() { Order = order++, StepTemplate = new StepTemplate() { CurrentInput = cpoint, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = 0, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
+                recipeNames.Add(SuperCreateRecipeTemplate(rt));
+            }
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "M26");
+                var pro = new ProgramClass();
+                pro.Name = "OCV-0.2C-0.3C";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "O2Sim1" && o.BatteryType.Name == "M26");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "OCV");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                foreach (var recname in recipeNames)
+                {
+                    RecipeTemplate recTemp;
+                    RecipeClass rec;
+                    recTemp = GetRecipeTemplateByName(dbContext, recname);
+                    rec = new RecipeClass(recTemp, bType);
+                    rec.Temperature = 25;
+                    pro.Recipes.Add(rec);
+                    rec = new RecipeClass(recTemp, bType);
+                    rec.Temperature = 25;
+                    pro.Recipes.Add(rec);
+                    rec = new RecipeClass(recTemp, bType);
+                    rec.Temperature = 25;
+                    pro.Recipes.Add(rec);
+                    rec = new RecipeClass(recTemp, bType);
+                    rec.Temperature = 25;
+                    pro.Recipes.Add(rec);
+                }
+
+                dbContext.Programs.Add(pro);
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_M26_O2Sim1_RC()
+        {
+            //CreateStepTemplate(-1000, CurrentUnitEnum.mA, 0, CutOffConditionTypeEnum.CRate);
+            //CreateStepTemplate(-5000, CurrentUnitEnum.mA, 0, CutOffConditionTypeEnum.CRate);
+            //CreateStepTemplate(-8000, CurrentUnitEnum.mA, 0, CutOffConditionTypeEnum.CRate);
+            //using (var dbContext = new AppDbContext())//1
+            //{
+            //    RecipeTemplate rt = new RecipeTemplate();
+            //    int order = 1;
+            //    rt.Name = "1A";
+            //    var newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0.5 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+            //    rt.Steps.Add(newStep);
+
+            //    newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 60 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+            //    rt.Steps.Add(newStep);
+
+            //    newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == -1000 && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
+            //    rt.Steps.Add(newStep);
+
+            //    dbContext.RecipeTemplates.Add(rt);
+            //    dbContext.SaveChanges();
+            //}
+            //using (var dbContext = new AppDbContext())//1
+            //{
+            //    RecipeTemplate rt = new RecipeTemplate();
+            //    int order = 1;
+            //    rt.Name = "5A";
+            //    var newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0.5 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+            //    rt.Steps.Add(newStep);
+
+            //    newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 60 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+            //    rt.Steps.Add(newStep);
+
+            //    newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == -5000 && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
+            //    rt.Steps.Add(newStep);
+
+            //    dbContext.RecipeTemplates.Add(rt);
+            //    dbContext.SaveChanges();
+            //}
+            //using (var dbContext = new AppDbContext())//1
+            //{
+            //    RecipeTemplate rt = new RecipeTemplate();
+            //    int order = 1;
+            //    rt.Name = "8A";
+            //    var newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0.5 && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
+            //    rt.Steps.Add(newStep);
+
+            //    newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == 0 && o.CutOffConditionValue == 60 && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
+            //    rt.Steps.Add(newStep);
+
+            //    newStep = new StepClass();
+            //    newStep.Order = order++;
+            //    newStep.StepTemplate = dbContext.StepTemplates.Single(o => o.CurrentInput == -8000 && o.CurrentUnit == CurrentUnitEnum.mA && o.CutOffConditionValue == 0);
+            //    rt.Steps.Add(newStep);
+
+            //    dbContext.RecipeTemplates.Add(rt);
+            //    dbContext.SaveChanges();
+            //}
+            var tPoints = new List<double>() { -10, -2.5, 5, 15, 25, 35, 45 };
+            //var cPoints = new List<string>() { "0.5A", "1A", "2A", "3A", "5A", "8A", "10A" };
+            var cPoints = new List<double>() { -500, -1000, -2000, -3000, -5000, -8000, -10000 };
+            var recipeNames = new List<String>();
+            foreach (var cpoint in cPoints)
+            {
+                RecipeTemplate rt = new RecipeTemplate();
+                int o = 1;
+                rt.Name = $"{cpoint / -1000.0}A";
+                rt.Steps.Add(new StepClass() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = 0.5, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
+                rt.Steps.Add(new StepClass() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
+                rt.Steps.Add(new StepClass() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = cpoint, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = 0, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
+                recipeNames.Add(SuperCreateRecipeTemplate(rt));
+            }
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "M26");
+                var pro = new ProgramClass();
+                pro.Name = "RC";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "O2Sim1" && o.BatteryType.Name == "M26");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "RC");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in recipeNames)
+                    {
+
+                        recTemp = GetRecipeTemplateByName(dbContext, c);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_M26_O2Sim1_EV_Static_01()
+        {
+            var tPoints = new List<double>() { -5, 2.5, 7, 10, 20, 28, 33 };
+            //var cPoints = new List<double>() { "8A", "2.5A", "6A", "9A" };
+            var cPoints = new List<double>() { -800, -2500, -6000, -9000 };
+            var recipeNames = new List<String>();
+            foreach (var cpoint in cPoints)
+            {
+                RecipeTemplate rt = new RecipeTemplate();
+                rt.Name = $"{cpoint / -1000.0}A";
+                rt.Steps.Add(new StepClass() { Order = 1, StepTemplate = new StepTemplate() { CurrentInput = 0.5, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
+                rt.Steps.Add(new StepClass() { Order = 2, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
+                rt.Steps.Add(new StepClass() { Order = 3, StepTemplate = new StepTemplate() { CurrentInput = cpoint, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = 0, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
+                rt.Steps.Add(new StepClass() { Order = 4, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 60, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
+                recipeNames.Add(SuperCreateRecipeTemplate(rt));
+            }
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "M26");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Static-N1";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "O2Sim1" && o.BatteryType.Name == "M26");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in recipeNames)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, c);
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
+        private static void Create_M26_O2Sim1_EV_Dynamic_01()
+        {
+            var tPoints = new List<double>() { -5, 2.5, 7, 10, 20, 28, 33 };
+            //var cPoints = new List<double>() { "8A", "2.5A", "6A", "9A" };
+            var cPointsList = new List<List<double>>() {
+                new List<double>(){ -8000, -1000, 60 },
+                new List<double>(){ -5000, -1000, 60 },
+                new List<double>(){ -8000, -5000, 60 },
+                new List<double>(){ -8000, -1000, 30 },
+                new List<double>(){ -8000, -1000, 10 },
+                new List<double>(){ -8000, -1000, 5 },
+                new List<double>(){ -3000, -1000, 10 },
+                new List<double>(){ -3000, -1000, 5 }
+            };
+            var recipeNames = new List<String>();
+            foreach (var cpoints in cPointsList)
+            {
+                RecipeTemplate rt = new RecipeTemplate();
+                int o = 1;
+                rt.Name = $"{cpoints[0] / -1000.0}A-{cpoints[1] / -1000.0}A-{cpoints[2]}S";
+                rt.Steps.Add(new StepClass() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
+                rt.Steps.Add(new StepClass() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = 0.5, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate } });
+                rt.Steps.Add(new StepClass() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 600, CutOffConditionType = CutOffConditionTypeEnum.Time_s } });
+                rt.Steps.Add(new StepClass() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = cpoints[0], CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = cpoints[2], CutOffConditionType = CutOffConditionTypeEnum.Time_s }, LoopLabel = "a" });
+                rt.Steps.Add(new StepClass() { Order = o++, StepTemplate = new StepTemplate() { CurrentInput = cpoints[1], CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = cpoints[2], CutOffConditionType = CutOffConditionTypeEnum.Time_s }, CompareMark = CompareMarkEnum.LargerThan, CRate = 0, LoopTarget = "a" });
+                recipeNames.Add(SuperCreateRecipeTemplate(rt));
+            }
+            using (var dbContext = new AppDbContext())//1
+            {
+                BatteryTypeClass bType = dbContext.BatteryTypes.Single(o => o.Name == "M26");
+                var pro = new ProgramClass();
+                pro.Name = "EV-Dynamic-N1";
+                pro.Project = dbContext.Projects.Single(o => o.Name == "O2Sim1" && o.BatteryType.Name == "M26");
+                pro.Type = dbContext.ProgramTypes.Single(o => o.Name == "EV");
+                pro.Requester = "Jim";
+                pro.RequestTime = DateTime.Now;
+
+                RecipeTemplate recTemp;
+                RecipeClass rec;
+                foreach (var t in tPoints)
+                {
+                    foreach (var c in recipeNames)
+                    {
+                        var id = GetRecipeTemplateIdByName(dbContext, c);
+                        recTemp = GetRecipeTemplateById(dbContext, id);
+                        rec = new RecipeClass(recTemp, bType);
+                        rec.Temperature = t;
+                        pro.Recipes.Add(rec);
+
+                        dbContext.Programs.Add(pro);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+        }
         private static void CreatePrograms()
         {
             Create_HG2_HighPower_MISC_Battery_Initial(1);
@@ -3412,6 +3924,13 @@ namespace BCLabManager
             Create_HG2_HighPower_EV_Dynamic_10();
             Create_HG2_HighPower_EV_Dynamic_11();
             Create_HG2_HighPower_EV_Dynamic_12();
+            Create_HG2_HighPower_EV_Dynamic_13();
+
+            Create_M26_O2Sim1_MISC_Battery_Initial(1);
+            Create_M26_O2Sim1_OCV02();
+            Create_M26_O2Sim1_RC();
+            Create_M26_O2Sim1_EV_Static_01();
+            Create_M26_O2Sim1_EV_Dynamic_01();
         }
         #endregion
         #region Common
@@ -3483,6 +4002,130 @@ namespace BCLabManager
         private static int GetRecipeTemplateIdByName(AppDbContext dbContext, string name)
         {
             return dbContext.RecipeTemplates.SingleOrDefault(o => o.Name == name).Id;
+        }
+
+        private static string SuperCreateRecipeTemplate(RecipeTemplate rt)  //传入一个rt，创建此rt并添加到db，传回合法名字
+        {
+            string name;
+            if (CheckRecipeTemplateExistance(rt, out name))
+            {
+                return name;
+            }
+            else
+            {
+                rt.Name = GetValidRecipeTemplateName(rt.Name);
+                CreateRecipeTemplate(rt);
+                return rt.Name;
+            }
+        }
+
+        private static void CreateRecipeTemplate(RecipeTemplate rt)
+        {
+            foreach (var st in rt.Steps)
+            {
+                CreateStepTemplate(st.StepTemplate.CurrentInput, st.StepTemplate.CurrentUnit, st.StepTemplate.CutOffConditionValue, st.StepTemplate.CutOffConditionType);
+            }
+            using (var dbContext = new AppDbContext())
+            {
+                int order = 1;
+                RecipeTemplate obj = new RecipeTemplate();
+                obj.Name = rt.Name;
+
+                foreach (var step in rt.Steps)
+                {
+                    var newStep = new StepClass();
+                    newStep.Order = order++;
+                    newStep.StepTemplate =
+                        dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == step.StepTemplate.CurrentInput
+                        && o.CurrentUnit == step.StepTemplate.CurrentUnit
+                        && o.CutOffConditionValue == step.StepTemplate.CutOffConditionValue
+                        && o.CutOffConditionType == step.StepTemplate.CutOffConditionType);
+                    newStep.CompareMark = step.CompareMark;
+                    newStep.CRate = step.CRate;
+                    newStep.LoopLabel = step.LoopLabel;
+                    newStep.LoopTarget = step.LoopTarget;
+                    newStep.LoopCount = step.LoopCount;
+                    obj.Steps.Add(newStep);
+                }
+
+                dbContext.RecipeTemplates.Add(obj);
+                dbContext.SaveChanges();
+            }
+        }
+
+        private static string GetValidRecipeTemplateName(string name)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var rts = dbContext.RecipeTemplates;
+                if (rts.Any(o => o.Name == name))
+                {
+                    for (int i = 2; i < 100; i++)
+                    {
+                        var newname = $"{name}-N{i}";
+                        if (!rts.Any(o => o.Name == newname))
+                            return newname;
+                    }
+                    return "";
+                }
+                else
+                    return name;
+            }
+        }
+
+        private static bool CheckRecipeTemplateExistance(RecipeTemplate rt, out string name)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var rts = dbContext.RecipeTemplates
+                    .Include(o => o.Steps)
+                        .ThenInclude(o => o.StepTemplate)
+                    .ToList();
+                var rttemp = rts.SingleOrDefault(o => StepsCompare(o.Steps, rt.Steps));
+                if (rttemp != null)
+                {
+                    name = rttemp.Name;
+                    return true;
+                }
+                else
+                {
+                    name = "";
+                    return false;
+                }
+            }
+        }
+
+        private static bool StepsCompare(ObservableCollection<StepClass> steps1, ObservableCollection<StepClass> steps2)
+        {
+            if (steps1.Count != steps2.Count)
+                return false;
+            steps1.OrderBy(o => o.Order);
+            steps2.OrderBy(o => o.Order);
+            for (int i = 0; i < steps1.Count; i++)
+            {
+                if (!StepCompare(steps1[i], steps2[i]))
+                    return false;
+            }
+            return true;
+        }
+
+        private static bool StepCompare(StepClass step1, StepClass step2)
+        {
+            return step1.Order == step2.Order
+                && StepTemplateCompare(step1.StepTemplate, step2.StepTemplate)
+                && step1.LoopLabel == step2.LoopLabel
+                && step1.LoopTarget == step2.LoopTarget
+                && step1.LoopCount == step2.LoopCount
+                && step1.CompareMark == step2.CompareMark
+                && step1.CRate == step2.CRate;
+        }
+
+        private static bool StepTemplateCompare(StepTemplate stepTemplate1, StepTemplate stepTemplate2)
+        {
+            return stepTemplate1.CurrentInput == stepTemplate2.CurrentInput
+                && stepTemplate1.CurrentUnit == stepTemplate2.CurrentUnit
+                && stepTemplate1.CutOffConditionValue == stepTemplate2.CutOffConditionValue
+                && stepTemplate1.CutOffConditionType == stepTemplate2.CutOffConditionType;
         }
         #endregion
     }

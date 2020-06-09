@@ -37,14 +37,14 @@
             <!-- CUSTOMER TYPE -->
             <Label 
       Grid.Row="0" Grid.Column="0" 
-      Content="_manufacturor:" 
+      Content="_manufacturer:" 
       HorizontalAlignment="Right"
-      Target="{Binding ElementName=manufacturorTxt}" 
+      Target="{Binding ElementName=manufacturerTxt}" 
       />
             <TextBox 
-      x:Name="manufacturorTxt"
+      x:Name="manufacturerTxt"
       Grid.Row="0" Grid.Column="2" 
-      Text="{Binding Path=Manufacturor, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+      Text="{Binding Path=Manufacturer, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
       Validation.ErrorTemplate="{x:Null}"
       />
 

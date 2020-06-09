@@ -56,7 +56,7 @@ namespace BCLabManager.Model
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             edittarget.HighestTemperature = item.HighestTemperature;
             edittarget.LowestTemperature = item.LowestTemperature;
-            edittarget.Manufacturor = item.Manufacturor;
+            edittarget.Manufacturer = item.Manufacturer;
             edittarget.Name = item.Name;
             edittarget.AssetUseCount = item.AssetUseCount;
             edittarget.Records = item.Records;

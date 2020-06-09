@@ -332,9 +332,9 @@
     <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
-    <Compile Include="Migrations\20200605064458_Init.cs" />
-    <Compile Include="Migrations\20200605064458_Init.designer.cs">
-      <DependentUpon>20200605064458_Init.cs</DependentUpon>
+    <Compile Include="Migrations\20200609021252_Init.cs" />
+    <Compile Include="Migrations\20200609021252_Init.designer.cs">
+      <DependentUpon>20200609021252_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">

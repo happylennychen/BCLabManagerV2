@@ -43,9 +43,9 @@ namespace BCLabManager.ViewModel
         {
             get { return _tester.Id; }
         }
-        public string Manufacturor
+        public string Manufacturer
         {
-            get { return _tester.Manufacturor; }
+            get { return _tester.Manufacturer; }
         }
 
         public string Name

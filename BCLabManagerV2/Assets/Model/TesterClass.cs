@@ -12,13 +12,13 @@ namespace BCLabManager.Model
     public class TesterClass : BindableBase, ITester
     {
         public int Id { get; set; }
-        //public String Manufacturor { get; set; }
+        //public String Manufacturer { get; set; }
         //public String Name { get; set; }
-        private string _manufacturor;
-        public string Manufacturor
+        private string _manufacturer;
+        public string Manufacturer
         {
-            get { return _manufacturor; }
-            set { SetProperty(ref _manufacturor, value); }
+            get { return _manufacturer; }
+            set { SetProperty(ref _manufacturer, value); }
         }
         private string _name;
         public string Name
@@ -30,16 +30,16 @@ namespace BCLabManager.Model
         public TesterClass()
         { }
 
-        //public TesterClass(String Manufacturor, String Name)
+        //public TesterClass(String Manufacturer, String Name)
         //{
         //    //this.TesterID = NextID;
-        //    this.Manufacturor = Manufacturor;
+        //    this.Manufacturer = Manufacturer;
         //    this.Name = Name;
         //}
 
-        //public void Update(String Manufacturor, String Name)
+        //public void Update(String Manufacturer, String Name)
         //{
-        //    this.Manufacturor = Manufacturor;
+        //    this.Manufacturer = Manufacturer;
         //    this.Name = Name;
         //}
 

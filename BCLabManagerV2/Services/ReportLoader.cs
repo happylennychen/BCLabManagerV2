@@ -30,7 +30,7 @@ namespace BCLabManager.Services
         {
             var row_number = index + 2;
             BatteryTypeClass output = new BatteryTypeClass();
-            output.Manufacturor = ExcelHelper.GetStringFromCell(BatteryTypeSheet, row_number, 2);
+            output.Manufacturer = ExcelHelper.GetStringFromCell(BatteryTypeSheet, row_number, 2);
             output.Name = ExcelHelper.GetStringFromCell(BatteryTypeSheet, row_number, 3);
             output.Material = ExcelHelper.GetStringFromCell(BatteryTypeSheet, row_number, 4);
             output.LimitedChargeVoltage = Convert.ToInt32(ExcelHelper.GetStringFromCell(BatteryTypeSheet, row_number, 5));
@@ -68,7 +68,7 @@ namespace BCLabManager.Services
         {
             int row_number = index + 2;
             TesterClass output = new TesterClass();
-            output.Manufacturor = ExcelHelper.GetStringFromCell(TesterSheet, row_number, 2);
+            output.Manufacturer = ExcelHelper.GetStringFromCell(TesterSheet, row_number, 2);
             output.Name = ExcelHelper.GetStringFromCell(TesterSheet, row_number, 3);
             return output;
         }
@@ -99,7 +99,7 @@ namespace BCLabManager.Services
         {
             int row_number = index + 2;
             ChamberClass output = new ChamberClass();
-            output.Manufacturor = ExcelHelper.GetStringFromCell(ChamberSheet, row_number, 2);
+            output.Manufacturer = ExcelHelper.GetStringFromCell(ChamberSheet, row_number, 2);
             output.Name = ExcelHelper.GetStringFromCell(ChamberSheet, row_number, 3);
             output.LowestTemperature = Convert.ToInt32(ExcelHelper.GetStringFromCell(ChamberSheet, row_number, 4));
             output.HighestTemperature = Convert.ToInt32(ExcelHelper.GetStringFromCell(ChamberSheet, row_number, 5));

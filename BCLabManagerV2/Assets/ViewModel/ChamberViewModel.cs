@@ -49,9 +49,9 @@ namespace BCLabManager.ViewModel
             get { return _chamber.Name; }
         }
 
-        public string Manufacturor
+        public string Manufacturer
         {
-            get { return _chamber.Manufacturor; }
+            get { return _chamber.Manufacturer; }
         }
 
         public Double LowTemp

@@ -14,7 +14,7 @@ namespace BCLabManager.Migrations
                 {
                     id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    manufacturor = table.Column<string>(nullable: true),
+                    manufacturer = table.Column<string>(nullable: true),
                     name = table.Column<string>(nullable: true),
                     material = table.Column<string>(nullable: true),
                     typical_capacity = table.Column<int>(nullable: false),
@@ -37,7 +37,7 @@ namespace BCLabManager.Migrations
                     id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     asset_use_count = table.Column<int>(nullable: false),
-                    manufacturor = table.Column<string>(nullable: true),
+                    manufacturer = table.Column<string>(nullable: true),
                     name = table.Column<string>(nullable: true),
                     lowest_temperature = table.Column<double>(nullable: false),
                     highest_temperature = table.Column<double>(nullable: false)
@@ -127,7 +127,7 @@ namespace BCLabManager.Migrations
                 {
                     id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    manufacturor = table.Column<string>(nullable: true),
+                    manufacturer = table.Column<string>(nullable: true),
                     name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

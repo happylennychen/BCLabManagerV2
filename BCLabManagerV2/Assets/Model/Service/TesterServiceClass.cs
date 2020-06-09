@@ -55,7 +55,7 @@ namespace BCLabManager.Model
         public void DomainUpdate(TesterClass item)
         {
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
-            edittarget.Manufacturor = item.Manufacturor;
+            edittarget.Manufacturer = item.Manufacturer;
             edittarget.Name = item.Name;
         }
 

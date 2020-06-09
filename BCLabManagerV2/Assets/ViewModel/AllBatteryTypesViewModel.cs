@@ -192,7 +192,7 @@ namespace BCLabManager.ViewModel
             BatteryTypeClass btc = new BatteryTypeClass();      //实例化一个新的model
             BatteryTypeEditViewModel btevm = new BatteryTypeEditViewModel(btc);      //实例化一个新的view model
             btevm.Id = _selectedItem.Id;
-            btevm.Manufacturor = _selectedItem.Manufacturor;
+            btevm.Manufacturer = _selectedItem.Manufacturer;
             btevm.Material = _selectedItem.Material;
             btevm.Name = _selectedItem.Name;
             //btevm.DisplayName = "Battery Type-Edit";
@@ -212,7 +212,7 @@ namespace BCLabManager.ViewModel
         {
             BatteryTypeClass btc = new BatteryTypeClass();      //实例化一个新的model
             BatteryTypeEditViewModel btevm = new BatteryTypeEditViewModel(btc);      //实例化一个新的view model
-            btevm.Manufacturor = _selectedItem.Manufacturor;
+            btevm.Manufacturer = _selectedItem.Manufacturer;
             btevm.Material = _selectedItem.Material;
             btevm.Name = _selectedItem.Name;
             btevm.CutoffDischargeVoltage = _selectedItem.CutoffDischargeVoltage;

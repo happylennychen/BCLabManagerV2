@@ -37,7 +37,8 @@ namespace BCLabManager.DataAccess
             //optionsBuilder.UseSqlite($"Data Source={GlobalSettings.DbPath}");
             //optionsBuilder.UseNpgsql(@"host=localhost;database=bclabmanager;user id=postgres;password=123456;");
             //optionsBuilder.UseNpgsql(@"host=localhost;database=demo;user id=postgres;password=123456;");
-            optionsBuilder.UseNpgsql(@"host=localhost;database=HighPower;user id=postgres;password=123456;").UseSnakeCaseNamingConvention();
+            //optionsBuilder.UseNpgsql(@"host=localhost;database=HighPower;user id=postgres;password=123456;").UseSnakeCaseNamingConvention();
+            optionsBuilder.UseNpgsql(@"host=localhost;database=test;user id=postgres;password=123456;").UseSnakeCaseNamingConvention();
         }
     }
 }
