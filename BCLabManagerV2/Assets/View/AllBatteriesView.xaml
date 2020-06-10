@@ -120,7 +120,7 @@
                     </GridView>
                 </ListView.View>
             </ListView>-->
-            <DataGrid GridLinesVisibility="None" AutoGenerateColumns="False" CanUserSortColumns="False"
+            <DataGrid GridLinesVisibility="None" AutoGenerateColumns="False"
                       ItemsSource="{Binding Path=Records}" Background="White">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>

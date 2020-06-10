@@ -28,6 +28,7 @@ namespace BCLabManager.ViewModel
         RelayCommand _saveAsCommand;
         RelayCommand _programInvalidateCommand;
         RelayCommand _abandonCommand;
+        RelayCommand _directCommitCommand;
         RelayCommand _executeCommand;
         RelayCommand _commitCommand;
         RelayCommand _invalidateCommand;
@@ -339,6 +340,20 @@ namespace BCLabManager.ViewModel
                         );
                 }
                 return _commitCommand;
+            }
+        }
+        public ICommand DirectCommitCommand
+        {
+            get
+            {
+                if (_directCommitCommand == null)
+                {
+                    _directCommitCommand = new RelayCommand(
+                        param => { this.DirectCommit(); },
+                        param => this.CanExecute
+                        );
+                }
+                return _directCommitCommand;
             }
         }
 
@@ -784,6 +799,100 @@ namespace BCLabManager.ViewModel
         private bool CanCommit
         {
             get { return _selectedTestRecord != null && _selectedTestRecord.Status == TestStatus.Executing; }
+        }
+        private void DirectCommit()
+        //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
+        {
+            var model = new TestRecord();
+            TestRecordDirectCommitViewModel evm = new TestRecordDirectCommitViewModel
+                (
+                model,
+                SelectedProgram.Project.BatteryType,
+                _batteryService.Items,
+                _testerService.Items,
+                _channelService.Items,
+                _chamberService.Items,
+                _selectedProgram.Type,
+                    SelectedProgram.Name,
+                    $"{SelectedRecipe.Temperature}Deg-{SelectedRecipe.Name}"
+                );
+            evm.Temperature = _selectedRecipe.Temperature;
+            var index = _selectedRecipe.Name.IndexOf('A');
+            if (index != -1)
+            {
+                var currStr = _selectedRecipe.Name.Remove(index);
+                try
+                {
+                    var currInA = Convert.ToDouble(currStr);
+                    evm.Current = currInA * 1000;
+                }
+                catch (Exception e)
+                {
+                    //MessageBox.Show("Error when converting");
+                    //return;
+                }
+            }
+            //evm.DisplayName = "Test-Commit";
+            var TestRecordDirectCommitViewInstance = new DirectCommitView();
+            TestRecordDirectCommitViewInstance.DataContext = evm;
+            TestRecordDirectCommitViewInstance.ShowDialog();
+            if (evm.IsOK == true)
+            {
+                try
+                {
+                    DateTime[] time = _testerService.GetTimeFromRawData(evm.Channel.Tester, evm.FileList);
+                    _programService.RecipeService.TestRecordService.Execute(
+                    SelectedTestRecord.Record,
+                    SelectedProgram.Project.BatteryType.Name,
+                    SelectedProgram.Project.Name,
+                    evm.Battery, evm.Chamber,
+                    evm.Tester.Name,
+                    evm.Channel,
+                    evm.Current,
+                    evm.Temperature,
+                    time[0],
+                    evm.MeasurementGain,
+                    evm.MeasurementOffset,
+                    evm.TraceResistance,
+                    evm.CapacityDifference,
+                    evm.Operator,
+                    SelectedProgram.Name,
+                    $"{SelectedRecipe.Temperature}Deg-{SelectedRecipe.Name}"    //Use this to represent RecipeStr
+                    );
+                    _batteryService.Execute(evm.Battery, time[0], SelectedProgram.Name, SelectedRecipe.Name);
+                    _channelService.Execute(evm.Channel, time[0], SelectedProgram.Name, SelectedRecipe.Name);
+                    _chamberService.Execute(evm.Chamber, time[0], SelectedProgram.Name, SelectedRecipe.Name);
+
+                    _batteryService.Commit(evm.Battery, time[1], SelectedProgram.Name, SelectedRecipe.Name, evm.NewCycle);
+                    _channelService.Commit(evm.Channel, time[1], SelectedProgram.Name, SelectedRecipe.Name);
+                    _chamberService.Commit(evm.Chamber, time[1], SelectedProgram.Name, SelectedRecipe.Name);
+                    Header header = new Header();
+                    header.Type = SelectedProgram.Type.ToString();
+                    header.TestTime = time[0].ToString("yyyy-MM-dd");
+                    header.Equipment = model.TesterStr;
+                    header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufacturer;
+                    header.BatteryModel = SelectedProgram.Project.BatteryType.Name;
+                    header.CycleCount = evm.NewCycle.ToString();
+                    header.Temperature = model.Temperature.ToString();
+                    header.Current = model.Current.ToString();
+                    header.MeasurementGain = model.MeasurementGain.ToString();
+                    header.MeasurementOffset = model.MeasurementOffset.ToString();
+                    header.TraceResistance = model.TraceResistance.ToString();
+                    header.CapacityDifference = model.CapacityDifference.ToString();
+                    header.AbsoluteMaxCapacity = SelectedProgram.Project.AbsoluteMaxCapacity.ToString();//.BatteryType.TypicalCapacity.ToString();
+                    header.LimitedChargeVoltage = SelectedProgram.Project.LimitedChargeVoltage.ToString();
+                    //header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
+                    header.CutoffDischargeVoltage = SelectedProgram.Project.BatteryType.CutoffDischargeVoltage.ToString();
+                    header.Tester = model.Operator;
+                    _programService.RecipeService.TestRecordService.Commit(
+                    SelectedTestRecord.Record, evm.Comment, evm.FileList.ToList(), evm.IsRename, evm.NewName, time[0], time[1], SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
+                }
+                catch (Exception e)
+                {
+                    //_programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), DateTime.MinValue, DateTime.MinValue, SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, SelectedProgram.Description);
+                    MessageBox.Show(e.Message);
+                }
+            }
         }
         private void Invalidate()
         {

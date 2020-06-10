@@ -374,8 +374,12 @@
     <Compile Include="Assets\View\AllProgramTypesView.xaml.cs">
       <DependentUpon>AllProgramTypesView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Programs\ViewModel\TestRecordDirectCommitViewModel.cs" />
     <Compile Include="Programs\View\AllStepTemplatesView.xaml.cs">
       <DependentUpon>AllStepTemplatesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Programs\View\DirectCommitView.xaml.cs">
+      <DependentUpon>DirectCommitView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Programs\View\RCProgramView.xaml.cs">
       <DependentUpon>RCProgramView.xaml</DependentUpon>
@@ -586,6 +590,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Programs\View\AllProgramsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Programs\View\DirectCommitView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

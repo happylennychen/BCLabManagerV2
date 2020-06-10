@@ -232,6 +232,7 @@
         <GroupBox Grid.Row="2" Grid.Column="0" Header="Test Records">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="_Direct Commit" Command="{Binding Path=DirectCommitCommand}" Margin="0,5,15,0" Width="100"></Button>
                     <Button Content="_Execute" Command="{Binding Path=ExecuteCommand}" Margin="0,5,5,0" Width="60"></Button>
                     <Button Content="_Commit" Command="{Binding Path=CommitCommand}" Margin="0,5,5,0" Width="60"></Button>
                     <Button Content="_Invalidate" Command="{Binding Path=InvalidateCommand}" Margin="0,5,5,0" Width="60"></Button>
