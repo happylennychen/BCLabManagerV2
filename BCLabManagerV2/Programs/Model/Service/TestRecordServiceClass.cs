@@ -112,7 +112,6 @@ namespace BCLabManager.Model
                 temptestfilepath = CreateTestFile(rawDataList, temproot, newName);
                 testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
                 CopyToServer(temptestfilepath, testRecord.TestFilePath);
-                //File.Copy(temptestfilepath, testRecord.TestFilePath);
             }
             else
             {
@@ -120,14 +119,12 @@ namespace BCLabManager.Model
                 {
                     temptestfilepath = RenameRawDataAndCopyToFolder(rawDataList[0], temproot, newName);
                     testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
-                    //File.Copy(temptestfilepath, testRecord.TestFilePath);
                     CopyToServer(temptestfilepath, testRecord.TestFilePath);
                 }
                 else
                 {
                     temptestfilepath = CopyToFolder(rawDataList[0], temproot);
                     testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
-                    //File.Copy(temptestfilepath, testRecord.TestFilePath);
                     CopyToServer(temptestfilepath, testRecord.TestFilePath);
                 }
             }
@@ -140,11 +137,9 @@ namespace BCLabManager.Model
                 if (!File.Exists(tempheaderFilePath))
                 {
                     CreateHeaderFile(tempheaderFilePath, header);
-                    //File.Copy(tempheaderFilePath, headerFilePath);
                     CopyToServer(tempheaderFilePath, headerFilePath);
                     var tempSourceFilePath = CreateSourceFile(temproot, tempheaderFilePath, temptestfilepath);
                     string sourceFilePath = $@"{root}\{GlobalSettings.SourceDataFolderName}\{Path.GetFileName(temptestfilepath)}";
-                    //File.Copy(tempSourceFilePath, sourceFilePath);
                     CopyToServer(tempSourceFilePath, sourceFilePath);
                 }
             }
@@ -152,15 +147,15 @@ namespace BCLabManager.Model
 
         private void CopyToServer(string tempPath, string serverPath)
         {
-            //File.Copy(tempPath, serverPath);
+            //File.Copy(tempPath, serverPath, true);
         }
 
         private string CopyToFolder(string filepath, string root)
         {
             var newPath = Path.Combine($@"{root}\{GlobalSettings.TestDataFolderName}", Path.GetFileName(filepath));
             var tempPath = Path.Combine($@"{GlobalSettings.TempraryFolder}\{GlobalSettings.TestDataFolderName}", Path.GetFileName(filepath));
-            File.Copy(filepath, tempPath);
-            File.Copy(filepath, newPath);
+            File.Copy(filepath, tempPath, true);
+            File.Copy(filepath, newPath, true);
             //rawDataName[0] = newPath;
             return newPath;
         }
@@ -168,7 +163,7 @@ namespace BCLabManager.Model
         private string RenameRawDataAndCopyToFolder(string rawDataName, string root, string newName)
         {
             var newPath = Path.Combine($@"{root}\{GlobalSettings.TestDataFolderName}", newName + Path.GetExtension(rawDataName));
-            File.Copy(rawDataName, newPath);
+            File.Copy(rawDataName, newPath, true);
             //rawDataName[0] = newPath;
             return newPath;
         }
@@ -176,7 +171,7 @@ namespace BCLabManager.Model
         private string CreateSourceFile(string root, string headerFilePath, string testFilePath)
         {
             string sourceFilePath = $@"{root}\{GlobalSettings.SourceDataFolderName}\{Path.GetFileName(testFilePath)}";
-            File.Copy(headerFilePath, sourceFilePath);
+            File.Copy(headerFilePath, sourceFilePath, true);
             File.AppendAllLines(sourceFilePath, File.ReadAllLines(testFilePath));
             return sourceFilePath;
         }
@@ -220,7 +215,7 @@ namespace BCLabManager.Model
                     //File.WriteAllText(filename, File.ReadAllText(raw.FilePath));
                     try
                     {
-                        File.Copy(raw, filepath);
+                        File.Copy(raw, filepath, true);
                     }
                     catch (Exception e)
                     {
