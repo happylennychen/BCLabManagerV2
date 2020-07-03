@@ -128,6 +128,16 @@ namespace BCLabManager.Model
                     CopyToServer(temptestfilepath, testRecord.TestFilePath);
                 }
             }
+            if(testRecord.TestFilePath == "")
+            {
+                MessageBox.Show("Test File Path Empty!");
+                return;
+            }
+            if (!File.Exists(testRecord.TestFilePath))
+            {
+                MessageBox.Show("Test File Missing!");
+                return;
+            }
             SuperUpdate(testRecord);
 
             if (header.Type == "RC" || header.Type == "OCV")
@@ -147,7 +157,7 @@ namespace BCLabManager.Model
 
         private void CopyToServer(string tempPath, string serverPath)
         {
-            //File.Copy(tempPath, serverPath, true);
+            File.Copy(tempPath, serverPath, true);
         }
 
         private string CopyToFolder(string filepath, string root)
@@ -179,22 +189,23 @@ namespace BCLabManager.Model
         private void CreateHeaderFile(string headerFilePath, Header header)
         {
             List<string> lines = new List<string>();
-            lines.Add($"Type,{header.Type}");
-            lines.Add($"Test Time,{header.TestTime}");
-            lines.Add($"Equipment,{header.Equipment}");
-            lines.Add($"Manufacture Factory,{header.ManufactureFactory}");
-            lines.Add($"Battery Model,{header.BatteryModel}");
-            lines.Add($"Cycle Count,{header.CycleCount}");
-            lines.Add($"Temperature(DegC),{header.Temperature}");
-            lines.Add($"Current(mA),{header.Current}");
-            lines.Add($"Measurement Gain,{header.MeasurementGain}");
-            lines.Add($"Measurement Offset(mV),{header.MeasurementOffset}");
-            lines.Add($"Trace Resistance(mohm),{header.TraceResistance}");
-            lines.Add($"Capacity Difference(mAH),{header.CapacityDifference}");
-            lines.Add($"Absolute Max Capacity(mAH),{header.AbsoluteMaxCapacity}");
-            lines.Add($"Limited Charge Voltage(mV),{header.LimitedChargeVoltage}");
-            lines.Add($"Cut-off Discharge Voltage(mV),{header.CutoffDischargeVoltage}");
-            lines.Add($"Tester,{header.Tester}");
+            lines.Add($"Type: ,{header.Type}");
+            lines.Add($"Test Time: ,{header.TestTime}");
+            lines.Add($"Equipment: ,{header.Equipment}");
+            lines.Add($"Manufacture Factory: ,{header.ManufactureFactory}");
+            lines.Add($"Battery Model: ,{header.BatteryModel}");
+            lines.Add($"Cycle Count: ,{header.CycleCount}");
+            lines.Add($"Temperature(DegC): ,{header.Temperature}");
+            lines.Add($"Current(mA): ,{header.Current}");
+            lines.Add($"Measurement Gain: ,{header.MeasurementGain}");
+            lines.Add($"Measurement Offset(mV): ,{header.MeasurementOffset}");
+            lines.Add($"Trace Resistance(mohm): ,{header.TraceResistance}");
+            lines.Add($"Capacity Difference(mAH): ,{header.CapacityDifference}");
+            lines.Add($"Absolute Max Capacity(mAH): ,{header.AbsoluteMaxCapacity}");
+            lines.Add($"Limited Charge Voltage(mV): ,{header.LimitedChargeVoltage}");
+            lines.Add($"Cut-off Discharge Voltage(mV): ,{header.CutoffDischargeVoltage}");
+            //lines.Add($"Tester: ,{header.Tester}");
+            lines.Add($"Tester: ,Leon");
             for (int i = 0; i < 9; i++)
             {
                 lines.Add("");

@@ -689,19 +689,27 @@ namespace BCLabManager.ViewModel
                 _selectedProgram.Type
                 );
             evm.Temperature = _selectedRecipe.Temperature;
-            var index = _selectedRecipe.Name.IndexOf('A');
-            if (index != -1)
+            if (_selectedProgram._program.Type.Name == "EV")
             {
-                var currStr = _selectedRecipe.Name.Remove(index);
-                try
+                if (_selectedProgram.Name.Contains("Dynamic"))
+                    evm.Current = 0;
+            }
+            else
+            {
+                var index = _selectedRecipe.Name.IndexOf('A');
+                if (index != -1)
                 {
-                    var currInA = Convert.ToDouble(currStr);
-                    evm.Current = currInA * 1000;
-                }
-                catch (Exception e)
-                {
-                    //MessageBox.Show("Error when converting");
-                    //return;
+                    var currStr = _selectedRecipe.Name.Remove(index);
+                    try
+                    {
+                        var currInA = Convert.ToDouble(currStr);
+                        evm.Current = currInA * 1000;
+                    }
+                    catch (Exception e)
+                    {
+                        //MessageBox.Show("Error when converting");
+                        //return;
+                    }
                 }
             }
             //evm.DisplayName = "Test-Execute";
@@ -817,19 +825,27 @@ namespace BCLabManager.ViewModel
                     $"{SelectedRecipe.Temperature}Deg-{SelectedRecipe.Name}"
                 );
             evm.Temperature = _selectedRecipe.Temperature;
-            var index = _selectedRecipe.Name.IndexOf('A');
-            if (index != -1)
+            if (_selectedProgram._program.Type.Name == "EV")
             {
-                var currStr = _selectedRecipe.Name.Remove(index);
-                try
+                if (_selectedProgram.Name.Contains("Dynamic"))
+                    evm.Current = 0;
+            }
+            else
+            {
+                var index = _selectedRecipe.Name.IndexOf('A');
+                if (index != -1)
                 {
-                    var currInA = Convert.ToDouble(currStr);
-                    evm.Current = currInA * 1000;
-                }
-                catch (Exception e)
-                {
-                    //MessageBox.Show("Error when converting");
-                    //return;
+                    var currStr = _selectedRecipe.Name.Remove(index);
+                    try
+                    {
+                        var currInA = Convert.ToDouble(currStr);
+                        evm.Current = currInA * 1000;
+                    }
+                    catch (Exception e)
+                    {
+                        //MessageBox.Show("Error when converting");
+                        //return;
+                    }
                 }
             }
             //evm.DisplayName = "Test-Commit";

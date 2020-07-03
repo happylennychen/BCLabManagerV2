@@ -348,14 +348,6 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public bool ShowCurrentAndTemperature
-        {
-            get
-            {
-                return _type.Name == "RC" || _type.Name == "OCV";
-            }
-        }
-
         public double Temperature
         {
             get
