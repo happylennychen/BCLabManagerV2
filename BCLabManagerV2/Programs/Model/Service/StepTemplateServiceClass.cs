@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BCLabManager.Model
 {
@@ -20,13 +21,21 @@ namespace BCLabManager.Model
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                uow.StepTemplates.Insert(item);
-                uow.Commit();
+                if (!uow.StepTemplates.GetAll().Any(o => o.CurrentInput == item.CurrentInput && o.CurrentUnit == item.CurrentUnit && o.CutOffConditionValue == item.CutOffConditionValue && o.CutOffConditionType == item.CutOffConditionType))
+                {
+                    uow.StepTemplates.Insert(item);
+                    uow.Commit();
+                }
+                else
+                {
+                    MessageBox.Show("Already existed.");
+                }
             }
         }
         public void DomainAdd(StepTemplate item)
         {
-            Items.Add(item);
+            if(!Items.Any(o => o.CurrentInput == item.CurrentInput && o.CurrentUnit == item.CurrentUnit && o.CutOffConditionValue == item.CutOffConditionValue && o.CutOffConditionType == item.CutOffConditionType))
+                Items.Add(item);
         }
         public void SuperRemove(int id)
         {

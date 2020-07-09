@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -157,7 +158,8 @@ namespace BCLabManager.Model
 
         private void CopyToServer(string tempPath, string serverPath)
         {
-            File.Copy(tempPath, serverPath, true);
+            var thread = new Thread(()=> { File.Copy(tempPath, serverPath, true); });
+            thread.Start();
         }
 
         private string CopyToFolder(string filepath, string root)
