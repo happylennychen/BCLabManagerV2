@@ -134,11 +134,6 @@ namespace BCLabManager.Model
                 MessageBox.Show("Test File Path Empty!");
                 return;
             }
-            if (!File.Exists(testRecord.TestFilePath))
-            {
-                MessageBox.Show("Test File Missing!");
-                return;
-            }
             SuperUpdate(testRecord);
 
             if (header.Type == "RC" || header.Type == "OCV")
@@ -158,7 +153,14 @@ namespace BCLabManager.Model
 
         private void CopyToServer(string tempPath, string serverPath)
         {
-            var thread = new Thread(()=> { File.Copy(tempPath, serverPath, true); });
+            var thread = new Thread(()=> { 
+                File.Copy(tempPath, serverPath, true);
+
+                if (!File.Exists(serverPath))
+                {
+                    MessageBox.Show("Test File Missing!");
+                }
+            });
             thread.Start();
         }
 

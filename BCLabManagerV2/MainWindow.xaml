@@ -12,7 +12,7 @@
                 <v:DashBoardView x:Name="DashBoardViewInstance"></v:DashBoardView>
             </TabItem>
             <TabItem Header="Assets">
-                <Grid>
+                <Grid Margin="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="20*"></ColumnDefinition>
                         <ColumnDefinition Width="10"></ColumnDefinition>
@@ -20,27 +20,12 @@
                         <ColumnDefinition Width="10"></ColumnDefinition>
                         <ColumnDefinition Width="60*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <GroupBox Header="Battery Types" Grid.Column="0" BorderBrush="Black" BorderThickness="1">
+                    <Border Padding="5" Grid.Column="0" BorderBrush="Black" BorderThickness="2">
                         <v:AllBatteryTypesView x:Name="AllBatteryTypesViewInstance"></v:AllBatteryTypesView>
-                    </GroupBox>
-                    <Grid Grid.Column="2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="50*"></RowDefinition>
-                            <RowDefinition Height="4"></RowDefinition>
-                            <RowDefinition Height="30*"></RowDefinition>
-                            <RowDefinition Height="4"></RowDefinition>
-                            <RowDefinition Height="50*"></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <GroupBox Header="Projects" BorderBrush="Black" BorderThickness="1">
-                            <v:AllProjectsView x:Name="AllProjectsViewInstance"></v:AllProjectsView>
-                        </GroupBox>
-                        <GroupBox Header="Program Types" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
-                            <v:AllProgramTypesView x:Name="AllProgramTypesViewInstance"></v:AllProgramTypesView>
-                        </GroupBox>
-                        <GroupBox Header="Testers" Grid.Row="4" BorderBrush="Black" BorderThickness="1">
-                            <v:AllTestersView x:Name="AllTestersViewInstance"></v:AllTestersView>
-                        </GroupBox>
-                    </Grid>
+                    </Border>
+                    <Border Padding="5" Grid.Column="2" BorderBrush="Black" BorderThickness="2">
+                        <v:AllTestersView x:Name="AllTestersViewInstance"></v:AllTestersView>
+                    </Border>
                     <Grid Grid.Column="4">
                         <Grid.RowDefinitions>
                             <RowDefinition></RowDefinition>
@@ -49,16 +34,33 @@
                             <RowDefinition Height="10"></RowDefinition>
                             <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
-                        <GroupBox Header="Batteries" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                        <Border Padding="5" Grid.Row="0" BorderBrush="Black" BorderThickness="2">
                             <v:AllBatteriesView x:Name="AllBatteriesViewInstance"></v:AllBatteriesView>
-                        </GroupBox>
-                        <GroupBox Header="Channels" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
+                        </Border>
+                        <Border Padding="5" Grid.Row="2" BorderBrush="Black" BorderThickness="2">
                             <v:AllChannelsView x:Name="AllChannelsViewInstance"></v:AllChannelsView>
-                        </GroupBox>
-                        <GroupBox Header="Chambers" Grid.Row="4" BorderBrush="Black" BorderThickness="1">
+                        </Border>
+                        <Border Padding="5" Grid.Row="4" BorderBrush="Black" BorderThickness="2">
                             <v:AllChambersView x:Name="AllChambersViewInstance"></v:AllChambersView>
-                        </GroupBox>
+                        </Border>
                     </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Settings">
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50*"></RowDefinition>
+                        <RowDefinition Height="4"></RowDefinition>
+                        <RowDefinition Height="30*"></RowDefinition>
+                        <RowDefinition Height="4"></RowDefinition>
+                        <RowDefinition Height="50*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <GroupBox Header="Projects" BorderBrush="Black" BorderThickness="1">
+                        <v:AllProjectsView x:Name="AllProjectsViewInstance"></v:AllProjectsView>
+                    </GroupBox>
+                    <GroupBox Header="Program Types" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
+                        <v:AllProgramTypesView x:Name="AllProgramTypesViewInstance"></v:AllProgramTypesView>
+                    </GroupBox>
                 </Grid>
             </TabItem>
             <TabItem Header="Templates">
@@ -74,12 +76,12 @@
                     <v:AllRecipeTemplatesView Grid.Column="3" x:Name="AllRecipeTemplatesViewInstance"></v:AllRecipeTemplatesView>
                 </Grid>
             </TabItem>
-            <TabItem Header="Open Programs">
+            <TabItem Header="Programs">
                 <v:AllProgramsView x:Name="AllProgramsViewInstance"></v:AllProgramsView>
             </TabItem>
-            <TabItem Header="Products(v0.1)">
+            <!--<TabItem Header="Products(v0.1)">
                 <v:AllProductsView x:Name="AllProductsViewInstance"></v:AllProductsView>
-            </TabItem>
+            </TabItem>-->
         </TabControl>
     </Grid>
 </Window>
