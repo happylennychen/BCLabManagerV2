@@ -336,6 +336,10 @@
     <Compile Include="Migrations\20200609031253_Init.designer.cs">
       <DependentUpon>20200609031253_Init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200714021230_extend_cfg.cs" />
+    <Compile Include="Migrations\20200714021230_extend_cfg.designer.cs">
+      <DependentUpon>20200714021230_extend_cfg.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\View\AllProductsView.xaml.cs">
       <DependentUpon>AllProductsView.xaml</DependentUpon>

@@ -545,6 +545,10 @@ namespace BCLabManager.Migrations
                         .HasColumnName("dsg_low_volt_mv")
                         .HasColumnType("integer");
 
+                    b.Property<string>("extend_cfg")
+                        .HasColumnName("extend_cfg")
+                        .HasColumnType("text");
+
                     b.Property<int>("fully_charged_end_current_ma")
                         .HasColumnName("fully_charged_end_current_ma")
                         .HasColumnType("integer");

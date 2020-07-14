@@ -113,5 +113,11 @@ namespace BCLabManager.Model
             get { return _isvalid; }
             set { SetProperty(ref _isvalid, value); }
         }
+        private string _extend_cfg;
+        public string extend_cfg
+        {
+            get { return _extend_cfg; }
+            set { SetProperty(ref _extend_cfg, value); }
+        }
     }
 }
