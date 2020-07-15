@@ -122,7 +122,7 @@ namespace BCLabManager.ViewModel
 
                 _project.AbsoluteMaxCapacity = value;
 
-                RaisePropertyChanged("RatedCapacity");
+                RaisePropertyChanged("AbsoluteMaxCapacity");
             }
         }
         public string VoltagePoints

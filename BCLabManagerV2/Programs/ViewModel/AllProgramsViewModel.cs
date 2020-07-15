@@ -780,7 +780,7 @@ namespace BCLabManager.ViewModel
                     Header header = new Header();
                     header.Type = SelectedProgram.Type.ToString();
                     header.TestTime = time[0].ToString("yyyy-MM-dd");
-                    header.Equipment = testRecord.TesterStr;
+                    header.Equipment = testRecord.Record.AssignedChannel.Tester.Manufacturer + " " + testRecord.TesterStr;
                     header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufacturer;
                     header.BatteryModel = SelectedProgram.Project.BatteryType.Name;
                     header.CycleCount = evm.NewCycle.ToString();
@@ -885,7 +885,7 @@ namespace BCLabManager.ViewModel
                     Header header = new Header();
                     header.Type = SelectedProgram.Type.ToString();
                     header.TestTime = time[0].ToString("yyyy-MM-dd");
-                    header.Equipment = model.TesterStr;
+                    header.Equipment = evm.Channel.Tester.Manufacturer + " " + evm.Channel.Tester.Name;
                     header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufacturer;
                     header.BatteryModel = SelectedProgram.Project.BatteryType.Name;
                     header.CycleCount = evm.NewCycle.ToString();

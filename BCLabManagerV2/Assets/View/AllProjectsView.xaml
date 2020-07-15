@@ -81,11 +81,11 @@
                     <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Customer" IsReadOnly="True" Binding="{Binding Path=Customer}"></DataGridTextColumn>
-                    <DataGridTextColumn Header="BatteryType" IsReadOnly="True" Binding="{Binding Path=BatteryType}"></DataGridTextColumn>
-                    <DataGridTextColumn Header="RatedCapacity" IsReadOnly="True" Binding="{Binding Path=RatedCapacity}"></DataGridTextColumn>
-                    <DataGridTextColumn Header="LimitedChargeVoltage" IsReadOnly="True" Binding="{Binding Path=LimitedChargeVoltage}"></DataGridTextColumn>
-                    <DataGridTextColumn Header="CutoffDischargeVoltage" IsReadOnly="True" Binding="{Binding Path=CutoffDischargeVoltage}"></DataGridTextColumn>
-                    <DataGridTextColumn Header="VoltagePoints" IsReadOnly="True" Binding="{Binding Path=VoltagePoints}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Battery Type" IsReadOnly="True" Binding="{Binding Path=BatteryType}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Absolute Max Capacity" IsReadOnly="True" Binding="{Binding Path=AbsoluteMaxCapacity}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Limited Charge Voltage" IsReadOnly="True" Binding="{Binding Path=LimitedChargeVoltage}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Cut-off Discharge Voltage" IsReadOnly="True" Binding="{Binding Path=CutoffDischargeVoltage}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Voltage Points" IsReadOnly="True" Binding="{Binding Path=VoltagePoints}"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>

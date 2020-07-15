@@ -251,12 +251,19 @@ namespace BCLabManager.Model
         {
             testRecord.Comment += "\r\n" + comment;
             testRecord.Status = TestStatus.Invalid;
+            File.Move(testRecord.TestFilePath, testRecord.TestFilePath + "_INVALID");
+            testRecord.TestFilePath += "_INVALID";
             DatabaseUpdate(testRecord);
         }
 
         internal void Abandon(TestRecord testRecord)
         {
             testRecord.Status = TestStatus.Abandoned;
+            if (testRecord.TestFilePath != string.Empty)
+            {
+                File.Move(testRecord.TestFilePath, testRecord.TestFilePath + "_ABANDONED");
+                testRecord.TestFilePath += "_ABANDONED";
+            }
             DatabaseUpdate(testRecord);
         }
     }

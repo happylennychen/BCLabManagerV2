@@ -72,12 +72,12 @@
       />
             <Label 
       Grid.Row="6" Grid.Column="0" 
-      Content="Rated Capacity:" 
+      Content="Absolute Max Capacity:" 
       HorizontalAlignment="Right"
       />
             <TextBox 
       Grid.Row="6" Grid.Column="2" 
-      Text="{Binding Path=RatedCapacity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+      Text="{Binding Path=AbsoluteMaxCapacity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
       Validation.ErrorTemplate="{x:Null}"
       />
             <Label 
