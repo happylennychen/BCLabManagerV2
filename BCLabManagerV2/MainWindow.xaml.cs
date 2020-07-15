@@ -34,6 +34,7 @@ namespace BCLabManager
         public AllBatteryTypesViewModel allBatteryTypesViewModel { get; set; }  //其中需要显示BatteryTypes和Batteries
         public AllProjectsViewModel allProjectsViewModel { get; set; }  //其中需要显示Projects
         public AllProgramTypesViewModel allProgramTypesViewModel { get; set; }  //其中需要显示Projects
+        public AllTableMakerProductTypesViewModel allTableMakerProductTypesViewModel { get; set; }  //
         public AllBatteriesViewModel allBatteriesViewModel { get; set; }  //其中需要显示Batteries和Records
 
         public AllTestersViewModel allTestersViewModel { get; set; }  //其中需要显示Testers和Channels
@@ -75,6 +76,7 @@ namespace BCLabManager
         public ProgramServiceClass ProgramService { get; set; } = new ProgramServiceClass();
         public ProjectServiceClass ProjectService { get; set; } = new ProjectServiceClass();
         public ProgramTypeServiceClass ProgramTypeService { get; set; } = new ProgramTypeServiceClass();
+        public TableMakerProductTypeServiceClass TableMakerProductTypeService { get; set; } = new TableMakerProductTypeServiceClass();
 
         public MainWindow()
         {
@@ -147,6 +149,7 @@ namespace BCLabManager
                 ProgramService.RecipeService.StepRuntimeService.Items = new ObservableCollection<StepRuntime>(uow.StepRuntimes.GetAll());
                 ProjectService.Items = new ObservableCollection<Project>(uow.Projects.GetAll());
                 ProgramTypeService.Items = new ObservableCollection<ProgramType>(uow.ProgramTypes.GetAll());
+                TableMakerProductTypeService.Items = new ObservableCollection<TableMakerProductType>(uow.TableMakerProductTypes.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
             }
@@ -158,6 +161,8 @@ namespace BCLabManager
             allProjectsViewModel = new AllProjectsViewModel(ProjectService, BatteryTypeService);    //ViewModel初始化
 
             allProgramTypesViewModel = new AllProgramTypesViewModel(ProgramTypeService);    //ViewModel初始化
+
+            allTableMakerProductTypesViewModel = new AllTableMakerProductTypesViewModel(TableMakerProductTypeService);    //ViewModel初始化
 
             allBatteriesViewModel = new AllBatteriesViewModel(BatteryService, BatteryTypeService);    //ViewModel初始化
 
@@ -200,6 +205,8 @@ namespace BCLabManager
             this.AllProjectsViewInstance.DataContext = allProjectsViewModel;                                                           //ViewModel跟View绑定
 
             this.AllProgramTypesViewInstance.DataContext = allProgramTypesViewModel;                                                           //ViewModel跟View绑定
+
+            this.AllTableMakerProductTypesViewInstance.DataContext = allTableMakerProductTypesViewModel;                                                           //ViewModel跟View绑定
 
 
             this.AllBatteriesViewInstance.DataContext = allBatteriesViewModel;                                                            //ViewModel跟View绑定

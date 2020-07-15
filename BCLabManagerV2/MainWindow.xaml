@@ -48,19 +48,33 @@
             </TabItem>
             <TabItem Header="Settings">
                 <Grid Grid.Column="2">
-                    <Grid.RowDefinitions>
+                    <!--<Grid.RowDefinitions>
                         <RowDefinition Height="50*"></RowDefinition>
                         <RowDefinition Height="4"></RowDefinition>
                         <RowDefinition Height="30*"></RowDefinition>
                         <RowDefinition Height="4"></RowDefinition>
                         <RowDefinition Height="50*"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <GroupBox Header="Projects" BorderBrush="Black" BorderThickness="1">
+                    </Grid.RowDefinitions>-->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20*"></ColumnDefinition>
+                        <ColumnDefinition Width="4"></ColumnDefinition>
+                        <ColumnDefinition Width="20*"></ColumnDefinition>
+                        <ColumnDefinition Width="4"></ColumnDefinition>
+                        <ColumnDefinition Width="20*"></ColumnDefinition>
+                        <ColumnDefinition Width="4"></ColumnDefinition>
+                        <ColumnDefinition Width="20*"></ColumnDefinition>
+                        <ColumnDefinition Width="4"></ColumnDefinition>
+                        <ColumnDefinition Width="20*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Border>
                         <v:AllProjectsView x:Name="AllProjectsViewInstance"></v:AllProjectsView>
-                    </GroupBox>
-                    <GroupBox Header="Program Types" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
+                    </Border>
+                    <Border Grid.Column="2">
                         <v:AllProgramTypesView x:Name="AllProgramTypesViewInstance"></v:AllProgramTypesView>
-                    </GroupBox>
+                    </Border>
+                    <Border Grid.Column="4">
+                        <v:AllTableMakerProductTypesView x:Name="AllTableMakerProductTypesViewInstance"></v:AllTableMakerProductTypesView>
+                    </Border>
                 </Grid>
             </TabItem>
             <TabItem Header="Templates">
