@@ -287,8 +287,20 @@
     <Compile Include="Assets\Model\Service\BatteryTypeServiceClass.cs" />
     <Compile Include="Assets\Model\Service\IModelService.cs" />
     <Compile Include="Assets\Model\Service\ModelService.cs" />
+    <Compile Include="DataAccess\ITableMakerProductRepository.cs" />
+    <Compile Include="DataAccess\TableMakerProductRepository.cs" />
     <Compile Include="DataAccess\ITableMakerProductTypeRepository.cs" />
     <Compile Include="DataAccess\TableMakerProductTypeRepository.cs" />
+    <Compile Include="Products\Model\Service\TableMakerProductServieClass.cs" />
+    <Compile Include="Products\ViewModel\AllTableMakerProductsViewModel.cs" />
+    <Compile Include="Products\ViewModel\TableMakerProductEditViewModel.cs" />
+    <Compile Include="Products\ViewModel\TableMakerProductViewModel.cs" />
+    <Compile Include="Products\View\AllTableMakerProductsView.xaml.cs">
+      <DependentUpon>AllTableMakerProductsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Products\View\TableMakerProductView.xaml.cs">
+      <DependentUpon>TableMakerProductView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Model\Service\TableMakerProductTypeServiceClass.cs" />
     <Compile Include="Settings\ViewModel\AllTableMakerProductTypesViewModel.cs" />
     <Compile Include="Settings\ViewModel\AllProgramTypesViewModel.cs" />
@@ -527,6 +539,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Products\View\AllTableMakerProductsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Products\View\TableMakerProductView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Settings\View\AllTableMakerProductTypesView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -717,7 +737,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Service\" />
-    <Folder Include="Products\ViewModel\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

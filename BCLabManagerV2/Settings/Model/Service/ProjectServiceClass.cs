@@ -92,7 +92,7 @@ namespace BCLabManager.Model
             edittarget.Description = item.Description;
             edittarget.ProjectSettings = item.ProjectSettings;
             edittarget.LimitedChargeVoltage = item.LimitedChargeVoltage;
-            edittarget.TableMakerProducts = item.TableMakerProducts;
+            //edittarget.TableMakerProducts = item.TableMakerProducts;
             edittarget.AbsoluteMaxCapacity = item.AbsoluteMaxCapacity;
             edittarget.VoltagePoints = item.VoltagePoints;
         }

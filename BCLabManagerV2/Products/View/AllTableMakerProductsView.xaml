@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="BCLabManager.View.AllTableMakerProductsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+
+        <LinearGradientBrush x:Key="Brush_HeaderBackground" StartPoint="0.5,0" EndPoint="0.5,1">
+            <GradientStop Color="#66000088" Offset="0" />
+            <GradientStop Color="#BB000088" Offset="1" />
+        </LinearGradientBrush>
+
+        <Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+
+        <CollectionViewSource x:Key="tableMakerProductsCollectionViewSource" Source="{Binding Path=AllTableMakerProducts}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Id" Direction="Ascending"></scm:SortDescription>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </UserControl.Resources>
+    <Grid>
+        <GroupBox Header="Table Maker Product">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="_Create" Command="{Binding Path=CreateCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Edit" Command="{Binding Path=EditCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Delete" Command="{Binding Path=DeleteCommand}" Margin="0,5,5,0" Width="60"></Button>
+                </StackPanel>
+                <DataGrid GridLinesVisibility="None" Background="White"
+                          x:Name="TableMakerProductlist" AutoGenerateColumns="False"
+                          ItemsSource="{Binding Source={StaticResource tableMakerProductsCollectionViewSource}}"
+                          SelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Project" IsReadOnly="True" Binding="{Binding Path=Project}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Path=Type}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Is Valid" IsReadOnly="True" Binding="{Binding Path=IsValid}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="File Path" IsReadOnly="True" Binding="{Binding Path=FilePath}"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </GroupBox>
+    </Grid>
+</UserControl>

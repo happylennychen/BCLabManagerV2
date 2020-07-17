@@ -16,8 +16,14 @@ namespace BCLabManager.Model
             get { return _type; }
             set { SetProperty(ref _type, value); }
         }
+        private Project _project;
+        public Project Project
+        {
+            get { return _project; }
+            set { SetProperty(ref _project, value); }
+        }
         private bool _isvalid;
-        public bool is_valid
+        public bool IsValid
         {
             get { return _isvalid; }
             set { SetProperty(ref _isvalid, value); }
