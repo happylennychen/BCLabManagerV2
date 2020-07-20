@@ -167,6 +167,9 @@ namespace BCLabManager.ViewModel
                 _project.BatteryType = value;
 
                 RaisePropertyChanged("BatteryType");
+                AbsoluteMaxCapacity = _project.BatteryType.RatedCapacity;
+                LimitedChargeVoltage = _project.BatteryType.LimitedChargeVoltage;
+                CutoffDischargeVoltage = _project.BatteryType.CutoffDischargeVoltage;
             }
         }
 
