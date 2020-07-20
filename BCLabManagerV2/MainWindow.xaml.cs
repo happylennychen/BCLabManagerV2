@@ -33,6 +33,7 @@ namespace BCLabManager
 
         public AllBatteryTypesViewModel allBatteryTypesViewModel { get; set; }  //其中需要显示BatteryTypes和Batteries
         public AllProjectsViewModel allProjectsViewModel { get; set; }  //其中需要显示Projects
+        public AllProjectSettingsViewModel allProjectSettingsViewModel { get; set; }  //其中需要显示Projects
         public AllProgramTypesViewModel allProgramTypesViewModel { get; set; }  //其中需要显示Projects
         public AllTableMakerProductTypesViewModel allTableMakerProductTypesViewModel { get; set; }  //
         public AllTableMakerProductsViewModel allTableMakerProductsViewModel { get; set; }  //
@@ -76,6 +77,7 @@ namespace BCLabManager
         public StepTemplateServiceClass StepTemplateService { get; set; } = new StepTemplateServiceClass();
         public ProgramServiceClass ProgramService { get; set; } = new ProgramServiceClass();
         public ProjectServiceClass ProjectService { get; set; } = new ProjectServiceClass();
+        public ProjectSettingServiceClass ProjectSettingService { get; set; } = new ProjectSettingServiceClass();
         public ProgramTypeServiceClass ProgramTypeService { get; set; } = new ProgramTypeServiceClass();
         public TableMakerProductTypeServiceClass TableMakerProductTypeService { get; set; } = new TableMakerProductTypeServiceClass();
         public TableMakerProductServiceClass TableMakerProductService { get; set; } = new TableMakerProductServiceClass();
@@ -150,6 +152,7 @@ namespace BCLabManager
                 ProgramService.RecipeService.TestRecordService.Items = new ObservableCollection<TestRecord>(uow.TestRecords.GetAll());
                 ProgramService.RecipeService.StepRuntimeService.Items = new ObservableCollection<StepRuntime>(uow.StepRuntimes.GetAll());
                 ProjectService.Items = new ObservableCollection<Project>(uow.Projects.GetAll());
+                ProjectSettingService.Items = new ObservableCollection<ProjectSetting>(uow.ProjectSettings.GetAll());
                 ProgramTypeService.Items = new ObservableCollection<ProgramType>(uow.ProgramTypes.GetAll());
                 TableMakerProductTypeService.Items = new ObservableCollection<TableMakerProductType>(uow.TableMakerProductTypes.GetAll());
                 TableMakerProductService.Items = new ObservableCollection<TableMakerProduct>(uow.TableMakerProducts.GetAll());
@@ -162,6 +165,8 @@ namespace BCLabManager
             allBatteryTypesViewModel = new AllBatteryTypesViewModel(BatteryTypeService, BatteryService);    //ViewModel初始化
 
             allProjectsViewModel = new AllProjectsViewModel(ProjectService, BatteryTypeService);    //ViewModel初始化
+
+            allProjectSettingsViewModel = new AllProjectSettingsViewModel(ProjectSettingService, ProjectService);    //ViewModel初始化
 
             allProgramTypesViewModel = new AllProgramTypesViewModel(ProgramTypeService);    //ViewModel初始化
 
@@ -208,6 +213,8 @@ namespace BCLabManager
             this.AllBatteryTypesViewInstance.DataContext = allBatteryTypesViewModel;
 
             this.AllProjectsViewInstance.DataContext = allProjectsViewModel;                                                           //ViewModel跟View绑定
+
+            this.AllProjectSettingsViewInstance.DataContext = allProjectSettingsViewModel;                                                           //ViewModel跟View绑定
 
             this.AllProgramTypesViewInstance.DataContext = allProgramTypesViewModel;                                                           //ViewModel跟View绑定
 

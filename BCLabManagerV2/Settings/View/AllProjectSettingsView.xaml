@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="BCLabManager.View.AllProjectSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+
+        <LinearGradientBrush x:Key="Brush_HeaderBackground" StartPoint="0.5,0" EndPoint="0.5,1">
+            <GradientStop Color="#66000088" Offset="0" />
+            <GradientStop Color="#BB000088" Offset="1" />
+        </LinearGradientBrush>
+
+        <Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+
+        <CollectionViewSource x:Key="ProjectSettingsCollectionViewSource" Source="{Binding Path=AllProjectSettings}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Id" Direction="Ascending"></scm:SortDescription>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </UserControl.Resources>
+    <Grid>
+        <GroupBox Header="Project Setting">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="_Create" Command="{Binding Path=CreateCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Edit" Command="{Binding Path=EditCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Delete" Command="{Binding Path=DeleteCommand}" Margin="0,5,5,0" Width="60"></Button>
+                </StackPanel>
+                <DataGrid GridLinesVisibility="None" Background="White"
+                          x:Name="ProjectSettinglist" AutoGenerateColumns="False"
+                          ItemsSource="{Binding Source={StaticResource ProjectSettingsCollectionViewSource}}"
+                          SelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Project" IsReadOnly="True" Binding="{Binding Path=Project}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Design Capacity" IsReadOnly="True" Binding="{Binding Path=design_capacity_mahr}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Limited Charge Voltage" IsReadOnly="True" Binding="{Binding Path=limited_charge_voltage_mv}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Fully Charged End Current" IsReadOnly="True" Binding="{Binding Path=fully_charged_end_current_ma}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Fully Charged Ending Time" IsReadOnly="True" Binding="{Binding Path=fully_charged_ending_time_ms}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Discharge End Voltage" IsReadOnly="True" Binding="{Binding Path=discharge_end_voltage_mv}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Threshold 1st facc" IsReadOnly="True" Binding="{Binding Path=threshold_1st_facc_mv}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Threshold 2nd facc" IsReadOnly="True" Binding="{Binding Path=_threshold2nd_facc_mv}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Threshold 3rd facc" IsReadOnly="True" Binding="{Binding Path=threshold_3rd_facc_mv}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Threshold 4th facc" IsReadOnly="True" Binding="{Binding Path=threshold_4th_facc_mv}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Initial Ratio fcc" IsReadOnly="True" Binding="{Binding Path=initial_ratio_fcc}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Accumulated Capacity" IsReadOnly="True" Binding="{Binding Path=accumulated_capacity_mahr}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="dsg low volt" IsReadOnly="True" Binding="{Binding Path=dsg_low_volt_mv}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="dsg low temp 01dc" IsReadOnly="True" Binding="{Binding Path=dsg_low_temp_01dc}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="initial soc start ocv" IsReadOnly="True" Binding="{Binding Path=initial_soc_start_ocv}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="system line impedance" IsReadOnly="True" Binding="{Binding Path=system_line_impedance}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="is valid" IsReadOnly="True" Binding="{Binding Path=is_valid}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="extend cfg" IsReadOnly="True" Binding="{Binding Path=extend_cfg}"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </GroupBox>
+    </Grid>
+</UserControl>

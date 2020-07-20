@@ -78,6 +78,9 @@
                     <Border Grid.Column="6">
                         <v:AllTableMakerProductsView x:Name="AllTableMakerProductsViewInstance"></v:AllTableMakerProductsView>
                     </Border>
+                    <Border Grid.Column="8">
+                        <v:AllProjectSettingsView x:Name="AllProjectSettingsViewInstance"></v:AllProjectSettingsView>
+                    </Border>
                 </Grid>
             </TabItem>
             <TabItem Header="Templates">

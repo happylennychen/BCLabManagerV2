@@ -13,6 +13,7 @@ namespace BCLabManager.DataAccess
         public IBatteryRepository Batteries { get; private set; }
         public IBatteryTypeRepository BatteryTypes { get; private set; }
         public IProjectRepository Projects { get; private set; }
+        public IProjectSettingRepository ProjectSettings { get; private set; }
         public ITesterRepository Testers { get; private set; }
         public IChannelRepository Channels { get; private set; }
         public IChamberRepository Chambers { get; private set; }
@@ -42,6 +43,7 @@ namespace BCLabManager.DataAccess
             Recipies = new RecipeRepository(_context);
             Programs = new ProgramRepository(_context);
             Projects = new ProjectRepository(_context);
+            ProjectSettings = new ProjectSettingRepository(_context);
             ProgramTypes = new ProgramTypeRepository(_context);
             TableMakerProducts = new TableMakerProductRepository(_context);
             TableMakerProductTypes = new TableMakerProductTypeRepository(_context);
