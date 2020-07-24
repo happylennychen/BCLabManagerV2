@@ -21,11 +21,12 @@ namespace BCLabManager.ViewModel
         public Program _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
         ObservableCollection<Project> _projects;
         ObservableCollection<ProgramType> _programTypes;
-        RecipeTemplateViewModel _selectedRecipeTemplate;
-        RecipeViewModel _selectedRecipe;
+        //RecipeTemplateViewModel _selectedRecipeTemplate;
+        //RecipeViewModel _selectedRecipe;
+        //RecipeTemplateViewModel _selectedChoosenRecipeTemplate;
         RelayCommand _okCommand;
-        RelayCommand _addCommand;
-        RelayCommand _removeCommand;
+        //RelayCommand _addCommand;
+        //RelayCommand _removeCommand;
         bool _isOK;
 
         #endregion // Fields
@@ -95,6 +96,20 @@ namespace BCLabManager.ViewModel
                 _program.Name = value;
 
                 RaisePropertyChanged("Name");
+            }
+        }
+        private string _temperatures;
+        public string Temperatures
+        {
+            get { return _temperatures; }
+            set
+            {
+                if (value == _temperatures)
+                    return;
+
+                _temperatures = value;
+
+                RaisePropertyChanged("Temperatures");
             }
         }
 
@@ -220,35 +235,6 @@ namespace BCLabManager.ViewModel
 
         public ObservableCollection<RecipeTemplateViewModel> AllRecipeTemplates { get; private set; }   //展示所有RecipeTemplate以便选用,跟Recipes是不一样的
 
-        public RecipeTemplateViewModel SelectedRecipeTemplate
-        {
-            get
-            {
-                return _selectedRecipeTemplate;
-            }
-            set
-            {
-                if (_selectedRecipeTemplate != value)
-                {
-                    _selectedRecipeTemplate = value;
-                }
-            }
-        }
-
-        public RecipeViewModel SelectedRecipe
-        {
-            get
-            {
-                return _selectedRecipe;
-            }
-            set
-            {
-                if (_selectedRecipe != value)
-                {
-                    _selectedRecipe = value;
-                }
-            }
-        }
         /// <summary>
         /// Returns a command that saves the customer.
         /// </summary>
@@ -292,36 +278,6 @@ namespace BCLabManager.ViewModel
             set { _isOK = value; }
         }
 
-        public ICommand AddCommand
-        {
-            get
-            {
-                if (_addCommand == null)
-                {
-                    _addCommand = new RelayCommand(
-                        param => { this.Add(); },
-                        param => this.CanAdd
-                            );
-                }
-                return _addCommand;
-            }
-        }
-
-        public ICommand RemoveCommand
-        {
-            get
-            {
-                if (_removeCommand == null)
-                {
-                    _removeCommand = new RelayCommand(
-                        param => { this.Remove(); },
-                        param => this.CanRemove
-                            );
-                }
-                return _removeCommand;
-            }
-        }
-
         #endregion // Presentation Properties
 
         #region Public Methods
@@ -331,6 +287,19 @@ namespace BCLabManager.ViewModel
         /// </summary>
         public void OK()
         {
+            List<int> temperatures = GetTemperatureList(Temperatures);
+            _program.RecipeTemplates = new List<string>();
+            foreach (var temperature in temperatures)
+            {
+                var query = AllRecipeTemplates.Where(o => o.IsSelected).Select(o => o._recipeTemplate);
+                foreach (var rectemp in query)
+                {
+                    var model = new Recipe(rectemp, Project.BatteryType);
+                    model.Temperature = temperature;
+                    _program.Recipes.Add(model);
+                    _program.RecipeTemplates.Add(rectemp.Name);
+                }
+            }
             foreach (var sub in _program.Recipes)
             {
                 foreach (var tr in sub.TestRecords)
@@ -339,24 +308,12 @@ namespace BCLabManager.ViewModel
             IsOK = true;
         }
 
-        public void Add()       //对于model来说，需要将选中的sub copy到_program.Recipes来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.Recipes里面去
+        private List<int> GetTemperatureList(string temperatures)
         {
-            var model = new Recipe(SelectedRecipeTemplate._recipeTemplate, Project.BatteryType);
-            var viewmodel = new RecipeViewModel(model);
-            _program.Recipes.Add(model);
-            this.Recipes.Add(viewmodel);
+            List<int> output = temperatures.Split(',').Select(o => Convert.ToInt32(o)).ToList();
+            return output;
         }
 
-        public void Remove()       //对于model来说，需要将选中的sub 从_program.Recipes中移除。对于viewmodel来说，需要将这个viewmodel从this.Recipes中移除
-        {
-            _program.Recipes.Remove(SelectedRecipe._recipe);
-            this.Recipes.Remove(SelectedRecipe);
-        }
-
-        //public ProgramViewModel Clone()
-        //{
-        //    return new ProgramViewModel(_program.Clone(), _programRepository, _RecipeRepository);
-        //}
 
         #endregion // Public Methods
 
@@ -378,7 +335,7 @@ namespace BCLabManager.ViewModel
                 //if (number != 0)
                 //    return false;
                 //else
-                    return true;
+                return true;
             }
         }
 
@@ -396,16 +353,6 @@ namespace BCLabManager.ViewModel
         bool CanSaveAs
         {
             get { return IsNewProgram; }
-        }
-
-        bool CanAdd
-        {
-            get { return SelectedRecipeTemplate!=null; }
-        }
-
-        bool CanRemove
-        {
-            get { return SelectedRecipe != null; }     //如果已经有数据，可否删除？
         }
 
         #endregion // Private Helpers

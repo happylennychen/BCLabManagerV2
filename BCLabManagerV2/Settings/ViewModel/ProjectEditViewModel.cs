@@ -125,15 +125,16 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("AbsoluteMaxCapacity");
             }
         }
+        private string _voltagePoints;
         public string VoltagePoints
         {
-            get { return _project.VoltagePoints; }
+            get { return _voltagePoints; }
             set
             {
-                if (value == _project.VoltagePoints)
+                if (value == _voltagePoints)
                     return;
 
-                _project.VoltagePoints = value;
+                _voltagePoints = value;
 
                 RaisePropertyChanged("VoltagePoints");
             }

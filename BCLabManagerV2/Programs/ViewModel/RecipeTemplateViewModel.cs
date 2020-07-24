@@ -58,6 +58,12 @@ namespace BCLabManager.ViewModel
                 return _recipeTemplate.Name;
             }
         }
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set { SetProperty(ref _isSelected, value); }
+        }
         //public ChargeTemperatureClass ChargeTemperature
         //{
         //    get { return _RecipeTemplate.ChargeTemperature; }

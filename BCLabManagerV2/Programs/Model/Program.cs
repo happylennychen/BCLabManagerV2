@@ -114,6 +114,24 @@ namespace BCLabManager.Model
             get { return _project; }
             set { SetProperty(ref _project, value); }
         }
+        private List<int> _temperatures;
+        public List<int> Temperatures
+        {
+            get { return _temperatures; }
+            set { SetProperty(ref _temperatures, value); }
+        }
+        //private List<RecipeTemplate> _recipeTemplates;
+        //public List<RecipeTemplate> RecipeTemplates
+        //{
+        //    get { return _recipeTemplates; }
+        //    set { SetProperty(ref _recipeTemplates, value); }
+        //}
+        private List<string> _recipeTemplates;
+        public List<string> RecipeTemplates
+        {
+            get { return _recipeTemplates; }
+            set { SetProperty(ref _recipeTemplates, value); }
+        }
         public ObservableCollection<Recipe> Recipes { get; set; } = new ObservableCollection<Recipe>();
 
         public Program()           //Create用到

@@ -84,7 +84,7 @@ namespace BCLabManager.ViewModel
 
         public string VoltagePoints
         {
-            get { return _project.VoltagePoints; }
+            get { return string.Join(",", _project.VoltagePoints); }
         }
 
         #endregion // Customer Properties

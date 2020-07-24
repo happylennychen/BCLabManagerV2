@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -169,7 +170,7 @@ namespace BCLabManager.Migrations
                     absolute_max_capacity = table.Column<int>(nullable: false),
                     limited_charge_voltage = table.Column<int>(nullable: false),
                     cutoff_discharge_voltage = table.Column<int>(nullable: false),
-                    voltage_points = table.Column<string>(nullable: true)
+                    voltage_points = table.Column<List<int>>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -245,7 +246,9 @@ namespace BCLabManager.Migrations
                     description = table.Column<string>(nullable: true),
                     is_invalid = table.Column<bool>(nullable: false),
                     table_file_path = table.Column<string>(nullable: true),
-                    project_id = table.Column<int>(nullable: true)
+                    project_id = table.Column<int>(nullable: true),
+                    temperatures = table.Column<List<int>>(nullable: true),
+                    recipe_templates = table.Column<List<string>>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -286,6 +289,7 @@ namespace BCLabManager.Migrations
                     initial_soc_start_ocv = table.Column<int>(nullable: false),
                     system_line_impedance = table.Column<int>(nullable: false),
                     is_valid = table.Column<bool>(nullable: false),
+                    extend_cfg = table.Column<string>(nullable: true),
                     project_id = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -307,8 +311,8 @@ namespace BCLabManager.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     file_path = table.Column<string>(nullable: true),
                     type_id = table.Column<int>(nullable: true),
-                    is_valid = table.Column<bool>(nullable: false),
-                    project_id = table.Column<int>(nullable: true)
+                    project_id = table.Column<int>(nullable: true),
+                    is_valid = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

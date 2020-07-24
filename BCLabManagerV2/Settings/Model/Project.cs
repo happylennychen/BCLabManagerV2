@@ -60,8 +60,8 @@ namespace BCLabManager.Model
             get { return _cutoffDischargeVoltage; }
             set { SetProperty(ref _cutoffDischargeVoltage, value); }
         }
-        private string _voltagePoints;
-        public string VoltagePoints
+        private List<int> _voltagePoints;
+        public List<int> VoltagePoints
         {
             get { return _voltagePoints; }
             set { SetProperty(ref _voltagePoints, value); }
