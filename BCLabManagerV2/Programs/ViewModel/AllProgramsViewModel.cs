@@ -776,7 +776,7 @@ namespace BCLabManager.ViewModel
                 }
                 try
                 {
-                    DateTime[] time = _testerService.GetTimeFromRawData(testRecord.Record.AssignedChannel.Tester, evm.FileList);
+                    DateTime[] time = _testerService.GetTimeFromRawData(testRecord.Record.AssignedChannel.Tester.ITesterProcesser, evm.FileList);
                     Header header = new Header();
                     header.Type = SelectedProgram.Type.ToString();
                     header.TestTime = time[0].ToString("yyyy-MM-dd");
@@ -856,7 +856,7 @@ namespace BCLabManager.ViewModel
             {
                 try
                 {
-                    DateTime[] time = _testerService.GetTimeFromRawData(evm.Channel.Tester, evm.FileList);
+                    DateTime[] time = _testerService.GetTimeFromRawData(evm.Channel.Tester.ITesterProcesser, evm.FileList);
                     _programService.RecipeService.TestRecordService.Execute(
                     SelectedTestRecord.Record,
                     SelectedProgram.Project.BatteryType.Name,

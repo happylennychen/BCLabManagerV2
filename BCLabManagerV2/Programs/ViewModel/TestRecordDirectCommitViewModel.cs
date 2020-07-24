@@ -579,7 +579,7 @@ namespace BCLabManager.ViewModel
             {
                 FileList = new ObservableCollection<string>(dialog.FileNames.ToList());
                 TesterServiceClass _testerService = new TesterServiceClass();
-                DateTime[] time = _testerService.GetTimeFromRawData(this.Channel.Tester, FileList);
+                DateTime[] time = _testerService.GetTimeFromRawData(this.Channel.Tester.ITesterProcesser, FileList);
                 NewName = $@"{_programStr}_{_recipeStr}_{time[0].ToString("yyyyMMddHHmmss")}";
             }
         }

@@ -59,7 +59,7 @@ namespace BCLabManager.Model
             edittarget.Name = item.Name;
         }
 
-        internal DateTime[] GetTimeFromRawData(ITester tester, ObservableCollection<string> fileList)
+        internal DateTime[] GetTimeFromRawData(ITesterProcesser tester, ObservableCollection<string> fileList)
         {
             return tester.GetTimeFromRawData(fileList);
         }

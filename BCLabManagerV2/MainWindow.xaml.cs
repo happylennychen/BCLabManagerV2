@@ -90,6 +90,7 @@ namespace BCLabManager
 #if Show
                 InitializeComponent();
                 LoadFromDB();
+                CreateProcesserForTesters();
                 InitializeNavigator();
                 CreateViewModels();
                 BindingVMandView();
@@ -102,6 +103,14 @@ namespace BCLabManager
             {
                 MessageBox.Show(e.Message);
                 App.Current.Shutdown();
+            }
+        }
+
+        private void CreateProcesserForTesters()
+        {
+            foreach (var tester in TesterService.Items)
+            {
+                tester.BuildProcesser();
             }
         }
 

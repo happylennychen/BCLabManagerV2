@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace BCLabManager.Model
 {
-    internal interface ITester
+    public interface ITesterProcesser
     {
         DateTime[] GetTimeFromRawData(ObservableCollection<string> fileList);
     }
