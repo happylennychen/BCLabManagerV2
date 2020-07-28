@@ -287,17 +287,16 @@ namespace BCLabManager.ViewModel
         /// </summary>
         public void OK()
         {
-            List<int> temperatures = GetTemperatureList(Temperatures);
-            _program.RecipeTemplates = new List<string>();
-            foreach (var temperature in temperatures)
+            _program.Temperatures = GetTemperatureList(Temperatures);
+            _program.RecipeTemplates = AllRecipeTemplates.Where(o => o.IsSelected).Select(o => o._recipeTemplate.Name).ToList();
+            foreach (var temperature in _program.Temperatures)
             {
-                var query = AllRecipeTemplates.Where(o => o.IsSelected).Select(o => o._recipeTemplate);
+                var query = AllRecipeTemplates.Where(o => o.IsSelected).Select(o => o._recipeTemplate).ToList();
                 foreach (var rectemp in query)
                 {
                     var model = new Recipe(rectemp, Project.BatteryType);
                     model.Temperature = temperature;
                     _program.Recipes.Add(model);
-                    _program.RecipeTemplates.Add(rectemp.Name);
                 }
             }
             foreach (var sub in _program.Recipes)

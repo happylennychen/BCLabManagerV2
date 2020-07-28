@@ -293,6 +293,11 @@
     <Compile Include="DataAccess\TableMakerProductRepository.cs" />
     <Compile Include="DataAccess\ITableMakerProductTypeRepository.cs" />
     <Compile Include="DataAccess\TableMakerProductTypeRepository.cs" />
+    <Compile Include="Migrations\20200724094040_NewOne.cs" />
+    <Compile Include="Migrations\20200724094040_NewOne.Designer.cs">
+      <DependentUpon>20200724094040_NewOne.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\Model\ReleasePackage.cs" />
     <Compile Include="Products\Model\Service\TableMakerProductServieClass.cs" />
     <Compile Include="Products\ViewModel\AllTableMakerProductsViewModel.cs" />

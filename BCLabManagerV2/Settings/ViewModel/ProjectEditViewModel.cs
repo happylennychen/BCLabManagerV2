@@ -238,6 +238,7 @@ namespace BCLabManager.ViewModel
             //_batterytypeRepository.AddItem(_batterytype);
 
             //RaisePropertyChanged("DisplayName");
+            _project.VoltagePoints = VoltagePoints.Split(',').Select(o=>Convert.ToInt32(o)).ToList();
             IsOK = true;
         }
 
