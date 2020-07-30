@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Microsoft.Win32;
 using Prism.Mvvm;
+using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
@@ -241,13 +242,29 @@ namespace BCLabManager.ViewModel
             //dialog.InitialDirectory = $@"{GlobalSettings.RootPath}{_record.BatteryTypeStr}\High Power\{GlobalSettings.TestDataFolderName}";
             if (dialog.ShowDialog() == true)
             {
-                FileList = new ObservableCollection<string>(dialog.FileNames.ToList());
-                TesterServiceClass _testerService = new TesterServiceClass();
-                DateTime[] time = _testerService.GetTimeFromRawData(_record.AssignedChannel.Tester.ITesterProcesser, FileList);
-                if (time != null)
-                    NewName = $@"{_record.ProgramStr}_{_record.RecipeStr}_{_record.TesterStr}_{_record.ChannelStr}_{_record.BatteryStr}_{time[0].ToString("yyyyMMddHHmmss")}";
+                if (_record.AssignedChannel != null)
+                {
+                    TesterServiceClass _testerService = new TesterServiceClass();
+                    foreach (var file in dialog.FileNames)
+                    {
+                        if (!_testerService.CheckChannelNumber(_record.AssignedChannel.Tester.ITesterProcesser, file, _record.AssignedChannel.Name))
+                        {
+                            MessageBox.Show("Wrong channel!");
+                            return;
+                        }
+                    }
+
+                    FileList = new ObservableCollection<string>(dialog.FileNames.ToList());
+                    DateTime[] time = _testerService.GetTimeFromRawData(_record.AssignedChannel.Tester.ITesterProcesser, FileList);
+                    if (time != null)
+                        NewName = $@"{_record.ProgramStr}_{_record.RecipeStr}_{_record.TesterStr}_{_record.ChannelStr}_{_record.BatteryStr}_{time[0].ToString("yyyyMMddHHmmss")}";
+                    else
+                        NewName = $@"{_record.ProgramStr}_{_record.RecipeStr}_{_record.TesterStr}_{_record.ChannelStr}_{_record.BatteryStr}";
+                }
                 else
-                    NewName = $@"{_record.ProgramStr}_{_record.RecipeStr}_{_record.TesterStr}_{_record.ChannelStr}_{_record.BatteryStr}";
+                {
+
+                }
             }
         }
 

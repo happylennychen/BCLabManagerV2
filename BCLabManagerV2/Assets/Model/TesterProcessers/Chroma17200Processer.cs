@@ -55,5 +55,24 @@ namespace BCLabManager.Model
         {
             return endTimes.Max();
         }
+
+        public bool CheckChannelNumber(string filepath, string channelnumber)
+        {
+            return GetChannelName(filepath) == channelnumber;
+        }
+
+        private string GetChannelName(string filepath)
+        {
+            string output = "Ch ";
+            FileStream fs = new FileStream(filepath, FileMode.Open);
+            StreamReader sw = new StreamReader(fs);
+            sw.ReadLine();
+            string channelNumberLine = sw.ReadLine();
+            string channelNumberStr = channelNumberLine.Substring(15, 1);
+            output += channelNumberStr;
+            sw.Close();
+            fs.Close();
+            return output;
+        }
     }
 }

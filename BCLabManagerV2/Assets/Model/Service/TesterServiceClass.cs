@@ -63,5 +63,10 @@ namespace BCLabManager.Model
         {
             return tester.GetTimeFromRawData(fileList);
         }
+
+        internal bool CheckChannelNumber(ITesterProcesser tester, string filepath, string channelnumber)
+        {
+            return tester.CheckChannelNumber(filepath, channelnumber);
+        }
     }
 }

@@ -12,6 +12,11 @@ namespace BCLabManager.Model
 {
     public class ZKEEBC_X_Processer : ITesterProcesser
     {
+        public bool CheckChannelNumber(string filepath, string channelnumber)
+        {
+            throw new NotImplementedException();
+        }
+
         public DateTime[] GetTimeFromRawData(ObservableCollection<string> fileList)
         {
             return null;

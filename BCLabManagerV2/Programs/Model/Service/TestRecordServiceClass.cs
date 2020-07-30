@@ -1,4 +1,5 @@
-﻿using BCLabManager.DataAccess;
+﻿#define Test
+using BCLabManager.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -154,6 +155,7 @@ namespace BCLabManager.Model
 
         private void CopyToServer(string tempPath, string serverPath)
         {
+#if! Test
             var thread = new Thread(() =>
             {
                 File.Copy(tempPath, serverPath, true);
@@ -164,6 +166,7 @@ namespace BCLabManager.Model
                 }
             });
             thread.Start();
+#endif
         }
 
         private string CopyToFolder(string filepath, string root)
