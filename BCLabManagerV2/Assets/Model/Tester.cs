@@ -101,8 +101,8 @@ namespace BCLabManager.Model
                 case "Chroma17200":
                     ITesterProcesser = new Chroma17200Processer();
                     break;
-                case "Suki111":
-                    ITesterProcesser = new SukiProcesser();
+                case "ZKEEBC-X":
+                    ITesterProcesser = new ZKEEBC_X_Processer();
                     break;
             }
         }

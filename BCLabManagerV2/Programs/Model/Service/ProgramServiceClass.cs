@@ -66,7 +66,7 @@ namespace BCLabManager.Model
                 {
                     rec.Steps = new ObservableCollection<Step>(rec.Steps.OrderBy(o => o.Order));
                 }
-                var rectemp = recTemplates.SingleOrDefault(o => o.Steps.Count == 3 &&
+                var rectemp = recTemplates.SingleOrDefault(o => o.Steps.Count == 4 &&
                o.Steps[0].StepTemplate.CurrentInput == chargeCurrent &&
                o.Steps[0].StepTemplate.CurrentUnit == CurrentUnitEnum.C &&
                o.Steps[0].StepTemplate.CutOffConditionValue == 1 &&
@@ -83,7 +83,13 @@ namespace BCLabManager.Model
                o.Steps[2].StepTemplate.CurrentUnit == CurrentUnitEnum.mA &&
                o.Steps[2].StepTemplate.CutOffConditionValue == 0 &&
                 //o.Steps[2].StepTemplate.CutOffConditionType == CutOffConditionTypeEnum.CRate
-               o.Steps[2].LoopLabel == null
+               o.Steps[2].LoopLabel == null &&
+
+               o.Steps[3].StepTemplate.CurrentInput == curr &&
+               o.Steps[3].StepTemplate.CurrentUnit == CurrentUnitEnum.mA &&
+               o.Steps[3].StepTemplate.CutOffConditionValue == 0 &&
+                //o.Steps[2].StepTemplate.CutOffConditionType == CutOffConditionTypeEnum.CRate
+               o.Steps[3].LoopLabel == null
                 );
                 if (rectemp != null)
                     return rectemp;
@@ -137,6 +143,9 @@ namespace BCLabManager.Model
                 output.Steps.Add(step);
 
                 step = new Step(dsgsteptemp);
+                output.Steps.Add(step);
+
+                step = new Step(idlesteptemp);
                 output.Steps.Add(step);
 
                 recipeTemplateService.SuperAdd(output);

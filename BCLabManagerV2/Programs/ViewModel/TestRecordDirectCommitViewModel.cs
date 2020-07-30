@@ -580,7 +580,11 @@ namespace BCLabManager.ViewModel
                 FileList = new ObservableCollection<string>(dialog.FileNames.ToList());
                 TesterServiceClass _testerService = new TesterServiceClass();
                 DateTime[] time = _testerService.GetTimeFromRawData(this.Channel.Tester.ITesterProcesser, FileList);
-                NewName = $@"{_programStr}_{_recipeStr}_{time[0].ToString("yyyyMMddHHmmss")}";
+                //NewName = $@"{_programStr}_{_recipeStr}_{time[0].ToString("yyyyMMddHHmmss")}";
+                if (time != null)
+                    NewName = $@"{_programStr}_{_recipeStr}_{_tester.Name}_{_channel.Name}_{_battery.Name}_{time[0].ToString("yyyyMMddHHmmss")}";
+                else
+                    NewName = $@"{_programStr}_{_recipeStr}_{_tester.Name}_{_channel.Name}_{_battery.Name}";
             }
         }
 

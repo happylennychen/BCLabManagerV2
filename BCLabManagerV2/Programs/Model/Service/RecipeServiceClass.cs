@@ -64,6 +64,15 @@ namespace BCLabManager.Model
             var newTestRecord = new TestRecord();
             recipe.TestRecords.Add(newTestRecord);
             SuperUpdate(recipe);
+            TestRecordService.DomainAdd(newTestRecord);
+        }
+
+        internal void Add(Recipe recipe)
+        {
+            var newTestRecord = new TestRecord();
+            recipe.TestRecords.Add(newTestRecord);
+            SuperUpdate(recipe);
+            TestRecordService.DomainAdd(newTestRecord);
         }
 
         internal void Abandon(Recipe recipe)

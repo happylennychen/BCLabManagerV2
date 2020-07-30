@@ -76,7 +76,8 @@ namespace BCLabManager.Model
             testRecord.BatteryTypeStr = batteryTypeStr;
             testRecord.ProjectStr = projectName;
             testRecord.BatteryStr = battery.Name;
-            testRecord.ChamberStr = chamber.Name;
+            if (chamber != null)
+                testRecord.ChamberStr = chamber.Name;
             testRecord.TesterStr = testerStr;
             testRecord.ChannelStr = channel.Name;
             testRecord.Current = current;
@@ -129,7 +130,7 @@ namespace BCLabManager.Model
                     CopyToServer(temptestfilepath, testRecord.TestFilePath);
                 }
             }
-            if(testRecord.TestFilePath == "")
+            if (testRecord.TestFilePath == "")
             {
                 MessageBox.Show("Test File Path Empty!");
                 return;
@@ -153,7 +154,8 @@ namespace BCLabManager.Model
 
         private void CopyToServer(string tempPath, string serverPath)
         {
-            var thread = new Thread(()=> { 
+            var thread = new Thread(() =>
+            {
                 File.Copy(tempPath, serverPath, true);
 
                 if (!File.Exists(serverPath))
