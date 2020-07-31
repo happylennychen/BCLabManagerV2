@@ -68,5 +68,9 @@ namespace BCLabManager.Model
         {
             return tester.CheckChannelNumber(filepath, channelnumber);
         }
+        internal bool CheckFileFormat(ITesterProcesser tester, string filepath)
+        {
+            return tester.CheckFileFormat(filepath);
+        }
     }
 }

@@ -242,11 +242,16 @@ namespace BCLabManager.ViewModel
             //dialog.InitialDirectory = $@"{GlobalSettings.RootPath}{_record.BatteryTypeStr}\High Power\{GlobalSettings.TestDataFolderName}";
             if (dialog.ShowDialog() == true)
             {
+                TesterServiceClass _testerService = new TesterServiceClass();
                 if (_record.AssignedChannel != null)
                 {
-                    TesterServiceClass _testerService = new TesterServiceClass();
                     foreach (var file in dialog.FileNames)
                     {
+                        if (!_testerService.CheckFileFormat(_record.AssignedChannel.Tester.ITesterProcesser, file))
+                        {
+                            MessageBox.Show("Wrong File Format!");
+                            return;
+                        }
                         if (!_testerService.CheckChannelNumber(_record.AssignedChannel.Tester.ITesterProcesser, file, _record.AssignedChannel.Name))
                         {
                             MessageBox.Show("Wrong channel!");
