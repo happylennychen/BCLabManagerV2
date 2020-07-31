@@ -279,7 +279,7 @@
     </ApplicationDefinition>
     <Compile Include="Assets\Model\AssetUsageRecord.cs" />
     <Compile Include="Assets\Model\IAsset.cs" />
-    <Compile Include="Assets\Model\ITester.cs" />
+    <Compile Include="Assets\Model\ITesterProcesser.cs" />
     <Compile Include="Assets\Model\Service\ChamberServiceClass.cs" />
     <Compile Include="Assets\Model\Service\TesterServiceClass.cs" />
     <Compile Include="Assets\Model\Service\ChannelServiceClass.cs" />
@@ -287,6 +287,8 @@
     <Compile Include="Assets\Model\Service\BatteryTypeServiceClass.cs" />
     <Compile Include="Assets\Model\Service\IModelService.cs" />
     <Compile Include="Assets\Model\Service\ModelService.cs" />
+    <Compile Include="Assets\Model\TesterProcessers\Chroma17200Processer.cs" />
+    <Compile Include="Assets\Model\TesterProcessers\ZKEEBC_X_Processer.cs" />
     <Compile Include="DataAccess\ProjectSettingRepository.cs" />
     <Compile Include="DataAccess\IProjectSettingRepository.cs" />
     <Compile Include="DataAccess\ITableMakerProductRepository.cs" />

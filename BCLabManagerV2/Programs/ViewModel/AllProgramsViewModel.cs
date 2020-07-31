@@ -35,6 +35,7 @@ namespace BCLabManager.ViewModel
         RelayCommand _viewCommand;
         RelayCommand _startCommand;
         RelayCommand _endCommand;
+        RelayCommand _addCommand;
 
         //ObservableCollection<BatteryTypeClass> _batteryTypes;
         //ObservableCollection<Tester> _testers;
@@ -384,6 +385,21 @@ namespace BCLabManager.ViewModel
                         );
                 }
                 return _viewCommand;
+            }
+        }
+
+        public ICommand AddCommand
+        {
+            get
+            {
+                if (_addCommand == null)
+                {
+                    _addCommand = new RelayCommand(
+                        param => { this.AddTestRecord(); },
+                        param => this.CanView
+                        );
+                }
+                return _addCommand;
             }
         }
         public ICommand StartCommand
@@ -740,7 +756,8 @@ namespace BCLabManager.ViewModel
                 {
                     _batteryService.Execute(evm.Battery, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
                     _channelService.Execute(evm.Channel, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
-                    _chamberService.Execute(evm.Chamber, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
+                    if (evm.Chamber != null)
+                        _chamberService.Execute(evm.Chamber, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
                 }
             }
         }
@@ -772,30 +789,40 @@ namespace BCLabManager.ViewModel
                 {
                     _batteryService.Commit(testRecord.Record.AssignedBattery, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name, evm.NewCycle);
                     _channelService.Commit(testRecord.Record.AssignedChannel, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
-                    _chamberService.Commit(testRecord.Record.AssignedChamber, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
+                    if (testRecord.Record.AssignedChamber != null)
+                        _chamberService.Commit(testRecord.Record.AssignedChamber, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
                 }
                 try
                 {
-                    DateTime[] time = _testerService.GetTimeFromRawData(testRecord.Record.AssignedChannel.Tester, evm.FileList);
-                    Header header = new Header();
-                    header.Type = SelectedProgram.Type.ToString();
-                    header.TestTime = time[0].ToString("yyyy-MM-dd");
-                    header.Equipment = testRecord.Record.AssignedChannel.Tester.Manufacturer + " " + testRecord.TesterStr;
-                    header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufacturer;
-                    header.BatteryModel = SelectedProgram.Project.BatteryType.Name;
-                    header.CycleCount = evm.NewCycle.ToString();
-                    header.Temperature = testRecord.Record.Temperature.ToString();
-                    header.Current = testRecord.Record.Current.ToString();
-                    header.MeasurementGain = testRecord.MeasurementGain.ToString();
-                    header.MeasurementOffset = testRecord.MeasurementOffset.ToString();
-                    header.TraceResistance = testRecord.TraceResistance.ToString();
-                    header.CapacityDifference = testRecord.CapacityDifference.ToString();
-                    header.AbsoluteMaxCapacity = SelectedProgram.Project.AbsoluteMaxCapacity.ToString();//.BatteryType.TypicalCapacity.ToString();
-                    header.LimitedChargeVoltage = SelectedProgram.Project.LimitedChargeVoltage.ToString();
-                    //header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
-                    header.CutoffDischargeVoltage = SelectedProgram.Project.BatteryType.CutoffDischargeVoltage.ToString();
-                    header.Tester = testRecord.Operator;
-                    _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, evm.FileList.ToList(), evm.IsRename, evm.NewName, time[0], time[1], SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
+                    DateTime[] time = _testerService.GetTimeFromRawData(testRecord.Record.AssignedChannel.Tester.ITesterProcesser, evm.FileList);
+                    if (time != null)
+                    {
+                        Header header = new Header();
+                        header.Type = SelectedProgram.Type.ToString();
+                        header.TestTime = time[0].ToString("yyyy-MM-dd");
+                        header.Equipment = testRecord.Record.AssignedChannel.Tester.Manufacturer + " " + testRecord.TesterStr;
+                        header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufacturer;
+                        header.BatteryModel = SelectedProgram.Project.BatteryType.Name;
+                        header.CycleCount = evm.NewCycle.ToString();
+                        header.Temperature = testRecord.Record.Temperature.ToString();
+                        header.Current = testRecord.Record.Current.ToString();
+                        header.MeasurementGain = testRecord.MeasurementGain.ToString();
+                        header.MeasurementOffset = testRecord.MeasurementOffset.ToString();
+                        header.TraceResistance = testRecord.TraceResistance.ToString();
+                        header.CapacityDifference = testRecord.CapacityDifference.ToString();
+                        header.AbsoluteMaxCapacity = SelectedProgram.Project.AbsoluteMaxCapacity.ToString();//.BatteryType.TypicalCapacity.ToString();
+                        header.LimitedChargeVoltage = SelectedProgram.Project.LimitedChargeVoltage.ToString();
+                        //header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
+                        header.CutoffDischargeVoltage = SelectedProgram.Project.BatteryType.CutoffDischargeVoltage.ToString();
+                        header.Tester = testRecord.Operator;
+                        _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, evm.FileList.ToList(), evm.IsRename, evm.NewName, time[0], time[1], SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
+                    }
+                    else
+                    {
+                        Header header = new Header();
+                        header.Type = string.Empty;
+                        _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, evm.FileList.ToList(), evm.IsRename, evm.NewName, DateTime.MinValue, DateTime.MinValue, SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -856,7 +883,19 @@ namespace BCLabManager.ViewModel
             {
                 try
                 {
-                    DateTime[] time = _testerService.GetTimeFromRawData(evm.Channel.Tester, evm.FileList);
+                    DateTime[] time = _testerService.GetTimeFromRawData(evm.Channel.Tester.ITesterProcesser, evm.FileList);
+                    var st = new DateTime();
+                    var et = new DateTime();
+                    if (time != null)
+                    {
+                        st = time[0];
+                        et = time[1];
+                    }
+                    else
+                    {
+                        st = DateTime.MinValue;
+                        et = DateTime.MinValue;
+                    }
                     _programService.RecipeService.TestRecordService.Execute(
                     SelectedTestRecord.Record,
                     SelectedProgram.Project.BatteryType.Name,
@@ -866,7 +905,7 @@ namespace BCLabManager.ViewModel
                     evm.Channel,
                     evm.Current,
                     evm.Temperature,
-                    time[0],
+                    st,
                     evm.MeasurementGain,
                     evm.MeasurementOffset,
                     evm.TraceResistance,
@@ -875,34 +914,43 @@ namespace BCLabManager.ViewModel
                     SelectedProgram.Name,
                     $"{SelectedRecipe.Temperature}Deg-{SelectedRecipe.Name}"    //Use this to represent RecipeStr
                     );
-                    _batteryService.Execute(evm.Battery, time[0], SelectedProgram.Name, SelectedRecipe.Name);
-                    _channelService.Execute(evm.Channel, time[0], SelectedProgram.Name, SelectedRecipe.Name);
-                    _chamberService.Execute(evm.Chamber, time[0], SelectedProgram.Name, SelectedRecipe.Name);
+                    _batteryService.Execute(evm.Battery, st, SelectedProgram.Name, SelectedRecipe.Name);
+                    _channelService.Execute(evm.Channel, st, SelectedProgram.Name, SelectedRecipe.Name);
+                    if (evm.Chamber != null)
+                        _chamberService.Execute(evm.Chamber, st, SelectedProgram.Name, SelectedRecipe.Name);
 
-                    _batteryService.Commit(evm.Battery, time[1], SelectedProgram.Name, SelectedRecipe.Name, evm.NewCycle);
-                    _channelService.Commit(evm.Channel, time[1], SelectedProgram.Name, SelectedRecipe.Name);
-                    _chamberService.Commit(evm.Chamber, time[1], SelectedProgram.Name, SelectedRecipe.Name);
+                    _batteryService.Commit(evm.Battery, et, SelectedProgram.Name, SelectedRecipe.Name, evm.NewCycle);
+                    _channelService.Commit(evm.Channel, et, SelectedProgram.Name, SelectedRecipe.Name);
+                    if (evm.Chamber != null)
+                        _chamberService.Commit(evm.Chamber, et, SelectedProgram.Name, SelectedRecipe.Name);
                     Header header = new Header();
-                    header.Type = SelectedProgram.Type.ToString();
-                    header.TestTime = time[0].ToString("yyyy-MM-dd");
-                    header.Equipment = evm.Channel.Tester.Manufacturer + " " + evm.Channel.Tester.Name;
-                    header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufacturer;
-                    header.BatteryModel = SelectedProgram.Project.BatteryType.Name;
-                    header.CycleCount = evm.NewCycle.ToString();
-                    header.Temperature = model.Temperature.ToString();
-                    header.Current = model.Current.ToString();
-                    header.MeasurementGain = model.MeasurementGain.ToString();
-                    header.MeasurementOffset = model.MeasurementOffset.ToString();
-                    header.TraceResistance = model.TraceResistance.ToString();
-                    header.CapacityDifference = model.CapacityDifference.ToString();
-                    header.AbsoluteMaxCapacity = SelectedProgram.Project.AbsoluteMaxCapacity.ToString();//.BatteryType.TypicalCapacity.ToString();
-                    header.LimitedChargeVoltage = SelectedProgram.Project.LimitedChargeVoltage.ToString();
-                    //header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
-                    header.CutoffDischargeVoltage = SelectedProgram.Project.BatteryType.CutoffDischargeVoltage.ToString();
-                    header.Tester = model.Operator;
+                    if (time != null)
+                    {
+                        header.Type = SelectedProgram.Type.ToString();
+                        header.TestTime = time[0].ToString("yyyy-MM-dd");
+                        header.Equipment = evm.Channel.Tester.Manufacturer + " " + evm.Channel.Tester.Name;
+                        header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufacturer;
+                        header.BatteryModel = SelectedProgram.Project.BatteryType.Name;
+                        header.CycleCount = evm.NewCycle.ToString();
+                        header.Temperature = model.Temperature.ToString();
+                        header.Current = model.Current.ToString();
+                        header.MeasurementGain = model.MeasurementGain.ToString();
+                        header.MeasurementOffset = model.MeasurementOffset.ToString();
+                        header.TraceResistance = model.TraceResistance.ToString();
+                        header.CapacityDifference = model.CapacityDifference.ToString();
+                        header.AbsoluteMaxCapacity = SelectedProgram.Project.AbsoluteMaxCapacity.ToString();//.BatteryType.TypicalCapacity.ToString();
+                        header.LimitedChargeVoltage = SelectedProgram.Project.LimitedChargeVoltage.ToString();
+                        //header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
+                        header.CutoffDischargeVoltage = SelectedProgram.Project.BatteryType.CutoffDischargeVoltage.ToString();
+                        header.Tester = model.Operator;
+                    }
+                    else
+                    {
+                        header.Type = string.Empty;
+                    }
                     SelectedTestRecord.NewCycle = evm.NewCycle;
                     _programService.RecipeService.TestRecordService.Commit(
-                    SelectedTestRecord.Record, evm.Comment, evm.FileList.ToList(), evm.IsRename, evm.NewName, time[0], time[1], SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
+                    SelectedTestRecord.Record, evm.Comment, evm.FileList.ToList(), evm.IsRename, evm.NewName, st, et, SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
                 }
                 catch (Exception e)
                 {
@@ -943,6 +991,10 @@ namespace BCLabManager.ViewModel
         private bool CanView
         {
             get { return _selectedTestRecord != null && (_selectedTestRecord.Record.TestFilePath != string.Empty); }
+        }
+        private void AddTestRecord()
+        {
+            _programService.RecipeService.Add(SelectedRecipe._recipe);
         }
         private void Start()
         {

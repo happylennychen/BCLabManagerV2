@@ -571,16 +571,36 @@ namespace BCLabManager.ViewModel
         {
             var dialog = new OpenFileDialog();
             dialog.Multiselect = true;
-            //dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.NetworkShortcuts); No use, cannot see network driver
-            //dialog.InitialDirectory = $@"Q:\807\Software\WH BC Lab\Data\{_record.BatteryTypeStr}\{_record.ProjectStr}\Raw Data";
-            //dialog.InitialDirectory = $@"Q:\807\Software\WH BC Lab\Data\{_record.BatteryTypeStr}\High Power\Raw Data";
-            //dialog.InitialDirectory = $@"{GlobalSettings.RootPath}{_record.BatteryTypeStr}\High Power\{GlobalSettings.TestDataFolderName}";
             if (dialog.ShowDialog() == true)
             {
-                FileList = new ObservableCollection<string>(dialog.FileNames.ToList());
                 TesterServiceClass _testerService = new TesterServiceClass();
-                DateTime[] time = _testerService.GetTimeFromRawData(this.Channel.Tester, FileList);
-                NewName = $@"{_programStr}_{_recipeStr}_{time[0].ToString("yyyyMMddHHmmss")}";
+                if (Channel != null)
+                {
+                    foreach (var file in dialog.FileNames)
+                    {
+                        if (!_testerService.CheckFileFormat(Channel.Tester.ITesterProcesser, file))
+                        {
+                            MessageBox.Show("Wrong File Format!");
+                            return;
+                        }
+                        if (!_testerService.CheckChannelNumber(Channel.Tester.ITesterProcesser, file, Channel.Name))
+                        {
+                            MessageBox.Show("Wrong channel!");
+                            return;
+                        }
+                    }
+
+                    FileList = new ObservableCollection<string>(dialog.FileNames.ToList());
+                    DateTime[] time = _testerService.GetTimeFromRawData(Channel.Tester.ITesterProcesser, FileList);
+                    if (time != null)
+                        NewName = $@"{_programStr}_{_recipeStr}_{_tester.Name}_{_channel.Name}_{_battery.Name}_{time[0].ToString("yyyyMMddHHmmss")}";
+                    else
+                        NewName = $@"{_programStr}_{_recipeStr}_{_tester.Name}_{_channel.Name}_{_battery.Name}";
+                }
+                else
+                {
+
+                }
             }
         }
 
