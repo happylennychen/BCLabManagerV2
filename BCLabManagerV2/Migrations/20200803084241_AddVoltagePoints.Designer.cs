@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200724090935_Init")]
-    partial class Init
+    [Migration("20200803084241_AddVoltagePoints")]
+    partial class AddVoltagePoints
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

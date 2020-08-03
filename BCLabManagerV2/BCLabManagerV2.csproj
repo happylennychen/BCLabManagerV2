@@ -293,9 +293,21 @@
     <Compile Include="DataAccess\TableMakerProductRepository.cs" />
     <Compile Include="DataAccess\ITableMakerProductTypeRepository.cs" />
     <Compile Include="DataAccess\TableMakerProductTypeRepository.cs" />
-    <Compile Include="Migrations\20200724094040_NewOne.cs" />
-    <Compile Include="Migrations\20200724094040_NewOne.Designer.cs">
-      <DependentUpon>20200724094040_NewOne.cs</DependentUpon>
+    <Compile Include="Migrations\20200609031253_Init.cs" />
+    <Compile Include="Migrations\20200609031253_Init.Designer.cs">
+      <DependentUpon>20200609031253_Init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200714021230_extend_cfg.cs" />
+    <Compile Include="Migrations\20200714021230_extend_cfg.Designer.cs">
+      <DependentUpon>20200714021230_extend_cfg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200803084118_RemoveVoltagePoints.cs" />
+    <Compile Include="Migrations\20200803084118_RemoveVoltagePoints.designer.cs">
+      <DependentUpon>20200803084118_RemoveVoltagePoints.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200803084241_AddVoltagePoints.cs" />
+    <Compile Include="Migrations\20200803084241_AddVoltagePoints.designer.cs">
+      <DependentUpon>20200803084241_AddVoltagePoints.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\Model\ReleasePackage.cs" />
