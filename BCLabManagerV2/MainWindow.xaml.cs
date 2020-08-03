@@ -1,5 +1,5 @@
-﻿//#define Migrate
-//#define Seed
+﻿#define Migrate
+#define Seed
 #define Show
 using System;
 using System.Collections.Generic;
@@ -152,14 +152,19 @@ namespace BCLabManager
 
                 ChamberService.Items = new ObservableCollection<Chamber>(uow.Chambers.GetAll("Records"));
 
-                RecipeTemplateService.Items = new ObservableCollection<RecipeTemplate>(uow.RecipeTemplates.GetAll());
-                StepService.Items = new ObservableCollection<Step>(uow.Steps.GetAll());
-                StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
+                //RecipeTemplateService.Items = new ObservableCollection<RecipeTemplate>(uow.RecipeTemplates.GetAll());
+                //StepService.Items = new ObservableCollection<Step>(uow.Steps.GetAll());
+                //StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
 
                 ProgramService.Items = new ObservableCollection<Program>(uow.Programs.GetAll());
                 ProgramService.RecipeService.Items = new ObservableCollection<Recipe>(uow.Recipies.GetAll());
                 ProgramService.RecipeService.TestRecordService.Items = new ObservableCollection<TestRecord>(uow.TestRecords.GetAll());
                 ProgramService.RecipeService.StepRuntimeService.Items = new ObservableCollection<StepRuntime>(uow.StepRuntimes.GetAll());
+
+                RecipeTemplateService.Items = new ObservableCollection<RecipeTemplate>(uow.RecipeTemplates.GetAll());
+                StepService.Items = new ObservableCollection<Step>(uow.Steps.GetAll());
+                StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
+
                 ProjectService.Items = new ObservableCollection<Project>(uow.Projects.GetAll());
                 ProjectSettingService.Items = new ObservableCollection<ProjectSetting>(uow.ProjectSettings.GetAll());
                 ProgramTypeService.Items = new ObservableCollection<ProgramType>(uow.ProgramTypes.GetAll());

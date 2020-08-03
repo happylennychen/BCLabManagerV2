@@ -174,7 +174,7 @@ namespace BCLabManager
                 proj.Name = name;
                 proj.Customer = customer;
                 proj.Description = description;
-                proj.VoltagePoints = voltagePoints;
+                //proj.VoltagePoints = voltagePoints;
                 proj.BatteryType = uow.BatteryTypes.SingleOrDefault(o => o.Name == batteryType);
                 //proj.CutoffDischargeVoltage = proj.BatteryType.CutoffDischargeVoltage;
                 proj.CutoffDischargeVoltage = codv;

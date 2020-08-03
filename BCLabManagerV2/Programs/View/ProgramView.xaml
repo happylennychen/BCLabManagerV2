@@ -44,6 +44,10 @@
                     <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
                 </Grid.RowDefinitions>
 
                 <!-- CUSTOMER TYPE -->
@@ -125,6 +129,16 @@
       Text="{Binding Path=Description, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
       Validation.ErrorTemplate="{x:Null}"
       />
+                <Label 
+      Grid.Row="14" Grid.Column="0" 
+      Content="Temperatuers:" 
+      HorizontalAlignment="Right"
+      />
+                <TextBox 
+      Grid.Row="14" Grid.Column="2" 
+      Text="{Binding Path=Temperatures, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+      Validation.ErrorTemplate="{x:Null}"
+      />
 
             </Grid>
         </GroupBox>
@@ -146,70 +160,14 @@
                     <ColumnDefinition Width="40"></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-
-                <!--<ListView Grid.Column="0"
-                      x:Name="LeftRecipelist"
-      AlternationCount="2" 
-      ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=AllRecipeTemplates}"
-                      SelectedItem="{Binding Path=SelectedRecipeTemplate, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
-      >
-
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn 
-            Header="Id" 
-            DisplayMemberBinding="{Binding Path=Id}" 
-            />
-                            <GridViewColumn 
-            Header="Name" 
-            DisplayMemberBinding="{Binding Path=Name}" 
-            />
-                        </GridView>
-                    </ListView.View>
-                </ListView>-->
                 <DataGrid GridLinesVisibility="None" x:Name="LeftRecipelist" AutoGenerateColumns="False"  Grid.Column="0"
-                          ItemsSource="{Binding Path=AllRecipeTemplates}" Background="White"
-                          SelectedItem="{Binding Path=SelectedRecipeTemplate, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                          ItemsSource="{Binding Path=AllRecipeTemplates}" Background="White">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                        <DataGridCheckBoxColumn Header="Selected" Binding="{Binding Path=IsSelected}"></DataGridCheckBoxColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-                <ListView Grid.Column="2"
-                      x:Name="RightRecipelist"
-      AlternationCount="2" 
-      ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=Recipes}"
-                      SelectedItem="{Binding Path=SelectedRecipe, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
-      >
-
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn 
-            Header="Name" 
-            DisplayMemberBinding="{Binding Path=Name}" 
-            />
-                            <GridViewColumn 
-            Header="Temperature" 
-                                CellTemplate="{StaticResource Temperature}"
-            />
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <Button Command="{Binding Path=AddCommand}">=></Button>
-                    <Border Height="10"></Border>
-                    <Button Command="{Binding Path=RemoveCommand}">&lt;=</Button>
-                </StackPanel>
-                <!--<DataGrid GridLinesVisibility="None" x:Name="RightRecipelist" AutoGenerateColumns="False"  Grid.Column="2"
-                          ItemsSource="{Binding Path=Recipes}" Background="White" CanUserSortColumns="False"
-                          SelectedItem="{Binding Path=SelectedRecipe, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
-                        <DataGridTemplateColumn Header="Temperature" CellTemplate="{StaticResource Temperature}"></DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>-->
             </Grid>
         </GroupBox>
     </DockPanel>

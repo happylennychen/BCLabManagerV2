@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,8 +61,9 @@ namespace BCLabManager.Model
             get { return _cutoffDischargeVoltage; }
             set { SetProperty(ref _cutoffDischargeVoltage, value); }
         }
-        private string _voltagePoints;
-        public string VoltagePoints
+        private List<int> _voltagePoints;
+        //[NotMapped]
+        public List<int> VoltagePoints
         {
             get { return _voltagePoints; }
             set { SetProperty(ref _voltagePoints, value); }
