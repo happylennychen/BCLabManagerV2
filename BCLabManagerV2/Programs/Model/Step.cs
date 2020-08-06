@@ -9,12 +9,6 @@ using Prism.Mvvm;
 
 namespace BCLabManager.Model
 {
-    public enum CompareMarkEnum
-    {
-        NA,
-        LargerThan,
-        SmallThan
-    }
     public class Step : BindableBase
     {
         public int Id { get; set; }

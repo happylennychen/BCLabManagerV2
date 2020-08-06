@@ -31,6 +31,8 @@ namespace BCLabManager.Model
         //}
 
         public ObservableCollection<Step> Steps { get; set; } = new ObservableCollection<Step>();
+        public ObservableCollection<StepV2> StepV2s { get; set; } = new ObservableCollection<StepV2>();
+        public ObservableCollection<Protection> Protections { get; set; } = new ObservableCollection<Protection>();
 
         public RecipeTemplate()
         {

@@ -311,6 +311,10 @@
     <Compile Include="Migrations\20200803084241_AddVoltagePoints.designer.cs">
       <DependentUpon>20200803084241_AddVoltagePoints.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200805100105_SupportPseudocode.cs" />
+    <Compile Include="Migrations\20200805100105_SupportPseudocode.designer.cs">
+      <DependentUpon>20200805100105_SupportPseudocode.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\Model\ReleasePackage.cs" />
     <Compile Include="Products\Model\Service\TableMakerProductServieClass.cs" />
@@ -323,6 +327,14 @@
     <Compile Include="Products\View\TableMakerProductView.xaml.cs">
       <DependentUpon>TableMakerProductView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Programs\Model\Enums\ActionMode.cs" />
+    <Compile Include="Programs\Model\Enums\CompareMarkEnum.cs" />
+    <Compile Include="Programs\Model\CutOffCondition.cs" />
+    <Compile Include="Programs\Model\Enums\Parameter.cs" />
+    <Compile Include="Programs\Model\Enums\JumpType.cs" />
+    <Compile Include="Programs\Model\Protection.cs" />
+    <Compile Include="Programs\Model\StepV2.cs" />
+    <Compile Include="Programs\Model\TesterAction.cs" />
     <Compile Include="Settings\Model\Service\ProjectSettingServieClass.cs" />
     <Compile Include="Settings\Model\Service\TableMakerProductTypeServiceClass.cs" />
     <Compile Include="Settings\ViewModel\AllProjectSettingsViewModel.cs" />

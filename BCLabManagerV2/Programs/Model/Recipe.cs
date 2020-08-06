@@ -61,6 +61,24 @@ namespace BCLabManager.Model
             get { return _ed; }
             set { SetProperty(ref _ed, value); }
         }
+        private TimeSpan _ed1;
+        public TimeSpan ED1
+        {
+            get { return _ed1; }
+            set { SetProperty(ref _ed1, value); }
+        }
+        private TimeSpan _ed2;
+        public TimeSpan ED2
+        {
+            get { return _ed2; }
+            set { SetProperty(ref _ed2, value); }
+        }
+        private RecipeTemplate _recipeTemplate;
+        public RecipeTemplate RecipeTemplate
+        {
+            get { return _recipeTemplate; }
+            set { SetProperty(ref _recipeTemplate, value); }
+        }
         //private double _current;
         //public double Current
         //{
