@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.DataAccess
 {
-    public interface ITestRecordRepository:IRepository<TestRecord>
+    public interface ITestRecordRepository : IRepository<TestRecord>
     {
+        IEnumerable<TestRecord> GetAllFreeTestRecords();
     }
 }

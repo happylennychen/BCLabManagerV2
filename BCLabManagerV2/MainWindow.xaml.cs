@@ -81,6 +81,7 @@ namespace BCLabManager
         public ProgramTypeServiceClass ProgramTypeService { get; set; } = new ProgramTypeServiceClass();
         public TableMakerProductTypeServiceClass TableMakerProductTypeService { get; set; } = new TableMakerProductTypeServiceClass();
         public TableMakerProductServiceClass TableMakerProductService { get; set; } = new TableMakerProductServiceClass();
+        public TestRecordServiceClass FreeTestRecordService { get; set; } = new TestRecordServiceClass();
 
         public MainWindow()
         {
@@ -89,6 +90,7 @@ namespace BCLabManager
                 InitializeDatabase();
 #if Show
                 InitializeComponent();
+                InitializeTempFileFolder();
                 LoadFromDB();
                 CreateProcesserForTesters();
                 InitializeNavigator();
@@ -104,6 +106,17 @@ namespace BCLabManager
                 MessageBox.Show(e.Message);
                 App.Current.Shutdown();
             }
+        }
+
+        private void InitializeTempFileFolder()
+        {
+            string tempFilePath = $@"{GlobalSettings.RootPath}{GlobalSettings.TempDataFolderName}";
+            if (!Directory.Exists(tempFilePath))
+                Directory.CreateDirectory(tempFilePath); 
+
+            tempFilePath = $@"{GlobalSettings.TempraryFolder}{GlobalSettings.TempDataFolderName}";
+            if (!Directory.Exists(tempFilePath))
+                Directory.CreateDirectory(tempFilePath);
         }
 
         private void CreateProcesserForTesters()
@@ -172,6 +185,7 @@ namespace BCLabManager
                 TableMakerProductService.Items = new ObservableCollection<TableMakerProduct>(uow.TableMakerProducts.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
+                FreeTestRecordService.Items = new ObservableCollection<TestRecord>(uow.TestRecords.GetAllFreeTestRecords());
             }
         }
         void CreateViewModels()
@@ -216,7 +230,9 @@ namespace BCLabManager
                 BatteryService,
                 TesterService,
                 ChannelService,
-                ChamberService
+                ChamberService,
+                BatteryTypeService,
+                FreeTestRecordService
                 );    //ViewModel初始化
 
             dashBoardViewModel = new DashBoardViewModel(BatteryService, ChannelService, ChamberService, ProgramService);

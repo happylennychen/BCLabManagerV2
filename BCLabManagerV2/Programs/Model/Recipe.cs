@@ -307,5 +307,9 @@ namespace BCLabManager.Model
             }
             return newsub;
         }
+        public override string ToString()
+        {
+            return $@"{this.Name} {this.Temperature} degree";
+        }
     }
 }

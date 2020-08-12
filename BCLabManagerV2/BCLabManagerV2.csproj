@@ -335,6 +335,18 @@
     <Compile Include="Programs\Model\Protection.cs" />
     <Compile Include="Programs\Model\StepV2.cs" />
     <Compile Include="Programs\Model\TesterAction.cs" />
+    <Compile Include="Programs\ViewModel\TestRecordCommitFreeViewModel.cs" />
+    <Compile Include="Programs\ViewModel\TestRecordExecuteFreeViewModel.cs" />
+    <Compile Include="Programs\ViewModel\TestRecordAttachViewModel.cs" />
+    <Compile Include="Programs\View\AttachView.xaml.cs">
+      <DependentUpon>AttachView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Programs\View\CommitFreeView.xaml.cs">
+      <DependentUpon>CommitFreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Programs\View\ExecuteFreeView.xaml.cs">
+      <DependentUpon>ExecuteFreeView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Model\Service\ProjectSettingServieClass.cs" />
     <Compile Include="Settings\Model\Service\TableMakerProductTypeServiceClass.cs" />
     <Compile Include="Settings\ViewModel\AllProjectSettingsViewModel.cs" />
@@ -578,6 +590,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Products\View\TableMakerProductView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Programs\View\AttachView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Programs\View\CommitFreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Programs\View\ExecuteFreeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -4,7 +4,7 @@
     {
         VOLTAGE,
         CURRENT,
-        Power,
+        POWER,
         TIME
     }
 }

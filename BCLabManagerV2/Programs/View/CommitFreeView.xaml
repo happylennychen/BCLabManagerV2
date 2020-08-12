@@ -1,0 +1,112 @@
+﻿<Window x:Class="BCLabManager.View.CommitFreeView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="{Binding Path=DisplayName}" Height="410" Width="600" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid Margin="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="6" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Label 
+      Grid.Row="0" Grid.Column="0" 
+      Content="Time:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=CompleteTimeDat}" 
+      />
+            <xctk:DateTimePicker
+      x:Name="CompleteTimeDat"
+      Grid.Row="0" Grid.Column="2" ShowButtonSpinner="False" ShowDropDownButton="False" TextAlignment="Center"
+      Text="{Binding Path=EndTime, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />
+
+            <Label 
+      Grid.Row="2" Grid.Column="0" 
+      Content="_Test Data:" VerticalAlignment="Center"
+      HorizontalAlignment="Right"
+      />
+            <DockPanel LastChildFill="True"
+      Grid.Row="2" Grid.Column="2" >
+                <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center">
+                    <Button Width="80" Margin="0,5" Command="{Binding Path=SplitterCommand}">Splitter</Button>
+                    <Button Width="80" Command="{Binding Path=OpenFilesCommand}" Margin="0,5">Select</Button>
+                </StackPanel>
+                <!--<TextBlock Name="FilePathLabel"
+      Text="{Binding Path=FilePath,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBlock>-->
+                <ListBox Height="80" x:Name="FileListBox" ItemsSource="{Binding Path=FileList, Mode=TwoWay}"></ListBox>
+            </DockPanel>
+
+            <CheckBox x:Name="ReNameCheckBox"
+      Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" 
+                Content="Rename Raw Data As:"
+      HorizontalAlignment="Center"
+                IsChecked="{Binding Path=IsRename}"
+      />
+            <TextBox 
+      x:Name="NewNameTxt" IsEnabled="{Binding ElementName=ReNameCheckBox, Path=IsChecked}"
+      Grid.Row="4" Grid.Column="2" 
+      Text="{Binding Path=NewName, ValidatesOnDataErrors=True, UpdateSourceTrigger=LostFocus}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <Label 
+      Grid.Row="6" Grid.Column="0" 
+      Content="_New Cycle:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=NewCycleTxt}" 
+      />
+            <TextBox 
+      x:Name="NewCycleTxt"
+      Grid.Row="6" Grid.Column="2" 
+      Text="{Binding Path=NewCycle, ValidatesOnDataErrors=True, UpdateSourceTrigger=LostFocus}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <Label 
+      Grid.Row="8" Grid.Column="0" 
+      Content="_Comment:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=CommentTxt}" 
+      />
+            <TextBox 
+      x:Name="CommentTxt" AcceptsReturn="True"
+      Grid.Row="8" Grid.RowSpan="2" Grid.Column="2" 
+      Text="{Binding Path=Comment, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <CheckBox 
+      Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="3" 
+                Content="DO NOT create assets usage record"
+      HorizontalAlignment="Center"
+                IsChecked="{Binding Path=IsSkip}"
+      />
+
+            <!-- SAVE BUTTON -->
+            <Button 
+      Grid.Row="14" Grid.Column="2"
+      Command="{Binding Path=OKCommand}"
+                Click="Button_Click"
+      Content="_OK"
+      HorizontalAlignment="Right"
+      Margin="4,2" 
+      MinWidth="60" 
+      />
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,231 @@
+﻿<Window x:Class="BCLabManager.View.ExecuteFreeView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="{Binding Path=DisplayName}" Height="530" Width="300" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid Margin="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="6" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- CUSTOMER TYPE -->
+            <!--<Label 
+      Grid.Row="0" Grid.Column="0" 
+      Content="_Battery Type:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=BatteryTypeCmb}" 
+      />
+            <ComboBox 
+      x:Name="BatteryTypeCmb"
+      Grid.Row="0" Grid.Column="2" 
+      ItemsSource="{Binding Path=AllBatteryTypes, Mode=OneWay}"
+      SelectedItem="{Binding Path=BatteryType, ValidatesOnDataErrors=True}"
+      Validation.ErrorTemplate="{x:Null}"
+      >
+            </ComboBox>-->
+            <!-- CUSTOMER TYPE -->
+
+            <Label 
+      Grid.Row="0" Grid.Column="0" 
+      Content="_Battery Type:" 
+      HorizontalAlignment="Right"
+      />
+            <ComboBox 
+      Grid.Row="0" Grid.Column="2" 
+      ItemsSource="{Binding Path=AllBatteryTypes, Mode=OneWay}"
+      SelectedItem="{Binding Path=BatteryType, ValidatesOnDataErrors=True}"
+      Validation.ErrorTemplate="{x:Null}"
+      >
+            </ComboBox>
+            <Label 
+      Grid.Row="2" Grid.Column="0" 
+      Content="_Battery:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=BatteryCmb}" 
+      />
+            <ComboBox 
+      x:Name="BatteryCmb"
+      Grid.Row="2" Grid.Column="2" 
+      ItemsSource="{Binding Path=AllBatteries, Mode=OneWay}"
+      SelectedItem="{Binding Path=Battery, ValidatesOnDataErrors=True}"
+      Validation.ErrorTemplate="{x:Null}"
+      >
+            </ComboBox>
+
+            
+            <Label 
+      Grid.Row="4" Grid.Column="0" 
+      Content="_Chamber:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=ChamberCmb}"
+      />
+            <ComboBox 
+      x:Name="ChamberCmb"
+      Grid.Row="4" Grid.Column="2" 
+      ItemsSource="{Binding Path=AllChambers, Mode=OneWay}"
+      SelectedItem="{Binding Path=Chamber, ValidatesOnDataErrors=True}"
+      Validation.ErrorTemplate="{x:Null}"
+      >
+            </ComboBox>
+
+            <Label 
+      Grid.Row="6" Grid.Column="0" 
+      Content="_Tester:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=TesterCmb}"
+      />
+            <ComboBox 
+      x:Name="TesterCmb"
+      Grid.Row="6" Grid.Column="2" 
+      ItemsSource="{Binding Path=AllTesters, Mode=OneWay}"
+      SelectedItem="{Binding Path=Tester, ValidatesOnDataErrors=True}"
+      Validation.ErrorTemplate="{x:Null}"
+      >
+            </ComboBox>
+
+            <Label 
+      Grid.Row="8" Grid.Column="0" 
+      Content="_Channel:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=ChannelCmb}"
+      />
+            <ComboBox 
+      x:Name="ChannelCmb"
+      Grid.Row="8" Grid.Column="2" 
+      ItemsSource="{Binding Path=AllChannels, Mode=OneWay}"
+      SelectedItem="{Binding Path=Channel, ValidatesOnDataErrors=True}"
+      Validation.ErrorTemplate="{x:Null}"
+      >
+            </ComboBox>
+
+            <Label 
+      Grid.Row="14" Grid.Column="0" 
+      Content="Time:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=StartTimeDat}" 
+      />
+            <xctk:DateTimePicker 
+      x:Name="StartTimeDat"
+      Grid.Row="14" Grid.Column="2" ShowButtonSpinner="False" ShowDropDownButton="False" TextAlignment="Center"
+      Text="{Binding Path=StartTime, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />
+
+            <Label 
+      Grid.Row="16" Grid.Column="0" 
+      Content="Measurement Gain:" 
+      HorizontalAlignment="Right"
+      />
+            <TextBox 
+      Grid.Row="16" Grid.Column="2" 
+      Text="{Binding Path=MeasurementGain, ValidatesOnDataErrors=True, UpdateSourceTrigger=LostFocus}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <Label 
+      Grid.Row="18" Grid.Column="0" 
+      Content="Measurement Offset:" 
+      HorizontalAlignment="Right"
+      />
+            <TextBox 
+      Grid.Row="18" Grid.Column="2" 
+      Text="{Binding Path=MeasurementOffset, ValidatesOnDataErrors=True, UpdateSourceTrigger=LostFocus}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <Label 
+      Grid.Row="20" Grid.Column="0" 
+      Content="Trace Resistance:" 
+      HorizontalAlignment="Right"
+      />
+            <TextBox 
+      Grid.Row="20" Grid.Column="2" 
+      Text="{Binding Path=TraceResistance, ValidatesOnDataErrors=True, UpdateSourceTrigger=LostFocus}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <Label 
+      Grid.Row="22" Grid.Column="0" 
+      Content="Capacity Difference:" 
+      HorizontalAlignment="Right"
+      />
+            <TextBox 
+      Grid.Row="22" Grid.Column="2" 
+      Text="{Binding Path=CapacityDifference, ValidatesOnDataErrors=True, UpdateSourceTrigger=LostFocus}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <Label 
+      Grid.Row="24" Grid.Column="0" 
+      Content="Operator:" 
+      HorizontalAlignment="Right"
+      />
+            <TextBox 
+      Grid.Row="24" Grid.Column="2" 
+      Text="{Binding Path=Operator, ValidatesOnDataErrors=True, UpdateSourceTrigger=LostFocus}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <CheckBox 
+      Grid.Row="26" Grid.Column="0" Grid.ColumnSpan="3" 
+                Content="DO NOT create assets usage record"
+      HorizontalAlignment="Center"
+                IsChecked="{Binding Path=IsSkip}"
+      />
+
+            <!--<Label 
+      Grid.Row="12" Grid.Column="0" 
+      Content="_Steps:" 
+      HorizontalAlignment="Right"
+      Target="{Binding ElementName=StepsTxt}" 
+      />
+            <TextBox 
+      x:Name="StepsTxt" AcceptsReturn="True"
+      Grid.Row="12" Grid.RowSpan="2" Grid.Column="2" 
+      Text="{Binding Path=Steps, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />-->
+
+            <!-- SAVE BUTTON -->
+            <Button 
+      Grid.Row="28" Grid.Column="2"
+      Command="{Binding Path=OKCommand}"
+                Click="Button_Click"
+      Content="_OK"
+      HorizontalAlignment="Right"
+      Margin="4,2" 
+      MinWidth="60" 
+      />
+        </Grid>
+    </Grid>
+</Window>

@@ -67,7 +67,7 @@ namespace BCLabManager.Model
             TestRecordService.DomainAdd(newTestRecord);
         }
 
-        internal void Add(Recipe recipe)
+        internal void AddTestRecord(Recipe recipe)
         {
             var newTestRecord = new TestRecord();
             recipe.TestRecords.Add(newTestRecord);
@@ -107,6 +107,21 @@ namespace BCLabManager.Model
                     time = item.EndTime;
                 }
             }
+        }
+
+        internal void Attach(Recipe recipe, TestRecord record)
+        {
+            var rec = new Recipe();
+            var tr = new TestRecord();
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                rec = uow.Recipies.SingleOrDefault(o=>o.Id == recipe.Id);
+                tr = uow.TestRecords.SingleOrDefault(o => o.Id == record.Id);
+                rec.TestRecords.Add(tr);
+                uow.Commit();
+            }
+            recipe.TestRecords.Add(record);
+            TestRecordService.Items.Add(record);
         }
     }
 }

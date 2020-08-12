@@ -12,7 +12,10 @@ namespace BCLabManager.DataAccess
         public TestRecordRepository(AppDbContext context)
             : base(context)
         {
-
+        }
+        public IEnumerable<TestRecord> GetAllFreeTestRecords()
+        {
+            return GetAll().Where(o => o.ProjectStr == null && o.ProgramStr == string.Empty && o.RecipeStr == string.Empty);
         }
     }
 }

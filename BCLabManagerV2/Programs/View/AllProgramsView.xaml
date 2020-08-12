@@ -101,59 +101,6 @@
                     <Button Content="_Edit" Command="{Binding Path=EditCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
                     <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
-                <!--<ListView Grid.Row="1"
-                      x:Name="Programlist"
-      AlternationCount="2"
-      ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Source={StaticResource programsCollectionViewSource}}"
-                      SelectedItem="{Binding Path=SelectedProgram, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
-      >
-
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn 
-            Header="Id" 
-            DisplayMemberBinding="{Binding Path=Id}" 
-            />
-                            <GridViewColumn Width="100"
-            Header="Progress"
-                                CellTemplate="{StaticResource ProgressBar}"
-            />
-                            <GridViewColumn 
-            Header="Name" 
-            DisplayMemberBinding="{Binding Path=Name}" 
-            />
-                            <GridViewColumn 
-            Header="Project" 
-            DisplayMemberBinding="{Binding Path=Project}" 
-            />
-                            <GridViewColumn 
-            Header="Requester" 
-            DisplayMemberBinding="{Binding Path=Requester}" 
-            />
-                            <GridViewColumn 
-            Header="Request Time" 
-            DisplayMemberBinding="{Binding Path=RequestTime}" 
-            />
-                            <GridViewColumn 
-            Header="Start Time" 
-                                CellTemplate="{StaticResource StartTime}"
-            />
-                            <GridViewColumn 
-            Header="End Time" 
-                                CellTemplate="{StaticResource EndTime}"
-            />
-                            --><!--<GridViewColumn 
-            Header="Duration" 
-            DisplayMemberBinding="{Binding Path=Duration}" 
-            />-->
-                            <!--<GridViewColumn 
-            Header="Description" 
-            DisplayMemberBinding="{Binding Path=Description}" 
-            />--><!--
-                        </GridView>
-                    </ListView.View>
-                </ListView>-->
                 <DataGrid GridLinesVisibility="None" Background="White"
                           x:Name="Programlist" AutoGenerateColumns="False"
                           ItemsSource="{Binding Source={StaticResource programsCollectionViewSource}}"
@@ -177,43 +124,6 @@
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="_Abandon" Command="{Binding Path=AbandonCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
-                <!--<ListView
-                      x:Name="Recipelist"
-      AlternationCount="2" 
-      ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Source={StaticResource subsCollectionViewSource}}"
-                      SelectedItem="{Binding Path=SelectedRecipe, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
-      >
-
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn 
-            Header="Id" 
-            DisplayMemberBinding="{Binding Path=Id}" 
-            />
-                            <GridViewColumn
-            Header="Progress"
-                                CellTemplate="{StaticResource ProgressBar}"
-            />
-                            <GridViewColumn 
-            Header="Temperature" 
-            DisplayMemberBinding="{Binding Path=Temperature}" 
-            />
-                            <GridViewColumn 
-            Header="Name" 
-            DisplayMemberBinding="{Binding Path=Name}" 
-            />
-                            <GridViewColumn 
-            Header="Start Time" 
-                                CellTemplate="{StaticResource StartTime}"
-            />
-                            <GridViewColumn 
-            Header="End Time" 
-                                CellTemplate="{StaticResource EndTime}"
-            />
-                        </GridView>
-                </ListView.View>
-            </ListView>-->
                 <DataGrid GridLinesVisibility="None" Background="White"
                           x:Name="Recipelist" AutoGenerateColumns="False"
                           ItemsSource="{Binding Source={StaticResource subsCollectionViewSource}}"
@@ -239,87 +149,6 @@
                     <Button Content="_View Data" Command="{Binding Path=ViewCommand}" Margin="0,5,5,0" Width="60"></Button>
                     <Button Content="_Add" Command="{Binding Path=AddCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
-                <!--<ListView
-                      x:Name="TestRecordList"
-      AlternationCount="2" 
-      ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=TestRecords}"
-                      SelectedItem="{Binding Path=SelectedTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
-      >
-
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn 
-            Header="Id" 
-            DisplayMemberBinding="{Binding Path=Id}" 
-            />
-                            <GridViewColumn Width="40"
-            Header=""
-                                CellTemplate="{StaticResource ProgressBar}"
-            />
-                            <GridViewColumn 
-            Header="Status" 
-            DisplayMemberBinding="{Binding Path=Status}" 
-            />
-                            <GridViewColumn 
-            Header="BatteryType" 
-            DisplayMemberBinding="{Binding Path=BatteryTypeStr}" 
-            />
-                            <GridViewColumn 
-            Header="Battery" 
-            DisplayMemberBinding="{Binding Path=BatteryStr}" 
-            />
-                            <GridViewColumn 
-            Header="Chamber" 
-            DisplayMemberBinding="{Binding Path=ChamberStr}" 
-            />
-                            <GridViewColumn 
-            Header="Tester" 
-            DisplayMemberBinding="{Binding Path=TesterStr}" 
-            />
-                            <GridViewColumn 
-            Header="Channel" 
-            DisplayMemberBinding="{Binding Path=ChannelStr}" 
-            />
-                            <GridViewColumn 
-            Header="Execute Time" 
-            DisplayMemberBinding="{Binding Path=StartTime}" 
-            />
-                            <GridViewColumn 
-            Header="Commit Time" 
-            DisplayMemberBinding="{Binding Path=EndTime}" 
-            />
-                            <GridViewColumn 
-            Header="Duration" 
-            DisplayMemberBinding="{Binding Path=Duration}" 
-            />
-                            <GridViewColumn 
-            Header="New Cycle" 
-            DisplayMemberBinding="{Binding Path=NewCycle}" 
-            />
-                            <GridViewColumn 
-            Header="Measurement Gain" 
-            DisplayMemberBinding="{Binding Path=MeasurementGain}" 
-            />
-                            <GridViewColumn 
-            Header="Measurement Offset" 
-            DisplayMemberBinding="{Binding Path=MeasurementOffset}" 
-            />
-                            <GridViewColumn 
-            Header="Trace Resistance" 
-            DisplayMemberBinding="{Binding Path=TraceResistance}" 
-            />
-                            <GridViewColumn 
-            Header="Capacity Difference" 
-            DisplayMemberBinding="{Binding Path=CapacityDifference}" 
-            />
-                            <GridViewColumn 
-            Header="Operator" 
-            DisplayMemberBinding="{Binding Path=Operator}" 
-            />
-                        </GridView>
-                    </ListView.View>
-                </ListView>-->
                 <DataGrid GridLinesVisibility="None" CanUserSortColumns="False" Background="White"
                           x:Name="TestRecordList" AutoGenerateColumns="False"
                           ItemsSource="{Binding Path=TestRecords}"
@@ -341,50 +170,32 @@
                 </DataGrid>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="2" Grid.Column="2" Header="Steps">
+        <GroupBox Grid.Row="2" Grid.Column="2" Header="Free Test Records">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="_Start" Command="{Binding Path=StartCommand}" Margin="0,5,5,0" Width="60"></Button>
-                    <Button Content="_End" Command="{Binding Path=EndCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="Attach" Command="{Binding Path=AttachCommand}" Margin="0,5,15,0" Width="100"></Button>
+                    <Button Content="_Direct Commit" Command="{Binding Path=DirectCommitFreeCommand}" Margin="0,5,15,0" Width="100"></Button>
+                    <Button Content="_Execute" Command="{Binding Path=ExecuteFreeCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Commit" Command="{Binding Path=CommitFreeCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Add" Command="{Binding Path=AddFreeCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
-                <!--<ListView
-                      x:Name="StepRuntimeList"
-      AlternationCount="2" 
-      ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=StepRuntimes}"
-                      SelectedItem="{Binding Path=SelectedStepRuntime, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
-      >
-
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn 
-            Header="Id" 
-            DisplayMemberBinding="{Binding Path=Id}" 
-            />
-                            <GridViewColumn 
-            Header="Step" 
-            DisplayMemberBinding="{Binding Path=Step}" 
-            />
-                            <GridViewColumn 
-            Header="Start Time" 
-                                CellTemplate="{StaticResource StartTime}"
-            />
-                            <GridViewColumn 
-            Header="End Time" 
-                                CellTemplate="{StaticResource EndTime}"
-            />
-                        </GridView>
-                    </ListView.View>
-                </ListView>-->
                 <DataGrid GridLinesVisibility="None" CanUserSortColumns="False" Background="White"
-                          x:Name="StepRuntimeList" AutoGenerateColumns="False"
-                          ItemsSource="{Binding Path=StepRuntimes}"
-                          SelectedItem="{Binding Path=SelectedStepRuntime, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                          x:Name="FreeTestRecordList" AutoGenerateColumns="False"
+                          ItemsSource="{Binding Path=FreeTestRecords}"
+                          SelectedItem="{Binding Path=SelectedFreeTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
-                        <DataGridTextColumn Header="Step" IsReadOnly="True" Binding="{Binding Path=Step}"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Progress" CellTemplate="{StaticResource ProgressBar}"></DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Status" IsReadOnly="True" Binding="{Binding Path=Status}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="BatteryType" IsReadOnly="True" Binding="{Binding Path=BatteryTypeStr}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Battery" IsReadOnly="True" Binding="{Binding Path=BatteryStr}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Chamber" IsReadOnly="True" Binding="{Binding Path=ChamberStr}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Tester" IsReadOnly="True" Binding="{Binding Path=TesterStr}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Channel" IsReadOnly="True" Binding="{Binding Path=ChannelStr}"></DataGridTextColumn>
                         <DataGridTemplateColumn Header="Start Time" CellTemplate="{StaticResource StartTime}"></DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="End Time" CellTemplate="{StaticResource EndTime}"></DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Duration" IsReadOnly="True" Binding="{Binding Path=Duration}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="New Cycle" IsReadOnly="True" Binding="{Binding Path=NewCycle}"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>

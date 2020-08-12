@@ -51,6 +51,8 @@ namespace BCLabManager.ViewModel
         private ProgramServiceClass _programService;
         private RecipeTemplateServiceClass _recipeTemplateService;
         private StepTemplateServiceClass _stepTemplateService;
+        private BatteryTypeServiceClass _batteryTypeService;
+        private TestRecordServiceClass _freeTestRecordService;
         #endregion // Fields
 
         #region Constructor
@@ -65,7 +67,9 @@ namespace BCLabManager.ViewModel
             BatteryServiceClass batteryService,
             TesterServiceClass testerService,
             ChannelServiceClass channelService,
-            ChamberServiceClass chamberService
+            ChamberServiceClass chamberService,
+            BatteryTypeServiceClass batteryTypeService,
+            TestRecordServiceClass freeTestRecordService
             )
         {
             _recipeTemplateService = recipeTemplateService;
@@ -79,11 +83,38 @@ namespace BCLabManager.ViewModel
             _testerService = testerService;
             _channelService = channelService;
             _chamberService = chamberService;
+            _batteryTypeService = batteryTypeService;
+            _freeTestRecordService = freeTestRecordService;
 
             foreach (var recipe in _programService.RecipeService.Items)
                 recipe.TestRecords.CollectionChanged += TestRecords_CollectionChanged;
 
             _programService.Items.CollectionChanged += Items_CollectionChanged;
+
+            CreateAllFreeTestRecords(_freeTestRecordService.Items);
+            _freeTestRecordService.Items.CollectionChanged += TRItems_CollectionChanged;
+        }
+
+        private void TRItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
+                    {
+                        var tr = item as TestRecord;
+                        this.FreeTestRecords.Add(new TestRecordViewModel(tr));
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    foreach (var item in e.OldItems)
+                    {
+                        var tr = item as TestRecord;
+                        var deletetarget = this.FreeTestRecords.SingleOrDefault(o => o.Id == tr.Id);
+                        this.FreeTestRecords.Remove(deletetarget);
+                    }
+                    break;
+            }
         }
 
         private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -994,7 +1025,7 @@ namespace BCLabManager.ViewModel
         }
         private void AddTestRecord()
         {
-            _programService.RecipeService.Add(SelectedRecipe._recipe);
+            _programService.RecipeService.AddTestRecord(SelectedRecipe._recipe);
         }
         private void Start()
         {
@@ -1075,6 +1106,373 @@ namespace BCLabManager.ViewModel
                     return false;
             }
         }
+
         #endregion //Private Helper
+
+
+        #region Free Test Records
+
+
+
+        RelayCommand _addFreeCommand;
+        RelayCommand _directCommitFreeCommand;
+        RelayCommand _executeFreeCommand;
+        RelayCommand _commitFreeCommand;
+        RelayCommand _attachCommand;
+
+
+        private void CreateAllFreeTestRecords(ObservableCollection<TestRecord> items)
+        {
+            List<TestRecordViewModel> all =
+                (from tr in items
+                 select new TestRecordViewModel(tr)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+
+            this.FreeTestRecords = new ObservableCollection<TestRecordViewModel>(all);     //再转换成Observable
+        }
+        public ObservableCollection<TestRecordViewModel> FreeTestRecords
+        {
+            get; set;
+        }
+
+        public TestRecordViewModel SelectedFreeTestRecord
+        {
+            get;
+            set;
+        }
+        public ICommand ExecuteFreeCommand
+        {
+            get
+            {
+                if (_executeFreeCommand == null)
+                {
+                    _executeFreeCommand = new RelayCommand(
+                        param => { this.ExecuteFree(); },
+                        param => this.CanExecuteFree
+                        );
+                }
+                return _executeFreeCommand;
+            }
+        }
+        public ICommand CommitFreeCommand
+        {
+            get
+            {
+                if (_commitFreeCommand == null)
+                {
+                    _commitFreeCommand = new RelayCommand(
+                        param => { this.CommitFree(); },
+                        param => this.CanCommitFree
+                        );
+                }
+                return _commitFreeCommand;
+            }
+        }
+        public ICommand DirectCommitFreeCommand
+        {
+            get
+            {
+                if (_directCommitFreeCommand == null)
+                {
+                    _directCommitFreeCommand = new RelayCommand(
+                        param => { this.DirectCommitFree(); },
+                        param => this.CanExecuteFree
+                        );
+                }
+                return _directCommitFreeCommand;
+            }
+        }
+
+        public ICommand AddFreeCommand
+        {
+            get
+            {
+                if (_addFreeCommand == null)
+                {
+                    _addFreeCommand = new RelayCommand(
+                        param => { this.AddFreeTestRecord(); },
+                        param => this.CanAddFree
+                        );
+                }
+                return _addFreeCommand;
+            }
+        }
+
+        public ICommand AttachCommand
+        {
+            get
+            {
+                if (_attachCommand == null)
+                {
+                    _attachCommand = new RelayCommand(
+                        param => { this.AttachTestRecord(); },
+                        param => this.CanAttach
+                        );
+                }
+                return _attachCommand;
+            }
+        }
+        private void ExecuteFree()
+        //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
+        {
+            var model = new TestRecord();
+            TestRecordExecuteFreeViewModel evm = new TestRecordExecuteFreeViewModel
+                (
+                //testRecord.Record,      //将model传给ExecuteViewModel      //??????????????????????????
+                model,
+                _batteryTypeService.Items,
+                _batteryService.Items,
+                _testerService.Items,
+                _channelService.Items,
+                _chamberService.Items
+                );
+            //evm.DisplayName = "Test-Execute";
+            var FreeTestRecordViewInstance = new ExecuteFreeView();
+            FreeTestRecordViewInstance.DataContext = evm;
+            FreeTestRecordViewInstance.ShowDialog();
+            if (evm.IsOK == true)
+            {
+                _freeTestRecordService.ExecuteFree(
+                    SelectedFreeTestRecord.Record,
+                    evm.Battery,
+                    evm.Chamber,
+                    evm.Tester.Name,
+                    evm.Channel,
+                    evm.StartTime,
+                    evm.MeasurementGain,
+                    evm.MeasurementOffset,
+                    evm.TraceResistance,
+                    evm.CapacityDifference,
+                    evm.Operator
+                    );
+            }
+        }
+        private bool CanExecuteFree
+        {
+            get { return SelectedFreeTestRecord != null && SelectedFreeTestRecord.Status == TestStatus.Waiting; }
+        }
+        private void CommitFree()
+        //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
+        {
+            TestRecordViewModel testRecord = SelectedFreeTestRecord;
+            //TestRecordClass m = new TestRecordClass();
+            //m.BatteryTypeStr = testRecord.Record.BatteryTypeStr;
+            //m.ProjectStr = testRecord.Record.ProjectStr;
+            //m.ProgramStr = testRecord.Record.ProgramStr;
+            //m.RecipeStr = testRecord.Record.RecipeStr;
+            TestRecordCommitFreeViewModel evm = new TestRecordCommitFreeViewModel
+                (
+                testRecord.Record      //??????????????????????????
+                                       //m
+                );
+            //evm.DisplayName = "Test-Commit";
+            var TestRecordCommitFreeViewInstance = new CommitFreeView();
+            TestRecordCommitFreeViewInstance.DataContext = evm;
+            TestRecordCommitFreeViewInstance.ShowDialog();
+            if (evm.IsOK == true)
+            {
+                try
+                {
+                    DateTime[] time = _testerService.GetTimeFromRawData(testRecord.Record.AssignedChannel.Tester.ITesterProcesser, evm.FileList);
+                    if (time != null)
+                    {
+                        Header header = new Header();
+                        header.TestTime = time[0].ToString("yyyy-MM-dd");
+                        header.Equipment = testRecord.Record.AssignedChannel.Tester.Manufacturer + " " + testRecord.TesterStr;
+                        header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufacturer;
+                        header.BatteryModel = SelectedProgram.Project.BatteryType.Name;
+                        header.CycleCount = evm.NewCycle.ToString();
+                        header.MeasurementGain = testRecord.MeasurementGain.ToString();
+                        header.MeasurementOffset = testRecord.MeasurementOffset.ToString();
+                        header.TraceResistance = testRecord.TraceResistance.ToString();
+                        header.CapacityDifference = testRecord.CapacityDifference.ToString();
+                        header.Tester = testRecord.Operator;
+                        _freeTestRecordService.CommitFree(testRecord.Record, evm.Comment, evm.FileList.ToList(), evm.IsRename, evm.NewName, time[0], time[1]);
+                    }
+                    else
+                    {
+                        Header header = new Header();
+                        header.Type = string.Empty;
+                        _freeTestRecordService.CommitFree(testRecord.Record, evm.Comment, evm.FileList.ToList(), evm.IsRename, evm.NewName, DateTime.MinValue, DateTime.MinValue);
+                    }
+                }
+                catch (Exception e)
+                {
+                    //_programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), DateTime.MinValue, DateTime.MinValue, SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, SelectedProgram.Description);
+                    MessageBox.Show(e.Message);
+                }
+            }
+        }
+        private bool CanCommitFree
+        {
+            get { return SelectedFreeTestRecord != null && SelectedFreeTestRecord.Status == TestStatus.Executing; }
+        }
+        private void DirectCommitFree()
+        //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
+        {
+            var model = new TestRecord();
+            TestRecordDirectCommitViewModel evm = new TestRecordDirectCommitViewModel
+                (
+                model,
+                SelectedProgram.Project.BatteryType,
+                _batteryService.Items,
+                _testerService.Items,
+                _channelService.Items,
+                _chamberService.Items,
+                _selectedProgram.Type,
+                    SelectedProgram.Name,
+                    $"{SelectedRecipe.Temperature}Deg-{SelectedRecipe.Name}"
+                );
+            evm.Temperature = _selectedRecipe.Temperature;
+            if (_selectedProgram._program.Type.Name == "EV")
+            {
+                if (_selectedProgram.Name.Contains("Dynamic"))
+                    evm.Current = 0;
+            }
+            else
+            {
+                var index = _selectedRecipe.Name.IndexOf('A');
+                if (index != -1)
+                {
+                    var currStr = _selectedRecipe.Name.Remove(index);
+                    try
+                    {
+                        var currInA = Convert.ToDouble(currStr);
+                        evm.Current = currInA * 1000;
+                    }
+                    catch (Exception e)
+                    {
+                        //MessageBox.Show("Error when converting");
+                        //return;
+                    }
+                }
+            }
+            //evm.DisplayName = "Test-Commit";
+            var TestRecordDirectCommitViewInstance = new DirectCommitView();
+            TestRecordDirectCommitViewInstance.DataContext = evm;
+            TestRecordDirectCommitViewInstance.ShowDialog();
+            if (evm.IsOK == true)
+            {
+                try
+                {
+                    DateTime[] time = _testerService.GetTimeFromRawData(evm.Channel.Tester.ITesterProcesser, evm.FileList);
+                    var st = new DateTime();
+                    var et = new DateTime();
+                    if (time != null)
+                    {
+                        st = time[0];
+                        et = time[1];
+                    }
+                    else
+                    {
+                        st = DateTime.MinValue;
+                        et = DateTime.MinValue;
+                    }
+                    _programService.RecipeService.TestRecordService.Execute(
+                    SelectedTestRecord.Record,
+                    SelectedProgram.Project.BatteryType.Name,
+                    SelectedProgram.Project.Name,
+                    evm.Battery, evm.Chamber,
+                    evm.Tester.Name,
+                    evm.Channel,
+                    evm.Current,
+                    evm.Temperature,
+                    st,
+                    evm.MeasurementGain,
+                    evm.MeasurementOffset,
+                    evm.TraceResistance,
+                    evm.CapacityDifference,
+                    evm.Operator,
+                    SelectedProgram.Name,
+                    $"{SelectedRecipe.Temperature}Deg-{SelectedRecipe.Name}"    //Use this to represent RecipeStr
+                    );
+                    _batteryService.Execute(evm.Battery, st, SelectedProgram.Name, SelectedRecipe.Name);
+                    _channelService.Execute(evm.Channel, st, SelectedProgram.Name, SelectedRecipe.Name);
+                    if (evm.Chamber != null)
+                        _chamberService.Execute(evm.Chamber, st, SelectedProgram.Name, SelectedRecipe.Name);
+
+                    _batteryService.Commit(evm.Battery, et, SelectedProgram.Name, SelectedRecipe.Name, evm.NewCycle);
+                    _channelService.Commit(evm.Channel, et, SelectedProgram.Name, SelectedRecipe.Name);
+                    if (evm.Chamber != null)
+                        _chamberService.Commit(evm.Chamber, et, SelectedProgram.Name, SelectedRecipe.Name);
+                    Header header = new Header();
+                    if (time != null)
+                    {
+                        header.Type = SelectedProgram.Type.ToString();
+                        header.TestTime = time[0].ToString("yyyy-MM-dd");
+                        header.Equipment = evm.Channel.Tester.Manufacturer + " " + evm.Channel.Tester.Name;
+                        header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufacturer;
+                        header.BatteryModel = SelectedProgram.Project.BatteryType.Name;
+                        header.CycleCount = evm.NewCycle.ToString();
+                        header.Temperature = model.Temperature.ToString();
+                        header.Current = model.Current.ToString();
+                        header.MeasurementGain = model.MeasurementGain.ToString();
+                        header.MeasurementOffset = model.MeasurementOffset.ToString();
+                        header.TraceResistance = model.TraceResistance.ToString();
+                        header.CapacityDifference = model.CapacityDifference.ToString();
+                        header.AbsoluteMaxCapacity = SelectedProgram.Project.AbsoluteMaxCapacity.ToString();//.BatteryType.TypicalCapacity.ToString();
+                        header.LimitedChargeVoltage = SelectedProgram.Project.LimitedChargeVoltage.ToString();
+                        //header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
+                        header.CutoffDischargeVoltage = SelectedProgram.Project.BatteryType.CutoffDischargeVoltage.ToString();
+                        header.Tester = model.Operator;
+                    }
+                    else
+                    {
+                        header.Type = string.Empty;
+                    }
+                    SelectedTestRecord.NewCycle = evm.NewCycle;
+                    _programService.RecipeService.TestRecordService.Commit(
+                    SelectedTestRecord.Record, evm.Comment, evm.FileList.ToList(), evm.IsRename, evm.NewName, st, et, SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
+                }
+                catch (Exception e)
+                {
+                    //_programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), DateTime.MinValue, DateTime.MinValue, SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, SelectedProgram.Description);
+                    MessageBox.Show(e.Message);
+                }
+            }
+        }
+        private bool CanAddFree
+        {
+            get { return true; }
+        }
+        private void AddFreeTestRecord()
+        {
+            _freeTestRecordService.SuperAdd(new TestRecord());
+        }
+        private void AttachTestRecord()
+        {
+            TestRecordViewModel testRecord = SelectedFreeTestRecord;
+            TestRecordAttachViewModel evm = new TestRecordAttachViewModel
+                (
+                testRecord.Record,
+                SelectedFreeTestRecord.BatteryTypeStr,
+                _projectService.Items,
+                _programService.Items,
+                _programService.RecipeService.Items
+                );
+            //evm.DisplayName = "Test-Commit";
+            var TestRecordAttachViewInstance = new AttachView();
+            TestRecordAttachViewInstance.DataContext = evm;
+            TestRecordAttachViewInstance.ShowDialog();
+            if (evm.IsOK == true)
+            {
+                try
+                {
+                    //_freeTestRecordService.Attach(testRecord.Record, evm.IsRename, evm.NewName, evm.Recipe);
+                    _freeTestRecordService.Detach(testRecord.Record);
+                    _programService.RecipeService.Attach(evm.Recipe, testRecord.Record);
+                    _programService.RecipeService.TestRecordService.UpdateFreeTestRecord(testRecord.Record, evm.IsRename, evm.NewName, testRecord.Record.BatteryTypeStr, evm.Project.Name, evm.Program.Name, evm.Recipe.Name);
+                }
+                catch (Exception e)
+                {
+                    //_programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), DateTime.MinValue, DateTime.MinValue, SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, SelectedProgram.Description);
+                    MessageBox.Show(e.Message);
+                }
+            }
+        }
+        private bool CanAttach
+        {
+            get { return SelectedFreeTestRecord != null && SelectedFreeTestRecord.Status == TestStatus.Completed; }
+        }
+        #endregion
     }
 }

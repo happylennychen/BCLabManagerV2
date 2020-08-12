@@ -175,5 +175,9 @@ namespace BCLabManager.Model
             ObservableCollection<Recipe> clonelist = new ObservableCollection<Recipe>(all);
             return new Program(this.Name, this.Project, this.Type, this.Requester, this.RequestTime, this.Description, clonelist);
         }
+        public override string ToString()
+        {
+            return this.Name;
+        }
     }
 }

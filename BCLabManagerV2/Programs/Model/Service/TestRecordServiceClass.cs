@@ -1,4 +1,4 @@
-﻿//#define Test
+﻿#define Test
 using BCLabManager.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -120,7 +120,7 @@ namespace BCLabManager.Model
             {
                 if (isRename)
                 {
-                    temptestfilepath = RenameRawDataAndCopyToFolder(rawDataList[0], temproot, newName);
+                    temptestfilepath = RenameRawDataAndCopyToFolder(rawDataList[0], $@"{root}\{GlobalSettings.TestDataFolderName}", newName);
                     testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
                     CopyToServer(temptestfilepath, testRecord.TestFilePath);
                 }
@@ -181,7 +181,7 @@ namespace BCLabManager.Model
 
         private string RenameRawDataAndCopyToFolder(string rawDataName, string root, string newName)
         {
-            var newPath = Path.Combine($@"{root}\{GlobalSettings.TestDataFolderName}", newName + Path.GetExtension(rawDataName));
+            var newPath = Path.Combine(root, newName + Path.GetExtension(rawDataName));
             File.Copy(rawDataName, newPath, true);
             //rawDataName[0] = newPath;
             return newPath;
@@ -270,6 +270,101 @@ namespace BCLabManager.Model
                 testRecord.TestFilePath += "_ABANDONED";
             }
             DatabaseUpdate(testRecord);
+        }
+
+        internal void ExecuteFree(TestRecord testRecord, Battery battery, Chamber chamber, string testerStr, Channel channel, DateTime startTime, double measurementGain, double measurementOffset, double traceResistance, double capacityDifference, string @operator)
+        {
+            testRecord.BatteryTypeStr = battery.BatteryType.Name;
+            testRecord.BatteryStr = battery.Name;
+            if (chamber != null)
+                testRecord.ChamberStr = chamber.Name;
+            testRecord.TesterStr = testerStr;
+            testRecord.ChannelStr = channel.Name;
+            testRecord.StartTime = startTime;
+            testRecord.MeasurementGain = measurementGain;
+            testRecord.MeasurementOffset = measurementOffset;
+            testRecord.TraceResistance = traceResistance;
+            testRecord.CapacityDifference = capacityDifference;
+            testRecord.Operator = @operator;
+            testRecord.AssignedBattery = battery;
+            testRecord.AssignedChamber = chamber;
+            testRecord.AssignedChannel = channel;
+            testRecord.Status = TestStatus.Executing;
+            DatabaseUpdate(testRecord);
+        }
+
+        internal void CommitFree(TestRecord testRecord, string comment, List<string> rawDataList, bool isRename, string newName, DateTime startTime, DateTime completeTime)
+        {
+            testRecord.Comment = comment;
+            testRecord.StartTime = startTime;
+            testRecord.EndTime = completeTime;
+            testRecord.AssignedBattery = null;
+            testRecord.AssignedChamber = null;
+            testRecord.AssignedChannel = null;
+            testRecord.Status = TestStatus.Completed;
+            string root = $@"{GlobalSettings.RootPath}{GlobalSettings.TempDataFolderName}";
+            string temproot = $@"{GlobalSettings.TempraryFolder}{GlobalSettings.TempDataFolderName}";
+            string temptestfilepath = string.Empty;
+            if (rawDataList.Count > 1)
+            {
+                temptestfilepath = CreateTestFile(rawDataList, temproot, newName);
+                testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
+                CopyToServer(temptestfilepath, testRecord.TestFilePath);
+            }
+            else
+            {
+                if (isRename)
+                {
+                    temptestfilepath = RenameRawDataAndCopyToFolder(rawDataList[0], temproot, newName);
+                    testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
+                    CopyToServer(temptestfilepath, testRecord.TestFilePath);
+                }
+                else
+                {
+                    temptestfilepath = CopyToFolder(rawDataList[0], temproot);
+                    testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
+                    CopyToServer(temptestfilepath, testRecord.TestFilePath);
+                }
+            }
+            if (testRecord.TestFilePath == "")
+            {
+                MessageBox.Show("Test File Path Empty!");
+                return;
+            }
+            SuperUpdate(testRecord);
+        }
+
+        internal void Detach(TestRecord record)
+        {
+            Items.Remove(record);
+        }
+
+        internal void UpdateFreeTestRecord(TestRecord testRecord, bool isRename, string newName, string batteryType, string projectName, string programName, string recipeName)
+        {
+            testRecord.ProgramStr = programName;
+            testRecord.RecipeStr = recipeName;
+            string root = $@"{GlobalSettings.RootPath}{batteryType}\{projectName}";
+            string temproot = $@"{GlobalSettings.TempraryFolder}{batteryType}\{projectName}";
+            string temptestfilepath = string.Empty;
+            if (isRename)
+            {
+                var oldPath = Path.Combine($@"{GlobalSettings.TempraryFolder}{GlobalSettings.TempDataFolderName}", Path.GetFileName(testRecord.TestFilePath));
+                temptestfilepath = RenameRawDataAndCopyToFolder(oldPath, $@"{temproot}\{GlobalSettings.TestDataFolderName}", Path.GetFileNameWithoutExtension(newName));
+                testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
+                CopyToServer(temptestfilepath, testRecord.TestFilePath);
+            }
+            else
+            {
+                temptestfilepath = CopyToFolder(testRecord.TestFilePath, temproot);
+                testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
+                CopyToServer(temptestfilepath, testRecord.TestFilePath);
+            }
+            if (testRecord.TestFilePath == "")
+            {
+                MessageBox.Show("Test File Path Empty!");
+                return;
+            }
+            SuperUpdate(testRecord);
         }
     }
 }
