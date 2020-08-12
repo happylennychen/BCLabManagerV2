@@ -1436,7 +1436,9 @@ namespace BCLabManager.ViewModel
         }
         private void AddFreeTestRecord()
         {
-            _freeTestRecordService.SuperAdd(new TestRecord());
+            var tr = new TestRecord();
+            _freeTestRecordService.SuperAdd(tr);
+            _programService.RecipeService.TestRecordService.Items.Add(tr);
         }
         private void AttachTestRecord()
         {

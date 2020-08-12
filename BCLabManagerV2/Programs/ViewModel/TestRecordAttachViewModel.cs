@@ -195,9 +195,9 @@ namespace BCLabManager.ViewModel
                 }
                 var array = Path.GetFileName(_record.TestFilePath).Split('_').ToList();
                 if (array.Count == 5)
-                    NewName = $@"{_program.Name}_{_recipe.Name}_{array[2]}_{array[3]}_{array[4]}";
+                    NewName = $@"{_program.Name}_{_recipe.Temperature}Deg-{_recipe.Name}_{array[2]}_{array[3]}_{array[4]}";
                 else if (array.Count == 6)
-                    NewName = $@"{_program.Name}_{_recipe.Name}_{array[2]}_{array[3]}_{array[4]}_{array[5]}";
+                    NewName = $@"{_program.Name}_{_recipe.Temperature}Deg-{_recipe.Name}_{array[2]}_{array[3]}_{array[4]}_{array[5]}";
             }
         }
 

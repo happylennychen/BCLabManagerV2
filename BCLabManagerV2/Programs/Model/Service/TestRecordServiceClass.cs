@@ -1,4 +1,4 @@
-﻿#define Test
+﻿//#define Test
 using BCLabManager.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -316,7 +316,7 @@ namespace BCLabManager.Model
                 if (isRename)
                 {
                     temptestfilepath = RenameRawDataAndCopyToFolder(rawDataList[0], temproot, newName);
-                    testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
+                    testRecord.TestFilePath = $@"{root}\{Path.GetFileName(temptestfilepath)}";
                     CopyToServer(temptestfilepath, testRecord.TestFilePath);
                 }
                 else
@@ -341,6 +341,7 @@ namespace BCLabManager.Model
 
         internal void UpdateFreeTestRecord(TestRecord testRecord, bool isRename, string newName, string batteryType, string projectName, string programName, string recipeName)
         {
+            testRecord.ProjectStr = projectName;
             testRecord.ProgramStr = programName;
             testRecord.RecipeStr = recipeName;
             string root = $@"{GlobalSettings.RootPath}{batteryType}\{projectName}";

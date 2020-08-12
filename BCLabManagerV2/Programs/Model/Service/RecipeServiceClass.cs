@@ -121,7 +121,6 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
             recipe.TestRecords.Add(record);
-            TestRecordService.Items.Add(record);
         }
     }
 }
