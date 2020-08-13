@@ -120,7 +120,7 @@ namespace BCLabManager.Model
             {
                 if (isRename)
                 {
-                    temptestfilepath = RenameRawDataAndCopyToFolder(rawDataList[0], $@"{root}\{GlobalSettings.TestDataFolderName}", newName);
+                    temptestfilepath = RenameRawDataAndCopyToFolder(rawDataList[0], $@"{temproot}\{GlobalSettings.TestDataFolderName}", newName);
                     testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
                     CopyToServer(temptestfilepath, testRecord.TestFilePath);
                 }

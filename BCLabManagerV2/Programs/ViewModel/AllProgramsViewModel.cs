@@ -1437,6 +1437,7 @@ namespace BCLabManager.ViewModel
         private void AddFreeTestRecord()
         {
             var tr = new TestRecord();
+            tr.NewCycle = 0;
             _freeTestRecordService.SuperAdd(tr);
             _programService.RecipeService.TestRecordService.Items.Add(tr);
         }
@@ -1460,6 +1461,7 @@ namespace BCLabManager.ViewModel
                 try
                 {
                     //_freeTestRecordService.Attach(testRecord.Record, evm.IsRename, evm.NewName, evm.Recipe);
+                    SelectedRecipe = SelectedProgram.Recipes.SingleOrDefault(o => o.Id == evm.Recipe.Id);
                     _freeTestRecordService.Detach(testRecord.Record);
                     _programService.RecipeService.Attach(evm.Recipe, testRecord.Record);
                     _programService.RecipeService.TestRecordService.UpdateFreeTestRecord(testRecord.Record, evm.IsRename, evm.NewName, testRecord.Record.BatteryTypeStr, evm.Project.Name, evm.Program.Name, evm.Recipe.Name);

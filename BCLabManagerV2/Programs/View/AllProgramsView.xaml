@@ -127,7 +127,7 @@
                 <DataGrid GridLinesVisibility="None" Background="White"
                           x:Name="Recipelist" AutoGenerateColumns="False"
                           ItemsSource="{Binding Source={StaticResource subsCollectionViewSource}}"
-                          SelectedItem="{Binding Path=SelectedRecipe, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                          SelectedItem="{Binding Path=SelectedRecipe, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
                         <DataGridTemplateColumn Header="Progress" CellTemplate="{StaticResource ProgressBar}"></DataGridTemplateColumn>
