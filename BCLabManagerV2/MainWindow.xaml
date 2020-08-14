@@ -6,7 +6,10 @@
         Title="BC Lab Manager v0.1.7.3" Height="855" Width="1600">
     <Window.Resources>
     </Window.Resources>
-    <Grid>
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Load Pseudocode" Click="MenuItem_Click"></MenuItem>
+        </Menu>
         <TabControl x:Name="MainTab">
             <TabItem Header="Dashboard">
                 <v:DashBoardView x:Name="DashBoardViewInstance"></v:DashBoardView>
@@ -103,5 +106,5 @@
                 <v:AllProductsView x:Name="AllProductsViewInstance"></v:AllProductsView>
             </TabItem>-->
         </TabControl>
-    </Grid>
+    </DockPanel>
 </Window>

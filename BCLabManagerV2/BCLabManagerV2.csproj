@@ -347,6 +347,7 @@
     <Compile Include="Programs\View\ExecuteFreeView.xaml.cs">
       <DependentUpon>ExecuteFreeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\PseudocodeProcesser.cs" />
     <Compile Include="Settings\Model\Service\ProjectSettingServieClass.cs" />
     <Compile Include="Settings\Model\Service\TableMakerProductTypeServiceClass.cs" />
     <Compile Include="Settings\ViewModel\AllProjectSettingsViewModel.cs" />

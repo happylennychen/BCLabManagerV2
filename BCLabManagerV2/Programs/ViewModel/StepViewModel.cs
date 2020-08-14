@@ -130,7 +130,7 @@ namespace BCLabManager.ViewModel
             {
                 List<CompareMarkEnum> all = new List<CompareMarkEnum>();
                 all.Add(CompareMarkEnum.NA);
-                all.Add(CompareMarkEnum.SmallThan);
+                all.Add(CompareMarkEnum.SmallerThan);
                 all.Add(CompareMarkEnum.LargerThan);
 
                 return all;

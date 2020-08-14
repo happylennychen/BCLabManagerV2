@@ -1,4 +1,4 @@
-﻿//#define Migrate
+﻿#define Migrate
 //#define Seed
 #define Show
 using System;
@@ -21,6 +21,7 @@ using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Collections.ObjectModel;
 using BCLabManager.View;
+using Microsoft.Win32;
 
 namespace BCLabManager
 {
@@ -186,6 +187,8 @@ namespace BCLabManager
                 //ProgramService.RecipeService.StepRuntimeService.StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
                 FreeTestRecordService.Items = new ObservableCollection<TestRecord>(uow.TestRecords.GetAllFreeTestRecords());
+
+                ProgramService.RecipeTemplateService = RecipeTemplateService;
             }
         }
         void CreateViewModels()
@@ -271,6 +274,18 @@ namespace BCLabManager
             this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定
 
             this.DashBoardViewInstance.DataContext = dashBoardViewModel;
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog();
+            dialog.DefaultExt = ".xml";
+            dialog.Title = "Load Pseudocode";
+            //dialog.Multiselect = true;
+            if (dialog.ShowDialog() == true)
+            {
+                PseudocodeProcesser.Load(dialog.FileName,RecipeTemplateService, ProgramService, ProjectService, ProgramTypeService);
+            }
         }
     }
 }

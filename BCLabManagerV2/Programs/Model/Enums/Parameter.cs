@@ -4,7 +4,9 @@
     {
         VOLTAGE,
         CURRENT,
+        TEMPERATURE,
         POWER,
-        TIME
+        TIME,
+        NA
     }
 }

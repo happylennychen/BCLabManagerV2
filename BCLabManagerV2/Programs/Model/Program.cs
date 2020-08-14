@@ -114,7 +114,7 @@ namespace BCLabManager.Model
             get { return _project; }
             set { SetProperty(ref _project, value); }
         }
-        private List<int> _temperatures;
+        private List<int> _temperatures = new List<int>();
         public List<int> Temperatures
         {
             get { return _temperatures; }
@@ -126,7 +126,7 @@ namespace BCLabManager.Model
         //    get { return _recipeTemplates; }
         //    set { SetProperty(ref _recipeTemplates, value); }
         //}
-        private List<string> _recipeTemplates;
+        private List<string> _recipeTemplates = new List<string>();
         public List<string> RecipeTemplates
         {
             get { return _recipeTemplates; }
@@ -178,6 +178,25 @@ namespace BCLabManager.Model
         public override string ToString()
         {
             return this.Name;
+        }
+
+        internal void BuildRecipes(List<RecipeTemplate> _recipeTemplates)
+        {
+            foreach (var temperature in this.Temperatures)
+            {
+                foreach (var rectempStr in this.RecipeTemplates)
+                {
+                    var rectemp = _recipeTemplates.SingleOrDefault(o => o.Name == rectempStr);
+                    var model = new Recipe(rectemp, this.Project.BatteryType);
+                    model.Temperature = temperature;
+                    this.Recipes.Add(model);
+                }
+            }
+            foreach (var sub in this.Recipes)
+            {
+                foreach (var tr in sub.TestRecords)
+                    tr.ProgramStr = this.Name;
+            }
         }
     }
 }

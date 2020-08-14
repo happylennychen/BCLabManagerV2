@@ -176,7 +176,7 @@ namespace BCLabManager.ViewModel
 
         public ObservableCollection<BatteryType> AllBatteryTypes
         {
-            get;set;
+            get; set;
         }
 
         /// <summary>
@@ -238,7 +238,8 @@ namespace BCLabManager.ViewModel
             //_batterytypeRepository.AddItem(_batterytype);
 
             //RaisePropertyChanged("DisplayName");
-            _project.VoltagePoints = VoltagePoints.Split(',').Select(o=>Convert.ToInt32(o)).ToList();
+            if (VoltagePoints!= null && VoltagePoints != string.Empty)
+                _project.VoltagePoints = VoltagePoints.Split(',').Select(o => Convert.ToInt32(o)).ToList();
             IsOK = true;
         }
 

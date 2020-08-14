@@ -16,6 +16,7 @@ namespace BCLabManager.Model
         public ObservableCollection<Program> Items { get; set; }
 
         public RecipeServiceClass RecipeService { get; set; } = new RecipeServiceClass();
+        public RecipeTemplateServiceClass RecipeTemplateService { get; set; } = new RecipeTemplateServiceClass();
         public void SuperAdd(Program item)
         {
             DomainAdd(item);

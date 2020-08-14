@@ -48,7 +48,7 @@ namespace BCLabManager.Model
             get { return _action; }
             set { SetProperty(ref _action, value); }
         }
-        private ObservableCollection<CutOffCondition> _cutOffConditions;
+        private ObservableCollection<CutOffCondition> _cutOffConditions = new ObservableCollection<CutOffCondition>();
         public ObservableCollection<CutOffCondition> CutOffConditions
         {
             get { return _cutOffConditions; }

@@ -21,6 +21,8 @@ namespace BCLabManager.ViewModel
         public Program _program;            //为了AllProgramsViewModel中的Edit，不得不开放给viewmodel。以后再想想有没有别的办法。
         ObservableCollection<Project> _projects;
         ObservableCollection<ProgramType> _programTypes;
+        private ObservableCollection<RecipeTemplate> _recipeTemplates;
+
         //RecipeTemplateViewModel _selectedRecipeTemplate;
         //RecipeViewModel _selectedRecipe;
         //RecipeTemplateViewModel _selectedChoosenRecipeTemplate;
@@ -42,6 +44,7 @@ namespace BCLabManager.ViewModel
             _program = programmodel;
             _projects = projects;
             _programTypes = programTypes;
+            _recipeTemplates = RecipeTemplates;
             this.CreateAllRecipeTemplates(RecipeTemplates);
             this.CreateRecipes();
         }
@@ -289,21 +292,22 @@ namespace BCLabManager.ViewModel
         {
             _program.Temperatures = GetTemperatureList(Temperatures);
             _program.RecipeTemplates = AllRecipeTemplates.Where(o => o.IsSelected).Select(o => o._recipeTemplate.Name).ToList();
-            foreach (var temperature in _program.Temperatures)
-            {
-                var query = AllRecipeTemplates.Where(o => o.IsSelected).Select(o => o._recipeTemplate).ToList();
-                foreach (var rectemp in query)
-                {
-                    var model = new Recipe(rectemp, Project.BatteryType);
-                    model.Temperature = temperature;
-                    _program.Recipes.Add(model);
-                }
-            }
-            foreach (var sub in _program.Recipes)
-            {
-                foreach (var tr in sub.TestRecords)
-                    tr.ProgramStr = this.Name;
-            }
+            _program.BuildRecipes(_recipeTemplates.ToList());
+            //foreach (var temperature in _program.Temperatures)
+            //{
+            //    var query = AllRecipeTemplates.Where(o => o.IsSelected).Select(o => o._recipeTemplate).ToList();
+            //    foreach (var rectemp in query)
+            //    {
+            //        var model = new Recipe(rectemp, Project.BatteryType);
+            //        model.Temperature = temperature;
+            //        _program.Recipes.Add(model);
+            //    }
+            //}
+            //foreach (var sub in _program.Recipes)
+            //{
+            //    foreach (var tr in sub.TestRecords)
+            //        tr.ProgramStr = this.Name;
+            //}
             IsOK = true;
         }
 

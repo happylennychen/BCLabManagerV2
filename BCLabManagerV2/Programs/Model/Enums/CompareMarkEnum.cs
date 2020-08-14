@@ -4,6 +4,7 @@
     {
         NA,
         LargerThan,
-        SmallThan
+        SmallerThan,
+        EqualTo
     }
 }

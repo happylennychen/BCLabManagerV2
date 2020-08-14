@@ -5,6 +5,7 @@
         NEXT,
         END,
         INDEX,
-        LOOP
+        LOOP,
+        NA
     }
 }

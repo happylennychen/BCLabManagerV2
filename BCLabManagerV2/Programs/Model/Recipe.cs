@@ -196,7 +196,7 @@ namespace BCLabManager.Model
                 if (capacity1 > capacity2)
                     return true;
             }
-            else if (compareMark == CompareMarkEnum.SmallThan)
+            else if (compareMark == CompareMarkEnum.SmallerThan)
             {
                 if (capacity1 < capacity2)
                     return true;
