@@ -247,6 +247,7 @@ namespace BCLabManager
                 var xmlRecipes = xmlProgram.Descendants("Recipes").Elements();
                 if (xmlRecipes != null)
                 {
+                    var dic = new Dictionary<string, int>();
                     foreach (var xmlRec in xmlRecipes)
                     {
                         if (xmlRec.Attribute("Template") == null)
@@ -261,9 +262,13 @@ namespace BCLabManager
                             continue;
                         }
                         program.RecipeTemplates.Add(recT.Name);
+                        var count = GetIntergerFromNode(xmlRec, "Count");
+                        if (count == 0)
+                            count = 1;
+                        dic.Add(recT.Name, count);
                     }
+                    program.BuildRecipes(recipeTemplateService.Items.ToList(), dic);
                 }
-                program.BuildRecipes(recipeTemplateService.Items.ToList());
             }
             catch (Exception e)
             {

@@ -292,7 +292,15 @@ namespace BCLabManager.ViewModel
         {
             _program.Temperatures = GetTemperatureList(Temperatures);
             _program.RecipeTemplates = AllRecipeTemplates.Where(o => o.IsSelected).Select(o => o._recipeTemplate.Name).ToList();
-            _program.BuildRecipes(_recipeTemplates.ToList());
+            var dic = new Dictionary<string, int>();
+            foreach (var recVM in AllRecipeTemplates)
+            {
+                if(recVM.IsSelected)
+                {
+                    dic.Add(recVM.Name, recVM.Count);
+                }
+            }
+            _program.BuildRecipes(_recipeTemplates.ToList(), dic);
             //foreach (var temperature in _program.Temperatures)
             //{
             //    var query = AllRecipeTemplates.Where(o => o.IsSelected).Select(o => o._recipeTemplate).ToList();

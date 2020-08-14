@@ -180,16 +180,20 @@ namespace BCLabManager.Model
             return this.Name;
         }
 
-        internal void BuildRecipes(List<RecipeTemplate> _recipeTemplates)
+        internal void BuildRecipes(List<RecipeTemplate> _recipeTemplates, Dictionary<string, int> dic)
         {
             foreach (var temperature in this.Temperatures)
             {
                 foreach (var rectempStr in this.RecipeTemplates)
                 {
                     var rectemp = _recipeTemplates.SingleOrDefault(o => o.Name == rectempStr);
-                    var model = new Recipe(rectemp, this.Project.BatteryType);
-                    model.Temperature = temperature;
-                    this.Recipes.Add(model);
+                    var count = dic[rectemp.Name];
+                    for (int i = 0; i < count; i++)
+                    {
+                        var model = new Recipe(rectemp, this.Project.BatteryType);
+                        model.Temperature = temperature;
+                        this.Recipes.Add(model);
+                    }
                 }
             }
             foreach (var sub in this.Recipes)
