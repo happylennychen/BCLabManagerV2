@@ -94,6 +94,20 @@ namespace BCLabManager.ViewModel
                 return _step.Action;
             }
         }
+        public string Loop1Label
+        {
+            get
+            {
+                return _step.Loop1Label;
+            }
+        }
+        public string Loop2Label
+        {
+            get
+            {
+                return _step.Loop2Label;
+            }
+        }
         public ObservableCollection<CutOffConditionViewModel> CutOffConditions
         { get; set; }
         #endregion // Customer Properties

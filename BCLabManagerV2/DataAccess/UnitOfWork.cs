@@ -24,6 +24,7 @@ namespace BCLabManager.DataAccess
         public IStepTemplateRepository StepTemplates { get; private set; }
         public IStepRepository Steps { get; private set; }
         public IStepV2Repository StepV2s { get; private set; }
+        public ITesterActionRepository TesterActions { get; private set; }
         public ICutOffConditionRepository CutOffConditions { get; private set; }
         public IStepRuntimeRepository StepRuntimes { get; private set; }
         public IRecipeTemplateRepository RecipeTemplates { get; private set; }
@@ -40,6 +41,7 @@ namespace BCLabManager.DataAccess
             TestRecords = new TestRecordRepository(_context);
             Steps = new StepRepository(_context);
             StepV2s = new StepV2Repository(_context);
+            TesterActions = new TesterActionRepository(_context);
             CutOffConditions = new CutOffConditionRepository(_context);
             StepTemplates = new StepTemplateRepository(_context);
             StepRuntimes = new StepRuntimeRepository(_context);

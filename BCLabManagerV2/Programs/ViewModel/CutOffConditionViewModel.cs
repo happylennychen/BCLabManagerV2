@@ -42,28 +42,60 @@ namespace BCLabManager.ViewModel
         public int Id
         {
             get { return _coc.Id; }
-            set
-            {
-                if (value == _coc.Id)
-                    return;
+            //set
+            //{
+            //    if (value == _coc.Id)
+            //        return;
 
-                _coc.Id = value;
+            //    _coc.Id = value;
 
-                RaisePropertyChanged("Id");
-            }
+            //    RaisePropertyChanged("Id");
+            //}
         }
         public Parameter Parameter
         {
             get { return _coc.Parameter; }
-            set
-            {
-                if (value == _coc.Parameter)
-                    return;
+            //set
+            //{
+            //    if (value == _coc.Parameter)
+            //        return;
 
-                _coc.Parameter = value;
+            //    _coc.Parameter = value;
 
-                RaisePropertyChanged("Parameter");
-            }
+            //    RaisePropertyChanged("Parameter");
+            //}
+        }
+        public CompareMarkEnum Mark
+        {
+            get { return _coc.Mark; }
+        }
+        public int Value
+        {
+            get { return _coc.Value; }
+        }
+        public JumpType JumpType
+        {
+            get { return _coc.JumpType; }
+        }
+        public int Index
+        {
+            get { return _coc.Index; }
+        }
+        public string Loop1Target
+        {
+            get { return _coc.Loop1Target; }
+        }
+        public int Loop1Count
+        {
+            get { return _coc.Loop1Count; }
+        }
+        public string Loop2Target
+        {
+            get { return _coc.Loop2Target; }
+        }
+        public int Loop2Count
+        {
+            get { return _coc.Loop2Count; }
         }
         #endregion // Customer Properties
     }

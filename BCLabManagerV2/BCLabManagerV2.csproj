@@ -290,11 +290,13 @@
     <Compile Include="Assets\Model\TesterProcessers\Chroma17200Processer.cs" />
     <Compile Include="Assets\Model\TesterProcessers\ZKEEBC_X_Processer.cs" />
     <Compile Include="DataAccess\ICutOffConditionRepository.cs" />
+    <Compile Include="DataAccess\ITesterActionRepository.cs" />
     <Compile Include="DataAccess\IStepV2Repository.cs" />
     <Compile Include="DataAccess\ProjectSettingRepository.cs" />
     <Compile Include="DataAccess\IProjectSettingRepository.cs" />
     <Compile Include="DataAccess\ITableMakerProductRepository.cs" />
     <Compile Include="DataAccess\CutOffConditionRepository.cs" />
+    <Compile Include="DataAccess\TesterActionRepository.cs" />
     <Compile Include="DataAccess\StepV2Repository.cs" />
     <Compile Include="DataAccess\TableMakerProductRepository.cs" />
     <Compile Include="DataAccess\ITableMakerProductTypeRepository.cs" />
@@ -338,6 +340,7 @@
     <Compile Include="Programs\Model\Enums\JumpType.cs" />
     <Compile Include="Programs\Model\Protection.cs" />
     <Compile Include="Programs\Model\Service\CutOffConditionServiceClass.cs" />
+    <Compile Include="Programs\Model\Service\TesterActionServiceClass.cs" />
     <Compile Include="Programs\Model\Service\StepV2ServiceClass.cs" />
     <Compile Include="Programs\Model\StepV2.cs" />
     <Compile Include="Programs\Model\TesterAction.cs" />

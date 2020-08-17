@@ -76,6 +76,7 @@ namespace BCLabManager
         public RecipeTemplateServiceClass RecipeTemplateService { get; set; } = new RecipeTemplateServiceClass();
         public StepServiceClass StepService { get; set; } = new StepServiceClass();
         public StepV2ServiceClass StepV2Service { get; set; } = new StepV2ServiceClass();
+        public TesterActionServiceClass TesterActionService { get; set; } = new TesterActionServiceClass();
         public CutOffConditionServiceClass CutOffConditionService { get; set; } = new CutOffConditionServiceClass();
         public StepTemplateServiceClass StepTemplateService { get; set; } = new StepTemplateServiceClass();
         public ProgramServiceClass ProgramService { get; set; } = new ProgramServiceClass();
@@ -180,6 +181,7 @@ namespace BCLabManager
                 RecipeTemplateService.Items = new ObservableCollection<RecipeTemplate>(uow.RecipeTemplates.GetAll());
                 StepService.Items = new ObservableCollection<Step>(uow.Steps.GetAll());
                 StepV2Service.Items = new ObservableCollection<StepV2>(uow.StepV2s.GetAll());
+                TesterActionService.Items = new ObservableCollection<TesterAction>(uow.TesterActions.GetAll());
                 CutOffConditionService.Items = new ObservableCollection<CutOffCondition>(uow.CutOffConditions.GetAll());
                 StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
 
@@ -271,7 +273,7 @@ namespace BCLabManager
 
             this.AllChambersViewInstance.DataContext = allChambersViewModel;                                                            //ViewModel跟View绑定
 
-            this.AllStepTemplateViewInstance.DataContext = allStepTemplatesViewModel;
+            //this.AllStepTemplateViewInstance.DataContext = allStepTemplatesViewModel;
 
             this.AllRecipeTemplatesViewInstance.DataContext = allRecipeTemplatesViewModel;                                                            //ViewModel跟View绑定
 

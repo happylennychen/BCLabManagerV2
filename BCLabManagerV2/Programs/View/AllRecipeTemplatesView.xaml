@@ -11,29 +11,52 @@
     <UserControl.Resources>
         <HierarchicalDataTemplate DataType="{x:Type vm:StepV2ViewModel}" 
                                   ItemsSource="{Binding Path=CutOffConditions}">
+            <DockPanel LastChildFill="True" Margin="10">
+                <TextBlock FontSize="22" FontWeight="Bold" DockPanel.Dock="Left" Margin="0,0,10,0">S</TextBlock>
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Index=" Margin="0,0,5,0" />
                     <TextBlock Text="{Binding Path=Index}" />
-                    <TextBlock Text="Prerest=" Margin="5,0,5,0" />
+                    <TextBlock Text="Prerest=" Margin="5,0,0,0" />
                     <TextBlock Text="{Binding Path=Prerest}" />
-                    <TextBlock Text="Rest=" Margin="5,0,5,0" />
+                    <TextBlock Text="Rest=" Margin="5,0,0,0" />
                     <TextBlock Text="{Binding Path=Rest}" />
-                    <TextBlock Text="Loop1Label=" Margin="5,0,5,0" />
+                    <TextBlock Text="Loop1Label=" Margin="5,0,0,0" />
                     <TextBlock Text="{Binding Path=Loop1Label}" />
-                    <TextBlock Text="Loop2Label=" Margin="5,0,5,0" />
+                    <TextBlock Text="Loop2Label=" Margin="5,0,0,0" />
                     <TextBlock Text="{Binding Path=Loop2Label}" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Mode" Margin="15,0,5,0" />
+                    <TextBlock Text="Mode" Margin="0,0,5,0" />
                     <TextBlock Text="{Binding Path=TesterAction.Mode}" />
+                    <TextBlock Text="Voltage=" Margin="5,0,0,0" />
+                    <TextBlock Text="{Binding Path=TesterAction.Voltage}" />
+                    <TextBlock Text="Current=" Margin="5,0,0,0" />
+                    <TextBlock Text="{Binding Path=TesterAction.Current}" />
+                    <TextBlock Text="Power=" Margin="5,0,0,0" />
+                    <TextBlock Text="{Binding Path=TesterAction.Power}" />
                 </StackPanel>
-            </StackPanel>
+                </StackPanel>
+            </DockPanel>
         </HierarchicalDataTemplate>
         <DataTemplate DataType="{x:Type vm:CutOffConditionViewModel}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="C" Margin="0,0,5,0" />
-                <TextBlock Text="{Binding Path=Parameter}" />
+                <TextBlock Text="COC" FontWeight="Bold" Margin="0,0,5,0" />
+                <TextBlock Text="{Binding Path=Parameter}" Margin="0,0,5,0"/>
+                <TextBlock Text="{Binding Path=Mark}" Margin="0,0,5,0"/>
+                <TextBlock Text="{Binding Path=Value}" Margin="0,0,5,0"/>
+                <TextBlock Text="JumpType=" Margin="0,0,5,0" />
+                <TextBlock Text="{Binding Path=JumpType}" Margin="0,0,5,0"/>
+                <TextBlock Text="Index=" Margin="0,0,5,0" />
+                <TextBlock Text="{Binding Path=Index}" Margin="0,0,5,0"/>
+                <TextBlock Text="Loop1Target=" Margin="0,0,5,0" />
+                <TextBlock Text="{Binding Path=Loop1Target}" Margin="0,0,5,0"/>
+                <TextBlock Text="Loop1Count=" Margin="0,0,5,0" />
+                <TextBlock Text="{Binding Path=Loop1Count}" Margin="0,0,5,0"/>
+                <TextBlock Text="Loop2Target=" Margin="0,0,5,0" />
+                <TextBlock Text="{Binding Path=Loop2Target}" Margin="0,0,5,0"/>
+                <TextBlock Text="Loop2Count=" Margin="0,0,5,0" />
+                <TextBlock Text="{Binding Path=Loop2Count}" Margin="0,0,5,0"/>
             </StackPanel>
         </DataTemplate>
 
@@ -110,6 +133,11 @@
                     </DataGrid.Columns>
                 </DataGrid>-->
                 <TreeView ItemsSource="{Binding Path=Steps}">
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="{x:Type TreeViewItem}">
+                            <Setter Property="IsExpanded" Value="True" />
+                        </Style>
+                    </TreeView.ItemContainerStyle>
                 </TreeView>
             </GroupBox>
         </Grid>
