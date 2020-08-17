@@ -11,9 +11,23 @@
     <UserControl.Resources>
         <HierarchicalDataTemplate DataType="{x:Type vm:StepV2ViewModel}" 
                                   ItemsSource="{Binding Path=CutOffConditions}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="S" Margin="0,0,5,0" />
-                <TextBlock Text="{Binding Path=Index}" />
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Index=" Margin="0,0,5,0" />
+                    <TextBlock Text="{Binding Path=Index}" />
+                    <TextBlock Text="Prerest=" Margin="5,0,5,0" />
+                    <TextBlock Text="{Binding Path=Prerest}" />
+                    <TextBlock Text="Rest=" Margin="5,0,5,0" />
+                    <TextBlock Text="{Binding Path=Rest}" />
+                    <TextBlock Text="Loop1Label=" Margin="5,0,5,0" />
+                    <TextBlock Text="{Binding Path=Loop1Label}" />
+                    <TextBlock Text="Loop2Label=" Margin="5,0,5,0" />
+                    <TextBlock Text="{Binding Path=Loop2Label}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Mode" Margin="15,0,5,0" />
+                    <TextBlock Text="{Binding Path=TesterAction.Mode}" />
+                </StackPanel>
             </StackPanel>
         </HierarchicalDataTemplate>
         <DataTemplate DataType="{x:Type vm:CutOffConditionViewModel}">
@@ -22,12 +36,6 @@
                 <TextBlock Text="{Binding Path=Parameter}" />
             </StackPanel>
         </DataTemplate>
-        <!--<DataTemplate DataType="{x:Type vm:StepV2ViewModel}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="S" Margin="0,0,5,0" />
-                <TextBlock Text="{Binding Path=Index}" />
-            </StackPanel>
-        </DataTemplate>-->
 
         <LinearGradientBrush x:Key="Brush_HeaderBackground" StartPoint="0.5,0" EndPoint="0.5,1">
             <GradientStop Color="#66000088" Offset="0" />

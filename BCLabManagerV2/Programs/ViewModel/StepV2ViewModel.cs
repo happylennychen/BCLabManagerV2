@@ -51,7 +51,7 @@ namespace BCLabManager.ViewModel
 
         #endregion // Constructor
 
-        #region RecipeClass Properties
+        #region StepV2 Properties
 
         public int Id
         {
@@ -71,6 +71,27 @@ namespace BCLabManager.ViewModel
             get
             {
                 return _step.Index;
+            }
+        }
+        public int Prerest
+        {
+            get
+            {
+                return _step.Prerest;
+            }
+        }
+        public int Rest
+        {
+            get
+            {
+                return _step.Rest;
+            }
+        }
+        public TesterAction TesterAction
+        {
+            get
+            {
+                return _step.Action;
             }
         }
         public ObservableCollection<CutOffConditionViewModel> CutOffConditions
