@@ -3,10 +3,31 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+		     xmlns:model="clr-namespace:BCLabManager.Model"
+		     xmlns:vm="clr-namespace:BCLabManager.ViewModel"
              xmlns:v="clr-namespace:BCLabManager.View"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="500">
     <UserControl.Resources>
+        <HierarchicalDataTemplate DataType="{x:Type vm:StepV2ViewModel}" 
+                                  ItemsSource="{Binding Path=CutOffConditions}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="S" Margin="0,0,5,0" />
+                <TextBlock Text="{Binding Path=Index}" />
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <DataTemplate DataType="{x:Type vm:CutOffConditionViewModel}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="C" Margin="0,0,5,0" />
+                <TextBlock Text="{Binding Path=Parameter}" />
+            </StackPanel>
+        </DataTemplate>
+        <!--<DataTemplate DataType="{x:Type vm:StepV2ViewModel}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="S" Margin="0,0,5,0" />
+                <TextBlock Text="{Binding Path=Index}" />
+            </StackPanel>
+        </DataTemplate>-->
 
         <LinearGradientBrush x:Key="Brush_HeaderBackground" StartPoint="0.5,0" EndPoint="0.5,1">
             <GradientStop Color="#66000088" Offset="0" />
@@ -68,42 +89,7 @@
                 </DockPanel>
             </GroupBox>
             <GroupBox Header="Steps" Grid.Column="2">
-                <!--<ListView Grid.Row="1"
-                      x:Name="Steplist"
-      AlternationCount="2"
-      ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=Steps}"
-      >
-
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn 
-            Header="Id" 
-            DisplayMemberBinding="{Binding Path=Id}" 
-            />
-                            <GridViewColumn 
-            Header="Name" 
-            DisplayMemberBinding="{Binding Path=Name}" 
-            />
-                            <GridViewColumn 
-            Header="Loop Label" DisplayMemberBinding="{Binding Path=LoopLabel}"
-            />
-                            <GridViewColumn 
-            Header="Loop Target" DisplayMemberBinding="{Binding Path=LoopTarget}"
-            />
-                            <GridViewColumn 
-            Header="Loop Count" DisplayMemberBinding="{Binding Path=LoopCount}"
-            />
-                            <GridViewColumn 
-            Header="Compare Mark" DisplayMemberBinding="{Binding Path=CompareMark}"
-            />
-                            <GridViewColumn 
-            Header="Capacity" DisplayMemberBinding="{Binding Path=Capacity}"
-            />
-                        </GridView>
-                    </ListView.View>
-                </ListView>-->
-                <DataGrid GridLinesVisibility="None" x:Name="Steplist" AutoGenerateColumns="False"  Background="White"
+                <!--<DataGrid GridLinesVisibility="None" x:Name="Steplist" AutoGenerateColumns="False"  Background="White"
                           ItemsSource="{Binding Path=Steps}" CanUserSortColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
@@ -114,7 +100,9 @@
                         <DataGridTextColumn Header="Compare Mark" IsReadOnly="True" Binding="{Binding Path=CompareMark}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Capacity" IsReadOnly="True" Binding="{Binding Path=Capacity}"></DataGridTextColumn>
                     </DataGrid.Columns>
-                </DataGrid>
+                </DataGrid>-->
+                <TreeView ItemsSource="{Binding Path=Steps}">
+                </TreeView>
             </GroupBox>
         </Grid>
     </GroupBox>

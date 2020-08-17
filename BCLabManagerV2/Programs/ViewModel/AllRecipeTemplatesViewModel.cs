@@ -80,19 +80,42 @@ namespace BCLabManager.ViewModel
         /// </summary>
         public ObservableCollection<RecipeTemplateViewModel> AllRecipeTemplates { get; private set; }
 
-        public ObservableCollection<StepViewModel> Steps
+        //public ObservableCollection<StepViewModel> Steps
+        //{
+        //    get 
+        //    {
+        //        if (SelectedItem == null)
+        //            return null;
+        //        //return SelectedItem._recipeTemplate.Steps;
+        //        var output = new ObservableCollection<StepViewModel>();
+        //        foreach(var step in SelectedItem._recipeTemplate.Steps.OrderBy(o=>o.Order))
+        //        {
+        //            output.Add(new StepViewModel(step));
+        //        }
+        //        return output;
+        //    }
+        //}
+
+        public ObservableCollection<StepV2ViewModel> Steps
         {
-            get 
+            //get
+            //{
+            //    if (SelectedItem == null)
+            //        return null;
+            //    //return SelectedItem._recipeTemplate.Steps;
+            //    var output = new ObservableCollection<StepV2ViewModel>();
+            //    foreach (var step in SelectedItem._recipeTemplate.StepV2s.OrderBy(o => o.Index))
+            //    {
+            //        output.Add(new StepV2ViewModel(step));
+            //    }
+            //    return output;
+            //}
+            get
             {
-                if (SelectedItem == null)
+                if (_selectedItem != null)
+                    return _selectedItem.Steps;
+                else
                     return null;
-                //return SelectedItem._recipeTemplate.Steps;
-                var output = new ObservableCollection<StepViewModel>();
-                foreach(var step in SelectedItem._recipeTemplate.Steps.OrderBy(o=>o.Order))
-                {
-                    output.Add(new StepViewModel(step));
-                }
-                return output;
             }
         }
 

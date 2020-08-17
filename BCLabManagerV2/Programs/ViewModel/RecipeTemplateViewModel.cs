@@ -27,6 +27,21 @@ namespace BCLabManager.ViewModel
         {
             _recipeTemplate = RecipeTemplate;
             _recipeTemplate.PropertyChanged += _RecipeTemplate_PropertyChanged;
+            CreateSteps();
+        }
+
+        private void CreateSteps()
+        {
+
+                List<StepV2ViewModel> all =
+                    (from sub in _recipeTemplate.StepV2s
+                     select new StepV2ViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+
+                //foreach (RecipeModelViewModel batmod in all)
+                //batmod.PropertyChanged += this.OnRecipeModelViewModelPropertyChanged;
+
+                this.Steps = new ObservableCollection<StepV2ViewModel>(all);     //再转换成Observable
+                                                                                   //this.AllCustomers.CollectionChanged += this.OnCollectionChanged
         }
 
         private void _RecipeTemplate_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -70,6 +85,7 @@ namespace BCLabManager.ViewModel
             get { return _count; }
             set { SetProperty(ref _count, value); }
         }
+        public ObservableCollection<StepV2ViewModel> Steps = new ObservableCollection<StepV2ViewModel>();
         //public ChargeTemperatureClass ChargeTemperature
         //{
         //    get { return _RecipeTemplate.ChargeTemperature; }

@@ -75,6 +75,8 @@ namespace BCLabManager
         //public TestRecordServiceClass TestRecordService { get; set; } = new TestRecordServiceClass();
         public RecipeTemplateServiceClass RecipeTemplateService { get; set; } = new RecipeTemplateServiceClass();
         public StepServiceClass StepService { get; set; } = new StepServiceClass();
+        public StepV2ServiceClass StepV2Service { get; set; } = new StepV2ServiceClass();
+        public CutOffConditionServiceClass CutOffConditionService { get; set; } = new CutOffConditionServiceClass();
         public StepTemplateServiceClass StepTemplateService { get; set; } = new StepTemplateServiceClass();
         public ProgramServiceClass ProgramService { get; set; } = new ProgramServiceClass();
         public ProjectServiceClass ProjectService { get; set; } = new ProjectServiceClass();
@@ -177,6 +179,8 @@ namespace BCLabManager
 
                 RecipeTemplateService.Items = new ObservableCollection<RecipeTemplate>(uow.RecipeTemplates.GetAll());
                 StepService.Items = new ObservableCollection<Step>(uow.Steps.GetAll());
+                StepV2Service.Items = new ObservableCollection<StepV2>(uow.StepV2s.GetAll());
+                CutOffConditionService.Items = new ObservableCollection<CutOffCondition>(uow.CutOffConditions.GetAll());
                 StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
 
                 ProjectService.Items = new ObservableCollection<Project>(uow.Projects.GetAll());
