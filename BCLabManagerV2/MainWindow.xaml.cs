@@ -74,6 +74,7 @@ namespace BCLabManager
         public ChamberServiceClass ChamberService { get; set; } = new ChamberServiceClass();
         //public TestRecordServiceClass TestRecordService { get; set; } = new TestRecordServiceClass();
         public RecipeTemplateServiceClass RecipeTemplateService { get; set; } = new RecipeTemplateServiceClass();
+        public ProtectionServiceClass ProtectionService { get; set; } = new ProtectionServiceClass();
         public StepServiceClass StepService { get; set; } = new StepServiceClass();
         public StepV2ServiceClass StepV2Service { get; set; } = new StepV2ServiceClass();
         public TesterActionServiceClass TesterActionService { get; set; } = new TesterActionServiceClass();
@@ -179,6 +180,7 @@ namespace BCLabManager
                 ProgramService.RecipeService.StepRuntimeService.Items = new ObservableCollection<StepRuntime>(uow.StepRuntimes.GetAll());
 
                 RecipeTemplateService.Items = new ObservableCollection<RecipeTemplate>(uow.RecipeTemplates.GetAll());
+                ProtectionService.Items = new ObservableCollection<Protection>(uow.Protections.GetAll());
                 StepService.Items = new ObservableCollection<Step>(uow.Steps.GetAll());
                 StepV2Service.Items = new ObservableCollection<StepV2>(uow.StepV2s.GetAll());
                 TesterActionService.Items = new ObservableCollection<TesterAction>(uow.TesterActions.GetAll());

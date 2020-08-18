@@ -63,6 +63,7 @@ namespace BCLabManager.ViewModel
             _projects = projects;
             _programs = programs;
             _recipes = recipes;
+            //_recipes.OrderBy(o => o.ToString());
 
             //_record.PropertyChanged += _record_PropertyChanged;
         }
@@ -132,7 +133,7 @@ namespace BCLabManager.ViewModel
                 //    where (i.Program.Id == Program.Id) && i.AssetUseCount == 0
                 //    select i).ToList();
                 //AllRecipes = new ObservableCollection<Recipe>(allstring);
-                AllRecipes = _program.Recipes;
+                AllRecipes = new ObservableCollection<Recipe>( _program.Recipes.OrderBy(o=>o.Temperature).ThenBy(o=>o.Name).ToList());
 
             }
         }

@@ -13,29 +13,29 @@
                                   ItemsSource="{Binding Path=CutOffConditions}">
             <DockPanel LastChildFill="True" Margin="10">
                 <TextBlock FontSize="22" FontWeight="Bold" DockPanel.Dock="Left" Margin="0,0,10,0">S</TextBlock>
-            <StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Index=" Margin="0,0,5,0" />
-                    <TextBlock Text="{Binding Path=Index}" />
-                    <TextBlock Text="Prerest=" Margin="5,0,0,0" />
-                    <TextBlock Text="{Binding Path=Prerest}" />
-                    <TextBlock Text="Rest=" Margin="5,0,0,0" />
-                    <TextBlock Text="{Binding Path=Rest}" />
-                    <TextBlock Text="Loop1Label=" Margin="5,0,0,0" />
-                    <TextBlock Text="{Binding Path=Loop1Label}" />
-                    <TextBlock Text="Loop2Label=" Margin="5,0,0,0" />
-                    <TextBlock Text="{Binding Path=Loop2Label}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Mode" Margin="0,0,5,0" />
-                    <TextBlock Text="{Binding Path=TesterAction.Mode}" />
-                    <TextBlock Text="Voltage=" Margin="5,0,0,0" />
-                    <TextBlock Text="{Binding Path=TesterAction.Voltage}" />
-                    <TextBlock Text="Current=" Margin="5,0,0,0" />
-                    <TextBlock Text="{Binding Path=TesterAction.Current}" />
-                    <TextBlock Text="Power=" Margin="5,0,0,0" />
-                    <TextBlock Text="{Binding Path=TesterAction.Power}" />
-                </StackPanel>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Index=" Margin="0,0,5,0" />
+                        <TextBlock Text="{Binding Path=Index}" />
+                        <TextBlock Text="Prerest=" Margin="5,0,0,0" />
+                        <TextBlock Text="{Binding Path=Prerest}" />
+                        <TextBlock Text="Rest=" Margin="5,0,0,0" />
+                        <TextBlock Text="{Binding Path=Rest}" />
+                        <TextBlock Text="Loop1Label=" Margin="5,0,0,0" />
+                        <TextBlock Text="{Binding Path=Loop1Label}" />
+                        <TextBlock Text="Loop2Label=" Margin="5,0,0,0" />
+                        <TextBlock Text="{Binding Path=Loop2Label}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Mode" Margin="0,0,5,0" />
+                        <TextBlock Text="{Binding Path=TesterAction.Mode}" />
+                        <TextBlock Text="Voltage=" Margin="5,0,0,0" />
+                        <TextBlock Text="{Binding Path=TesterAction.Voltage}" />
+                        <TextBlock Text="Current=" Margin="5,0,0,0" />
+                        <TextBlock Text="{Binding Path=TesterAction.Current}" />
+                        <TextBlock Text="Power=" Margin="5,0,0,0" />
+                        <TextBlock Text="{Binding Path=TesterAction.Power}" />
+                    </StackPanel>
                 </StackPanel>
             </DockPanel>
         </HierarchicalDataTemplate>
@@ -119,8 +119,24 @@
                     </DataGrid>
                 </DockPanel>
             </GroupBox>
-            <GroupBox Header="Steps" Grid.Column="2">
-                <!--<DataGrid GridLinesVisibility="None" x:Name="Steplist" AutoGenerateColumns="False"  Background="White"
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20*"></RowDefinition>
+                    <RowDefinition Height="10"></RowDefinition>
+                    <RowDefinition Height="80*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <GroupBox Header="Protections" Grid.Row="0">
+                    <DataGrid GridLinesVisibility="None" x:Name="Protectionlist" AutoGenerateColumns="False"  Background="White"
+                          ItemsSource="{Binding Path=Protections}" CanUserSortColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Parameter" IsReadOnly="True" Binding="{Binding Path=Parameter}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Mark" IsReadOnly="True" Binding="{Binding Path=Mark}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Value" IsReadOnly="True" Binding="{Binding Path=Value}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+                <GroupBox Header="Steps" Grid.Row="2">
+                    <!--<DataGrid GridLinesVisibility="None" x:Name="Steplist" AutoGenerateColumns="False"  Background="White"
                           ItemsSource="{Binding Path=Steps}" CanUserSortColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
@@ -132,14 +148,15 @@
                         <DataGridTextColumn Header="Capacity" IsReadOnly="True" Binding="{Binding Path=Capacity}"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>-->
-                <TreeView ItemsSource="{Binding Path=Steps}">
-                    <TreeView.ItemContainerStyle>
-                        <Style TargetType="{x:Type TreeViewItem}">
-                            <Setter Property="IsExpanded" Value="True" />
-                        </Style>
-                    </TreeView.ItemContainerStyle>
-                </TreeView>
-            </GroupBox>
+                    <TreeView ItemsSource="{Binding Path=Steps}">
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}">
+                                <Setter Property="IsExpanded" Value="True" />
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                    </TreeView>
+                </GroupBox>
+            </Grid>
         </Grid>
     </GroupBox>
 </UserControl>

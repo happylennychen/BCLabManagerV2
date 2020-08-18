@@ -309,7 +309,7 @@ namespace BCLabManager.Model
         }
         public override string ToString()
         {
-            return $@"{this.Name} {this.Temperature} degree";
+            return $@"{this.Temperature} degree {this.Name}";
         }
     }
 }

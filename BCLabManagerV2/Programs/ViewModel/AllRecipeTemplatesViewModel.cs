@@ -118,6 +118,16 @@ namespace BCLabManager.ViewModel
                     return null;
             }
         }
+        public ObservableCollection<ProtectionViewModel> Protections
+        {
+            get
+            {
+                if (_selectedItem != null)
+                    return _selectedItem.Protections;
+                else
+                    return null;
+            }
+        }
 
         public RecipeTemplateViewModel SelectedItem    //绑定选中项，从而改变Recipes
         {
@@ -131,6 +141,7 @@ namespace BCLabManager.ViewModel
                 {
                     _selectedItem = value;
                     RaisePropertyChanged("Steps");
+                    RaisePropertyChanged("Protections");
                 }
             }
         }

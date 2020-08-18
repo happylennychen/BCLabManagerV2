@@ -187,7 +187,7 @@ namespace BCLabManager.ViewModel
             get
             {
                 if (_selectedProgram != null)
-                    return _selectedProgram.Recipes;
+                    return new ObservableCollection<RecipeViewModel>(_selectedProgram.Recipes.OrderBy(o => o.Temperature).ThenBy(o => o.Name).ToList());
                 else
                     return null;
             }
