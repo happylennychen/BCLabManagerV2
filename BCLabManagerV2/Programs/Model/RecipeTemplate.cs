@@ -37,5 +37,13 @@ namespace BCLabManager.Model
         public RecipeTemplate()
         {
         }
+        //internal StepV2 GetStepByActionMode(ActionMode actionMode)
+        //{
+        //    return StepV2s.SingleOrDefault(o => o.Action.Mode == actionMode);
+        //}
+        //internal StepV2 GetStepByIndex(int index)
+        //{
+        //    return StepV2s.SingleOrDefault(o => o.Index == index);
+        //}
     }
 }

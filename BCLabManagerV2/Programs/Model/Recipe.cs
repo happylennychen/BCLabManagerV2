@@ -119,7 +119,7 @@ namespace BCLabManager.Model
             tr.StatusChanged += this.TestRecord_StatusChanged;
             this.TestRecords.Add(tr);
         }
-
+        #region step
         private void BuildStepRuntimesBasedOnSteps(List<Step> steps, BatteryType batteryType)
         {
             int targetIndex;
@@ -213,7 +213,7 @@ namespace BCLabManager.Model
             }
             return -1;
         }
-
+        #endregion
         public Recipe(RecipeTemplate template, string ProgramStr, BatteryType batteryType)  //Only used by populator
         {
             this.Name = template.Name;

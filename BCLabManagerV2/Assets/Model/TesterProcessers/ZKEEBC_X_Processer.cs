@@ -56,5 +56,10 @@ namespace BCLabManager.Model
             fs.Close();
             return true;
         }
+
+        public bool DataPreprocessing(string filepath, Program program, Recipe recipe)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

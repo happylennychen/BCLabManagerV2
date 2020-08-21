@@ -72,5 +72,9 @@ namespace BCLabManager.Model
         {
             return tester.CheckFileFormat(filepath);
         }
+        internal bool DataPreprocessing(ITesterProcesser tester, string filepath, Program program, Recipe recipe)
+        {
+            return tester.DataPreprocessing(filepath, program, recipe);
+        }
     }
 }
