@@ -192,6 +192,7 @@ namespace BCLabManager.Model
                     {
                         var model = new Recipe(rectemp, this.Project.BatteryType);
                         model.Temperature = temperature;
+                        model.RecipeTemplate = rectemp;
                         this.Recipes.Add(model);
                     }
                 }

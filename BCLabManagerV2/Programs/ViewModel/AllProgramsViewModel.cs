@@ -914,6 +914,7 @@ namespace BCLabManager.ViewModel
             {
                 try
                 {
+
                     DateTime[] time = _testerService.GetTimeFromRawData(evm.Channel.Tester.ITesterProcesser, evm.FileList);
                     var st = new DateTime();
                     var et = new DateTime();
@@ -927,6 +928,20 @@ namespace BCLabManager.ViewModel
                         st = DateTime.MinValue;
                         et = DateTime.MinValue;
                     }
+                    var filePath = _programService.RecipeService.TestRecordService.DataPreProcess(SelectedTestRecord.Record, evm.FileList.ToList(), 
+                        evm.IsRename, 
+                        evm.NewName, 
+                        st, 
+                        et, 
+                        SelectedProgram.Project.BatteryType.Name, 
+                        SelectedProgram.Project.Name, 
+                        SelectedProgram._program, 
+                        SelectedRecipe._recipe,
+                        evm.Tester.ITesterProcesser);
+                    if (filePath == string.Empty)
+                        return;
+                    SelectedTestRecord.Record.TestFilePath = filePath;
+
                     _programService.RecipeService.TestRecordService.Execute(
                     SelectedTestRecord.Record,
                     SelectedProgram.Project.BatteryType.Name,
@@ -980,8 +995,8 @@ namespace BCLabManager.ViewModel
                         header.Type = string.Empty;
                     }
                     SelectedTestRecord.NewCycle = evm.NewCycle;
-                    _programService.RecipeService.TestRecordService.Commit(
-                    SelectedTestRecord.Record, evm.Comment, evm.FileList.ToList(), evm.IsRename, evm.NewName, st, et, SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
+                    _programService.RecipeService.TestRecordService.CommitV2(
+                    SelectedTestRecord.Record, evm.Comment, filePath, st, et);
                 }
                 catch (Exception e)
                 {

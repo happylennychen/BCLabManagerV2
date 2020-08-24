@@ -13,6 +13,7 @@ namespace BCLabManager.Model
         public ObservableCollection<Recipe> Items { get; set; }
         public TestRecordServiceClass TestRecordService { get; set; } = new TestRecordServiceClass();
         public StepRuntimeServiceClass StepRuntimeService { get; set; } = new StepRuntimeServiceClass();
+        public RecipeTemplateServiceClass RecipeTemplateService { get; set; } = new RecipeTemplateServiceClass();
         //public void Add(RecipeClass item)
         //{
         //using (var uow = new UnitOfWork(new AppDbContext()))

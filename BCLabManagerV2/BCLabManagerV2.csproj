@@ -288,6 +288,7 @@
     <Compile Include="Assets\Model\Service\IModelService.cs" />
     <Compile Include="Assets\Model\Service\ModelService.cs" />
     <Compile Include="Assets\Model\TesterProcessers\Chroma17200Processer.cs" />
+    <Compile Include="Assets\Model\TesterProcessers\Exceptions.cs" />
     <Compile Include="Assets\Model\TesterProcessers\ZKEEBC_X_Processer.cs" />
     <Compile Include="DataAccess\ICutOffConditionRepository.cs" />
     <Compile Include="DataAccess\IProtectionRepository.cs" />

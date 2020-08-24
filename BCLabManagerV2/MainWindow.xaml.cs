@@ -179,7 +179,7 @@ namespace BCLabManager
                 ProgramService.RecipeService.TestRecordService.Items = new ObservableCollection<TestRecord>(uow.TestRecords.GetAll());
                 ProgramService.RecipeService.StepRuntimeService.Items = new ObservableCollection<StepRuntime>(uow.StepRuntimes.GetAll());
 
-                RecipeTemplateService.Items = new ObservableCollection<RecipeTemplate>(uow.RecipeTemplates.GetAll());
+                ProgramService.RecipeService.RecipeTemplateService.Items = new ObservableCollection<RecipeTemplate>(uow.RecipeTemplates.GetAll());
                 ProtectionService.Items = new ObservableCollection<Protection>(uow.Protections.GetAll());
                 StepService.Items = new ObservableCollection<Step>(uow.Steps.GetAll());
                 StepV2Service.Items = new ObservableCollection<StepV2>(uow.StepV2s.GetAll());
@@ -196,7 +196,7 @@ namespace BCLabManager
                 //ProgramService.RecipeService.StepRuntimeService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
                 FreeTestRecordService.Items = new ObservableCollection<TestRecord>(uow.TestRecords.GetAllFreeTestRecords());
 
-                ProgramService.RecipeTemplateService = RecipeTemplateService;
+                //ProgramService.RecipeTemplateService = RecipeTemplateService;
             }
         }
         void CreateViewModels()
@@ -223,7 +223,7 @@ namespace BCLabManager
 
             allRecipeTemplatesViewModel =
                 new AllRecipeTemplatesViewModel(
-                    RecipeTemplateService, StepTemplateService
+                    ProgramService.RecipeService.RecipeTemplateService, StepTemplateService
                     //ChargeCurrents,
                     //DischargeTemperatures,
                     //DischargeCurrents
@@ -234,7 +234,7 @@ namespace BCLabManager
             allProgramsViewModel = new AllProgramsViewModel
                 (
                 ProgramService,
-                RecipeTemplateService,
+                ProgramService.RecipeService.RecipeTemplateService,
                 StepTemplateService,
                 ProjectService,
                 ProgramTypeService,

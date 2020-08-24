@@ -1,4 +1,4 @@
-﻿//#define Test
+﻿#define Test
 using BCLabManager.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -365,6 +365,55 @@ namespace BCLabManager.Model
                 MessageBox.Show("Test File Path Empty!");
                 return;
             }
+            SuperUpdate(testRecord);
+        }
+
+        internal string DataPreProcess(TestRecord record, List<string> rawDataList, bool isRename, string newName, DateTime st, DateTime et, string batteryType, string projectName, Program program, Recipe recipe, ITesterProcesser processer)
+        {
+            string root = $@"{GlobalSettings.RootPath}{batteryType}\{projectName}";
+            string temproot = $@"{GlobalSettings.TempraryFolder}{batteryType}\{projectName}";
+            string temptestfilepath = string.Empty;
+            if (rawDataList.Count > 1)
+            {
+                temptestfilepath = CreateTestFile(rawDataList, temproot, newName);
+            }
+            else
+            {
+                if (isRename)
+                {
+                    temptestfilepath = RenameRawDataAndCopyToFolder(rawDataList[0], $@"{temproot}\{GlobalSettings.TestDataFolderName}", newName);
+                }
+                else
+                {
+                    temptestfilepath = CopyToFolder(rawDataList[0], temproot);
+                }
+            }
+            TesterServiceClass ts = new TesterServiceClass();
+            if (!ts.DataPreprocessing(processer, temptestfilepath, program, recipe, record))
+            {
+                File.Delete(temptestfilepath);
+                return string.Empty;
+            }
+            var TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
+            CopyToServer(temptestfilepath, TestFilePath);
+            if (TestFilePath == "")
+            {
+                MessageBox.Show("Test File Path Empty!");
+                return string.Empty;
+            }
+            return TestFilePath;
+        }
+
+        internal void CommitV2(TestRecord testRecord, string comment, string filePath, DateTime startTime, DateTime completeTime)
+        {
+            testRecord.Comment = comment;
+            testRecord.StartTime = startTime;
+            testRecord.EndTime = completeTime;
+            testRecord.AssignedBattery = null;
+            testRecord.AssignedChamber = null;
+            testRecord.AssignedChannel = null;
+            testRecord.Status = TestStatus.Completed;
+            testRecord.TestFilePath = filePath;
             SuperUpdate(testRecord);
         }
     }
