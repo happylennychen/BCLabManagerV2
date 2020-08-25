@@ -17,9 +17,10 @@ namespace BCLabManager.Model
         Dictionary<Column, double> ContinuityTolerance = new Dictionary<Column, double>();
         public Chroma17200Processer()
         {
-            StepTolerance.Add(Column.CURRENT, 0.005);
+            StepTolerance.Add(Column.CURRENT, 10);        //mA
             StepTolerance.Add(Column.VOLTAGE, 0.05);
-            StepTolerance.Add(Column.TEMPERATURE, 2.5);
+            StepTolerance.Add(Column.TEMPERATURE, 2.8);
+            StepTolerance.Add(Column.TIME, 3);          //S
 
             ContinuityTolerance.Add(Column.STEPNO, 1);
             ContinuityTolerance.Add(Column.STEP, 1);
@@ -28,7 +29,7 @@ namespace BCLabManager.Model
             ContinuityTolerance.Add(Column.CYCLE, 1);
             ContinuityTolerance.Add(Column.LOOP, 1);
             ContinuityTolerance.Add(Column.MODE, 1);
-            ContinuityTolerance.Add(Column.CURRENT, 0.1);
+            ContinuityTolerance.Add(Column.CURRENT, 0.1);   //A
             ContinuityTolerance.Add(Column.VOLTAGE, 0.1);
             ContinuityTolerance.Add(Column.TEMPERATURE, 1);
             ContinuityTolerance.Add(Column.CAPACITY, 0.5);
@@ -49,7 +50,8 @@ namespace BCLabManager.Model
             VOLTAGE,
             TEMPERATURE,
             CAPACITY,       //单个Step的电量
-            TOTAL_CAPACITY  //
+            TOTAL_CAPACITY,  //
+            STATUS              //StepFinishByCut_V,StepFinishByCut_T,StepFinishByCut_I
         }
         public DateTime[] GetTimeFromRawData(ObservableCollection<string> fileList)
         {
@@ -153,9 +155,15 @@ namespace BCLabManager.Model
             bool isFirstDischargeChecked = false;
             int lineIndex = 0;
             int startTime = 0;
+            int timeSpan = 0;
+
+            StepV2 step0 = new StepV2();
+            StepV2 step1 = new StepV2();
+
+            Dictionary<Column, string> row0 = new Dictionary<Column, string>();
+            Dictionary<Column, string> row1 = new Dictionary<Column, string>();
             try
             {
-                //uint ret = 0;
                 bool isStartPoint = false;
                 bool isCOCPoint = false;
                 List<StepV2> fullSteps = GetFullSteps(recipe.RecipeTemplate.StepV2s);
@@ -163,25 +171,13 @@ namespace BCLabManager.Model
                     sw.ReadLine();
                 string dataLine0 = string.Empty;
                 string dataLine1 = string.Empty;
-
-                Dictionary<Column, string> row0 = new Dictionary<Column, string>();
-                Dictionary<Column, string> row1 = new Dictionary<Column, string>();
                 dataLine1 = sw.ReadLine();
                 row1 = GetRowFromString(dataLine1);
-
-                StepV2 targetStep;
                 ActionMode am = GetActionMode(row1[Column.STEP_MODE]);
-                //if (am == ActionMode.CC_CV_CHARGE)
                 if (am == ActionMode.CC_DISCHARGE)
                     isFirstDischarge = true;
-                targetStep = fullSteps.First(o => o.Action.Mode == am);
-                StepStartPointCheck(targetStep, row1, recipe.Temperature, isFirstDischarge, ref isFirstDischargeChecked);
-                //if (ret != ErrorCode.NORMAL)
-                //{
-                //    sw.Close();
-                //    fs.Close();
-                //    return false;
-                //}
+                step1 = fullSteps.First(o => o.Action.Mode == am);
+                StepStartPointCheck(step1, row1, recipe.Temperature, isFirstDischarge, ref isFirstDischargeChecked);
 
                 lineIndex = 11;
                 while (true)
@@ -201,20 +197,18 @@ namespace BCLabManager.Model
                     if (isCOCPoint)
                     {
                         #region COC Point Check
-                        int timeSpan = (Convert.ToInt32(row0[Column.TIME_MS]) - startTime) / 1000;
-                        StepCOCPointCheck(targetStep, row0, recipe.Temperature);
-                        targetStep = GetNewTargetStep(targetStep, fullSteps, row1, recipe.Temperature, timeSpan);
+                        timeSpan = (Convert.ToInt32(row0[Column.TIME_MS]) - startTime) / 1000;
+                        StepCOCPointCheck(step1, row0, recipe.Temperature, timeSpan);
+                        step0 = step1;
+                        step1 = GetNewTargetStep(step0, fullSteps, row0, recipe.Temperature, timeSpan);
+                        if (step1 == null)
+                            throw new ProcessException("Cannot Get Next Step");
+                        StepActionModeCheck(step1.Action.Mode, GetActionMode(row1[Column.STEP_MODE]));
                         if (!isFirstDischargeChecked)
                         {
-                            if (targetStep.Action.Mode == ActionMode.CC_DISCHARGE)
+                            if (step1.Action.Mode == ActionMode.CC_DISCHARGE)
                                 isFirstDischarge = true;
                         }
-                        //if (ret != ErrorCode.NORMAL)
-                        //{
-                        //    sw.Close();
-                        //    fs.Close();
-                        //    return false;
-                        //}
                         isCOCPoint = false;
                         isStartPoint = true;
                         #endregion
@@ -223,13 +217,7 @@ namespace BCLabManager.Model
                     else if (isStartPoint)
                     {
                         #region Start Point Check
-                        StepStartPointCheck(targetStep, row1, recipe.Temperature, isFirstDischarge, ref isFirstDischargeChecked);
-                        //if (ret != ErrorCode.NORMAL)
-                        //{
-                        //    sw.Close();
-                        //    fs.Close();
-                        //    return false;
-                        //}
+                        StepStartPointCheck(step1, row1, recipe.Temperature, isFirstDischarge, ref isFirstDischargeChecked);
                         isStartPoint = false;
                         startTime = Convert.ToInt32(row1[Column.TIME_MS]);
                         #endregion
@@ -238,13 +226,7 @@ namespace BCLabManager.Model
                     else
                     {
                         #region Normal Point Check
-                        StepMidPointCheck(targetStep, row1, recipe.Temperature);
-                        //if (ret != ErrorCode.NORMAL)
-                        //{
-                        //    sw.Close();
-                        //    fs.Close();
-                        //    return false;
-                        //}
+                        StepMidPointCheck(step1, row1, recipe.Temperature);
 
 
 
@@ -252,17 +234,8 @@ namespace BCLabManager.Model
 
                         if (row1[Column.MODE] != "0")
                         {
-                            if (lineIndex == 10905)
-                                lineIndex = 10905;
                             Dictionary<Column, bool> rowContinuityMatrix = GetContinuityMatrix(row0, row1, ContinuityTolerance);
                             ContinuityCheck(rowContinuityMatrix);
-                            //if (ret != ErrorCode.NORMAL)
-                            //{
-                            //    MessageBox.Show($"Continuity Check Failed! Line {i}");
-                            //    sw.Close();
-                            //    fs.Close();
-                            //    return false;
-                            //}
                         }
                         #endregion
                         #endregion
@@ -271,20 +244,11 @@ namespace BCLabManager.Model
                 }
 
             }
-            catch (StartPointCheckException e)
+            catch (ProcessException e)
             {
-                ret = false;
-            }
-            catch (MidPointCheckException e)
-            {
-                ret = false;
-            }
-            catch (EndPointCheckException e)
-            {
-                ret = false;
-            }
-            catch (ContinuityCheckException e)
-            {
+                MessageBox.Show(e.Message);
+                var msg = $@"{step0.Index}_{step1.Index}_{row0[Column.TIME_MS]}_{row1[Column.TIME_MS]}_{timeSpan}_{lineIndex}";
+                MessageBox.Show(msg);
                 ret = false;
             }
             finally
@@ -295,55 +259,66 @@ namespace BCLabManager.Model
             return ret;
         }
 
+        private void StepActionModeCheck(ActionMode mode, ActionMode actionMode)
+        {
+            if (mode != actionMode)
+                throw new ProcessException("Action mode mismatch");
+        }
+
         private StepV2 GetNewTargetStep(StepV2 currentStep, List<StepV2> fullSteps, Dictionary<Column, string> row, double temperature, int timeSpan)
         {
             StepV2 nextStep = null;
             foreach (var coc in currentStep.CutOffConditions)
             {
                 double value = -999999;
+                double tolerance = 0;
                 switch (coc.Parameter)
                 {
                     case Parameter.VOLTAGE:
                         value = Convert.ToDouble(row[Column.VOLTAGE]);
+                        tolerance = StepTolerance[Column.VOLTAGE];
                         break;
                     case Parameter.CURRENT:
                         value = Convert.ToDouble(row[Column.CURRENT]);
+                        tolerance = StepTolerance[Column.CURRENT];
                         break;
                     case Parameter.TEMPERATURE:
                         value = Convert.ToDouble(row[Column.TEMPERATURE]);
+                        tolerance = StepTolerance[Column.TEMPERATURE];
                         break;
                     case Parameter.TIME:
-                        value = timeSpan;// Convert.ToDouble(row[Column.TIME_MS]);
+                        value = timeSpan;
+                        tolerance = StepTolerance[Column.TIME];
                         break;
                     default:
                         break;
                 }
-                if(value != -999999)
-                    nextStep = Compare(coc, value, fullSteps, currentStep.Index);
+                if (value != -999999)
+                    nextStep = Compare(coc, value, tolerance, fullSteps, currentStep.Index);
                 if (nextStep != null)
                     return nextStep;
             }
             return nextStep;
         }
 
-        private StepV2 Compare(CutOffCondition coc, double value, List<StepV2> fullSteps, int currentStepIndex)
+        private StepV2 Compare(CutOffCondition coc, double value, double tolerance, List<StepV2> fullSteps, int currentStepIndex)
         {
             StepV2 nextStep = null;
-            switch (coc.Mark)
-            {
-                case CompareMarkEnum.SmallerThan:
-                    if (value < coc.Value)
+            //switch (coc.Mark)
+            //{
+            //    case CompareMarkEnum.SmallerThan:
+                    if (Math.Abs(value - coc.Value) <= tolerance)
                     {
                         nextStep = Jump(coc, fullSteps, currentStepIndex);
                     }
-                    break;
-                case CompareMarkEnum.LargerThan:
-                    if (value > coc.Value)
-                    {
-                        nextStep = Jump(coc, fullSteps, currentStepIndex);
-                    }
-                    break;
-            }
+            //        break;
+            //    case CompareMarkEnum.LargerThan:
+            //        if (Math.Abs(value - coc.Value) <= StepTolerance[Column.CURRENT])
+            //        {
+            //            nextStep = Jump(coc, fullSteps, currentStepIndex);
+            //        }
+            //        break;
+            //}
             return nextStep;
         }
 
@@ -412,28 +387,21 @@ namespace BCLabManager.Model
             switch (step.Action.Mode)
             {
                 case ActionMode.CC_CV_CHARGE:
-                    voltage = Convert.ToDouble(row1[Column.VOLTAGE]);
-                    if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance[Column.VOLTAGE])
-                        //return ErrorCode.CHARGE_START_VOL;
-                        throw new StartPointCheckException("Voltage Out Of Range");
-                    current = Convert.ToDouble(row1[Column.CURRENT]);
+                    current = GetCurrentFromRow(row1);
                     if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
-                        //return ErrorCode.CHARGE_START_CUR;
-                        throw new StartPointCheckException("Current Out Of Range");
-                    temperature = Convert.ToDouble(row1[Column.TEMPERATURE]);
-                    if (Math.Abs(temperature - temp) > StepTolerance[Column.TEMPERATURE])
-                        //return ErrorCode.CHARGE_START_TEMP;
-                        throw new StartPointCheckException("Temperature Out Of Range");
+                        throw new ProcessException("Current Out Of Range");
                     break;
                 case ActionMode.CC_DISCHARGE:
+
+                    current = GetCurrentFromRow(row1);
+                    if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
+                        throw new ProcessException("Current Out Of Range");
+
                     if (isFirstDischarge && !isFirstDischargeChecked)
                     {
-                        current = Convert.ToDouble(row1[Column.CURRENT]);
-                        if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
-                            throw new StartPointCheckException("Current Out Of Range");
                         temperature = Convert.ToDouble(row1[Column.TEMPERATURE]);
                         if (Math.Abs(temperature - temp) > StepTolerance[Column.TEMPERATURE])
-                            throw new StartPointCheckException("Temperature Out Of Range");
+                            throw new ProcessException("Temperature Out Of Range");
 
                         isFirstDischargeChecked = true;
                     }
@@ -443,40 +411,33 @@ namespace BCLabManager.Model
                 default:
                     break;
             }
-            //return ErrorCode.NORMAL;
+        }
+
+        private double GetCurrentFromRow(Dictionary<Column, string> row1)
+        {
+            return Convert.ToDouble(row1[Column.CURRENT]) * -1000.0;
         }
 
         private void StepMidPointCheck(StepV2 step, Dictionary<Column, string> row1, double temp)
         {
-            double voltage = 0;
-            //double current = 0;
-            double temperature = 0;
+            double current = 0;
             switch (step.Action.Mode)
             {
                 case ActionMode.CC_CV_CHARGE:
-                    voltage = Convert.ToDouble(row1[Column.VOLTAGE]);
-                    if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance[Column.VOLTAGE])
-                        throw new MidPointCheckException("Voltage Out Of Range");
-                    //return ErrorCode.CHARGE_MID_VOL;
-                    //current = Convert.ToDouble(row1[Column.CURRENT]);
-                    //if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
-                    //    return ret;
-                    temperature = Convert.ToDouble(row1[Column.TEMPERATURE]);
-                    if (Math.Abs(temperature - temp) > StepTolerance[Column.TEMPERATURE])
-                        throw new MidPointCheckException("Temperature Out Of Range");
-                    //return ErrorCode.CHARGE_MID_TEMP;
                     break;
                 case ActionMode.CC_DISCHARGE:
+                    current = GetCurrentFromRow(row1);
+                    if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
+                        throw new ProcessException("Current Out Of Range");
                     break;
                 case ActionMode.REST:
                     break;
                 default:
                     break;
             }
-            //return ErrorCode.NORMAL;
         }
 
-        private void StepCOCPointCheck(StepV2 step, Dictionary<Column, string> row1, double temp)
+        private void StepCOCPointCheck(StepV2 step, Dictionary<Column, string> row, double temp, int timeSpan)
         {
             double voltage = 0;
             double current = 0;
@@ -484,22 +445,41 @@ namespace BCLabManager.Model
             switch (step.Action.Mode)
             {
                 case ActionMode.CC_CV_CHARGE:
-                    voltage = Convert.ToDouble(row1[Column.VOLTAGE]);
-                    if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance[Column.VOLTAGE])
-                        //return ErrorCode.CHARGE_END_VOL;
-                        throw new EndPointCheckException("Voltage Out Of Range");
-                    current = Convert.ToDouble(row1[Column.CURRENT]);
-                    if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
-                        //return ErrorCode.CHARGE_END_CUR;
-                        throw new EndPointCheckException("Current Out Of Range");
-                    temperature = Convert.ToDouble(row1[Column.TEMPERATURE]);
-                    if (Math.Abs(temperature - temp) > StepTolerance[Column.TEMPERATURE])
-                        //return ErrorCode.CHARGE_END_TEMP;
-                        throw new EndPointCheckException("Temperature Out Of Range");
+                    if (row[Column.STATUS] == "StepFinishByCut_V")
+                    {
+                        voltage = Convert.ToDouble(row[Column.VOLTAGE]);
+                        if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance[Column.VOLTAGE])
+                            throw new ProcessException("Voltage Out Of Range");
+                    }
+                    else if (row[Column.STATUS] == "StepFinishByCut_I")
+                    {
+                        current = GetCurrentFromRow(row);
+                        if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
+                            throw new ProcessException("Current Out Of Range");
+                    }
+                    else if (row[Column.STATUS] == "StepFinishByCut_T")
+                    {
+                    }
                     break;
                 case ActionMode.CC_DISCHARGE:
+                    if (row[Column.STATUS] == "StepFinishByCut_V")
+                    {
+                        voltage = Convert.ToDouble(row[Column.VOLTAGE]);
+                        if (Math.Abs(voltage - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE).Value) > StepTolerance[Column.VOLTAGE])
+                            throw new ProcessException("Voltage Out Of Range");
+                    }
+                    else if (row[Column.STATUS] == "StepFinishByCut_T")
+                    {
+                        if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance[Column.TIME])
+                            throw new ProcessException("Time Out Of Range");
+                    }
                     break;
                 case ActionMode.REST:
+                    if (row[Column.STATUS] == "StepFinishByCut_T")
+                    {
+                        if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance[Column.TIME])
+                            throw new ProcessException("Time Out Of Range");
+                    }
                     break;
                 default:
                     break;
@@ -528,27 +508,19 @@ namespace BCLabManager.Model
             }
             if (result == 0x00)
             {
-                //return ErrorCode.NORMAL;
                 return;
             }
             else if ((result | 0b111110000000) == 0b111110000000)   //只有物理参数超范围，不管
             {
                 return; //ErrorCode.NORMAL;
             }
-            //if ((result & 0x0080) == 0x0000)    //step change
-            //{
-            //    return true;
-            //}
             else if ((result | 0x000e) == 0x000e)       //Step 和 Time错了
             {
-
-                //return ErrorCode.STEP_JUMP;
-                throw new ContinuityCheckException("STEP Jump.");
+                throw new ProcessException("STEP Jump.");
             }
             else
             {
-                //return ErrorCode.UNDEFINDED;
-                throw new ContinuityCheckException("Undefined.");
+                throw new ProcessException("Undefined.");
             }
         }
 
@@ -578,25 +550,11 @@ namespace BCLabManager.Model
             }
             return output;
         }
-
-        //    STEPNO,     //配方的Index，1234234234
-        //    STEP,       //真实的顺序，1234...n
-        //    TIME_MS,    //100，200，300
-        //    TIME,       //2020-07-24 08:55:31
-        //    CYCLE,      //外层循环？
-        //    LOOP,       //内层循环？
-        //    STEP_MODE,       //Rest, CC_CV_Charge, CC_Discharge
-        //    MODE,            //Step改变时为0，否则为1
-        //    CURRENT,
-        //    VOLTAGE,
-        //    TEMPERATURE,
-        //    CAPACITY,       //单个Step的电量
-        //    TOTAL_CAPACITY  //
         private Dictionary<Column, string> GetRowFromString(string dataLine)
         {
             Dictionary<Column, string> output = new Dictionary<Column, string>();
             var strRow = dataLine.Split(',');
-            for (int i = 0; i < 13; i++)
+            for (int i = 0; i < 14; i++)
                 output.Add((Column)i, strRow[i]);
 
             return output;
