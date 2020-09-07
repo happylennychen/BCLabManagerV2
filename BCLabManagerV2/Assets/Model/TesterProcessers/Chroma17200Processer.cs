@@ -166,7 +166,7 @@ namespace BCLabManager.Model
             {
                 bool isStartPoint = false;
                 bool isCOCPoint = false;
-                List<StepV2> fullSteps = GetFullSteps(recipe.RecipeTemplate.StepV2s);
+                var fullSteps = new List<StepV2>(recipe.RecipeTemplate.StepV2s);
                 for (; lineIndex < 10; lineIndex++)     //第十行以后都是数据
                     sw.ReadLine();
                 string dataLine0 = string.Empty;
@@ -339,44 +339,6 @@ namespace BCLabManager.Model
                     throw new NotImplementedException();
             }
             return nextStep;
-        }
-
-        private List<StepV2> GetFullSteps(ObservableCollection<StepV2> stepV2s)
-        {
-            List<StepV2> output = new List<StepV2>();
-            int offset = 0;
-            foreach (var step in stepV2s)
-            {
-                if (step.Prerest != 0)
-                    output.Add(CreateRestStep(step.Prerest, step.Index, ref offset));
-                output.Add(CloneStep(step, ref offset));
-                if (step.Rest != 0)
-                    output.Add(CreateRestStep(step.Rest, step.Index + offset + 1, ref offset));
-            }
-            return output;
-        }
-
-        private StepV2 CloneStep(StepV2 step, ref int offset)
-        {
-            StepV2 output = new StepV2();
-            output.Index = step.Index + offset;
-            output.Loop1Label = step.Loop1Label;
-            output.Loop2Label = step.Loop2Label;
-            output.Action = step.Action;
-            output.CutOffConditions = step.CutOffConditions;
-            return output;
-        }
-
-        private StepV2 CreateRestStep(int restTime, int index, ref int offset)
-        {
-            StepV2 output = new StepV2();
-            output.Index = index;
-            offset++;
-            output.Action = new TesterAction() { Mode = ActionMode.REST };
-            output.CutOffConditions.Add(new CutOffCondition() { Parameter = Parameter.TIME, Mark = CompareMarkEnum.LargerThan, Value = restTime });
-
-            return output;
-
         }
 
         private void StepStartPointCheck(StepV2 step, Dictionary<Column, string> row1, double temp, bool isFirstDischarge, ref bool isFirstDischargeChecked)

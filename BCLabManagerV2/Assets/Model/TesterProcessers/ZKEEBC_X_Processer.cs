@@ -42,10 +42,10 @@ namespace BCLabManager.Model
 
             FileStream fs = new FileStream(filepath, FileMode.Open);
             StreamReader sw = new StreamReader(fs);
-            for (int i = 0; i < 3; i++)
-                sw.ReadLine();
+            //for (int i = 0; i < 3; i++)
+            //    sw.ReadLine();
             string urlLine = sw.ReadLine();
-            if (urlLine != "----------www.zketech.com--------------")
+            if (!urlLine.Contains("EBC-X0510"))
             {
                 sw.Close();
                 fs.Close();
@@ -59,6 +59,7 @@ namespace BCLabManager.Model
 
         public bool DataPreprocessing(string filepath, Program program, Recipe recipe, TestRecord record)
         {
+            return true;
             throw new NotImplementedException();
         }
     }
