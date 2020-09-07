@@ -18,7 +18,7 @@ namespace BCLabManager.Model
         public Chroma17200Processer()
         {
             StepTolerance.Add(Column.CURRENT, 10);        //mA
-            StepTolerance.Add(Column.VOLTAGE, 0.05);
+            StepTolerance.Add(Column.VOLTAGE, 50);          //mV
             StepTolerance.Add(Column.TEMPERATURE, 2.8);
             StepTolerance.Add(Column.TIME, 3);          //S
 
@@ -275,7 +275,7 @@ namespace BCLabManager.Model
                 switch (coc.Parameter)
                 {
                     case Parameter.VOLTAGE:
-                        value = Convert.ToDouble(row[Column.VOLTAGE]);
+                        value = Convert.ToDouble(row[Column.VOLTAGE]) * 1000;
                         tolerance = StepTolerance[Column.VOLTAGE];
                         break;
                     case Parameter.CURRENT:
@@ -409,7 +409,7 @@ namespace BCLabManager.Model
                 case ActionMode.CC_CV_CHARGE:
                     if (row[Column.STATUS] == "StepFinishByCut_V")
                     {
-                        voltage = Convert.ToDouble(row[Column.VOLTAGE]);
+                        voltage = Convert.ToDouble(row[Column.VOLTAGE]) * 1000;
                         if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance[Column.VOLTAGE])
                             throw new ProcessException("Voltage Out Of Range");
                     }
@@ -426,7 +426,7 @@ namespace BCLabManager.Model
                 case ActionMode.CC_DISCHARGE:
                     if (row[Column.STATUS] == "StepFinishByCut_V")
                     {
-                        voltage = Convert.ToDouble(row[Column.VOLTAGE]);
+                        voltage = Convert.ToDouble(row[Column.VOLTAGE]) * 1000;
                         if (Math.Abs(voltage - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE).Value) > StepTolerance[Column.VOLTAGE])
                             throw new ProcessException("Voltage Out Of Range");
                     }
