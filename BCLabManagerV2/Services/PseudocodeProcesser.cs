@@ -13,12 +13,17 @@ namespace BCLabManager
         internal static void Load(string fileName, RecipeTemplateServiceClass recipeTemplateService, ProgramServiceClass programService, ProjectServiceClass projectService, ProgramTypeServiceClass programTypeService)
         {
             List<RecipeTemplate> recipeTemplates = BuildRecipeTemplatesFromPseudocode(fileName, recipeTemplateService);
-            foreach (var rt in recipeTemplates)
-                recipeTemplateService.SuperAdd(rt);
+            if (recipeTemplates != null)
+                foreach (var rt in recipeTemplates)
+                    recipeTemplateService.SuperAdd(rt);
 
             List<Program> programs = BuildProgramsFromPseudocode(fileName, programService, projectService, programTypeService, recipeTemplateService);
-            foreach (var prog in programs)
-                programService.SuperAdd(prog);
+            if (programs != null)
+                foreach (var prog in programs)
+                {
+                    programService.SuperAdd(prog);
+                    //programService.FixTemplates(prog);    //不管用
+                }
         }
 
         private static List<RecipeTemplate> BuildRecipeTemplatesFromPseudocode(string fileName, RecipeTemplateServiceClass recipeTemplateService)
@@ -60,9 +65,9 @@ namespace BCLabManager
             }
 
             var xmlsteps = xmlrecTemplate.Descendants("Steps").Elements();
-            if(xmlsteps !=null)
+            if (xmlsteps != null)
             {
-                foreach(var xmlstep in xmlsteps)
+                foreach (var xmlstep in xmlsteps)
                 {
                     var step = new StepV2();
                     step.Index = GetIntergerFromNode(xmlstep, "Index");
@@ -142,6 +147,12 @@ namespace BCLabManager
                 case "CP DISCHARGE":
                     m = ActionMode.CP_DISCHARGE;
                     break;
+                case "REST":
+                    m = ActionMode.REST;
+                    break;
+                default:
+                    m = ActionMode.NA;
+                    break;
             }
             return m;
         }
@@ -156,7 +167,7 @@ namespace BCLabManager
 
         private static int GetIntergerFromNode(XElement xe, string v)
         {
-            if (xe.Attribute(v) != null && xe.Attribute(v).Value!=string.Empty)
+            if (xe.Attribute(v) != null && xe.Attribute(v).Value != string.Empty)
                 return Convert.ToInt32(xe.Attribute(v).Value);
             else
                 return 0;
@@ -255,7 +266,7 @@ namespace BCLabManager
                         var recTname = xmlRec.Attribute("Template").Value;
                         if (recTname == string.Empty)
                             continue;
-                        var recT = recipeTemplateService.Items.SingleOrDefault(o => o.Name == recTname);
+                        var recT = recipeTemplateService.Items.Last(o => o.Name == recTname);
                         if (recT == null)
                         {
                             MessageBox.Show($@"No such recipe template:{recTname}");

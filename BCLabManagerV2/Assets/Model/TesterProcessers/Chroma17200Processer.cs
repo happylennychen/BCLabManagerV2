@@ -166,7 +166,7 @@ namespace BCLabManager.Model
             {
                 bool isStartPoint = false;
                 bool isCOCPoint = false;
-                var fullSteps = new List<StepV2>(recipe.RecipeTemplate.StepV2s);
+                var fullSteps = new List<StepV2>(recipe.RecipeTemplate.StepV2s.OrderBy(o=>o.Index));
                 for (; lineIndex < 10; lineIndex++)     //第十行以后都是数据
                     sw.ReadLine();
                 string dataLine0 = string.Empty;
@@ -178,16 +178,24 @@ namespace BCLabManager.Model
                     isFirstDischarge = true;
                 step1 = fullSteps.First(o => o.Action.Mode == am);
                 StepStartPointCheck(step1, row1, recipe.Temperature, isFirstDischarge, ref isFirstDischargeChecked);
-
+                startTime = Convert.ToInt32(row1[Column.TIME_MS]);
                 lineIndex = 11;
                 while (true)
                 {
+                    lineIndex++;
                     dataLine0 = dataLine1;
                     row0 = row1;
                     dataLine1 = sw.ReadLine();
                     if (dataLine1 == null)
+                    {
+                        timeSpan = (Convert.ToInt32(row0[Column.TIME_MS]) - startTime) / 1000;
+                        StepCOCPointCheck(step1, row0, recipe.Temperature, timeSpan);
+                        step0 = step1;
+                        step1 = GetNewTargetStep(step0, fullSteps, row0, recipe.Temperature, timeSpan);
+                        if (step1 != null)
+                            throw new ProcessException($@"Step {step1.Index} is missing");
                         break;
-                    lineIndex++;
+                    }
                     row1 = GetRowFromString(dataLine1);
 
                     if (row1[Column.MODE] == "0")
@@ -202,7 +210,7 @@ namespace BCLabManager.Model
                         step0 = step1;
                         step1 = GetNewTargetStep(step0, fullSteps, row0, recipe.Temperature, timeSpan);
                         if (step1 == null)
-                            throw new ProcessException("Cannot Get Next Step");
+                            throw new ProcessException("Cannot Get Next Step.");
                         StepActionModeCheck(step1.Action.Mode, GetActionMode(row1[Column.STEP_MODE]));
                         if (!isFirstDischargeChecked)
                         {
@@ -210,18 +218,23 @@ namespace BCLabManager.Model
                                 isFirstDischarge = true;
                         }
                         isCOCPoint = false;
-                        isStartPoint = true;
                         #endregion
-                    }
-
-                    else if (isStartPoint)
-                    {
+                        //isStartPoint = true;
                         #region Start Point Check
                         StepStartPointCheck(step1, row1, recipe.Temperature, isFirstDischarge, ref isFirstDischargeChecked);
                         isStartPoint = false;
                         startTime = Convert.ToInt32(row1[Column.TIME_MS]);
                         #endregion
                     }
+
+                    //else if (isStartPoint)
+                    //{
+                    //    #region Start Point Check
+                    //    StepStartPointCheck(step1, row1, recipe.Temperature, isFirstDischarge, ref isFirstDischargeChecked);
+                    //    isStartPoint = false;
+                    //    startTime = Convert.ToInt32(row1[Column.TIME_MS]);
+                    //    #endregion
+                    //}
 
                     else
                     {
@@ -246,10 +259,14 @@ namespace BCLabManager.Model
             }
             catch (ProcessException e)
             {
-                MessageBox.Show(e.Message);
-                var msg = $@"{step0.Index}_{step1.Index}_{row0[Column.TIME_MS]}_{row1[Column.TIME_MS]}_{timeSpan}_{lineIndex}";
-                MessageBox.Show(msg);
-                ret = false;
+                var str = $"{e.Message}\nLine:{lineIndex}\nContinue to commit?";
+                var userRet = MessageBox.Show(str, "", MessageBoxButton.YesNo);
+                if (userRet == MessageBoxResult.Yes)
+                {
+                    ret = true;
+                }
+                else
+                    ret = false;
             }
             finally
             {
@@ -279,7 +296,7 @@ namespace BCLabManager.Model
                         tolerance = StepTolerance[Column.VOLTAGE];
                         break;
                     case Parameter.CURRENT:
-                        value = Convert.ToDouble(row[Column.CURRENT]);
+                        value = Convert.ToDouble(row[Column.CURRENT]) * 1000;
                         tolerance = StepTolerance[Column.CURRENT];
                         break;
                     case Parameter.TEMPERATURE:
@@ -349,9 +366,13 @@ namespace BCLabManager.Model
             switch (step.Action.Mode)
             {
                 case ActionMode.CC_CV_CHARGE:
-                    current = GetCurrentFromRow(row1);
-                    if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
-                        throw new ProcessException("Current Out Of Range");
+                    voltage = Convert.ToDouble(row1[Column.VOLTAGE]) * 1000;
+                    if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance[Column.VOLTAGE])
+                    {
+                        current = GetCurrentFromRow(row1) * -1;
+                        if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
+                            throw new ProcessException("Current Out Of Range");
+                    }
                     break;
                 case ActionMode.CC_DISCHARGE:
 
@@ -407,20 +428,23 @@ namespace BCLabManager.Model
             switch (step.Action.Mode)
             {
                 case ActionMode.CC_CV_CHARGE:
-                    if (row[Column.STATUS] == "StepFinishByCut_V")
+                    if (row[Column.STATUS] == "StepFinishByCut_I")
                     {
+                        current = GetCurrentFromRow(row) * -1;
+                        if (Math.Abs(current - step.CutOffConditions.SingleOrDefault(o=>o.Parameter == Parameter.CURRENT).Value) > StepTolerance[Column.CURRENT])
+                            throw new ProcessException("Current Out Of Range");
                         voltage = Convert.ToDouble(row[Column.VOLTAGE]) * 1000;
                         if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance[Column.VOLTAGE])
                             throw new ProcessException("Voltage Out Of Range");
                     }
-                    else if (row[Column.STATUS] == "StepFinishByCut_I")
+                    else if (row[Column.STATUS] == "StepFinishByCut_T")     //DST测试也会设定充电时间
                     {
-                        current = GetCurrentFromRow(row);
-                        if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
-                            throw new ProcessException("Current Out Of Range");
+                        if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance[Column.TIME])
+                            throw new ProcessException("Time Out Of Range");
                     }
-                    else if (row[Column.STATUS] == "StepFinishByCut_T")
+                    else
                     {
+                        throw new ProcessException("Abnormal step cut off.");
                     }
                     break;
                 case ActionMode.CC_DISCHARGE:
@@ -435,12 +459,20 @@ namespace BCLabManager.Model
                         if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance[Column.TIME])
                             throw new ProcessException("Time Out Of Range");
                     }
+                    else
+                    {
+                        throw new ProcessException("Abnormal step cut off.");
+                    }
                     break;
                 case ActionMode.REST:
                     if (row[Column.STATUS] == "StepFinishByCut_T")
                     {
                         if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance[Column.TIME])
                             throw new ProcessException("Time Out Of Range");
+                    }
+                    else
+                    {
+                        throw new ProcessException("Abnormal step cut off.");
                     }
                     break;
                 default:

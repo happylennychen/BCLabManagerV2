@@ -113,7 +113,7 @@ namespace BCLabManager.ViewModel
             get
             {
                 if (_selectedItem != null)
-                    return _selectedItem.Steps;
+                    return new ObservableCollection<StepV2ViewModel>(_selectedItem.Steps.OrderBy(o=>o.Index));
                 else
                     return null;
             }

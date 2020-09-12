@@ -186,13 +186,13 @@ namespace BCLabManager.Model
             {
                 foreach (var rectempStr in this.RecipeTemplates)
                 {
-                    var rectemp = _recipeTemplates.SingleOrDefault(o => o.Name == rectempStr);
+                    var rectemp = _recipeTemplates.Last(o => o.Name == rectempStr); //如果有重名的，则选择最新的那个。这只是个临时方案
                     var count = dic[rectemp.Name];
                     for (int i = 0; i < count; i++)
                     {
                         var model = new Recipe(rectemp, this.Project.BatteryType);
                         model.Temperature = temperature;
-                        model.RecipeTemplate = rectemp;
+                        //model.RecipeTemplate = rectemp;   //加了就会报错
                         this.Recipes.Add(model);
                     }
                 }

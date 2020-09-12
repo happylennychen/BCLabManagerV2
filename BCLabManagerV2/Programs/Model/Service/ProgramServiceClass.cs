@@ -39,6 +39,18 @@ namespace BCLabManager.Model
             DatabaseAdd(item);
         }
 
+        //internal void FixTemplates(Program prog)
+        //{
+        //    using (var uow = new UnitOfWork(new AppDbContext()))
+        //    {
+        //        foreach (var rec in prog.Recipes)
+        //        {
+        //            rec.RecipeTemplate = uow.RecipeTemplates.GetAll("StepV2s").Last(o => o.Name == rec.Name);
+        //        }
+        //        uow.Commit();
+        //    }
+        //}
+
         private List<RecipeTemplate> GetRCRecipeTemplatesByCurrents(double chargeRate, double idleTime, List<double> currents, RecipeTemplateServiceClass recipeTemplateService, StepTemplateServiceClass stepTemplateService)
         {
             var output = new List<RecipeTemplate>();
@@ -124,7 +136,7 @@ namespace BCLabManager.Model
                 if (idlesteptemp == null)
                 {
                     idlesteptemp = CreateRCStepTemplate(0, CurrentUnitEnum.mA, idleTime, CutOffConditionTypeEnum.Time_s, stepTemplateService);
-                        //new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = idleTime, CutOffConditionType = CutOffConditionTypeEnum.Time_s };
+                    //new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = idleTime, CutOffConditionType = CutOffConditionTypeEnum.Time_s };
                 }
 
                 var dsgsteptemp = stepTemplates.SingleOrDefault(o => o.CurrentInput == curr && o.CutOffConditionValue == 0);
@@ -220,7 +232,7 @@ namespace BCLabManager.Model
 
         private StepTemplate CreateRCStepTemplate(double currentInput, CurrentUnitEnum currentUnit, double cutOffConditionValue, CutOffConditionTypeEnum cutOffConditionType, StepTemplateServiceClass stepTemplateService)
         {
-            var output = new StepTemplate() { CurrentInput = currentInput , CurrentUnit = currentUnit, CutOffConditionValue = cutOffConditionValue, CutOffConditionType = cutOffConditionType};
+            var output = new StepTemplate() { CurrentInput = currentInput, CurrentUnit = currentUnit, CutOffConditionValue = cutOffConditionValue, CutOffConditionType = cutOffConditionType };
             stepTemplateService.SuperAdd(output);
             return output;
         }
