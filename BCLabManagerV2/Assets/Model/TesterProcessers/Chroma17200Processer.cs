@@ -19,7 +19,7 @@ namespace BCLabManager.Model
         {
             StepTolerance.Add(Column.CURRENT, 10);        //mA
             StepTolerance.Add(Column.VOLTAGE, 50);          //mV
-            StepTolerance.Add(Column.TEMPERATURE, 2.8);
+            StepTolerance.Add(Column.TEMPERATURE, 3.5);
             StepTolerance.Add(Column.TIME, 3);          //S
 
             ContinuityTolerance.Add(Column.STEPNO, 1);

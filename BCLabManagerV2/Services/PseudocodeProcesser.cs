@@ -266,7 +266,7 @@ namespace BCLabManager
                         var recTname = xmlRec.Attribute("Template").Value;
                         if (recTname == string.Empty)
                             continue;
-                        var recT = recipeTemplateService.Items.Last(o => o.Name == recTname);
+                        var recT = recipeTemplateService.Items.Last(o => o.Name == recTname); //如果有重名的，则选择最新的那个。这只是个临时方案
                         if (recT == null)
                         {
                             MessageBox.Show($@"No such recipe template:{recTname}");
