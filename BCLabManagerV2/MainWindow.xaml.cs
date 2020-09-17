@@ -170,7 +170,7 @@ namespace BCLabManager
 
                 ChamberService.Items = new ObservableCollection<Chamber>(uow.Chambers.GetAll("Records"));
 
-                RecipeTemplateService.Items = new ObservableCollection<RecipeTemplate>(uow.RecipeTemplates.GetAll());
+                //RecipeTemplateService.Items = new ObservableCollection<RecipeTemplate>(uow.RecipeTemplates.GetAll());
                 //StepService.Items = new ObservableCollection<Step>(uow.Steps.GetAll());
                 //StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
 
@@ -292,7 +292,7 @@ namespace BCLabManager
             //dialog.Multiselect = true;
             if (dialog.ShowDialog() == true)
             {
-                PseudocodeProcesser.Load(dialog.FileName,RecipeTemplateService, ProgramService, ProjectService, ProgramTypeService);
+                PseudocodeProcesser.Load(dialog.FileName, ProgramService.RecipeService.RecipeTemplateService, ProgramService, ProjectService, ProgramTypeService);
             }
         }
     }
