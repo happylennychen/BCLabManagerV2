@@ -252,14 +252,9 @@ namespace BCLabManager.Model
                 if (RecipeService.StepRuntimeService.Items.Count != 0)
                     nextId = RecipeService.StepRuntimeService.Items.Max(o => o.Id) + 1;   //?????help efcore to produce correct id
                 foreach (var recipe in item.Recipes)
-                    foreach (var stepRuntim in recipe.StepRuntimes)
-                    {
-                        //int StepId = stepRuntim.Step.Id;
-                        int StepTemplateId = stepRuntim.StepTemplate.Id;
-                        //stepRuntim.Step = uow.Steps.GetById(StepId);
-                        stepRuntim.StepTemplate = uow.StepTemplates.GetById(StepTemplateId);
-                        stepRuntim.Id = nextId++;
-                    }
+                {
+                    recipe.RecipeTemplate = uow.RecipeTemplates.GetAll().Last(o => o.Name == recipe.Name);      //用Last只是临时方案
+                }
                 uow.Programs.Insert(item);
                 uow.Commit();
             }
