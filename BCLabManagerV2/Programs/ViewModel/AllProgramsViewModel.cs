@@ -883,10 +883,10 @@ namespace BCLabManager.ViewModel
                     $"{SelectedRecipe.Temperature}Deg-{SelectedRecipe.Name}"
                 );
             evm.Temperature = _selectedRecipe.Temperature;
-            if (_selectedProgram._program.Type.Name == "EV")
+            if (_selectedProgram._program.Type.Name == "EV" && _selectedProgram.Name.Contains("Dynamic"))   //Issue 2321
             {
-                if (_selectedProgram.Name.Contains("Dynamic"))
-                    evm.Current = 0;
+                //if (_selectedProgram.Name.Contains("Dynamic"))
+                evm.Current = 0;
             }
             else
             {
@@ -928,14 +928,14 @@ namespace BCLabManager.ViewModel
                         st = DateTime.MinValue;
                         et = DateTime.MinValue;
                     }
-                    var filePath = _programService.RecipeService.TestRecordService.DataPreProcess(SelectedTestRecord.Record, evm.FileList.ToList(), 
-                        evm.IsRename, 
-                        evm.NewName, 
-                        st, 
-                        et, 
-                        SelectedProgram.Project.BatteryType.Name, 
-                        SelectedProgram.Project.Name, 
-                        SelectedProgram._program, 
+                    var filePath = _programService.RecipeService.TestRecordService.DataPreProcess(SelectedTestRecord.Record, evm.FileList.ToList(),
+                        evm.IsRename,
+                        evm.NewName,
+                        st,
+                        et,
+                        SelectedProgram.Project.BatteryType.Name,
+                        SelectedProgram.Project.Name,
+                        SelectedProgram._program,
                         SelectedRecipe._recipe,
                         evm.Tester.ITesterProcesser);
                     if (filePath == string.Empty)
