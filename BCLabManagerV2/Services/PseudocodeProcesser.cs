@@ -258,25 +258,26 @@ namespace BCLabManager
                 var xmlRecipes = xmlProgram.Descendants("Recipes").Elements();
                 if (xmlRecipes != null)
                 {
-                    var dic = new Dictionary<string, int>();
+                    var dic = new Dictionary<int, int>();   //recipe template id, count
                     foreach (var xmlRec in xmlRecipes)
                     {
                         if (xmlRec.Attribute("Template") == null)
                             continue;
-                        var recTname = xmlRec.Attribute("Template").Value;
-                        if (recTname == string.Empty)
+                        var recTid = xmlRec.Attribute("Template").Value;
+                        if (recTid == string.Empty)
                             continue;
-                        var recT = recipeTemplateService.Items.Last(o => o.Name == recTname); //如果有重名的，则选择最新的那个。这只是个临时方案
+                        var Tid = Convert.ToInt32(recTid);
+                        var recT = recipeTemplateService.Items.SingleOrDefault(o => o.Id == Tid);
                         if (recT == null)
                         {
-                            MessageBox.Show($@"No such recipe template:{recTname}");
+                            MessageBox.Show($@"No such recipe template:{recTid}");
                             continue;
                         }
                         program.RecipeTemplates.Add(recT.Name);
                         var count = GetIntergerFromNode(xmlRec, "Count");
                         if (count == 0)
                             count = 1;
-                        dic.Add(recT.Name, count);
+                        dic.Add(recT.Id, count);
                     }
                     program.BuildRecipes(recipeTemplateService.Items.ToList(), dic);
                 }

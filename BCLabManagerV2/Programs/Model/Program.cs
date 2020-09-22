@@ -180,14 +180,14 @@ namespace BCLabManager.Model
             return this.Name;
         }
 
-        internal void BuildRecipes(List<RecipeTemplate> _recipeTemplates, Dictionary<string, int> dic)
+        internal void BuildRecipes(List<RecipeTemplate> _recipeTemplates, Dictionary<int, int> dic)
         {
             foreach (var temperature in this.Temperatures)
             {
-                foreach (var rectempStr in this.RecipeTemplates)
+                foreach (var tid in dic.Keys)
                 {
-                    var rectemp = _recipeTemplates.Last(o => o.Name == rectempStr); //如果有重名的，则选择最新的那个。这只是个临时方案
-                    var count = dic[rectemp.Name];
+                    var rectemp = _recipeTemplates.SingleOrDefault(o => o.Id == tid);
+                    var count = dic[tid];
                     for (int i = 0; i < count; i++)
                     {
                         var model = new Recipe(rectemp, this.Project.BatteryType);

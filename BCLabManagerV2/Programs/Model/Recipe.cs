@@ -79,6 +79,7 @@ namespace BCLabManager.Model
             get { return _recipeTemplate; }
             set { SetProperty(ref _recipeTemplate, value); }
         }
+        public int RecipeTemplateId { get; set; }
         //private double _current;
         //public double Current
         //{
@@ -102,6 +103,7 @@ namespace BCLabManager.Model
         public Recipe(RecipeTemplate template, BatteryType batteryType)
         {
             Name = template.Name;
+            RecipeTemplateId = template.Id;
             //Current = template.Current;
             //Temperature = template.Temperature;
             //foreach (var step in template.Steps)
