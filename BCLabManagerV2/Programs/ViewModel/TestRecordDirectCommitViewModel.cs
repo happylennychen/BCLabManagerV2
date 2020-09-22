@@ -503,6 +503,23 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("NewName");
             }
         }
+        private int _startIndex = 0;
+        public int StartIndex
+        {
+            get
+            {
+                return _startIndex;
+            }
+            set
+            {
+                if (value == _startIndex)
+                    return;
+
+                _startIndex = value;
+
+                RaisePropertyChanged("StartIndex");
+            }
+        }
 
         #endregion // Presentation Properties
 

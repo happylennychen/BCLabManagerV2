@@ -931,6 +931,7 @@ namespace BCLabManager.ViewModel
                     var filePath = _programService.RecipeService.TestRecordService.DataPreProcess(SelectedTestRecord.Record, evm.FileList.ToList(),
                         evm.IsRename,
                         evm.NewName,
+                        evm.StartIndex,
                         st,
                         et,
                         SelectedProgram.Project.BatteryType.Name,

@@ -146,7 +146,7 @@ namespace BCLabManager.Model
             return true;
         }
 
-        public bool DataPreprocessing(string filepath, Program program, Recipe recipe, TestRecord record)
+        public bool DataPreprocessing(string filepath, Program program, Recipe recipe, TestRecord record, int startIndex)
         {
             FileStream fs = new FileStream(filepath, FileMode.Open);
             StreamReader sw = new StreamReader(fs);
@@ -164,9 +164,8 @@ namespace BCLabManager.Model
             Dictionary<Column, string> row1 = new Dictionary<Column, string>();
             try
             {
-                bool isStartPoint = false;
                 bool isCOCPoint = false;
-                var fullSteps = new List<StepV2>(recipe.RecipeTemplate.StepV2s.OrderBy(o=>o.Index));
+                var fullSteps = new List<StepV2>(recipe.RecipeTemplate.StepV2s.OrderBy(o => o.Index));
                 for (; lineIndex < 10; lineIndex++)     //第十行以后都是数据
                     sw.ReadLine();
                 string dataLine0 = string.Empty;
@@ -176,7 +175,12 @@ namespace BCLabManager.Model
                 ActionMode am = GetActionMode(row1[Column.STEP_MODE]);
                 if (am == ActionMode.CC_DISCHARGE)
                     isFirstDischarge = true;
-                step1 = fullSteps.First(o => o.Action.Mode == am);
+                if (startIndex != 0)
+                {
+                    step1 = fullSteps.SingleOrDefault(o => o.Index == startIndex);
+                }
+                else
+                    step1 = fullSteps.First(o => o.Action.Mode == am);  //有隐患
                 StepStartPointCheck(step1, row1, recipe.Temperature, isFirstDischarge, ref isFirstDischargeChecked);
                 startTime = Convert.ToInt32(row1[Column.TIME_MS]);
                 lineIndex = 11;
@@ -222,7 +226,6 @@ namespace BCLabManager.Model
                         //isStartPoint = true;
                         #region Start Point Check
                         StepStartPointCheck(step1, row1, recipe.Temperature, isFirstDischarge, ref isFirstDischargeChecked);
-                        isStartPoint = false;
                         startTime = Convert.ToInt32(row1[Column.TIME_MS]);
                         #endregion
                     }
@@ -324,10 +327,10 @@ namespace BCLabManager.Model
             //switch (coc.Mark)
             //{
             //    case CompareMarkEnum.SmallerThan:
-                    if (Math.Abs(value - coc.Value) <= tolerance)
-                    {
-                        nextStep = Jump(coc, fullSteps, currentStepIndex);
-                    }
+            if (Math.Abs(value - coc.Value) <= tolerance)
+            {
+                nextStep = Jump(coc, fullSteps, currentStepIndex);
+            }
             //        break;
             //    case CompareMarkEnum.LargerThan:
             //        if (Math.Abs(value - coc.Value) <= StepTolerance[Column.CURRENT])
@@ -431,7 +434,7 @@ namespace BCLabManager.Model
                     if (row[Column.STATUS] == "StepFinishByCut_I")
                     {
                         current = GetCurrentFromRow(row) * -1;
-                        if (Math.Abs(current - step.CutOffConditions.SingleOrDefault(o=>o.Parameter == Parameter.CURRENT).Value) > StepTolerance[Column.CURRENT])
+                        if (Math.Abs(current - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.CURRENT).Value) > StepTolerance[Column.CURRENT])
                             throw new ProcessException("Current Out Of Range");
                         voltage = Convert.ToDouble(row[Column.VOLTAGE]) * 1000;
                         if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance[Column.VOLTAGE])

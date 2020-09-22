@@ -1,4 +1,4 @@
-﻿#define Test
+﻿//#define Test
 using BCLabManager.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -368,7 +368,7 @@ namespace BCLabManager.Model
             SuperUpdate(testRecord);
         }
 
-        internal string DataPreProcess(TestRecord record, List<string> rawDataList, bool isRename, string newName, DateTime st, DateTime et, string batteryType, string projectName, Program program, Recipe recipe, ITesterProcesser processer)
+        internal string DataPreProcess(TestRecord record, List<string> rawDataList, bool isRename, string newName, int startIndex, DateTime st, DateTime et, string batteryType, string projectName, Program program, Recipe recipe, ITesterProcesser processer)
         {
             string root = $@"{GlobalSettings.RootPath}{batteryType}\{projectName}";
             string temproot = $@"{GlobalSettings.TempraryFolder}{batteryType}\{projectName}";
@@ -389,7 +389,7 @@ namespace BCLabManager.Model
                 }
             }
             TesterServiceClass ts = new TesterServiceClass();
-            if (!ts.DataPreprocessing(processer, temptestfilepath, program, recipe, record))
+            if (!ts.DataPreprocessing(processer, temptestfilepath, program, recipe, record, startIndex))
             {
                 File.Delete(temptestfilepath);
                 return string.Empty;

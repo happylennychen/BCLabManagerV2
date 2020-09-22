@@ -57,7 +57,7 @@ namespace BCLabManager.Model
             return true;
         }
 
-        public bool DataPreprocessing(string filepath, Program program, Recipe recipe, TestRecord record)
+        public bool DataPreprocessing(string filepath, Program program, Recipe recipe, TestRecord record, int startIndex)
         {
             return true;
             throw new NotImplementedException();
