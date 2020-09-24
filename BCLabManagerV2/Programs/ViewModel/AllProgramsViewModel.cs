@@ -21,7 +21,6 @@ namespace BCLabManager.ViewModel
         ProgramViewModel _selectedProgram;
         RecipeViewModel _selectedRecipe;
         TestRecordViewModel _selectedTestRecord;
-        StepRuntimeViewModel _selectedStepRuntime;
         RelayCommand _createCommand;
         RelayCommand _createRCProgramCommand;
         RelayCommand _editCommand;
@@ -221,18 +220,6 @@ namespace BCLabManager.ViewModel
                     return null;
             }
         }
-
-        public List<StepRuntimeViewModel> StepRuntimes
-        {
-            get
-            {
-                if (_selectedRecipe != null)
-                    return _selectedRecipe.StepRuntimes.OrderBy(o => o.StepRuntime.Order).ToList();
-                else
-                    return null;
-            }
-        }
-
         public TestRecordViewModel SelectedTestRecord
         {
             get
@@ -244,21 +231,6 @@ namespace BCLabManager.ViewModel
                 if (_selectedTestRecord != value)
                 {
                     _selectedTestRecord = value;
-                }
-            }
-        }
-
-        public StepRuntimeViewModel SelectedStepRuntime
-        {
-            get
-            {
-                return _selectedStepRuntime;
-            }
-            set
-            {
-                if (_selectedStepRuntime != value)
-                {
-                    _selectedStepRuntime = value;
                 }
             }
         }
@@ -431,34 +403,6 @@ namespace BCLabManager.ViewModel
                         );
                 }
                 return _addCommand;
-            }
-        }
-        public ICommand StartCommand
-        {
-            get
-            {
-                if (_startCommand == null)
-                {
-                    _startCommand = new RelayCommand(
-                        param => { this.Start(); },
-                        param => this.CanStart
-                        );
-                }
-                return _startCommand;
-            }
-        }
-        public ICommand EndCommand
-        {
-            get
-            {
-                if (_endCommand == null)
-                {
-                    _endCommand = new RelayCommand(
-                        param => { this.End(); },
-                        param => this.CanEnd
-                        );
-                }
-                return _endCommand;
             }
         }
         #endregion // Public Interface
@@ -1043,86 +987,6 @@ namespace BCLabManager.ViewModel
         {
             _programService.RecipeService.AddTestRecord(SelectedRecipe._recipe);
         }
-        private void Start()
-        {
-            StepStartViewModel viewModel = new StepStartViewModel();
-            StartView StartViewInstance = new StartView();
-            StartViewInstance.DataContext = viewModel;
-            StartViewInstance.ShowDialog();
-            if (viewModel.IsOK == true)
-            {
-                _programService.StepStart(SelectedProgram._program, SelectedRecipe._recipe, SelectedStepRuntime.StepRuntime, viewModel.StartTime);
-            }
-        }
-        private bool CanStart
-        {
-            get
-            {
-                if (_selectedStepRuntime != null)
-                {
-                    //    //var sr = _selectedStepRuntime.StepRuntime;
-                    //    if (_selectedProgram == AllPrograms.First())
-                    //    {
-                    //        if (_selectedRecipe == _selectedProgram.Recipes.First())
-                    //        {
-                    if (_selectedStepRuntime == _selectedRecipe.StepRuntimes.First())
-                    {
-                        if (_selectedStepRuntime.StepRuntime.StartTime == DateTime.MinValue)
-                            return true;
-                        else
-                            return false;
-                    }
-                    else
-                    {
-                        var index = _selectedRecipe.StepRuntimes.IndexOf(_selectedStepRuntime);
-                        var previous = _selectedRecipe.StepRuntimes[index - 1];
-                        if (previous.StepRuntime.EndTime == DateTime.MinValue)
-                            return false;
-                        else
-                        {
-                            if (_selectedStepRuntime.StepRuntime.StartTime == DateTime.MinValue)
-                                return true;
-                            else
-                                return false;
-                        }
-                    }
-                    //    }
-                    //    else
-                    //    {
-
-                    //    }
-                    //}
-                    //else
-                    //{
-
-                    //}
-                }
-                else
-                    return false;
-            }
-        }
-        private void End()
-        {
-            StepEndViewModel viewModel = new StepEndViewModel();
-            EndView EndViewInstance = new EndView();
-            EndViewInstance.DataContext = viewModel;
-            EndViewInstance.ShowDialog();
-            if (viewModel.IsOK == true)
-            {
-                _programService.StepEnd(SelectedProgram._program, SelectedRecipe._recipe, SelectedStepRuntime.StepRuntime, viewModel.EndTime);
-            }
-        }
-        private bool CanEnd
-        {
-            get
-            {
-                if (_selectedStepRuntime != null && _selectedStepRuntime.StepRuntime.StartTime != DateTime.MinValue && _selectedStepRuntime.StepRuntime.EndTime == DateTime.MinValue)
-                    return true;
-                else
-                    return false;
-            }
-        }
-
         #endregion //Private Helper
 
 

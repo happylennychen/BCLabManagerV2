@@ -452,19 +452,11 @@
     <Compile Include="Programs\Model\StepTemplate.cs" />
     <Compile Include="Programs\Model\Step.cs" />
     <Compile Include="Programs\ViewModel\RCProgramEditViewModel.cs" />
-    <Compile Include="Programs\ViewModel\StepEndViewModel.cs" />
-    <Compile Include="Programs\ViewModel\StepTemplateViewModel.cs" />
-    <Compile Include="Programs\ViewModel\StepTemplateEditViewModel.cs" />
-    <Compile Include="Programs\ViewModel\StepRuntimeViewModel.cs" />
-    <Compile Include="Programs\ViewModel\StepStartViewModel.cs" />
     <Compile Include="Programs\ViewModel\SplitterViewModel.cs" />
     <Compile Include="Settings\View\AllProgramTypesView.xaml.cs">
       <DependentUpon>AllProgramTypesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Programs\ViewModel\TestRecordDirectCommitViewModel.cs" />
-    <Compile Include="Programs\View\AllStepTemplatesView.xaml.cs">
-      <DependentUpon>AllStepTemplatesView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Programs\View\DirectCommitView.xaml.cs">
       <DependentUpon>DirectCommitView.xaml</DependentUpon>
     </Compile>
@@ -474,17 +466,8 @@
     <Compile Include="Programs\View\SplitterView.xaml.cs">
       <DependentUpon>SplitterView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Programs\View\EndView.xaml.cs">
-      <DependentUpon>EndView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Programs\View\StartView.xaml.cs">
-      <DependentUpon>StartView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\View\ProgramTypeView.xaml.cs">
       <DependentUpon>ProgramTypeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Programs\View\StepView.xaml.cs">
-      <DependentUpon>StepView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\DatabasePopulator.cs" />
     <Compile Include="Services\ExcelHelper.cs" />
@@ -703,10 +686,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Programs\View\AllStepTemplatesView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Programs\View\AllRecipeTemplatesView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -724,14 +703,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Programs\View\SplitterView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Programs\View\EndView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Programs\View\StartView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -756,10 +727,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Programs\View\ProgramView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Programs\View\StepView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
