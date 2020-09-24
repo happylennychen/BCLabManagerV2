@@ -297,6 +297,8 @@ namespace BCLabManager.ViewModel
             {
                 if(recVM.IsSelected)
                 {
+                    if (recVM.Count == 0)
+                        recVM.Count = 1;
                     dic.Add(recVM.Id, recVM.Count);
                 }
             }

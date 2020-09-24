@@ -34,6 +34,21 @@ namespace BCLabManager.ViewModel
             )
         {
             _RecipeTemplate = RecipeTemplateModel;
+            _RecipeTemplate.StepV2s.CollectionChanged += StepV2s_CollectionChanged;
+        }
+
+        private void StepV2s_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
+                    {
+                        var step = item as StepV2;
+                        step.Index = Steps.Count;
+                    }
+                    break;
+            }
         }
 
 
@@ -102,6 +117,20 @@ namespace BCLabManager.ViewModel
                 {
                     _selectedStep = value;
                 }
+            }
+        }
+
+        public ObservableCollection<Protection> Protections
+        {
+            get { return _RecipeTemplate.Protections; }
+            set
+            {
+                if (value == _RecipeTemplate.Protections)
+                    return;
+
+                _RecipeTemplate.Protections = value;
+
+                RaisePropertyChanged("Protections");
             }
         }
         #endregion // Customer Properties
@@ -196,11 +225,11 @@ namespace BCLabManager.ViewModel
         public void AddStep()       //对于model来说，需要将选中的sub copy到_program.Recipes来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.Recipes里面去
         {
             var step = new StepV2();
-            var stepViewInstance = new StepView();
-            var stepViewEditViewModel = new StepV2EditViewModel(step);
-            stepViewInstance.DataContext = stepViewEditViewModel;
-            stepViewInstance.ShowDialog();
-            if (stepViewEditViewModel.IsOK == true)
+            //var stepViewInstance = new StepView();
+            //var stepViewEditViewModel = new StepV2EditViewModel(step);
+            //stepViewInstance.DataContext = stepViewEditViewModel;
+            //stepViewInstance.ShowDialog();
+            //if (stepViewEditViewModel.IsOK == true)
             {
                 step.Index = Steps.Count + 1;
                 Steps.Add(step);

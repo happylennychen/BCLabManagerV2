@@ -95,11 +95,11 @@
         <GroupBox Grid.Row="0" Header="Programs">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="_Create RC Program" Command="{Binding Path=CreateRCProgramCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Create RC Program" Command="{Binding Path=CreateRCProgramCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
                     <Button Content="_Abandon" Command="{Binding Path=ProgramInvalidateCommand}" Margin="0,5,15,0" Width="60"></Button>
                     <Button Content="_Create" Command="{Binding Path=CreateCommand}" Margin="0,5,5,0" Width="60"></Button>
                     <Button Content="_Edit" Command="{Binding Path=EditCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
-                    <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
                 </StackPanel>
                 <DataGrid GridLinesVisibility="None" Background="White"
                           x:Name="Programlist" AutoGenerateColumns="False"
@@ -143,8 +143,8 @@
             <DockPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="_Direct Commit" Command="{Binding Path=DirectCommitCommand}" Margin="0,5,15,0" Width="100"></Button>
-                    <Button Content="_Execute" Command="{Binding Path=ExecuteCommand}" Margin="0,5,5,0" Width="60"></Button>
-                    <Button Content="_Commit" Command="{Binding Path=CommitCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Execute" Command="{Binding Path=ExecuteCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
+                    <Button Content="_Commit" Command="{Binding Path=CommitCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
                     <Button Content="_Invalidate" Command="{Binding Path=InvalidateCommand}" Margin="0,5,5,0" Width="60"></Button>
                     <Button Content="_View Data" Command="{Binding Path=ViewCommand}" Margin="0,5,5,0" Width="60"></Button>
                     <Button Content="_Add" Command="{Binding Path=AddCommand}" Margin="0,5,5,0" Width="60"></Button>

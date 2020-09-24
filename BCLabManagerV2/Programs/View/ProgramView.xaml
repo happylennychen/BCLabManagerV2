@@ -157,8 +157,8 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition Width="40"></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
+                    <!--<ColumnDefinition Width="40"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>-->
                 </Grid.ColumnDefinitions>
                 <DataGrid GridLinesVisibility="None" x:Name="LeftRecipelist" AutoGenerateColumns="False"  Grid.Column="0"
                           ItemsSource="{Binding Path=AllRecipeTemplates}" Background="White">
@@ -166,6 +166,7 @@
                         <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
                         <DataGridCheckBoxColumn Header="Selected" Binding="{Binding Path=IsSelected}"></DataGridCheckBoxColumn>
+                        <DataGridTextColumn Header="Count" Binding="{Binding Path=Count}"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

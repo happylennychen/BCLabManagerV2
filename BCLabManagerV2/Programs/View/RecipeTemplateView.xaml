@@ -1,9 +1,30 @@
 ﻿<Window x:Class="BCLabManager.View.RecipeTemplateView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="{Binding Path=DisplayName}" Height="600" Width="850" WindowStartupLocation="CenterScreen">
+        xmlns:core="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:BCLabManager.Model"
+        Title="{Binding Path=DisplayName}" Height="600" Width="1050" WindowStartupLocation="CenterScreen">
     <Window.Resources>
-
+        <ObjectDataProvider x:Key="ActionModeEnum" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type Type="local:ActionMode"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="ParameterEnum" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type Type="local:Parameter"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="MarkEnum" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type Type="local:CompareMarkEnum"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="JumpTypeEnum" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type Type="local:JumpType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
         <LinearGradientBrush x:Key="Brush_HeaderBackground" StartPoint="0.5,0" EndPoint="0.5,1">
             <GradientStop Color="#66000088" Offset="0" />
             <GradientStop Color="#BB000088" Offset="1" />
@@ -101,11 +122,11 @@
                                       />
                                 </DockPanel>
                                 <DataGrid GridLinesVisibility="None" x:Name="Steps" AutoGenerateColumns="False"  Grid.Column="0"
-                          ItemsSource="{Binding Path=Steps}" Background="White" IsReadOnly="True"
+                          ItemsSource="{Binding Path=Steps}" Background="White" CanUserAddRows="True" Validation.ErrorTemplate="{x:Null}"
                           SelectedItem="{Binding Path=SelectedStep, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Index" IsReadOnly="True" Binding="{Binding Path=Index}"></DataGridTextColumn>
-                                        <DataGridComboBoxColumn Header="Mode" ItemsSource="{Binding Path=Action.Mode}"></DataGridComboBoxColumn>
+                                        <DataGridComboBoxColumn Header="Mode" SelectedItemBinding="{Binding Path=Action.Mode}" ItemsSource="{Binding Source={StaticResource ActionModeEnum}}"></DataGridComboBoxColumn>
                                         <DataGridTextColumn Header="Voltage" Binding="{Binding Path=Action.Voltage}"></DataGridTextColumn>
                                         <DataGridTextColumn Header="Current" Binding="{Binding Path=Action.Current}"></DataGridTextColumn>
                                         <DataGridTextColumn Header="Power" Binding="{Binding Path=Action.Power}"></DataGridTextColumn>
@@ -134,22 +155,28 @@
                                       />
                                 </DockPanel>
                                 <DataGrid GridLinesVisibility="None" x:Name="Protections" AutoGenerateColumns="False"  Grid.Column="0"
-                          ItemsSource="{Binding Path=Protections}" Background="White" IsReadOnly="True"
-                          SelectedItem="{Binding Path=SelectedProtection, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                          ItemsSource="{Binding Path=Protections}" Background="White"  CanUserAddRows="True" Validation.ErrorTemplate="{x:Null}">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
-                                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                                        <DataGridComboBoxColumn Header="Parameter" SelectedItemBinding="{Binding Path=Parameter}" ItemsSource="{Binding Source={StaticResource ParameterEnum}}"></DataGridComboBoxColumn>
+                                        <DataGridComboBoxColumn Header="Compare Mark" SelectedItemBinding="{Binding Path=Mark}" ItemsSource="{Binding Source={StaticResource MarkEnum}}"></DataGridComboBoxColumn>
+                                        <DataGridTextColumn Header="Value" Binding="{Binding Path=Value}"></DataGridTextColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </DockPanel>
                         </GroupBox>
                         <GroupBox Header="Cut-off Conditions" Grid.Column="3" Grid.Row="3">
-                            <DataGrid GridLinesVisibility="None" x:Name="COCs" AutoGenerateColumns="False"  Grid.Column="0" IsReadOnly="True"
-                          ItemsSource="{Binding Path=CutOffConditions}" Background="White"
-                          SelectedItem="{Binding Path=SelectedCutOffCondition, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                            <DataGrid GridLinesVisibility="None" x:Name="COCs" AutoGenerateColumns="False"  Grid.Column="0"
+                          ItemsSource="{Binding ElementName=Steps, Path=SelectedItem.CutOffConditions}" Background="White"  CanUserAddRows="True" Validation.ErrorTemplate="{x:Null}">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
-                                    <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                                    <DataGridComboBoxColumn Header="Parameter" SelectedItemBinding="{Binding Path=Parameter}" ItemsSource="{Binding Source={StaticResource ParameterEnum}}"></DataGridComboBoxColumn>
+                                    <DataGridComboBoxColumn Header="Compare Mark" SelectedItemBinding="{Binding Path=Mark}" ItemsSource="{Binding Source={StaticResource MarkEnum}}"></DataGridComboBoxColumn>
+                                    <DataGridTextColumn Header="Value" Binding="{Binding Path=Value}"></DataGridTextColumn>
+                                    <DataGridComboBoxColumn Header="Jump Type" SelectedItemBinding="{Binding Path=JumpType}" ItemsSource="{Binding Source={StaticResource JumpTypeEnum}}"></DataGridComboBoxColumn>
+                                    <DataGridTextColumn Header="Index" Binding="{Binding Path=Index}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Loop1Target" Binding="{Binding Path=Loop1Target}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Loop1Count" Binding="{Binding Path=Loop1Count}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Loop2Target" Binding="{Binding Path=Loop2Target}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Loop2Count" Binding="{Binding Path=Loop2Count}"></DataGridTextColumn>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
