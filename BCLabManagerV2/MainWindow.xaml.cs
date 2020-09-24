@@ -45,8 +45,6 @@ namespace BCLabManager
 
         public AllChambersViewModel allChambersViewModel { get; set; }  //其中需要显示Chambers和Records
 
-        public AllStepTemplatesViewModel allStepTemplatesViewModel { get; set; }  //其中需要显示Recipes
-
         public AllRecipeTemplatesViewModel allRecipeTemplatesViewModel { get; set; }  //其中需要显示Recipes
 
         public AllProgramsViewModel allProgramsViewModel { get; set; }  //其中需要显示Programs, Recipes, Test1, Test2, TestSteps
@@ -228,8 +226,6 @@ namespace BCLabManager
                     //DischargeTemperatures,
                     //DischargeCurrents
                     );    //ViewModel初始化
-
-            allStepTemplatesViewModel = new AllStepTemplatesViewModel(StepTemplateService);
 
             allProgramsViewModel = new AllProgramsViewModel
                 (

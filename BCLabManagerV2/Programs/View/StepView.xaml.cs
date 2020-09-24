@@ -16,9 +16,9 @@ namespace BCLabManager.View
     /// <summary>
     /// Interaction logic for ChannelView.xaml
     /// </summary>
-    public partial class StepTemplateView : Window
+    public partial class StepView : Window
     {
-        public StepTemplateView()
+        public StepView()
         {
             InitializeComponent();
         }

@@ -42,7 +42,7 @@ namespace BCLabManager.Model
             get { return _loop2Label; }
             set { SetProperty(ref _loop2Label, value); }
         }
-        private TesterAction _action;
+        private TesterAction _action = new TesterAction();
         public TesterAction Action
         {
             get { return _action; }

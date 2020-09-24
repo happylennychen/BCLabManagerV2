@@ -8,6 +8,7 @@ using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using BCLabManager.Properties;
 using Prism.Mvvm;
+using BCLabManager.View;
 
 namespace BCLabManager.ViewModel
 {
@@ -18,11 +19,10 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
         public readonly RecipeTemplate _RecipeTemplate;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
-        StepTemplateViewModel _selectedStepTemplate;
-        StepViewModel _selectedStep;
+        StepV2ViewModel _selectedStep;
         RelayCommand _okCommand;
-        RelayCommand _addCommand;
-        RelayCommand _removeCommand;
+        RelayCommand _addStepCommand;
+        RelayCommand _removeStepCommand;
         bool _isOK;
 
         #endregion // Fields
@@ -30,36 +30,21 @@ namespace BCLabManager.ViewModel
         #region Constructor
 
         public RecipeTemplateEditViewModel(
-            RecipeTemplate RecipeTemplateModel,
-            ObservableCollection<StepTemplate> stepTemplates
+            RecipeTemplate RecipeTemplateModel
             )
         {
             _RecipeTemplate = RecipeTemplateModel;
-            this.CreateStepTemplates(stepTemplates);
-            this.CreateSteps();
         }
 
 
-        void CreateStepTemplates(ObservableCollection<StepTemplate> stepTemplates)
-        {
-            List<StepTemplateViewModel> all =
-                (from sub in stepTemplates
-                 select new StepTemplateViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+        //void CreateStepTemplates(ObservableCollection<StepTemplate> stepTemplates)
+        //{
+        //    List<StepTemplateViewModel> all =
+        //        (from sub in stepTemplates
+        //         select new StepTemplateViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-            this.StepTemplates = new ObservableCollection<StepTemplateViewModel>(all);     //再转换成Observable
-        }
-        void CreateSteps()
-        {
-            List<StepViewModel> all =
-                (from step in _RecipeTemplate.Steps
-                 select new StepViewModel(step)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
-
-            //foreach (RecipeModelViewModel batmod in all)
-            //batmod.PropertyChanged += this.OnRecipeModelViewModelPropertyChanged;
-
-            this.Steps = new ObservableCollection<StepViewModel>(all);     //再转换成Observable
-            //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
-        }
+        //    this.StepTemplates = new ObservableCollection<StepTemplateViewModel>(all);     //再转换成Observable
+        //}
         #endregion // Constructor
 
         #region RecipeTemplate Properties
@@ -90,53 +75,22 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("Name");
             }
         }
-        //public double Current
-        //{
-        //    get { return _RecipeTemplate.Current; }
-        //    set
-        //    {
-        //        if (value == _RecipeTemplate.Current)
-        //            return;
 
-        //        _RecipeTemplate.Current = value;
-
-        //        RaisePropertyChanged("Current");
-        //    }
-        //}
-        //public double Temperature
-        //{
-        //    get { return _RecipeTemplate.Temperature; }
-        //    set
-        //    {
-        //        if (value == _RecipeTemplate.Temperature)
-        //            return;
-
-        //        _RecipeTemplate.Temperature = value;
-
-        //        RaisePropertyChanged("Temperature");
-        //    }
-        //}
-        public ObservableCollection<StepTemplateViewModel> StepTemplates { get; set; }
-
-        public ObservableCollection<StepViewModel> Steps { get; set; }
-
-
-        public StepTemplateViewModel SelectedStepTemplate
+        public ObservableCollection<StepV2> Steps
         {
-            get
-            {
-                return _selectedStepTemplate;
-            }
+            get { return _RecipeTemplate.StepV2s; }
             set
             {
-                if (_selectedStepTemplate != value)
-                {
-                    _selectedStepTemplate = value;
-                }
+                if (value == _RecipeTemplate.StepV2s)
+                    return;
+
+                _RecipeTemplate.StepV2s = value;
+
+                RaisePropertyChanged("Steps");
             }
         }
 
-        public StepViewModel SelectedStep
+        public StepV2ViewModel SelectedStep
         {
             get
             {
@@ -197,33 +151,33 @@ namespace BCLabManager.ViewModel
             set { _isOK = value; }
         }
 
-        public ICommand AddCommand
+        public ICommand AddStepCommand
         {
             get
             {
-                if (_addCommand == null)
+                if (_addStepCommand == null)
                 {
-                    _addCommand = new RelayCommand(
-                        param => { this.Add(); },
-                        param => this.CanAdd
+                    _addStepCommand = new RelayCommand(
+                        param => { this.AddStep(); },
+                        param => this.CanAddStep
                             );
                 }
-                return _addCommand;
+                return _addStepCommand;
             }
         }
 
-        public ICommand RemoveCommand
+        public ICommand RemoveStepCommand
         {
             get
             {
-                if (_removeCommand == null)
+                if (_removeStepCommand == null)
                 {
-                    _removeCommand = new RelayCommand(
-                        param => { this.Remove(); },
-                        param => this.CanRemove
+                    _removeStepCommand = new RelayCommand(
+                        param => { this.RemoveStep(); },
+                        param => this.CanRemoveStep
                             );
                 }
-                return _removeCommand;
+                return _removeStepCommand;
             }
         }
 
@@ -236,27 +190,26 @@ namespace BCLabManager.ViewModel
         /// </summary>
         public void OK()
         {
-            int i = 0;
-            foreach (var step in _RecipeTemplate.Steps) //创建时设定Order
-            {
-                step.Order = i;
-                i++;
-            }
             IsOK = true;
         }
 
-        public void Add()       //对于model来说，需要将选中的sub copy到_program.Recipes来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.Recipes里面去
+        public void AddStep()       //对于model来说，需要将选中的sub copy到_program.Recipes来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.Recipes里面去
         {
-            var m = new Step(SelectedStepTemplate._stepTemplate);
-            var vm = new StepViewModel(m);
-            _RecipeTemplate.Steps.Add(m);
-            this.Steps.Add(vm);
+            var step = new StepV2();
+            var stepViewInstance = new StepView();
+            var stepViewEditViewModel = new StepV2EditViewModel(step);
+            stepViewInstance.DataContext = stepViewEditViewModel;
+            stepViewInstance.ShowDialog();
+            if (stepViewEditViewModel.IsOK == true)
+            {
+                step.Index = Steps.Count + 1;
+                Steps.Add(step);
+            }
         }
 
-        public void Remove()       //对于model来说，需要将选中的sub 从_program.Recipes中移除。对于viewmodel来说，需要将这个viewmodel从this.Recipes中移除
+        public void RemoveStep()       //对于model来说，需要将选中的sub 从_program.Recipes中移除。对于viewmodel来说，需要将这个viewmodel从this.Recipes中移除
         {
-            _RecipeTemplate.Steps.Remove(SelectedStep._step);
-            this.Steps.Remove(SelectedStep);
+
         }
 
         #endregion // Public Methods
@@ -291,12 +244,12 @@ namespace BCLabManager.ViewModel
             get { return IsNewRecipeTemplate; }
         }
 
-        bool CanAdd
+        bool CanAddStep
         {
-            get { return SelectedStepTemplate != null; }
+            get { return true; }
         }
 
-        bool CanRemove
+        bool CanRemoveStep
         {
             get { return SelectedStep != null; }     //如果已经有数据，可否删除？
         }

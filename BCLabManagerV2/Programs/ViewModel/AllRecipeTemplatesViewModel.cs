@@ -80,36 +80,8 @@ namespace BCLabManager.ViewModel
         /// </summary>
         public ObservableCollection<RecipeTemplateViewModel> AllRecipeTemplates { get; private set; }
 
-        //public ObservableCollection<StepViewModel> Steps
-        //{
-        //    get 
-        //    {
-        //        if (SelectedItem == null)
-        //            return null;
-        //        //return SelectedItem._recipeTemplate.Steps;
-        //        var output = new ObservableCollection<StepViewModel>();
-        //        foreach(var step in SelectedItem._recipeTemplate.Steps.OrderBy(o=>o.Order))
-        //        {
-        //            output.Add(new StepViewModel(step));
-        //        }
-        //        return output;
-        //    }
-        //}
-
         public ObservableCollection<StepV2ViewModel> Steps
         {
-            //get
-            //{
-            //    if (SelectedItem == null)
-            //        return null;
-            //    //return SelectedItem._recipeTemplate.Steps;
-            //    var output = new ObservableCollection<StepV2ViewModel>();
-            //    foreach (var step in SelectedItem._recipeTemplate.StepV2s.OrderBy(o => o.Index))
-            //    {
-            //        output.Add(new StepV2ViewModel(step));
-            //    }
-            //    return output;
-            //}
             get
             {
                 if (_selectedItem != null)
@@ -196,8 +168,7 @@ namespace BCLabManager.ViewModel
             RecipeTemplate model = new RecipeTemplate();      //实例化一个新的model
             RecipeTemplateEditViewModel viewmodel = 
                 new RecipeTemplateEditViewModel(
-                    model,
-                    _stepTemplateService.Items
+                    model
                     );      //实例化一个新的view model
             //viewmodel.DisplayName = "RecipeTemplate-Create";
             viewmodel.commandType = CommandType.Create;
@@ -206,11 +177,11 @@ namespace BCLabManager.ViewModel
             RecipeViewInstance.ShowDialog();                   //设置viewmodel属性
             if (viewmodel.IsOK == true)
             {
-                foreach (var step in model.Steps)
-                {
-                    int order = 1;
-                    step.Order = order++;
-                }
+                //foreach (var step in model.Steps)
+                //{
+                //    int order = 1;
+                //    step.Order = order++;
+                //}
 
                 _recipeTemplateServcie.SuperAdd(model);
             }
@@ -259,11 +230,7 @@ namespace BCLabManager.ViewModel
             }
             RecipeTemplateEditViewModel viewmodel =
                 new RecipeTemplateEditViewModel(
-                    model,
-                    _stepTemplateService.Items
-                    //_chargeCurrents,
-                    //_dischargeTemperatures,
-                    //_dischargeCurrents
+                    model
                     );      //实例化一个新的view model
             //viewmodel.Id = _selectedItem.Id;
             //viewmodel.DisplayName = "Recipe-Save As";

@@ -164,64 +164,6 @@ namespace BCLabManager.Model
 
 
                 return output;
-                //}
-                /*using (var dbContext = new AppDbContext())
-                {
-                    //steptemplist = dbContext.StepTemplates.GetAll().ToList();
-                    var chargesteptemp = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == chargeCurrent && o.CurrentUnit == CurrentUnitEnum.C && o.CutOffConditionValue == 1 && o.CutOffConditionType == CutOffConditionTypeEnum.CRate);
-                    if (chargesteptemp == null)
-                    {
-                        //using (var uow = new UnitOfWork(new AppDbContext()))
-                        //{
-                        chargesteptemp = new StepTemplate() { CurrentInput = chargeCurrent, CurrentUnit = CurrentUnitEnum.C, CutOffConditionValue = 1, CutOffConditionType = CutOffConditionTypeEnum.CRate };
-                        //    uow.StepTemplates.Insert(chargesteptemp);
-                        //    uow.Commit();
-                        //}
-                    }
-
-                    var idlesteptemp = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == 0 && o.CutOffConditionValue == idleTime && o.CutOffConditionType == CutOffConditionTypeEnum.Time_s);
-                    if (idlesteptemp == null)
-                    {
-                        //using (var uow = new UnitOfWork(new AppDbContext()))
-                        //{
-                        idlesteptemp = new StepTemplate() { CurrentInput = 0, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = idleTime, CutOffConditionType = CutOffConditionTypeEnum.Time_s };
-                        //    uow.StepTemplates.Insert(idlesteptemp);
-                        //    uow.Commit();
-                        //}
-                    }
-
-                    var dsgsteptemp = dbContext.StepTemplates.SingleOrDefault(o => o.CurrentInput == curr && o.CutOffConditionValue == 0);
-                    if (dsgsteptemp == null)
-                    {
-                        //using (var uow = new UnitOfWork(new AppDbContext()))
-                        //{
-                        dsgsteptemp = new StepTemplate() { CurrentInput = curr, CurrentUnit = CurrentUnitEnum.mA, CutOffConditionValue = 0, CutOffConditionType = CutOffConditionTypeEnum.CRate };
-                        //    uow.StepTemplates.Insert(dsgsteptemp);
-                        //    uow.Commit();
-                        //}
-                    }
-                    int order = 1;
-                    RecipeTemplate output;
-                    output = new RecipeTemplate() { Name = $"{curr / -1000}A" };
-                    var step = new StepClass();
-                    step.Order = order++;
-                    step.StepTemplate = chargesteptemp;
-                    output.Steps.Add(step);
-
-                    step = new StepClass();
-                    step.Order = order++;
-                    step.StepTemplate = idlesteptemp;
-                    output.Steps.Add(step);
-
-                    step = new StepClass();
-                    step.Order = order++;
-                    step.StepTemplate = dsgsteptemp;
-                    output.Steps.Add(step);
-                    dbContext.RecipeTemplates.Add(output);
-                    dbContext.SaveChanges();
-
-                    return output;
-                }*/
             }
             catch (Exception e)
             {

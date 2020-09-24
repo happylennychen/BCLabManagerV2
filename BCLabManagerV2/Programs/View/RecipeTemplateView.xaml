@@ -42,39 +42,27 @@
     </Window.Resources>
     <DockPanel>
         <GroupBox Header="Recipe Template" DockPanel.Dock="Top">
-            <Grid Margin="4">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="6" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="4" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="4" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <!-- CUSTOMER TYPE -->
-                <Label 
+            <DockPanel LastChildFill="True">
+                <Grid Margin="4" DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="6" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Label 
       Grid.Row="0" Grid.Column="0" 
       Content="_Name:" 
       HorizontalAlignment="Right"
       Target="{Binding ElementName=NameTxt}" 
       />
-                <TextBox 
+                    <TextBox 
       x:Name="NameTxt"
       Grid.Row="0" Grid.Column="2" 
       Text="{Binding Path=Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
       Validation.ErrorTemplate="{x:Null}"
       />
-            </Grid>
-        </GroupBox>
-
-        <!-- SAVE BUTTON -->
-        <Button DockPanel.Dock="Bottom"
+                </Grid>
+                <Button DockPanel.Dock="Bottom"
       Command="{Binding Path=OKCommand}"
                 Click="Button_Click"
       Content="_OK"
@@ -82,97 +70,92 @@
       Margin="4,2" 
       MinWidth="60" 
       />
-
-        <GroupBox Header="Steps">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="30*"></ColumnDefinition>
-                    <ColumnDefinition Width="40"></ColumnDefinition>
-                    <ColumnDefinition Width="60*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-
-                <!--<ListView Grid.Column="0"
-                      x:Name="StepTemplates"
-      AlternationCount="2" 
-      ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=StepTemplates}"
-                      SelectedItem="{Binding Path=SelectedStepTemplate, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
-      >
-
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn 
-            Header="Id" 
-            DisplayMemberBinding="{Binding Path=Id}" 
-            />
-                            <GridViewColumn 
-            Header="Name" 
-            DisplayMemberBinding="{Binding Path=Name}" 
-            />
-                        </GridView>
-                    </ListView.View>
-                </ListView>-->
-                <DataGrid GridLinesVisibility="None" x:Name="StepTemplates" AutoGenerateColumns="False"  Grid.Column="0"
-                          ItemsSource="{Binding Path=StepTemplates}" Background="White"
-                          SelectedItem="{Binding Path=SelectedStepTemplate, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
-                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
-                <ListView Grid.Column="2"
-                      x:Name="Steps"
-      AlternationCount="2" 
-      ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=Steps}"
-                      SelectedItem="{Binding Path=SelectedStep, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
-      >
-
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn 
-            Header="Name" 
-            DisplayMemberBinding="{Binding Path=Name}" 
-            />
-                            <GridViewColumn 
-            Header="Loop Label" 
-                                CellTemplate="{StaticResource LoopLabel}"
-            />
-                            <GridViewColumn 
-            Header="Loop Target" 
-                                CellTemplate="{StaticResource LoopTarget}"
-            />
-                            <GridViewColumn 
-            Header="Loop Count" 
-                                CellTemplate="{StaticResource LoopCount}"
-            />
-                            <GridViewColumn 
-            Header="Compare Mark" CellTemplate="{StaticResource CompareMark}"
-            />
-                            <GridViewColumn 
-            Header="Capacity" CellTemplate="{StaticResource Capacity}"
-            />
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-                <!--<DataGrid GridLinesVisibility="None" x:Name="Steps" AutoGenerateColumns="False"  Grid.Column="2"
-                          ItemsSource="{Binding Path=Steps}" Background="White" CanUserSortColumns="False"
+                <Grid Margin="4">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50*"></ColumnDefinition>
+                            <ColumnDefinition Width="5"></ColumnDefinition>
+                            <ColumnDefinition Width="50*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50*"></RowDefinition>
+                            <RowDefinition Height="5"></RowDefinition>
+                            <RowDefinition Height="50*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <GroupBox Header="Steps" Grid.RowSpan="3">
+                            <DockPanel>
+                                <DockPanel DockPanel.Dock="Bottom">
+                                    <Button DockPanel.Dock="Right"
+                                      Command="{Binding Path=RemoveStepCommand}"
+                                      Content="Remove"
+                                      HorizontalAlignment="Right"
+                                      Margin="4,2" 
+                                      MinWidth="60" 
+                                      />
+                                    <Button DockPanel.Dock="Right"
+                                      Command="{Binding Path=AddStepCommand}"
+                                      Content="Add"
+                                      HorizontalAlignment="Right"
+                                      Margin="4,2" 
+                                      MinWidth="60" 
+                                      />
+                                </DockPanel>
+                                <DataGrid GridLinesVisibility="None" x:Name="Steps" AutoGenerateColumns="False"  Grid.Column="0"
+                          ItemsSource="{Binding Path=Steps}" Background="White" IsReadOnly="True"
                           SelectedItem="{Binding Path=SelectedStep, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
-                        <DataGridTemplateColumn Header="LoopLable" CellTemplate="{StaticResource LoopLabel}"></DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="LoopTarget" CellTemplate="{StaticResource LoopTarget}"></DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="LoopCount" CellTemplate="{StaticResource LoopCount}"></DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="CompareMark" CellTemplate="{StaticResource CompareMark}"></DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Capacity" CellTemplate="{StaticResource Capacity}"></DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>-->
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <Button Command="{Binding Path=AddCommand}">=></Button>
-                    <Border Height="10"></Border>
-                    <Button Command="{Binding Path=RemoveCommand}">&lt;=</Button>
-                </StackPanel>
-            </Grid>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Index" IsReadOnly="True" Binding="{Binding Path=Index}"></DataGridTextColumn>
+                                        <DataGridComboBoxColumn Header="Mode" ItemsSource="{Binding Path=Action.Mode}"></DataGridComboBoxColumn>
+                                        <DataGridTextColumn Header="Voltage" Binding="{Binding Path=Action.Voltage}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Current" Binding="{Binding Path=Action.Current}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Power" Binding="{Binding Path=Action.Power}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Loop1Label" Binding="{Binding Path=Loop1Label}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Loop2Label" Binding="{Binding Path=Loop2Label}"></DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </DockPanel>
+                        </GroupBox>
+                        <GroupBox Header="Protections" Grid.Column="2">
+                            <DockPanel>
+                                <DockPanel DockPanel.Dock="Bottom">
+                                    <Button DockPanel.Dock="Right"
+                                      Command="{Binding Path=RemoveStepCommand}"
+                                      Content="Remove"
+                                      HorizontalAlignment="Right"
+                                      Margin="4,2" 
+                                      MinWidth="60" 
+                                      />
+                                    <Button DockPanel.Dock="Right"
+                                      Command="{Binding Path=AddStepCommand}"
+                                      Content="Add"
+                                      HorizontalAlignment="Right"
+                                      Margin="4,2" 
+                                      MinWidth="60" 
+                                      />
+                                </DockPanel>
+                                <DataGrid GridLinesVisibility="None" x:Name="Protections" AutoGenerateColumns="False"  Grid.Column="0"
+                          ItemsSource="{Binding Path=Protections}" Background="White" IsReadOnly="True"
+                          SelectedItem="{Binding Path=SelectedProtection, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </DockPanel>
+                        </GroupBox>
+                        <GroupBox Header="Cut-off Conditions" Grid.Column="3" Grid.Row="3">
+                            <DataGrid GridLinesVisibility="None" x:Name="COCs" AutoGenerateColumns="False"  Grid.Column="0" IsReadOnly="True"
+                          ItemsSource="{Binding Path=CutOffConditions}" Background="White"
+                          SelectedItem="{Binding Path=SelectedCutOffCondition, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </GroupBox>
+                    </Grid>
+                </Grid>
+            </DockPanel>
         </GroupBox>
     </DockPanel>
 </Window>
