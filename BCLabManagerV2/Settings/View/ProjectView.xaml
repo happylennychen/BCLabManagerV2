@@ -40,7 +40,7 @@
             <TextBox 
       x:Name="NameTxt"
       Grid.Row="0" Grid.Column="2" 
-      Text="{Binding Path=Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+      Text="{Binding Path=Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=LostFocus}" 
       Validation.ErrorTemplate="{x:Null}"
       />
 

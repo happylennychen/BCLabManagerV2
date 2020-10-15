@@ -68,7 +68,7 @@ namespace BCLabManager.ViewModel
                 if (value == _project.Name)
                     return;
 
-                _project.Name = value;
+                _project.Name = value.Trim();
 
                 RaisePropertyChanged("Name");
             }

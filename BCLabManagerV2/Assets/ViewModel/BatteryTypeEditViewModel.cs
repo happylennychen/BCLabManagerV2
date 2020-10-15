@@ -76,7 +76,7 @@ namespace BCLabManager.ViewModel
                 if (value == _batterytype.Name)
                     return;
 
-                _batterytype.Name = value;
+                _batterytype.Name = value.Trim();
 
                 RaisePropertyChanged("Name");
             }
