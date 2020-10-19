@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using System;
+using Prism.Mvvm;
 
 namespace BCLabManager.Model
 {
@@ -28,6 +29,16 @@ namespace BCLabManager.Model
         {
             get { return _power; }
             set { SetProperty(ref _power, value); }
+        }
+
+        internal TesterAction Clone()
+        {
+            TesterAction output = new TesterAction();
+            output.Current = this.Current;
+            output.Mode = this.Mode;
+            output.Power = this.Power;
+            output.Voltage = this.Voltage;
+            return output;
         }
     }
 }
