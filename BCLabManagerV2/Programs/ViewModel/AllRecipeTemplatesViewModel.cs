@@ -8,6 +8,7 @@ using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Prism.Mvvm;
+using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
@@ -20,24 +21,31 @@ namespace BCLabManager.ViewModel
         //List<DischargeTemperatureClass> _dischargeTemperatures;
         //List<DischargeCurrentClass> _dischargeCurrents;
         private RecipeTemplateServiceClass _recipeTemplateServcie;
+        private RecipeTemplateGroupServiceClass _recipeTemplateGroupServcie;
         private StepTemplateServiceClass _stepTemplateService;
         RecipeTemplateViewModel _selectedItem;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
+        RelayCommand _abandonCommand;
+        RelayCommand _createGroupCommand;
+        RelayCommand _manageGroupCommand;
 
         #endregion // Fields
 
         #region Constructor
 
         public AllRecipeTemplatesViewModel(
-            RecipeTemplateServiceClass recipeTemplateServcie, StepTemplateServiceClass stepTemplateService
+            RecipeTemplateServiceClass recipeTemplateService, StepTemplateServiceClass stepTemplateService, RecipeTemplateGroupServiceClass recipeTemplateGroupService
             )
         {
-            _recipeTemplateServcie = recipeTemplateServcie;
+            _recipeTemplateServcie = recipeTemplateService;
             _stepTemplateService = stepTemplateService;
+            _recipeTemplateGroupServcie = recipeTemplateGroupService;
             this.CreateAllRecipeTemplates(_recipeTemplateServcie.Items);
+            this.CreateAllRecipeTemplateGroups(_recipeTemplateGroupServcie.Items);
             _recipeTemplateServcie.Items.CollectionChanged += Items_CollectionChanged;
+            _recipeTemplateGroupServcie.Items.CollectionChanged += Groups_CollectionChanged;
         }
 
         private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -62,6 +70,28 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        private void Groups_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
+                    {
+                        var recipeTemplateGroup = item as RecipeTemplateGroup;
+                        this.AllGroups.Add(new RecipeTemplateGroupViewModel(recipeTemplateGroup));
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    foreach (var item in e.OldItems)
+                    {
+                        var recipeTemplateGroup = item as RecipeTemplateGroup;
+                        var deletetarget = this.AllGroups.SingleOrDefault(o => o.Id == recipeTemplateGroup.Id);
+                        this.AllGroups.Remove(deletetarget);
+                    }
+                    break;
+            }
+        }
+
         void CreateAllRecipeTemplates(ObservableCollection<RecipeTemplate> recipeTemplates)
         {
             List<RecipeTemplateViewModel> all =
@@ -69,6 +99,14 @@ namespace BCLabManager.ViewModel
                  select new RecipeTemplateViewModel(subt)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.AllRecipeTemplates = new ObservableCollection<RecipeTemplateViewModel>(all);     //再转换成Observable
+        }
+        void CreateAllRecipeTemplateGroups(ObservableCollection<RecipeTemplateGroup> recipeTemplateGroups)
+        {
+            List<RecipeTemplateGroupViewModel> all =
+                (from subt in recipeTemplateGroups
+                 select new RecipeTemplateGroupViewModel(subt)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+
+            this.AllGroups = new ObservableCollection<RecipeTemplateGroupViewModel>(all);     //再转换成Observable
         }
 
         #endregion // Constructor
@@ -118,6 +156,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public ObservableCollection<RecipeTemplateGroupViewModel> AllGroups { get; private set; }
         public ICommand CreateCommand
         {
             get
@@ -159,7 +198,47 @@ namespace BCLabManager.ViewModel
                 return _saveAsCommand;
             }
         }
+        public ICommand AbandonCommand
+        {
+            get
+            {
+                if (_abandonCommand == null)
+                {
+                    _abandonCommand = new RelayCommand(
+                        param => { this.Abandon(); }
+                        );
+                }
+                return _abandonCommand;
+            }
+        }
 
+        public ICommand CreateGroupCommand
+        {
+            get
+            {
+                if (_createGroupCommand == null)
+                {
+                    _createGroupCommand = new RelayCommand(
+                        param => { this.CreateGroup(); }
+                        );
+                }
+                return _createGroupCommand;
+            }
+        }
+
+        public ICommand ManageGroupCommand
+        {
+            get
+            {
+                if (_manageGroupCommand == null)
+                {
+                    _manageGroupCommand = new RelayCommand(
+                        param => { this.ManageGroup(); }
+                        );
+                }
+                return _manageGroupCommand;
+            }
+        }
         #endregion // Public Interface
 
         #region Private Helper
@@ -246,6 +325,41 @@ namespace BCLabManager.ViewModel
         private bool CanSaveAs
         {
             get { return _selectedItem != null; }
+        }
+        private void Abandon()
+        {
+            
+            if (MessageBox.Show("Are you sure?", "Abandon Selected Recipe", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                _recipeTemplateServcie.Abandon(SelectedItem._recipeTemplate);
+            }
+        }
+        private void CreateGroup()
+        {
+            RecipeTemplateGroup model = new RecipeTemplateGroup();      //实例化一个新的model
+            RecipeTemplateGroupEditViewModel viewmodel =
+                new RecipeTemplateGroupEditViewModel(
+                    model
+                    );      //实例化一个新的view model
+            //viewmodel.DisplayName = "RecipeTemplate-Create";
+            viewmodel.commandType = CommandType.Create;
+            var RecipeGroupViewInstance = new RecipeTemplateGroupView();      //实例化一个新的view
+            RecipeGroupViewInstance.DataContext = viewmodel;
+            RecipeGroupViewInstance.ShowDialog();                   //设置viewmodel属性
+            if (viewmodel.IsOK == true)
+            {
+                //foreach (var step in model.Steps)
+                //{
+                //    int order = 1;
+                //    step.Order = order++;
+                //}
+
+                _recipeTemplateGroupServcie.SuperAdd(model);
+            }
+        }
+        private void ManageGroup()
+        {
+
         }
         #endregion //Private Helper
 

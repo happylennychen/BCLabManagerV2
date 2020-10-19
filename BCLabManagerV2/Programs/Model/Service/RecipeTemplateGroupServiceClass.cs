@@ -8,27 +8,24 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class RecipeTemplateServiceClass
+    public class RecipeTemplateGroupServiceClass
     {
-        public ObservableCollection<RecipeTemplate> Items { get; set; }
+        public ObservableCollection<RecipeTemplateGroup> Items { get; set; }
         //public StepServiceClass StepService { get; set; } = new StepServiceClass();
-        public RecipeTemplateGroupServiceClass RecipeTemplateGroupService { get; set; } = new RecipeTemplateGroupServiceClass();
-        public void SuperAdd(RecipeTemplate item)
+        public void SuperAdd(RecipeTemplateGroup item)
         {
             DatabaseAdd(item);
             DomainAdd(item);
         }
-        public void DatabaseAdd(RecipeTemplate item)
+        public void DatabaseAdd(RecipeTemplateGroup item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                foreach (var step in item.Steps)
-                    step.StepTemplate = uow.StepTemplates.GetById(step.StepTemplate.Id);
-                uow.RecipeTemplates.Insert(item);
+                uow.RecipeTemplateGroups.Insert(item);
                 uow.Commit();
             }
         }
-        public void DomainAdd(RecipeTemplate item)
+        public void DomainAdd(RecipeTemplateGroup item)
         {
             Items.Add(item);
         }
@@ -43,24 +40,24 @@ namespace BCLabManager.Model
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                uow.RecipeTemplates.Delete(id);
+                uow.RecipeTemplateGroups.Delete(id);
                 uow.Commit();
             }
         }
-        public void SuperUpdate(RecipeTemplate item)
+        public void SuperUpdate(RecipeTemplateGroup item)
         {
             DatabaseUpdate(item);
             DomainUpdate(item);
         }
-        public void DatabaseUpdate(RecipeTemplate item)
+        public void DatabaseUpdate(RecipeTemplateGroup item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                uow.RecipeTemplates.Update(item);
+                uow.RecipeTemplateGroups.Update(item);
                 uow.Commit();
             }
         }
-        public void DomainUpdate(RecipeTemplate item)
+        public void DomainUpdate(RecipeTemplateGroup item)
         {
             //var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
             //edittarget.BatteryType = item.BatteryType;
@@ -68,17 +65,6 @@ namespace BCLabManager.Model
             //edittarget.CycleCount = item.CycleCount;
             //edittarget.AssetUseCount = item.AssetUseCount;
             //edittarget.Records = item.Records;
-        }
-
-        internal void Abandon(RecipeTemplate recipeTemplate)
-        {
-            using (var uow = new UnitOfWork(new AppDbContext()))
-            {
-                RecipeTemplateGroup rtg = uow.RecipeTemplateGroups.SingleOrDefault(o => o.Name == "Abandoned");
-                recipeTemplate.Group = rtg;
-                uow.RecipeTemplates.Update(recipeTemplate);
-                uow.Commit();
-            }
         }
     }
 }

@@ -56,7 +56,7 @@ namespace BCLabManager.ViewModel
             //batmod.PropertyChanged += this.OnRecipeModelViewModelPropertyChanged;
 
             this.Protections = new ObservableCollection<ProtectionViewModel>(all);     //再转换成Observable
-                                                                             //this.AllCustomers.CollectionChanged += this.OnCollectionChanged
+                                                                                       //this.AllCustomers.CollectionChanged += this.OnCollectionChanged
         }
 
         private void _RecipeTemplate_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -86,6 +86,23 @@ namespace BCLabManager.ViewModel
             get
             {
                 return _recipeTemplate.Name;
+            }
+        }
+        public String Group
+        {
+            get
+            {
+                if (_recipeTemplate.Group != null)
+                    return _recipeTemplate.Group.Name;
+                else
+                    return string.Empty;
+            }
+        }
+        public bool Editable
+        {
+            get
+            {
+                return _recipeTemplate.Editable;
             }
         }
         private bool _isSelected;

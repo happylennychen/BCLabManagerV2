@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using BCLabManager.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201015071209_Protections")]
+    partial class Protections
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -777,14 +779,6 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<bool>("Editable")
-                        .HasColumnName("editable")
-                        .HasColumnType("boolean");
-
-                    b.Property<int?>("GroupId")
-                        .HasColumnName("group_id")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .HasColumnName("name")
                         .HasColumnType("text");
@@ -792,28 +786,7 @@ namespace BCLabManager.Migrations
                     b.HasKey("Id")
                         .HasName("pk_recipe_templates");
 
-                    b.HasIndex("GroupId")
-                        .HasName("ix_recipe_templates_group_id");
-
                     b.ToTable("recipe_templates");
-                });
-
-            modelBuilder.Entity("BCLabManager.Model.RecipeTemplateGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnName("name")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id")
-                        .HasName("pk_recipe_template_groups");
-
-                    b.ToTable("recipe_template_groups");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ReleasePackage", b =>
@@ -1423,14 +1396,6 @@ namespace BCLabManager.Migrations
                         .HasConstraintName("fk_recipes_recipe_templates_recipe_template_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BCLabManager.Model.RecipeTemplate", b =>
-                {
-                    b.HasOne("BCLabManager.Model.RecipeTemplateGroup", "Group")
-                        .WithMany()
-                        .HasForeignKey("GroupId")
-                        .HasConstraintName("fk_recipe_templates_recipe_template_groups_group_id");
                 });
 
             modelBuilder.Entity("BCLabManager.Model.ReleasePackage", b =>

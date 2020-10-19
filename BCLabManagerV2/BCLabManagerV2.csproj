@@ -292,6 +292,7 @@
     <Compile Include="Assets\Model\TesterProcessers\ZKEEBC_X_Processer.cs" />
     <Compile Include="DataAccess\ICutOffConditionRepository.cs" />
     <Compile Include="DataAccess\IProtectionRepository.cs" />
+    <Compile Include="DataAccess\IRecipeTemplateGroupRepository.cs" />
     <Compile Include="DataAccess\ITesterActionRepository.cs" />
     <Compile Include="DataAccess\IStepV2Repository.cs" />
     <Compile Include="DataAccess\ProjectSettingRepository.cs" />
@@ -299,6 +300,7 @@
     <Compile Include="DataAccess\ITableMakerProductRepository.cs" />
     <Compile Include="DataAccess\CutOffConditionRepository.cs" />
     <Compile Include="DataAccess\ProtectionRepository.cs" />
+    <Compile Include="DataAccess\RecipeTemplateGroupRepository.cs" />
     <Compile Include="DataAccess\TesterActionRepository.cs" />
     <Compile Include="DataAccess\StepV2Repository.cs" />
     <Compile Include="DataAccess\TableMakerProductRepository.cs" />
@@ -324,6 +326,14 @@
     <Compile Include="Migrations\20200805100105_SupportPseudocode.designer.cs">
       <DependentUpon>20200805100105_SupportPseudocode.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20201015071209_Protections.cs" />
+    <Compile Include="Migrations\20201015071209_Protections.designer.cs">
+      <DependentUpon>20201015071209_Protections.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20201015072249_RecipeTemplateGroup.cs" />
+    <Compile Include="Migrations\20201015072249_RecipeTemplateGroup.designer.cs">
+      <DependentUpon>20201015072249_RecipeTemplateGroup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\Model\ReleasePackage.cs" />
     <Compile Include="Products\Model\Service\TableMakerProductServieClass.cs" />
@@ -342,14 +352,18 @@
     <Compile Include="Programs\Model\Enums\Parameter.cs" />
     <Compile Include="Programs\Model\Enums\JumpType.cs" />
     <Compile Include="Programs\Model\Protection.cs" />
+    <Compile Include="Programs\Model\RecipeTemplateGroup.cs" />
     <Compile Include="Programs\Model\Service\CutOffConditionServiceClass.cs" />
     <Compile Include="Programs\Model\Service\ProtectionServiceClass.cs" />
+    <Compile Include="Programs\Model\Service\RecipeTemplateGroupServiceClass.cs" />
     <Compile Include="Programs\Model\Service\TesterActionServiceClass.cs" />
     <Compile Include="Programs\Model\Service\StepV2ServiceClass.cs" />
     <Compile Include="Programs\Model\StepV2.cs" />
     <Compile Include="Programs\Model\TesterAction.cs" />
     <Compile Include="Programs\ViewModel\ProtectionViewModel.cs" />
     <Compile Include="Programs\ViewModel\CutOffConditionViewModel.cs" />
+    <Compile Include="Programs\ViewModel\RecipeTemplateGroupEditViewModel.cs" />
+    <Compile Include="Programs\ViewModel\RecipeTemplateGroupViewModel.cs" />
     <Compile Include="Programs\ViewModel\StepV2EditViewModel.cs" />
     <Compile Include="Programs\ViewModel\StepV2ViewModel.cs" />
     <Compile Include="Programs\ViewModel\TestRecordCommitFreeViewModel.cs" />
@@ -363,6 +377,9 @@
     </Compile>
     <Compile Include="Programs\View\ExecuteFreeView.xaml.cs">
       <DependentUpon>ExecuteFreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Programs\View\RecipeTemplateGroupView.xaml.cs">
+      <DependentUpon>RecipeTemplateGroupView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\PseudocodeProcesser.cs" />
     <Compile Include="Settings\Model\Service\ProjectSettingServieClass.cs" />
@@ -601,6 +618,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Programs\View\ExecuteFreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Programs\View\RecipeTemplateGroupView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

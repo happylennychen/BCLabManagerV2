@@ -32,6 +32,8 @@ namespace BCLabManager.DataAccess
         public DbSet<EmulatorResult> EmulatorResults { get; set; }
         public DbSet<LibFG> lib_fgs { get; set; }
         public DbSet<ReleasePackage> ReleasePackages { get; set; }
+        public DbSet<Protection> Protections { get; set; }
+        public DbSet<RecipeTemplateGroup> RecipeTemplateGroups { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseSqloptionsBuilder.UseNpgsql(@"host=localhost;database=test;useroptionsBuilder.UseNpgsql(@"host=localhost;database=bclabmanager;user id=postgres;password=123456;");

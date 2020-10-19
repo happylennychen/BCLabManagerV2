@@ -178,6 +178,7 @@ namespace BCLabManager
                 ProgramService.RecipeService.StepRuntimeService.Items = new ObservableCollection<StepRuntime>(uow.StepRuntimes.GetAll());
 
                 ProgramService.RecipeService.RecipeTemplateService.Items = new ObservableCollection<RecipeTemplate>(uow.RecipeTemplates.GetAll());
+                ProgramService.RecipeService.RecipeTemplateService.RecipeTemplateGroupService.Items = new ObservableCollection<RecipeTemplateGroup>(uow.RecipeTemplateGroups.GetAll());
                 ProtectionService.Items = new ObservableCollection<Protection>(uow.Protections.GetAll());
                 StepService.Items = new ObservableCollection<Step>(uow.Steps.GetAll());
                 StepV2Service.Items = new ObservableCollection<StepV2>(uow.StepV2s.GetAll());
@@ -221,7 +222,7 @@ namespace BCLabManager
 
             allRecipeTemplatesViewModel =
                 new AllRecipeTemplatesViewModel(
-                    ProgramService.RecipeService.RecipeTemplateService, StepTemplateService
+                    ProgramService.RecipeService.RecipeTemplateService, StepTemplateService, ProgramService.RecipeService.RecipeTemplateService.RecipeTemplateGroupService
                     //ChargeCurrents,
                     //DischargeTemperatures,
                     //DischargeCurrents

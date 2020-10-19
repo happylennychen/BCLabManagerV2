@@ -7,7 +7,7 @@
 		     xmlns:vm="clr-namespace:BCLabManager.ViewModel"
              xmlns:v="clr-namespace:BCLabManager.View"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="500">
+             d:DesignHeight="800" d:DesignWidth="1200">
     <UserControl.Resources>
         <HierarchicalDataTemplate DataType="{x:Type vm:StepV2ViewModel}" 
                                   ItemsSource="{Binding Path=CutOffConditions}">
@@ -73,21 +73,28 @@
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
     </UserControl.Resources>
-    <GroupBox Header="Recipe Templates">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="39*"></ColumnDefinition>
-                <ColumnDefinition Width="1*"></ColumnDefinition>
-                <ColumnDefinition Width="60*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <GroupBox Header="Recipe Template">
-                <DockPanel>
-                    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Content="_Create" Command="{Binding Path=CreateCommand}" Margin="0,5,5,0" Width="60"></Button>
-                        <!--<Button Content="_Edit" Command="{Binding Path=EditCommand}" Margin="0,5,5,0" Width="60"></Button>-->
-                        <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
-                    </StackPanel>
-                    <!--<ListView Grid.Row="1"
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"></ColumnDefinition>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+            <ColumnDefinition Width="88*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <GroupBox Header="Recipe Templates" Grid.Column="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="39*"></ColumnDefinition>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                    <ColumnDefinition Width="60*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <GroupBox Header="Recipe Template">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="_Create" Command="{Binding Path=CreateCommand}" Margin="0,5,5,0" Width="60"></Button>
+                            <!--<Button Content="_Edit" Command="{Binding Path=EditCommand}" Margin="0,5,5,0" Width="60"></Button>-->
+                            <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
+                            <Button Content="_Abandon" Command="{Binding Path=AbandonCommand}" Margin="0,5,5,0" Width="60"></Button>
+                        </StackPanel>
+                        <!--<ListView Grid.Row="1"
                               x:Name="Recipelist"
               AlternationCount="2" 
               ItemContainerStyle="{StaticResource ListViewItemStyle}"
@@ -109,34 +116,36 @@
                             </GridView>
                         </ListView.View>
                     </ListView>-->
-                    <DataGrid GridLinesVisibility="None" x:Name="Recipelist" AutoGenerateColumns="False" 
+                        <DataGrid GridLinesVisibility="None" x:Name="Recipelist" AutoGenerateColumns="False" 
                               ItemsSource="{Binding Path=AllRecipeTemplates}" Background="White"
                               SelectedItem="{Binding Path=SelectedItem, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </DockPanel>
-            </GroupBox>
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="20*"></RowDefinition>
-                    <RowDefinition Height="10"></RowDefinition>
-                    <RowDefinition Height="80*"></RowDefinition>
-                </Grid.RowDefinitions>
-                <GroupBox Header="Protections" Grid.Row="0">
-                    <DataGrid GridLinesVisibility="None" x:Name="Protectionlist" AutoGenerateColumns="False"  Background="White"
-                          ItemsSource="{Binding Path=Protections}" CanUserSortColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Parameter" IsReadOnly="True" Binding="{Binding Path=Parameter}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Mark" IsReadOnly="True" Binding="{Binding Path=Mark}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Value" IsReadOnly="True" Binding="{Binding Path=Value}"></DataGridTextColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Group" IsReadOnly="True" Binding="{Binding Path=Group}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Editable" IsReadOnly="True" Binding="{Binding Path=Editable}"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
                 </GroupBox>
-                <GroupBox Header="Steps" Grid.Row="2">
-                    <!--<DataGrid GridLinesVisibility="None" x:Name="Steplist" AutoGenerateColumns="False"  Background="White"
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20*"></RowDefinition>
+                        <RowDefinition Height="10"></RowDefinition>
+                        <RowDefinition Height="80*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <GroupBox Header="Protections" Grid.Row="0">
+                        <DataGrid GridLinesVisibility="None" x:Name="Protectionlist" AutoGenerateColumns="False"  Background="White"
+                          ItemsSource="{Binding Path=Protections}" CanUserSortColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Parameter" IsReadOnly="True" Binding="{Binding Path=Parameter}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Mark" IsReadOnly="True" Binding="{Binding Path=Mark}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Value" IsReadOnly="True" Binding="{Binding Path=Value}"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox>
+                    <GroupBox Header="Steps" Grid.Row="2">
+                        <!--<DataGrid GridLinesVisibility="None" x:Name="Steplist" AutoGenerateColumns="False"  Background="White"
                           ItemsSource="{Binding Path=Steps}" CanUserSortColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
@@ -148,15 +157,32 @@
                         <DataGridTextColumn Header="Capacity" IsReadOnly="True" Binding="{Binding Path=Capacity}"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>-->
-                    <TreeView ItemsSource="{Binding Path=Steps}">
-                        <TreeView.ItemContainerStyle>
-                            <Style TargetType="{x:Type TreeViewItem}">
-                                <Setter Property="IsExpanded" Value="True" />
-                            </Style>
-                        </TreeView.ItemContainerStyle>
-                    </TreeView>
-                </GroupBox>
+                        <TreeView ItemsSource="{Binding Path=Steps}">
+                            <TreeView.ItemContainerStyle>
+                                <Style TargetType="{x:Type TreeViewItem}">
+                                    <Setter Property="IsExpanded" Value="True" />
+                                </Style>
+                            </TreeView.ItemContainerStyle>
+                        </TreeView>
+                    </GroupBox>
+                </Grid>
             </Grid>
-        </Grid>
-    </GroupBox>
+        </GroupBox>
+        <GroupBox Header="Groups" Grid.Column="0">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="_Create" Command="{Binding Path=CreateGroupCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button Content="_Manage" Command="{Binding Path=ManageGroupCommand}" Margin="0,5,5,0" Width="60"></Button>
+                </StackPanel>
+                <DataGrid GridLinesVisibility="None" x:Name="Grouplist" AutoGenerateColumns="False" 
+                              ItemsSource="{Binding Path=AllGroups}" Background="White"
+                              SelectedItem="{Binding Path=SelectedGroup, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </GroupBox>
+    </Grid>
 </UserControl>

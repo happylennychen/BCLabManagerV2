@@ -28,6 +28,7 @@ namespace BCLabManager.DataAccess
         public ICutOffConditionRepository CutOffConditions { get; private set; }
         public IStepRuntimeRepository StepRuntimes { get; private set; }
         public IRecipeTemplateRepository RecipeTemplates { get; private set; }
+        public IRecipeTemplateGroupRepository RecipeTemplateGroups { get; private set; }
         public IProtectionRepository Protections { get; private set; }
         public IRecipeRepository Recipies { get; private set; }
         public IProgramRepository Programs { get; private set; }
@@ -47,6 +48,7 @@ namespace BCLabManager.DataAccess
             StepTemplates = new StepTemplateRepository(_context);
             StepRuntimes = new StepRuntimeRepository(_context);
             RecipeTemplates = new RecipeTemplateRepository(_context);
+            RecipeTemplateGroups = new RecipeTemplateGroupRepository(_context);
             Protections = new ProtectionRepository(_context);
             Recipies = new RecipeRepository(_context);
             Programs = new ProgramRepository(_context);

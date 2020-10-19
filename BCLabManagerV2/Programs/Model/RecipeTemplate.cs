@@ -17,18 +17,19 @@ namespace BCLabManager.Model
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
-        //private double _current;
-        //public double Current
-        //{
-        //    get { return _current; }
-        //    set { SetProperty(ref _current, value); }
-        //}
-        //private double _temperature;
-        //public double Temperature
-        //{
-        //    get { return _temperature; }
-        //    set { SetProperty(ref _temperature, value); }
-        //}
+        private RecipeTemplateGroup _group;
+        public RecipeTemplateGroup Group
+        {
+            get { return _group; }
+            set { SetProperty(ref _group, value); }
+        }
+
+        private bool _editable;
+        public bool Editable
+        {
+            get { return _editable; }
+            set { SetProperty(ref _editable, value); }
+        }
 
         public ObservableCollection<Step> Steps { get; set; } = new ObservableCollection<Step>();
         public ObservableCollection<StepV2> StepV2s { get; set; } = new ObservableCollection<StepV2>();
