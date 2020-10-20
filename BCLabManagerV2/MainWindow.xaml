@@ -69,7 +69,7 @@
                         <ColumnDefinition Width="4"></ColumnDefinition>
                         <ColumnDefinition Width="20*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Border>
+                    <Border x:Name="ProjectBorder">
                         <v:AllProjectsView x:Name="AllProjectsViewInstance"></v:AllProjectsView>
                     </Border>
                     <Border Grid.Column="2">
@@ -81,7 +81,7 @@
                     <Border Grid.Column="6">
                         <v:AllTableMakerProductsView x:Name="AllTableMakerProductsViewInstance"></v:AllTableMakerProductsView>
                     </Border>
-                    <Border Grid.Column="8">
+                    <Border Grid.Column="8" x:Name="ProjectSettingBorder">
                         <v:AllProjectSettingsView x:Name="AllProjectSettingsViewInstance"></v:AllProjectSettingsView>
                     </Border>
                 </Grid>

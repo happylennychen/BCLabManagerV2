@@ -28,11 +28,11 @@
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" Header="Tester">
             <DockPanel>
-                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="_Create" Command="{Binding Path=CreateCommand}" Margin="0,5,5,0" Width="60"></Button>
-                    <Button Content="_Edit" Command="{Binding Path=EditCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
-                    <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60"></Button>
-                    <Button Content="_Delete" Command="{Binding Path=DeleteCommand}" Margin="0,5,5,0" Width="60"></Button>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Name="ButtonPanel">
+                    <Button x:Name="CreateBtn" Content="_Create" Command="{Binding Path=CreateCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button x:Name="EditBtn" Content="_Edit" Command="{Binding Path=EditCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
+                    <Button x:Name="SaveAsBtn" Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button x:Name="DeleteBtn" Content="_Delete" Command="{Binding Path=DeleteCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
                 <!--<ListView Grid.Row="1"
                       x:Name="BatteryTypelist"

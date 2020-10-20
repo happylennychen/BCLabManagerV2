@@ -1,6 +1,7 @@
 ﻿//#define Migrate
 //#define Seed
 #define Show
+#define Requester
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,6 +101,9 @@ namespace BCLabManager
                 CreateViewModels();
                 BindingVMandView();
                 ProgramService.UpdateEstimatedTimeChain();
+#if Requester
+                UpdateUIForRequester();
+#endif
 #else
                 App.Current.Shutdown();
 #endif
@@ -291,6 +295,28 @@ namespace BCLabManager
             {
                 PseudocodeProcesser.Load(dialog.FileName, ProgramService.RecipeService.RecipeTemplateService, ProgramService, ProjectService, ProgramTypeService);
             }
+        }
+
+        private void UpdateUIForRequester()
+        {
+            AllTestersViewInstance.ButtonPanel.IsEnabled = false;
+            AllChannelsViewInstance.ButtonPanel.IsEnabled = false;
+            AllBatteriesViewInstance.ButtonPanel.IsEnabled = false;
+            AllChambersViewInstance.ButtonPanel.IsEnabled = false;
+            AllProgramTypesViewInstance.Visibility = Visibility.Collapsed;
+            AllTableMakerProductTypesViewInstance.Visibility = Visibility.Collapsed;
+            AllTableMakerProductsViewInstance.Visibility = Visibility.Collapsed;
+            AllProgramsViewInstance.RecipeButtonPanel.IsEnabled = false;
+            AllProgramsViewInstance.FreeTestRecordButtonPanel.IsEnabled = false;
+            AllProgramsViewInstance.DirectCommitBtn.IsEnabled = false;
+            AllProgramsViewInstance.ExecuteBtn.IsEnabled = false;
+            AllProgramsViewInstance.CommitBtn.IsEnabled = false;
+            AllProgramsViewInstance.InvalidateBtn.IsEnabled = false;
+            AllProgramsViewInstance.AddBtn.IsEnabled = false;
+            Grid.SetColumnSpan(ProjectBorder, 3);
+            Grid.SetColumn(ProjectSettingBorder, 4);
+            Grid.SetColumnSpan(ProjectSettingBorder, 5);
+            Title = "BCLM-R v0.2";
         }
     }
 }
