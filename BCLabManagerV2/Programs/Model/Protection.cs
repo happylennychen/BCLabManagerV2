@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using System;
+using Prism.Mvvm;
 
 namespace BCLabManager.Model
 {
@@ -22,6 +23,15 @@ namespace BCLabManager.Model
         {
             get { return _value; }
             set { SetProperty(ref _value, value); }
+        }
+
+        internal Protection Clone()
+        {
+            Protection output = new Protection();
+            output.Mark = this.Mark;
+            output.Parameter = this.Parameter;
+            output.Value = this.Value;
+            return output;
         }
     }
 }

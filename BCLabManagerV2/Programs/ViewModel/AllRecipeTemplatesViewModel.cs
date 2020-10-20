@@ -302,10 +302,16 @@ namespace BCLabManager.ViewModel
             model.Name = _selectedItem._recipeTemplate.Name;
             //model.Current = _selectedItem._recipeTemplate.Current;
             //model.Temperature = _selectedItem._recipeTemplate.Temperature;
-            foreach (var step in _selectedItem._recipeTemplate.Steps)
+            foreach (var step in _selectedItem._recipeTemplate.StepV2s)
             {
-                var m = new Step(step.StepTemplate);
-                model.Steps.Add(m);
+                //var m = new StepV2(step.StepTemplate);
+                var newstep = step.Clone();
+                model.StepV2s.Add(newstep);
+            }
+            foreach (var protection in _selectedItem._recipeTemplate.Protections)
+            {
+                var newprotection = protection.Clone();
+                model.Protections.Add(newprotection);
             }
             RecipeTemplateEditViewModel viewmodel =
                 new RecipeTemplateEditViewModel(

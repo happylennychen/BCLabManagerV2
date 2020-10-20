@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using System;
+using Prism.Mvvm;
 
 namespace BCLabManager.Model
 {
@@ -58,6 +59,21 @@ namespace BCLabManager.Model
         {
             get { return _loop2Count; }
             set { SetProperty(ref _loop2Count, value); }
+        }
+
+        internal CutOffCondition Clone()
+        {
+            CutOffCondition output = new CutOffCondition();
+            output.Index = this.Index;
+            output.JumpType = this.JumpType;
+            output.Loop1Count = this.Loop1Count;
+            output.Loop1Target = this.Loop1Target;
+            output.Loop2Count = this.Loop2Count;
+            output.Loop2Target = this.Loop2Target;
+            output.Mark = this.Mark;
+            output.Parameter = this.Parameter;
+            output.Value = this.Value;
+            return output;
         }
     }
 }

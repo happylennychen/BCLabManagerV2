@@ -57,5 +57,20 @@ namespace BCLabManager.Model
         public StepV2()
         {
         }
+
+        internal StepV2 Clone()
+        {
+            StepV2 output = new StepV2();
+            output.Action = this.Action.Clone();
+            foreach (var coc in this.CutOffConditions)
+            {
+                CutOffCondition newcoc = coc.Clone();
+                output.CutOffConditions.Add(newcoc);
+            }
+            output.Index = this.Index;
+            output.Loop1Label = this.Loop1Label;
+            output.Loop2Label = this.Loop2Label;
+            return output;
+        }
     }
 }
