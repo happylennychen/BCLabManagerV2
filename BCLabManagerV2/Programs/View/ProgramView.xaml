@@ -57,12 +57,18 @@
       HorizontalAlignment="Right"
       Target="{Binding ElementName=NameTxt}" 
       />
-                <TextBox 
+                <DockPanel
+      Grid.Row="0" Grid.Column="2" LastChildFill="True">
+                    <Label DockPanel.Dock="Right" Margin="10,0"
+      Content="RC-N1/OCV-0.3C/MISC-Init-N1/EV-Dynamic-N1" Foreground="Gray"
+      HorizontalAlignment="Center"
+      />
+                    <TextBox 
       x:Name="NameTxt"
-      Grid.Row="0" Grid.Column="2" 
       Text="{Binding Path=Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
       Validation.ErrorTemplate="{x:Null}"
       />
+                </DockPanel>
 
                 <!-- CUSTOMER TYPE -->
                 <Label 
