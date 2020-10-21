@@ -111,7 +111,7 @@
                         </Grid.RowDefinitions>
                         <GroupBox Header="Steps" Grid.RowSpan="3">
                             <DockPanel>
-                                <DockPanel DockPanel.Dock="Bottom">
+                                <DockPanel DockPanel.Dock="Bottom" Visibility="Collapsed">
                                     <Button DockPanel.Dock="Right"
                                       Command="{Binding Path=RemoveStepCommand}"
                                       Content="Remove"
@@ -144,7 +144,7 @@
                         </GroupBox>
                         <GroupBox Header="Protections" Grid.Column="2">
                             <DockPanel>
-                                <DockPanel DockPanel.Dock="Bottom">
+                                <DockPanel DockPanel.Dock="Bottom" Visibility="Collapsed">
                                     <Button DockPanel.Dock="Right"
                                       Command="{Binding Path=RemoveStepCommand}"
                                       Content="Remove"

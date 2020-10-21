@@ -62,5 +62,10 @@ namespace BCLabManager.Model
             return true;
             throw new NotImplementedException();
         }
+
+        public string EventDescriptor(string filepath, Program program, Recipe recipe, TestRecord record, string info)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

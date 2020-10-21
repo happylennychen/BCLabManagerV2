@@ -156,6 +156,8 @@ namespace BCLabManager.Model
             int lineIndex = 0;
             int startTime = 0;
             int timeSpan = 0;
+            string dataLine0 = string.Empty;
+            string dataLine1 = string.Empty;
 
             StepV2 step0 = new StepV2();
             StepV2 step1 = new StepV2();
@@ -168,8 +170,6 @@ namespace BCLabManager.Model
                 var fullSteps = new List<StepV2>(recipe.RecipeTemplate.StepV2s.OrderBy(o => o.Index));
                 for (; lineIndex < 10; lineIndex++)     //第十行以后都是数据
                     sw.ReadLine();
-                string dataLine0 = string.Empty;
-                string dataLine1 = string.Empty;
                 dataLine1 = sw.ReadLine();
                 row1 = GetRowFromString(dataLine1);
                 ActionMode am = GetActionMode(row1[Column.STEP_MODE]);
@@ -262,10 +262,25 @@ namespace BCLabManager.Model
             }
             catch (ProcessException e)
             {
-                var str = $"{e.Message}\nLine:{lineIndex}\nContinue to commit?";
+                var str = $"{e.Message}\n" +
+                    $"-----------------------------" +
+                    $"Line:{lineIndex-1}\n" +
+                    $"{dataLine0}\n" +
+                    $"-----------------------------" +
+                    $"Line:{lineIndex}\n" +
+                    $"{dataLine1}\n" +
+                    $"-----------------------------" +
+                    $"Continue to commit?";
                 var userRet = MessageBox.Show(str, "", MessageBoxButton.YesNo);
                 if (userRet == MessageBoxResult.Yes)
                 {
+                    Event evt = new Event();
+                    evt.Module = Module.DataPreprocessor;
+                    evt.Type = EventType.Warning;
+                    evt.Timestamp = DateTime.Now;
+                    string info = GetChromaEventInfo(lineIndex, e.Message, "Ignore");
+                    evt.Description = EventDescriptor(filepath, program, recipe, record, info);
+                    EventService.SuperAdd(evt);
                     ret = true;
                 }
                 else
@@ -277,6 +292,11 @@ namespace BCLabManager.Model
                 fs.Close();
             }
             return ret;
+        }
+
+        private string GetChromaEventInfo(int lineIndex, string message, string solution = "", string userComment = "")
+        {
+            return $"Line: {lineIndex}\nProblem: {message}\nSolution: {solution}\nUser Commnet: {userComment}";
         }
 
         private void StepActionModeCheck(ActionMode mode, ActionMode actionMode)
@@ -555,6 +575,22 @@ namespace BCLabManager.Model
                 output.Add((Column)i, strRow[i]);
 
             return output;
+        }
+
+        public string EventDescriptor(string filepath, Program program, Recipe recipe, TestRecord record, string info)
+        {
+            return $"Battery Type: {program.Project.BatteryType.Name}\n" +
+                $"Project: {program.Project.Name}\n" +
+                $"Program: {program.Name}\n" +
+                $"Recipe: {recipe.Name}\n" +
+                $"Test Record ID: {record.Id}\n" +
+                $"Battery: {record.BatteryStr}\n" +
+                $"Tester: {record.TesterStr}\n" +
+                $"Channel: {record.ChannelStr}\n" +
+                $"Chamber: {record.ChamberStr}\n" +
+                $"File Path: {record.TestFilePath}\n" +
+                $"Operator: {record.Operator}\n" +
+                $"{info}";
         }
     }
 }

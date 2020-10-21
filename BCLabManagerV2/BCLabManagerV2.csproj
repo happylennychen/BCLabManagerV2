@@ -286,6 +286,7 @@
     <Compile Include="Migrations\20201021020401_Event.designer.cs">
       <DependentUpon>20201021020401_Event.cs</DependentUpon>
     </Compile>
+    <Compile Include="Services\Module.cs" />
     <Compile Include="Services\EventService.cs" />
     <Compile Include="Assets\Model\Service\ChamberServiceClass.cs" />
     <Compile Include="Assets\Model\Service\TesterServiceClass.cs" />
