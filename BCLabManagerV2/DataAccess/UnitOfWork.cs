@@ -32,6 +32,7 @@ namespace BCLabManager.DataAccess
         public IProtectionRepository Protections { get; private set; }
         public IRecipeRepository Recipies { get; private set; }
         public IProgramRepository Programs { get; private set; }
+        public IEventRepository Events { get; private set; }
         public UnitOfWork(AppDbContext dbContext)
         {
             _context = dbContext;
@@ -57,6 +58,7 @@ namespace BCLabManager.DataAccess
             ProgramTypes = new ProgramTypeRepository(_context);
             TableMakerProducts = new TableMakerProductRepository(_context);
             TableMakerProductTypes = new TableMakerProductTypeRepository(_context);
+            Events = new EventRepository(_context);
         }
         public void Commit()
         {

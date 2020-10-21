@@ -34,6 +34,7 @@ namespace BCLabManager.DataAccess
         public DbSet<ReleasePackage> ReleasePackages { get; set; }
         public DbSet<Protection> Protections { get; set; }
         public DbSet<RecipeTemplateGroup> RecipeTemplateGroups { get; set; }
+        public DbSet<Event> Events { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseSqloptionsBuilder.UseNpgsql(@"host=localhost;database=test;useroptionsBuilder.UseNpgsql(@"host=localhost;database=bclabmanager;user id=postgres;password=123456;");

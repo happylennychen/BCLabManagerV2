@@ -1,0 +1,32 @@
+﻿<Window x:Class="BCLabManager.View.AllEventsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" Title="Event Window"
+             d:DesignHeight="300" d:DesignWidth="300" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+
+        <LinearGradientBrush x:Key="Brush_HeaderBackground" StartPoint="0.5,0" EndPoint="0.5,1">
+            <GradientStop Color="#66000088" Offset="0" />
+            <GradientStop Color="#BB000088" Offset="1" />
+        </LinearGradientBrush>
+
+        <Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}">
+            <!-- 
+      Stretch the content of each cell so that we can 
+      right-align text in the Total Sales column. 
+      -->
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+    </Window.Resources>
+    <DataGrid GridLinesVisibility="None" Background="White" ItemsSource="{Binding Path=AllEvents}">
+        <!--<DataGrid.Columns>
+                <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Module" IsReadOnly="True" Binding="{Binding Path=Module}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Path=Type}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Description" IsReadOnly="True" Binding="{Binding Path=Description}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Timestamp" IsReadOnly="True" Binding="{Binding Path=Timestamp}"></DataGridTextColumn>
+            </DataGrid.Columns>-->
+    </DataGrid>
+</Window>

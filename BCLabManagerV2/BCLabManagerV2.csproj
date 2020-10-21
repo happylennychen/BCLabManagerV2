@@ -280,6 +280,13 @@
     <Compile Include="Assets\Model\AssetUsageRecord.cs" />
     <Compile Include="Assets\Model\IAsset.cs" />
     <Compile Include="Assets\Model\ITesterProcesser.cs" />
+    <Compile Include="DataAccess\EventRepository.cs" />
+    <Compile Include="DataAccess\IEventRepository.cs" />
+    <Compile Include="Migrations\20201021020401_Event.cs" />
+    <Compile Include="Migrations\20201021020401_Event.designer.cs">
+      <DependentUpon>20201021020401_Event.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Services\EventService.cs" />
     <Compile Include="Assets\Model\Service\ChamberServiceClass.cs" />
     <Compile Include="Assets\Model\Service\TesterServiceClass.cs" />
     <Compile Include="Assets\Model\Service\ChannelServiceClass.cs" />
@@ -290,6 +297,8 @@
     <Compile Include="Assets\Model\TesterProcessers\Chroma17200Processer.cs" />
     <Compile Include="Assets\Model\TesterProcessers\ProcessException.cs" />
     <Compile Include="Assets\Model\TesterProcessers\ZKEEBC_X_Processer.cs" />
+    <Compile Include="Services\ViewModel\EventViewModel.cs" />
+    <Compile Include="Services\ViewModel\AllEventsViewModel.cs" />
     <Compile Include="DataAccess\ICutOffConditionRepository.cs" />
     <Compile Include="DataAccess\IProtectionRepository.cs" />
     <Compile Include="DataAccess\IRecipeTemplateGroupRepository.cs" />
@@ -381,6 +390,7 @@
     <Compile Include="Programs\View\RecipeTemplateGroupView.xaml.cs">
       <DependentUpon>RecipeTemplateGroupView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\Model\Event.cs" />
     <Compile Include="Services\PseudocodeProcesser.cs" />
     <Compile Include="Settings\Model\Service\ProjectSettingServieClass.cs" />
     <Compile Include="Settings\Model\Service\TableMakerProductTypeServiceClass.cs" />
@@ -401,6 +411,9 @@
     <Compile Include="Settings\ViewModel\ProjectSettingViewModel.cs" />
     <Compile Include="Settings\View\AllProjectSettingsView.xaml.cs">
       <DependentUpon>AllProjectSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Services\View\AllEventsView.xaml.cs">
+      <DependentUpon>AllEventsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\View\AllTableMakerProductTypesView.xaml.cs">
       <DependentUpon>AllTableMakerProductTypesView.xaml</DependentUpon>
@@ -626,6 +639,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\View\AllProjectSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Services\View\AllEventsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

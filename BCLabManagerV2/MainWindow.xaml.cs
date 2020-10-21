@@ -200,6 +200,7 @@ namespace BCLabManager
                 FreeTestRecordService.Items = new ObservableCollection<TestRecord>(uow.TestRecords.GetAllFreeTestRecords());
 
                 //ProgramService.RecipeTemplateService = RecipeTemplateService;
+                EventService.Items = new ObservableCollection<Event>(uow.Events.GetAll());
             }
         }
         void CreateViewModels()
@@ -285,7 +286,7 @@ namespace BCLabManager
             this.DashBoardViewInstance.DataContext = dashBoardViewModel;
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void Load_Pseudocode_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog();
             dialog.DefaultExt = ".xml";
@@ -295,6 +296,13 @@ namespace BCLabManager
             {
                 PseudocodeProcesser.Load(dialog.FileName, ProgramService.RecipeService.RecipeTemplateService, ProgramService, ProjectService, ProgramTypeService);
             }
+        }
+
+        private void Event_Click(object sender, RoutedEventArgs e)
+        {
+            AllEventsView allEventsView = new AllEventsView();
+            allEventsView.DataContext = new AllEventsViewModel(/*EventService*/);
+            allEventsView.ShowDialog();
         }
 
         private void UpdateUIForRequester()

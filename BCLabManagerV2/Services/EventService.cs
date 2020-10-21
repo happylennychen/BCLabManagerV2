@@ -8,59 +8,56 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
-    public class RecipeTemplateGroupServiceClass
+    public static class EventService
     {
-        public ObservableCollection<RecipeTemplateGroup> Items { get; set; }
-        //public StepServiceClass StepService { get; set; } = new StepServiceClass();
-        public void SuperAdd(RecipeTemplateGroup item)
+        public static ObservableCollection<Event> Items { get; set; }
+        public static void SuperAdd(Event item)
         {
             DatabaseAdd(item);
-            DomainAdd(item);
+            Items.Add(item);
         }
-        public void DatabaseAdd(RecipeTemplateGroup item)
+        public static void DatabaseAdd(Event item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                uow.RecipeTemplateGroups.Insert(item);
+                uow.Events.Insert(item);
                 uow.Commit();
             }
         }
-        public void DomainAdd(RecipeTemplateGroup item)
-        {
-            Items.Add(item);
-        }
-        public void SuperRemove(int id)
+        public static void SuperRemove(int id)
         {
             DatabaseRemove(id);
-
             var item = Items.SingleOrDefault(o => o.Id == id);
             Items.Remove(item);
         }
-        public void DatabaseRemove(int id)
+        public static void DatabaseRemove(int id)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                uow.RecipeTemplateGroups.Delete(id);
+                uow.Events.Delete(id);
                 uow.Commit();
             }
         }
-        public void SuperUpdate(RecipeTemplateGroup item)
+        public static void SuperUpdate(Event item)
         {
             DatabaseUpdate(item);
             DomainUpdate(item);
         }
-        public void DatabaseUpdate(RecipeTemplateGroup item)
+        public static void DatabaseUpdate(Event item)
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                uow.RecipeTemplateGroups.Update(item);
+                uow.Events.Update(item);
                 uow.Commit();
             }
         }
-        public void DomainUpdate(RecipeTemplateGroup item)
+        public static void DomainUpdate(Event item)
         {
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
-            edittarget.Name = item.Name;
+            edittarget.Module = item.Module;
+            edittarget.Type = item.Type;
+            edittarget.Description = item.Description;
+            edittarget.Timestamp = item.Timestamp;
         }
     }
 }
