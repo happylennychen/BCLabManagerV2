@@ -94,7 +94,9 @@ namespace BCLabManager
                 InitializeDatabase();
 #if Show
                 InitializeComponent();
+#if !Requester
                 InitializeTempFileFolder();
+#endif
                 LoadFromDB();
                 CreateProcesserForTesters();
                 InitializeNavigator();

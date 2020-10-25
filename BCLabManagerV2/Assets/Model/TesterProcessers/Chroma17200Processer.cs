@@ -148,9 +148,13 @@ namespace BCLabManager.Model
 
         public bool DataPreprocessing(string filepath, Program program, Recipe recipe, TestRecord record, int startIndex)
         {
+            UInt32 result = ErrorCode.NORMAL;
+            List<Event> events = new List<Event>();
             FileStream fs = new FileStream(filepath, FileMode.Open);
-            StreamReader sw = new StreamReader(fs);
-            bool ret = true;
+            var tempFilePath = Path.Combine(System.Environment.CurrentDirectory, "temp.txt");
+            FileStream tempFileStream = new FileStream(tempFilePath, FileMode.Create);
+            StreamReader sr = new StreamReader(fs);
+            StreamWriter sw = new StreamWriter(tempFileStream);
             bool isFirstDischarge = false;
             bool isFirstDischargeChecked = false;
             int lineIndex = 0;
@@ -169,8 +173,10 @@ namespace BCLabManager.Model
                 bool isCOCPoint = false;
                 var fullSteps = new List<StepV2>(recipe.RecipeTemplate.StepV2s.OrderBy(o => o.Index));
                 for (; lineIndex < 10; lineIndex++)     //第十行以后都是数据
-                    sw.ReadLine();
-                dataLine1 = sw.ReadLine();
+                {
+                    sw.WriteLine(sr.ReadLine());
+                }
+                dataLine1 = sr.ReadLine();
                 row1 = GetRowFromString(dataLine1);
                 ActionMode am = GetActionMode(row1[Column.STEP_MODE]);
                 if (am == ActionMode.CC_DISCHARGE)
@@ -181,7 +187,16 @@ namespace BCLabManager.Model
                 }
                 else
                     step1 = fullSteps.First(o => o.Action.Mode == am);  //有隐患
-                StepStartPointCheck(step1, row1, recipe.Temperature, isFirstDischarge, ref isFirstDischargeChecked);
+                result = StepStartPointCheck(step1, row1, recipe.Temperature, isFirstDischarge, ref isFirstDischargeChecked);
+                if (result != ErrorCode.NORMAL)
+                {
+                    if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1))
+                    {
+                        return false;
+                    }
+                }
+                sw.WriteLine(dataLine1);
+
                 startTime = Convert.ToInt32(row1[Column.TIME_MS]);
                 lineIndex = 11;
                 while (true)
@@ -189,15 +204,32 @@ namespace BCLabManager.Model
                     lineIndex++;
                     dataLine0 = dataLine1;
                     row0 = row1;
-                    dataLine1 = sw.ReadLine();
+                    dataLine1 = sr.ReadLine();
                     if (dataLine1 == null)
                     {
                         timeSpan = (Convert.ToInt32(row0[Column.TIME_MS]) - startTime) / 1000;
-                        StepCOCPointCheck(step1, row0, recipe.Temperature, timeSpan);
+                        result = StepCOCPointCheck(step1, row0, recipe.Temperature, timeSpan);
+                        if (result != ErrorCode.NORMAL)
+                        {
+                            if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1))
+                            {
+                                return false;
+                            }
+                        }
                         step0 = step1;
                         step1 = GetNewTargetStep(step0, fullSteps, row0, recipe.Temperature, timeSpan);
                         if (step1 != null)
-                            throw new ProcessException($@"Step {step1.Index} is missing");
+                        {
+                            result = ErrorCode.DP_STEP_MISSING;
+                            if (result != ErrorCode.NORMAL)
+                            {
+                                if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1, step1.Index))
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                        //throw new ProcessException($@"Step {step1.Index} is missing");
                         break;
                     }
                     row1 = GetRowFromString(dataLine1);
@@ -210,12 +242,36 @@ namespace BCLabManager.Model
                     {
                         #region COC Point Check
                         timeSpan = (Convert.ToInt32(row0[Column.TIME_MS]) - startTime) / 1000;
-                        StepCOCPointCheck(step1, row0, recipe.Temperature, timeSpan);
+                        result = StepCOCPointCheck(step1, row0, recipe.Temperature, timeSpan);
+                        if (result != ErrorCode.NORMAL)
+                        {
+                            if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1))
+                            {
+                                return false;
+                            }
+                        }
                         step0 = step1;
                         step1 = GetNewTargetStep(step0, fullSteps, row0, recipe.Temperature, timeSpan);
                         if (step1 == null)
-                            throw new ProcessException("Cannot Get Next Step.");
-                        StepActionModeCheck(step1.Action.Mode, GetActionMode(row1[Column.STEP_MODE]));
+                        //throw new ProcessException("Cannot Get Next Step.");
+                        {
+                            result = ErrorCode.DP_NO_NEXT_STEP;
+                            if (result != ErrorCode.NORMAL)
+                            {
+                                if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1))
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                        result = StepActionModeCheck(step1.Action.Mode, GetActionMode(row1[Column.STEP_MODE]));
+                        if (result != ErrorCode.NORMAL)
+                        {
+                            if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1))
+                            {
+                                return false;
+                            }
+                        }
                         if (!isFirstDischargeChecked)
                         {
                             if (step1.Action.Mode == ActionMode.CC_DISCHARGE)
@@ -225,7 +281,14 @@ namespace BCLabManager.Model
                         #endregion
                         //isStartPoint = true;
                         #region Start Point Check
-                        StepStartPointCheck(step1, row1, recipe.Temperature, isFirstDischarge, ref isFirstDischargeChecked);
+                        result = StepStartPointCheck(step1, row1, recipe.Temperature, isFirstDischarge, ref isFirstDischargeChecked);
+                        if (result != ErrorCode.NORMAL)
+                        {
+                            if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1))
+                            {
+                                return false;
+                            }
+                        }
                         startTime = Convert.ToInt32(row1[Column.TIME_MS]);
                         #endregion
                     }
@@ -242,7 +305,14 @@ namespace BCLabManager.Model
                     else
                     {
                         #region Normal Point Check
-                        StepMidPointCheck(step1, row1, recipe.Temperature);
+                        result = StepMidPointCheck(step1, row1, recipe.Temperature);
+                        if (result != ErrorCode.NORMAL)
+                        {
+                            if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1))
+                            {
+                                return false;
+                            }
+                        }
 
 
 
@@ -251,58 +321,116 @@ namespace BCLabManager.Model
                         if (row1[Column.MODE] != "0")
                         {
                             Dictionary<Column, bool> rowContinuityMatrix = GetContinuityMatrix(row0, row1, ContinuityTolerance);
-                            ContinuityCheck(rowContinuityMatrix);
+                            result = ContinuityCheck(rowContinuityMatrix);
+                            if (result != ErrorCode.NORMAL)
+                            {
+                                if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1))
+                                {
+                                    return false;
+                                }
+                            }
+                            row1 = GetRowFromString(dataLine1); //有可能dataLine1更新了，需要再一次更新row1
                         }
                         #endregion
                         #endregion
                     }
 
+                    sw.WriteLine(dataLine1);
                 }
 
             }
-            catch (ProcessException e)
+            catch (Exception e)
             {
-                var str = $"{e.Message}\n" +
-                    $"-----------------------------" +
-                    $"Line:{lineIndex-1}\n" +
-                    $"{dataLine0}\n" +
-                    $"-----------------------------" +
-                    $"Line:{lineIndex}\n" +
-                    $"{dataLine1}\n" +
-                    $"-----------------------------" +
-                    $"Continue to commit?";
-                var userRet = MessageBox.Show(str, "", MessageBoxButton.YesNo);
-                if (userRet == MessageBoxResult.Yes)
-                {
-                    Event evt = new Event();
-                    evt.Module = Module.DataPreprocessor;
-                    evt.Type = EventType.Warning;
-                    evt.Timestamp = DateTime.Now;
-                    string info = GetChromaEventInfo(lineIndex, e.Message, "Ignore");
-                    evt.Description = EventDescriptor(filepath, program, recipe, record, info);
-                    EventService.SuperAdd(evt);
-                    ret = true;
-                }
-                else
-                    ret = false;
+                MessageBox.Show(e.Message);
             }
             finally
             {
+                sr.Close();
                 sw.Close();
                 fs.Close();
+                if (result == ErrorCode.NORMAL)
+                {
+                    File.Delete(filepath);
+                    File.Move(tempFilePath, filepath);
+                    foreach (var evt in events)
+                    {
+                        EventService.SuperAdd(evt);
+                    }
+                }
+                else
+                {
+                    File.Delete(tempFilePath);
+                }
+            }
+            return true;
+        }
+
+        private bool ErrorHandler(ref List<Event> events, uint result, string filepath, Program program, Recipe recipe, TestRecord record, int lineIndex, string dataLine0, ref string dataLine1, params object[] args)
+        {
+            Event evt = new Event(); 
+            string info = string.Empty;
+            string solution = string.Empty;
+            string oldLine1 = dataLine1;
+            string newLine1 = string.Empty;
+            bool ret;
+            switch (result)
+            {
+                case ErrorCode.DP_ABNORMAL_STEP_AND_TIME_JUMP:       //只有step和time不对，直接修复
+                    var row0 = GetRowFromString(dataLine0);
+                    var row1 = GetRowFromString(dataLine1);
+                    row1[Column.STEP] = row0[Column.STEP];
+                    row1[Column.TIME_MS] = (Convert.ToInt32(row0[Column.TIME_MS]) + 1000).ToString();
+                    row1[Column.TIME] = DateTime.Parse(row0[Column.TIME]).Add(TimeSpan.FromSeconds(1)).ToString("yyyy-MM-dd HH:mm:ss");
+                    row1[Column.STATUS] = row0[Column.STATUS];
+                    dataLine1 = BuildStringFromRow(row1);   //更新dataLine1
+                    newLine1 = dataLine1;
+                    solution = "Auto Fixed";
+                    ret = true;
+                    break;
+                default:
+                    var str = $"{ErrorCode.GetDescription(result, args)}\n" +
+                               $"-----------------------------" +
+                               $"Line:{lineIndex - 1}\n" +
+                               $"{dataLine0}\n" +
+                               $"-----------------------------" +
+                               $"Line:{lineIndex}\n" +
+                               $"{dataLine1}\n" +
+                               $"-----------------------------" +
+                               $"Continue to commit?";
+                    var userRet = MessageBox.Show(str, "Data Preprocessing Error", MessageBoxButton.YesNo);
+                    if (userRet == MessageBoxResult.Yes)
+                    {
+                        solution = "Ignored";
+                        ret = true;
+                    }
+                    else
+                        ret = false;
+                    break;
+            }
+            if (ret)
+            {
+                evt.Module = Module.DataPreprocessor;
+                evt.Type = EventType.Warning;
+                evt.Timestamp = DateTime.Now;
+                info = GetChromaEventInfo(lineIndex, ErrorCode.GetDescription(result, args), solution, dataLine0, oldLine1, newLine1);
+                evt.Description = EventDescriptor(filepath, program, recipe, record, info);
+                events.Add(evt);
             }
             return ret;
         }
 
-        private string GetChromaEventInfo(int lineIndex, string message, string solution = "", string userComment = "")
+        private string GetChromaEventInfo(int lineIndex, string message, string solution = "", string dataLine0 = "", string dataLine1 = "", string newLine1 = "", string userComment = "")
         {
-            return $"Line: {lineIndex}\nProblem: {message}\nSolution: {solution}\nUser Commnet: {userComment}";
+            return $"Line: {lineIndex}\nProblem: {message}\nSolution: {solution}\nLine0: {dataLine0}\nLine1: {dataLine1}\nNew Line: {newLine1}\nUser Commnet: {userComment}";
         }
 
-        private void StepActionModeCheck(ActionMode mode, ActionMode actionMode)
+        private UInt32 StepActionModeCheck(ActionMode mode, ActionMode actionMode)
         {
             if (mode != actionMode)
-                throw new ProcessException("Action mode mismatch");
+                //throw new ProcessException("Action mode mismatch");
+                return ErrorCode.DP_ACTION_MODE_MISMATCH;
+            else
+                return ErrorCode.NORMAL;
         }
 
         private StepV2 GetNewTargetStep(StepV2 currentStep, List<StepV2> fullSteps, Dictionary<Column, string> row, double temperature, int timeSpan)
@@ -381,7 +509,7 @@ namespace BCLabManager.Model
             return nextStep;
         }
 
-        private void StepStartPointCheck(StepV2 step, Dictionary<Column, string> row1, double temp, bool isFirstDischarge, ref bool isFirstDischargeChecked)
+        private UInt32 StepStartPointCheck(StepV2 step, Dictionary<Column, string> row1, double temp, bool isFirstDischarge, ref bool isFirstDischargeChecked)
         {
             double voltage = 0;
             double current = 0;
@@ -394,20 +522,23 @@ namespace BCLabManager.Model
                     {
                         current = GetCurrentFromRow(row1) * -1;
                         if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
-                            throw new ProcessException("Current Out Of Range");
+                            //throw new ProcessException("Current Out Of Range");
+                            return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
                     }
                     break;
                 case ActionMode.CC_DISCHARGE:
 
                     current = GetCurrentFromRow(row1);
                     if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
-                        throw new ProcessException("Current Out Of Range");
+                        //throw new ProcessException("Current Out Of Range");
+                        return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
 
                     if (isFirstDischarge && !isFirstDischargeChecked)
                     {
                         temperature = Convert.ToDouble(row1[Column.TEMPERATURE]);
                         if (Math.Abs(temperature - temp) > StepTolerance[Column.TEMPERATURE])
-                            throw new ProcessException("Temperature Out Of Range");
+                            //throw new ProcessException("Temperature Out Of Range");
+                            return ErrorCode.DP_TEMPERATURE_OUT_OF_RANGE;
 
                         isFirstDischargeChecked = true;
                     }
@@ -417,6 +548,7 @@ namespace BCLabManager.Model
                 default:
                     break;
             }
+            return ErrorCode.NORMAL;
         }
 
         private double GetCurrentFromRow(Dictionary<Column, string> row1)
@@ -424,7 +556,7 @@ namespace BCLabManager.Model
             return Convert.ToDouble(row1[Column.CURRENT]) * -1000.0;
         }
 
-        private void StepMidPointCheck(StepV2 step, Dictionary<Column, string> row1, double temp)
+        private UInt32 StepMidPointCheck(StepV2 step, Dictionary<Column, string> row1, double temp)
         {
             double current = 0;
             switch (step.Action.Mode)
@@ -434,16 +566,18 @@ namespace BCLabManager.Model
                 case ActionMode.CC_DISCHARGE:
                     current = GetCurrentFromRow(row1);
                     if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
-                        throw new ProcessException("Current Out Of Range");
+                        //throw new ProcessException("Current Out Of Range");
+                        return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
                     break;
                 case ActionMode.REST:
                     break;
                 default:
                     break;
             }
+            return ErrorCode.NORMAL;
         }
 
-        private void StepCOCPointCheck(StepV2 step, Dictionary<Column, string> row, double temp, int timeSpan)
+        private UInt32 StepCOCPointCheck(StepV2 step, Dictionary<Column, string> row, double temp, int timeSpan)
         {
             double voltage = 0;
             double current = 0;
@@ -455,19 +589,23 @@ namespace BCLabManager.Model
                     {
                         current = GetCurrentFromRow(row) * -1;
                         if (Math.Abs(current - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.CURRENT).Value) > StepTolerance[Column.CURRENT])
-                            throw new ProcessException("Current Out Of Range");
+                            //throw new ProcessException("Current Out Of Range");
+                            return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
                         voltage = Convert.ToDouble(row[Column.VOLTAGE]) * 1000;
                         if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance[Column.VOLTAGE])
-                            throw new ProcessException("Voltage Out Of Range");
+                            //throw new ProcessException("Voltage Out Of Range");
+                            return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
                     }
                     else if (row[Column.STATUS] == "StepFinishByCut_T")     //DST测试也会设定充电时间
                     {
                         if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance[Column.TIME])
-                            throw new ProcessException("Time Out Of Range");
+                            //throw new ProcessException("Time Out Of Range");
+                            return ErrorCode.DP_TIME_OUT_OF_RANGE;
                     }
                     else
                     {
-                        throw new ProcessException("Abnormal step cut off.");
+                        //throw new ProcessException("Abnormal step cut off.");
+                        return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
                     }
                     break;
                 case ActionMode.CC_DISCHARGE:
@@ -475,33 +613,38 @@ namespace BCLabManager.Model
                     {
                         voltage = Convert.ToDouble(row[Column.VOLTAGE]) * 1000;
                         if (Math.Abs(voltage - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE).Value) > StepTolerance[Column.VOLTAGE])
-                            throw new ProcessException("Voltage Out Of Range");
+                            //throw new ProcessException("Voltage Out Of Range");
+                            return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
                     }
                     else if (row[Column.STATUS] == "StepFinishByCut_T")
                     {
                         if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance[Column.TIME])
-                            throw new ProcessException("Time Out Of Range");
+                            //throw new ProcessException("Time Out Of Range");
+                            return ErrorCode.DP_TIME_OUT_OF_RANGE;
                     }
                     else
                     {
-                        throw new ProcessException("Abnormal step cut off.");
+                        //throw new ProcessException("Abnormal step cut off.");
+                        return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
                     }
                     break;
                 case ActionMode.REST:
                     if (row[Column.STATUS] == "StepFinishByCut_T")
                     {
                         if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance[Column.TIME])
-                            throw new ProcessException("Time Out Of Range");
+                            //throw new ProcessException("Time Out Of Range");
+                            return ErrorCode.DP_TIME_OUT_OF_RANGE;
                     }
                     else
                     {
-                        throw new ProcessException("Abnormal step cut off.");
+                        //throw new ProcessException("Abnormal step cut off.");
+                        return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
                     }
                     break;
                 default:
                     break;
             }
-            //return ErrorCode.NORMAL;
+            return ErrorCode.NORMAL;
         }
 
         private ActionMode GetActionMode(string v)
@@ -515,7 +658,7 @@ namespace BCLabManager.Model
             }
         }
 
-        private void ContinuityCheck(Dictionary<Column, bool> rowContinuityMatrix)
+        private UInt32 ContinuityCheck(Dictionary<Column, bool> rowContinuityMatrix)
         {
             int result = 0;
             foreach (var key in rowContinuityMatrix.Keys)
@@ -525,19 +668,20 @@ namespace BCLabManager.Model
             }
             if (result == 0x00)
             {
-                return;
+                return ErrorCode.NORMAL;
             }
             else if ((result | 0b111110000000) == 0b111110000000)   //只有物理参数超范围，不管
             {
-                return; //ErrorCode.NORMAL;
+                return ErrorCode.NORMAL;
             }
             else if ((result | 0x000e) == 0x000e)       //Step 和 Time错了
             {
-                throw new ProcessException("STEP Jump.");
+                return ErrorCode.DP_ABNORMAL_STEP_AND_TIME_JUMP;
             }
             else
             {
-                throw new ProcessException("Undefined.");
+                //throw new ProcessException("Undefined.");
+                return ErrorCode.DP_UNDEFINED;
             }
         }
 
@@ -551,7 +695,7 @@ namespace BCLabManager.Model
                 {
                     DateTime t0 = DateTime.Parse(row0[key]);
                     DateTime t1 = DateTime.Parse(row1[key]);
-                    if ((t1 - t0) > TimeSpan.FromSeconds(tolerance[key]))
+                    if (Math.Abs((t1 - t0).TotalSeconds) > tolerance[key])
                         result = false;
                     else
                         result = true;
@@ -576,6 +720,15 @@ namespace BCLabManager.Model
 
             return output;
         }
+        private string BuildStringFromRow(Dictionary<Column, string> row)
+        {
+            string output = string.Empty;
+            foreach(var key in row.Keys)
+            {
+                output += row[key]+",";
+            }
+            return output.Substring(0,output.Length-1);
+        }
 
         public string EventDescriptor(string filepath, Program program, Recipe recipe, TestRecord record, string info)
         {
@@ -584,12 +737,12 @@ namespace BCLabManager.Model
                 $"Program: {program.Name}\n" +
                 $"Recipe: {recipe.Name}\n" +
                 $"Test Record ID: {record.Id}\n" +
-                $"Battery: {record.BatteryStr}\n" +
-                $"Tester: {record.TesterStr}\n" +
-                $"Channel: {record.ChannelStr}\n" +
-                $"Chamber: {record.ChamberStr}\n" +
-                $"File Path: {record.TestFilePath}\n" +
-                $"Operator: {record.Operator}\n" +
+                //$"Battery: {record.BatteryStr}\n" +
+                //$"Tester: {record.TesterStr}\n" +
+                //$"Channel: {record.ChannelStr}\n" +
+                //$"Chamber: {record.ChamberStr}\n" +
+                //$"File Path: {record.TestFilePath}\n" +
+                //$"Operator: {record.Operator}\n" +
                 $"{info}";
         }
     }
