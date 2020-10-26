@@ -183,7 +183,7 @@ namespace BCLabManager.ViewModel
         {
             Channel m = new Channel();      //实例化一个新的model
             ChannelEditViewModel evm = new ChannelEditViewModel(m, _testerService.Items);      //实例化一个新的view model
-            //evm.DisplayName = "Channel-Create";
+            evm.DisplayName = "Channel-Create";
             evm.commandType = CommandType.Create;
             var ChannelViewInstance = new ChannelView();      //实例化一个新的view
             ChannelViewInstance.DataContext = evm;
@@ -201,7 +201,7 @@ namespace BCLabManager.ViewModel
             evm.Name = _selectedItem.Name;
             evm.Tester = evm.AllTesters.SingleOrDefault(i => i.Id == _selectedItem.Tester.Id);   //所以改用Id来找到List里的item
             evm.AssetUseCount = _selectedItem.AssetUseCount;
-            //evm.DisplayName = "Channel-Edit";
+            evm.DisplayName = "Channel-Edit";
             evm.commandType = CommandType.Edit;
             var ChannelViewInstance = new ChannelView();      //实例化一个新的view
             ChannelViewInstance.DataContext = evm;
@@ -223,7 +223,7 @@ namespace BCLabManager.ViewModel
             //evm.Tester = _selectedItem.Tester;
             evm.Tester = evm.AllTesters.SingleOrDefault(i => i.Id == _selectedItem.Tester.Id);   //所以改用Id来找到List里的item
             evm.AssetUseCount = _selectedItem.AssetUseCount;
-            //evm.DisplayName = "Channel-Save As";
+            evm.DisplayName = "Channel-Save As";
             evm.commandType = CommandType.SaveAs;
             var ChannelViewInstance = new ChannelView();      //实例化一个新的view
             ChannelViewInstance.DataContext = evm;

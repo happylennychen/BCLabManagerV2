@@ -178,7 +178,7 @@ namespace BCLabManager.ViewModel
         {
             Tester m = new Tester();      //实例化一个新的model
             TesterEditViewModel evm = new TesterEditViewModel(m);      //实例化一个新的view model
-            //evm.DisplayName = "Tester-Create";
+            evm.DisplayName = "Tester-Create";
             var TesterViewInstance = new TesterView();      //实例化一个新的view
             TesterViewInstance.DataContext = evm;
             TesterViewInstance.ShowDialog();                   //设置viewmodel属性
@@ -194,7 +194,7 @@ namespace BCLabManager.ViewModel
             evm.Id = SelectedItem.Id;
             evm.Manufacturer = _selectedItem.Manufacturer;
             evm.Name = _selectedItem.Name;
-            //evm.DisplayName = "Tester-Edit";
+            evm.DisplayName = "Tester-Edit";
             var TesterViewInstance = new TesterView();      //实例化一个新的view
             TesterViewInstance.DataContext = evm;
             TesterViewInstance.ShowDialog();
@@ -213,7 +213,7 @@ namespace BCLabManager.ViewModel
             TesterEditViewModel evm = new TesterEditViewModel(m);      //实例化一个新的view model
             evm.Manufacturer = _selectedItem.Manufacturer;
             evm.Name = _selectedItem.Name;
-            //evm.DisplayName = "Tester-Save As";
+            evm.DisplayName = "Tester-Save As";
             var TesterViewInstance = new TesterView();      //实例化一个新的view
             TesterViewInstance.DataContext = evm;
             TesterViewInstance.ShowDialog();

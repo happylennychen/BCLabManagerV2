@@ -158,7 +158,7 @@ namespace BCLabManager.ViewModel
         {
             Project proj = new Project();      //实例化一个新的model
             ProjectEditViewModel projevm = new ProjectEditViewModel(proj, _batteryTypeService.Items);      //实例化一个新的view model
-            //btevm.DisplayName = "Battery Type-Create";
+            projevm.DisplayName = "Project-Create";
             var ProjectEditViewInstance = new ProjectView();      //实例化一个新的view
             ProjectEditViewInstance.DataContext = projevm;
             ProjectEditViewInstance.ShowDialog();                   //设置viewmodel属性
@@ -171,6 +171,7 @@ namespace BCLabManager.ViewModel
         {
             Project proj = new Project();      //实例化一个新的model
             ProjectEditViewModel projevm = new ProjectEditViewModel(proj, _batteryTypeService.Items);      //实例化一个新的view model
+            projevm.DisplayName = "Project-Edit";
             projevm.Id = _selectedItem.Id;
             projevm.Name = _selectedItem.Name;
             projevm.Customer = _selectedItem.Customer;
@@ -197,6 +198,7 @@ namespace BCLabManager.ViewModel
         {
             Project proj = new Project();      //实例化一个新的model
             ProjectEditViewModel projevm = new ProjectEditViewModel(proj, _batteryTypeService.Items);      //实例化一个新的view model
+            projevm.DisplayName = "Project-Save As";
             projevm.Name = _selectedItem.Name;
             projevm.Customer = _selectedItem.Customer;
             projevm.BatteryType = _selectedItem.BatteryType;

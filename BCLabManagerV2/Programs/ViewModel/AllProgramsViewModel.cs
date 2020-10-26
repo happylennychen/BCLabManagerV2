@@ -148,6 +148,7 @@ namespace BCLabManager.ViewModel
         {
             List<ProgramViewModel> all =
                 (from program in programClasses
+                 where (program.IsInvalid == false)
                  select new ProgramViewModel(program)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.AllPrograms = new ObservableCollection<ProgramViewModel>(all);     //再转换成Observable
@@ -412,7 +413,7 @@ namespace BCLabManager.ViewModel
         {
             Program m = new Program();      //实例化一个新的model
             ProgramEditViewModel evm = new ProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items, _programTypeService.Items);      //实例化一个新的view model
-            //evm.DisplayName = "Program-Create";
+            evm.DisplayName = "Program-Create";
             evm.commandType = CommandType.Create;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
             ProgramViewInstance.DataContext = evm;
@@ -427,7 +428,7 @@ namespace BCLabManager.ViewModel
             Program m = new Program();      //实例化一个新的model
             m.Type = _programTypeService.Items.SingleOrDefault(o => o.Name == "RC");
             RCProgramEditViewModel evm = new RCProgramEditViewModel(m, _projectService.Items);      //实例化一个新的view model
-            //evm.DisplayName = "Program-Create";
+            evm.DisplayName = "Program-Create";
             var RCProgramViewInstance = new RCProgramView();      //实例化一个新的view
             RCProgramViewInstance.DataContext = evm;
             RCProgramViewInstance.ShowDialog();                   //设置viewmodel属性
@@ -632,7 +633,7 @@ namespace BCLabManager.ViewModel
         {
             Program m = _selectedProgram._program.Clone();
             ProgramEditViewModel evm = new ProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items, _programTypeService.Items);      //实例化一个新的view model
-            ////evm.DisplayName = "Program-Save As";
+            evm.DisplayName = "Program-Save As";
             //evm.commandType = CommandType.SaveAs;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
             ProgramViewInstance.DataContext = evm;
@@ -703,7 +704,7 @@ namespace BCLabManager.ViewModel
                     }
                 }
             }
-            //evm.DisplayName = "Test-Execute";
+            evm.DisplayName = "Test-Execute";
             var TestRecordViewInstance = new ExecuteView();
             TestRecordViewInstance.DataContext = evm;
             TestRecordViewInstance.ShowDialog();
@@ -754,7 +755,7 @@ namespace BCLabManager.ViewModel
                 testRecord.Record      //??????????????????????????
                                        //m
                 );
-            //evm.DisplayName = "Test-Commit";
+            evm.DisplayName = "Test-Commit";
             var TestRecordCommitViewInstance = new CommitView();
             TestRecordCommitViewInstance.DataContext = evm;
             TestRecordCommitViewInstance.ShowDialog();
@@ -850,7 +851,7 @@ namespace BCLabManager.ViewModel
                     }
                 }
             }
-            //evm.DisplayName = "Test-Commit";
+            evm.DisplayName = "Test-Direct Commit";
             var TestRecordDirectCommitViewInstance = new DirectCommitView();
             TestRecordDirectCommitViewInstance.DataContext = evm;
             TestRecordDirectCommitViewInstance.ShowDialog();
@@ -954,7 +955,7 @@ namespace BCLabManager.ViewModel
         {
             TestRecordViewModel testRecord = SelectedTestRecord;
             TestRecordInvalidateViewModel evm = new TestRecordInvalidateViewModel();
-            //evm.DisplayName = "Test-Invalidate";
+            evm.DisplayName = "Test-Invalidate";
             var TestRecordInvalidateViewInstance = new InvalidateView();
             TestRecordInvalidateViewInstance.DataContext = evm;
             TestRecordInvalidateViewInstance.ShowDialog();
@@ -974,7 +975,7 @@ namespace BCLabManager.ViewModel
                 (
                 testRecordVM.Record      //??????????????????????????
                 );
-            //evm.DisplayName = "Test-View Raw Data";
+            evm.DisplayName = "Test-View Raw Data";
             var TestRecordRawDataViewInstance = new TestDataView();
             TestRecordRawDataViewInstance.DataContext = evm;
             TestRecordRawDataViewInstance.ShowDialog();
@@ -1105,7 +1106,7 @@ namespace BCLabManager.ViewModel
                 _channelService.Items,
                 _chamberService.Items
                 );
-            //evm.DisplayName = "Test-Execute";
+            evm.DisplayName = "Free Test-Execute";
             var FreeTestRecordViewInstance = new ExecuteFreeView();
             FreeTestRecordViewInstance.DataContext = evm;
             FreeTestRecordViewInstance.ShowDialog();
@@ -1144,7 +1145,7 @@ namespace BCLabManager.ViewModel
                 testRecord.Record      //??????????????????????????
                                        //m
                 );
-            //evm.DisplayName = "Test-Commit";
+            evm.DisplayName = "Free Test-Commit";
             var TestRecordCommitFreeViewInstance = new CommitFreeView();
             TestRecordCommitFreeViewInstance.DataContext = evm;
             TestRecordCommitFreeViewInstance.ShowDialog();
@@ -1226,7 +1227,7 @@ namespace BCLabManager.ViewModel
                     }
                 }
             }
-            //evm.DisplayName = "Test-Commit";
+            evm.DisplayName = "Free Test-Direcit Commit";
             var TestRecordDirectCommitViewInstance = new DirectCommitView();
             TestRecordDirectCommitViewInstance.DataContext = evm;
             TestRecordDirectCommitViewInstance.ShowDialog();
@@ -1332,7 +1333,7 @@ namespace BCLabManager.ViewModel
                 _programService.Items,
                 _programService.RecipeService.Items
                 );
-            //evm.DisplayName = "Test-Commit";
+            evm.DisplayName = "Free Test-Attach";
             var TestRecordAttachViewInstance = new AttachView();
             TestRecordAttachViewInstance.DataContext = evm;
             TestRecordAttachViewInstance.ShowDialog();

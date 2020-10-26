@@ -156,7 +156,7 @@ namespace BCLabManager.ViewModel
         {
             ProgramType proT = new ProgramType();      //实例化一个新的model
             ProgramTypeEditViewModel proTevm = new ProgramTypeEditViewModel(proT);      //实例化一个新的view model
-            //btevm.DisplayName = "Battery Type-Create";
+            proTevm.DisplayName = "Program Type-Create";
             var ProgramTypeEditViewInstance = new ProgramTypeView();      //实例化一个新的view
             ProgramTypeEditViewInstance.DataContext = proTevm;
             ProgramTypeEditViewInstance.ShowDialog();                   //设置viewmodel属性
@@ -169,6 +169,7 @@ namespace BCLabManager.ViewModel
         {
             ProgramType proT = new ProgramType();      //实例化一个新的model
             ProgramTypeEditViewModel proTevm = new ProgramTypeEditViewModel(proT);      //实例化一个新的view model
+            proTevm.DisplayName = "Program Type-Edit";
             proTevm.Id = _selectedItem.Id;
             proTevm.Name = _selectedItem.Name;
             proTevm.Description = _selectedItem.Description;
@@ -189,6 +190,7 @@ namespace BCLabManager.ViewModel
         {
             ProgramType proT = new ProgramType();      //实例化一个新的model
             ProgramTypeEditViewModel proTevm = new ProgramTypeEditViewModel(proT);      //实例化一个新的view model
+            proTevm.DisplayName = "Program Type-Save As";
             proTevm.Name = _selectedItem.Name;
             proTevm.Description = _selectedItem.Description;
 

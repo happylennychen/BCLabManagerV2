@@ -185,7 +185,7 @@ namespace BCLabManager.ViewModel
         {
             Battery editItem = new Battery();      //实例化一个新的model
             BatteryEditViewModel bevm = new BatteryEditViewModel(editItem, _batteryTypeServie.Items);      //实例化一个新的view model
-            //bevm.DisplayName = "Battery-Create";
+            bevm.DisplayName = "Battery-Create";
             bevm.commandType = CommandType.Create;
             var BatteryViewInstance = new BatteryView();      //实例化一个新的view
             BatteryViewInstance.DataContext = bevm;
@@ -206,7 +206,7 @@ namespace BCLabManager.ViewModel
             bevm.BatteryType = bevm.AllBatteryTypes.SingleOrDefault(i=>i.Id == _selectedItem.BatteryType.Id);   //所以改用Id来找到List里的item
             bevm.CycleCount = _selectedItem.CycleCount;
             bevm.AssetUseCount = _selectedItem.AssetUseCount;
-            //bevm.DisplayName = "Battery-Edit";
+            bevm.DisplayName = "Battery-Edit";
             bevm.commandType = CommandType.Edit;
             var BatteryViewInstance = new BatteryView();      //实例化一个新的view
             BatteryViewInstance.DataContext = bevm;
@@ -228,7 +228,7 @@ namespace BCLabManager.ViewModel
             bevm.BatteryType = bevm.AllBatteryTypes.SingleOrDefault(i => i.Id == _selectedItem.BatteryType.Id);
             bevm.CycleCount = _selectedItem.CycleCount;
             bevm.AssetUseCount = _selectedItem.AssetUseCount;
-            //bevm.DisplayName = "Battery-Edit";
+            bevm.DisplayName = "Battery-Save As";
             bevm.commandType = CommandType.SaveAs;
             var BatteryViewInstance = new BatteryView();      //实例化一个新的view
             BatteryViewInstance.DataContext = bevm;

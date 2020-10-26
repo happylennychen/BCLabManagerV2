@@ -181,7 +181,7 @@ namespace BCLabManager.ViewModel
         {
             Chamber edititem = new Chamber();      //实例化一个新的model
             ChamberEditViewModel evm = new ChamberEditViewModel(edititem);      //实例化一个新的view model
-            //evm.DisplayName = "Chamber-Create";
+            evm.DisplayName = "Chamber-Create";
             evm.commandType = CommandType.Create;
             var ChamberViewInstance = new ChamberView();      //实例化一个新的view
             ChamberViewInstance.DataContext = evm;
@@ -200,7 +200,7 @@ namespace BCLabManager.ViewModel
             evm.Manufacturer = _selectedItem.Manufacturer;
             evm.LowTemp = _selectedItem.LowTemp;
             evm.HighTemp = _selectedItem.HighTemp;
-            //evm.DisplayName = "Chamber-Edit";
+            evm.DisplayName = "Chamber-Edit";
             evm.commandType = CommandType.Edit;
             var ChamberViewInstance = new ChamberView();      //实例化一个新的view
             ChamberViewInstance.DataContext = evm;
@@ -222,7 +222,7 @@ namespace BCLabManager.ViewModel
             evm.Manufacturer = _selectedItem.Manufacturer;
             evm.LowTemp = _selectedItem.LowTemp;
             evm.HighTemp = _selectedItem.HighTemp;
-            //evm.DisplayName = "Chamber-Save As";
+            evm.DisplayName = "Chamber-Save As";
             evm.commandType = CommandType.SaveAs;
             var ChamberViewInstance = new ChamberView();      //实例化一个新的view
             ChamberViewInstance.DataContext = evm;

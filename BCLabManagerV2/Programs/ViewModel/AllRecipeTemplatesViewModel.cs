@@ -96,6 +96,7 @@ namespace BCLabManager.ViewModel
         {
             List<RecipeTemplateViewModel> all =
                 (from subt in recipeTemplates
+                 where (subt.Group == null || subt.Group.Name != "Abandoned")
                  select new RecipeTemplateViewModel(subt)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.AllRecipeTemplates = new ObservableCollection<RecipeTemplateViewModel>(all);     //再转换成Observable
@@ -249,7 +250,7 @@ namespace BCLabManager.ViewModel
                 new RecipeTemplateEditViewModel(
                     model
                     );      //实例化一个新的view model
-            //viewmodel.DisplayName = "RecipeTemplate-Create";
+            viewmodel.DisplayName = "Recipe Template-Create";
             viewmodel.commandType = CommandType.Create;
             var RecipeViewInstance = new RecipeTemplateView();      //实例化一个新的view
             RecipeViewInstance.DataContext = viewmodel;
@@ -318,7 +319,7 @@ namespace BCLabManager.ViewModel
                     model
                     );      //实例化一个新的view model
             //viewmodel.Id = _selectedItem.Id;
-            //viewmodel.DisplayName = "Recipe-Save As";
+            viewmodel.DisplayName = "Recipe Template-Save As";
             viewmodel.commandType = CommandType.SaveAs;
             var RecipeViewInstance = new RecipeTemplateView();      //实例化一个新的view
             RecipeViewInstance.DataContext = viewmodel;
@@ -347,7 +348,7 @@ namespace BCLabManager.ViewModel
                 new RecipeTemplateGroupEditViewModel(
                     model
                     );      //实例化一个新的view model
-            //viewmodel.DisplayName = "RecipeTemplate-Create";
+            viewmodel.DisplayName = "Recipe Template Group-Create";
             viewmodel.commandType = CommandType.Create;
             var RecipeGroupViewInstance = new RecipeTemplateGroupView();      //实例化一个新的view
             RecipeGroupViewInstance.DataContext = viewmodel;

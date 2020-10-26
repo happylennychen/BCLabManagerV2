@@ -1,7 +1,7 @@
 ﻿<Window x:Class="BCLabManager.View.TableMakerProductTypeView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="{Binding Path=DisplayName}" Height="350" Width="300" WindowStartupLocation="CenterScreen">
+        Title="{Binding Path=DisplayName}" Height="200" Width="500" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid Margin="4">
             <Grid.ColumnDefinitions>
@@ -14,26 +14,26 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="30" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="130" />
+                <RowDefinition Height="30" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="30" />
             </Grid.RowDefinitions>
 
             <!-- CUSTOMER TYPE -->
             <Label 
-      Grid.Row="0" Grid.Column="0" 
+      Grid.Row="2" Grid.Column="0" 
       Content="Description:" 
       HorizontalAlignment="Right"
       />
             <TextBox 
-      Grid.Row="0" Grid.Column="2" 
+      Grid.Row="2" Grid.Column="2" 
       Text="{Binding Path=Description, UpdateSourceTrigger=LostFocus}" 
       >
             </TextBox>
 
             <!-- SAVE BUTTON -->
             <Button 
-      Grid.Row="10" Grid.Column="2"
+      Grid.Row="4" Grid.Column="2"
       Command="{Binding Path=OKCommand}"
                 Click="Button_Click"
       Content="_OK"

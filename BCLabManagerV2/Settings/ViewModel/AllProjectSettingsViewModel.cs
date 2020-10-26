@@ -160,7 +160,7 @@ namespace BCLabManager.ViewModel
         {
             ProjectSetting editItem = new ProjectSetting();      //实例化一个新的model
             ProjectSettingEditViewModel bevm = new ProjectSettingEditViewModel(editItem, _projectService.Items);      //实例化一个新的view model
-            //bevm.DisplayName = "ProjectSetting-Create";
+            bevm.DisplayName = "Project Setting-Create";
             bevm.commandType = CommandType.Create;
             var ProjectSettingViewInstance = new ProjectSettingView();      //实例化一个新的view
             ProjectSettingViewInstance.DataContext = bevm;
@@ -194,7 +194,7 @@ namespace BCLabManager.ViewModel
             bevm.is_valid = _selectedItem.is_valid;
             bevm.extend_cfg = _selectedItem.extend_cfg;
             bevm.Project = bevm.AllProjects.SingleOrDefault(i => i.Id == _selectedItem.Project.Id);
-            //bevm.DisplayName = "ProjectSetting-Edit";
+            bevm.DisplayName = "Project Setting-Edit";
             bevm.commandType = CommandType.Edit;
             var ProjectSettingViewInstance = new ProjectSettingView();      //实例化一个新的view
             ProjectSettingViewInstance.DataContext = bevm;
@@ -214,7 +214,7 @@ namespace BCLabManager.ViewModel
             ProjectSettingEditViewModel bevm = new ProjectSettingEditViewModel(bc, _projectService.Items);      //实例化一个新的view model
             bevm.design_capacity_mahr = _selectedItem.design_capacity_mahr;
             bevm.Project = bevm.AllProjects.SingleOrDefault(i => i.Id == _selectedItem.Project.Id);
-            //bevm.DisplayName = "ProjectSetting-Edit";
+            bevm.DisplayName = "Project Setting-Save As";
             bevm.commandType = CommandType.SaveAs;
             var ProjectSettingViewInstance = new ProjectSettingView();      //实例化一个新的view
             ProjectSettingViewInstance.DataContext = bevm;

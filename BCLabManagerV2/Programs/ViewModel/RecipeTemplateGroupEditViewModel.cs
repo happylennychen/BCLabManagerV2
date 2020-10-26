@@ -15,7 +15,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class RecipeTemplateGroupEditViewModel : BindableBase//, IDataErrorInfo
+    public class RecipeTemplateGroupEditViewModel : BindableBaseWithName//, IDataErrorInfo
     {
         #region Fields
         public readonly RecipeTemplateGroup _RecipeTemplateGroup;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。

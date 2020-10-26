@@ -162,7 +162,7 @@ namespace BCLabManager.ViewModel
         {
             TableMakerProduct editItem = new TableMakerProduct();      //实例化一个新的model
             TableMakerProductEditViewModel bevm = new TableMakerProductEditViewModel(editItem, _projectService.Items, _tableMakerProductTypeServie.Items);      //实例化一个新的view model
-            //bevm.DisplayName = "TableMakerProduct-Create";
+            bevm.DisplayName = "Table Maker Product-Create";
             bevm.commandType = CommandType.Create;
             var TableMakerProductViewInstance = new TableMakerProductView();      //实例化一个新的view
             TableMakerProductViewInstance.DataContext = bevm;
@@ -183,7 +183,7 @@ namespace BCLabManager.ViewModel
             bevm.Project = bevm.AllProjects.SingleOrDefault(i => i.Id == _selectedItem.Project.Id);
             bevm.IsValid = _selectedItem.IsValid;
             bevm.TableMakerProductType = bevm.AllTableMakerProductTypes.SingleOrDefault(i=>i.Id == _selectedItem.TableMakerProductType.Id);   //所以改用Id来找到List里的item
-            //bevm.DisplayName = "TableMakerProduct-Edit";
+            bevm.DisplayName = "Table Maker Product-Edit";
             bevm.commandType = CommandType.Edit;
             var TableMakerProductViewInstance = new TableMakerProductView();      //实例化一个新的view
             TableMakerProductViewInstance.DataContext = bevm;
@@ -205,7 +205,7 @@ namespace BCLabManager.ViewModel
             bevm.Project = bevm.AllProjects.SingleOrDefault(i => i.Id == _selectedItem.Project.Id);
             bevm.TableMakerProductType = bevm.AllTableMakerProductTypes.SingleOrDefault(i => i.Id == _selectedItem.TableMakerProductType.Id);
             bevm.IsValid = _selectedItem.IsValid;
-            //bevm.DisplayName = "TableMakerProduct-Edit";
+            bevm.DisplayName = "Table Maker Product-Save As";
             bevm.commandType = CommandType.SaveAs;
             var TableMakerProductViewInstance = new TableMakerProductView();      //实例化一个新的view
             TableMakerProductViewInstance.DataContext = bevm;

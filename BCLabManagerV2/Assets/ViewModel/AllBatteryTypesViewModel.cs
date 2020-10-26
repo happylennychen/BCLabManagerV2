@@ -178,7 +178,7 @@ namespace BCLabManager.ViewModel
         {
             BatteryType btc = new BatteryType();      //实例化一个新的model
             BatteryTypeEditViewModel btevm = new BatteryTypeEditViewModel(btc);      //实例化一个新的view model
-            //btevm.DisplayName = "Battery Type-Create";
+            btevm.DisplayName = "Battery Type-Create";
             var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
             BatteryTypeViewInstance.DataContext = btevm;
             BatteryTypeViewInstance.ShowDialog();                   //设置viewmodel属性
@@ -195,7 +195,7 @@ namespace BCLabManager.ViewModel
             btevm.Manufacturer = _selectedItem.Manufacturer;
             btevm.Material = _selectedItem.Material;
             btevm.Name = _selectedItem.Name;
-            //btevm.DisplayName = "Battery Type-Edit";
+            btevm.DisplayName = "Battery Type-Edit";
             var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
             BatteryTypeViewInstance.DataContext = btevm;
             BatteryTypeViewInstance.ShowDialog();
@@ -222,7 +222,7 @@ namespace BCLabManager.ViewModel
             btevm.NominalVoltage = _selectedItem.NominalVoltage;
             btevm.RatedCapacity = _selectedItem.RatedCapacity;
             btevm.TypicalCapacity = _selectedItem.TypicalCapacity;
-            //btevm.DisplayName = "Battery Type-Save As";
+            btevm.DisplayName = "Battery Type-Save As";
             var BatteryTypeViewInstance = new BatteryTypeView();      //实例化一个新的view
             BatteryTypeViewInstance.DataContext = btevm;
             BatteryTypeViewInstance.ShowDialog();

@@ -256,7 +256,13 @@ namespace BCLabManager.Model
         {
             testRecord.Comment += "\r\n" + comment;
             testRecord.Status = TestStatus.Invalid;
-            File.Move(testRecord.TestFilePath, testRecord.TestFilePath + "_INVALID");
+            try
+            {
+                File.Move(testRecord.TestFilePath, testRecord.TestFilePath + "_INVALID");
+            }
+            catch(Exception e)
+            {
+            }
             testRecord.TestFilePath += "_INVALID";
             DatabaseUpdate(testRecord);
         }

@@ -16,7 +16,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class TestRecordDirectCommitViewModel : BindableBase//, IDataErrorInfo
+    public class TestRecordDirectCommitViewModel : BindableBaseWithName//, IDataErrorInfo
     {
         #region Fields
         readonly TestRecord _record;

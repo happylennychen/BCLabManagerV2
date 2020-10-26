@@ -15,7 +15,7 @@ namespace BCLabManager.ViewModel
     /// Editable: true
     /// Updateable: no need
     /// </summary>
-    public class ChamberEditViewModel : BindableBase//, IDataErrorInfo
+    public class ChamberEditViewModel : BindableBaseWithName//, IDataErrorInfo
     {
         #region Fields
 

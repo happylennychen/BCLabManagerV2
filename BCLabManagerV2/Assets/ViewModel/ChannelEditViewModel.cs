@@ -15,7 +15,7 @@ namespace BCLabManager.ViewModel
     /// Editable: true
     /// Updateable: no need
     /// </summary>
-    public class ChannelEditViewModel : BindableBase//, IDataErrorInfo
+    public class ChannelEditViewModel : BindableBaseWithName//, IDataErrorInfo
     {
         #region Fields
 

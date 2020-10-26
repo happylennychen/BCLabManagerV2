@@ -400,6 +400,7 @@
     <Compile Include="Settings\ViewModel\AllTableMakerProductTypesViewModel.cs" />
     <Compile Include="Settings\ViewModel\AllProgramTypesViewModel.cs" />
     <Compile Include="Settings\ViewModel\AllProjectsViewModel.cs" />
+    <Compile Include="Services\ViewModel\BindableBaseWithName.cs" />
     <Compile Include="Settings\ViewModel\ProjectSettingEditViewModel.cs" />
     <Compile Include="Settings\ViewModel\TableMakerProductTypeEditViewModel.cs" />
     <Compile Include="Settings\ViewModel\ProgramTypeEditViewModel.cs" />

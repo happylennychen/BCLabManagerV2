@@ -15,7 +15,7 @@ namespace BCLabManager.ViewModel
     /// Editable: true
     /// Updateable: no need
     /// </summary>
-    public class BatteryTypeEditViewModel : BindableBase//, IDataErrorInfo
+    public class BatteryTypeEditViewModel : BindableBaseWithName//, IDataErrorInfo
     {
         #region Fields
 

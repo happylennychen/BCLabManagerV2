@@ -15,7 +15,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class TableMakerProductTypeEditViewModel : BindableBase//, IDataErrorInfo
+    public class TableMakerProductTypeEditViewModel : BindableBaseWithName//, IDataErrorInfo
     {
         #region Fields
 
@@ -69,7 +69,6 @@ namespace BCLabManager.ViewModel
         #endregion // Customer Properties
 
         #region Presentation Properties
-
         /// <summary>
         /// Returns a command that saves the customer.
         /// </summary>

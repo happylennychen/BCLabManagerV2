@@ -14,7 +14,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Program object.
     /// </summary>
-    public class ProgramEditViewModel : BindableBase//, IDataErrorInfo
+    public class ProgramEditViewModel : BindableBaseWithName//, IDataErrorInfo
     {
         #region Fields
 
@@ -54,6 +54,7 @@ namespace BCLabManager.ViewModel
         {
             List<RecipeTemplateViewModel> all =
                 (from sub in RecipeTemplates
+                 where (sub.Group == null || sub.Group.Name != "Abandoned")
                  select new RecipeTemplateViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             this.AllRecipeTemplates = new ObservableCollection<RecipeTemplateViewModel>(all);     //再转换成Observable

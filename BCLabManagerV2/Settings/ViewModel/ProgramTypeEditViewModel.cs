@@ -15,7 +15,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class ProgramTypeEditViewModel : BindableBase//, IDataErrorInfo
+    public class ProgramTypeEditViewModel : BindableBaseWithName//, IDataErrorInfo
     {
         #region Fields
 

@@ -156,7 +156,7 @@ namespace BCLabManager.ViewModel
         {
             TableMakerProductType proT = new TableMakerProductType();      //实例化一个新的model
             TableMakerProductTypeEditViewModel proTevm = new TableMakerProductTypeEditViewModel(proT);      //实例化一个新的view model
-            //btevm.DisplayName = "Battery Type-Create";
+            proTevm.DisplayName = "Table Maker Product Type-Create";
             var TableMakerProductTypeEditViewInstance = new TableMakerProductTypeView();      //实例化一个新的view
             TableMakerProductTypeEditViewInstance.DataContext = proTevm;
             TableMakerProductTypeEditViewInstance.ShowDialog();                   //设置viewmodel属性
@@ -169,6 +169,7 @@ namespace BCLabManager.ViewModel
         {
             TableMakerProductType proT = new TableMakerProductType();      //实例化一个新的model
             TableMakerProductTypeEditViewModel proTevm = new TableMakerProductTypeEditViewModel(proT);      //实例化一个新的view model
+            proTevm.DisplayName = "Table Maker Product Type-Edit";
             proTevm.Id = _selectedItem.Id;
             proTevm.Description = _selectedItem.Description;
 
@@ -188,6 +189,7 @@ namespace BCLabManager.ViewModel
         {
             TableMakerProductType proT = new TableMakerProductType();      //实例化一个新的model
             TableMakerProductTypeEditViewModel proTevm = new TableMakerProductTypeEditViewModel(proT);      //实例化一个新的view model
+            proTevm.DisplayName = "Table Maker Product Type-Save As";
             proTevm.Description = _selectedItem.Description;
 
             var TableMakerProductTypeEditViewInstance = new TableMakerProductTypeView();      //实例化一个新的view

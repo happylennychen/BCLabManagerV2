@@ -14,7 +14,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Program object.
     /// </summary>
-    public class RCProgramEditViewModel : BindableBase//, IDataErrorInfo
+    public class RCProgramEditViewModel : BindableBaseWithName//, IDataErrorInfo
     {
         #region Fields
 
