@@ -166,7 +166,7 @@ namespace BCLabManager.Model
                 dataLine1 = sr.ReadLine();
                 row1 = GetRowFromString(dataLine1);
                 ActionMode am = GetActionMode(row1[Column.STEP_MODE]);
-                if (am == ActionMode.CC_DISCHARGE)
+                if (am == ActionMode.CC_DISCHARGE || am == ActionMode.CP_DISCHARGE)
                     isFirstDischarge = true;
                 if (startIndex != 0)
                 {
@@ -435,36 +435,51 @@ namespace BCLabManager.Model
         private StepV2 GetNewTargetStep(StepV2 currentStep, List<StepV2> fullSteps, Dictionary<Column, string> row, double temperature, int timeSpan)
         {
             StepV2 nextStep = null;
-            foreach (var coc in currentStep.CutOffConditions)
+            //foreach (var coc in currentStep.CutOffConditions)
+            //{
+            //    double value = -999999;
+            //    double tolerance = 0;
+            //    switch (coc.Parameter)
+            //    {
+            //        case Parameter.VOLTAGE:
+            //            value = Convert.ToDouble(row[Column.VOLTAGE]) * 1000;
+            //            tolerance = StepTolerance[Column.VOLTAGE];
+            //            break;
+            //        case Parameter.CURRENT:
+            //            value = Convert.ToDouble(row[Column.CURRENT]) * 1000;
+            //            tolerance = StepTolerance[Column.CURRENT];
+            //            break;
+            //        case Parameter.TEMPERATURE:
+            //            value = Convert.ToDouble(row[Column.TEMPERATURE]);
+            //            tolerance = StepTolerance[Column.TEMPERATURE];
+            //            break;
+            //        case Parameter.TIME:
+            //            value = timeSpan;
+            //            tolerance = StepTolerance[Column.TIME];
+            //            break;
+            //        default:
+            //            break;
+            //    }
+            //    if (value != -999999)
+            //        nextStep = Compare(coc, value, tolerance, fullSteps, currentStep.Index);
+            //    if (nextStep != null)
+            //        return nextStep;
+            //}
+            CutOffCondition coc = null;
+            switch (row[Column.STATUS])
             {
-                double value = -999999;
-                double tolerance = 0;
-                switch (coc.Parameter)
-                {
-                    case Parameter.VOLTAGE:
-                        value = Convert.ToDouble(row[Column.VOLTAGE]) * 1000;
-                        tolerance = StepTolerance[Column.VOLTAGE];
-                        break;
-                    case Parameter.CURRENT:
-                        value = Convert.ToDouble(row[Column.CURRENT]) * 1000;
-                        tolerance = StepTolerance[Column.CURRENT];
-                        break;
-                    case Parameter.TEMPERATURE:
-                        value = Convert.ToDouble(row[Column.TEMPERATURE]);
-                        tolerance = StepTolerance[Column.TEMPERATURE];
-                        break;
-                    case Parameter.TIME:
-                        value = timeSpan;
-                        tolerance = StepTolerance[Column.TIME];
-                        break;
-                    default:
-                        break;
-                }
-                if (value != -999999)
-                    nextStep = Compare(coc, value, tolerance, fullSteps, currentStep.Index);
-                if (nextStep != null)
-                    return nextStep;
+                case "StepFinishByCut_V":
+                    coc = currentStep.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE);
+                    break;
+                case "StepFinishByCut_I":
+                    coc = currentStep.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.CURRENT);
+                    break;
+                case "StepFinishByCut_T":
+                    coc = currentStep.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME);
+                    break;
             }
+            if (coc != null)
+                nextStep = Jump(coc, fullSteps, currentStep.Index);
             return nextStep;
         }
 
@@ -522,7 +537,6 @@ namespace BCLabManager.Model
                     {
                         current = GetCurrentFromRow(row1) * -1;
                         if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
-                            //throw new ProcessException("Current Out Of Range");
                             return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
                     }
                     break;
@@ -530,14 +544,12 @@ namespace BCLabManager.Model
 
                     current = GetCurrentFromRow(row1);
                     if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
-                        //throw new ProcessException("Current Out Of Range");
                         return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
 
                     if (isFirstDischarge && !isFirstDischargeChecked)
                     {
                         temperature = Convert.ToDouble(row1[Column.TEMPERATURE]);
                         if (Math.Abs(temperature - temp) > StepTolerance[Column.TEMPERATURE])
-                            //throw new ProcessException("Temperature Out Of Range");
                             return ErrorCode.DP_TEMPERATURE_OUT_OF_RANGE;
 
                         isFirstDischargeChecked = true;
@@ -545,16 +557,14 @@ namespace BCLabManager.Model
                     break;
                 case ActionMode.CP_DISCHARGE:
 
-                    power = GetPowerFromRow(row1)*1000;             //mW
-                    if (Math.Abs(power - step.Action.Power) > 100)
-                        //throw new ProcessException("Current Out Of Range");
+                    power = GetPowerFromRow(row1) * 1000;             //mW
+                    if (Math.Abs(power - step.Action.Power) > 200)
                         return ErrorCode.DP_POWER_OUT_OF_RANGE;
 
                     if (isFirstDischarge && !isFirstDischargeChecked)
                     {
                         temperature = Convert.ToDouble(row1[Column.TEMPERATURE]);
                         if (Math.Abs(temperature - temp) > StepTolerance[Column.TEMPERATURE])
-                            //throw new ProcessException("Temperature Out Of Range");
                             return ErrorCode.DP_TEMPERATURE_OUT_OF_RANGE;
 
                         isFirstDischargeChecked = true;
@@ -593,6 +603,11 @@ namespace BCLabManager.Model
                         //throw new ProcessException("Current Out Of Range");
                         return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
                     break;
+                case ActionMode.CP_DISCHARGE:
+                    var power = GetPowerFromRow(row1) * 1000;             //mW
+                    if (Math.Abs(power - step.Action.Power) > 200)
+                        return ErrorCode.DP_POWER_OUT_OF_RANGE;
+                    break;
                 case ActionMode.REST:
                     break;
                 default:
@@ -613,22 +628,18 @@ namespace BCLabManager.Model
                     {
                         current = GetCurrentFromRow(row) * -1;
                         if (Math.Abs(current - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.CURRENT).Value) > StepTolerance[Column.CURRENT])
-                            //throw new ProcessException("Current Out Of Range");
                             return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
                         voltage = Convert.ToDouble(row[Column.VOLTAGE]) * 1000;
                         if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance[Column.VOLTAGE])
-                            //throw new ProcessException("Voltage Out Of Range");
                             return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
                     }
                     else if (row[Column.STATUS] == "StepFinishByCut_T")     //DST测试也会设定充电时间
                     {
                         if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance[Column.TIME])
-                            //throw new ProcessException("Time Out Of Range");
                             return ErrorCode.DP_TIME_OUT_OF_RANGE;
                     }
                     else
                     {
-                        //throw new ProcessException("Abnormal step cut off.");
                         return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
                     }
                     break;
@@ -637,18 +648,32 @@ namespace BCLabManager.Model
                     {
                         voltage = Convert.ToDouble(row[Column.VOLTAGE]) * 1000;
                         if (Math.Abs(voltage - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE).Value) > StepTolerance[Column.VOLTAGE])
-                            //throw new ProcessException("Voltage Out Of Range");
                             return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
                     }
                     else if (row[Column.STATUS] == "StepFinishByCut_T")
                     {
                         if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance[Column.TIME])
-                            //throw new ProcessException("Time Out Of Range");
                             return ErrorCode.DP_TIME_OUT_OF_RANGE;
                     }
                     else
                     {
-                        //throw new ProcessException("Abnormal step cut off.");
+                        return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
+                    }
+                    break;
+                case ActionMode.CP_DISCHARGE:
+                    if (row[Column.STATUS] == "StepFinishByCut_V")
+                    {
+                        voltage = Convert.ToDouble(row[Column.VOLTAGE]) * 1000;
+                        if (Math.Abs(voltage - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE).Value) > StepTolerance[Column.VOLTAGE])
+                            return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
+                    }
+                    else if (row[Column.STATUS] == "StepFinishByCut_T")
+                    {
+                        if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance[Column.TIME])
+                            return ErrorCode.DP_TIME_OUT_OF_RANGE;
+                    }
+                    else
+                    {
                         return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
                     }
                     break;
@@ -656,12 +681,10 @@ namespace BCLabManager.Model
                     if (row[Column.STATUS] == "StepFinishByCut_T")
                     {
                         if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance[Column.TIME])
-                            //throw new ProcessException("Time Out Of Range");
                             return ErrorCode.DP_TIME_OUT_OF_RANGE;
                     }
                     else
                     {
-                        //throw new ProcessException("Abnormal step cut off.");
                         return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
                     }
                     break;
@@ -797,8 +820,8 @@ namespace BCLabManager.Model
             if (diff < 0 || diff > 1000)
                 output.Add(Column.TIME_MS, false);
             else
-                output.Add(Column.TIME_MS, true); 
-            
+                output.Add(Column.TIME_MS, true);
+
             DateTime t0 = DateTime.Parse(row0[Column.TIME]);
             DateTime t1 = DateTime.Parse(row1[Column.TIME]);
             diff = (t1 - t0).TotalSeconds;
