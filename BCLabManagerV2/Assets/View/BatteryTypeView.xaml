@@ -37,7 +37,7 @@
             <!-- CUSTOMER TYPE -->
             <Label 
       Grid.Row="0" Grid.Column="0" 
-      Content="_manufacturer:" 
+      Content="_Manufacturer:" 
       HorizontalAlignment="Right"
       Target="{Binding ElementName=manufacturerTxt}" 
       />

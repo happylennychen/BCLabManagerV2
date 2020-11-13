@@ -21,19 +21,6 @@ namespace BCLabManager.Model
             StepTolerance.Add(Column.VOLTAGE, 50);          //mV
             StepTolerance.Add(Column.TEMPERATURE, 3.5);
             StepTolerance.Add(Column.TIME, 3);          //S
-
-            ContinuityTolerance.Add(Column.STEPNO, 1);
-            ContinuityTolerance.Add(Column.STEP, 1);
-            ContinuityTolerance.Add(Column.TIME_MS, 1000);
-            ContinuityTolerance.Add(Column.TIME, 1);
-            ContinuityTolerance.Add(Column.CYCLE, 1);
-            ContinuityTolerance.Add(Column.LOOP, 1);
-            ContinuityTolerance.Add(Column.MODE, 1);
-            ContinuityTolerance.Add(Column.CURRENT, 0.1);   //A
-            ContinuityTolerance.Add(Column.VOLTAGE, 0.1);
-            ContinuityTolerance.Add(Column.TEMPERATURE, 1);
-            ContinuityTolerance.Add(Column.CAPACITY, 0.5);
-            ContinuityTolerance.Add(Column.TOTAL_CAPACITY, 0.5);
         }
 
         enum Column
@@ -274,7 +261,7 @@ namespace BCLabManager.Model
                         }
                         if (!isFirstDischargeChecked)
                         {
-                            if (step1.Action.Mode == ActionMode.CC_DISCHARGE)
+                            if (step1.Action.Mode == ActionMode.CC_DISCHARGE || step1.Action.Mode == ActionMode.CP_DISCHARGE)
                                 isFirstDischarge = true;
                         }
                         isCOCPoint = false;
@@ -320,7 +307,7 @@ namespace BCLabManager.Model
 
                         if (row1[Column.MODE] != "0")
                         {
-                            Dictionary<Column, bool> rowContinuityMatrix = GetContinuityMatrix(row0, row1, ContinuityTolerance);
+                            Dictionary<Column, bool> rowContinuityMatrix = GetContinuityMatrix(row0, row1);
                             result = ContinuityCheck(rowContinuityMatrix);
                             if (result != ErrorCode.NORMAL)
                             {
@@ -367,26 +354,38 @@ namespace BCLabManager.Model
 
         private bool ErrorHandler(ref List<Event> events, uint result, string filepath, Program program, Recipe recipe, TestRecord record, int lineIndex, string dataLine0, ref string dataLine1, params object[] args)
         {
-            Event evt = new Event(); 
+            Event evt = new Event();
             string info = string.Empty;
             string solution = string.Empty;
             string oldLine1 = dataLine1;
             string newLine1 = string.Empty;
             bool ret;
+            Dictionary<Column, string> row0 = new Dictionary<Column, string>();
+            Dictionary<Column, string> row1 = new Dictionary<Column, string>();
             switch (result)
             {
-                case ErrorCode.DP_ABNORMAL_STEP_AND_TIME_JUMP:       //只有step和time不对，直接修复
-                    var row0 = GetRowFromString(dataLine0);
-                    var row1 = GetRowFromString(dataLine1);
-                    row1[Column.STEP] = row0[Column.STEP];
-                    row1[Column.TIME_MS] = (Convert.ToInt32(row0[Column.TIME_MS]) + 1000).ToString();
-                    row1[Column.TIME] = DateTime.Parse(row0[Column.TIME]).Add(TimeSpan.FromSeconds(1)).ToString("yyyy-MM-dd HH:mm:ss");
-                    row1[Column.STATUS] = row0[Column.STATUS];
-                    dataLine1 = BuildStringFromRow(row1);   //更新dataLine1
-                    newLine1 = dataLine1;
-                    solution = "Auto Fixed";
-                    ret = true;
-                    break;
+                //case ErrorCode.DP_CHECKSUM_ABNORMAL_STEP_AND_TIME_JUMP:       //只有step和time不对，直接修复
+                //    row0 = GetRowFromString(dataLine0);
+                //    row1 = GetRowFromString(dataLine1);
+                //    row1[Column.STEP] = row0[Column.STEP];
+                //    row1[Column.TIME_MS] = (Convert.ToInt32(row0[Column.TIME_MS]) + 1000).ToString();
+                //    row1[Column.TIME] = DateTime.Parse(row0[Column.TIME]).Add(TimeSpan.FromSeconds(1)).ToString("yyyy-MM-dd HH:mm:ss");
+                //    row1[Column.STATUS] = row0[Column.STATUS];
+                //    dataLine1 = BuildStringFromRow(row1);   //更新dataLine1
+                //    newLine1 = dataLine1;
+                //    solution = "Auto Fixed";
+                //    ret = true;
+                //    break;
+                //case ErrorCode.DP_CHECKSUM_ABNORMAL_STEP_JUMP:
+                //    row0 = GetRowFromString(dataLine0);
+                //    row1 = GetRowFromString(dataLine1);
+                //    row1[Column.STEP] = row0[Column.STEP];
+                //    row1[Column.STATUS] = row0[Column.STATUS];
+                //    dataLine1 = BuildStringFromRow(row1);   //更新dataLine1
+                //    newLine1 = dataLine1;
+                //    solution = "Auto Fixed";
+                //    ret = true;
+                //    break;
                 default:
                     var str = $"{ErrorCode.GetDescription(result, args)}\n" +
                                $"-----------------------------" +
@@ -513,6 +512,7 @@ namespace BCLabManager.Model
         {
             double voltage = 0;
             double current = 0;
+            double power = 0;
             double temperature = 0;
             switch (step.Action.Mode)
             {
@@ -543,6 +543,23 @@ namespace BCLabManager.Model
                         isFirstDischargeChecked = true;
                     }
                     break;
+                case ActionMode.CP_DISCHARGE:
+
+                    power = GetPowerFromRow(row1)*1000;             //mW
+                    if (Math.Abs(power - step.Action.Power) > 100)
+                        //throw new ProcessException("Current Out Of Range");
+                        return ErrorCode.DP_POWER_OUT_OF_RANGE;
+
+                    if (isFirstDischarge && !isFirstDischargeChecked)
+                    {
+                        temperature = Convert.ToDouble(row1[Column.TEMPERATURE]);
+                        if (Math.Abs(temperature - temp) > StepTolerance[Column.TEMPERATURE])
+                            //throw new ProcessException("Temperature Out Of Range");
+                            return ErrorCode.DP_TEMPERATURE_OUT_OF_RANGE;
+
+                        isFirstDischargeChecked = true;
+                    }
+                    break;
                 case ActionMode.REST:
                     break;
                 default:
@@ -554,6 +571,13 @@ namespace BCLabManager.Model
         private double GetCurrentFromRow(Dictionary<Column, string> row1)
         {
             return Convert.ToDouble(row1[Column.CURRENT]) * -1000.0;
+        }
+
+        private double GetPowerFromRow(Dictionary<Column, string> row1)
+        {
+            var current = Convert.ToDouble(row1[Column.CURRENT]) * -1.0;
+            var voltage = Convert.ToDouble(row1[Column.VOLTAGE]);
+            return current * voltage;
         }
 
         private UInt32 StepMidPointCheck(StepV2 step, Dictionary<Column, string> row1, double temp)
@@ -653,30 +677,40 @@ namespace BCLabManager.Model
             {
                 case "CC_CV_Charge": return ActionMode.CC_CV_CHARGE;
                 case "CC_Discharge": return ActionMode.CC_DISCHARGE;
+                case "CP_Discharge": return ActionMode.CP_DISCHARGE;
                 case "Rest": return ActionMode.REST;
                 default: return ActionMode.NA;
             }
         }
 
+
         private UInt32 ContinuityCheck(Dictionary<Column, bool> rowContinuityMatrix)
         {
             int result = 0;
+            int i = 0;
             foreach (var key in rowContinuityMatrix.Keys)
             {
                 if (rowContinuityMatrix[key] == false)
-                    result |= (0x0001 << (int)key);
+                    result |= (0x0001 << i);
+                i++;
             }
+            //     0,    1,       2,    3,     4,    5,    6,       7,       8,           9,       10,            11,      12,        13
+            //STEPNO, STEP, TIME_MS, TIME, CYCLE, LOOP, MODE, ,STEP_MODE, CURRENT, VOLTAGE, TEMPERATURE, CAPACITY, TOTAL_CAPACITY, STATUS
             if (result == 0x00)
             {
                 return ErrorCode.NORMAL;
             }
-            else if ((result | 0b111110000000) == 0b111110000000)   //只有物理参数超范围，不管
+            else if ((result | 0x1f00) == 0x1f00)   //只有物理参数超范围，不管
             {
                 return ErrorCode.NORMAL;
             }
-            else if ((result | 0x000e) == 0x000e)       //Step 和 Time错了
+            else if (result == 0x2002)       //Step, Status错了
             {
-                return ErrorCode.DP_ABNORMAL_STEP_AND_TIME_JUMP;
+                return ErrorCode.DP_CHECKSUM_ABNORMAL_STEP_JUMP;
+            }
+            else if (result == 0x200e)       //Step, Time, Time_mS, Status错了
+            {
+                return ErrorCode.DP_CHECKSUM_ABNORMAL_STEP_AND_TIME_JUMP;
             }
             else
             {
@@ -685,30 +719,141 @@ namespace BCLabManager.Model
             }
         }
 
-        private Dictionary<Column, bool> GetContinuityMatrix(Dictionary<Column, string> row0, Dictionary<Column, string> row1, Dictionary<Column, double> tolerance)
+
+        //    ContinuityTolerance.Add(Column.STEPNO, 1);
+        //    ContinuityTolerance.Add(Column.STEP, 1);
+        //    ContinuityTolerance.Add(Column.TIME_MS, 1000);
+        //    ContinuityTolerance.Add(Column.TIME, 1);
+        //    ContinuityTolerance.Add(Column.CYCLE, 1);
+        //    ContinuityTolerance.Add(Column.LOOP, 1);
+        //    ContinuityTolerance.Add(Column.MODE, 1);
+        //    ContinuityTolerance.Add(Column.CURRENT, 0.1);   //A
+        //    ContinuityTolerance.Add(Column.VOLTAGE, 0.1);
+        //    ContinuityTolerance.Add(Column.TEMPERATURE, 1);
+        //    ContinuityTolerance.Add(Column.CAPACITY, 0.5);
+        //    ContinuityTolerance.Add(Column.TOTAL_CAPACITY, 0.5);        
+        //enum Column
+        //{
+        //    STEPNO,     //配方的Index，1234234234
+        //    STEP,       //真实的顺序，1234...n
+        //    TIME_MS,    //100，200，300
+        //    TIME,       //2020-07-24 08:55:31
+        //    CYCLE,      //外层循环？
+        //    LOOP,       //内层循环？
+        //    STEP_MODE,       //Rest, CC_CV_Charge, CC_Discharge
+        //    MODE,            //Step改变时为0，否则为1
+        //    CURRENT,
+        //    VOLTAGE,
+        //    TEMPERATURE,
+        //    CAPACITY,       //单个Step的电量
+        //    TOTAL_CAPACITY,  //
+        //    STATUS              //StepFinishByCut_V,StepFinishByCut_T,StepFinishByCut_I
+        //}
+        private Dictionary<Column, bool> GetContinuityMatrix(Dictionary<Column, string> row0, Dictionary<Column, string> row1)
         {
             Dictionary<Column, bool> output = new Dictionary<Column, bool>();
-            foreach (var key in tolerance.Keys)
-            {
-                bool result = false;
-                if (key == Column.TIME)
-                {
-                    DateTime t0 = DateTime.Parse(row0[key]);
-                    DateTime t1 = DateTime.Parse(row1[key]);
-                    if (Math.Abs((t1 - t0).TotalSeconds) > tolerance[key])
-                        result = false;
-                    else
-                        result = true;
-                }
-                else
-                {
-                    if (Math.Abs(Convert.ToDouble(row1[key]) - Convert.ToDouble(row0[key])) > tolerance[key])
-                        result = false;
-                    else
-                        result = true;
-                }
-                output.Add(key, result);
-            }
+            double diff;
+            //foreach (var key in tolerance.Keys)
+            //{
+            //    bool result = false;
+            //    if (key == Column.TIME)
+            //    {
+            //        DateTime t0 = DateTime.Parse(row0[key]);
+            //        DateTime t1 = DateTime.Parse(row1[key]);
+            //        if (Math.Abs((t1 - t0).TotalSeconds) > tolerance[key])
+            //            result = false;
+            //        else
+            //            result = true;
+            //    }
+            //    else if (key == Column.STEP)
+            //    {
+            //        var diff = (Convert.ToDouble(row1[key]) - Convert.ToDouble(row0[key]));
+            //        if (diff < 0 || diff > tolerance[key])
+            //            result = false;
+            //        else
+            //            result = true;
+            //    }
+            //    else
+            //    {
+            //        if (Math.Abs(Convert.ToDouble(row1[key]) - Convert.ToDouble(row0[key])) > tolerance[key])
+            //            result = false;
+            //        else
+            //            result = true;
+            //    }
+            //    output.Add(key, result);
+            //}
+            if (row1[Column.STEPNO] == "0")
+                output.Add(Column.STEPNO, false);
+            else
+                output.Add(Column.STEPNO, true);
+
+            diff = (Convert.ToDouble(row1[Column.STEP]) - Convert.ToDouble(row0[Column.STEP]));
+            if (diff < 0 || diff > 1)
+                output.Add(Column.STEP, false);
+            else
+                output.Add(Column.STEP, true);
+
+            diff = (Convert.ToDouble(row1[Column.TIME_MS]) - Convert.ToDouble(row0[Column.TIME_MS]));
+            if (diff < 0 || diff > 1000)
+                output.Add(Column.TIME_MS, false);
+            else
+                output.Add(Column.TIME_MS, true); 
+            
+            DateTime t0 = DateTime.Parse(row0[Column.TIME]);
+            DateTime t1 = DateTime.Parse(row1[Column.TIME]);
+            diff = (t1 - t0).TotalSeconds;
+            if (diff < 0 || diff > 1)
+                output.Add(Column.TIME, false);
+            else
+                output.Add(Column.TIME, true);
+
+            if (Math.Abs(Convert.ToDouble(row1[Column.CYCLE]) - Convert.ToDouble(row0[Column.CYCLE])) > 1)
+                output.Add(Column.CYCLE, false);
+            else
+                output.Add(Column.CYCLE, true);
+
+            if (Math.Abs(Convert.ToDouble(row1[Column.LOOP]) - Convert.ToDouble(row0[Column.LOOP])) > 1)
+                output.Add(Column.LOOP, false);
+            else
+                output.Add(Column.LOOP, true);
+
+            output.Add(Column.STEP_MODE, true);
+
+            if (Math.Abs(Convert.ToDouble(row1[Column.MODE]) - Convert.ToDouble(row0[Column.MODE])) > 1)
+                output.Add(Column.MODE, false);
+            else
+                output.Add(Column.MODE, true);
+
+            if (Math.Abs(Convert.ToDouble(row1[Column.CURRENT]) - Convert.ToDouble(row0[Column.CURRENT])) > 0.1)
+                output.Add(Column.CURRENT, false);
+            else
+                output.Add(Column.CURRENT, true);
+
+            if (Math.Abs(Convert.ToDouble(row1[Column.VOLTAGE]) - Convert.ToDouble(row0[Column.VOLTAGE])) > 0.1)
+                output.Add(Column.VOLTAGE, false);
+            else
+                output.Add(Column.VOLTAGE, true);
+
+            if (Math.Abs(Convert.ToDouble(row1[Column.TEMPERATURE]) - Convert.ToDouble(row0[Column.TEMPERATURE])) > 1)
+                output.Add(Column.TEMPERATURE, false);
+            else
+                output.Add(Column.TEMPERATURE, true);
+
+            if (Math.Abs(Convert.ToDouble(row1[Column.CAPACITY]) - Convert.ToDouble(row0[Column.CAPACITY])) > 0.5)
+                output.Add(Column.CAPACITY, false);
+            else
+                output.Add(Column.CAPACITY, true);
+
+            if (Math.Abs(Convert.ToDouble(row1[Column.TOTAL_CAPACITY]) - Convert.ToDouble(row0[Column.TOTAL_CAPACITY])) > 0.5)
+                output.Add(Column.TOTAL_CAPACITY, false);
+            else
+                output.Add(Column.TOTAL_CAPACITY, true);
+
+
+            if (row1[Column.STATUS] == "Warring_CheckSum")
+                output.Add(Column.STATUS, false);
+            else
+                output.Add(Column.STATUS, true);
             return output;
         }
         private Dictionary<Column, string> GetRowFromString(string dataLine)
@@ -723,11 +868,11 @@ namespace BCLabManager.Model
         private string BuildStringFromRow(Dictionary<Column, string> row)
         {
             string output = string.Empty;
-            foreach(var key in row.Keys)
+            foreach (var key in row.Keys)
             {
-                output += row[key]+",";
+                output += row[key] + ",";
             }
-            return output.Substring(0,output.Length-1);
+            return output.Substring(0, output.Length - 1);
         }
 
         public string EventDescriptor(string filepath, Program program, Recipe recipe, TestRecord record, string info)
