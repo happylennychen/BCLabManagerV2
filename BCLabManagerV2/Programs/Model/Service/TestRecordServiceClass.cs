@@ -395,11 +395,11 @@ namespace BCLabManager.Model
                 }
             }
             TesterServiceClass ts = new TesterServiceClass();
-            if (!ts.DataPreprocessing(processer, temptestfilepath, program, recipe, record, startIndex))
-            {
-                File.Delete(temptestfilepath);
-                return string.Empty;
-            }
+            //if (!ts.DataPreprocessing(processer, temptestfilepath, program, recipe, record, startIndex))
+            //{
+            //    File.Delete(temptestfilepath);
+            //    return string.Empty;
+            //}
             var TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
             CopyToServer(temptestfilepath, TestFilePath);
             if (TestFilePath == "")

@@ -67,5 +67,10 @@ namespace BCLabManager.Model
         {
             throw new NotImplementedException();
         }
+
+        public uint LoadRawToSource(string testFilePath, ref SourceData sd)
+        {
+            return ErrorCode.UNDEFINED;
+        }
     }
 }

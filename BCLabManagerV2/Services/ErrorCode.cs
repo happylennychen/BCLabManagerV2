@@ -22,6 +22,7 @@ namespace BCLabManager
         public const UInt32 DP_ACTION_MODE_MISMATCH = DATA_PREPROCESSOR_OFFSET + 0x0000000a;
         public const UInt32 DP_CHECKSUM_ABNORMAL_STEP_JUMP = DATA_PREPROCESSOR_OFFSET + 0x0000000b;
         public const UInt32 DP_POWER_OUT_OF_RANGE = DATA_PREPROCESSOR_OFFSET + 0x0000000c;
+        public const UInt32 UNDEFINED = 0xffffffff;
         public static string GetDescription(UInt32 errorcode, params object[] args)
         {
             switch(errorcode)

@@ -239,7 +239,7 @@ namespace BCLabManager.ViewModel
 
             //RaisePropertyChanged("DisplayName");
             if (VoltagePoints!= null && VoltagePoints != string.Empty)
-                _project.VoltagePoints = VoltagePoints.Split(',').Select(o => Convert.ToInt32(o)).ToList();
+                _project.VoltagePoints = VoltagePoints.Split(',').Select(o => Convert.ToUInt32(o)).ToList();
             IsOK = true;
         }
 

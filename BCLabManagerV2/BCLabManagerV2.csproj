@@ -84,6 +84,9 @@
     <Reference Include="EFCore.NamingConventions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <HintPath>..\packages\EFCore.NamingConventions.1.1.0\lib\netstandard2.0\EFCore.NamingConventions.dll</HintPath>
     </Reference>
+    <Reference Include="MathNet.Numerics, Version=4.12.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.12.0\lib\net461\MathNet.Numerics.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.1\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -224,6 +227,7 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Text.Encodings.Web, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encodings.Web.4.7.1\lib\net461\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
@@ -299,6 +303,14 @@
     <Compile Include="Assets\Model\TesterProcessers\Chroma17200Processer.cs" />
     <Compile Include="Assets\Model\TesterProcessers\ProcessException.cs" />
     <Compile Include="Assets\Model\TesterProcessers\ZKEEBC_X_Processer.cs" />
+    <Compile Include="Services\TableMaker\AndroidContentConverter.cs" />
+    <Compile Include="Services\TableMaker\DataRow.cs" />
+    <Compile Include="Services\TableMaker\IContentConverter.cs" />
+    <Compile Include="Services\TableMaker\MiniModel.cs" />
+    <Compile Include="Services\TableMaker\OCVModel.cs" />
+    <Compile Include="Services\TableMaker\RCModel.cs" />
+    <Compile Include="Services\TableMaker\SourceData.cs" />
+    <Compile Include="Services\TableMaker\StandardContentConverter.cs" />
     <Compile Include="Services\ViewModel\EventViewModel.cs" />
     <Compile Include="Services\ViewModel\AllEventsViewModel.cs" />
     <Compile Include="DataAccess\ICutOffConditionRepository.cs" />
@@ -402,6 +414,7 @@
     <Compile Include="Settings\ViewModel\AllProjectsViewModel.cs" />
     <Compile Include="Services\ViewModel\BindableBaseWithName.cs" />
     <Compile Include="Settings\ViewModel\ProjectSettingEditViewModel.cs" />
+    <Compile Include="Services\TableMaker\TableMaker.cs" />
     <Compile Include="Settings\ViewModel\TableMakerProductTypeEditViewModel.cs" />
     <Compile Include="Settings\ViewModel\ProgramTypeEditViewModel.cs" />
     <Compile Include="Settings\ViewModel\TableMakerProductTypeViewModel.cs" />

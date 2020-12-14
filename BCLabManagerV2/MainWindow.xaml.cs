@@ -209,7 +209,7 @@ namespace BCLabManager
         {
             allBatteryTypesViewModel = new AllBatteryTypesViewModel(BatteryTypeService, BatteryService);    //ViewModel初始化
 
-            allProjectsViewModel = new AllProjectsViewModel(ProjectService, BatteryTypeService);    //ViewModel初始化
+            allProjectsViewModel = new AllProjectsViewModel(TesterService, ProjectService, BatteryTypeService, ProgramService, ProjectSettingService, TableMakerProductService);    //ViewModel初始化
 
             allProjectSettingsViewModel = new AllProjectSettingsViewModel(ProjectSettingService, ProjectService);    //ViewModel初始化
 

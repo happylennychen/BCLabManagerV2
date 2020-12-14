@@ -19,7 +19,7 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        readonly Project _project;
+        public readonly Project _project;
 
         #endregion // Fields
 

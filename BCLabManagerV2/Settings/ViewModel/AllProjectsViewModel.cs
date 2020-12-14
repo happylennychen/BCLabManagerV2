@@ -10,6 +10,7 @@ using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
 using Prism.Mvvm;
+using System.IO;
 
 namespace BCLabManager.ViewModel
 {
@@ -21,21 +22,30 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
         ProjectViewModel _selectedItem;
+        RelayCommand _tableMakerCommand;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
         RelayCommand _deleteCommand;
         private ProjectServiceClass _projectService;
+        private ProgramServiceClass _programService;
+        private ProjectSettingServiceClass _projectSettingService;
+        private TableMakerProductServiceClass _tableMakerProductService;
+        private TesterServiceClass _testerService;
         private BatteryTypeServiceClass _batteryTypeService;
 
         #endregion // Fields
 
         #region Constructor
 
-        public AllProjectsViewModel(ProjectServiceClass projectService, BatteryTypeServiceClass batteryTypeServie)
+        public AllProjectsViewModel(TesterServiceClass testerService, ProjectServiceClass projectService, BatteryTypeServiceClass batteryTypeServie, ProgramServiceClass programService, ProjectSettingServiceClass projectSettingService, TableMakerProductServiceClass tableMakerProductService)
         {
+            _testerService = testerService;
             _projectService = projectService;
             _batteryTypeService = batteryTypeServie;
+            _programService = programService;
+            _projectSettingService = projectSettingService;
+            _tableMakerProductService = tableMakerProductService;
             this.CreateAllProjects(_projectService.Items);
             _projectService.Items.CollectionChanged += Items_CollectionChanged;
         }
@@ -92,6 +102,21 @@ namespace BCLabManager.ViewModel
                 {
                     _selectedItem = value;
                 }
+            }
+        }
+
+        public ICommand TableMakerCommand
+        {
+            get
+            {
+                if (_tableMakerCommand == null)
+                {
+                    _tableMakerCommand = new RelayCommand(
+                        param => { this.TableMakerDialog(); },
+                        param => this.CanMakeTable
+                        );
+                }
+                return _tableMakerCommand;
             }
         }
 
@@ -154,6 +179,30 @@ namespace BCLabManager.ViewModel
         #endregion // Public Interface
 
         #region Private Helper
+        private void TableMakerDialog()
+        {
+            var testers = _testerService.Items.ToList();
+            var project = _selectedItem._project;
+            //var projectSetting = _projectSettingService.Items.SingleOrDefault(o => o.Project.Id == project.Id && o.is_valid == true);
+            var programs = _programService.Items.Select(o=>o).Where(o=>o.Project.Id == project.Id && o.IsInvalid == false && (o.Type.Name == "RC" || o.Type.Name == "OCV")).ToList();
+            project.VoltagePoints = LoadVCFGFile(@"D:\Issues\Open\BC_Lab\Table Maker\30Q.vcfg");
+            TableMaker.Make(project, programs, testers, true, true, true, true, true);
+        }
+        private List<UInt32> LoadVCFGFile(string fullpath)
+        {
+            List<UInt32> output = new List<uint>();
+            FileStream file = new FileStream(fullpath, FileMode.Open);
+            StreamReader sr = new StreamReader(file);
+            string line;
+            while ((line = sr.ReadLine()) != null)
+            {
+                output.Add(Convert.ToUInt32(line));
+            }
+            sr.Close();
+            file.Close();
+            output.Sort();
+            return output;
+        }
         private void Create()
         {
             Project proj = new Project();      //实例化一个新的model
@@ -191,6 +240,10 @@ namespace BCLabManager.ViewModel
             }
         }
         private bool CanEdit
+        {
+            get { return _selectedItem != null; }
+        }
+        private bool CanMakeTable
         {
             get { return _selectedItem != null; }
         }
