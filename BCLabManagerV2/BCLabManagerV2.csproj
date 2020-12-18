@@ -303,14 +303,16 @@
     <Compile Include="Assets\Model\TesterProcessers\Chroma17200Processer.cs" />
     <Compile Include="Assets\Model\TesterProcessers\ProcessException.cs" />
     <Compile Include="Assets\Model\TesterProcessers\ZKEEBC_X_Processer.cs" />
-    <Compile Include="Services\TableMaker\AndroidContentConverter.cs" />
+    <Compile Include="Services\TableMaker\AndroidDriverMaker.cs" />
     <Compile Include="Services\TableMaker\DataRow.cs" />
-    <Compile Include="Services\TableMaker\IContentConverter.cs" />
+    <Compile Include="Services\TableMaker\MiniDriverMaker.cs" />
     <Compile Include="Services\TableMaker\MiniModel.cs" />
     <Compile Include="Services\TableMaker\OCVModel.cs" />
+    <Compile Include="Services\TableMaker\OCVTableMaker.cs" />
     <Compile Include="Services\TableMaker\RCModel.cs" />
+    <Compile Include="Services\TableMaker\RCTableMaker.cs" />
     <Compile Include="Services\TableMaker\SourceData.cs" />
-    <Compile Include="Services\TableMaker\StandardContentConverter.cs" />
+    <Compile Include="Services\TableMaker\StandardDriverMaker.cs" />
     <Compile Include="Services\ViewModel\EventViewModel.cs" />
     <Compile Include="Services\ViewModel\AllEventsViewModel.cs" />
     <Compile Include="DataAccess\ICutOffConditionRepository.cs" />
@@ -406,6 +408,8 @@
     </Compile>
     <Compile Include="Services\Model\Event.cs" />
     <Compile Include="Services\PseudocodeProcesser.cs" />
+    <Compile Include="Settings\Model\AndroidModel.cs" />
+    <Compile Include="Settings\Model\StandardModel.cs" />
     <Compile Include="Settings\Model\TableMakerModel.cs" />
     <Compile Include="Settings\Model\Service\ProjectSettingServieClass.cs" />
     <Compile Include="Settings\Model\Service\TableMakerProductTypeServiceClass.cs" />

@@ -10,6 +10,8 @@ using BCLabManager.Properties;
 using Microsoft.EntityFrameworkCore;
 using Prism.Mvvm;
 using System.Threading;
+using System.Diagnostics;
+using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
@@ -95,6 +97,30 @@ namespace BCLabManager.ViewModel
         {
             get { return _tableMakerModel.RCModel.FilePath; }
         }
+        public string StandardDriverCFileName
+        {
+            get { return _tableMakerModel.StandardModel.FilePaths[0]; }
+        }
+        public string StandardDriverHFileName
+        {
+            get { return _tableMakerModel.StandardModel.FilePaths[1]; }
+        }
+        public string AndroidDriverCFileName
+        {
+            get { return _tableMakerModel.AndroidModel.FilePaths[0]; }
+        }
+        public string AndroidDriverHFileName
+        {
+            get { return _tableMakerModel.AndroidModel.FilePaths[1]; }
+        }
+        public string MiniDriverCFileName
+        {
+            get { return _tableMakerModel.MiniModel.FilePaths[0]; }
+        }
+        public string MiniDriverHFileName
+        {
+            get { return _tableMakerModel.MiniModel.FilePaths[1]; }
+        }
         /// <summary>
         /// Returns a command that saves the customer.
         /// </summary>
@@ -131,7 +157,17 @@ namespace BCLabManager.ViewModel
             //TableMakerService.Make(_tableMakerModel.Project, _tableMakerModel.Programs, _tableMakerModel.Testers, OCVReady, RCReady, SDReady, ADReady, MiniReady);
             Thread t = new Thread(() =>
             {
-                TableMakerService.Build(ref _tableMakerModel);
+                if (MessageBox.Show("It will take a while to get the work done, Continue?", "Generate Tables and Drivers.", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                {
+                    System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+                    stopwatch.Start();
+                    TableMakerService.Build(ref _tableMakerModel);
+                    var project = _tableMakerModel.Project;
+                    var folder = $@"{GlobalSettings.RootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
+                    string time = Math.Round(stopwatch.Elapsed.TotalSeconds, 0).ToString() + "S";
+                    MessageBox.Show($"Completed. It took {time} to get the job done.");
+                    Process.Start(folder);
+                }
             });
             t.Start();
         }

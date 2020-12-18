@@ -1,13 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
+using BCLabManager.Model;
 
 namespace BCLabManager
 {
-    public class AndroidContentConverter : IContentConverter
+    public static class AndroidDriverMaker
     {
-        public string Type { get { return "android"; } }
+        public static void GetAndroidModel(OCVModel ocvModel, RCModel rcModel, ref AndroidModel androidModel)
+        {
+            androidModel.iOCVVolt = ocvModel.iOCVVolt;
 
-        public List<string> GetCFileContent(string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
+            androidModel.fCTABase = rcModel.fCTABase;
+            androidModel.fCTASlope = rcModel.fCTASlope;
+            androidModel.listfCurr = rcModel.listfCurr;
+            androidModel.listfTemp = rcModel.listfTemp;
+            androidModel.outYValue = rcModel.outYValue;
+        }
+
+        internal static void GenerateAndroidDriver(AndroidModel androidModel, Project project)
+        {
+            List<string> strFilePaths = androidModel.FilePaths;
+            List<string> strHHeaderComments;
+            UInt32 uErr = 0;
+            TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), out strHHeaderComments);
+            var OutFolder = $@"{GlobalSettings.RootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
+            GenerateCHFiles(ref uErr, OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, androidModel.iOCVVolt, project.VoltagePoints, androidModel.listfTemp, androidModel.listfCurr, androidModel.outYValue, androidModel.fCTABase, androidModel.fCTASlope);
+        }
+        #region Driver
+
+        //Initialize content of H file, currently using hard coding in code, but hopely we can read it from file, a sample file in particular folder
+
+        private static bool GenerateCHFiles(ref UInt32 uErr, string OutFolder, string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
+        {
+            bool bReturn;
+            string standardCFilePath = System.IO.Path.Combine(OutFolder, strCFileStandardName);
+            string standardHFilePath = System.IO.Path.Combine(OutFolder, strHFileStandardName);
+
+            List<string> hFileContent = GetHFileContent(strHFileStandardName, strHHeaderComments, ilstOCVVolt, voltList, listfCurr, listfTemp, fCTABase, fCTASlope);
+            TableMakerService.CreateFile(standardHFilePath, hFileContent);
+
+            List<string> cFileContent = GetCFileContent(strCFileStandardName, strHFileStandardName, strHHeaderComments, ilstOCVVolt, voltList, listfTemp, listfCurr, outYValue, fCTABase, fCTASlope);
+            TableMakerService.CreateFile(standardCFilePath, cFileContent);
+
+            bReturn = true;
+            uErr = 1;
+
+            return bReturn;
+        }
+        private static List<string> GetCFileContent(string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
         {
             string line = "";
             List<string> output = new List<string>();
@@ -153,7 +193,7 @@ namespace BCLabManager
         }
 
         //Initialize content of H file, currently using hard coding in code, but hopely we can read it from file, a sample file in particular folder
-        public List<string> GetHFileContent(string strStandardH, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfCurr, List<float> listfTemp, double fCTABase, double fCTASlope)
+        private static List<string> GetHFileContent(string strStandardH, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfCurr, List<float> listfTemp, double fCTABase, double fCTASlope)
         {
             int iLineCmtHCFile = 4;
             int i = 0;
@@ -210,4 +250,5 @@ namespace BCLabManager
 
         }
     }
+    #endregion
 }

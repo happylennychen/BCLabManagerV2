@@ -17,5 +17,7 @@ namespace BCLabManager.Model
         public OCVModel OCVModel { get; set; }
         public RCModel RCModel { get; set; }
         public MiniModel MiniModel { get; set; }
+        public StandardModel StandardModel { get; set; }
+        public AndroidModel AndroidModel { get; set; }
     }
 }

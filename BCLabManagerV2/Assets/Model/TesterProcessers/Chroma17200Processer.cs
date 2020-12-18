@@ -949,12 +949,12 @@ namespace BCLabManager.Model
             UInt16 iHighVoltDiff = 100;
             float fAccmnStart = -1F;            //use to record the faccmn value when reaching the first discharge current
 
-            var tempFilePath = Path.Combine(GlobalSettings.TempraryFolder, Path.GetFileName(filePath));
+            //var tempFilePath = Path.Combine(GlobalSettings.TempraryFolder, Path.GetFileName(filePath));
 
             try
             {
-                File.Copy(filePath, tempFilePath);
-                stmCSV = File.Open(tempFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                //File.Copy(filePath, tempFilePath);
+                stmCSV = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 stmContent = new StreamReader(stmCSV);
             }
             catch (Exception e)
@@ -1273,7 +1273,7 @@ namespace BCLabManager.Model
 
                 output.AdjustedExpData[iCount - 1].fSoCAdj = fSoCA;
             }
-            File.Delete(tempFilePath);
+            //File.Delete(tempFilePath);
             return ErrorCode.NORMAL;
         }
         private bool ParseChroFormaV2(string[] inToken, out string outVolt, out string outCurr, out string outTemp, out string outAccm, out string outDate, out UInt32 outSerial)
