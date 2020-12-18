@@ -1,0 +1,45 @@
+﻿<Window x:Class="BCLabManager.View.TableMakerView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Table Maker Dialog" Height="250" Width="1000" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style x:Key="LabelBG" TargetType="Label">
+            <Style.Triggers>
+                <Trigger Property="Label.IsEnabled" Value="True">
+                    <Setter Property="Label.Background" Value="LightGreen"></Setter>
+                </Trigger>
+                <Trigger Property="Label.IsEnabled" Value="False">
+                    <Setter Property="Label.Background" Value="Red"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid Margin="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40*" />
+                <RowDefinition Height="4" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+            <GroupBox Header="Products">
+                <WrapPanel>
+                    <Label Name="OCVLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=OCVReady, Mode=OneTime}" Margin="5" Content="{Binding Path=OCVFileName}"></Label>
+                    <Label Name="RCLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=RCReady, Mode=OneTime}" Margin="5" Content="{Binding Path=RCFileName}"></Label>
+                    <Label Name="SDLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=SDReady, Mode=OneTime}" Margin="5">Standard Driver</Label>
+                    <Label Name="ADLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=ADReady, Mode=OneTime}" Margin="5">Android Driver</Label>
+                    <Label Name="MiniLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=MiniReady, Mode=OneTime}" Margin="5">Mini Driver</Label>
+                    <Label Name="LiteLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=LiteReady, Mode=OneTime}" Margin="5">Lite Driver</Label>
+                </WrapPanel>
+            </GroupBox>
+            <Button 
+      Grid.Row="4" Grid.Column="2"
+      Command="{Binding Path=GenerateCommand}"
+                Click="Button_Click"
+      Content="_Generate"
+      HorizontalAlignment="Right"
+      MinWidth="100" 
+                Height="30" Margin="15,0"
+      />
+        </Grid>
+    </Grid>
+</Window>

@@ -9,6 +9,8 @@ using BCLabManager.Model;
 using BCLabManager.Properties;
 using Microsoft.EntityFrameworkCore;
 using Prism.Mvvm;
+using Microsoft.Win32;
+using System.IO;
 
 namespace BCLabManager.ViewModel
 {
@@ -21,6 +23,7 @@ namespace BCLabManager.ViewModel
 
         readonly Project _project;
         RelayCommand _okCommand;
+        RelayCommand _loadCommand;
         bool _isOK;
 
         #endregion // Fields
@@ -125,17 +128,19 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("AbsoluteMaxCapacity");
             }
         }
-        private string _voltagePoints;
         public string VoltagePoints
         {
-            get { return _voltagePoints; }
+            get
+            {
+                if (_project.VoltagePoints != null)
+                    return string.Join(",", _project.VoltagePoints);
+                else
+                    return string.Empty;
+            }
             set
             {
-                if (value == _voltagePoints)
-                    return;
-
-                _voltagePoints = value;
-
+                if(value != string.Empty)
+                    _project.VoltagePoints = value.Split(',').Select(o => Convert.ToInt32(o)).ToList();
                 RaisePropertyChanged("VoltagePoints");
             }
         }
@@ -212,6 +217,43 @@ namespace BCLabManager.ViewModel
                 return _okCommand;
             }
         }
+        public ICommand LoadCommand
+        {
+            get
+            {
+                if (_loadCommand == null)
+                {
+                    _loadCommand = new RelayCommand(param => { this.Load(); });
+                }
+                return _loadCommand;
+            }
+        }
+
+        private void Load()
+        {
+            var dialog = new OpenFileDialog();
+            dialog.DefaultExt = ".vcfg";
+            dialog.Title = "Load Voltage Points";
+            if (dialog.ShowDialog() == true)
+            {
+                VoltagePoints = string.Join(",", LoadVCFGFile(dialog.FileName));
+            }
+        }
+        private List<UInt32> LoadVCFGFile(string fullpath)
+        {
+            List<UInt32> output = new List<uint>();
+            FileStream file = new FileStream(fullpath, FileMode.Open);
+            StreamReader sr = new StreamReader(file);
+            string line;
+            while ((line = sr.ReadLine()) != null)
+            {
+                output.Add(Convert.ToUInt32(line));
+            }
+            sr.Close();
+            file.Close();
+            output.Sort();
+            return output;
+        }
 
         public CommandType commandType
         { get; set; }
@@ -238,8 +280,8 @@ namespace BCLabManager.ViewModel
             //_batterytypeRepository.AddItem(_batterytype);
 
             //RaisePropertyChanged("DisplayName");
-            if (VoltagePoints!= null && VoltagePoints != string.Empty)
-                _project.VoltagePoints = VoltagePoints.Split(',').Select(o => Convert.ToUInt32(o)).ToList();
+            //if (VoltagePoints!= null && VoltagePoints != string.Empty)
+            //    _project.VoltagePoints = VoltagePoints.Split(',').Select(o => Convert.ToInt32(o)).ToList();
             IsOK = true;
         }
 

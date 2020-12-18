@@ -7,7 +7,7 @@ namespace BCLabManager
     {
         public string Type { get { return "android"; } }
 
-        public List<string> GetCFileContent(string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<uint> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
+        public List<string> GetCFileContent(string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
         {
             string line = "";
             List<string> output = new List<string>();
@@ -47,7 +47,7 @@ namespace BCLabManager
             line += (string.Format("{{"));
 
 
-            var ilstOCVSoC = TableMaker.GetOCVSocPoints();
+            var ilstOCVSoC = TableMakerService.GetOCVSocPoints();
             for (i = 0; i < ilstOCVVolt.Count; i++)
             {
                 if (i == ilstOCVVolt.Count - 1)
@@ -153,7 +153,7 @@ namespace BCLabManager
         }
 
         //Initialize content of H file, currently using hard coding in code, but hopely we can read it from file, a sample file in particular folder
-        public List<string> GetHFileContent(string strStandardH, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<uint> voltList, List<float> listfCurr, List<float> listfTemp, double fCTABase, double fCTASlope)
+        public List<string> GetHFileContent(string strStandardH, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfCurr, List<float> listfTemp, double fCTABase, double fCTASlope)
         {
             int iLineCmtHCFile = 4;
             int i = 0;

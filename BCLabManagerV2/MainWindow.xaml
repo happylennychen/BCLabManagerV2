@@ -60,31 +60,40 @@
                         <RowDefinition Height="50*"></RowDefinition>
                     </Grid.RowDefinitions>-->
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="20*"></ColumnDefinition>
-                        <ColumnDefinition Width="4"></ColumnDefinition>
-                        <ColumnDefinition Width="20*"></ColumnDefinition>
-                        <ColumnDefinition Width="4"></ColumnDefinition>
-                        <ColumnDefinition Width="20*"></ColumnDefinition>
-                        <ColumnDefinition Width="4"></ColumnDefinition>
-                        <ColumnDefinition Width="20*"></ColumnDefinition>
-                        <ColumnDefinition Width="4"></ColumnDefinition>
-                        <ColumnDefinition Width="20*"></ColumnDefinition>
+                        <ColumnDefinition Width="40*"></ColumnDefinition>
+                        <ColumnDefinition Width="60*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Border x:Name="ProjectBorder">
-                        <v:AllProjectsView x:Name="AllProjectsViewInstance"></v:AllProjectsView>
-                    </Border>
-                    <Border Grid.Column="2">
-                        <v:AllProgramTypesView x:Name="AllProgramTypesViewInstance"></v:AllProgramTypesView>
-                    </Border>
-                    <Border Grid.Column="4">
-                        <v:AllTableMakerProductTypesView x:Name="AllTableMakerProductTypesViewInstance"></v:AllTableMakerProductTypesView>
-                    </Border>
-                    <Border Grid.Column="6">
-                        <v:AllTableMakerProductsView x:Name="AllTableMakerProductsViewInstance"></v:AllTableMakerProductsView>
-                    </Border>
-                    <Border Grid.Column="8" x:Name="ProjectSettingBorder">
-                        <v:AllProjectSettingsView x:Name="AllProjectSettingsViewInstance"></v:AllProjectSettingsView>
-                    </Border>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50*"></ColumnDefinition>
+                            <ColumnDefinition Width="4"></ColumnDefinition>
+                            <ColumnDefinition Width="50*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0">
+                            <v:AllTableMakerProductTypesView x:Name="AllTableMakerProductTypesViewInstance"></v:AllTableMakerProductTypesView>
+                        </Border>
+                        <Border Grid.Column="2">
+                            <v:AllProgramTypesView x:Name="AllProgramTypesViewInstance"></v:AllProgramTypesView>
+                        </Border>
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30*"></RowDefinition>
+                            <RowDefinition Height="4"></RowDefinition>
+                            <RowDefinition Height="30*"></RowDefinition>
+                            <RowDefinition Height="4"></RowDefinition>
+                            <RowDefinition Height="30*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Border x:Name="ProjectBorder">
+                            <v:AllProjectsView x:Name="AllProjectsViewInstance"></v:AllProjectsView>
+                        </Border>
+                        <Border Grid.Row="2">
+                            <v:AllTableMakerProductsView x:Name="AllTableMakerProductsViewInstance"></v:AllTableMakerProductsView>
+                        </Border>
+                        <Border Grid.Row="4" x:Name="ProjectSettingBorder">
+                            <v:AllProjectSettingsView x:Name="AllProjectSettingsViewInstance"></v:AllProjectSettingsView>
+                        </Border>
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Templates">

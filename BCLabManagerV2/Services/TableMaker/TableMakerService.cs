@@ -4,13 +4,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using BCLabManager.Model;
 using MathNet.Numerics;
 
 namespace BCLabManager
 {
-    static public class TableMaker
+    static public class TableMakerService
     {
         static public int iNumOfPoints = 65;
         static public float fPerSteps = 1.5625F;
@@ -92,6 +93,7 @@ namespace BCLabManager
             ilstCellTempData.Add(-400);
             return ilstCellTempData;
         }
+
         public static List<float> GetOCVSocPoints()
         {
             var lstfPoints = new List<float>();
@@ -129,62 +131,119 @@ namespace BCLabManager
             fs.Close();
             return true;
         }
-        public static void Make( Project project, IEnumerable<Program> programs, List<Tester> testers, bool v1, bool v2, bool v3, bool v4, bool v5)
-        {
-            OCVModel ocvModel = null;
-            RCModel rcModel = null;
-            MiniModel miniModel = null;
-            List<SourceData> ocvSource = null;
-            List<SourceData> rcSource = null;
-            List<TableMakerProduct> tableMakerProducts = new List<TableMakerProduct>();
-            if (v1)
-            {
-                ocvSource = GetOCVSource(project, programs.SingleOrDefault(o => o.Type.Name == "OCV"), testers);
-                ocvModel = GetOCVModel(ocvSource);
-                /*TableMakerProduct ocvTable =*/
-                GenerateOCVTable(project, ocvModel);
-                //tableMakerProducts.Add(ocvTable);
-            }
 
-            if (v2)
+        public static void GetFilePaths(ref TableMakerModel tableMakerModel)
+        {
+            var project = tableMakerModel.Project;
+            var programs = tableMakerModel.Programs;
+            var testers = tableMakerModel.Testers;
+
+            OCVModel ocvModel = new OCVModel();
+            RCModel rcModel = new RCModel();
+            MiniModel miniModel = new MiniModel();
+
+            tableMakerModel.OCVModel = ocvModel;
+            tableMakerModel.RCModel = rcModel;
+            tableMakerModel.MiniModel = miniModel;
+
+            ocvModel.FilePath = GetOCVTableFilePath(project);
+            rcModel.FilePath = GetRCTableFilePath(project);
+            List<string> strFilePaths;
+            GetDriverFilePaths(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "mini", out strFilePaths);
+            miniModel.FilePaths = strFilePaths;
+        }
+
+        public static void Build(ref TableMakerModel tableMakerModel)
+        {
+            try
             {
-                rcSource = GetRCSource(project, programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList(), testers);
-                rcModel = GetRCModel(rcSource, project);
-                /*TableMakerProduct rcTable =*/
-                GenerateRCTable(project, rcModel);
-                //tableMakerProducts.Add(rcTable);
-            }
-            if (v3)
-            {
-                GenerateDriver(new StandardContentConverter(), ocvModel, rcModel, project);
-            }
-            if (v4)
-            {
-                GenerateDriver(new AndroidContentConverter(), ocvModel, rcModel, project);
-            }
-            if (v5)
-            {
+                var project = tableMakerModel.Project;
+                var programs = tableMakerModel.Programs;
+                var testers = tableMakerModel.Testers;
+                var ocvModel = tableMakerModel.OCVModel;
+                var rcModel = tableMakerModel.RCModel;
+                var miniModel = tableMakerModel.MiniModel;
+
+                List<SourceData> ocvSource;
+                GetOCVSource(project, programs.Where(o => o.Type.Name == "OCV").ToList(), testers, out ocvSource);
+                GetOCVModel(ocvSource, ref ocvModel);
+
+                List<SourceData> rcSource;
+                GetRCSource(project, programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList(), testers, out rcSource);
+                GetRCModel(rcSource, project, ref rcModel);
                 miniModel = GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, project);
+
+
+                GenerateOCVTable(project, ocvModel);
+                GenerateRCTable(project, rcModel);
                 GenerateMini(miniModel, project);
             }
-            //foreach (var tmp in tableMakerProducts) 
-            //    tableMakerProductService.SuperAdd(tmp);
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
+        //public static void Make( Project project, IEnumerable<Program> programs, List<Tester> testers, bool v1, bool v2, bool v3, bool v4, bool v5)
+        //{
+        //    OCVModel ocvModel = null;
+        //    RCModel rcModel = null;
+        //    MiniModel miniModel = null;
+        //    List<SourceData> ocvSource = null;
+        //    List<SourceData> rcSource = null;
+        //    List<TableMakerProduct> tableMakerProducts = new List<TableMakerProduct>();
+        //    if (v1)
+        //    {
+        //        ocvSource = GetOCVSource(project, programs.Where(o => o.Type.Name == "OCV").ToList(), testers);
+        //        ocvModel = GetOCVModel(ocvSource);
+
+        //        ocvModel.FilePath = GetOCVTableFilePath(project);
+        //        /*TableMakerProduct ocvTable =*/
+        //        GenerateOCVTable(project, ocvModel);
+        //        //tableMakerProducts.Add(ocvTable);
+        //    }
+
+        //    if (v2)
+        //    {
+        //        rcSource = GetRCSource(project, programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList(), testers);
+        //        rcModel = GetRCModel(rcSource, project);
+
+        //        rcModel.FilePath = GetRCTableFilePath(project);
+        //        /*TableMakerProduct rcTable =*/
+        //        GenerateRCTable(project, rcModel);
+        //        //tableMakerProducts.Add(rcTable);
+        //    }
+        //    if (v3)
+        //    {
+        //        GenerateDriver(new StandardContentConverter(), ocvModel, rcModel, project);
+        //    }
+        //    if (v4)
+        //    {
+        //        GenerateDriver(new AndroidContentConverter(), ocvModel, rcModel, project);
+        //    }
+        //    if (v5)
+        //    {
+        //        miniModel = GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, project);
+        //        GenerateMini(miniModel, project);
+        //    }
+        //    //foreach (var tmp in tableMakerProducts) 
+        //    //    tableMakerProductService.SuperAdd(tmp);
+        //}
         #region OCV
-        private static List<SourceData> GetOCVSource(Project project, Program program, List<Tester> testers)
+        private static void GetOCVSource(Project project, List<Program> programs, List<Tester> testers, out List<SourceData> MaxSDList)
         {
-            var trs = program.Recipes.Select(o => o.TestRecords.ToList()).ToList();
+            var trs = programs.Select(o => o.Recipes.Select(i => i.TestRecords.Where(j => j.Status == TestStatus.Completed).ToList()).ToList()).ToList();
             List<TestRecord> testRecords = new List<TestRecord>();
             foreach (var tr in trs)
             {
-                testRecords = testRecords.Concat(tr).ToList();
+                foreach (var t in tr)
+                    testRecords = testRecords.Concat(t).ToList();
             }
-            List<SourceData> MaxSDList = new List<SourceData>();   //找出最大的sd
-            foreach (var rtName in program.RecipeTemplates)
+            testRecords = testRecords.Where(o => o.Status == TestStatus.Completed).ToList();
+            MaxSDList = new List<SourceData>();
+            foreach (var grp in testRecords.GroupBy(o => o.Current))
             {
-                var trGroup = testRecords.Select(o => o).Where(o => o.RecipeStr.Contains($"Deg-{rtName}")).ToList();
                 List<SourceData> SDList = new List<SourceData>();   //找出最大的sd
-                foreach (var tr in trGroup)
+                foreach (var tr in grp)
                 {
                     SourceData sd = new SourceData();
                     sd.fAbsMaxCap = project.AbsoluteMaxCapacity;
@@ -197,33 +256,43 @@ namespace BCLabManager
                     sd.fTemperature = (float)tr.Temperature;
                     sd.fTraceResis = (float)tr.TraceResistance;
                     var tester = testers.SingleOrDefault(o => o.Name == tr.TesterStr);
+
                     UInt32 result = tester.ITesterProcesser.LoadRawToSource(tr.TestFilePath, ref sd);
                     if (result == ErrorCode.NORMAL)
                     {
                         SDList.Add(sd);
                     }
+                    //string filePath = Path.Combine("D:\\Issues\\Open\\BC_Lab\\Table Maker\\Francis 30Q Source Data", Path.GetFileName(tr.TestFilePath));
+                    //if (File.Exists(filePath))
+                    //{
+                    //    UInt32 result = tester.ITesterProcesser.LoadRawToSource(filePath, ref sd);
+                    //    if (result == ErrorCode.NORMAL)
+                    //    {
+                    //        SDList.Add(sd);
+                    //    }
+                    //}
                 }
                 SourceData maxSD = SDList.OrderByDescending(o => o.fAccmAhrCap).First();
                 MaxSDList.Add(maxSD);
             }
-            return MaxSDList;
         }
-        private static OCVModel GetOCVModel(List<SourceData> MaxSDList)
+        private static void GetOCVModel(List<SourceData> MaxSDList, ref OCVModel ocvModel)
         {
-            OCVModel output = new OCVModel();
+            OCVModel output = ocvModel;
 
-
+            output.SourceList = MaxSDList;
 
             Int32 iMinVoltage;
             Int32 iMaxVoltage;
             GetVoltageBondary(MaxSDList, out iMinVoltage, out iMaxVoltage);
+            output.MinVoltage = iMinVoltage;
+            output.MaxVoltage = iMaxVoltage;
             List<Int32> iOCVVolt;
             if (CreateNewOCVPoints(MaxSDList, iMinVoltage, iMaxVoltage, out iOCVVolt))
             {
                 ;
             }
             output.iOCVVolt = iOCVVolt;
-            return output;
         }
         private static void GetVoltageBondary(List<SourceData> list, out Int32 iMinVoltage, out Int32 iMaxVoltage)
         {
@@ -389,12 +458,12 @@ namespace BCLabManager
         }
         private static TableMakerProduct GenerateOCVTable(Project project, OCVModel ocvModel)
         {
-            string filePath = GetOCVTableFilePath(project);
+            string filePath = ocvModel.FilePath;
             List<string> OCVHeader = GetOCVFileHeader(project);
             List<string> OCVContent = GetOCVFileContent(ocvModel.iOCVVolt);
-            UInt32 result = 0;
+            //UInt32 result = 0;
             //GenerateOCVTableFile(ref result, filePath, OCVHeader, OCVContent);
-            TableMaker.CreateFile(filePath, OCVHeader.Concat(OCVContent).ToList());
+            TableMakerService.CreateFile(filePath, OCVHeader.Concat(OCVContent).ToList());
             TableMakerProduct tmp = new TableMakerProduct();
             tmp.FilePath = filePath;
             tmp.IsValid = true;
@@ -412,8 +481,7 @@ namespace BCLabManager
                                 sFileSeperator + project.LimitedChargeVoltage + "mV" +
                                 sFileSeperator + project.CutoffDischargeVoltage + "mV" +
                                 sFileSeperator + version +
-                                sFileSeperator + DateTime.Now.Year.ToString("D4") +
-                                DateTime.Now.Month.ToString("D2") + DateTime.Now.Day.ToString("D2") +
+                                sFileSeperator + DateTime.Now.ToString("yyyyMMddHHmmss") +
                                 "_Arm.txt";
             outputFilePath = System.IO.Path.Combine(folder, outputFilePath);
             return outputFilePath;
@@ -550,7 +618,7 @@ namespace BCLabManager
         }
         #endregion
         #region RC
-        private static List<SourceData> GetRCSource(Project project, List<Program> programs, List<Tester> testers)
+        private static void GetRCSource(Project project, List<Program> programs, List<Tester> testers, out List<SourceData> SDList)
         {
             var trs = programs.Select(o => o.Recipes.Select(i => i.TestRecords.Where(j => j.Status == TestStatus.Completed).ToList()).ToList()).ToList();
             List<TestRecord> testRecords = new List<TestRecord>();
@@ -559,7 +627,8 @@ namespace BCLabManager
                 foreach (var t in tr)
                     testRecords = testRecords.Concat(t).ToList();
             }
-            List<SourceData> SDList = new List<SourceData>();
+            testRecords = testRecords.Where(o => o.Status == TestStatus.Completed).ToList();
+            SDList = new List<SourceData>();
             foreach (var tr in testRecords)
             {
                 SourceData sd = new SourceData();
@@ -578,12 +647,26 @@ namespace BCLabManager
                 {
                     SDList.Add(sd);
                 }
+                //string filePath = Path.Combine("D:\\Issues\\Open\\BC_Lab\\Table Maker\\Francis 30Q Source Data", Path.GetFileName(tr.TestFilePath));
+                //if (File.Exists(filePath))
+                //{
+                //    UInt32 result = tester.ITesterProcesser.LoadRawToSource(filePath, ref sd);
+                //    if (result == ErrorCode.NORMAL)
+                //    {
+                //        SDList.Add(sd);
+                //    }
+                //}
             }
-            return SDList;
         }
-        private static RCModel GetRCModel(List<SourceData> SDList, Project project)
+        private static void GetRCModel(List<SourceData> SDList, Project project, ref RCModel rcModel)
         {
-            RCModel output = new RCModel();
+            RCModel output = rcModel;
+            output.SourceList = SDList;
+            Int32 iMinVoltage;
+            Int32 iMaxVoltage;
+            GetVoltageBondary(SDList, out iMinVoltage, out iMaxVoltage);
+            output.MinVoltage = iMinVoltage;
+            output.MaxVoltage = iMaxVoltage;
             foreach (var sd in SDList)
             {
                 if (!output.listfTemp.Contains(sd.fTemperature))  //not exist in list add it
@@ -597,7 +680,6 @@ namespace BCLabManager
             }
             UInt32 uErr = 0;
             CreateRCPoints_TableMini(ref uErr, ref output, SDList, project);
-            return output;
         }
         private static bool CreateRCPoints_TableMini(ref uint uErr, ref RCModel output, List<SourceData> sdList, Project project)
         {
@@ -717,7 +799,7 @@ namespace BCLabManager
             return bReturn;
         }
 
-        private static bool CreateYPoints_CTAV0026(List<uint> TableVoltagePoints, ref List<Int32> ypoints, ref float fRefMaxDiff, ref float fRefCCount, List<DataRow> inListRCData, ref UInt32 uErr, float fDesignCapacity, float fCapaciDiff)
+        private static bool CreateYPoints_CTAV0026(List<int> TableVoltagePoints, ref List<Int32> ypoints, ref float fRefMaxDiff, ref float fRefCCount, List<DataRow> inListRCData, ref UInt32 uErr, float fDesignCapacity, float fCapaciDiff)
         {
             bool bReturn = false;
             int i = 0, j = 0, iCountP = 0;
@@ -932,11 +1014,11 @@ namespace BCLabManager
 
         private static TableMakerProduct GenerateRCTable(Project project, RCModel rcModel)
         {
-            string filePath = GetRCTableFilePath(project);
+            string filePath = rcModel.FilePath;//GetRCTableFilePath(project);
             var strRCHeader = GetRCFileHeader(project, rcModel.fCTABase, rcModel.fCTASlope);
             var strRCContent = GetRCFileContent(rcModel.outYValue, project.VoltagePoints, rcModel.listfTemp, rcModel.listfCurr);
-            UInt32 uErr = 0;
-            TableMaker.CreateFile(filePath, strRCHeader.Concat(strRCContent).ToList());
+            //UInt32 uErr = 0;
+            TableMakerService.CreateFile(filePath, strRCHeader.Concat(strRCContent).ToList());
             TableMakerProduct tmp = new TableMakerProduct();
             tmp.FilePath = filePath;
             tmp.IsValid = true;
@@ -954,8 +1036,7 @@ namespace BCLabManager
                                 sFileSeperator + project.LimitedChargeVoltage + "mV" +
                                 sFileSeperator + project.CutoffDischargeVoltage + "mV" +
                                 sFileSeperator + version +
-                                sFileSeperator + DateTime.Now.Year.ToString("D4") +
-                                DateTime.Now.Month.ToString("D2") + DateTime.Now.Day.ToString("D2") +
+                                sFileSeperator + DateTime.Now.ToString("yyyyMMddHHmmss") +
                                 ".txt";
             outputFilePath = System.IO.Path.Combine(folder, outputFilePath);
             return outputFilePath;
@@ -995,7 +1076,7 @@ namespace BCLabManager
             return strRCHeader;
         }
 
-        private static List<string> GetRCFileContent(List<List<Int32>> rcYval, List<uint> TableVoltagePoints, List<float> listfTemp, List<float> listfCurr)
+        private static List<string> GetRCFileContent(List<List<Int32>> rcYval, List<int> TableVoltagePoints, List<float> listfTemp, List<float> listfCurr)
         {
             List<string> strRCContent = new List<string>();
             string strrctmp = "";
@@ -1105,14 +1186,14 @@ namespace BCLabManager
         private static void GenerateDriver(IContentConverter iContentConverter, OCVModel ocvModel, RCModel rcModel, Project project)
         {
             List<string> strFilePaths;
-            GetFilePaths(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), iContentConverter.Type, out strFilePaths);
+            GetDriverFilePaths(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), iContentConverter.Type, out strFilePaths);
             List<string> strHHeaderComments;
             UInt32 uErr = 0;
             InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), out strHHeaderComments);
             var OutFolder = $@"{GlobalSettings.RootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
             GenerateCHFiles(iContentConverter, ref uErr, OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, ocvModel.iOCVVolt, project.VoltagePoints, rcModel.listfTemp, rcModel.listfCurr, rcModel.outYValue, rcModel.fCTABase, rcModel.fCTASlope);
         }
-        public static bool GetFilePaths(string manufacturer, string betteryType, string absMaxCap, string type, out List<string> strFilePaths)
+        public static bool GetDriverFilePaths(string manufacturer, string betteryType, string absMaxCap, string type, out List<string> strFilePaths)
         {
             bool bReturn = false;
             string strTmpFile = "";
@@ -1121,8 +1202,8 @@ namespace BCLabManager
             if (true)
             {
                 strTmpFile = manufacturer + "_" + betteryType + "_" + absMaxCap.ToString() + "mAhr";
-                string strCFileStandardName = strTmpFile + "_" + type + ".c";
-                string strHFileStandardName = strTmpFile + "_" + type + ".h";
+                string strCFileStandardName = $"{strTmpFile}_{type}_{DateTime.Now.ToString("yyyyMMddHHmmss")}.c";
+                string strHFileStandardName = $"{strTmpFile}_{type}_{DateTime.Now.ToString("yyyyMMddHHmmss")}.h";
                 strFilePaths.Add(strCFileStandardName);
                 strFilePaths.Add(strHFileStandardName);
             }
@@ -1191,17 +1272,17 @@ namespace BCLabManager
 
         //Initialize content of H file, currently using hard coding in code, but hopely we can read it from file, a sample file in particular folder
 
-        private static bool GenerateCHFiles(IContentConverter icc, ref UInt32 uErr, string OutFolder, string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<uint> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
+        private static bool GenerateCHFiles(IContentConverter icc, ref UInt32 uErr, string OutFolder, string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
         {
             bool bReturn;
             string standardCFilePath = System.IO.Path.Combine(OutFolder, strCFileStandardName);
             string standardHFilePath = System.IO.Path.Combine(OutFolder, strHFileStandardName);
 
             List<string> hFileContent = icc.GetHFileContent(strHFileStandardName, strHHeaderComments, ilstOCVVolt, voltList, listfCurr, listfTemp, fCTABase, fCTASlope);
-            TableMaker.CreateFile(standardHFilePath, hFileContent);
+            TableMakerService.CreateFile(standardHFilePath, hFileContent);
 
             List<string> cFileContent = icc.GetCFileContent(strCFileStandardName, strHFileStandardName, strHHeaderComments, ilstOCVVolt, voltList, listfTemp, listfCurr, outYValue, fCTABase, fCTASlope);
-            TableMaker.CreateFile(standardCFilePath, cFileContent);
+            TableMakerService.CreateFile(standardCFilePath, cFileContent);
 
             bReturn = true;
             uErr = 1;
@@ -1410,9 +1491,9 @@ namespace BCLabManager
         private static void GetLstRCM_Volt(List<SourceData> ocvSource, List<SourceData> rcSource, RCModel rcModel, out List<List<float>> fLstRCM_Volt)
         {
             fLstRCM_Volt = new List<List<float>>();
-            Int32 iMinVoltage;
-            Int32 iMaxVoltage;
-            GetVoltageBondary(rcSource, out iMinVoltage, out iMaxVoltage);
+            Int32 iMinVoltage = rcModel.MinVoltage;
+            //Int32 iMaxVoltage;
+            //GetVoltageBondary(rcSource, out iMinVoltage, out iMaxVoltage);
             var listfTemp = rcModel.listfTemp;
             var fc = rcModel.listfCurr[0];
 
@@ -1718,7 +1799,7 @@ namespace BCLabManager
         private static void GenerateMini(MiniModel miniModel, Project project)
         {
             List<string> strFilePaths;
-            GetFilePaths(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "mini", out strFilePaths);
+            GetDriverFilePaths(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "mini", out strFilePaths);
             List<string> strHHeaderComments;
             UInt32 uErr = 0;
             InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), out strHHeaderComments);
@@ -1748,7 +1829,7 @@ namespace BCLabManager
                 FileContent.WriteLine(shc);
             }
 
-            var ilstCellTempData = TableMaker.GenerateSampleCellTempData();
+            var ilstCellTempData = TableMakerService.GenerateSampleCellTempData();
             #region write H file content to
             FileContent.WriteLine(string.Format("#ifndef _TABLE_MINI_H_"));
             FileContent.WriteLine(string.Format("#define _TABLE_MINI_H_"));

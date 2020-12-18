@@ -181,27 +181,19 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void TableMakerDialog()
         {
-            var testers = _testerService.Items.ToList();
-            var project = _selectedItem._project;
-            //var projectSetting = _projectSettingService.Items.SingleOrDefault(o => o.Project.Id == project.Id && o.is_valid == true);
-            var programs = _programService.Items.Select(o=>o).Where(o=>o.Project.Id == project.Id && o.IsInvalid == false && (o.Type.Name == "RC" || o.Type.Name == "OCV")).ToList();
-            project.VoltagePoints = LoadVCFGFile(@"D:\Issues\Open\BC_Lab\Table Maker\30Q.vcfg");
-            TableMaker.Make(project, programs, testers, true, true, true, true, true);
-        }
-        private List<UInt32> LoadVCFGFile(string fullpath)
-        {
-            List<UInt32> output = new List<uint>();
-            FileStream file = new FileStream(fullpath, FileMode.Open);
-            StreamReader sr = new StreamReader(file);
-            string line;
-            while ((line = sr.ReadLine()) != null)
-            {
-                output.Add(Convert.ToUInt32(line));
-            }
-            sr.Close();
-            file.Close();
-            output.Sort();
-            return output;
+            TableMakerModel tableMakerModel = new TableMakerModel();
+            tableMakerModel.Project = _selectedItem._project;
+            tableMakerModel.Testers = _testerService.Items.ToList();
+            tableMakerModel.Programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == tableMakerModel.Project.Id && o.IsInvalid == false && (o.Type.Name == "RC" || o.Type.Name == "OCV")).ToList();
+            TableMakerViewModel tableMakerViewModel = new TableMakerViewModel(tableMakerModel);
+            TableMakerView tableMakerView = new TableMakerView();
+            tableMakerView.DataContext = tableMakerViewModel;
+            tableMakerView.ShowDialog();
+            //var testers = _testerService.Items.ToList();
+            //var project = _selectedItem._project;
+            //var programs = _programService.Items.Select(o=>o).Where(o=>o.Project.Id == project.Id && o.IsInvalid == false && (o.Type.Name == "RC" || o.Type.Name == "OCV")).ToList();
+            //project.VoltagePoints = LoadVCFGFile(@"D:\Issues\Open\BC_Lab\Table Maker\30Q.vcfg");
+            //TableMaker.Make(project, programs, testers, true, true, true, true, true);
         }
         private void Create()
         {
@@ -245,7 +237,38 @@ namespace BCLabManager.ViewModel
         }
         private bool CanMakeTable
         {
-            get { return _selectedItem != null; }
+            get
+            {
+                if (_selectedItem == null)
+                    return false;
+                var project = _selectedItem._project;
+                if (project.VoltagePoints == null)
+                    return false;
+                if (project.VoltagePoints.Count == 0)
+                    return false;
+
+                var ocvPrograms = _programService.Items.Select(o => o).Where(o => o.Project.Id == project.Id && o.IsCompleted == true && (o.Type.Name == "OCV")).ToList();
+                var rcPrograms = _programService.Items.Select(o => o).Where(o => o.Project.Id == project.Id && o.IsCompleted == true && (o.Type.Name == "RC")).ToList();
+
+                if (ocvPrograms.Count >= 1)
+                {
+                    List<string> strTemplates = new List<string>();
+                    foreach (var p in ocvPrograms)
+                    {
+                        if (p.RecipeTemplates != null)
+                            strTemplates = strTemplates.Concat(p.RecipeTemplates).ToList();
+                    }
+                    strTemplates = strTemplates.Distinct().ToList();
+                    if (strTemplates.Count == 2)
+                        return true;
+                }
+
+                if (rcPrograms.Count == 1)
+                {
+                    return true;
+                }
+                return false;
+            }
         }
         private void SaveAs()
         {

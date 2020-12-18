@@ -7,7 +7,7 @@ namespace BCLabManager
     {
         public string Type { get { return "standard"; } }
 
-        public List<string> GetCFileContent(string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<uint> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
+        public List<string> GetCFileContent(string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
         {
             string line = "";
             List<string> output = new List<string>();
@@ -38,7 +38,7 @@ namespace BCLabManager
             output.Add(string.Format("{{"));
 
 
-            var ilstOCVSoC = TableMaker.GetOCVSocPoints();
+            var ilstOCVSoC = TableMakerService.GetOCVSocPoints();
             for (i = 0; i < ilstOCVVolt.Count; i++)
             {
                 strCTmp = string.Format("\t{{{0}, \t{1}", ilstOCVVolt[i], Math.Round(ilstOCVSoC[i], 0)) + "},";
@@ -65,7 +65,7 @@ namespace BCLabManager
             output.Add(string.Format("one_latitude_data_t cell_temp_data[TEMPERATURE_DATA_NUM] = "));
             output.Add(string.Format("{{"));
 
-            var ilstCellTempData = TableMaker.GenerateSampleCellTempData();
+            var ilstCellTempData = TableMakerService.GenerateSampleCellTempData();
             for (i = 0; i < ilstCellTempData.Count; i++)
             {
                 strCTmp = string.Format("\t{{{0}, \t{1}", ilstCellTempData[i], ilstCellTempData[++i]) + "},";
@@ -171,7 +171,7 @@ namespace BCLabManager
         }
 
 
-        public List<string> GetHFileContent(string strStandardH, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<uint> voltList, List<float> listfCurr, List<float> listfTemp, double fCTABase, double fCTASlope)
+        public List<string> GetHFileContent(string strStandardH, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfCurr, List<float> listfTemp, double fCTABase, double fCTASlope)
         {
             int iLineCmtHCFile = 4;
             int i = 0;
@@ -191,7 +191,7 @@ namespace BCLabManager
 
             #region write H file content to
 
-            var ilstCellTempData = TableMaker.GenerateSampleCellTempData();
+            var ilstCellTempData = TableMakerService.GenerateSampleCellTempData();
             output.Add(string.Format("#ifndef _TABLE_STANDARD_H_"));
             output.Add(string.Format("#define _TABLE_STANDARD_H_"));
             output.Add(string.Format("\n"));

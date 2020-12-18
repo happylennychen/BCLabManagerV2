@@ -105,11 +105,15 @@
       Content="Voltage Points:" 
       HorizontalAlignment="Right"
       />
-            <TextBox 
-      Grid.Row="12" Grid.Column="2" 
-      Text="{Binding Path=VoltagePoints, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+            <DockPanel
+      Grid.Row="12" Grid.Column="2" >
+                <Button DockPanel.Dock="Right" Margin="5,0"
+      Command="{Binding Path=LoadCommand}">Load</Button>
+                <TextBox 
+      Text="{Binding Path=VoltagePoints, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsEnabled="False"
       Validation.ErrorTemplate="{x:Null}"
       />
+            </DockPanel>
             <Label 
       Grid.Row="14" Grid.Column="0" 
       Content="Description:" 

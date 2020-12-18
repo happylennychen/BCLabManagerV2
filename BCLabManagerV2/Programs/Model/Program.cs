@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -133,6 +134,15 @@ namespace BCLabManager.Model
             set { SetProperty(ref _recipeTemplates, value); }
         }
         public ObservableCollection<Recipe> Recipes { get; set; } = new ObservableCollection<Recipe>();
+
+        [NotMapped]
+        public bool IsCompleted
+        {
+            get
+            {
+                return Recipes.All(o => o.IsCompleted == true);
+            }
+        }
 
         public Program()           //Create用到
         {

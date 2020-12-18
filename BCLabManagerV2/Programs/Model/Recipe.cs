@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -80,6 +81,15 @@ namespace BCLabManager.Model
             set { SetProperty(ref _recipeTemplate, value); }
         }
         public int RecipeTemplateId { get; set; }
+
+        [NotMapped]
+        public bool IsCompleted 
+        { 
+            get 
+            {
+                return TestRecords.Count(o => o.Status == TestStatus.Completed) > 0;
+            }  
+        }
         //private double _current;
         //public double Current
         //{

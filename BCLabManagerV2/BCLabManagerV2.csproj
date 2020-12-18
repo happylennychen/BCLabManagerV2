@@ -406,6 +406,7 @@
     </Compile>
     <Compile Include="Services\Model\Event.cs" />
     <Compile Include="Services\PseudocodeProcesser.cs" />
+    <Compile Include="Settings\Model\TableMakerModel.cs" />
     <Compile Include="Settings\Model\Service\ProjectSettingServieClass.cs" />
     <Compile Include="Settings\Model\Service\TableMakerProductTypeServiceClass.cs" />
     <Compile Include="Settings\ViewModel\AllProjectSettingsViewModel.cs" />
@@ -413,8 +414,9 @@
     <Compile Include="Settings\ViewModel\AllProgramTypesViewModel.cs" />
     <Compile Include="Settings\ViewModel\AllProjectsViewModel.cs" />
     <Compile Include="Services\ViewModel\BindableBaseWithName.cs" />
+    <Compile Include="Settings\ViewModel\TableMakerViewModel.cs" />
     <Compile Include="Settings\ViewModel\ProjectSettingEditViewModel.cs" />
-    <Compile Include="Services\TableMaker\TableMaker.cs" />
+    <Compile Include="Services\TableMaker\TableMakerService.cs" />
     <Compile Include="Settings\ViewModel\TableMakerProductTypeEditViewModel.cs" />
     <Compile Include="Settings\ViewModel\ProgramTypeEditViewModel.cs" />
     <Compile Include="Settings\ViewModel\TableMakerProductTypeViewModel.cs" />
@@ -433,6 +435,9 @@
     </Compile>
     <Compile Include="Settings\View\AllTableMakerProductTypesView.xaml.cs">
       <DependentUpon>AllTableMakerProductTypesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\View\TableMakerView.xaml.cs">
+      <DependentUpon>TableMakerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\View\TableMakerProductTypeView.xaml.cs">
       <DependentUpon>TableMakerProductTypeView.xaml</DependentUpon>
@@ -663,6 +668,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\View\AllTableMakerProductTypesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\View\TableMakerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
