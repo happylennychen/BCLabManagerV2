@@ -8,6 +8,7 @@ using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using BCLabManager.Properties;
 using Prism.Mvvm;
+using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
@@ -292,6 +293,11 @@ namespace BCLabManager.ViewModel
         public void OK()
         {
             _program.Temperatures = GetTemperatureList(Temperatures);
+            if (_program.Temperatures == null)
+            {
+                IsOK = false;
+                return;
+            }
             _program.RecipeTemplates = AllRecipeTemplates.Where(o => o.IsSelected).Select(o => o._recipeTemplate.Name).ToList();
             var dic = new Dictionary<int, int>();
             foreach (var recVM in AllRecipeTemplates)
@@ -324,7 +330,14 @@ namespace BCLabManager.ViewModel
 
         private List<int> GetTemperatureList(string temperatures)
         {
-            List<int> output = temperatures.Split(',').Select(o => Convert.ToInt32(o)).ToList();
+            List<int> output = null;
+            try {
+                output = temperatures.Trim(',').Split(',').Select(o => Convert.ToInt32(o)).ToList();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Loading Temperature failed. Error Message: \n{e.Message}");
+            }
             return output;
         }
 
