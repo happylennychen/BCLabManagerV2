@@ -1,4 +1,4 @@
-﻿//#define Test
+﻿#define Test
 using BCLabManager.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -114,7 +114,7 @@ namespace BCLabManager.Model
             {
                 temptestfilepath = CreateTestFile(rawDataList, temproot, newName);
                 testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
-                CopyToServer(temptestfilepath, testRecord.TestFilePath);
+                CopyToServerWithRetry(temptestfilepath, testRecord.TestFilePath);
             }
             else
             {
@@ -122,13 +122,13 @@ namespace BCLabManager.Model
                 {
                     temptestfilepath = RenameRawDataAndCopyToFolder(rawDataList[0], $@"{temproot}\{GlobalSettings.TestDataFolderName}", newName);
                     testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
-                    CopyToServer(temptestfilepath, testRecord.TestFilePath);
+                    CopyToServerWithRetry(temptestfilepath, testRecord.TestFilePath);
                 }
                 else
                 {
                     temptestfilepath = CopyToFolder(rawDataList[0], temproot);
                     testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
-                    CopyToServer(temptestfilepath, testRecord.TestFilePath);
+                    CopyToServerWithRetry(temptestfilepath, testRecord.TestFilePath);
                 }
             }
             if (testRecord.TestFilePath == "")
@@ -145,28 +145,71 @@ namespace BCLabManager.Model
                 if (!File.Exists(tempheaderFilePath))
                 {
                     CreateHeaderFile(tempheaderFilePath, header);
-                    CopyToServer(tempheaderFilePath, headerFilePath);
+                    CopyToServerWithRetry(tempheaderFilePath, headerFilePath);
                     var tempSourceFilePath = CreateSourceFile(temproot, tempheaderFilePath, temptestfilepath);
                     string sourceFilePath = $@"{root}\{GlobalSettings.SourceDataFolderName}\{Path.GetFileName(temptestfilepath)}";
-                    CopyToServer(tempSourceFilePath, sourceFilePath);
+                    CopyToServerWithRetry(tempSourceFilePath, sourceFilePath);
                 }
             }
         }
 
-        private void CopyToServer(string tempPath, string serverPath)
+        private void CopyToServerWithRetry(string tempPath, string serverPath)
         {
 #if! Test
             var thread = new Thread(() =>
             {
-                File.Copy(tempPath, serverPath, true);
-
-                if (!File.Exists(serverPath))
+                int i;
+                for (i = 0; i < 5; i++)
                 {
-                    MessageBox.Show("Test File Missing!");
+                    if (CopyToServer(tempPath, serverPath))
+                    {
+                        break;
+                    }
+                }
+                if (i == 5)
+                {
+                    if (!File.Exists(serverPath))
+                    {
+                        Event evt = new Event();
+                        evt.Module = "NAS file transfer";
+                        evt.Timestamp = DateTime.Now;
+                        evt.Type = EventType.Error;
+                        evt.Description = $"Test File Missing!. File Name: {Path.GetFileName(tempPath)}";
+                        EventService.SuperAdd(evt);
+                        MessageBox.Show(evt.Description);
+                        return;
+                    }
+
+                    FileInfo fi1 = new FileInfo(tempPath);
+                    FileInfo fi2 = new FileInfo(serverPath);
+                    if (fi1.Length != fi2.Length)
+                    {
+                        Event evt = new Event();
+                        evt.Module = "NAS file transfer";
+                        evt.Timestamp = DateTime.Now;
+                        evt.Type = EventType.Error;
+                        evt.Description = $"Original file length is {fi1.Length}B, server file length is {fi2.Length}B.";
+                        EventService.SuperAdd(evt);
+                        MessageBox.Show(evt.Description);
+                    }
                 }
             });
             thread.Start();
 #endif
+        }
+
+        private bool CopyToServer(string tempPath, string serverPath)
+        {
+            File.Copy(tempPath, serverPath, true);
+            if (!File.Exists(serverPath))
+                return false;
+
+            FileInfo fi1 = new FileInfo(tempPath);
+            FileInfo fi2 = new FileInfo(serverPath);
+            if (fi1.Length != fi2.Length)
+                return false;
+
+            return true;
         }
 
         private string CopyToFolder(string filepath, string root)
@@ -260,7 +303,7 @@ namespace BCLabManager.Model
             {
                 File.Move(testRecord.TestFilePath, testRecord.TestFilePath + "_INVALID");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
             }
             testRecord.TestFilePath += "_INVALID";
@@ -315,7 +358,7 @@ namespace BCLabManager.Model
             {
                 temptestfilepath = CreateTestFile(rawDataList, temproot, newName);
                 testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
-                CopyToServer(temptestfilepath, testRecord.TestFilePath);
+                CopyToServerWithRetry(temptestfilepath, testRecord.TestFilePath);
             }
             else
             {
@@ -323,13 +366,13 @@ namespace BCLabManager.Model
                 {
                     temptestfilepath = RenameRawDataAndCopyToFolder(rawDataList[0], temproot, newName);
                     testRecord.TestFilePath = $@"{root}\{Path.GetFileName(temptestfilepath)}";
-                    CopyToServer(temptestfilepath, testRecord.TestFilePath);
+                    CopyToServerWithRetry(temptestfilepath, testRecord.TestFilePath);
                 }
                 else
                 {
                     temptestfilepath = CopyToFolder(rawDataList[0], temproot);
                     testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
-                    CopyToServer(temptestfilepath, testRecord.TestFilePath);
+                    CopyToServerWithRetry(temptestfilepath, testRecord.TestFilePath);
                 }
             }
             if (testRecord.TestFilePath == "")
@@ -358,13 +401,13 @@ namespace BCLabManager.Model
                 var oldPath = Path.Combine($@"{GlobalSettings.TempraryFolder}{GlobalSettings.TempDataFolderName}", Path.GetFileName(testRecord.TestFilePath));
                 temptestfilepath = RenameRawDataAndCopyToFolder(oldPath, $@"{temproot}\{GlobalSettings.TestDataFolderName}", Path.GetFileNameWithoutExtension(newName));
                 testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
-                CopyToServer(temptestfilepath, testRecord.TestFilePath);
+                CopyToServerWithRetry(temptestfilepath, testRecord.TestFilePath);
             }
             else
             {
                 temptestfilepath = CopyToFolder(testRecord.TestFilePath, temproot);
                 testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
-                CopyToServer(temptestfilepath, testRecord.TestFilePath);
+                CopyToServerWithRetry(temptestfilepath, testRecord.TestFilePath);
             }
             if (testRecord.TestFilePath == "")
             {
@@ -395,13 +438,15 @@ namespace BCLabManager.Model
                 }
             }
             TesterServiceClass ts = new TesterServiceClass();
-            //if (!ts.DataPreprocessing(processer, temptestfilepath, program, recipe, record, startIndex))
-            //{
-            //    File.Delete(temptestfilepath);
-            //    return string.Empty;
-            //}
+//#if !Test
+            if (!ts.DataPreprocessing(processer, temptestfilepath, program, recipe, record, startIndex))
+            {
+                File.Delete(temptestfilepath);
+                return string.Empty;
+            }
+//#endif
             var TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
-            CopyToServer(temptestfilepath, TestFilePath);
+            CopyToServerWithRetry(temptestfilepath, TestFilePath);
             if (TestFilePath == "")
             {
                 MessageBox.Show("Test File Path Empty!");
