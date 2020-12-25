@@ -20,13 +20,16 @@
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
     </Window.Resources>
-    <DataGrid GridLinesVisibility="None" Background="White" ItemsSource="{Binding Path=AllEvents}">
-        <!--<DataGrid.Columns>
+    <DockPanel>
+        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="5" Width="80" Command="{Binding Path=ExportCommand}">Export</Button>
+        <DataGrid GridLinesVisibility="None" Background="White" ItemsSource="{Binding Path=AllEvents}">
+            <!--<DataGrid.Columns>
                 <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Module" IsReadOnly="True" Binding="{Binding Path=Module}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Path=Type}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Description" IsReadOnly="True" Binding="{Binding Path=Description}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Timestamp" IsReadOnly="True" Binding="{Binding Path=Timestamp}"></DataGridTextColumn>
             </DataGrid.Columns>-->
-    </DataGrid>
+        </DataGrid>
+    </DockPanel>
 </Window>

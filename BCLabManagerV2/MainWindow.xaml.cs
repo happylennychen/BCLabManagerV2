@@ -302,8 +302,19 @@ namespace BCLabManager
 
         private void Event_Click(object sender, RoutedEventArgs e)
         {
-            AllEventsView allEventsView = new AllEventsView();
-            allEventsView.DataContext = new AllEventsViewModel(/*EventService*/);
+            AllEventsView allEventsView = new AllEventsView(); 
+            var vm = new AllEventsViewModel
+                 (
+                 ProgramService,
+                 ProjectService,
+                 ProgramTypeService,
+                 BatteryService,
+                 TesterService,
+                 ChannelService,
+                 ChamberService,
+                 BatteryTypeService
+                 );
+            allEventsView.DataContext = vm;// new AllEventsViewModel(/*EventService*/);
             allEventsView.ShowDialog();
         }
 
