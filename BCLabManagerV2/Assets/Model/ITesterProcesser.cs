@@ -10,7 +10,7 @@ namespace BCLabManager.Model
         string GetChannelName(string filepath);
         bool CheckFileFormat(string filepath);
         bool DataPreprocessing(string filepath, Program program, Recipe recipe, TestRecord record, int startIndex);
-        string EventDescriptor(string filepath, Program program, Recipe recipe, TestRecord record, string info);
+        //string EventDescriptor(string filepath, Program program, Recipe recipe, TestRecord record, string info);
         uint LoadRawToSource(string testFilePath, ref SourceData sd);
     }
 }

@@ -23,23 +23,6 @@ namespace BCLabManager.Model
             StepTolerance.Add(Column.TIME, 3);          //S
         }
 
-        enum Column
-        {
-            STEPNO,     //配方的Index，1234234234
-            STEP,       //真实的顺序，1234...n
-            TIME_MS,    //100，200，300
-            TIME,       //2020-07-24 08:55:31
-            CYCLE,      //外层循环？
-            LOOP,       //内层循环？
-            STEP_MODE,       //Rest, CC_CV_Charge, CC_Discharge
-            MODE,            //Step改变时为0，否则为1
-            CURRENT,
-            VOLTAGE,
-            TEMPERATURE,
-            CAPACITY,       //单个Step的电量
-            TOTAL_CAPACITY,  //
-            STATUS              //StepFinishByCut_V,StepFinishByCut_T,StepFinishByCut_I
-        }
         enum O2ChromaRecord : int
         {
             ChSerial = 2,
@@ -144,7 +127,7 @@ namespace BCLabManager.Model
             return true;
         }
 
-        public bool DataPreprocessing(string filepath, Program program, Recipe recipe, TestRecord record, int startIndex)
+        public bool DataPreprocessing(string filepath, Program program, Recipe recipe, TestRecord record, int startStepIndex)
         {
             UInt32 result = ErrorCode.NORMAL;
             List<Event> events = new List<Event>();
@@ -153,19 +136,21 @@ namespace BCLabManager.Model
             FileStream tempFileStream = new FileStream(tempFilePath, FileMode.Create);
             StreamReader sr = new StreamReader(fs);
             StreamWriter sw = new StreamWriter(tempFileStream);
-            bool isFirstDischarge = false;
-            bool isFirstDischargeChecked = false;
+            //bool IsFirstDischarge = false;
+            //bool IsFirstDischargeChecked = false;
             int lineIndex = 0;
             int startTime = 0;
             int timeSpan = 0;
-            string dataLine0 = string.Empty;
-            string dataLine1 = string.Empty;
+            //string dataLine0 = string.Empty;
+            //string dataLine1 = string.Empty;
 
             StepV2 step0 = new StepV2();
             StepV2 step1 = new StepV2();
 
-            Dictionary<Column, string> row0 = new Dictionary<Column, string>();
-            Dictionary<Column, string> row1 = new Dictionary<Column, string>();
+            //Dictionary<Column, string> row0 = new Dictionary<Column, string>();
+            //Dictionary<Column, string> row1 = new Dictionary<Column, string>();
+            List<Dictionary<Column, string>> buffer = new List<Dictionary<Column, string>>();
+            DataPreprocesser.Index = 0;
             try
             {
                 bool isCOCPoint = false;
@@ -174,139 +159,159 @@ namespace BCLabManager.Model
                 {
                     sw.WriteLine(sr.ReadLine());
                 }
-                dataLine1 = sr.ReadLine();
-                row1 = GetRowFromString(dataLine1);
-                ActionMode am = GetActionMode(row1[Column.STEP_MODE]);
-                if (am == ActionMode.CC_DISCHARGE || am == ActionMode.CP_DISCHARGE)
-                    isFirstDischarge = true;
-                if (startIndex != 0)
+                DataPreprocesser.Length = 20;
+                for (int i = 0; i < DataPreprocesser.Length; i++)
                 {
-                    step1 = fullSteps.SingleOrDefault(o => o.Index == startIndex);
+                    DataPreprocesser.NewLine = sr.ReadLine();
+                }
+                //dataLine1 = sr.ReadLine();
+                //row1 = GetRowFromString(dataLine1);
+                //ActionMode am = GetActionMode(row1[Column.STEP_MODE]);
+                ActionMode am = DataPreprocesser.Nodes[DataPreprocesser.Index].StepMode;
+                if (am == ActionMode.CC_DISCHARGE || am == ActionMode.CP_DISCHARGE)
+                    DataPreprocesser.IsFirstDischarge = true;
+                if (startStepIndex != 0)
+                {
+                    step1 = fullSteps.SingleOrDefault(o => o.Index == startStepIndex);
                 }
                 else
                     step1 = fullSteps.First(o => o.Action.Mode == am);  //有隐患
-                result = StepStartPointCheck(step1, row1, recipe.Temperature, isFirstDischarge, ref isFirstDischargeChecked);
+                result = DataPreprocesser.StepStartPointCheck(step1, recipe.Temperature);
                 if (result != ErrorCode.NORMAL)
                 {
-                    if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1))
+                    if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
                     {
                         return false;
                     }
                 }
-                sw.WriteLine(dataLine1);
+                sw.WriteLine(DataPreprocesser.StringList[DataPreprocesser.Index]);
 
-                startTime = Convert.ToInt32(row1[Column.TIME_MS]);
+                //startTime = Convert.ToInt32(row1[Column.TIME_MS]);
+                startTime = DataPreprocesser.Nodes[DataPreprocesser.Index].TimeInMS;
                 lineIndex = 11;
                 while (true)
                 {
                     lineIndex++;
-                    dataLine0 = dataLine1;
-                    row0 = row1;
-                    dataLine1 = sr.ReadLine();
-                    if (dataLine1 == null)
+                    //dataLine0 = dataLine1;
+                    //row0 = row1;
+                    //dataLine1 = sr.ReadLine();
+                    if (DataPreprocesser.Index < DataPreprocesser.Length / 2)
                     {
-                        timeSpan = (Convert.ToInt32(row0[Column.TIME_MS]) - startTime) / 1000;
-                        result = StepCOCPointCheck(step1, row0, recipe.Temperature, timeSpan);
+                        DataPreprocesser.Index++;
+                    }
+                    else
+                    {
+                        var newLine = sr.ReadLine();
+                        if (newLine == null)
+                            newLine = null;
+                        DataPreprocesser.NewLine = newLine;
+                    }
+                    if (DataPreprocesser.StringList[DataPreprocesser.Index + 1] == null)  //文件结束
+                    {
+                        DataPreprocesser.Index++;
+                        //timeSpan = (Convert.ToInt32(row0[Column.TIME_MS]) - startTime) / 1000;
+                        timeSpan = (DataPreprocesser.Nodes[DataPreprocesser.Index - 1].TimeInMS - startTime) / 1000;
+                        //result = StepCOCPointCheck(step1, row0, recipe.Temperature, timeSpan);
+                        result = DataPreprocesser.StepCOCPointCheck(step1, recipe.Temperature, timeSpan);      //Index?
                         if (result != ErrorCode.NORMAL)
                         {
-                            if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1))
+                            if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
                             {
                                 return false;
                             }
                         }
                         step0 = step1;
-                        step1 = GetNewTargetStep(step0, fullSteps, row0, recipe.Temperature, timeSpan);
+                        step1 = GetNewTargetStep(step0, fullSteps, DataPreprocesser.Nodes[DataPreprocesser.Index - 1].Status, recipe.Temperature, timeSpan);
                         if (step1 != null)
                         {
                             result = ErrorCode.DP_STEP_MISSING;
-                            if (result != ErrorCode.NORMAL)
+                            if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, step1.Index))
                             {
-                                if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1, step1.Index))
-                                {
-                                    return false;
-                                }
+                                return false;
                             }
                         }
                         //throw new ProcessException($@"Step {step1.Index} is missing");
                         break;
                     }
-                    row1 = GetRowFromString(dataLine1);
-
-                    if (row1[Column.MODE] == "0")
+                    //row1 = GetRowFromString(dataLine1);
+                    if (DataPreprocesser.Nodes[DataPreprocesser.Index].Status == StepEndString.EndByError)
+                    {
+                        result = ErrorCode.DP_CHECKSUM;
+                        if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
+                        {
+                            return false;
+                        }
+                    }
+                    //if (row1[Column.MODE] == "0")
+                    if (DataPreprocesser.Nodes[DataPreprocesser.Index].Mode == 0)
                     {
                         isCOCPoint = true;
                     }
                     if (isCOCPoint)
                     {
                         #region COC Point Check
-                        timeSpan = (Convert.ToInt32(row0[Column.TIME_MS]) - startTime) / 1000;
-                        result = StepCOCPointCheck(step1, row0, recipe.Temperature, timeSpan);
+                        //timeSpan = (Convert.ToInt32(row0[Column.TIME_MS]) - startTime) / 1000;
+                        timeSpan = (DataPreprocesser.Nodes[DataPreprocesser.Index - 1].TimeInMS - startTime) / 1000;
+                        //result = StepCOCPointCheck(step1, row0, recipe.Temperature, timeSpan);
+                        result = DataPreprocesser.StepCOCPointCheck(step1, recipe.Temperature, timeSpan);      //Index?
                         if (result != ErrorCode.NORMAL)
                         {
-                            if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1))
+                            if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
                             {
                                 return false;
                             }
                         }
                         step0 = step1;
-                        step1 = GetNewTargetStep(step0, fullSteps, row0, recipe.Temperature, timeSpan);
+                        //step1 = GetNewTargetStep(step0, fullSteps, row0, recipe.Temperature, timeSpan);
+                        step1 = GetNewTargetStep(step0, fullSteps, DataPreprocesser.Nodes[DataPreprocesser.Index - 1].Status, recipe.Temperature, timeSpan);
                         if (step1 == null)
-                        //throw new ProcessException("Cannot Get Next Step.");
                         {
                             result = ErrorCode.DP_NO_NEXT_STEP;
-                            if (result != ErrorCode.NORMAL)
-                            {
-                                if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1))
-                                {
-                                    return false;
-                                }
-                            }
-                        }
-                        result = StepActionModeCheck(step1.Action.Mode, GetActionMode(row1[Column.STEP_MODE]));
-                        if (result != ErrorCode.NORMAL)
-                        {
-                            if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1))
+                            if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
                             {
                                 return false;
                             }
                         }
-                        if (!isFirstDischargeChecked)
+
+                        //result = StepActionModeCheck(step1.Action.Mode, GetActionMode(row1[Column.STEP_MODE]));
+                        result = StepActionModeCheck(step1.Action.Mode, DataPreprocesser.Nodes[DataPreprocesser.Index].StepMode);
+                        if (result != ErrorCode.NORMAL)
+                        {
+                            if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
+                            {
+                                return false;
+                            }
+                        }
+                        if (!DataPreprocesser.IsFirstDischargeChecked)
                         {
                             if (step1.Action.Mode == ActionMode.CC_DISCHARGE || step1.Action.Mode == ActionMode.CP_DISCHARGE)
-                                isFirstDischarge = true;
+                                DataPreprocesser.IsFirstDischarge = true;
                         }
                         isCOCPoint = false;
                         #endregion
                         //isStartPoint = true;
                         #region Start Point Check
-                        result = StepStartPointCheck(step1, row1, recipe.Temperature, isFirstDischarge, ref isFirstDischargeChecked);
+                        //result = StepStartPointCheck(step1, row1, recipe.Temperature, IsFirstDischarge, ref IsFirstDischargeChecked);
+                        result = DataPreprocesser.StepStartPointCheck(step1, recipe.Temperature);
                         if (result != ErrorCode.NORMAL)
                         {
-                            if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1))
+                            if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
                             {
                                 return false;
                             }
                         }
-                        startTime = Convert.ToInt32(row1[Column.TIME_MS]);
+                        //startTime = Convert.ToInt32(row1[Column.TIME_MS]);
+                        startTime = DataPreprocesser.Nodes[DataPreprocesser.Index].TimeInMS;
                         #endregion
                     }
-
-                    //else if (isStartPoint)
-                    //{
-                    //    #region Start Point Check
-                    //    StepStartPointCheck(step1, row1, recipe.Temperature, isFirstDischarge, ref isFirstDischargeChecked);
-                    //    isStartPoint = false;
-                    //    startTime = Convert.ToInt32(row1[Column.TIME_MS]);
-                    //    #endregion
-                    //}
-
                     else
                     {
                         #region Normal Point Check
-                        result = StepMidPointCheck(step1, row1, recipe.Temperature);
+                        //result = StepMidPointCheck(step1, row1, recipe.Temperature);
+                        result = DataPreprocesser.StepMidPointCheck(step1);
                         if (result != ErrorCode.NORMAL)
                         {
-                            if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1))
+                            if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
                             {
                                 return false;
                             }
@@ -316,24 +321,26 @@ namespace BCLabManager.Model
 
                         #region Continuity Check
 
-                        if (row1[Column.MODE] != "0")
+                        //if (row1[Column.MODE] != "0")
+                        if (DataPreprocesser.Nodes[DataPreprocesser.Index].Mode != 0)
                         {
-                            Dictionary<Column, bool> rowContinuityMatrix = GetContinuityMatrix(row0, row1);
-                            result = ContinuityCheck(rowContinuityMatrix);
+                            //Dictionary<Column, bool> rowContinuityMatrix = GetContinuityMatrix(row0, row1);
+                            //result = ContinuityCheck(rowContinuityMatrix);
+                            result = DataPreprocesser.ContinuityCheck(program.Type, step1);
                             if (result != ErrorCode.NORMAL)
                             {
-                                if (!ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, dataLine0, ref dataLine1))
+                                if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
                                 {
                                     return false;
                                 }
                             }
-                            row1 = GetRowFromString(dataLine1); //有可能dataLine1更新了，需要再一次更新row1
+                            //row1 = GetRowFromString(dataLine1); //有可能dataLine1更新了，需要再一次更新row1
                         }
                         #endregion
                         #endregion
                     }
 
-                    sw.WriteLine(dataLine1);
+                    sw.WriteLine(DataPreprocesser.StringList[DataPreprocesser.Index]);
                 }
 
             }
@@ -363,121 +370,11 @@ namespace BCLabManager.Model
             return true;
         }
 
-        private bool ErrorHandler(ref List<Event> events, uint result, string filepath, Program program, Recipe recipe, TestRecord record, int lineIndex, string dataLine0, ref string dataLine1, params object[] args)
-        {
-            Event evt = new Event();
-            string info = string.Empty;
-            string solution = string.Empty;
-            string oldLine1 = dataLine1;
-            string newLine1 = string.Empty;
-            bool ret;
-            Dictionary<Column, string> row0 = new Dictionary<Column, string>();
-            Dictionary<Column, string> row1 = new Dictionary<Column, string>();
-            switch (result)
-            {
-                //case ErrorCode.DP_CHECKSUM_ABNORMAL_STEP_AND_TIME_JUMP:       //只有step和time不对，直接修复
-                //    row0 = GetRowFromString(dataLine0);
-                //    row1 = GetRowFromString(dataLine1);
-                //    row1[Column.STEP] = row0[Column.STEP];
-                //    row1[Column.TIME_MS] = (Convert.ToInt32(row0[Column.TIME_MS]) + 1000).ToString();
-                //    row1[Column.TIME] = DateTime.Parse(row0[Column.TIME]).Add(TimeSpan.FromSeconds(1)).ToString("yyyy-MM-dd HH:mm:ss");
-                //    row1[Column.STATUS] = row0[Column.STATUS];
-                //    dataLine1 = BuildStringFromRow(row1);   //更新dataLine1
-                //    newLine1 = dataLine1;
-                //    solution = "Auto Fixed";
-                //    ret = true;
-                //    break;
-                //case ErrorCode.DP_CHECKSUM_ABNORMAL_STEP_JUMP:
-                //    row0 = GetRowFromString(dataLine0);
-                //    row1 = GetRowFromString(dataLine1);
-                //    row1[Column.STEP] = row0[Column.STEP];
-                //    row1[Column.STATUS] = row0[Column.STATUS];
-                //    dataLine1 = BuildStringFromRow(row1);   //更新dataLine1
-                //    newLine1 = dataLine1;
-                //    solution = "Auto Fixed";
-                //    ret = true;
-                //    break;
-                default:
-                    var str = $"{ErrorCode.GetDescription(result, args)}\n" +
-                               $"-----------------------------" +
-                               $"Line:{lineIndex - 1}\n" +
-                               $"{dataLine0}\n" +
-                               $"-----------------------------" +
-                               $"Line:{lineIndex}\n" +
-                               $"{dataLine1}\n" +
-                               $"-----------------------------" +
-                               $"Continue to commit?";
-                    var userRet = MessageBox.Show(str, "Data Preprocessing Error", MessageBoxButton.YesNo);
-                    if (userRet == MessageBoxResult.Yes)
-                    {
-                        solution = "Ignored";
-                        ret = true;
-                    }
-                    else
-                        ret = false;
-                    break;
-            }
-            if (ret)
-            {
-                evt.Module = Module.DataPreprocessor;
-                evt.Type = EventType.Warning;
-                evt.Timestamp = DateTime.Now;
-                info = GetChromaEventInfo(lineIndex, ErrorCode.GetDescription(result, args), solution, dataLine0, oldLine1, newLine1);
-                evt.Description = EventDescriptor(filepath, program, recipe, record, info);
-                events.Add(evt);
-            }
-            return ret;
-        }
-
-        private string GetChromaEventInfo(int lineIndex, string message, string solution = "", string dataLine0 = "", string dataLine1 = "", string newLine1 = "", string userComment = "")
-        {
-            return $"Line: {lineIndex}\nProblem: {message}\nSolution: {solution}\nLine0: {dataLine0}\nLine1: {dataLine1}\nNew Line: {newLine1}\nUser Commnet: {userComment}";
-        }
-
-        private UInt32 StepActionModeCheck(ActionMode mode, ActionMode actionMode)
-        {
-            if (mode != actionMode)
-                //throw new ProcessException("Action mode mismatch");
-                return ErrorCode.DP_ACTION_MODE_MISMATCH;
-            else
-                return ErrorCode.NORMAL;
-        }
-
-        private StepV2 GetNewTargetStep(StepV2 currentStep, List<StepV2> fullSteps, Dictionary<Column, string> row, double temperature, int timeSpan)
+        private StepV2 GetNewTargetStep(StepV2 currentStep, List<StepV2> fullSteps, string status, double temperature, int timeSpan)
         {
             StepV2 nextStep = null;
-            //foreach (var coc in currentStep.CutOffConditions)
-            //{
-            //    double value = -999999;
-            //    double tolerance = 0;
-            //    switch (coc.Parameter)
-            //    {
-            //        case Parameter.VOLTAGE:
-            //            value = Convert.ToDouble(row[Column.VOLTAGE]) * 1000;
-            //            tolerance = StepTolerance[Column.VOLTAGE];
-            //            break;
-            //        case Parameter.CURRENT:
-            //            value = Convert.ToDouble(row[Column.CURRENT]) * 1000;
-            //            tolerance = StepTolerance[Column.CURRENT];
-            //            break;
-            //        case Parameter.TEMPERATURE:
-            //            value = Convert.ToDouble(row[Column.TEMPERATURE]);
-            //            tolerance = StepTolerance[Column.TEMPERATURE];
-            //            break;
-            //        case Parameter.TIME:
-            //            value = timeSpan;
-            //            tolerance = StepTolerance[Column.TIME];
-            //            break;
-            //        default:
-            //            break;
-            //    }
-            //    if (value != -999999)
-            //        nextStep = Compare(coc, value, tolerance, fullSteps, currentStep.Index);
-            //    if (nextStep != null)
-            //        return nextStep;
-            //}
             CutOffCondition coc = null;
-            switch (row[Column.STATUS])
+            switch (status)
             {
                 case "StepFinishByCut_V":
                     coc = currentStep.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE);
@@ -494,28 +391,7 @@ namespace BCLabManager.Model
             return nextStep;
         }
 
-        private StepV2 Compare(CutOffCondition coc, double value, double tolerance, List<StepV2> fullSteps, int currentStepIndex)
-        {
-            StepV2 nextStep = null;
-            //switch (coc.Mark)
-            //{
-            //    case CompareMarkEnum.SmallerThan:
-            if (Math.Abs(value - coc.Value) <= tolerance)
-            {
-                nextStep = Jump(coc, fullSteps, currentStepIndex);
-            }
-            //        break;
-            //    case CompareMarkEnum.LargerThan:
-            //        if (Math.Abs(value - coc.Value) <= StepTolerance[Column.CURRENT])
-            //        {
-            //            nextStep = Jump(coc, fullSteps, currentStepIndex);
-            //        }
-            //        break;
-            //}
-            return nextStep;
-        }
-
-        private StepV2 Jump(CutOffCondition coc, List<StepV2> fullSteps, int currentStepIndex)
+        private static StepV2 Jump(CutOffCondition coc, List<StepV2> fullSteps, int currentStepIndex)
         {
             StepV2 nextStep = null;
             switch (coc.JumpType)
@@ -534,396 +410,36 @@ namespace BCLabManager.Model
             return nextStep;
         }
 
-        private UInt32 StepStartPointCheck(StepV2 step, Dictionary<Column, string> row1, double temp, bool isFirstDischarge, ref bool isFirstDischargeChecked)
+        private static StepV2 Compare(CutOffCondition coc, double value, double tolerance, List<StepV2> fullSteps, int currentStepIndex)
         {
-            double voltage = 0;
-            double current = 0;
-            double power = 0;
-            double temperature = 0;
-            switch (step.Action.Mode)
-            {
-                case ActionMode.CC_CV_CHARGE:
-                    voltage = Convert.ToDouble(row1[Column.VOLTAGE]) * 1000;
-                    if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance[Column.VOLTAGE])
-                    {
-                        current = GetCurrentFromRow(row1) * -1;
-                        if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
-                            return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
-                    }
-                    break;
-                case ActionMode.CC_DISCHARGE:
-
-                    current = GetCurrentFromRow(row1);
-                    if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
-                        return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
-
-                    if (isFirstDischarge && !isFirstDischargeChecked)
-                    {
-                        temperature = Convert.ToDouble(row1[Column.TEMPERATURE]);
-                        if (Math.Abs(temperature - temp) > StepTolerance[Column.TEMPERATURE])
-                            return ErrorCode.DP_TEMPERATURE_OUT_OF_RANGE;
-
-                        isFirstDischargeChecked = true;
-                    }
-                    break;
-                case ActionMode.CP_DISCHARGE:
-
-                    power = GetPowerFromRow(row1) * 1000;             //mW
-                    if (Math.Abs(power - step.Action.Power) > 200)
-                        return ErrorCode.DP_POWER_OUT_OF_RANGE;
-
-                    if (isFirstDischarge && !isFirstDischargeChecked)
-                    {
-                        temperature = Convert.ToDouble(row1[Column.TEMPERATURE]);
-                        if (Math.Abs(temperature - temp) > StepTolerance[Column.TEMPERATURE])
-                            return ErrorCode.DP_TEMPERATURE_OUT_OF_RANGE;
-
-                        isFirstDischargeChecked = true;
-                    }
-                    break;
-                case ActionMode.REST:
-                    break;
-                default:
-                    break;
-            }
-            return ErrorCode.NORMAL;
-        }
-
-        private double GetCurrentFromRow(Dictionary<Column, string> row1)
-        {
-            return Convert.ToDouble(row1[Column.CURRENT]) * -1000.0;
-        }
-
-        private double GetPowerFromRow(Dictionary<Column, string> row1)
-        {
-            var current = Convert.ToDouble(row1[Column.CURRENT]) * -1.0;
-            var voltage = Convert.ToDouble(row1[Column.VOLTAGE]);
-            return current * voltage;
-        }
-
-        private UInt32 StepMidPointCheck(StepV2 step, Dictionary<Column, string> row1, double temp)
-        {
-            double current = 0;
-            switch (step.Action.Mode)
-            {
-                case ActionMode.CC_CV_CHARGE:
-                    break;
-                case ActionMode.CC_DISCHARGE:
-                    current = GetCurrentFromRow(row1);
-                    if (Math.Abs(current - step.Action.Current) > StepTolerance[Column.CURRENT])
-                        //throw new ProcessException("Current Out Of Range");
-                        return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
-                    break;
-                case ActionMode.CP_DISCHARGE:
-                    var power = GetPowerFromRow(row1) * 1000;             //mW
-                    if (Math.Abs(power - step.Action.Power) > 200)
-                        return ErrorCode.DP_POWER_OUT_OF_RANGE;
-                    break;
-                case ActionMode.REST:
-                    break;
-                default:
-                    break;
-            }
-            return ErrorCode.NORMAL;
-        }
-
-        private UInt32 StepCOCPointCheck(StepV2 step, Dictionary<Column, string> row, double temp, int timeSpan)
-        {
-            double voltage = 0;
-            double current = 0;
-            double temperature = 0;
-            switch (step.Action.Mode)
-            {
-                case ActionMode.CC_CV_CHARGE:
-                    if (row[Column.STATUS] == "StepFinishByCut_I")
-                    {
-                        current = GetCurrentFromRow(row) * -1;
-                        if (Math.Abs(current - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.CURRENT).Value) > StepTolerance[Column.CURRENT])
-                            return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
-                        voltage = Convert.ToDouble(row[Column.VOLTAGE]) * 1000;
-                        if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance[Column.VOLTAGE])
-                            return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
-                    }
-                    else if (row[Column.STATUS] == "StepFinishByCut_T")     //DST测试也会设定充电时间
-                    {
-                        if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance[Column.TIME])
-                            return ErrorCode.DP_TIME_OUT_OF_RANGE;
-                    }
-                    else
-                    {
-                        return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
-                    }
-                    break;
-                case ActionMode.CC_DISCHARGE:
-                    if (row[Column.STATUS] == "StepFinishByCut_V")
-                    {
-                        voltage = Convert.ToDouble(row[Column.VOLTAGE]) * 1000;
-                        if (Math.Abs(voltage - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE).Value) > StepTolerance[Column.VOLTAGE])
-                            return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
-                    }
-                    else if (row[Column.STATUS] == "StepFinishByCut_T")
-                    {
-                        if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance[Column.TIME])
-                            return ErrorCode.DP_TIME_OUT_OF_RANGE;
-                    }
-                    else
-                    {
-                        return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
-                    }
-                    break;
-                case ActionMode.CP_DISCHARGE:
-                    if (row[Column.STATUS] == "StepFinishByCut_V")
-                    {
-                        voltage = Convert.ToDouble(row[Column.VOLTAGE]) * 1000;
-                        if (Math.Abs(voltage - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE).Value) > StepTolerance[Column.VOLTAGE])
-                            return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
-                    }
-                    else if (row[Column.STATUS] == "StepFinishByCut_T")
-                    {
-                        if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance[Column.TIME])
-                            return ErrorCode.DP_TIME_OUT_OF_RANGE;
-                    }
-                    else
-                    {
-                        return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
-                    }
-                    break;
-                case ActionMode.REST:
-                    if (row[Column.STATUS] == "StepFinishByCut_T")
-                    {
-                        if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance[Column.TIME])
-                            return ErrorCode.DP_TIME_OUT_OF_RANGE;
-                    }
-                    else
-                    {
-                        return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
-                    }
-                    break;
-                default:
-                    break;
-            }
-            return ErrorCode.NORMAL;
-        }
-
-        private ActionMode GetActionMode(string v)
-        {
-            switch (v)
-            {
-                case "CC_CV_Charge": return ActionMode.CC_CV_CHARGE;
-                case "CC_Discharge": return ActionMode.CC_DISCHARGE;
-                case "CP_Discharge": return ActionMode.CP_DISCHARGE;
-                case "Rest": return ActionMode.REST;
-                default: return ActionMode.NA;
-            }
-        }
-
-
-        private UInt32 ContinuityCheck(Dictionary<Column, bool> rowContinuityMatrix)
-        {
-            int result = 0;
-            int i = 0;
-            foreach (var key in rowContinuityMatrix.Keys)
-            {
-                if (rowContinuityMatrix[key] == false)
-                    result |= (0x0001 << i);
-                i++;
-            }
-            //     0,    1,       2,    3,     4,    5,    6,       7,       8,           9,       10,            11,      12,        13
-            //STEPNO, STEP, TIME_MS, TIME, CYCLE, LOOP, MODE, ,STEP_MODE, CURRENT, VOLTAGE, TEMPERATURE, CAPACITY, TOTAL_CAPACITY, STATUS
-            if (result == 0x00)
-            {
-                return ErrorCode.NORMAL;
-            }
-            else if ((result | 0x1f00) == 0x1f00)   //只有物理参数超范围，不管
-            {
-                return ErrorCode.NORMAL;
-            }
-            else if (result == 0x2002)       //Step, Status错了
-            {
-                return ErrorCode.DP_CHECKSUM_ABNORMAL_STEP_JUMP;
-            }
-            else if (result == 0x200e)       //Step, Time, Time_mS, Status错了
-            {
-                return ErrorCode.DP_CHECKSUM_ABNORMAL_STEP_AND_TIME_JUMP;
-            }
-            else
-            {
-                //throw new ProcessException("Undefined.");
-                return ErrorCode.DP_UNDEFINED;
-            }
-        }
-
-
-        //    ContinuityTolerance.Add(Column.STEPNO, 1);
-        //    ContinuityTolerance.Add(Column.STEP, 1);
-        //    ContinuityTolerance.Add(Column.TIME_MS, 1000);
-        //    ContinuityTolerance.Add(Column.TIME, 1);
-        //    ContinuityTolerance.Add(Column.CYCLE, 1);
-        //    ContinuityTolerance.Add(Column.LOOP, 1);
-        //    ContinuityTolerance.Add(Column.MODE, 1);
-        //    ContinuityTolerance.Add(Column.CURRENT, 0.1);   //A
-        //    ContinuityTolerance.Add(Column.VOLTAGE, 0.1);
-        //    ContinuityTolerance.Add(Column.TEMPERATURE, 1);
-        //    ContinuityTolerance.Add(Column.CAPACITY, 0.5);
-        //    ContinuityTolerance.Add(Column.TOTAL_CAPACITY, 0.5);        
-        //enum Column
-        //{
-        //    STEPNO,     //配方的Index，1234234234
-        //    STEP,       //真实的顺序，1234...n
-        //    TIME_MS,    //100，200，300
-        //    TIME,       //2020-07-24 08:55:31
-        //    CYCLE,      //外层循环？
-        //    LOOP,       //内层循环？
-        //    STEP_MODE,       //Rest, CC_CV_Charge, CC_Discharge
-        //    MODE,            //Step改变时为0，否则为1
-        //    CURRENT,
-        //    VOLTAGE,
-        //    TEMPERATURE,
-        //    CAPACITY,       //单个Step的电量
-        //    TOTAL_CAPACITY,  //
-        //    STATUS              //StepFinishByCut_V,StepFinishByCut_T,StepFinishByCut_I
-        //}
-        private Dictionary<Column, bool> GetContinuityMatrix(Dictionary<Column, string> row0, Dictionary<Column, string> row1)
-        {
-            Dictionary<Column, bool> output = new Dictionary<Column, bool>();
-            double diff;
-            //foreach (var key in tolerance.Keys)
+            StepV2 nextStep = null;
+            //switch (coc.Mark)
             //{
-            //    bool result = false;
-            //    if (key == Column.TIME)
-            //    {
-            //        DateTime t0 = DateTime.Parse(row0[key]);
-            //        DateTime t1 = DateTime.Parse(row1[key]);
-            //        if (Math.Abs((t1 - t0).TotalSeconds) > tolerance[key])
-            //            result = false;
-            //        else
-            //            result = true;
-            //    }
-            //    else if (key == Column.STEP)
-            //    {
-            //        var diff = (Convert.ToDouble(row1[key]) - Convert.ToDouble(row0[key]));
-            //        if (diff < 0 || diff > tolerance[key])
-            //            result = false;
-            //        else
-            //            result = true;
-            //    }
-            //    else
-            //    {
-            //        if (Math.Abs(Convert.ToDouble(row1[key]) - Convert.ToDouble(row0[key])) > tolerance[key])
-            //            result = false;
-            //        else
-            //            result = true;
-            //    }
-            //    output.Add(key, result);
-            //}
-            if (row1[Column.STEPNO] == "0")
-                output.Add(Column.STEPNO, false);
-            else
-                output.Add(Column.STEPNO, true);
-
-            diff = (Convert.ToDouble(row1[Column.STEP]) - Convert.ToDouble(row0[Column.STEP]));
-            if (diff < 0 || diff > 1)
-                output.Add(Column.STEP, false);
-            else
-                output.Add(Column.STEP, true);
-
-            diff = (Convert.ToDouble(row1[Column.TIME_MS]) - Convert.ToDouble(row0[Column.TIME_MS]));
-            if (diff < 0 || diff > 1000)
-                output.Add(Column.TIME_MS, false);
-            else
-                output.Add(Column.TIME_MS, true);
-
-            DateTime t0 = DateTime.Parse(row0[Column.TIME]);
-            DateTime t1 = DateTime.Parse(row1[Column.TIME]);
-            diff = (t1 - t0).TotalSeconds;
-            if (diff < 0 || diff > 1)
-                output.Add(Column.TIME, false);
-            else
-                output.Add(Column.TIME, true);
-
-            if (Math.Abs(Convert.ToDouble(row1[Column.CYCLE]) - Convert.ToDouble(row0[Column.CYCLE])) > 1)
-                output.Add(Column.CYCLE, false);
-            else
-                output.Add(Column.CYCLE, true);
-
-            if (Math.Abs(Convert.ToDouble(row1[Column.LOOP]) - Convert.ToDouble(row0[Column.LOOP])) > 1)
-                output.Add(Column.LOOP, false);
-            else
-                output.Add(Column.LOOP, true);
-
-            output.Add(Column.STEP_MODE, true);
-
-            if (Math.Abs(Convert.ToDouble(row1[Column.MODE]) - Convert.ToDouble(row0[Column.MODE])) > 1)
-                output.Add(Column.MODE, false);
-            else
-                output.Add(Column.MODE, true);
-
-            if (Math.Abs(Convert.ToDouble(row1[Column.CURRENT]) - Convert.ToDouble(row0[Column.CURRENT])) > 0.1)
-                output.Add(Column.CURRENT, false);
-            else
-                output.Add(Column.CURRENT, true);
-
-            if (Math.Abs(Convert.ToDouble(row1[Column.VOLTAGE]) - Convert.ToDouble(row0[Column.VOLTAGE])) > 0.1)
-                output.Add(Column.VOLTAGE, false);
-            else
-                output.Add(Column.VOLTAGE, true);
-
-            if (Math.Abs(Convert.ToDouble(row1[Column.TEMPERATURE]) - Convert.ToDouble(row0[Column.TEMPERATURE])) > 1)
-                output.Add(Column.TEMPERATURE, false);
-            else
-                output.Add(Column.TEMPERATURE, true);
-
-            if (Math.Abs(Convert.ToDouble(row1[Column.CAPACITY]) - Convert.ToDouble(row0[Column.CAPACITY])) > 0.5)
-                output.Add(Column.CAPACITY, false);
-            else
-                output.Add(Column.CAPACITY, true);
-
-            if (Math.Abs(Convert.ToDouble(row1[Column.TOTAL_CAPACITY]) - Convert.ToDouble(row0[Column.TOTAL_CAPACITY])) > 0.5)
-                output.Add(Column.TOTAL_CAPACITY, false);
-            else
-                output.Add(Column.TOTAL_CAPACITY, true);
-
-
-            if (row1[Column.STATUS] == "Warring_CheckSum")
-                output.Add(Column.STATUS, false);
-            else
-                output.Add(Column.STATUS, true);
-            return output;
-        }
-        private Dictionary<Column, string> GetRowFromString(string dataLine)
-        {
-            Dictionary<Column, string> output = new Dictionary<Column, string>();
-            var strRow = dataLine.Split(',');
-            for (int i = 0; i < 14; i++)
-                output.Add((Column)i, strRow[i]);
-
-            return output;
-        }
-        private string BuildStringFromRow(Dictionary<Column, string> row)
-        {
-            string output = string.Empty;
-            foreach (var key in row.Keys)
+            //    case CompareMarkEnum.SmallerThan:
+            if (Math.Abs(value - coc.Value) <= tolerance)
             {
-                output += row[key] + ",";
+                nextStep = Jump(coc, fullSteps, currentStepIndex);
             }
-            return output.Substring(0, output.Length - 1);
+            //        break;
+            //    case CompareMarkEnum.LargerThan:
+            //        if (Math.Abs(value - coc.Value) <= StepTolerance.Current)
+            //        {
+            //            nextStep = Jump(coc, fullSteps, currentStepIndex);
+            //        }
+            //        break;
+            //}
+            return nextStep;
         }
 
-        public string EventDescriptor(string filepath, Program program, Recipe recipe, TestRecord record, string info)
+        private UInt32 StepActionModeCheck(ActionMode mode, ActionMode actionMode)
         {
-            return $"Battery Type: {program.Project.BatteryType.Name}\n" +
-                $"Project: {program.Project.Name}\n" +
-                $"Program: {program.Name}\n" +
-                $"Recipe: {recipe.Name}\n" +
-                $"Test Record ID: {record.Id}\n" +
-                //$"Battery: {record.BatteryStr}\n" +
-                //$"Tester: {record.TesterStr}\n" +
-                //$"Channel: {record.ChannelStr}\n" +
-                //$"Chamber: {record.ChamberStr}\n" +
-                //$"File Path: {record.TestFilePath}\n" +
-                //$"Operator: {record.Operator}\n" +
-                $"{info}";
+            if (mode != actionMode)
+                //throw new ProcessException("Action mode mismatch");
+                return ErrorCode.DP_ACTION_MODE_MISMATCH;
+            else
+                return ErrorCode.NORMAL;
         }
+
 
         public uint LoadRawToSource(string filePath, ref SourceData output)
         {
@@ -1276,6 +792,12 @@ namespace BCLabManager.Model
             //File.Delete(tempFilePath);
             return ErrorCode.NORMAL;
         }
+
+        private bool ErrorHandler(uint result)
+        {
+            throw new NotImplementedException();
+        }
+
         private bool ParseChroFormaV2(string[] inToken, out string outVolt, out string outCurr, out string outTemp, out string outAccm, out string outDate, out UInt32 outSerial)
         {
             string sStepCtlg = "";
@@ -1345,9 +867,548 @@ namespace BCLabManager.Model
 
             return true;
         }
-        private bool ErrorHandler(uint ret)
+    }
+
+    public static class DataPreprocesser
+    {
+        public static uint Length { get; set; } = 0;
+        public static int Index { get; set; } = 0;
+        public static List<string> StringList { get; set; } = new List<string>();
+        public static List<Dictionary<Column, string>> DicList { get; set; } = new List<Dictionary<Column, string>>();  //尽量淘汰
+        public static List<ChromaNode> Nodes { get; set; } = new List<ChromaNode>();
+        public static string NewLine
         {
-            throw new NotImplementedException();
+            set
+            {
+                if (Length == 0)
+                {
+                    MessageBox.Show("Please Set Length first.");
+                    return;
+                }
+                StringList.Add(value);
+                if (StringList.Count > Length)
+                {
+                    StringList.RemoveAt(0);
+                }
+                var dic = GetRowFromString(value);
+                DicList.Add(dic);
+                if (DicList.Count > Length)
+                {
+                    DicList.RemoveAt(0);
+                }
+                var node = GetNodeFromeString(value);
+                Nodes.Add(node);
+                if (Nodes.Count > Length)
+                {
+                    Nodes.RemoveAt(0);
+                }
+            }
         }
+        //public static bool IsFirstDischarge { get; set; } = false;
+        //public static bool IsFirstDischargeChecked { get; set; } = false;
+
+        private static bool _isFirstDischarge = false;
+
+        public static bool IsFirstDischarge
+        {
+            get { return _isFirstDischarge; }
+            set { _isFirstDischarge = value; }
+        }
+        private static bool _isFirstDischargeChecked = false;
+
+        public static bool IsFirstDischargeChecked
+        {
+            get { return _isFirstDischargeChecked; }
+            set { _isFirstDischargeChecked = value; }
+        }
+
+
+        private static ChromaNode GetNodeFromeString(string value)
+        {
+            if (value != null)
+            {
+                ChromaNode node = new ChromaNode();
+                var strRow = value.Split(',');
+                if (strRow.Length != 14)
+                    return null;
+                try
+                {
+                    node.StepNo = Convert.ToInt32(strRow[(int)Column.STEPNO]);
+                    node.Step = Convert.ToInt32(strRow[(int)Column.STEP]);
+                    node.TimeInMS = Convert.ToInt32(strRow[(int)Column.TIME_MS]);
+                    node.Time = DateTime.Parse(strRow[(int)Column.TIME]);
+                    node.Cycle = Convert.ToByte(strRow[(int)Column.CYCLE]);
+                    node.Loop = Convert.ToByte(strRow[(int)Column.LOOP]);
+                    node.StepMode = GetActionMode(strRow[(int)Column.STEP_MODE]);
+                    node.Mode = Convert.ToByte(strRow[(int)Column.MODE]);
+                    node.Current = Convert.ToDouble(strRow[(int)Column.CURRENT]);
+                    node.Voltage = Convert.ToDouble(strRow[(int)Column.VOLTAGE]);
+                    node.Temperature = Convert.ToDouble(strRow[(int)Column.TEMPERATURE]);
+                    node.Capacity = Convert.ToDouble(strRow[(int)Column.CAPACITY]);
+                    node.TotalCapacity = Convert.ToDouble(strRow[(int)Column.TOTAL_CAPACITY]);
+                    node.Status = strRow[(int)Column.STATUS];
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($"Row Parsing Failed. Error Message is:\n{e.Message}");
+                    return null;
+                }
+                return node;
+            }
+            return null;
+        }
+        private static ActionMode GetActionMode(string v)
+        {
+            switch (v)
+            {
+                case "CC_CV_Charge": return ActionMode.CC_CV_CHARGE;
+                case "CC_Discharge": return ActionMode.CC_DISCHARGE;
+                case "CP_Discharge": return ActionMode.CP_DISCHARGE;
+                case "Rest": return ActionMode.REST;
+                default: return ActionMode.NA;
+            }
+        }
+
+        private static Dictionary<Column, string> GetRowFromString(string dataLine)
+        {
+            if (dataLine != null)
+            {
+                Dictionary<Column, string> output = new Dictionary<Column, string>();
+                var strRow = dataLine.Split(',');
+                for (int i = 0; i < 14; i++)
+                    output.Add((Column)i, strRow[i]);
+                return output;
+            }
+            return null;
+        }
+
+
+        public static UInt32 StepStartPointCheck(StepV2 step, double temp)
+        {
+            if (DataPreprocesser.Nodes[DataPreprocesser.Index].Mode != 0)
+            {
+                return ErrorCode.DP_UNDEFINED;
+            }
+            double voltage = 0;
+            double current = 0;
+            double power = 0;
+            double temperature = 0;
+            switch (step.Action.Mode)
+            {
+                case ActionMode.CC_CV_CHARGE:
+                    //voltage = Convert.ToDouble(row1[Column.VOLTAGE]) * 1000;
+                    voltage = Nodes[Index].Voltage * 1000;
+                    if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance.Voltage)
+                    {
+                        //current = GetCurrentFromRow(row1) * -1;
+                        current = Nodes[Index].Current * 1000;
+                        if (Math.Abs(current - step.Action.Current) > StepTolerance.Current)
+                            return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
+                    }
+                    break;
+                case ActionMode.CC_DISCHARGE:
+
+                    current = Nodes[Index].Current * -1000;
+                    if (Math.Abs(current - step.Action.Current) > StepTolerance.Current)
+                        return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
+
+                    if (IsFirstDischarge && !IsFirstDischargeChecked)
+                    {
+                        temperature = Nodes[Index].Temperature;
+                        if (Math.Abs(temperature - temp) > StepTolerance.Temperature)
+                            return ErrorCode.DP_TEMPERATURE_OUT_OF_RANGE;
+
+                        IsFirstDischargeChecked = true;
+                    }
+                    break;
+                case ActionMode.CP_DISCHARGE:
+
+                    //power = GetPowerFromRow(row1) * 1000;             //mW
+                    var timeSpan = (Nodes[Index].TimeInMS - Nodes[Index - 1].TimeInMS);
+                    if (timeSpan > 950)
+                    {
+                        power = Math.Abs(Nodes[Index].Current * Nodes[Index].Voltage) * 1000;   //mW
+                    }
+                    else
+                    {
+                        power = Math.Abs(Nodes[Index + 1].Current * Nodes[Index + 1].Voltage) * 1000;   //mW
+                    }
+                    if (Math.Abs(power - step.Action.Power) > StepTolerance.Power)
+                        return ErrorCode.DP_POWER_OUT_OF_RANGE;
+
+                    if (IsFirstDischarge && !IsFirstDischargeChecked)
+                    {
+                        temperature = Nodes[Index].Temperature;
+                        if (Math.Abs(temperature - temp) > StepTolerance.Temperature)
+                            return ErrorCode.DP_TEMPERATURE_OUT_OF_RANGE;
+
+                        IsFirstDischargeChecked = true;
+                    }
+                    break;
+                case ActionMode.REST:
+                    break;
+                default:
+                    break;
+            }
+            return ErrorCode.NORMAL;
+        }
+        private static string GetChromaEventInfo(int lineIndex, string message, string solution = "", string oldLine = "", string userComment = "")
+        {
+            string str = $"Line: {lineIndex}\nProblem: {message}\nSolution: {solution}\n";
+            int i = 0;
+            foreach (string s in StringList)
+            {
+                if (i++ == Index)
+                    str += $"{s}\t*\n";
+                else
+                    str += $"{s}\n";
+            }
+            str += $"Old Line: {oldLine}\nUser Commnet: {userComment}";
+            return str;
+        }
+
+        private static double GetCurrentFromRow(Dictionary<Column, string> row1)
+        {
+            return Convert.ToDouble(row1[Column.CURRENT]) * -1000.0;
+        }
+
+        private static double GetPowerFromRow(Dictionary<Column, string> row1)
+        {
+            var current = Convert.ToDouble(row1[Column.CURRENT]) * -1.0;
+            var voltage = Convert.ToDouble(row1[Column.VOLTAGE]);
+            return current * voltage;
+        }
+
+        public static UInt32 StepMidPointCheck(StepV2 step)
+        {
+            double current = 0;
+            switch (step.Action.Mode)
+            {
+                case ActionMode.CC_CV_CHARGE:
+                    break;
+                case ActionMode.CC_DISCHARGE:
+                    current = Nodes[Index].Current * -1000;
+                    if (Math.Abs(current - step.Action.Current) > StepTolerance.Current)
+                        //throw new ProcessException("Current Out Of Range");
+                        return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
+                    break;
+                case ActionMode.CP_DISCHARGE:
+                    //var power = GetPowerFromRow(row1) * 1000;             //mW
+                    var power = Math.Abs(Nodes[Index].Current * Nodes[Index].Voltage) * 1000;       //mW
+                    if (Math.Abs(power - step.Action.Power) > StepTolerance.Power)
+                        return ErrorCode.DP_POWER_OUT_OF_RANGE;
+                    break;
+                case ActionMode.REST:
+                    break;
+                default:
+                    break;
+            }
+            return ErrorCode.NORMAL;
+        }
+
+        public static UInt32 StepCOCPointCheck(StepV2 step, double temp, int timeSpan)
+        {
+            double voltage = 0;
+            double current = 0;
+            //double temperature = 0;
+            switch (step.Action.Mode)
+            {
+                case ActionMode.CC_CV_CHARGE:
+                    //if (Nodes[Index].Status == "StepFinishByCut_I")
+                    if (Nodes[Index - 1].Status == StepEndString.EndByCurrent)
+                    {
+                        //current = GetCurrentFromRow(row) * -1;
+                        current = Nodes[Index - 1].Current * 1000;
+                        if (Math.Abs(current - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.CURRENT).Value) > StepTolerance.Current)
+                            return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
+                        voltage = Nodes[Index - 1].Voltage * 1000;
+                        if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance.Voltage)
+                            return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
+                    }
+                    else if (Nodes[Index - 1].Status == StepEndString.EndByTime)     //DST测试也会设定充电时间
+                    {
+                        if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance.Time)
+                            return ErrorCode.DP_TIME_OUT_OF_RANGE;
+                    }
+                    else
+                    {
+                        return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
+                    }
+                    break;
+                case ActionMode.CC_DISCHARGE:
+                    if (Nodes[Index - 1].Status == StepEndString.EndByVoltage)
+                    {
+                        voltage = Nodes[Index - 1].Voltage * 1000;
+                        if (Math.Abs(voltage - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE).Value) > StepTolerance.Voltage)
+                            return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
+                    }
+                    else if (Nodes[Index - 1].Status == StepEndString.EndByTime)
+                    {
+                        if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance.Time)
+                            return ErrorCode.DP_TIME_OUT_OF_RANGE;
+                    }
+                    else
+                    {
+                        return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
+                    }
+                    break;
+                case ActionMode.CP_DISCHARGE:
+                    if (Nodes[Index - 1].Status == StepEndString.EndByVoltage)
+                    {
+                        voltage = Nodes[Index - 1].Voltage * 1000;
+                        if (Math.Abs(voltage - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE).Value) > StepTolerance.Voltage)
+                            return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
+                    }
+                    else if (Nodes[Index - 1].Status == StepEndString.EndByTime)
+                    {
+                        if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance.Time)
+                            return ErrorCode.DP_TIME_OUT_OF_RANGE;
+                    }
+                    else
+                    {
+                        return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
+                    }
+                    break;
+                case ActionMode.REST:
+                    if (Nodes[Index - 1].Status == StepEndString.EndByTime)
+                    {
+                        if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance.Time)
+                            return ErrorCode.DP_TIME_OUT_OF_RANGE;
+                    }
+                    else
+                    {
+                        return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return ErrorCode.NORMAL;
+        }
+
+        //    ContinuityTolerance.Add(Column.STEPNO, 1);
+        //    ContinuityTolerance.Add(Column.STEP, 1);
+        //    ContinuityTolerance.Add(Column.TIME_MS, 1000);
+        //    ContinuityTolerance.Add(Column.TIME, 1);
+        //    ContinuityTolerance.Add(Column.CYCLE, 1);
+        //    ContinuityTolerance.Add(Column.LOOP, 1);
+        //    ContinuityTolerance.Add(Column.MODE, 1);
+        //    ContinuityTolerance.Add(Column.CURRENT, 0.1);   //A
+        //    ContinuityTolerance.Add(Column.VOLTAGE, 0.1);
+        //    ContinuityTolerance.Add(Column.TEMPERATURE, 1);
+        //    ContinuityTolerance.Add(Column.CAPACITY, 0.5);
+        //    ContinuityTolerance.Add(Column.TOTAL_CAPACITY, 0.5);        
+        //enum Column
+        //{
+        //    STEPNO,     //配方的Index，1234234234
+        //    STEP,       //真实的顺序，1234...n
+        //    TIME_MS,    //100，200，300
+        //    TIME,       //2020-07-24 08:55:31
+        //    CYCLE,      //外层循环？
+        //    LOOP,       //内层循环？
+        //    STEP_MODE,       //Rest, CC_CV_Charge, CC_Discharge
+        //    MODE,            //Step改变时为0，否则为1
+        //    CURRENT,
+        //    VOLTAGE,
+        //    TEMPERATURE,
+        //    CAPACITY,       //单个Step的电量
+        //    TOTAL_CAPACITY,  //
+        //    STATUS              //StepFinishByCut_V,StepFinishByCut_T,StepFinishByCut_I
+        //}
+        public static UInt32 ContinuityCheck(ProgramType type, StepV2 step)
+        {
+            double diff;
+
+            if (Nodes[Index].StepNo == 0)
+                return ErrorCode.DP_STEP_NO_JUMP;
+
+            //diff = (Convert.ToDouble(row1[Column.STEP]) - Convert.ToDouble(row0[Column.STEP]));
+            diff = Nodes[Index].Step - Nodes[Index - 1].Step;
+            if (diff < 0 || diff > 1)
+                return ErrorCode.DP_STEP_JUMP;
+
+            //diff = (Convert.ToDouble(row1[Column.TIME_MS]) - Convert.ToDouble(row0[Column.TIME_MS]));
+            diff = Nodes[Index].TimeInMS - Nodes[Index - 1].TimeInMS;
+            if (diff < 0 || diff > 1000)
+                return ErrorCode.DP_TIME_JUMP;
+
+            //DateTime t0 = DateTime.Parse(row0[Column.TIME]);
+            //DateTime t1 = DateTime.Parse(row1[Column.TIME]);
+            //diff = (t1 - t0).TotalSeconds;
+            diff = (Nodes[Index].Time - Nodes[Index - 1].Time).TotalSeconds;
+            if (diff < 0 || diff > 1)
+                return ErrorCode.DP_TIME_JUMP;
+
+            //if (Math.Abs(Convert.ToDouble(row1[Column.CYCLE]) - Convert.ToDouble(row0[Column.CYCLE])) > 1)
+            if (Math.Abs(Nodes[Index].Cycle - Nodes[Index - 1].Cycle) > 1)
+                return ErrorCode.DP_CYCLE_JUMP;
+
+            //if (Math.Abs(Convert.ToDouble(row1[Column.LOOP]) - Convert.ToDouble(row0[Column.LOOP])) > 1)
+            if (Math.Abs(Nodes[Index].Loop - Nodes[Index - 1].Loop) > 1)
+                return ErrorCode.DP_LOOP_JUMP;
+
+            //output.Add(Column.STEP_MODE, true);
+
+            //if (Math.Abs(Convert.ToDouble(row1[Column.MODE]) - Convert.ToDouble(row0[Column.MODE])) > 1)
+            if (Math.Abs(Nodes[Index].Mode - Nodes[Index - 1].Mode) > 1)
+                return ErrorCode.DP_MODE_JUMP;
+
+
+            //output.Add(Column.CURRENT, true);       //目前不挑错
+
+            //if (Math.Abs(Convert.ToDouble(row1[Column.VOLTAGE]) - Convert.ToDouble(row0[Column.VOLTAGE])) > 0.1)
+            //    output.Add(Column.VOLTAGE, false);
+            //else
+            //    output.Add(Column.VOLTAGE, true);
+            if (type.Name == "RC" || type.Name == "OCV")
+            {
+                if (step.Action.Mode == ActionMode.CC_DISCHARGE)
+                {
+                    if ((Nodes[Index].Voltage - Nodes[Index - 1].Voltage) > 0.005)       //RC或OCV实验的放电过程中，电压回弹超过5mV，则报错
+                        return ErrorCode.DP_DISCHARGE_VOLTAGE_JUMP_IN_RC_OCV;
+                }
+            }
+
+            //output.Add(Column.TEMPERATURE, true);       //目前不挑错
+
+            //output.Add(Column.CAPACITY, true);       //目前不挑错
+
+            //output.Add(Column.TOTAL_CAPACITY, true);       //目前不挑错
+
+            if (Nodes[Index].Status == StepEndString.EndByError)
+                return ErrorCode.DP_CHECKSUM;
+
+            return ErrorCode.NORMAL;
+        }
+        private static string BuildStringFromRow(Dictionary<Column, string> row)
+        {
+            string output = string.Empty;
+            foreach (var key in row.Keys)
+            {
+                output += row[key] + ",";
+            }
+            return output.Substring(0, output.Length - 1);
+        }
+        public static bool ErrorHandler(ref List<Event> events, uint result, string filepath, Program program, Recipe recipe, TestRecord record, int lineIndex, params object[] args)
+        {
+            Event evt = new Event();
+            string info = string.Empty;
+            string solution = string.Empty;
+            string oldLine1 = null;
+            if (StringList[Index] != null)
+                oldLine1 = StringList[Index];
+            //string newLine1 = string.Empty;
+            bool ret;
+            //Dictionary<Column, string> row0 = new Dictionary<Column, string>();
+            //Dictionary<Column, string> row1 = new Dictionary<Column, string>();
+            switch (result)
+            {
+                case ErrorCode.DP_CHECKSUM:       //只有step和time不对，直接修复
+                    RestoreCheckSumError();
+                    solution = "Auto Fixed";
+                    ret = true;
+                    break;
+                default:
+                    var str = $"{ErrorCode.GetDescription(result, args)}\n";
+                    foreach (var s in StringList)
+                    {
+                        str += $"{s}\n";
+                    }
+                    str += $"Continue to commit?";
+                    var userRet = MessageBox.Show(str, "Data Preprocessing Error", MessageBoxButton.YesNo);
+                    if (userRet == MessageBoxResult.Yes)
+                    {
+                        solution = "Ignored";
+                        ret = true;
+                    }
+                    else
+                        ret = false;
+                    break;
+            }
+            if (ret)
+            {
+                evt.Module = Module.DataPreprocessor;
+                evt.Type = EventType.Warning;
+                evt.Timestamp = DateTime.Now;
+                info = GetChromaEventInfo(lineIndex, ErrorCode.GetDescription(result, args), solution, oldLine1);
+                evt.Description = EventDescriptor(filepath, program, recipe, record, info);
+                events.Add(evt);
+            }
+            return ret;
+        }
+
+        private static void RestoreCheckSumError()
+        {
+            //throw new NotImplementedException();
+            MessageBox.Show("It's not ready dude.");
+        }
+
+        private static string EventDescriptor(string filepath, Program program, Recipe recipe, TestRecord record, string info)
+        {
+            return $"Battery Type: {program.Project.BatteryType.Name}\n" +
+                $"Project: {program.Project.Name}\n" +
+                $"Program: {program.Name}\n" +
+                $"Recipe: {recipe.Name}\n" +
+                //$"Test Record ID: {record.Id}\n" +
+                //$"Battery: {record.BatteryStr}\n" +
+                //$"Tester: {record.TesterStr}\n" +
+                //$"Channel: {record.ChannelStr}\n" +
+                //$"Chamber: {record.ChamberStr}\n" +
+                $"File Path: {record.TestFilePath}\n" +
+                //$"Operator: {record.Operator}\n" +
+                $"{info}";
+        }
+    }
+
+    public enum Column
+    {
+        STEPNO,     //配方的Index，1234234234
+        STEP,       //真实的顺序，1234...n
+        TIME_MS,    //100，200，300
+        TIME,       //2020-07-24 08:55:31
+        CYCLE,      //外层循环？
+        LOOP,       //内层循环？
+        STEP_MODE,       //Rest, CC_CV_Charge, CC_Discharge
+        MODE,            //Step改变时为0，否则为1
+        CURRENT,
+        VOLTAGE,
+        TEMPERATURE,
+        CAPACITY,       //单个Step的电量
+        TOTAL_CAPACITY,  //
+        STATUS              //StepFinishByCut_V,StepFinishByCut_T,StepFinishByCut_I
+    }
+    public class ChromaNode
+    {
+        public Int32 StepNo { get; set; }
+        public Int32 Step { get; set; }
+        public int TimeInMS { get; set; }
+        public DateTime Time { get; set; }
+        public byte Cycle { get; set; }
+        public byte Loop { get; set; }
+        public ActionMode StepMode { get; set; }
+        public byte Mode { get; set; }
+        public double Current { get; set; }
+        public double Voltage { get; set; }
+        public double Temperature { get; set; }
+        public double Capacity { get; set; }
+        public double TotalCapacity { get; set; }
+        public string Status { get; set; }
+    }
+    public static class StepTolerance
+    {
+        public static double Current { get { return 10; } } //mA
+        public static double Temperature { get { return 3.5; } }    //deg
+        public static double Voltage { get { return 50; } } //mV
+        public static double Power { get { return 100; } }
+        public static double Time { get { return 3; } }     //S
+    }
+    public static class StepEndString
+    {
+        public static string EndByCurrent { get { return "StepFinishByCut_I"; } }
+        public static string EndByVoltage { get { return "StepFinishByCut_V"; } }
+        public static string EndByPower { get { return ""; } }
+        public static string EndByTemperature { get { return ""; } }
+        public static string EndByTime { get { return "StepFinishByCut_T"; } }
+        public static string EndByError { get { return "Warring_CheckSum"; } }
     }
 }

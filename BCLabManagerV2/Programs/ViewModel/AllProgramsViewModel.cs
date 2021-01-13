@@ -884,7 +884,7 @@ namespace BCLabManager.ViewModel
                         SelectedProgram._program,
                         SelectedRecipe._recipe,
                         evm.Tester.ITesterProcesser);
-                    if (filePath == string.Empty)
+                    //if (filePath == string.Empty)
                         return;
                     SelectedTestRecord.Record.TestFilePath = filePath;
 
