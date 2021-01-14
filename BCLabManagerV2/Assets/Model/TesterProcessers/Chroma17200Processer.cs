@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using MathNet.Numerics;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -968,6 +969,17 @@ namespace BCLabManager.Model
                 default: return ActionMode.NA;
             }
         }
+        private static string ConvertActionModeToString(ActionMode v)
+        {
+            switch (v)
+            {
+                case ActionMode.CC_CV_CHARGE: return "CC_CV_Charge";
+                case ActionMode.CC_DISCHARGE: return "CC_Discharge";
+                case ActionMode.CP_DISCHARGE: return "CP_Discharge";
+                case ActionMode.REST: return "Rest";
+                default: return string.Empty;
+            }
+        }
 
         private static Dictionary<Column, string> GetRowFromString(string dataLine)
         {
@@ -1303,8 +1315,15 @@ namespace BCLabManager.Model
             //Dictionary<Column, string> row1 = new Dictionary<Column, string>();
             switch (result)
             {
-                case ErrorCode.DP_CHECKSUM:       //只有step和time不对，直接修复
+                case ErrorCode.DP_CHECKSUM:
+                    if (Nodes.Where(o => o.Status == StepEndString.EndByError).Count() > 1)
+                    {
+                        MessageBox.Show("Unhandled!");
+                        ret = false;
+                        break;
+                    }
                     RestoreCheckSumError();
+                    //MessageBox.Show("Unfinished yet.");
                     solution = "Auto Fixed";
                     ret = true;
                     break;
@@ -1340,7 +1359,140 @@ namespace BCLabManager.Model
         private static void RestoreCheckSumError()
         {
             //throw new NotImplementedException();
-            MessageBox.Show("It's not ready dude.");
+            RestoreTimeInMs();
+            RestorePhysicalColumns();
+            RestoreUnchangedColumns();
+            UpdateStringList();
+        }
+
+        private static void UpdateStringList()
+        {
+            StringList[Index] = $"{Nodes[Index].StepNo},{Nodes[Index].Step},{Nodes[Index].TimeInMS},{Nodes[Index].Time.ToString("yyyy-MM-dd HH:mm:ss")},{Nodes[Index].Cycle},{Nodes[Index].Loop},{ConvertActionModeToString(Nodes[Index].StepMode)},{Nodes[Index].Mode},{Nodes[Index].Current},{Nodes[Index].Voltage},{Nodes[Index].Temperature},{Nodes[Index].Capacity},{Nodes[Index].TotalCapacity},{Nodes[Index].Status}";
+        }
+
+        private static void RestorePhysicalColumns()
+        {
+            double[] xdata;
+            double[] ydata;
+            Tuple<double, double> p;
+            double b, a;
+
+            xdata = Nodes.Where(o => o.Status != StepEndString.EndByError).Select(o => Convert.ToDouble(o.TimeInMS)).ToArray();
+            ydata = Nodes.Where(o => o.Status != StepEndString.EndByError).Select(o => o.Current).ToArray();
+            p = Fit.Line(xdata, ydata);
+            b = p.Item1; // == 10; intercept
+            a = p.Item2; // == 0.5; slope
+            double newCurrent = a * Nodes[Index].TimeInMS + b;
+            Nodes[Index].Current = Math.Round(newCurrent, 4);
+
+
+            ydata = Nodes.Where(o => o.Status != StepEndString.EndByError).Select(o => o.Voltage).ToArray();
+            p = Fit.Line(xdata, ydata);
+            b = p.Item1; // == 10; intercept
+            a = p.Item2; // == 0.5; slope
+            double newVoltage = a * Nodes[Index].TimeInMS + b;
+            Nodes[Index].Voltage = Math.Round(newVoltage, 4);
+
+            ydata = Nodes.Where(o => o.Status != StepEndString.EndByError).Select(o => o.Temperature).ToArray();
+            p = Fit.Line(xdata, ydata);
+            b = p.Item1; // == 10; intercept
+            a = p.Item2; // == 0.5; slope
+            double newTemperature = a * Nodes[Index].TimeInMS + b;
+            Nodes[Index].Temperature = Math.Round(newTemperature, 4);
+
+            ydata = Nodes.Where(o => o.Status != StepEndString.EndByError).Select(o => o.Capacity).ToArray();
+            p = Fit.Line(xdata, ydata);
+            b = p.Item1; // == 10; intercept
+            a = p.Item2; // == 0.5; slope
+            double newCapacity = a * Nodes[Index].TimeInMS + b;
+            Nodes[Index].Capacity = Math.Round(newCapacity, 4);
+
+            ydata = Nodes.Where(o => o.Status != StepEndString.EndByError).Select(o => o.TotalCapacity).ToArray();
+            p = Fit.Line(xdata, ydata);
+            b = p.Item1; // == 10; intercept
+            a = p.Item2; // == 0.5; slope
+            double newTotalCapacity = a * Nodes[Index].TimeInMS + b;
+            Nodes[Index].TotalCapacity = Math.Round(newTotalCapacity, 4);
+        }
+
+        private static void RestoreUnchangedColumns()
+        {
+            if (Nodes[Index - 1].StepNo == Nodes[Index + 1].StepNo)
+            {
+                if (Nodes[Index - 1].StepNo != Nodes[Index].StepNo)
+                    Nodes[Index].StepNo = Nodes[Index - 1].StepNo;
+            }
+            else
+            {
+                ;//未处理
+            }
+            if (Nodes[Index - 1].Step == Nodes[Index + 1].Step)
+            {
+                if (Nodes[Index - 1].Step != Nodes[Index].Step)
+                    Nodes[Index].Step = Nodes[Index - 1].Step;
+            }
+            else
+            {
+                ;//未处理
+            }
+            if (Nodes[Index - 1].Cycle == Nodes[Index + 1].Cycle)
+            {
+                if (Nodes[Index - 1].Cycle != Nodes[Index].Cycle)
+                    Nodes[Index].Cycle = Nodes[Index - 1].Cycle;
+            }
+            else
+            {
+                ;//未处理
+            }
+            if (Nodes[Index - 1].Loop == Nodes[Index + 1].Loop)
+            {
+                if (Nodes[Index - 1].Loop != Nodes[Index].Loop)
+                    Nodes[Index].Loop = Nodes[Index - 1].Loop;
+            }
+            else
+            {
+                ;//未处理
+            }
+            if (Nodes[Index - 1].StepMode == Nodes[Index + 1].StepMode)
+            {
+                if (Nodes[Index - 1].StepMode != Nodes[Index].StepMode)
+                    Nodes[Index].StepMode = Nodes[Index - 1].StepMode;
+            }
+            else
+            {
+                ;//未处理
+            }
+            if (Nodes[Index - 1].Mode == Nodes[Index + 1].Mode)
+            {
+                if (Nodes[Index - 1].Mode != Nodes[Index].Mode)
+                    Nodes[Index].Mode = Nodes[Index - 1].Mode;
+            }
+            else
+            {
+                ;//未处理
+            }
+            if (Nodes[Index - 1].Status == Nodes[Index + 1].Status)
+            {
+                if (Nodes[Index - 1].Status != Nodes[Index].Status)
+                    Nodes[Index].Status = Nodes[Index - 1].Status;
+            }
+            else
+            {
+                ;//未处理
+            }
+        }
+
+        private static void RestoreTimeInMs()
+        {
+            List<int> Diffs = new List<int>();
+            for (int i = 1; i < Nodes.Count; i++)
+            {
+                if (i == Index || i == Index + 1)
+                    continue;
+                Diffs.Add(Nodes[i].TimeInMS - Nodes[i - 1].TimeInMS);
+            }
+            var diff = Diffs.GroupBy(o => o).Max(o => o).First();
+            Nodes[Index].TimeInMS = Nodes[Index - 1].TimeInMS + diff;
         }
 
         private static string EventDescriptor(string filepath, Program program, Recipe recipe, TestRecord record, string info)
