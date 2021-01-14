@@ -313,11 +313,11 @@ namespace BCLabManager.Model
         internal void Abandon(TestRecord testRecord)
         {
             testRecord.Status = TestStatus.Abandoned;
-            //if (testRecord.TestFilePath != string.Empty)
-            //{
-            //    File.Move(testRecord.TestFilePath, testRecord.TestFilePath + "_ABANDONED");
-            //    testRecord.TestFilePath += "_ABANDONED";
-            //}
+            if (testRecord.TestFilePath != string.Empty)
+            {
+                File.Move(testRecord.TestFilePath, testRecord.TestFilePath + "_ABANDONED");
+                testRecord.TestFilePath += "_ABANDONED";
+            }
             DatabaseUpdate(testRecord);
         }
 
