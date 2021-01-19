@@ -328,6 +328,23 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public double LastCycle
+        {
+            get
+            {
+                return _record.LastCycle;
+            }
+            set
+            {
+                if (value == _record.LastCycle)
+                    return;
+
+                _record.LastCycle = value;
+
+                RaisePropertyChanged("LastCycle");
+            }
+        }
+
         public double NewCycle
         {
             get

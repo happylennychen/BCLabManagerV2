@@ -65,6 +65,7 @@ namespace BCLabManager.Model
             edittarget.ChannelStr = item.ChannelStr;
             edittarget.Comment = item.Comment;
             edittarget.EndTime = item.EndTime;
+            edittarget.LastCycle = item.LastCycle;
             edittarget.NewCycle = item.NewCycle;
             edittarget.ProgramStr = item.ProgramStr;
             edittarget.RecipeStr = item.RecipeStr;
@@ -77,6 +78,7 @@ namespace BCLabManager.Model
             testRecord.BatteryTypeStr = batteryTypeStr;
             testRecord.ProjectStr = projectName;
             testRecord.BatteryStr = battery.Name;
+            testRecord.LastCycle = battery.CycleCount;
             if (chamber != null)
                 testRecord.ChamberStr = chamber.Name;
             testRecord.TesterStr = testerStr;

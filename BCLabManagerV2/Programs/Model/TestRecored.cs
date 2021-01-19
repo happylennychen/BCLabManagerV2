@@ -116,6 +116,13 @@ namespace BCLabManager.Model
             set { SetProperty(ref _endTime, value); }
         }
         public String Comment { get; set; }
+
+        private double _lastCycle;
+        public double LastCycle
+        {
+            get { return _lastCycle; }
+            set { SetProperty(ref _lastCycle, value); }
+        }
         //public Double NewCycle { get; set; }
         private double _newCycle = 1;
         public double NewCycle

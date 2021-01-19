@@ -290,6 +290,10 @@
     <Compile Include="Migrations\20201021020401_Event.designer.cs">
       <DependentUpon>20201021020401_Event.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20210115031443_LastCycle.cs" />
+    <Compile Include="Migrations\20210115031443_LastCycle.designer.cs">
+      <DependentUpon>20210115031443_LastCycle.cs</DependentUpon>
+    </Compile>
     <Compile Include="Services\ErrorCode.cs" />
     <Compile Include="Services\Module.cs" />
     <Compile Include="Services\EventService.cs" />

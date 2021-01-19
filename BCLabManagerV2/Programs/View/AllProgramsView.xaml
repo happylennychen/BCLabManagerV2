@@ -165,6 +165,7 @@
                         <DataGridTemplateColumn Header="Start Time" CellTemplate="{StaticResource StartTime}"></DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="End Time" CellTemplate="{StaticResource EndTime}"></DataGridTemplateColumn>
                         <DataGridTextColumn Header="Duration" IsReadOnly="True" Binding="{Binding Path=Duration}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Last Cycle" IsReadOnly="True" Binding="{Binding Path=LastCycle}"></DataGridTextColumn>
                         <DataGridTextColumn Header="New Cycle" IsReadOnly="True" Binding="{Binding Path=NewCycle}"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>

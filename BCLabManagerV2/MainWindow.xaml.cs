@@ -337,7 +337,9 @@ namespace BCLabManager
             Grid.SetColumnSpan(ProjectBorder, 3);
             Grid.SetColumn(ProjectSettingBorder, 4);
             Grid.SetColumnSpan(ProjectSettingBorder, 5);
-            Title = "BCLM-R v0.3";
+            //Title = "BCLM-R v0.2.0.5";
+            var array = Title.Split();
+            Title = $"{array[0]}-R {array[1]}";
         }
     }
 }

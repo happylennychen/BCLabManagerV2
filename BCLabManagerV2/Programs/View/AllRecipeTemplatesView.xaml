@@ -9,6 +9,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1200">
     <UserControl.Resources>
+        <v:LoopLabelConverter x:Key="llc"></v:LoopLabelConverter>
+        <v:IndexConverter x:Key="idc"></v:IndexConverter>
         <HierarchicalDataTemplate DataType="{x:Type vm:StepV2ViewModel}" 
                                   ItemsSource="{Binding Path=CutOffConditions}">
             <DockPanel LastChildFill="True" Margin="10">
@@ -17,14 +19,10 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Index=" Margin="0,0,5,0" />
                         <TextBlock Text="{Binding Path=Index}" />
-                        <TextBlock Text="Prerest=" Margin="5,0,0,0" />
-                        <TextBlock Text="{Binding Path=Prerest}" />
-                        <TextBlock Text="Rest=" Margin="5,0,0,0" />
-                        <TextBlock Text="{Binding Path=Rest}" />
-                        <TextBlock Text="Loop1Label=" Margin="5,0,0,0" />
-                        <TextBlock Text="{Binding Path=Loop1Label}" />
-                        <TextBlock Text="Loop2Label=" Margin="5,0,0,0" />
-                        <TextBlock Text="{Binding Path=Loop2Label}" />
+                        <TextBlock Text="Loop1Label=" Margin="5,0,0,0" Visibility="{Binding Path=Loop1Label, Converter={StaticResource llc}}" />
+                        <TextBlock Text="{Binding Path=Loop1Label}" Visibility="{Binding Path=Loop1Label, Converter={StaticResource llc}}" />
+                        <TextBlock Text="Loop2Label=" Margin="5,0,0,0" Visibility="{Binding Path=Loop2Label, Converter={StaticResource llc}}"/>
+                        <TextBlock Text="{Binding Path=Loop2Label}" Visibility="{Binding Path=Loop2Label, Converter={StaticResource llc}}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Mode" Margin="0,0,5,0" />
@@ -47,16 +45,16 @@
                 <TextBlock Text="{Binding Path=Value}" Margin="0,0,5,0"/>
                 <TextBlock Text="JumpType=" Margin="0,0,5,0" />
                 <TextBlock Text="{Binding Path=JumpType}" Margin="0,0,5,0"/>
-                <TextBlock Text="Index=" Margin="0,0,5,0" />
-                <TextBlock Text="{Binding Path=Index}" Margin="0,0,5,0"/>
-                <TextBlock Text="Loop1Target=" Margin="0,0,5,0" />
-                <TextBlock Text="{Binding Path=Loop1Target}" Margin="0,0,5,0"/>
-                <TextBlock Text="Loop1Count=" Margin="0,0,5,0" />
-                <TextBlock Text="{Binding Path=Loop1Count}" Margin="0,0,5,0"/>
-                <TextBlock Text="Loop2Target=" Margin="0,0,5,0" />
-                <TextBlock Text="{Binding Path=Loop2Target}" Margin="0,0,5,0"/>
-                <TextBlock Text="Loop2Count=" Margin="0,0,5,0" />
-                <TextBlock Text="{Binding Path=Loop2Count}" Margin="0,0,5,0"/>
+                <TextBlock Text="Index=" Margin="0,0,5,0" Visibility="{Binding Path=JumpType, Converter={StaticResource idc}}"/>
+                <TextBlock Text="{Binding Path=Index}" Margin="0,0,5,0" Visibility="{Binding Path=JumpType, Converter={StaticResource idc}}"/>
+                <TextBlock Text="Loop1Target=" Margin="0,0,5,0"  Visibility="{Binding Path=Loop1Target, Converter={StaticResource llc}}"/>
+                <TextBlock Text="{Binding Path=Loop1Target}" Margin="0,0,5,0"  Visibility="{Binding Path=Loop1Target, Converter={StaticResource llc}}"/>
+                <TextBlock Text="Loop1Count=" Margin="0,0,5,0"   Visibility="{Binding Path=Loop1Target, Converter={StaticResource llc}}"/>
+                <TextBlock Text="{Binding Path=Loop1Count}" Margin="0,0,5,0"  Visibility="{Binding Path=Loop1Target, Converter={StaticResource llc}}"/>
+                <TextBlock Text="Loop2Target=" Margin="0,0,5,0"   Visibility="{Binding Path=Loop2Target, Converter={StaticResource llc}}"/>
+                <TextBlock Text="{Binding Path=Loop2Target}" Margin="0,0,5,0"  Visibility="{Binding Path=Loop2Target, Converter={StaticResource llc}}"/>
+                <TextBlock Text="Loop2Count=" Margin="0,0,5,0"   Visibility="{Binding Path=Loop2Target, Converter={StaticResource llc}}"/>
+                <TextBlock Text="{Binding Path=Loop2Count}" Margin="0,0,5,0"  Visibility="{Binding Path=Loop2Target, Converter={StaticResource llc}}"/>
             </StackPanel>
         </DataTemplate>
 
