@@ -28,20 +28,31 @@ namespace BCLabManager.ViewModel
         {
             _step = step;
             _step.PropertyChanged += _Step_PropertyChanged;
-            CreateCOCs();
+            CreateCOBs();
+            CreateProtections();
         }
 
-        private void CreateCOCs()
+        private void CreateCOBs()
         {
-            List<CutOffConditionViewModel> all =
-                (from sub in _step.CutOffConditions
-                 select new CutOffConditionViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+            List<CutOffBehaviorViewModel> all =
+                (from sub in _step.CutOffBehaviors
+                 select new CutOffBehaviorViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+
+            this.CutOffBehaviors = new ObservableCollection<CutOffBehaviorViewModel>(all);     //再转换成Observable
+        }
+
+        private void CreateProtections()
+        {
+
+            List<ProtectionViewModel> all =
+                (from sub in _step.Protections
+                 select new ProtectionViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
             //foreach (RecipeModelViewModel batmod in all)
             //batmod.PropertyChanged += this.OnRecipeModelViewModelPropertyChanged;
 
-            this.CutOffConditions = new ObservableCollection<CutOffConditionViewModel>(all);     //再转换成Observable
-            //this.AllCustomers.CollectionChanged += this.OnCollectionChanged;
+            this.Protections = new ObservableCollection<ProtectionViewModel>(all);     //再转换成Observable
+                                                                                       //this.AllCustomers.CollectionChanged += this.OnCollectionChanged
         }
 
         private void _Step_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -108,8 +119,11 @@ namespace BCLabManager.ViewModel
                 return _step.Loop2Label;
             }
         }
-        public ObservableCollection<CutOffConditionViewModel> CutOffConditions
+        //public ObservableCollection<CutOffConditionViewModel> CutOffConditions
+        //{ get; set; }
+        public ObservableCollection<CutOffBehaviorViewModel> CutOffBehaviors
         { get; set; }
+        public ObservableCollection<ProtectionViewModel> Protections = new ObservableCollection<ProtectionViewModel>();
         #endregion // Customer Properties
     }
 }

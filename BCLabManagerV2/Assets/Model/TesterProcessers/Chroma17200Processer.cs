@@ -348,6 +348,7 @@ namespace BCLabManager.Model
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
+                result = ErrorCode.UNDEFINED;
             }
             finally
             {
@@ -368,49 +369,110 @@ namespace BCLabManager.Model
                     File.Delete(tempFilePath);
                 }
             }
-            return true;
+            if (result == ErrorCode.NORMAL)
+                return true;
+            else
+                return false;
         }
 
         private StepV2 GetNewTargetStep(StepV2 currentStep, List<StepV2> fullSteps, string status, double temperature, int timeSpan)
         {
             StepV2 nextStep = null;
-            CutOffCondition coc = null;
+            CutOffBehavior cob = null;
             switch (status)
             {
                 case "StepFinishByCut_V":
-                    coc = currentStep.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE);
+                    cob = currentStep.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.VOLTAGE);
                     break;
                 case "StepFinishByCut_I":
-                    coc = currentStep.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.CURRENT);
+                    cob = currentStep.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.CURRENT);
                     break;
                 case "StepFinishByCut_T":
-                    coc = currentStep.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME);
+                    cob = currentStep.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME);
                     break;
             }
-            if (coc != null)
-                nextStep = Jump(coc, fullSteps, currentStep.Index);
+            if (cob != null)
+                nextStep = Jump(cob, fullSteps, currentStep.Index);
             return nextStep;
         }
 
-        private static StepV2 Jump(CutOffCondition coc, List<StepV2> fullSteps, int currentStepIndex)
+        private static StepV2 Jump(CutOffBehavior cob, List<StepV2> fullSteps, int currentStepIndex)
         {
             StepV2 nextStep = null;
-            switch (coc.JumpType)
+            if (cob.JumpBehaviors.Count == 1)
             {
-                case JumpType.INDEX:
-                    nextStep = fullSteps.SingleOrDefault(o => o.Index == coc.Index);
-                    break;
-                case JumpType.END:
-                    break;
-                case JumpType.NEXT:
-                    nextStep = fullSteps.SingleOrDefault(o => o.Index == currentStepIndex + 1);
-                    break;
-                case JumpType.LOOP:
-                    throw new NotImplementedException();
+                var jpb = cob.JumpBehaviors.First();
+                switch (jpb.JumpType)
+                {
+                    case JumpType.INDEX:
+                        nextStep = fullSteps.SingleOrDefault(o => o.Index == jpb.Index);
+                        break;
+                    case JumpType.END:
+                        break;
+                    case JumpType.NEXT:
+                        nextStep = fullSteps.SingleOrDefault(o => o.Index == currentStepIndex + 1);
+                        break;
+                    case JumpType.LOOP:
+                        throw new NotImplementedException();
+                }
+            }
+            else if (cob.JumpBehaviors.Count > 1)
+            {
+                JumpBehavior validJPB = null;
+                foreach (var jpb in cob.JumpBehaviors)
+                {
+                    bool isConditionMet = false;
+                    double leftvalue = 0;
+                    double rightvalue = jpb.Condition.Value;
+                    switch (jpb.Condition.Parameter)
+                    {
+                        case Parameter.CURRENT: leftvalue = DataPreprocesser.Nodes[DataPreprocesser.Index].Current; break;
+                        case Parameter.POWER: leftvalue = DataPreprocesser.Nodes[DataPreprocesser.Index].Current * DataPreprocesser.Nodes[DataPreprocesser.Index].Voltage; break;
+                        case Parameter.TEMPERATURE: leftvalue = DataPreprocesser.Nodes[DataPreprocesser.Index].Temperature; break;
+                        case Parameter.TIME: leftvalue = DataPreprocesser.Nodes[DataPreprocesser.Index].TimeInMS / 1000; break;
+                        case Parameter.VOLTAGE: leftvalue = DataPreprocesser.Nodes[DataPreprocesser.Index].Voltage; break;
+                    }
+                    switch (jpb.Condition.Mark)
+                    {
+                        case CompareMarkEnum.EqualTo:
+                            if (leftvalue == rightvalue)
+                                isConditionMet = true;
+                            break;
+                        case CompareMarkEnum.LargerThan:
+                            if (leftvalue > rightvalue)
+                                isConditionMet = true;
+                            break;
+                        case CompareMarkEnum.SmallerThan:
+                            if (leftvalue < rightvalue)
+                                isConditionMet = true;
+                            break;
+                    }
+                    if (isConditionMet)
+                    {
+                        validJPB = jpb;
+                        break;
+                    }
+                }
+                if (validJPB != null)
+                {
+                    switch (validJPB.JumpType)
+                    {
+                        case JumpType.INDEX:
+                            nextStep = fullSteps.SingleOrDefault(o => o.Index == validJPB.Index);
+                            break;
+                        case JumpType.END:
+                            break;
+                        case JumpType.NEXT:
+                            nextStep = fullSteps.SingleOrDefault(o => o.Index == currentStepIndex + 1);
+                            break;
+                        case JumpType.LOOP:
+                            throw new NotImplementedException();
+                    }
+                }
             }
             return nextStep;
         }
-
+#if false
         private static StepV2 Compare(CutOffCondition coc, double value, double tolerance, List<StepV2> fullSteps, int currentStepIndex)
         {
             StepV2 nextStep = null;
@@ -431,7 +493,7 @@ namespace BCLabManager.Model
             //}
             return nextStep;
         }
-
+#endif
         private UInt32 StepActionModeCheck(ActionMode mode, ActionMode actionMode)
         {
             if (mode != actionMode)
@@ -505,7 +567,7 @@ namespace BCLabManager.Model
                     fVoltOld = fVoltn;
                 fVoltOld = fVoltn;
 
-                #region skip other except log data line
+#region skip other except log data line
                 strToken = strTemp.Split(chSeperate, StringSplitOptions.None);  //split column by ',' character
                 //if (strToken.Length < (int)O2TXTRecord.TxtAccMah)
                 if (strToken.Length < 13)   //Leon: 被逗号分出的份数小于13，意味着不是数据行
@@ -532,9 +594,9 @@ namespace BCLabManager.Model
                         continue;
                     }
                 }
-                #endregion
+#endregion
 
-                #region call format parsing, to get correct value for log line
+#region call format parsing, to get correct value for log line
 
                 //iNumSrlNow = 0;
                 ftmp = 1000F;      //Chroma is in A/V/Ahr format
@@ -548,12 +610,12 @@ namespace BCLabManager.Model
                     iElipseTime = 1;
                 else
                     iElipseTime = 0;
-                #endregion
+#endregion
 
                 if ((sVoltage.Length != 0) && (sCurrent.Length != 0) &&
                     (sTemp.Length != 0) && (sAccM.Length != 0) && (sDate.Length != 0) && iNumSrlNow != 0)
                 {
-                    #region check volt/curr/temp/accm conveting to float
+#region check volt/curr/temp/accm conveting to float
                     if (!float.TryParse(sVoltage, out fVoltn))
                     {
                         result = 1;
@@ -577,14 +639,14 @@ namespace BCLabManager.Model
                     fVoltn *= ftmp;
                     fCurrn *= ftmp;
                     fAccmn *= ftmp;
-                    #endregion
+#endregion
 
                     if (fVoltn > output.fMaxExpVolt) output.fMaxExpVolt = fVoltn;//set maximum voltage value from raw data
                     if (fVoltn < output.fMinExpVolt) output.fMinExpVolt = fVoltn;
 
 
                     //bReachHighVolt = true;  //(20201109)for leon miss
-                    #region check all log data about voltage/current, to get bReachHighVolt, bStartExpData, bStopExpData, and, bReachLowVolt value
+#region check all log data about voltage/current, to get bReachHighVolt, bStartExpData, bStopExpData, and, bReachLowVolt value
                     if (!bReachHighVolt)
                     {       //initially, first time must go here, suppose not reach high voltage
                         if ((Math.Abs(fVoltn - output.fLimitChgVolt) < iHighVoltDiff))    //maybe log will only be idle stage after charge_to_full, set higher hysteresis
@@ -648,7 +710,7 @@ namespace BCLabManager.Model
                             output.fAccmAhrCap = Math.Abs(fAccmn);
                         }
                     }
-                    #endregion
+#endregion
 
                     if ((bStartExpData) && (!bStopExpData))     //experiment data starts but not stop
                     {
@@ -659,7 +721,7 @@ namespace BCLabManager.Model
                             //CreateNewError(iNumSrlNow, fVoltn, ret);
                             //(E141201)
                         }
-                        #region check raw data is resonable or not
+#region check raw data is resonable or not
                         if (iNumColCnt == 0)        //first one record
                         {
                             iNumSrlStart = iNumSrlNow;
@@ -721,7 +783,7 @@ namespace BCLabManager.Model
                             //if(Math.Abs(fVoltn - fVoltOld) != 0)
                             //fVoltageDiff = Math.Abs(fVoltn - fVoltOld);
                         }   //if (iNumColCnt == 0)		else	(first one)
-                        #endregion
+#endregion
 
                         if (result != 0)
                         {
@@ -1129,7 +1191,8 @@ namespace BCLabManager.Model
                     //if (Nodes[Index].Status == "StepFinishByCut_I")
                     if (Nodes[Index - 1].Status == StepEndString.EndByCurrent)
                     {
-                        //current = GetCurrentFromRow(row) * -1;
+                        if (step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.CURRENT) == null)
+                            return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
                         current = Nodes[Index - 1].Current * 1000;
                         if (Math.Abs(current - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.CURRENT).Value) > StepTolerance.Current)
                             return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
@@ -1139,6 +1202,8 @@ namespace BCLabManager.Model
                     }
                     else if (Nodes[Index - 1].Status == StepEndString.EndByTime)     //DST测试也会设定充电时间
                     {
+                        if (step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME) == null)
+                            return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
                         if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance.Time)
                             return ErrorCode.DP_TIME_OUT_OF_RANGE;
                     }
@@ -1150,12 +1215,16 @@ namespace BCLabManager.Model
                 case ActionMode.CC_DISCHARGE:
                     if (Nodes[Index - 1].Status == StepEndString.EndByVoltage)
                     {
+                        if (step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE) == null)
+                            return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
                         voltage = Nodes[Index - 1].Voltage * 1000;
                         if (Math.Abs(voltage - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE).Value) > StepTolerance.Voltage)
                             return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
                     }
                     else if (Nodes[Index - 1].Status == StepEndString.EndByTime)
                     {
+                        if (step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME) == null)
+                            return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
                         if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance.Time)
                             return ErrorCode.DP_TIME_OUT_OF_RANGE;
                     }
@@ -1167,12 +1236,16 @@ namespace BCLabManager.Model
                 case ActionMode.CP_DISCHARGE:
                     if (Nodes[Index - 1].Status == StepEndString.EndByVoltage)
                     {
+                        if (step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE) == null)
+                            return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
                         voltage = Nodes[Index - 1].Voltage * 1000;
                         if (Math.Abs(voltage - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE).Value) > StepTolerance.Voltage)
                             return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
                     }
                     else if (Nodes[Index - 1].Status == StepEndString.EndByTime)
                     {
+                        if (step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME) == null)
+                            return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
                         if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance.Time)
                             return ErrorCode.DP_TIME_OUT_OF_RANGE;
                     }
@@ -1184,6 +1257,8 @@ namespace BCLabManager.Model
                 case ActionMode.REST:
                     if (Nodes[Index - 1].Status == StepEndString.EndByTime)
                     {
+                        if (step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME) == null)
+                            return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
                         if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance.Time)
                             return ErrorCode.DP_TIME_OUT_OF_RANGE;
                     }
@@ -1360,6 +1435,7 @@ namespace BCLabManager.Model
         {
             //throw new NotImplementedException();
             RestoreTimeInMs();
+            RestoreTime();
             RestorePhysicalColumns();
             RestoreUnchangedColumns();
             UpdateStringList();
@@ -1377,8 +1453,24 @@ namespace BCLabManager.Model
             Tuple<double, double> p;
             double b, a;
 
-            xdata = Nodes.Where(o => o.Status != StepEndString.EndByError).Select(o => Convert.ToDouble(o.TimeInMS)).ToArray();
-            ydata = Nodes.Where(o => o.Status != StepEndString.EndByError).Select(o => o.Current).ToArray();
+            int startTime = Nodes.First().TimeInMS;
+            int endTime = Nodes.Last().TimeInMS;
+            for (int i = Nodes.Count() - 1; i >= 0; i--)
+            {
+                if (Nodes[i].StepMode != Nodes[Index].StepMode)
+                {
+                    if (i > Index)
+                        endTime = Nodes[i - 1].TimeInMS;
+                    else if (i < Index)
+                    {
+                        startTime = Nodes[i + 1].TimeInMS;
+                        break;
+                    }
+                }
+            }
+            var nodesClip = Nodes.Where(o => o.Status != StepEndString.EndByError && o.TimeInMS >= startTime && o.TimeInMS <= endTime);
+            xdata = nodesClip.Select(o => Convert.ToDouble(o.TimeInMS)).ToArray();
+            ydata = nodesClip.Select(o => o.Current).ToArray();
             p = Fit.Line(xdata, ydata);
             b = p.Item1; // == 10; intercept
             a = p.Item2; // == 0.5; slope
@@ -1386,28 +1478,28 @@ namespace BCLabManager.Model
             Nodes[Index].Current = Math.Round(newCurrent, 4);
 
 
-            ydata = Nodes.Where(o => o.Status != StepEndString.EndByError).Select(o => o.Voltage).ToArray();
+            ydata = nodesClip.Select(o => o.Voltage).ToArray();
             p = Fit.Line(xdata, ydata);
             b = p.Item1; // == 10; intercept
             a = p.Item2; // == 0.5; slope
             double newVoltage = a * Nodes[Index].TimeInMS + b;
             Nodes[Index].Voltage = Math.Round(newVoltage, 4);
 
-            ydata = Nodes.Where(o => o.Status != StepEndString.EndByError).Select(o => o.Temperature).ToArray();
+            ydata = nodesClip.Select(o => o.Temperature).ToArray();
             p = Fit.Line(xdata, ydata);
             b = p.Item1; // == 10; intercept
             a = p.Item2; // == 0.5; slope
             double newTemperature = a * Nodes[Index].TimeInMS + b;
             Nodes[Index].Temperature = Math.Round(newTemperature, 4);
 
-            ydata = Nodes.Where(o => o.Status != StepEndString.EndByError).Select(o => o.Capacity).ToArray();
+            ydata = nodesClip.Select(o => o.Capacity).ToArray();
             p = Fit.Line(xdata, ydata);
             b = p.Item1; // == 10; intercept
             a = p.Item2; // == 0.5; slope
             double newCapacity = a * Nodes[Index].TimeInMS + b;
             Nodes[Index].Capacity = Math.Round(newCapacity, 4);
 
-            ydata = Nodes.Where(o => o.Status != StepEndString.EndByError).Select(o => o.TotalCapacity).ToArray();
+            ydata = nodesClip.Select(o => o.TotalCapacity).ToArray();
             p = Fit.Line(xdata, ydata);
             b = p.Item1; // == 10; intercept
             a = p.Item2; // == 0.5; slope
@@ -1491,8 +1583,13 @@ namespace BCLabManager.Model
                     continue;
                 Diffs.Add(Nodes[i].TimeInMS - Nodes[i - 1].TimeInMS);
             }
-            var diff = Diffs.GroupBy(o => o).Max(o => o).First();
+            var diff = Diffs.GroupBy(o => o).Max(o => o.Key);
             Nodes[Index].TimeInMS = Nodes[Index - 1].TimeInMS + diff;
+        }
+
+        private static void RestoreTime()
+        {
+            Nodes[Index].Time = Nodes[Index - 1].Time + TimeSpan.FromMilliseconds(Nodes[Index].TimeInMS - Nodes[Index - 1].TimeInMS);
         }
 
         private static string EventDescriptor(string filepath, Program program, Recipe recipe, TestRecord record, string info)

@@ -2,6 +2,7 @@
 //#define Seed
 #define Show
 //#define Requester
+#define TemplateUpgrade
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,6 +79,8 @@ namespace BCLabManager
         public StepV2ServiceClass StepV2Service { get; set; } = new StepV2ServiceClass();
         public TesterActionServiceClass TesterActionService { get; set; } = new TesterActionServiceClass();
         public CutOffConditionServiceClass CutOffConditionService { get; set; } = new CutOffConditionServiceClass();
+        public CutOffBehaviorServiceClass CutOffBehaviorService { get; set; } = new CutOffBehaviorServiceClass();
+        public JumpBehaviorServiceClass JumpBehaviorService { get; set; } = new JumpBehaviorServiceClass();
         public StepTemplateServiceClass StepTemplateService { get; set; } = new StepTemplateServiceClass();
         public ProgramServiceClass ProgramService { get; set; } = new ProgramServiceClass();
         public ProjectServiceClass ProjectService { get; set; } = new ProjectServiceClass();
@@ -98,6 +101,9 @@ namespace BCLabManager
                 InitializeTempFileFolder();
 #endif
                 LoadFromDB();
+#if TemplateUpgrade
+                UpgradeTemplate();
+#endif
                 CreateProcesserForTesters();
                 InitializeNavigator();
                 CreateViewModels();
@@ -121,7 +127,7 @@ namespace BCLabManager
         {
             string tempFilePath = $@"{GlobalSettings.RootPath}{GlobalSettings.TempDataFolderName}";
             if (!Directory.Exists(tempFilePath))
-                Directory.CreateDirectory(tempFilePath); 
+                Directory.CreateDirectory(tempFilePath);
 
             tempFilePath = $@"{GlobalSettings.TempraryFolder}{GlobalSettings.TempDataFolderName}";
             if (!Directory.Exists(tempFilePath))
@@ -190,6 +196,8 @@ namespace BCLabManager
                 StepV2Service.Items = new ObservableCollection<StepV2>(uow.StepV2s.GetAll());
                 TesterActionService.Items = new ObservableCollection<TesterAction>(uow.TesterActions.GetAll());
                 CutOffConditionService.Items = new ObservableCollection<CutOffCondition>(uow.CutOffConditions.GetAll());
+                CutOffBehaviorService.Items = new ObservableCollection<CutOffBehavior>(uow.CutOffBehaviors.GetAll("Condition"));
+                JumpBehaviorService.Items = new ObservableCollection<JumpBehavior>(uow.JumpBehaviors.GetAll("Condition"));
                 StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
 
                 ProjectService.Items = new ObservableCollection<Project>(uow.Projects.GetAll());
@@ -205,6 +213,58 @@ namespace BCLabManager
                 EventService.Items = new ObservableCollection<Event>(uow.Events.GetAll());
             }
         }
+#if TemplateUpgrade
+        private void UpgradeTemplate()
+        {
+            foreach (var recT in ProgramService.RecipeService.RecipeTemplateService.Items.Where(o => o.StepV2s.Count != 0 && o.StepV2s.All(s => s.CutOffConditions.Count != 0 && s.CutOffBehaviors.Count == 0)))
+            {
+                foreach (var step in recT.StepV2s)
+                {
+                    foreach (var prot in recT.Protections)
+                    {
+                        var newprot = new Protection() { Parameter = prot.Parameter, Mark = prot.Mark, Value = prot.Value};
+                        step.Protections.Add(newprot);
+                    }
+                    foreach (var coc in step.CutOffConditions)
+                    {
+                        var cob = ConvertCOC2COB(coc);
+                        if (cob != null)
+                        {
+                            step.CutOffBehaviors.Add(cob);
+                        }
+                    }
+                }
+                RecipeTemplateService.SuperUpdate(recT);
+            }
+            //foreach (var recT in ProgramService.RecipeService.RecipeTemplateService.Items.Where(o => o.StepV2s.Count != 0 && o.StepV2s.All(s => s.CutOffBehaviors.All(c => c.JumpBehaviors.All(j=>j.Condition.Parameter == Parameter.VOLTAGE && j.Condition.Mark == CompareMarkEnum.NA)))))
+            //{
+            //    foreach (var step in recT.StepV2s)
+            //    {
+            //        foreach (var cob in step.CutOffBehaviors)
+            //        {
+            //            foreach (var jpb in cob.JumpBehaviors)
+            //            {
+            //                jpb.Condition.Parameter = Parameter.NA;
+            //            }
+            //        }
+            //    }
+            //    RecipeTemplateService.SuperUpdate(recT);
+            //}
+        }
+
+        private CutOffBehavior ConvertCOC2COB(CutOffCondition coc)
+        {
+            CutOffBehavior cob = new CutOffBehavior();
+            cob.Condition.Parameter = coc.Parameter;
+            cob.Condition.Mark = coc.Mark;
+            cob.Condition.Value = coc.Value;
+            JumpBehavior jpb = new JumpBehavior();
+            jpb.JumpType = coc.JumpType;
+            jpb.Index = coc.Index;
+            cob.JumpBehaviors.Add(jpb);
+            return cob;
+        }
+#endif
         void CreateViewModels()
         {
             allBatteryTypesViewModel = new AllBatteryTypesViewModel(BatteryTypeService, BatteryService);    //ViewModel初始化
@@ -302,7 +362,7 @@ namespace BCLabManager
 
         private void Event_Click(object sender, RoutedEventArgs e)
         {
-            AllEventsView allEventsView = new AllEventsView(); 
+            AllEventsView allEventsView = new AllEventsView();
             var vm = new AllEventsViewModel
                  (
                  ProgramService,

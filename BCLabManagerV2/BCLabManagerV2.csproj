@@ -284,7 +284,11 @@
     <Compile Include="Assets\Model\AssetUsageRecord.cs" />
     <Compile Include="Assets\Model\IAsset.cs" />
     <Compile Include="Assets\Model\ITesterProcesser.cs" />
+    <Compile Include="DataAccess\JumpBehaviorRepository.cs" />
+    <Compile Include="DataAccess\CutOffBehaviorRepository.cs" />
     <Compile Include="DataAccess\EventRepository.cs" />
+    <Compile Include="DataAccess\IJumpBehaviorRepository.cs" />
+    <Compile Include="DataAccess\ICutOffBehaviorRepository.cs" />
     <Compile Include="DataAccess\IEventRepository.cs" />
     <Compile Include="Migrations\20201021020401_Event.cs" />
     <Compile Include="Migrations\20201021020401_Event.designer.cs">
@@ -294,6 +298,17 @@
     <Compile Include="Migrations\20210115031443_LastCycle.designer.cs">
       <DependentUpon>20210115031443_LastCycle.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20210129083304_TemplateUpgrade.cs" />
+    <Compile Include="Migrations\20210129083304_TemplateUpgrade.designer.cs">
+      <DependentUpon>20210129083304_TemplateUpgrade.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Programs\Model\CutOffBehavior.cs" />
+    <Compile Include="Programs\Model\Condition.cs" />
+    <Compile Include="Programs\Model\JumpBehavior.cs" />
+    <Compile Include="Programs\Model\Service\JumpBehaviorServiceClass.cs" />
+    <Compile Include="Programs\Model\Service\CutOffBehaviorServiceClass.cs" />
+    <Compile Include="Programs\ViewModel\JumpBehaviorViewModel.cs" />
+    <Compile Include="Programs\ViewModel\CutOffBehaviorViewModel.cs" />
     <Compile Include="Services\ErrorCode.cs" />
     <Compile Include="Services\Module.cs" />
     <Compile Include="Services\EventService.cs" />

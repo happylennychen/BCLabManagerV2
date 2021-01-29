@@ -20,6 +20,7 @@ namespace BCLabManager.ViewModel
         #region Fields
         public readonly RecipeTemplate _RecipeTemplate;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
         StepV2ViewModel _selectedStep;
+        CutOffBehaviorViewModel _selectedCOB;
         RelayCommand _okCommand;
         RelayCommand _addStepCommand;
         RelayCommand _removeStepCommand;
@@ -120,19 +121,34 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ObservableCollection<Protection> Protections
+        public CutOffBehaviorViewModel SelectedCOB
         {
-            get { return _RecipeTemplate.Protections; }
+            get
+            {
+                return _selectedCOB;
+            }
             set
             {
-                if (value == _RecipeTemplate.Protections)
-                    return;
-
-                _RecipeTemplate.Protections = value;
-
-                RaisePropertyChanged("Protections");
+                if (_selectedCOB != value)
+                {
+                    _selectedCOB = value;
+                }
             }
         }
+
+        //public ObservableCollection<Protection> Protections
+        //{
+        //    get { return _RecipeTemplate.Protections; }
+        //    set
+        //    {
+        //        if (value == _RecipeTemplate.Protections)
+        //            return;
+
+        //        _RecipeTemplate.Protections = value;
+
+        //        RaisePropertyChanged("Protections");
+        //    }
+        //}
         #endregion // Customer Properties
 
         #region Presentation Properties

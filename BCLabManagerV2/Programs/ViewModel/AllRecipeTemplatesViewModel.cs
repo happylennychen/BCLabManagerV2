@@ -24,6 +24,8 @@ namespace BCLabManager.ViewModel
         private RecipeTemplateGroupServiceClass _recipeTemplateGroupServcie;
         private StepTemplateServiceClass _stepTemplateService;
         RecipeTemplateViewModel _selectedItem;
+        StepV2ViewModel _selectedStep;
+        CutOffBehaviorViewModel _selectedCOB;
         RelayCommand _createCommand;
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
@@ -124,19 +126,59 @@ namespace BCLabManager.ViewModel
             get
             {
                 if (_selectedItem != null)
-                    return new ObservableCollection<StepV2ViewModel>(_selectedItem.Steps.OrderBy(o=>o.Index));
+                    return new ObservableCollection<StepV2ViewModel>(_selectedItem.Steps.OrderBy(o => o.Index));
                 else
                     return null;
             }
         }
+
+        public StepV2ViewModel SelectedStep    //绑定选中项，从而改变Recipes
+        {
+            //get
+            //{
+            //    return _selectedStep;   //应该到不了这里来
+            //}
+            set
+            {
+                if (_selectedStep != value)
+                {
+                    _selectedStep = value;
+                    RaisePropertyChanged("Protections");
+                }
+            }
+        }
+        public CutOffBehaviorViewModel SelectedCOB    //绑定选中项，从而改变Recipes
+        {
+            //get
+            //{
+            //    return _selectedStep;   //应该到不了这里来
+            //}
+            set
+            {
+                if (_selectedCOB != value)
+                {
+                    _selectedCOB = value;
+                    RaisePropertyChanged("Protections");
+                }
+            }
+        }
+        //private ObservableCollection<ProtectionViewModel> _protections;
         public ObservableCollection<ProtectionViewModel> Protections
         {
             get
             {
-                if (_selectedItem != null)
-                    return _selectedItem.Protections;
-                else
-                    return null;
+                if (_selectedStep != null)
+                    return _selectedStep.Protections;
+                else return null;
+            }
+        }
+        public ObservableCollection<JumpBehaviorViewModel> JumpBehaviors
+        {
+            get
+            {
+                if (_selectedCOB != null)
+                    return _selectedCOB.JumpBehaviors;
+                else return null;
             }
         }
 
@@ -152,7 +194,6 @@ namespace BCLabManager.ViewModel
                 {
                     _selectedItem = value;
                     RaisePropertyChanged("Steps");
-                    RaisePropertyChanged("Protections");
                 }
             }
         }
@@ -165,7 +206,7 @@ namespace BCLabManager.ViewModel
                 if (_createCommand == null)
                 {
                     _createCommand = new RelayCommand(
-                        param => { this.Create();}
+                        param => { this.Create(); }
                         );
                 }
                 return _createCommand;
@@ -246,7 +287,7 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             RecipeTemplate model = new RecipeTemplate();      //实例化一个新的model
-            RecipeTemplateEditViewModel viewmodel = 
+            RecipeTemplateEditViewModel viewmodel =
                 new RecipeTemplateEditViewModel(
                     model
                     );      //实例化一个新的view model
@@ -309,11 +350,7 @@ namespace BCLabManager.ViewModel
                 var newstep = step.Clone();
                 model.StepV2s.Add(newstep);
             }
-            foreach (var protection in _selectedItem._recipeTemplate.Protections)
-            {
-                var newprotection = protection.Clone();
-                model.Protections.Add(newprotection);
-            }
+
             RecipeTemplateEditViewModel viewmodel =
                 new RecipeTemplateEditViewModel(
                     model
@@ -335,7 +372,6 @@ namespace BCLabManager.ViewModel
         }
         private void Abandon()
         {
-            
             if (MessageBox.Show("Are you sure?", "Abandon Selected Recipe", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 _recipeTemplateServcie.Abandon(SelectedItem._recipeTemplate);

@@ -18,7 +18,7 @@ namespace BCLabManager.Model
         C_mAH,
         CRate
     }
-    public class StepTemplate : BindableBase    //不需要跳转比较符
+    public class StepTemplate : BindableBase    //不需要跳转比较符  //No need anymore
     {
         public int Id { get; set; }
         private Coefficient _coef = new Coefficient();

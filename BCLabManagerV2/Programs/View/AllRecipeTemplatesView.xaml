@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 		     xmlns:model="clr-namespace:BCLabManager.Model"
+             xmlns:e="http://schemas.microsoft.com/expression/2010/interactivity"
 		     xmlns:vm="clr-namespace:BCLabManager.ViewModel"
              xmlns:v="clr-namespace:BCLabManager.View"
              mc:Ignorable="d" 
@@ -11,39 +12,36 @@
     <UserControl.Resources>
         <v:LoopLabelConverter x:Key="llc"></v:LoopLabelConverter>
         <v:IndexConverter x:Key="idc"></v:IndexConverter>
+        <v:JumpConditionConverter x:Key="jcc"></v:JumpConditionConverter>
+
+        <Style x:Key="ValueStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="Blue" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
         <HierarchicalDataTemplate DataType="{x:Type vm:StepV2ViewModel}" 
-                                  ItemsSource="{Binding Path=CutOffConditions}">
-            <DockPanel LastChildFill="True" Margin="10">
-                <TextBlock FontSize="22" FontWeight="Bold" DockPanel.Dock="Left" Margin="0,0,10,0">S</TextBlock>
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Index=" Margin="0,0,5,0" />
-                        <TextBlock Text="{Binding Path=Index}" />
-                        <TextBlock Text="Loop1Label=" Margin="5,0,0,0" Visibility="{Binding Path=Loop1Label, Converter={StaticResource llc}}" />
-                        <TextBlock Text="{Binding Path=Loop1Label}" Visibility="{Binding Path=Loop1Label, Converter={StaticResource llc}}" />
-                        <TextBlock Text="Loop2Label=" Margin="5,0,0,0" Visibility="{Binding Path=Loop2Label, Converter={StaticResource llc}}"/>
-                        <TextBlock Text="{Binding Path=Loop2Label}" Visibility="{Binding Path=Loop2Label, Converter={StaticResource llc}}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Mode" Margin="0,0,5,0" />
-                        <TextBlock Text="{Binding Path=TesterAction.Mode}" />
-                        <TextBlock Text="Voltage=" Margin="5,0,0,0" />
-                        <TextBlock Text="{Binding Path=TesterAction.Voltage}" />
-                        <TextBlock Text="Current=" Margin="5,0,0,0" />
-                        <TextBlock Text="{Binding Path=TesterAction.Current}" />
-                        <TextBlock Text="Power=" Margin="5,0,0,0" />
-                        <TextBlock Text="{Binding Path=TesterAction.Power}" />
-                    </StackPanel>
-                </StackPanel>
-            </DockPanel>
-        </HierarchicalDataTemplate>
-        <DataTemplate DataType="{x:Type vm:CutOffConditionViewModel}">
+                                  ItemsSource="{Binding Path=CutOffBehaviors}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="COC" FontWeight="Bold" Margin="0,0,5,0" />
-                <TextBlock Text="{Binding Path=Parameter}" Margin="0,0,5,0"/>
-                <TextBlock Text="{Binding Path=Mark}" Margin="0,0,5,0"/>
-                <TextBlock Text="{Binding Path=Value}" Margin="0,0,5,0"/>
-                <TextBlock Text="JumpType=" Margin="0,0,5,0" />
+                <TextBlock FontWeight="Bold" DockPanel.Dock="Left" Margin="0,0,10,0">STEP</TextBlock>
+                <TextBlock Text="Index="/>
+                <TextBlock Text="{Binding Path=Index}" Style="{StaticResource ValueStyle}" Margin="0,0,5,0"  />
+                <TextBlock Text="Mode="/>
+                <TextBlock Text="{Binding Path=TesterAction.Mode}" Style="{StaticResource ValueStyle}"  Margin="0,0,5,0" />
+                <TextBlock Text="Voltage="/>
+                <TextBlock Text="{Binding Path=TesterAction.Voltage}" Style="{StaticResource ValueStyle}"  Margin="0,0,5,0" />
+                <TextBlock Text="Current="/>
+                <TextBlock Text="{Binding Path=TesterAction.Current}" Style="{StaticResource ValueStyle}"  Margin="0,0,5,0" />
+                <TextBlock Text="Power="/>
+                <TextBlock Text="{Binding Path=TesterAction.Power}" Style="{StaticResource ValueStyle}" />
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type vm:CutOffBehaviorViewModel}"
+                                  ItemsSource="{Binding Path=JumpBehaviors}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="COB" FontWeight="Bold" Margin="0,0,5,0" />
+                <TextBlock Text="{Binding Path=Condition.Parameter}" Margin="0,0,5,0" Style="{StaticResource ValueStyle}"/>
+                <TextBlock Text="{Binding Path=Condition.Mark}" Margin="0,0,5,0" Style="{StaticResource ValueStyle}"/>
+                <TextBlock Text="{Binding Path=Condition.Value}" Margin="0,0,5,0" Style="{StaticResource ValueStyle}"/>
+                <!--<TextBlock Text="JumpType=" Margin="0,0,5,0" />
                 <TextBlock Text="{Binding Path=JumpType}" Margin="0,0,5,0"/>
                 <TextBlock Text="Index=" Margin="0,0,5,0" Visibility="{Binding Path=JumpType, Converter={StaticResource idc}}"/>
                 <TextBlock Text="{Binding Path=Index}" Margin="0,0,5,0" Visibility="{Binding Path=JumpType, Converter={StaticResource idc}}"/>
@@ -54,7 +52,19 @@
                 <TextBlock Text="Loop2Target=" Margin="0,0,5,0"   Visibility="{Binding Path=Loop2Target, Converter={StaticResource llc}}"/>
                 <TextBlock Text="{Binding Path=Loop2Target}" Margin="0,0,5,0"  Visibility="{Binding Path=Loop2Target, Converter={StaticResource llc}}"/>
                 <TextBlock Text="Loop2Count=" Margin="0,0,5,0"   Visibility="{Binding Path=Loop2Target, Converter={StaticResource llc}}"/>
-                <TextBlock Text="{Binding Path=Loop2Count}" Margin="0,0,5,0"  Visibility="{Binding Path=Loop2Target, Converter={StaticResource llc}}"/>
+                <TextBlock Text="{Binding Path=Loop2Count}" Margin="0,0,5,0"  Visibility="{Binding Path=Loop2Target, Converter={StaticResource llc}}"/>-->
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <DataTemplate DataType="{x:Type vm:JumpBehaviorViewModel}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="JPB" FontWeight="Bold" Margin="0,0,5,0" />
+                <TextBlock Text="{Binding Path=Condition.Parameter}" Margin="0,0,5,0" Visibility="{Binding Path=Condition.Parameter, Converter={StaticResource jcc}}" Style="{StaticResource ValueStyle}"/>
+                <TextBlock Text="{Binding Path=Condition.Mark}" Margin="0,0,5,0" Visibility="{Binding Path=Condition.Parameter, Converter={StaticResource jcc}}" Style="{StaticResource ValueStyle}"/>
+                <TextBlock Text="{Binding Path=Condition.Value}" Margin="0,0,5,0" Visibility="{Binding Path=Condition.Parameter, Converter={StaticResource jcc}}" Style="{StaticResource ValueStyle}"/>
+                <TextBlock Text="JumpType="/>
+                <TextBlock Text="{Binding Path=JumpType}" Margin="0,0,5,0" Style="{StaticResource ValueStyle}"/>
+                <TextBlock Text="Index=" Visibility="{Binding Path=JumpType, Converter={StaticResource idc}}"/>
+                <TextBlock Text="{Binding Path=Index}" Margin="0,0,5,0" Visibility="{Binding Path=JumpType, Converter={StaticResource idc}}" Style="{StaticResource ValueStyle}"/>
             </StackPanel>
         </DataTemplate>
 
@@ -155,7 +165,10 @@
                         <DataGridTextColumn Header="Capacity" IsReadOnly="True" Binding="{Binding Path=Capacity}"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>-->
-                        <TreeView ItemsSource="{Binding Path=Steps}">
+                        <TreeView ItemsSource="{Binding Path=Steps, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" x:Name="Steps">
+                            <e:Interaction.Behaviors>
+                                <v:BindableSelectedItemBehavior SelectedItem="{Binding Path=SelectedStep, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"></v:BindableSelectedItemBehavior>
+                            </e:Interaction.Behaviors>
                             <TreeView.ItemContainerStyle>
                                 <Style TargetType="{x:Type TreeViewItem}">
                                     <Setter Property="IsExpanded" Value="True" />

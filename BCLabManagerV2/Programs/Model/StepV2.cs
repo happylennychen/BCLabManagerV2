@@ -54,6 +54,13 @@ namespace BCLabManager.Model
             get { return _cutOffConditions; }
             set { SetProperty(ref _cutOffConditions, value); }
         }
+        private ObservableCollection<CutOffBehavior> _cutOffBehaviors = new ObservableCollection<CutOffBehavior>();
+        public ObservableCollection<CutOffBehavior> CutOffBehaviors
+        {
+            get { return _cutOffBehaviors; }
+            set { SetProperty(ref _cutOffBehaviors, value); }
+        }
+        public ObservableCollection<Protection> Protections { get; set; } = new ObservableCollection<Protection>();
         public StepV2()
         {
         }
@@ -62,10 +69,20 @@ namespace BCLabManager.Model
         {
             StepV2 output = new StepV2();
             output.Action = this.Action.Clone();
-            foreach (var coc in this.CutOffConditions)
+            //foreach (var coc in this.CutOffConditions)
+            //{
+            //    CutOffCondition newcoc = coc.Clone();
+            //    output.CutOffConditions.Add(newcoc);
+            //}
+            foreach (var cob in this.CutOffBehaviors)
             {
-                CutOffCondition newcoc = coc.Clone();
-                output.CutOffConditions.Add(newcoc);
+                CutOffBehavior newcob = cob.Clone();
+                output.CutOffBehaviors.Add(newcob);
+            }
+            foreach (var protection in this.Protections)
+            {
+                var newprotection = protection.Clone();
+                output.Protections.Add(newprotection);
             }
             output.Index = this.Index;
             output.Loop1Label = this.Loop1Label;
