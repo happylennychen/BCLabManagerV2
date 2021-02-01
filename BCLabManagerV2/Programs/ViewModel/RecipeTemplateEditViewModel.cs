@@ -49,6 +49,12 @@ namespace BCLabManager.ViewModel
                         step.Index = Steps.Count;
                     }
                     break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    for (int i = 0; i < Steps.Count; i++)
+                    {
+                        Steps[i].Index = i + 1;
+                    }
+                    break;
             }
         }
 

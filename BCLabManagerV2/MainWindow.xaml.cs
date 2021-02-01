@@ -1,8 +1,8 @@
 ﻿//#define Migrate
 //#define Seed
 #define Show
-//#define Requester
-#define TemplateUpgrade
+#define Requester
+//#define TemplateUpgrade
 using System;
 using System.Collections.Generic;
 using System.Linq;

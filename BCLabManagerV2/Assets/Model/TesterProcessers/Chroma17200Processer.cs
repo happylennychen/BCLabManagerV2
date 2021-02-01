@@ -1634,7 +1634,7 @@ namespace BCLabManager.Model
     {
         public static double Current { get { return 10; } } //mA
         public static double Temperature { get { return 3.5; } }    //deg
-        public static double Voltage { get { return 50; } } //mV
+        public static double Voltage { get { return 5; } } //mV
         public static double Power { get { return 100; } }
         public static double Time { get { return 3; } }     //S
     }

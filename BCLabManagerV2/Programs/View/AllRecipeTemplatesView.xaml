@@ -138,21 +138,11 @@
                 </GroupBox>
                 <Grid Grid.Column="2">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="20*"></RowDefinition>
-                        <RowDefinition Height="10"></RowDefinition>
                         <RowDefinition Height="80*"></RowDefinition>
+                        <RowDefinition Height="10"></RowDefinition>
+                        <RowDefinition Height="20*"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <GroupBox Header="Protections" Grid.Row="0">
-                        <DataGrid GridLinesVisibility="None" x:Name="Protectionlist" AutoGenerateColumns="False"  Background="White"
-                          ItemsSource="{Binding Path=Protections}" CanUserSortColumns="False">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Parameter" IsReadOnly="True" Binding="{Binding Path=Parameter}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Mark" IsReadOnly="True" Binding="{Binding Path=Mark}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Value" IsReadOnly="True" Binding="{Binding Path=Value}"></DataGridTextColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </GroupBox>
-                    <GroupBox Header="Steps" Grid.Row="2">
+                    <GroupBox Header="Steps" Grid.Row="0">
                         <!--<DataGrid GridLinesVisibility="None" x:Name="Steplist" AutoGenerateColumns="False"  Background="White"
                           ItemsSource="{Binding Path=Steps}" CanUserSortColumns="False">
                     <DataGrid.Columns>
@@ -175,6 +165,16 @@
                                 </Style>
                             </TreeView.ItemContainerStyle>
                         </TreeView>
+                    </GroupBox>
+                    <GroupBox Header="Protections" Grid.Row="2">
+                        <DataGrid GridLinesVisibility="None" x:Name="Protectionlist" AutoGenerateColumns="False"  Background="White"
+                          ItemsSource="{Binding Path=Protections}" CanUserSortColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Parameter" IsReadOnly="True" Binding="{Binding Path=Parameter}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Mark" IsReadOnly="True" Binding="{Binding Path=Mark}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Value" IsReadOnly="True" Binding="{Binding Path=Value}"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </GroupBox>
                 </Grid>
             </Grid>
