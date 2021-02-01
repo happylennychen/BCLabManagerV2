@@ -152,6 +152,8 @@ namespace BCLabManager.Model
             //Dictionary<Column, string> row1 = new Dictionary<Column, string>();
             List<Dictionary<Column, string>> buffer = new List<Dictionary<Column, string>>();
             DataPreprocesser.Index = 0;
+            DataPreprocesser.IsFirstDischarge = false;
+            DataPreprocesser.IsFirstDischargeChecked = false;
             try
             {
                 bool isCOCPoint = false;
@@ -967,23 +969,8 @@ namespace BCLabManager.Model
                 }
             }
         }
-        //public static bool IsFirstDischarge { get; set; } = false;
-        //public static bool IsFirstDischargeChecked { get; set; } = false;
-
-        private static bool _isFirstDischarge = false;
-
-        public static bool IsFirstDischarge
-        {
-            get { return _isFirstDischarge; }
-            set { _isFirstDischarge = value; }
-        }
-        private static bool _isFirstDischargeChecked = false;
-
-        public static bool IsFirstDischargeChecked
-        {
-            get { return _isFirstDischargeChecked; }
-            set { _isFirstDischargeChecked = value; }
-        }
+        public static bool IsFirstDischarge { get; set; }
+        public static bool IsFirstDischargeChecked { get; set; }
 
 
         private static ChromaNode GetNodeFromeString(string value)
