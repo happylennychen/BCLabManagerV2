@@ -14,7 +14,7 @@
         </Menu>
         <TabControl x:Name="MainTab">
             <TabItem Header="Dashboard">
-                <v:DashBoardView x:Name="DashBoardViewInstance"></v:DashBoardView>
+                <v:DashBoardView x:Name="DashBoardViewInstance" DataContext="{Binding Path=dashBoardViewModel}"></v:DashBoardView>
             </TabItem>
             <TabItem Header="Assets">
                 <Grid Margin="5">
@@ -26,10 +26,10 @@
                         <ColumnDefinition Width="60*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Border Padding="5" Grid.Column="0" BorderBrush="Black" BorderThickness="2">
-                        <v:AllBatteryTypesView x:Name="AllBatteryTypesViewInstance"></v:AllBatteryTypesView>
+                        <v:AllBatteryTypesView x:Name="AllBatteryTypesViewInstance" DataContext="{Binding Path=allBatteryTypesViewModel}"></v:AllBatteryTypesView>
                     </Border>
                     <Border Padding="5" Grid.Column="2" BorderBrush="Black" BorderThickness="2">
-                        <v:AllTestersView x:Name="AllTestersViewInstance"></v:AllTestersView>
+                        <v:AllTestersView x:Name="AllTestersViewInstance" DataContext="{Binding Path=allTestersViewModel}"></v:AllTestersView>
                     </Border>
                     <Grid Grid.Column="4">
                         <Grid.RowDefinitions>
@@ -40,13 +40,13 @@
                             <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
                         <Border Padding="5" Grid.Row="0" BorderBrush="Black" BorderThickness="2">
-                            <v:AllBatteriesView x:Name="AllBatteriesViewInstance"></v:AllBatteriesView>
+                            <v:AllBatteriesView x:Name="AllBatteriesViewInstance" DataContext="{Binding Path=allBatteriesViewModel}"></v:AllBatteriesView>
                         </Border>
                         <Border Padding="5" Grid.Row="2" BorderBrush="Black" BorderThickness="2">
-                            <v:AllChannelsView x:Name="AllChannelsViewInstance"></v:AllChannelsView>
+                            <v:AllChannelsView x:Name="AllChannelsViewInstance" DataContext="{Binding Path=allChannelsViewModel}"></v:AllChannelsView>
                         </Border>
                         <Border Padding="5" Grid.Row="4" BorderBrush="Black" BorderThickness="2">
-                            <v:AllChambersView x:Name="AllChambersViewInstance"></v:AllChambersView>
+                            <v:AllChambersView x:Name="AllChambersViewInstance" DataContext="{Binding Path=allChambersViewModel}"></v:AllChambersView>
                         </Border>
                     </Grid>
                 </Grid>
@@ -71,10 +71,10 @@
                             <ColumnDefinition Width="50*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Border Grid.Column="0">
-                            <v:AllTableMakerProductTypesView x:Name="AllTableMakerProductTypesViewInstance"></v:AllTableMakerProductTypesView>
+                            <v:AllTableMakerProductTypesView x:Name="AllTableMakerProductTypesViewInstance" DataContext="{Binding Path=allTableMakerProductTypesViewModel}"></v:AllTableMakerProductTypesView>
                         </Border>
                         <Border Grid.Column="2">
-                            <v:AllProgramTypesView x:Name="AllProgramTypesViewInstance"></v:AllProgramTypesView>
+                            <v:AllProgramTypesView x:Name="AllProgramTypesViewInstance" DataContext="{Binding Path=allProgramTypesViewModel}"></v:AllProgramTypesView>
                         </Border>
                     </Grid>
                     <Grid Grid.Column="1">
@@ -86,22 +86,22 @@
                             <RowDefinition Height="30*"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Border x:Name="ProjectBorder">
-                            <v:AllProjectsView x:Name="AllProjectsViewInstance"></v:AllProjectsView>
+                            <v:AllProjectsView x:Name="AllProjectsViewInstance" DataContext="{Binding Path=allProjectsViewModel}"></v:AllProjectsView>
                         </Border>
                         <Border Grid.Row="2">
-                            <v:AllTableMakerProductsView x:Name="AllTableMakerProductsViewInstance"></v:AllTableMakerProductsView>
+                            <v:AllTableMakerProductsView x:Name="AllTableMakerProductsViewInstance" DataContext="{Binding Path=allTableMakerProductsViewModel}"></v:AllTableMakerProductsView>
                         </Border>
                         <Border Grid.Row="4" x:Name="ProjectSettingBorder">
-                            <v:AllProjectSettingsView x:Name="AllProjectSettingsViewInstance"></v:AllProjectSettingsView>
+                            <v:AllProjectSettingsView x:Name="AllProjectSettingsViewInstance" DataContext="{Binding Path=allProjectSettingsViewModel}"></v:AllProjectSettingsView>
                         </Border>
                     </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Templates">
-                <v:AllRecipeTemplatesView x:Name="AllRecipeTemplatesViewInstance"></v:AllRecipeTemplatesView>
+                <v:AllRecipeTemplatesView x:Name="AllRecipeTemplatesViewInstance" DataContext="{Binding Path=allRecipeTemplatesViewModel}"></v:AllRecipeTemplatesView>
             </TabItem>
             <TabItem Header="Programs">
-                <v:AllProgramsView x:Name="AllProgramsViewInstance"></v:AllProgramsView>
+                <v:AllProgramsView x:Name="AllProgramsViewInstance" DataContext="{Binding Path=allProgramsViewModel}"></v:AllProgramsView>
             </TabItem>
             <!--<TabItem Header="Products(v0.1)">
                 <v:AllProductsView x:Name="AllProductsViewInstance"></v:AllProductsView>

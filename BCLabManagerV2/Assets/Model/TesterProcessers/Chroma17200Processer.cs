@@ -182,7 +182,7 @@ namespace BCLabManager.Model
                 result = DataPreprocesser.StepStartPointCheck(step1, recipe.Temperature);
                 if (result != ErrorCode.NORMAL)
                 {
-                    if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
+                    if (!DataPreprocesser.ErrorHandler(ref events, ref result, filepath, program, recipe, record, lineIndex))
                     {
                         return false;
                     }
@@ -218,7 +218,7 @@ namespace BCLabManager.Model
                         result = DataPreprocesser.StepCOCPointCheck(step1, recipe.Temperature, timeSpan);      //Index?
                         if (result != ErrorCode.NORMAL)
                         {
-                            if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
+                            if (!DataPreprocesser.ErrorHandler(ref events, ref result, filepath, program, recipe, record, lineIndex))
                             {
                                 return false;
                             }
@@ -228,7 +228,7 @@ namespace BCLabManager.Model
                         if (step1 != null)
                         {
                             result = ErrorCode.DP_STEP_MISSING;
-                            if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex, step1.Index))
+                            if (!DataPreprocesser.ErrorHandler(ref events, ref result, filepath, program, recipe, record, lineIndex, step1.Index))
                             {
                                 return false;
                             }
@@ -240,7 +240,7 @@ namespace BCLabManager.Model
                     if (DataPreprocesser.Nodes[DataPreprocesser.Index].Status == StepEndString.EndByError)
                     {
                         result = ErrorCode.DP_CHECKSUM;
-                        if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
+                        if (!DataPreprocesser.ErrorHandler(ref events, ref result, filepath, program, recipe, record, lineIndex))
                         {
                             return false;
                         }
@@ -259,7 +259,7 @@ namespace BCLabManager.Model
                         result = DataPreprocesser.StepCOCPointCheck(step1, recipe.Temperature, timeSpan);      //Index?
                         if (result != ErrorCode.NORMAL)
                         {
-                            if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
+                            if (!DataPreprocesser.ErrorHandler(ref events, ref result, filepath, program, recipe, record, lineIndex))
                             {
                                 return false;
                             }
@@ -270,7 +270,7 @@ namespace BCLabManager.Model
                         if (step1 == null)
                         {
                             result = ErrorCode.DP_NO_NEXT_STEP;
-                            if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
+                            if (!DataPreprocesser.ErrorHandler(ref events, ref result, filepath, program, recipe, record, lineIndex))
                             {
                                 return false;
                             }
@@ -280,7 +280,7 @@ namespace BCLabManager.Model
                         result = StepActionModeCheck(step1.Action.Mode, DataPreprocesser.Nodes[DataPreprocesser.Index].StepMode);
                         if (result != ErrorCode.NORMAL)
                         {
-                            if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
+                            if (!DataPreprocesser.ErrorHandler(ref events, ref result, filepath, program, recipe, record, lineIndex))
                             {
                                 return false;
                             }
@@ -298,7 +298,7 @@ namespace BCLabManager.Model
                         result = DataPreprocesser.StepStartPointCheck(step1, recipe.Temperature);
                         if (result != ErrorCode.NORMAL)
                         {
-                            if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
+                            if (!DataPreprocesser.ErrorHandler(ref events, ref result, filepath, program, recipe, record, lineIndex))
                             {
                                 return false;
                             }
@@ -314,7 +314,7 @@ namespace BCLabManager.Model
                         result = DataPreprocesser.StepMidPointCheck(step1);
                         if (result != ErrorCode.NORMAL)
                         {
-                            if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
+                            if (!DataPreprocesser.ErrorHandler(ref events, ref result, filepath, program, recipe, record, lineIndex))
                             {
                                 return false;
                             }
@@ -332,7 +332,7 @@ namespace BCLabManager.Model
                             result = DataPreprocesser.ContinuityCheck(program.Type, step1);
                             if (result != ErrorCode.NORMAL)
                             {
-                                if (!DataPreprocesser.ErrorHandler(ref events, result, filepath, program, recipe, record, lineIndex))
+                                if (!DataPreprocesser.ErrorHandler(ref events, ref result, filepath, program, recipe, record, lineIndex))
                                 {
                                     return false;
                                 }
@@ -1363,7 +1363,7 @@ namespace BCLabManager.Model
             }
             return output.Substring(0, output.Length - 1);
         }
-        public static bool ErrorHandler(ref List<Event> events, uint result, string filepath, Program program, Recipe recipe, TestRecord record, int lineIndex, params object[] args)
+        public static bool ErrorHandler(ref List<Event> events, ref uint result, string filepath, Program program, Recipe recipe, TestRecord record, int lineIndex, params object[] args)
         {
             Event evt = new Event();
             string info = string.Empty;
@@ -1388,6 +1388,7 @@ namespace BCLabManager.Model
                     //MessageBox.Show("Unfinished yet.");
                     solution = "Auto Fixed";
                     ret = true;
+                    result = ErrorCode.NORMAL;
                     break;
                 default:
                     var str = $"{ErrorCode.GetDescription(result, args)}\n";
@@ -1401,6 +1402,7 @@ namespace BCLabManager.Model
                     {
                         solution = "Ignored";
                         ret = true;
+                        result = ErrorCode.NORMAL;
                     }
                     else
                         ret = false;

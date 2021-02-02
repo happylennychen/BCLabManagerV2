@@ -1,73 +1,25 @@
-﻿//#define Migrate
-//#define Seed
-#define Show
-//#define Requester
-//#define TemplateUpgrade
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using BCLabManager.ViewModel;
 using BCLabManager.DataAccess;
 using BCLabManager.Model;
-using Microsoft.EntityFrameworkCore;
-using System.IO;
-using System.Collections.ObjectModel;
 using BCLabManager.View;
-using Microsoft.Win32;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
+using Microsoft.EntityFrameworkCore;
+using Prism.Mvvm;
+using System.IO;
+using System.Windows;
 
-namespace BCLabManager
+namespace BCLabManager.ViewModel
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public partial class MainWindow : Window
+    public class MainWindowViewModel : BindableBaseWithName//, IDataErrorInfo
     {
-        //private Repositories _repositories = new Repositories();    //model实例全部放在这里。viewmodel和database的source
-
-        public AllBatteryTypesViewModel allBatteryTypesViewModel { get; set; }  //其中需要显示BatteryTypes和Batteries
-        public AllProjectsViewModel allProjectsViewModel { get; set; }  //其中需要显示Projects
-        public AllProjectSettingsViewModel allProjectSettingsViewModel { get; set; }  //其中需要显示Projects
-        public AllProgramTypesViewModel allProgramTypesViewModel { get; set; }  //其中需要显示Projects
-        public AllTableMakerProductTypesViewModel allTableMakerProductTypesViewModel { get; set; }  //
-        public AllTableMakerProductsViewModel allTableMakerProductsViewModel { get; set; }  //
-        public AllBatteriesViewModel allBatteriesViewModel { get; set; }  //其中需要显示Batteries和Records
-
-        public AllTestersViewModel allTestersViewModel { get; set; }  //其中需要显示Testers和Channels
-        public AllChannelsViewModel allChannelsViewModel { get; set; }  //其中需要显示Channels和Records
-
-        public AllChambersViewModel allChambersViewModel { get; set; }  //其中需要显示Chambers和Records
-
-        public AllRecipeTemplatesViewModel allRecipeTemplatesViewModel { get; set; }  //其中需要显示Recipes
-
-        public AllProgramsViewModel allProgramsViewModel { get; set; }  //其中需要显示Programs, Recipes, Test1, Test2, TestSteps
-
-        public DashBoardViewModel dashBoardViewModel { get; set; }
-        public MainWindowViewModel mainWindowViewModel { get; set; }
-
-        //public ObservableCollection<BatteryTypeClass> BatteryTypes { get; set; }
-        //public ObservableCollection<BatteryClass> Batteries { get; set; }
-        //public ObservableCollection<Tester> Testers { get; set; }
-        //public ObservableCollection<Channel> Channels { get; set; }
-        //public ObservableCollection<ChamberClass> Chambers { get; set; }
-        //public List<RecipeTemplate> RecipeTemplates { get; set; }
-        //public List<ChargeTemperatureClass> ChargeTemperatures { get; set; }
-        //public List<ChargeCurrentClass> ChargeCurrents { get; set; }
-        //public List<DischargeTemperatureClass> DischargeTemperatures { get; set; }
-        //public List<DischargeCurrentClass> DischargeCurrents { get; set; }
-        //public ObservableCollection<ProgramClass> Programs { get; set; }
-
-        //private DomainDataClass _domainData;
-
+        #region Fields
         public BatteryTypeServiceClass BatteryTypeService { get; set; } = new BatteryTypeServiceClass();
         public BatteryServiceClass BatteryService { get; set; } = new BatteryServiceClass();
         public TesterServiceClass TesterService { get; set; } = new TesterServiceClass();
@@ -91,45 +43,59 @@ namespace BCLabManager
         public TableMakerProductServiceClass TableMakerProductService { get; set; } = new TableMakerProductServiceClass();
         public TestRecordServiceClass FreeTestRecordService { get; set; } = new TestRecordServiceClass();
 
-        public MainWindow()
+        #endregion // Fields
+
+        #region Constructor
+
+        public MainWindowViewModel(
+            )     //
         {
-            MessageBox.Show("Then here");
-#if false
+            //this.AllBatteryTypesViewInstance.DataContext = allBatteryTypesViewModel;
+
+            //this.AllProjectsViewInstance.DataContext = allProjectsViewModel;                                                           //ViewModel跟View绑定
+
+            //this.AllProjectSettingsViewInstance.DataContext = allProjectSettingsViewModel;                                                           //ViewModel跟View绑定
+
+            //this.AllProgramTypesViewInstance.DataContext = allProgramTypesViewModel;                                                           //ViewModel跟View绑定
+
+            //this.AllTableMakerProductTypesViewInstance.DataContext = allTableMakerProductTypesViewModel;
+
+            //this.AllTableMakerProductsViewInstance.DataContext = allTableMakerProductsViewModel;                                                         //ViewModel跟View绑定
+
+
+            //this.AllBatteriesViewInstance.DataContext = allBatteriesViewModel;                                                            //ViewModel跟View绑定
+
+
+            //this.AllTestersViewInstance.DataContext = allTestersViewModel;                                                            //ViewModel跟View绑定
+
+
+            //this.AllChannelsViewInstance.DataContext = allChannelsViewModel;                                                            //ViewModel跟View绑定
+
+
+            //this.AllChambersViewInstance.DataContext = allChambersViewModel;                                                            //ViewModel跟View绑定
+
+            ////this.AllStepTemplateViewInstance.DataContext = allStepTemplatesViewModel;
+
+            //this.AllRecipeTemplatesViewInstance.DataContext = allRecipeTemplatesViewModel;                                                            //ViewModel跟View绑定
+
+            //this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定
+
+            //this.DashBoardViewInstance.DataContext = dashBoardViewModel;
+
             try
             {
                 InitializeDatabase();
-#if Show
-                InitializeComponent();
-#if !Requester
                 InitializeTempFileFolder();
-#endif
                 LoadFromDB();
-#if TemplateUpgrade
-                UpgradeTemplate();
-#endif
                 CreateProcesserForTesters();
-                InitializeNavigator();
                 CreateViewModels();
-                BindingVMandView();
-                ProgramService.UpdateEstimatedTimeChain();
-#if Requester
-                UpdateUIForRequester();
-#endif
-#else
-                App.Current.Shutdown();
-#endif
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
-                App.Current.Shutdown();
             }
-#else
-            InitializeComponent();
-            mainWindowViewModel = new MainWindowViewModel();
-            DataContext = mainWindowViewModel;
-#endif
         }
+
 
         private void InitializeTempFileFolder()
         {
@@ -148,11 +114,6 @@ namespace BCLabManager
             {
                 tester.BuildProcesser();
             }
-        }
-
-        private void InitializeNavigator()
-        {
-            Navigator.Initialize(this);
         }
         void InitializeDatabase()
         {
@@ -320,94 +281,28 @@ namespace BCLabManager
 
             dashBoardViewModel = new DashBoardViewModel(BatteryService, ChannelService, ChamberService, ProgramService);
         }
-        void BindingVMandView()
-        {
+        #endregion // Constructor
 
-            this.AllBatteryTypesViewInstance.DataContext = allBatteryTypesViewModel;
+        #region Presentation Properties
+        public AllBatteryTypesViewModel allBatteryTypesViewModel { get; set; }  //其中需要显示BatteryTypes和Batteries
+        public AllProjectsViewModel allProjectsViewModel { get; set; }  //其中需要显示Projects
+        public AllProjectSettingsViewModel allProjectSettingsViewModel { get; set; }  //其中需要显示Projects
+        public AllProgramTypesViewModel allProgramTypesViewModel { get; set; }  //其中需要显示Projects
+        public AllTableMakerProductTypesViewModel allTableMakerProductTypesViewModel { get; set; }  //
+        public AllTableMakerProductsViewModel allTableMakerProductsViewModel { get; set; }  //
+        public AllBatteriesViewModel allBatteriesViewModel { get; set; }  //其中需要显示Batteries和Records
 
-            this.AllProjectsViewInstance.DataContext = allProjectsViewModel;                                                           //ViewModel跟View绑定
+        public AllTestersViewModel allTestersViewModel { get; set; }  //其中需要显示Testers和Channels
+        public AllChannelsViewModel allChannelsViewModel { get; set; }  //其中需要显示Channels和Records
 
-            this.AllProjectSettingsViewInstance.DataContext = allProjectSettingsViewModel;                                                           //ViewModel跟View绑定
+        public AllChambersViewModel allChambersViewModel { get; set; }  //其中需要显示Chambers和Records
 
-            this.AllProgramTypesViewInstance.DataContext = allProgramTypesViewModel;                                                           //ViewModel跟View绑定
+        public AllRecipeTemplatesViewModel allRecipeTemplatesViewModel { get; set; }  //其中需要显示Recipes
 
-            this.AllTableMakerProductTypesViewInstance.DataContext = allTableMakerProductTypesViewModel;
+        public AllProgramsViewModel allProgramsViewModel { get; set; }  //其中需要显示Programs, Recipes, Test1, Test2, TestSteps
 
-            this.AllTableMakerProductsViewInstance.DataContext = allTableMakerProductsViewModel;                                                         //ViewModel跟View绑定
+        public DashBoardViewModel dashBoardViewModel { get; set; }
+#endregion // Presentation Properties
 
-
-            this.AllBatteriesViewInstance.DataContext = allBatteriesViewModel;                                                            //ViewModel跟View绑定
-
-
-            this.AllTestersViewInstance.DataContext = allTestersViewModel;                                                            //ViewModel跟View绑定
-
-
-            this.AllChannelsViewInstance.DataContext = allChannelsViewModel;                                                            //ViewModel跟View绑定
-
-
-            this.AllChambersViewInstance.DataContext = allChambersViewModel;                                                            //ViewModel跟View绑定
-
-            //this.AllStepTemplateViewInstance.DataContext = allStepTemplatesViewModel;
-
-            this.AllRecipeTemplatesViewInstance.DataContext = allRecipeTemplatesViewModel;                                                            //ViewModel跟View绑定
-
-            this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定
-
-            this.DashBoardViewInstance.DataContext = dashBoardViewModel;
-        }
-
-        private void Load_Pseudocode_Click(object sender, RoutedEventArgs e)
-        {
-            var dialog = new OpenFileDialog();
-            dialog.DefaultExt = ".xml";
-            dialog.Title = "Load Pseudocode";
-            //dialog.Multiselect = true;
-            if (dialog.ShowDialog() == true)
-            {
-                PseudocodeProcesser.Load(dialog.FileName, ProgramService.RecipeService.RecipeTemplateService, ProgramService, ProjectService, ProgramTypeService);
-            }
-        }
-
-        private void Event_Click(object sender, RoutedEventArgs e)
-        {
-            AllEventsView allEventsView = new AllEventsView();
-            var vm = new AllEventsViewModel
-                 (
-                 ProgramService,
-                 ProjectService,
-                 ProgramTypeService,
-                 BatteryService,
-                 TesterService,
-                 ChannelService,
-                 ChamberService,
-                 BatteryTypeService
-                 );
-            allEventsView.DataContext = vm;// new AllEventsViewModel(/*EventService*/);
-            allEventsView.ShowDialog();
-        }
-
-        private void UpdateUIForRequester()
-        {
-            AllTestersViewInstance.ButtonPanel.IsEnabled = false;
-            AllChannelsViewInstance.ButtonPanel.IsEnabled = false;
-            AllBatteriesViewInstance.ButtonPanel.IsEnabled = false;
-            AllChambersViewInstance.ButtonPanel.IsEnabled = false;
-            AllProgramTypesViewInstance.Visibility = Visibility.Collapsed;
-            AllTableMakerProductTypesViewInstance.Visibility = Visibility.Collapsed;
-            AllTableMakerProductsViewInstance.Visibility = Visibility.Collapsed;
-            AllProgramsViewInstance.RecipeButtonPanel.IsEnabled = false;
-            AllProgramsViewInstance.FreeTestRecordButtonPanel.IsEnabled = false;
-            AllProgramsViewInstance.DirectCommitBtn.IsEnabled = false;
-            AllProgramsViewInstance.ExecuteBtn.IsEnabled = false;
-            AllProgramsViewInstance.CommitBtn.IsEnabled = false;
-            AllProgramsViewInstance.InvalidateBtn.IsEnabled = false;
-            AllProgramsViewInstance.AddBtn.IsEnabled = false;
-            Grid.SetColumnSpan(ProjectBorder, 3);
-            Grid.SetColumn(ProjectSettingBorder, 4);
-            Grid.SetColumnSpan(ProjectSettingBorder, 5);
-            //Title = "BCLM-R v0.2.0.5";
-            var array = Title.Split();
-            Title = $"{array[0]}-R {array[1]}";
-        }
     }
 }
