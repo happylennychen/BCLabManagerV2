@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#define TemplateUpgrade
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,45 +51,16 @@ namespace BCLabManager.ViewModel
         public MainWindowViewModel(
             )     //
         {
-            //this.AllBatteryTypesViewInstance.DataContext = allBatteryTypesViewModel;
-
-            //this.AllProjectsViewInstance.DataContext = allProjectsViewModel;                                                           //ViewModel跟View绑定
-
-            //this.AllProjectSettingsViewInstance.DataContext = allProjectSettingsViewModel;                                                           //ViewModel跟View绑定
-
-            //this.AllProgramTypesViewInstance.DataContext = allProgramTypesViewModel;                                                           //ViewModel跟View绑定
-
-            //this.AllTableMakerProductTypesViewInstance.DataContext = allTableMakerProductTypesViewModel;
-
-            //this.AllTableMakerProductsViewInstance.DataContext = allTableMakerProductsViewModel;                                                         //ViewModel跟View绑定
-
-
-            //this.AllBatteriesViewInstance.DataContext = allBatteriesViewModel;                                                            //ViewModel跟View绑定
-
-
-            //this.AllTestersViewInstance.DataContext = allTestersViewModel;                                                            //ViewModel跟View绑定
-
-
-            //this.AllChannelsViewInstance.DataContext = allChannelsViewModel;                                                            //ViewModel跟View绑定
-
-
-            //this.AllChambersViewInstance.DataContext = allChambersViewModel;                                                            //ViewModel跟View绑定
-
-            ////this.AllStepTemplateViewInstance.DataContext = allStepTemplatesViewModel;
-
-            //this.AllRecipeTemplatesViewInstance.DataContext = allRecipeTemplatesViewModel;                                                            //ViewModel跟View绑定
-
-            //this.AllProgramsViewInstance.DataContext = allProgramsViewModel;                                                            //ViewModel跟View绑定
-
-            //this.DashBoardViewInstance.DataContext = dashBoardViewModel;
-
             try
             {
+                var startupWindow = new StartupWindow();
+                startupWindow.Show();
                 InitializeDatabase();
                 InitializeTempFileFolder();
                 LoadFromDB();
                 CreateProcesserForTesters();
                 CreateViewModels();
+                startupWindow.Close();
             }
             catch (Exception e)
             {

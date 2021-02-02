@@ -16,7 +16,6 @@ namespace BCLabManager
     {
         protected override Window CreateShell()
         {
-            MessageBox.Show("Got here first");
             return Container.Resolve<MainWindow>();
         }
 

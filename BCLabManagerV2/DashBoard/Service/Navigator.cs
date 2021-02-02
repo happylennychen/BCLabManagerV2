@@ -21,7 +21,8 @@ namespace BCLabManager.View
         }
         public static void SetSelectedTestRecord(int id)
         {
-            foreach (var pro in _mainWindow.allProgramsViewModel.AllPrograms)
+            MainWindowViewModel mwv = _mainWindow.DataContext as MainWindowViewModel;
+            foreach (var pro in mwv.allProgramsViewModel.AllPrograms)
                 foreach (var sub in pro.Recipes)
                 {
                     foreach(var tr in sub.TestRecords)
