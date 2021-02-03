@@ -148,7 +148,13 @@ namespace BCLabManager.ViewModel
 
         public string Description
         {
-            get { return _program.Description; }
+            get 
+            {
+                if (_program.Description != string.Empty && _program.Description != null)
+                    return _program.Description;
+                else
+                    return "No description.";
+            }
             set
             {
                 if (value == _program.Description)

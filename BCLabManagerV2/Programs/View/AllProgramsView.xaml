@@ -105,6 +105,15 @@
                           x:Name="Programlist" AutoGenerateColumns="False"
                           ItemsSource="{Binding Source={StaticResource programsCollectionViewSource}}"
                           SelectedItem="{Binding Path=SelectedProgram, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="ToolTip">
+                                <Setter.Value>
+                                    <TextBlock Text="{Binding Path=Description}" />
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGrid.RowStyle>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
                         <DataGridTemplateColumn Header="Progress" CellTemplate="{StaticResource ProgressBar}" Width="100"></DataGridTemplateColumn>
