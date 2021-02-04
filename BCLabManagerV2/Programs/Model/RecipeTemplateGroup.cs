@@ -20,5 +20,9 @@ namespace BCLabManager.Model
         public RecipeTemplateGroup()
         {
         }
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

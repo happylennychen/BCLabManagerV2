@@ -1,0 +1,41 @@
+﻿<Window x:Class="BCLabManager.View.GroupManagerView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:BCLabManager.Model"
+        Title="{Binding Path=DisplayName}" Height="800" Width="400" WindowStartupLocation="CenterScreen">
+    <Grid Margin="4">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="4"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="4"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4"></RowDefinition>
+            <RowDefinition Height="15*"></RowDefinition>
+            <RowDefinition Height="4"></RowDefinition>
+            <RowDefinition Height="70*"></RowDefinition>
+            <RowDefinition Height="4"></RowDefinition>
+            <RowDefinition Height="15*"></RowDefinition>
+            <RowDefinition Height="4"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Template Group</Label>
+        <ComboBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"
+      ItemsSource="{Binding Path=AllGroups, Mode=OneWay}"
+      SelectedItem="{Binding Path=Group, ValidatesOnDataErrors=True}"></ComboBox>
+        <DataGrid Grid.Row="3" Grid.ColumnSpan="5" GridLinesVisibility="None" AutoGenerateColumns="False"  Grid.Column="0"
+                          ItemsSource="{Binding Path=RecipeTemplates}" Background="White" CanUserAddRows="True" Validation.ErrorTemplate="{x:Null}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Name" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Original Group" Binding="{Binding Path=Group}"></DataGridTextColumn>
+                <DataGridCheckBoxColumn Header="IsSelected" Binding="{Binding Path=IsSelected}"></DataGridCheckBoxColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Grid.Row="5" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="60"
+      Command="{Binding Path=ApplyCommand}">Apply</Button>
+        <Button Grid.Row="5" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="60" Click="OK_Click">OK</Button>
+    </Grid>
+</Window>

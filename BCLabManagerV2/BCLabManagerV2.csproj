@@ -309,6 +309,11 @@
     <Compile Include="Programs\Model\Service\CutOffBehaviorServiceClass.cs" />
     <Compile Include="Programs\ViewModel\JumpBehaviorViewModel.cs" />
     <Compile Include="Programs\ViewModel\CutOffBehaviorViewModel.cs" />
+    <Compile Include="Programs\ViewModel\GroupManagerViewModel.cs" />
+    <Compile Include="Programs\ViewModel\RecipeTemplateChooseViewModel.cs" />
+    <Compile Include="Programs\View\GroupManagerView.xaml.cs">
+      <DependentUpon>GroupManagerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\ErrorCode.cs" />
     <Compile Include="Services\Module.cs" />
     <Compile Include="Services\EventService.cs" />
@@ -679,6 +684,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Programs\View\ExecuteFreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Programs\View\GroupManagerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -402,7 +402,10 @@ namespace BCLabManager.ViewModel
         }
         private void ManageGroup()
         {
-
+            GroupManagerViewModel viewModel = new GroupManagerViewModel(_recipeTemplateGroupServcie, _recipeTemplateServcie);
+            var groupManagerViewInstance = new GroupManagerView();
+            groupManagerViewInstance.DataContext = viewModel;
+            groupManagerViewInstance.ShowDialog();
         }
         #endregion //Private Helper
 
