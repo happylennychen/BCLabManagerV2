@@ -116,12 +116,23 @@ namespace BCLabManager.Model
             var tr = new TestRecord();
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                rec = uow.Recipies.SingleOrDefault(o=>o.Id == recipe.Id);
+                rec = uow.Recipies.SingleOrDefault(o => o.Id == recipe.Id);
                 tr = uow.TestRecords.SingleOrDefault(o => o.Id == record.Id);
                 rec.TestRecords.Add(tr);
                 uow.Commit();
             }
             recipe.TestRecords.Add(record);
+        }
+
+        internal void UpdateTime(Recipe recipe)
+        {
+            var quary = recipe.TestRecords.Where(o => o.Status != TestStatus.Abandoned && o.StartTime!=DateTime.MinValue && o.EndTime!=DateTime.MinValue);
+            if (quary != null && quary.Count() != 0)
+            {
+                recipe.StartTime = quary.Min(o => o.StartTime);
+                recipe.EndTime = quary.Max(o => o.EndTime);
+                SuperUpdate(recipe);
+            }
         }
     }
 }

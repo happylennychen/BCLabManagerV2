@@ -183,10 +183,10 @@ namespace BCLabManager.ViewModel
         {
             get 
             {
-                if (_program.StartTime != DateTime.MinValue)
+                //if (_program.StartTime != DateTime.MinValue)
                     return _program.StartTime;
-                else
-                    return _program.EST;
+                //else
+                //    return _program.EST;
             }
             set
             {
@@ -215,10 +215,10 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                if (_program.EndTime != DateTime.MinValue)
+                //if (_program.EndTime != DateTime.MinValue)
                     return _program.EndTime;
-                else
-                    return _program.EET;
+                //else
+                //    return _program.EET;
             }
             set
             {

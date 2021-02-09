@@ -174,6 +174,16 @@ namespace BCLabManager.ViewModel
                     return Brushes.Black;
             }
         }
+
+        public TimeSpan Duration
+        {
+            get
+            {
+                if (EndTime == DateTime.MinValue)
+                    return TimeSpan.Zero;
+                return EndTime - StartTime;
+            }
+        }
         public string Name
         {
             get

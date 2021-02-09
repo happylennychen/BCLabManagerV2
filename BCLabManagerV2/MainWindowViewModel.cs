@@ -51,23 +51,65 @@ namespace BCLabManager.ViewModel
         public MainWindowViewModel(
             )     //
         {
+            var startupWindow = new StartupWindow();
+            startupWindow.Show();
             try
             {
-                var startupWindow = new StartupWindow();
-                startupWindow.Show();
                 InitializeDatabase();
                 InitializeTempFileFolder();
                 LoadFromDB();
                 CreateProcesserForTesters();
                 CreateViewModels();
-                startupWindow.Close();
+                UpdateStatus();
+                UpdateTime();
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }
+            finally
+            {
+                startupWindow.Close();
+            }
         }
 
+        private void UpdateStatus()
+        {
+            foreach (var rec in ProgramService.RecipeService.Items)
+            {
+                if (rec.IsAbandoned == false)
+                    if (rec.TestRecords.All(o => o.Status == TestStatus.Abandoned))
+                    {
+                        rec.IsAbandoned = true;
+                        ProgramService.RecipeService.SuperUpdate(rec);
+                    }
+            }
+            foreach (var pro in ProgramService.Items)
+            {
+                if (pro.IsInvalid == false)
+                    if (pro.Recipes.All(o => o.IsAbandoned == true))
+                    {
+                        pro.IsInvalid = true;
+                        ProgramService.SuperUpdate(pro);
+                    }
+            }
+        }
+
+        private void UpdateTime()
+        {
+            foreach (var rec in ProgramService.RecipeService.Items)
+            {
+                if (rec.IsAbandoned == false)
+                    if (rec.StartTime == null || rec.StartTime == DateTime.MinValue)
+                        ProgramService.RecipeService.UpdateTime(rec);
+            }
+            foreach (var pro in ProgramService.Items)
+            {
+                if (pro.IsInvalid == false)
+                    if (pro.StartTime == null || pro.StartTime == DateTime.MinValue)
+                        ProgramService.UpdateTime(pro);
+            }
+        }
 
         private void InitializeTempFileFolder()
         {
@@ -274,7 +316,7 @@ namespace BCLabManager.ViewModel
         public AllProgramsViewModel allProgramsViewModel { get; set; }  //其中需要显示Programs, Recipes, Test1, Test2, TestSteps
 
         public DashBoardViewModel dashBoardViewModel { get; set; }
-#endregion // Presentation Properties
+        #endregion // Presentation Properties
 
     }
 }

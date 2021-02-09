@@ -374,5 +374,16 @@ namespace BCLabManager.Model
             }
             DatabaseUpdate(program);
         }
+
+        internal void UpdateTime(Program program)
+        {
+            var quary = program.Recipes.Where(o => o.IsAbandoned == false && o.StartTime != DateTime.MinValue);
+            if (quary != null && quary.Count() != 0)
+            {
+                program.StartTime = quary.Min(o => o.StartTime);
+                program.EndTime = quary.Max(o => o.EndTime);
+                SuperUpdate(program);
+            }
+        }
     }
 }

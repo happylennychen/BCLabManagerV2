@@ -1178,10 +1178,10 @@ namespace BCLabManager.Model
                     //if (Nodes[Index].Status == "StepFinishByCut_I")
                     if (Nodes[Index - 1].Status == StepEndString.EndByCurrent)
                     {
-                        if (step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.CURRENT) == null)
+                        if (!step.CutOffBehaviors.Any(o => o.Condition.Parameter == Parameter.CURRENT))
                             return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
                         current = Nodes[Index - 1].Current * 1000;
-                        if (Math.Abs(current - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.CURRENT).Value) > StepTolerance.Current)
+                        if (Math.Abs(current - step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.CURRENT).Condition.Value) > StepTolerance.Current)
                             return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
                         voltage = Nodes[Index - 1].Voltage * 1000;
                         if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance.Voltage)
@@ -1189,9 +1189,9 @@ namespace BCLabManager.Model
                     }
                     else if (Nodes[Index - 1].Status == StepEndString.EndByTime)     //DST测试也会设定充电时间
                     {
-                        if (step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME) == null)
+                        if (step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME) == null)
                             return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
-                        if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance.Time)
+                        if (Math.Abs(timeSpan - step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME).Condition.Value) > StepTolerance.Time)
                             return ErrorCode.DP_TIME_OUT_OF_RANGE;
                     }
                     else
@@ -1202,17 +1202,17 @@ namespace BCLabManager.Model
                 case ActionMode.CC_DISCHARGE:
                     if (Nodes[Index - 1].Status == StepEndString.EndByVoltage)
                     {
-                        if (step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE) == null)
+                        if (step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.VOLTAGE) == null)
                             return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
                         voltage = Nodes[Index - 1].Voltage * 1000;
-                        if (Math.Abs(voltage - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE).Value) > StepTolerance.Voltage)
+                        if (Math.Abs(voltage - step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.VOLTAGE).Condition.Value) > StepTolerance.Voltage)
                             return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
                     }
                     else if (Nodes[Index - 1].Status == StepEndString.EndByTime)
                     {
-                        if (step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME) == null)
+                        if (step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME) == null)
                             return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
-                        if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance.Time)
+                        if (Math.Abs(timeSpan - step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME).Condition.Value) > StepTolerance.Time)
                             return ErrorCode.DP_TIME_OUT_OF_RANGE;
                     }
                     else
@@ -1223,17 +1223,17 @@ namespace BCLabManager.Model
                 case ActionMode.CP_DISCHARGE:
                     if (Nodes[Index - 1].Status == StepEndString.EndByVoltage)
                     {
-                        if (step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE) == null)
+                        if (step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.VOLTAGE) == null)
                             return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
                         voltage = Nodes[Index - 1].Voltage * 1000;
-                        if (Math.Abs(voltage - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.VOLTAGE).Value) > StepTolerance.Voltage)
+                        if (Math.Abs(voltage - step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.VOLTAGE).Condition.Value) > StepTolerance.Voltage)
                             return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
                     }
                     else if (Nodes[Index - 1].Status == StepEndString.EndByTime)
                     {
-                        if (step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME) == null)
+                        if (step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME) == null)
                             return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
-                        if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance.Time)
+                        if (Math.Abs(timeSpan - step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME).Condition.Value) > StepTolerance.Time)
                             return ErrorCode.DP_TIME_OUT_OF_RANGE;
                     }
                     else
@@ -1244,9 +1244,9 @@ namespace BCLabManager.Model
                 case ActionMode.REST:
                     if (Nodes[Index - 1].Status == StepEndString.EndByTime)
                     {
-                        if (step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME) == null)
+                        if (step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME) == null)
                             return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
-                        if (Math.Abs(timeSpan - step.CutOffConditions.SingleOrDefault(o => o.Parameter == Parameter.TIME).Value) > StepTolerance.Time)
+                        if (Math.Abs(timeSpan - step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME).Condition.Value) > StepTolerance.Time)
                             return ErrorCode.DP_TIME_OUT_OF_RANGE;
                     }
                     else

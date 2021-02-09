@@ -943,6 +943,8 @@ namespace BCLabManager.ViewModel
                     SelectedTestRecord.NewCycle = evm.NewCycle;
                     _programService.RecipeService.TestRecordService.CommitV2(
                     SelectedTestRecord.Record, evm.Comment, filePath, st, et);
+                    _programService.RecipeService.UpdateTime(SelectedRecipe._recipe);
+                    _programService.UpdateTime(SelectedProgram._program);
                 }
                 catch (Exception e)
                 {
