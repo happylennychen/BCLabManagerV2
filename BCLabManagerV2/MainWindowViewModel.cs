@@ -62,6 +62,7 @@ namespace BCLabManager.ViewModel
                 CreateViewModels();
                 UpdateStatus();
                 UpdateTime();
+                UpdateEditable();
             }
             catch (Exception e)
             {
@@ -70,6 +71,27 @@ namespace BCLabManager.ViewModel
             finally
             {
                 startupWindow.Close();
+            }
+        }
+
+        private void UpdateEditable()
+        {
+            List<RecipeTemplate> UsedTemplates = new List<RecipeTemplate>();
+            foreach (var pro in ProgramService.Items)
+            {
+                foreach (var rec in pro.Recipes)
+                {
+                    if (!UsedTemplates.Contains(rec.RecipeTemplate))
+                        UsedTemplates.Add(rec.RecipeTemplate);
+                }
+            }
+            foreach (var rectemp in ProgramService.RecipeService.RecipeTemplateService.Items)
+            {
+                if (!UsedTemplates.Contains(rectemp))
+                {
+                    rectemp.Editable = true;
+                    ProgramService.RecipeService.RecipeTemplateService.SuperUpdate(rectemp);
+                }
             }
         }
 

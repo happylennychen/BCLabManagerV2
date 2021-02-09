@@ -336,7 +336,7 @@ namespace BCLabManager.ViewModel
         }
         private bool CanEdit
         {
-            get { return _selectedItem != null; }
+            get { return _selectedItem != null && _selectedItem.Editable == true; }
         }
         private void SaveAs()
         {

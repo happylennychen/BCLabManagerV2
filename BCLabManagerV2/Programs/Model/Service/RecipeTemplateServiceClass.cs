@@ -80,5 +80,11 @@ namespace BCLabManager.Model
                 uow.Commit();
             }
         }
+
+        internal void UpdateEditable(RecipeTemplate recipeTemplate)
+        {
+            recipeTemplate.Editable = false;
+            SuperUpdate(recipeTemplate);
+        }
     }
 }

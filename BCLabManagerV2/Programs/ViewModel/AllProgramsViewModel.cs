@@ -945,6 +945,7 @@ namespace BCLabManager.ViewModel
                     SelectedTestRecord.Record, evm.Comment, filePath, st, et);
                     _programService.RecipeService.UpdateTime(SelectedRecipe._recipe);
                     _programService.UpdateTime(SelectedProgram._program);
+                    _programService.RecipeService.RecipeTemplateService.UpdateEditable(SelectedRecipe._recipe.RecipeTemplate);
                 }
                 catch (Exception e)
                 {

@@ -24,7 +24,7 @@ namespace BCLabManager.Model
             set { SetProperty(ref _group, value); }
         }
 
-        private bool _editable;
+        private bool _editable = true;
         public bool Editable
         {
             get { return _editable; }
