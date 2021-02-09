@@ -158,7 +158,6 @@ namespace BCLabManager.ViewModel
                 if (_selectedCOB != value)
                 {
                     _selectedCOB = value;
-                    RaisePropertyChanged("Protections");
                 }
             }
         }
@@ -194,6 +193,7 @@ namespace BCLabManager.ViewModel
                 {
                     _selectedItem = value;
                     RaisePropertyChanged("Steps");
+                    //RaisePropertyChanged("Protections");
                 }
             }
         }

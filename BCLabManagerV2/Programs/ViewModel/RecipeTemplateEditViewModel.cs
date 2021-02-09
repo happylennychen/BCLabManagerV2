@@ -19,13 +19,13 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
         public readonly RecipeTemplate _RecipeTemplate;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
-        StepV2ViewModel _selectedStep;
+        StepV2 _selectedStep;
         CutOffBehaviorViewModel _selectedCOB;
         RelayCommand _okCommand;
-        RelayCommand _addStepCommand;
-        RelayCommand _removeStepCommand;
+        RelayCommand _pasteStepCommand;
+        RelayCommand _copyStepCommand;
         bool _isOK;
-
+        StepV2 stepBuffer;
         #endregion // Fields
 
         #region Constructor
@@ -43,10 +43,10 @@ namespace BCLabManager.ViewModel
             switch (e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    foreach (var item in e.NewItems)
+                    foreach (var item in Steps)
                     {
                         var step = item as StepV2;
-                        step.Index = Steps.Count;
+                        step.Index = Steps.IndexOf(step) + 1;
                     }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
@@ -112,7 +112,7 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public StepV2ViewModel SelectedStep
+        public StepV2 SelectedStep
         {
             get
             {
@@ -127,20 +127,20 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public CutOffBehaviorViewModel SelectedCOB
-        {
-            get
-            {
-                return _selectedCOB;
-            }
-            set
-            {
-                if (_selectedCOB != value)
-                {
-                    _selectedCOB = value;
-                }
-            }
-        }
+        //public CutOffBehaviorViewModel SelectedCOB
+        //{
+        //    get
+        //    {
+        //        return _selectedCOB;
+        //    }
+        //    set
+        //    {
+        //        if (_selectedCOB != value)
+        //        {
+        //            _selectedCOB = value;
+        //        }
+        //    }
+        //}
 
         //public ObservableCollection<Protection> Protections
         //{
@@ -202,33 +202,33 @@ namespace BCLabManager.ViewModel
             set { _isOK = value; }
         }
 
-        public ICommand AddStepCommand
+        public ICommand PasteStepCommand
         {
             get
             {
-                if (_addStepCommand == null)
+                if (_pasteStepCommand == null)
                 {
-                    _addStepCommand = new RelayCommand(
-                        param => { this.AddStep(); },
-                        param => this.CanAddStep
+                    _pasteStepCommand = new RelayCommand(
+                        param => { this.PasteStep(); },
+                        param => this.CanPasteStep
                             );
                 }
-                return _addStepCommand;
+                return _pasteStepCommand;
             }
         }
 
-        public ICommand RemoveStepCommand
+        public ICommand CopyStepCommand
         {
             get
             {
-                if (_removeStepCommand == null)
+                if (_copyStepCommand == null)
                 {
-                    _removeStepCommand = new RelayCommand(
-                        param => { this.RemoveStep(); },
-                        param => this.CanRemoveStep
+                    _copyStepCommand = new RelayCommand(
+                        param => { this.CopyStep(); },
+                        param => this.CanCopyStep
                             );
                 }
-                return _removeStepCommand;
+                return _copyStepCommand;
             }
         }
 
@@ -244,23 +244,17 @@ namespace BCLabManager.ViewModel
             IsOK = true;
         }
 
-        public void AddStep()       //对于model来说，需要将选中的sub copy到_program.Recipes来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.Recipes里面去
+        public void CopyStep()       //对于model来说，需要将选中的sub 从_program.Recipes中移除。对于viewmodel来说，需要将这个viewmodel从this.Recipes中移除
         {
-            var step = new StepV2();
-            //var stepViewInstance = new StepView();
-            //var stepViewEditViewModel = new StepV2EditViewModel(step);
-            //stepViewInstance.DataContext = stepViewEditViewModel;
-            //stepViewInstance.ShowDialog();
-            //if (stepViewEditViewModel.IsOK == true)
-            {
-                step.Index = Steps.Count + 1;
-                Steps.Add(step);
-            }
+            stepBuffer = SelectedStep;
         }
 
-        public void RemoveStep()       //对于model来说，需要将选中的sub 从_program.Recipes中移除。对于viewmodel来说，需要将这个viewmodel从this.Recipes中移除
+        public void PasteStep()       //对于model来说，需要将选中的sub copy到_program.Recipes来。对于viewmodel来说，需要将这个copy出来的sub，包装成viewmodel并添加到this.Recipes里面去
         {
-
+            var step = stepBuffer.Clone();
+            //step.Index = Steps.Count + 1;
+            //Steps.Add(step);
+            Steps.Insert(Steps.IndexOf(SelectedStep), step);
         }
 
         #endregion // Public Methods
@@ -295,14 +289,16 @@ namespace BCLabManager.ViewModel
             get { return IsNewRecipeTemplate; }
         }
 
-        bool CanAddStep
+        bool CanPasteStep
         {
-            get { return true; }
+            get { return stepBuffer != null; }
+            //get { return true; }
         }
 
-        bool CanRemoveStep
+        bool CanCopyStep
         {
-            get { return SelectedStep != null; }     //如果已经有数据，可否删除？
+            get { return SelectedStep != null; }
+            //get { return true; }
         }
 
         #endregion // Private Helpers

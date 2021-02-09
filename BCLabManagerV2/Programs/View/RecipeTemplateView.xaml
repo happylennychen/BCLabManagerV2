@@ -98,114 +98,112 @@
       MinWidth="60" 
       />
                 <Grid Margin="4">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50*"></ColumnDefinition>
-                            <ColumnDefinition Width="5"></ColumnDefinition>
-                            <ColumnDefinition Width="25*"></ColumnDefinition>
-                            <ColumnDefinition Width="5"></ColumnDefinition>
-                            <ColumnDefinition Width="25*"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="50*"></RowDefinition>
-                            <RowDefinition Height="5"></RowDefinition>
-                            <RowDefinition Height="50*"></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <GroupBox Header="Steps" Grid.RowSpan="3">
-                            <DockPanel>
-                                <DockPanel DockPanel.Dock="Bottom" Visibility="Collapsed">
-                                    <Button DockPanel.Dock="Right"
-                                      Command="{Binding Path=RemoveStepCommand}"
-                                      Content="Remove"
-                                      HorizontalAlignment="Right"
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="25*"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="25*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50*"></RowDefinition>
+                        <RowDefinition Height="5"></RowDefinition>
+                        <RowDefinition Height="50*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <GroupBox Header="Steps" Grid.RowSpan="3">
+                        <DockPanel>
+                            <DockPanel DockPanel.Dock="Top">
+                                <Button DockPanel.Dock="Left"
+                                      Command="{Binding Path=CopyStepCommand}"
+                                      Content="Copy"
+                                      HorizontalAlignment="Left"
                                       Margin="4,2" 
                                       MinWidth="60" 
                                       />
-                                    <Button DockPanel.Dock="Right"
-                                      Command="{Binding Path=AddStepCommand}"
-                                      Content="Add"
-                                      HorizontalAlignment="Right"
+                                <Button DockPanel.Dock="Left"
+                                      Command="{Binding Path=PasteStepCommand}"
+                                      Content="Paste"
+                                      HorizontalAlignment="Left"
                                       Margin="4,2" 
                                       MinWidth="60" 
                                       />
-                                </DockPanel>
-                                <DataGrid GridLinesVisibility="None" x:Name="Steps" AutoGenerateColumns="False"  Grid.Column="0"
+                            </DockPanel>
+                            <DataGrid GridLinesVisibility="None" x:Name="Steps" AutoGenerateColumns="False"  Grid.Column="0"
                           ItemsSource="{Binding Path=Steps}" Background="White" CanUserAddRows="True" Validation.ErrorTemplate="{x:Null}"
                           SelectedItem="{Binding Path=SelectedStep, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Index" IsReadOnly="True" Binding="{Binding Path=Index}"></DataGridTextColumn>
-                                        <DataGridComboBoxColumn Header="Mode" SelectedItemBinding="{Binding Path=Action.Mode}" ItemsSource="{Binding Source={StaticResource ActionModeEnum}}"></DataGridComboBoxColumn>
-                                        <DataGridTextColumn Header="Voltage" Binding="{Binding Path=Action.Voltage}"></DataGridTextColumn>
-                                        <DataGridTextColumn Header="Current" Binding="{Binding Path=Action.Current}"></DataGridTextColumn>
-                                        <DataGridTextColumn Header="Power" Binding="{Binding Path=Action.Power}"></DataGridTextColumn>
-                                        <DataGridTextColumn Header="Loop1Label" Binding="{Binding Path=Loop1Label}"></DataGridTextColumn>
-                                        <DataGridTextColumn Header="Loop2Label" Binding="{Binding Path=Loop2Label}"></DataGridTextColumn>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </DockPanel>
-                        </GroupBox>
-                        <GroupBox Header="Protections" Grid.Column="2">
-                            <DockPanel>
-                                <DockPanel DockPanel.Dock="Bottom" Visibility="Collapsed">
-                                    <Button DockPanel.Dock="Right"
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Index" IsReadOnly="True" Binding="{Binding Path=Index}"></DataGridTextColumn>
+                                    <DataGridComboBoxColumn Header="Mode" SelectedItemBinding="{Binding Path=Action.Mode}" ItemsSource="{Binding Source={StaticResource ActionModeEnum}}"></DataGridComboBoxColumn>
+                                    <DataGridTextColumn Header="Voltage" Binding="{Binding Path=Action.Voltage}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Current" Binding="{Binding Path=Action.Current}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Power" Binding="{Binding Path=Action.Power}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Loop1Label" Binding="{Binding Path=Loop1Label}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Loop2Label" Binding="{Binding Path=Loop2Label}"></DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DockPanel>
+                    </GroupBox>
+                    <GroupBox Header="Protections" Grid.Column="2">
+                        <DockPanel>
+                            <DockPanel DockPanel.Dock="Bottom" Visibility="Collapsed">
+                                <Button DockPanel.Dock="Right"
                                       Command="{Binding Path=RemoveStepCommand}"
                                       Content="Remove"
                                       HorizontalAlignment="Right"
                                       Margin="4,2" 
                                       MinWidth="60" 
                                       />
-                                    <Button DockPanel.Dock="Right"
+                                <Button DockPanel.Dock="Right"
                                       Command="{Binding Path=AddStepCommand}"
                                       Content="Add"
                                       HorizontalAlignment="Right"
                                       Margin="4,2" 
                                       MinWidth="60" 
                                       />
-                                </DockPanel>
-                                <DataGrid GridLinesVisibility="None" x:Name="Protections" AutoGenerateColumns="False"  Grid.Column="0"
-                          ItemsSource="{Binding ElementName=Steps, Path=SelectedItem.Protections}" Background="White"  CanUserAddRows="True" Validation.ErrorTemplate="{x:Null}">
-                                    <DataGrid.Columns>
-                                        <DataGridComboBoxColumn Header="Parameter" SelectedItemBinding="{Binding Path=Parameter}" ItemsSource="{Binding Source={StaticResource ParameterEnum}}"></DataGridComboBoxColumn>
-                                        <DataGridComboBoxColumn Header="Compare Mark" SelectedItemBinding="{Binding Path=Mark}" ItemsSource="{Binding Source={StaticResource MarkEnum}}"></DataGridComboBoxColumn>
-                                        <DataGridTextColumn Header="Value" Binding="{Binding Path=Value}"></DataGridTextColumn>
-                                    </DataGrid.Columns>
-                                </DataGrid>
                             </DockPanel>
-                        </GroupBox>
-                        <GroupBox Header="Cut-off Conditions" Grid.Column="4" Grid.Row="0">
-                            <DataGrid GridLinesVisibility="None" x:Name="COBs" AutoGenerateColumns="False"  Grid.Column="0"
+                            <DataGrid GridLinesVisibility="None" x:Name="Protections" AutoGenerateColumns="False"  Grid.Column="0"
+                          ItemsSource="{Binding ElementName=Steps, Path=SelectedItem.Protections}" Background="White"  CanUserAddRows="True" Validation.ErrorTemplate="{x:Null}">
+                                <DataGrid.Columns>
+                                    <DataGridComboBoxColumn Header="Parameter" SelectedItemBinding="{Binding Path=Parameter}" ItemsSource="{Binding Source={StaticResource ParameterEnum}}"></DataGridComboBoxColumn>
+                                    <DataGridComboBoxColumn Header="Compare Mark" SelectedItemBinding="{Binding Path=Mark}" ItemsSource="{Binding Source={StaticResource MarkEnum}}"></DataGridComboBoxColumn>
+                                    <DataGridTextColumn Header="Value" Binding="{Binding Path=Value}"></DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DockPanel>
+                    </GroupBox>
+                    <GroupBox Header="Cut-off Conditions" Grid.Column="4" Grid.Row="0">
+                        <DataGrid GridLinesVisibility="None" x:Name="COBs" AutoGenerateColumns="False"  Grid.Column="0"
                           ItemsSource="{Binding ElementName=Steps, Path=SelectedItem.CutOffBehaviors}" Background="White"  CanUserAddRows="True" Validation.ErrorTemplate="{x:Null}"
                           SelectedItem="{Binding Path=SelectedCOB, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
-                                <DataGrid.Columns>
-                                    <DataGridComboBoxColumn Header="Parameter" SelectedItemBinding="{Binding Path=Condition.Parameter}" ItemsSource="{Binding Source={StaticResource ParameterEnum}}"></DataGridComboBoxColumn>
-                                    <DataGridComboBoxColumn Header="Compare Mark" SelectedItemBinding="{Binding Path=Condition.Mark}" ItemsSource="{Binding Source={StaticResource MarkEnum}}"></DataGridComboBoxColumn>
-                                    <DataGridTextColumn Header="Value" Binding="{Binding Path=Condition.Value}"></DataGridTextColumn>
-                                    <!--<DataGridComboBoxColumn Header="Jump Type" SelectedItemBinding="{Binding Path=JumpType}" ItemsSource="{Binding Source={StaticResource JumpTypeEnum}}"></DataGridComboBoxColumn>
+                            <DataGrid.Columns>
+                                <DataGridComboBoxColumn Header="Parameter" SelectedItemBinding="{Binding Path=Condition.Parameter}" ItemsSource="{Binding Source={StaticResource ParameterEnum}}"></DataGridComboBoxColumn>
+                                <DataGridComboBoxColumn Header="Compare Mark" SelectedItemBinding="{Binding Path=Condition.Mark}" ItemsSource="{Binding Source={StaticResource MarkEnum}}"></DataGridComboBoxColumn>
+                                <DataGridTextColumn Header="Value" Binding="{Binding Path=Condition.Value}"></DataGridTextColumn>
+                                <!--<DataGridComboBoxColumn Header="Jump Type" SelectedItemBinding="{Binding Path=JumpType}" ItemsSource="{Binding Source={StaticResource JumpTypeEnum}}"></DataGridComboBoxColumn>
                                     <DataGridTextColumn Header="Index" Binding="{Binding Path=Index}"></DataGridTextColumn>
                                     <DataGridTextColumn Header="Loop1Target" Binding="{Binding Path=Loop1Target}"></DataGridTextColumn>
                                     <DataGridTextColumn Header="Loop1Count" Binding="{Binding Path=Loop1Count}"></DataGridTextColumn>
                                     <DataGridTextColumn Header="Loop2Target" Binding="{Binding Path=Loop2Target}"></DataGridTextColumn>
                                     <DataGridTextColumn Header="Loop2Count" Binding="{Binding Path=Loop2Count}"></DataGridTextColumn>-->
-                                </DataGrid.Columns>
-                            </DataGrid>
-                        </GroupBox>
-                        <GroupBox Header="Jump Behaviors" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="3">
-                            <DataGrid GridLinesVisibility="None" AutoGenerateColumns="False"  Grid.Column="0"
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox>
+                    <GroupBox Header="Jump Behaviors" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="3">
+                        <DataGrid GridLinesVisibility="None" AutoGenerateColumns="False"  Grid.Column="0"
                           ItemsSource="{Binding ElementName=COBs, Path=SelectedItem.JumpBehaviors}" Background="White"  CanUserAddRows="True" Validation.ErrorTemplate="{x:Null}">
-                                <DataGrid.Columns>
-                                    <DataGridComboBoxColumn Header="Parameter" SelectedItemBinding="{Binding Path=Condition.Parameter}" ItemsSource="{Binding Source={StaticResource ParameterEnum}}"></DataGridComboBoxColumn>
-                                    <DataGridComboBoxColumn Header="Compare Mark" SelectedItemBinding="{Binding Path=Condition.Mark}" ItemsSource="{Binding Source={StaticResource MarkEnum}}"></DataGridComboBoxColumn>
-                                    <DataGridTextColumn Header="Value" Binding="{Binding Path=Condition.Value}"></DataGridTextColumn>
-                                    <DataGridComboBoxColumn Header="Jump Type" SelectedItemBinding="{Binding Path=JumpType}" ItemsSource="{Binding Source={StaticResource JumpTypeEnum}}"></DataGridComboBoxColumn>
-                                    <DataGridTextColumn Header="Index" Binding="{Binding Path=Index}"></DataGridTextColumn>
-                                    <!--<DataGridTextColumn Header="Loop1Target" Binding="{Binding Path=Loop1Target}"></DataGridTextColumn>
+                            <DataGrid.Columns>
+                                <DataGridComboBoxColumn Header="Parameter" SelectedItemBinding="{Binding Path=Condition.Parameter}" ItemsSource="{Binding Source={StaticResource ParameterEnum}}"></DataGridComboBoxColumn>
+                                <DataGridComboBoxColumn Header="Compare Mark" SelectedItemBinding="{Binding Path=Condition.Mark}" ItemsSource="{Binding Source={StaticResource MarkEnum}}"></DataGridComboBoxColumn>
+                                <DataGridTextColumn Header="Value" Binding="{Binding Path=Condition.Value}"></DataGridTextColumn>
+                                <DataGridComboBoxColumn Header="Jump Type" SelectedItemBinding="{Binding Path=JumpType}" ItemsSource="{Binding Source={StaticResource JumpTypeEnum}}"></DataGridComboBoxColumn>
+                                <DataGridTextColumn Header="Index" Binding="{Binding Path=Index}"></DataGridTextColumn>
+                                <!--<DataGridTextColumn Header="Loop1Target" Binding="{Binding Path=Loop1Target}"></DataGridTextColumn>
                                     <DataGridTextColumn Header="Loop1Count" Binding="{Binding Path=Loop1Count}"></DataGridTextColumn>
                                     <DataGridTextColumn Header="Loop2Target" Binding="{Binding Path=Loop2Target}"></DataGridTextColumn>
                                     <DataGridTextColumn Header="Loop2Count" Binding="{Binding Path=Loop2Count}"></DataGridTextColumn>-->
-                                </DataGrid.Columns>
-                            </DataGrid>
-                        </GroupBox>
-                    </Grid>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox>
                 </Grid>
             </DockPanel>
         </GroupBox>
