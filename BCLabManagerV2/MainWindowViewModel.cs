@@ -60,9 +60,10 @@ namespace BCLabManager.ViewModel
                 LoadFromDB();
                 CreateProcesserForTesters();
                 CreateViewModels();
-                UpdateStatus();
-                UpdateTime();
-                UpdateEditable();
+                //以下三个函数只用调用一次即可
+                //UpdateStatus();
+                //UpdateTime();
+                //UpdateEditable();
             }
             catch (Exception e)
             {
