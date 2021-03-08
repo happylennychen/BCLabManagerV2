@@ -419,7 +419,7 @@ namespace BCLabManager.Model
             SuperUpdate(testRecord);
         }
 
-        internal string DataPreProcess(TestRecord record, List<string> rawDataList, bool isRename, string newName, int startIndex, DateTime st, DateTime et, string batteryType, string projectName, Program program, Recipe recipe, ITesterProcesser processer)
+        internal string DataPreProcess(TestRecord record, List<string> rawDataList, bool isRename, string newName, int startIndex, DateTime st, DateTime et, string batteryType, string projectName, Program program, Recipe recipe, ITesterProcesser processer, bool isSkipDP)
         {
             string root = $@"{GlobalSettings.RootPath}{batteryType}\{projectName}";
             string temproot = $@"{GlobalSettings.LocalFolder}{batteryType}\{projectName}";
@@ -440,13 +440,17 @@ namespace BCLabManager.Model
                 }
             }
             TesterServiceClass ts = new TesterServiceClass();
-//#if !Test
-            if (!ts.DataPreprocessing(processer, temptestfilepath, program, recipe, record, startIndex))
+            //#if !Test
+
+            if (!isSkipDP)
             {
-                File.Delete(temptestfilepath);
-                return string.Empty;
+                if (!ts.DataPreprocessing(processer, temptestfilepath, program, recipe, record, startIndex))
+                {
+                    File.Delete(temptestfilepath);
+                    return string.Empty;
+                }
             }
-//#endif
+            //#endif
             var TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
             CopyToServerWithRetry(temptestfilepath, TestFilePath);
             if (TestFilePath == "")

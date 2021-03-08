@@ -883,7 +883,7 @@ namespace BCLabManager.ViewModel
                         SelectedProgram.Project.Name,
                         SelectedProgram._program,
                         SelectedRecipe._recipe,
-                        evm.Tester.ITesterProcesser);
+                        evm.Tester.ITesterProcesser, evm.IsSkipDP);
                     if (filePath == string.Empty)
                         return;
                     SelectedTestRecord.Record.TestFilePath = filePath;

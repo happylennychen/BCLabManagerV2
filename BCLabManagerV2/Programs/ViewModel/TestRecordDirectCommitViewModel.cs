@@ -383,7 +383,7 @@ namespace BCLabManager.ViewModel
         }
 
         private bool _isSkip = false;
-        public bool IsSkip
+        public bool IsSkip  //略过对Assets的操作
         {
             get
             {
@@ -538,6 +538,24 @@ namespace BCLabManager.ViewModel
             }
         }
 
+
+        private bool _isSkipDP = false;
+        public bool IsSkipDP  //略过DataPreprocessing中的一部分操作
+        {
+            get
+            {
+                return _isSkipDP;
+            }
+            set
+            {
+                if (value == _isSkipDP)
+                    return;
+
+                _isSkipDP = value;
+
+                RaisePropertyChanged("IsSkipDP");
+            }
+        }
         #endregion // Presentation Properties
 
 
