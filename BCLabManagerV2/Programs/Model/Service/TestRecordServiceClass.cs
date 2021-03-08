@@ -110,7 +110,7 @@ namespace BCLabManager.Model
             testRecord.AssignedChannel = null;
             testRecord.Status = TestStatus.Completed;
             string root = $@"{GlobalSettings.RootPath}{batteryType}\{projectName}";
-            string temproot = $@"{GlobalSettings.TempraryFolder}{batteryType}\{projectName}";
+            string temproot = $@"{GlobalSettings.LocalFolder}{batteryType}\{projectName}";
             string temptestfilepath = string.Empty;
             if (rawDataList.Count > 1)
             {
@@ -217,7 +217,7 @@ namespace BCLabManager.Model
         private string CopyToFolder(string filepath, string root)
         {
             var newPath = Path.Combine($@"{root}\{GlobalSettings.TestDataFolderName}", Path.GetFileName(filepath));
-            var tempPath = Path.Combine($@"{GlobalSettings.TempraryFolder}\{GlobalSettings.TestDataFolderName}", Path.GetFileName(filepath));
+            var tempPath = Path.Combine($@"{GlobalSettings.LocalFolder}\{GlobalSettings.TestDataFolderName}", Path.GetFileName(filepath));
             File.Copy(filepath, tempPath, true);
             File.Copy(filepath, newPath, true);
             //rawDataName[0] = newPath;
@@ -354,7 +354,7 @@ namespace BCLabManager.Model
             testRecord.AssignedChannel = null;
             testRecord.Status = TestStatus.Completed;
             string root = $@"{GlobalSettings.RootPath}{GlobalSettings.TempDataFolderName}";
-            string temproot = $@"{GlobalSettings.TempraryFolder}{GlobalSettings.TempDataFolderName}";
+            string temproot = $@"{GlobalSettings.LocalFolder}{GlobalSettings.TempDataFolderName}";
             string temptestfilepath = string.Empty;
             if (rawDataList.Count > 1)
             {
@@ -396,11 +396,11 @@ namespace BCLabManager.Model
             testRecord.ProgramStr = programName;
             testRecord.RecipeStr = recipeName;
             string root = $@"{GlobalSettings.RootPath}{batteryType}\{projectName}";
-            string temproot = $@"{GlobalSettings.TempraryFolder}{batteryType}\{projectName}";
+            string temproot = $@"{GlobalSettings.LocalFolder}{batteryType}\{projectName}";
             string temptestfilepath = string.Empty;
             if (isRename)
             {
-                var oldPath = Path.Combine($@"{GlobalSettings.TempraryFolder}{GlobalSettings.TempDataFolderName}", Path.GetFileName(testRecord.TestFilePath));
+                var oldPath = Path.Combine($@"{GlobalSettings.LocalFolder}{GlobalSettings.TempDataFolderName}", Path.GetFileName(testRecord.TestFilePath));
                 temptestfilepath = RenameRawDataAndCopyToFolder(oldPath, $@"{temproot}\{GlobalSettings.TestDataFolderName}", Path.GetFileNameWithoutExtension(newName));
                 testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
                 CopyToServerWithRetry(temptestfilepath, testRecord.TestFilePath);
@@ -422,7 +422,7 @@ namespace BCLabManager.Model
         internal string DataPreProcess(TestRecord record, List<string> rawDataList, bool isRename, string newName, int startIndex, DateTime st, DateTime et, string batteryType, string projectName, Program program, Recipe recipe, ITesterProcesser processer)
         {
             string root = $@"{GlobalSettings.RootPath}{batteryType}\{projectName}";
-            string temproot = $@"{GlobalSettings.TempraryFolder}{batteryType}\{projectName}";
+            string temproot = $@"{GlobalSettings.LocalFolder}{batteryType}\{projectName}";
             string temptestfilepath = string.Empty;
             if (rawDataList.Count > 1)
             {

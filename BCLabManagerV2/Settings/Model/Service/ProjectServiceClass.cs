@@ -24,7 +24,7 @@ namespace BCLabManager.Model
         public void CreateFolder(string batteryType, string project)
         {
             CreateFolder(GlobalSettings.RootPath, batteryType, project);
-            CreateFolder(GlobalSettings.TempraryFolder, batteryType, project);
+            CreateFolder(GlobalSettings.LocalFolder, batteryType, project);
         }
 
         private void CreateFolder(string rootPath, string batteryType, string project)

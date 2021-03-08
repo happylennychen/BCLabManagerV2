@@ -119,7 +119,7 @@ namespace BCLabManager.ViewModel
                 {
                     System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                     stopwatch.Start();
-                    var folderPath = GlobalSettings.TempraryFolder + DateTime.Now.ToString("yyyyMMddHHmmss");
+                    var folderPath = GlobalSettings.LocalFolder + DateTime.Now.ToString("yyyyMMddHHmmss");
                     Directory.CreateDirectory(folderPath);
                     foreach (var evt in EventService.Items)
                     {

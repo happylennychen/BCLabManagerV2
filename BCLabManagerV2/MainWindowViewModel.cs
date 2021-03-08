@@ -56,8 +56,9 @@ namespace BCLabManager.ViewModel
             try
             {
                 InitializeDatabase();
-                InitializeTempFileFolder();
                 LoadFromDB();
+                InitializeFolder();
+                //InitializeTempFileFolder();
                 CreateProcesserForTesters();
                 CreateViewModels();
                 //以下三个函数只用调用一次即可
@@ -134,13 +135,41 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        private void InitializeFolder()
+        {
+            InitializeLocalAndRemoteFolder();
+            InitializeProjectFolder();
+            InitializeTempFileFolder();
+            foreach (var prj in ProjectService.Items)
+            {
+                ProjectService.CreateFolder(prj.BatteryType.Name, prj.Name);
+            }
+        }
+
+        private void InitializeLocalAndRemoteFolder()
+        {
+            if (!Directory.Exists(GlobalSettings.RootPath))
+                Directory.CreateDirectory(GlobalSettings.RootPath);
+
+            if (!Directory.Exists(GlobalSettings.LocalFolder))
+                Directory.CreateDirectory(GlobalSettings.LocalFolder);
+        }
+
+        private void InitializeProjectFolder()
+        {
+            foreach (var prj in ProjectService.Items)
+            {
+                ProjectService.CreateFolder(prj.BatteryType.Name, prj.Name);
+            }
+        }
+
         private void InitializeTempFileFolder()
         {
             string tempFilePath = $@"{GlobalSettings.RootPath}{GlobalSettings.TempDataFolderName}";
             if (!Directory.Exists(tempFilePath))
                 Directory.CreateDirectory(tempFilePath);
 
-            tempFilePath = $@"{GlobalSettings.TempraryFolder}{GlobalSettings.TempDataFolderName}";
+            tempFilePath = $@"{GlobalSettings.LocalFolder}{GlobalSettings.TempDataFolderName}";
             if (!Directory.Exists(tempFilePath))
                 Directory.CreateDirectory(tempFilePath);
         }

@@ -530,7 +530,7 @@ namespace BCLabManager.Model
             UInt16 iHighVoltDiff = 100;
             float fAccmnStart = -1F;            //use to record the faccmn value when reaching the first discharge current
 
-            //var tempFilePath = Path.Combine(GlobalSettings.TempraryFolder, Path.GetFileName(filePath));
+            //var tempFilePath = Path.Combine(GlobalSettings.LocalFolder, Path.GetFileName(filePath));
 
             try
             {
