@@ -207,6 +207,7 @@ namespace BCLabManager.ViewModel
                     //RaisePropertyChanged("SelectedType");
                     RaisePropertyChanged("TestRecords"); //通知TestRecords改变
                     RaisePropertyChanged("StepRuntimes"); //通知TestRecords改变
+                    RaisePropertyChanged("Steps");         //通知Steps改变
                 }
             }
         }
@@ -247,6 +248,26 @@ namespace BCLabManager.ViewModel
                         );
                 }
                 return _createCommand;
+            }
+        }
+
+        public ObservableCollection<StepV2ViewModel> Steps
+        {
+            get
+            {
+                if (_selectedRecipe != null)
+                {
+                    List<StepV2ViewModel> all =
+                        (from sub in _selectedRecipe._recipe.RecipeTemplate.StepV2s
+                         select new StepV2ViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+
+                    //foreach (RecipeModelViewModel batmod in all)
+                    //batmod.PropertyChanged += this.OnRecipeModelViewModelPropertyChanged;
+
+                    return new ObservableCollection<StepV2ViewModel>(all);     //再转换成Observable
+                }
+                else
+                    return null;
             }
         }
 

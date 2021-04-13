@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+		     xmlns:vm="clr-namespace:BCLabManager.ViewModel"
+             xmlns:v="clr-namespace:BCLabManager.View"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="800">
     <UserControl.Resources>
@@ -60,6 +62,12 @@
                 <scm:SortDescription PropertyName="Id" Direction="Ascending"></scm:SortDescription>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
+        
+        <CollectionViewSource x:Key="StepCVS" Source="{Binding Path=Steps}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Index" Direction="Ascending"></scm:SortDescription>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
 
         <DataTemplate x:Key="ProgressBar">
             <Grid>
@@ -85,6 +93,51 @@
 
         <DataTemplate x:Key="EndTime">
             <TextBlock Text="{Binding Path=EndTime, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding Path=EndTimeColor, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+        </DataTemplate>
+
+        <v:LoopLabelConverter x:Key="llc"></v:LoopLabelConverter>
+        <v:IndexConverter x:Key="idc"></v:IndexConverter>
+        <v:JumpConditionConverter x:Key="jcc"></v:JumpConditionConverter>
+        <Style x:Key="ValueStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="Blue" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <HierarchicalDataTemplate DataType="{x:Type vm:StepV2ViewModel}" 
+                                  ItemsSource="{Binding Path=CutOffBehaviors}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontWeight="Bold" DockPanel.Dock="Left" Margin="0,0,10,0">STEP</TextBlock>
+                <TextBlock Text="Index="/>
+                <TextBlock Text="{Binding Path=Index}" Style="{StaticResource ValueStyle}" Margin="0,0,5,0"  />
+                <TextBlock Text="Mode="/>
+                <TextBlock Text="{Binding Path=TesterAction.Mode}" Style="{StaticResource ValueStyle}"  Margin="0,0,5,0" />
+                <TextBlock Text="Voltage="/>
+                <TextBlock Text="{Binding Path=TesterAction.Voltage}" Style="{StaticResource ValueStyle}"  Margin="0,0,5,0" />
+                <TextBlock Text="Current="/>
+                <TextBlock Text="{Binding Path=TesterAction.Current}" Style="{StaticResource ValueStyle}"  Margin="0,0,5,0" />
+                <TextBlock Text="Power="/>
+                <TextBlock Text="{Binding Path=TesterAction.Power}" Style="{StaticResource ValueStyle}" />
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type vm:CutOffBehaviorViewModel}"
+                                  ItemsSource="{Binding Path=JumpBehaviors}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="COB" FontWeight="Bold" Margin="0,0,5,0" />
+                <TextBlock Text="{Binding Path=Condition.Parameter}" Margin="0,0,5,0" Style="{StaticResource ValueStyle}"/>
+                <TextBlock Text="{Binding Path=Condition.Mark}" Margin="0,0,5,0" Style="{StaticResource ValueStyle}"/>
+                <TextBlock Text="{Binding Path=Condition.Value}" Margin="0,0,5,0" Style="{StaticResource ValueStyle}"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <DataTemplate DataType="{x:Type vm:JumpBehaviorViewModel}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="JPB" FontWeight="Bold" Margin="0,0,5,0" />
+                <TextBlock Text="{Binding Path=Condition.Parameter}" Margin="0,0,5,0" Visibility="{Binding Path=Condition.Parameter, Converter={StaticResource jcc}}" Style="{StaticResource ValueStyle}"/>
+                <TextBlock Text="{Binding Path=Condition.Mark}" Margin="0,0,5,0" Visibility="{Binding Path=Condition.Parameter, Converter={StaticResource jcc}}" Style="{StaticResource ValueStyle}"/>
+                <TextBlock Text="{Binding Path=Condition.Value}" Margin="0,0,5,0" Visibility="{Binding Path=Condition.Parameter, Converter={StaticResource jcc}}" Style="{StaticResource ValueStyle}"/>
+                <TextBlock Text="JumpType="/>
+                <TextBlock Text="{Binding Path=JumpType}" Margin="0,0,5,0" Style="{StaticResource ValueStyle}"/>
+                <TextBlock Text="Index=" Visibility="{Binding Path=JumpType, Converter={StaticResource idc}}"/>
+                <TextBlock Text="{Binding Path=Index}" Margin="0,0,5,0" Visibility="{Binding Path=JumpType, Converter={StaticResource idc}}" Style="{StaticResource ValueStyle}"/>
+            </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
     <Grid>
@@ -228,7 +281,7 @@
                 </DataGrid>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="2" Grid.Column="2" Header="Free Test Records">
+        <GroupBox Grid.Row="2" Grid.Column="2" Header="Free Test Records" Visibility="Collapsed">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Name="FreeTestRecordButtonPanel">
                     <Button Content="Attach" Command="{Binding Path=AttachCommand}" Margin="0,5,15,0" Width="100"></Button>
@@ -257,6 +310,15 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>
+        </GroupBox>
+        <GroupBox Grid.Row="2" Grid.Column="2" Header="Recipe Details">
+            <TreeView ItemsSource="{Binding Source={StaticResource StepCVS}}" x:Name="Steps">
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="IsExpanded" Value="True" />
+                    </Style>
+                </TreeView.ItemContainerStyle>
+            </TreeView>
         </GroupBox>
     </Grid>
 </UserControl>
