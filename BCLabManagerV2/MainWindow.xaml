@@ -99,7 +99,7 @@
             <TabItem Header="Templates">
                 <v:AllRecipeTemplatesView x:Name="AllRecipeTemplatesViewInstance" DataContext="{Binding Path=allRecipeTemplatesViewModel}"></v:AllRecipeTemplatesView>
             </TabItem>
-            <TabItem Header="Programs">
+            <TabItem Header="Executor">
                 <v:AllProgramsView x:Name="AllProgramsViewInstance" DataContext="{Binding Path=allProgramsViewModel}"></v:AllProgramsView>
             </TabItem>
             <!--<TabItem Header="Products(v0.1)">
