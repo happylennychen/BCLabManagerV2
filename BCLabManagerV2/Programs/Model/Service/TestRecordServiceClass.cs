@@ -419,7 +419,7 @@ namespace BCLabManager.Model
             SuperUpdate(testRecord);
         }
 
-        internal string DataPreProcess(TestRecord record, List<string> rawDataList, bool isRename, string newName, int startIndex, DateTime st, DateTime et, string batteryType, string projectName, Program program, Recipe recipe, ITesterProcesser processer, bool isSkipDP)
+        internal string DataPreProcess(TestRecord record, List<string> rawDataList, bool isRename, string newName, int startIndex, DateTime st, DateTime et, string batteryType, string projectName, Program program, Recipe recipe, ITesterProcesser processer, bool isSkipDP, uint options)
         {
             string root = $@"{GlobalSettings.RootPath}{batteryType}\{projectName}";
             string temproot = $@"{GlobalSettings.LocalFolder}{batteryType}\{projectName}";
@@ -444,7 +444,7 @@ namespace BCLabManager.Model
 
             if (!isSkipDP)
             {
-                if (!ts.DataPreprocessing(processer, temptestfilepath, program, recipe, record, startIndex))
+                if (!ts.DataPreprocessing(processer, temptestfilepath, program, recipe, record, startIndex, options))
                 {
                     File.Delete(temptestfilepath);
                     return string.Empty;

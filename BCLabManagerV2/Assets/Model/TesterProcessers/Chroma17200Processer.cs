@@ -128,7 +128,7 @@ namespace BCLabManager.Model
             return true;
         }
 
-        public bool DataPreprocessing(string filepath, Program program, Recipe recipe, TestRecord record, int startStepIndex)
+        public bool DataPreprocessing(string filepath, Program program, Recipe recipe, TestRecord record, int startStepIndex, uint options)
         {
             UInt32 result = ErrorCode.NORMAL;
             List<Event> events = new List<Event>();
@@ -179,7 +179,7 @@ namespace BCLabManager.Model
                 }
                 else
                     step1 = fullSteps.First(o => o.Action.Mode == am);  //有隐患
-                result = DataPreprocesser.StepStartPointCheck(step1, recipe.Temperature);
+                result = DataPreprocesser.StepStartPointCheck(step1, recipe.Temperature, options);
                 if (result != ErrorCode.NORMAL)
                 {
                     if (!DataPreprocesser.ErrorHandler(ref events, ref result, filepath, program, recipe, record, lineIndex))
@@ -295,7 +295,7 @@ namespace BCLabManager.Model
                         //isStartPoint = true;
                         #region Start Point Check
                         //result = StepStartPointCheck(step1, row1, recipe.Temperature, IsFirstDischarge, ref IsFirstDischargeChecked);
-                        result = DataPreprocesser.StepStartPointCheck(step1, recipe.Temperature);
+                        result = DataPreprocesser.StepStartPointCheck(step1, recipe.Temperature, options);
                         if (result != ErrorCode.NORMAL)
                         {
                             if (!DataPreprocesser.ErrorHandler(ref events, ref result, filepath, program, recipe, record, lineIndex))
@@ -1044,7 +1044,7 @@ namespace BCLabManager.Model
         }
 
 
-        public static UInt32 StepStartPointCheck(StepV2 step, double temp)
+        public static UInt32 StepStartPointCheck(StepV2 step, double temp, uint options)
         {
             if (DataPreprocesser.Nodes[DataPreprocesser.Index].Mode != 0)
             {
@@ -1075,9 +1075,12 @@ namespace BCLabManager.Model
 
                     if (IsFirstDischarge && !IsFirstDischargeChecked)
                     {
-                        temperature = Nodes[Index].Temperature;
-                        if (Math.Abs(temperature - temp) > StepTolerance.Temperature)
-                            return ErrorCode.DP_TEMPERATURE_OUT_OF_RANGE;
+                        if ((options & TesterProcesserOptions.SkipTemperatureCheck) == 0)
+                        {
+                            temperature = Nodes[Index].Temperature;
+                            if (Math.Abs(temperature - temp) > StepTolerance.Temperature)
+                                return ErrorCode.DP_TEMPERATURE_OUT_OF_RANGE;
+                        }
 
                         IsFirstDischargeChecked = true;
                     }
@@ -1099,9 +1102,12 @@ namespace BCLabManager.Model
 
                     if (IsFirstDischarge && !IsFirstDischargeChecked)
                     {
-                        temperature = Nodes[Index].Temperature;
-                        if (Math.Abs(temperature - temp) > StepTolerance.Temperature)
-                            return ErrorCode.DP_TEMPERATURE_OUT_OF_RANGE;
+                        if ((options & TesterProcesserOptions.SkipTemperatureCheck) == 0)
+                        {
+                            temperature = Nodes[Index].Temperature;
+                            if (Math.Abs(temperature - temp) > StepTolerance.Temperature)
+                                return ErrorCode.DP_TEMPERATURE_OUT_OF_RANGE;
+                        }
 
                         IsFirstDischargeChecked = true;
                     }

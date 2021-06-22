@@ -556,6 +556,25 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("IsSkipDP");
             }
         }
+
+
+        private bool _isSkipTC = false;
+        public bool IsSkipTC  //略过DataPreprocessing中的放电温度检查
+        {
+            get
+            {
+                return _isSkipTC;
+            }
+            set
+            {
+                if (value == _isSkipTC)
+                    return;
+
+                _isSkipTC = value;
+
+                RaisePropertyChanged("IsSkipTC");
+            }
+        }
         #endregion // Presentation Properties
 
 

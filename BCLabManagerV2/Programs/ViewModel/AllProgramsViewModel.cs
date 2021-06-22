@@ -894,6 +894,11 @@ namespace BCLabManager.ViewModel
                         st = DateTime.MinValue;
                         et = DateTime.MinValue;
                     }
+                    uint options = 0;
+                    if (evm.IsSkipTC == true)
+                    {
+                        options |= TesterProcesserOptions.SkipTemperatureCheck;
+                    }
                     var filePath = _programService.RecipeService.TestRecordService.DataPreProcess(SelectedTestRecord.Record, evm.FileList.ToList(),
                         evm.IsRename,
                         evm.NewName,
@@ -904,7 +909,7 @@ namespace BCLabManager.ViewModel
                         SelectedProgram.Project.Name,
                         SelectedProgram._program,
                         SelectedRecipe._recipe,
-                        evm.Tester.ITesterProcesser, evm.IsSkipDP);
+                        evm.Tester.ITesterProcesser, evm.IsSkipDP, options);
                     if (filePath == string.Empty)
                         return;
                     SelectedTestRecord.Record.TestFilePath = filePath;

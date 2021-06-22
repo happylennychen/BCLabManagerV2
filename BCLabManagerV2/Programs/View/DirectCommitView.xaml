@@ -299,6 +299,13 @@
                 IsChecked="{Binding Path=IsSkipDP}"
       />
 
+            <CheckBox x:Name="SkipTCCheckBox"
+      Grid.Row="39" Grid.Column="0" Grid.ColumnSpan="3" 
+                Content="Skip Discharge Temperature Check"
+      HorizontalAlignment="Center"
+                IsChecked="{Binding Path=IsSkipTC}"
+      />
+
             <!--<Label 
       Grid.Row="12" Grid.Column="0" 
       Content="_Steps:" 
