@@ -32,6 +32,8 @@ namespace BCLabManager
         public MainWindowViewModel mainWindowViewModel { get; set; }
         public MainWindow()
         {
+            var startupWindow = new StartupWindow();
+            startupWindow.Show();
             try
             {
 #if Show
@@ -50,8 +52,13 @@ namespace BCLabManager
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show($"{e.Message}\n" +
+                    $"{e.InnerException}");
                 App.Current.Shutdown();
+            }
+            finally
+            {
+                startupWindow.Close();
             }
         }
         private void InitializeNavigator()

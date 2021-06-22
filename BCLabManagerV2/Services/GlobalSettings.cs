@@ -11,6 +11,7 @@ namespace BCLabManager
     {
         public static string DbPath { get; set; }
         public static string ConfigurationFilePath { get; } = "BCLabConfiguration.cfg";
+        public static string RunningLogFilePath { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Running Log\\", $"{DateTime.Now.ToString("yyyyMMddHHmmss")}.log");
 
         //public static string RootPath { get; set; } = @"D:\Issues\Open\BC_Lab\Data V3\";
         //public static string TempraryFolder { get; } = @"D:\Issues\Open\BC_Lab\Data test\";//AppDomain.CurrentDomain.BaseDirectory
@@ -22,5 +23,6 @@ namespace BCLabManager
         public static string SourceDataFolderName { get; } = @"Meta Data\Source";
         public static string ProductFolderName { get; } = "Table Maker Product";
         public static string EvResultFolderName { get; } = "Emulator Product";
+        public static string RunningLogFolder { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Running Log\\");
     }
 }

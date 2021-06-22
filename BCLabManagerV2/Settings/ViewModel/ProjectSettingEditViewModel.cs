@@ -296,11 +296,11 @@ namespace BCLabManager.ViewModel
                 _ProjectSetting.Project = value;
 
                 RaisePropertyChanged("Project");
-                design_capacity_mahr = _ProjectSetting.Project.AbsoluteMaxCapacity;
-                limited_charge_voltage_mv = _ProjectSetting.Project.LimitedChargeVoltage;
-                fully_charged_end_current_ma = _ProjectSetting.Project.BatteryType.FullyChargedEndCurrent;
-                fully_charged_ending_time_ms = _ProjectSetting.Project.BatteryType.FullyChargedEndingTimeout;
-                discharge_end_voltage_mv = _ProjectSetting.Project.BatteryType.CutoffDischargeVoltage;
+                //design_capacity_mahr = _ProjectSetting.Project.AbsoluteMaxCapacity;
+                //limited_charge_voltage_mv = _ProjectSetting.Project.LimitedChargeVoltage;
+                //fully_charged_end_current_ma = _ProjectSetting.Project.BatteryType.FullyChargedEndCurrent;
+                //fully_charged_ending_time_ms = _ProjectSetting.Project.BatteryType.FullyChargedEndingTimeout;
+                //discharge_end_voltage_mv = _ProjectSetting.Project.BatteryType.CutoffDischargeVoltage;
             }
         }
 

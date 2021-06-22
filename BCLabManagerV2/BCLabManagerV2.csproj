@@ -327,6 +327,7 @@
     <Compile Include="Assets\Model\TesterProcessers\Chroma17200Processer.cs" />
     <Compile Include="Assets\Model\TesterProcessers\ProcessException.cs" />
     <Compile Include="Assets\Model\TesterProcessers\ZKEEBC_X_Processer.cs" />
+    <Compile Include="Services\RuningLog.cs" />
     <Compile Include="Services\TableMaker\AndroidDriverMaker.cs" />
     <Compile Include="Services\TableMaker\DataRow.cs" />
     <Compile Include="Services\TableMaker\MiniDriverMaker.cs" />

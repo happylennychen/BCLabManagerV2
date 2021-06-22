@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BCLabManager.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,13 +50,28 @@ namespace BCLabManager.DataAccess
 
         public IEnumerable<T> GetAll(string includeProperties = "")
         {
-            IQueryable<T> query = table;
+            try
+            {
+                IQueryable<T> query = table;
 
-            foreach (var includeProperty in includeProperties.Split
-                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                )
-                query = query.Include(includeProperty);
-            return query.ToList();
+                foreach (var includeProperty in includeProperties.Split
+                    (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    )
+                    query = query.Include(includeProperty);
+                return query.ToList();
+            }
+            catch (Exception e)
+            {
+                Event evt = new Event();
+                evt.Module = Module.Database;
+                evt.Type = EventType.Error;
+                evt.Timestamp = DateTime.Now;
+                evt.Description = $"Cannot access database. Details:\n" +
+                    $"\tMessage: {e.Message}\n" +
+                    $"\tInnerException: {e.InnerException}";
+                EventService.SuperAdd(evt);
+                throw e;
+            }
         }
 
         public T GetById(object id)

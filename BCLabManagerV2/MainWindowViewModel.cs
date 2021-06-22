@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Prism.Mvvm;
 using System.IO;
 using System.Windows;
+using System.Diagnostics;
 
 namespace BCLabManager.ViewModel
 {
@@ -51,29 +52,36 @@ namespace BCLabManager.ViewModel
         public MainWindowViewModel(
             )     //
         {
-            var startupWindow = new StartupWindow();
-            startupWindow.Show();
-            try
+            //try
             {
+                InitializeRuningLogFolder();
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
                 InitializeDatabase();
+                RuningLog.Write($"InitializeDatabase spend {sw.ElapsedMilliseconds} milliseconds\n");
+                sw.Restart();
                 LoadFromDB();
+                RuningLog.Write($"LoadFromDB spend {sw.ElapsedMilliseconds} milliseconds\n");
+                sw.Restart();
                 InitializeFolder();
+                RuningLog.Write($"InitializeFolder spend {sw.ElapsedMilliseconds} milliseconds\n");
+                sw.Restart();
                 //InitializeTempFileFolder();
                 CreateProcesserForTesters();
+                RuningLog.Write($"CreateProcesserForTesters spend {sw.ElapsedMilliseconds} milliseconds\n");
+                sw.Restart();
                 CreateViewModels();
+                RuningLog.Write($"CreateViewModels spend {sw.ElapsedMilliseconds} milliseconds\n");
+                sw.Restart();
                 //以下三个函数只用调用一次即可
                 //UpdateStatus();
                 //UpdateTime();
                 //UpdateEditable();
             }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
-            finally
-            {
-                startupWindow.Close();
-            }
+            //catch (Exception e)
+            //{
+            //    MessageBox.Show(e.Message);
+            //}
         }
 
         private void UpdateEditable()
@@ -148,8 +156,21 @@ namespace BCLabManager.ViewModel
 
         private void InitializeLocalAndRemoteFolder()
         {
-            if (!Directory.Exists(GlobalSettings.RootPath))
-                Directory.CreateDirectory(GlobalSettings.RootPath);
+            try
+            {
+                if (!Directory.Exists(GlobalSettings.RootPath))
+                    Directory.CreateDirectory(GlobalSettings.RootPath);
+            }
+            catch(Exception e)
+            {
+                Event evt = new Event();
+                evt.Module = Module.NAS;
+                evt.Timestamp = DateTime.Now;
+                evt.Type = EventType.Error;
+                evt.Description = $"Cannot access NAS {GlobalSettings.RootPath}.";
+                EventService.SuperAdd(evt);
+                throw e;
+            }
 
             if (!Directory.Exists(GlobalSettings.LocalFolder))
                 Directory.CreateDirectory(GlobalSettings.LocalFolder);
@@ -172,6 +193,12 @@ namespace BCLabManager.ViewModel
             tempFilePath = $@"{GlobalSettings.LocalFolder}{GlobalSettings.TempDataFolderName}";
             if (!Directory.Exists(tempFilePath))
                 Directory.CreateDirectory(tempFilePath);
+        }
+
+        private void InitializeRuningLogFolder()
+        {
+            if (!Directory.Exists(GlobalSettings.RunningLogFolder))
+                Directory.CreateDirectory(GlobalSettings.RunningLogFolder);
         }
 
         private void CreateProcesserForTesters()

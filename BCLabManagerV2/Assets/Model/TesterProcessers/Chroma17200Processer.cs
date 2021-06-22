@@ -569,7 +569,7 @@ namespace BCLabManager.Model
                     fVoltOld = fVoltn;
                 fVoltOld = fVoltn;
 
-#region skip other except log data line
+                #region skip other except log data line
                 strToken = strTemp.Split(chSeperate, StringSplitOptions.None);  //split column by ',' character
                 //if (strToken.Length < (int)O2TXTRecord.TxtAccMah)
                 if (strToken.Length < 13)   //Leon: 被逗号分出的份数小于13，意味着不是数据行
@@ -596,9 +596,9 @@ namespace BCLabManager.Model
                         continue;
                     }
                 }
-#endregion
+                #endregion
 
-#region call format parsing, to get correct value for log line
+                #region call format parsing, to get correct value for log line
 
                 //iNumSrlNow = 0;
                 ftmp = 1000F;      //Chroma is in A/V/Ahr format
@@ -612,12 +612,12 @@ namespace BCLabManager.Model
                     iElipseTime = 1;
                 else
                     iElipseTime = 0;
-#endregion
+                #endregion
 
                 if ((sVoltage.Length != 0) && (sCurrent.Length != 0) &&
                     (sTemp.Length != 0) && (sAccM.Length != 0) && (sDate.Length != 0) && iNumSrlNow != 0)
                 {
-#region check volt/curr/temp/accm conveting to float
+                    #region check volt/curr/temp/accm conveting to float
                     if (!float.TryParse(sVoltage, out fVoltn))
                     {
                         result = 1;
@@ -641,14 +641,14 @@ namespace BCLabManager.Model
                     fVoltn *= ftmp;
                     fCurrn *= ftmp;
                     fAccmn *= ftmp;
-#endregion
+                    #endregion
 
                     if (fVoltn > output.fMaxExpVolt) output.fMaxExpVolt = fVoltn;//set maximum voltage value from raw data
                     if (fVoltn < output.fMinExpVolt) output.fMinExpVolt = fVoltn;
 
 
                     //bReachHighVolt = true;  //(20201109)for leon miss
-#region check all log data about voltage/current, to get bReachHighVolt, bStartExpData, bStopExpData, and, bReachLowVolt value
+                    #region check all log data about voltage/current, to get bReachHighVolt, bStartExpData, bStopExpData, and, bReachLowVolt value
                     if (!bReachHighVolt)
                     {       //initially, first time must go here, suppose not reach high voltage
                         if ((Math.Abs(fVoltn - output.fLimitChgVolt) < iHighVoltDiff))    //maybe log will only be idle stage after charge_to_full, set higher hysteresis
@@ -712,7 +712,7 @@ namespace BCLabManager.Model
                             output.fAccmAhrCap = Math.Abs(fAccmn);
                         }
                     }
-#endregion
+                    #endregion
 
                     if ((bStartExpData) && (!bStopExpData))     //experiment data starts but not stop
                     {
@@ -723,7 +723,7 @@ namespace BCLabManager.Model
                             //CreateNewError(iNumSrlNow, fVoltn, ret);
                             //(E141201)
                         }
-#region check raw data is resonable or not
+                        #region check raw data is resonable or not
                         if (iNumColCnt == 0)        //first one record
                         {
                             iNumSrlStart = iNumSrlNow;
@@ -785,7 +785,7 @@ namespace BCLabManager.Model
                             //if(Math.Abs(fVoltn - fVoltOld) != 0)
                             //fVoltageDiff = Math.Abs(fVoltn - fVoltOld);
                         }   //if (iNumColCnt == 0)		else	(first one)
-#endregion
+                        #endregion
 
                         if (result != 0)
                         {
@@ -1378,7 +1378,7 @@ namespace BCLabManager.Model
             switch (result)
             {
                 case ErrorCode.DP_CHECKSUM:
-                    if (Nodes.Where(o => o.Status == StepEndString.EndByError).Count() > 1)
+                    if (Nodes.Where(o => o != null).Where(o => o.Status == StepEndString.EndByError).Count() > 1)
                     {
                         MessageBox.Show("Unhandled!");
                         ret = false;
@@ -1442,58 +1442,60 @@ namespace BCLabManager.Model
             Tuple<double, double> p;
             double b, a;
 
-            int startTime = Nodes.First().TimeInMS;
-            int endTime = Nodes.Last().TimeInMS;
-            for (int i = Nodes.Count() - 1; i >= 0; i--)
+            var nodes = Nodes.Select(o => o).Where(o => o != null).ToList();
+
+            int startTime = nodes.First().TimeInMS;
+            int endTime = nodes.Last().TimeInMS;
+            for (int i = nodes.Count() - 1; i >= 0; i--)
             {
-                if (Nodes[i].StepMode != Nodes[Index].StepMode)
+                if (nodes[i].StepMode != nodes[Index].StepMode)
                 {
                     if (i > Index)
-                        endTime = Nodes[i - 1].TimeInMS;
+                        endTime = nodes[i - 1].TimeInMS;
                     else if (i < Index)
                     {
-                        startTime = Nodes[i + 1].TimeInMS;
+                        startTime = nodes[i + 1].TimeInMS;
                         break;
                     }
                 }
             }
-            var nodesClip = Nodes.Where(o => o.Status != StepEndString.EndByError && o.TimeInMS >= startTime && o.TimeInMS <= endTime);
+            var nodesClip = nodes.Where(o => o.Status != StepEndString.EndByError && o.TimeInMS >= startTime && o.TimeInMS <= endTime);
             xdata = nodesClip.Select(o => Convert.ToDouble(o.TimeInMS)).ToArray();
             ydata = nodesClip.Select(o => o.Current).ToArray();
             p = Fit.Line(xdata, ydata);
             b = p.Item1; // == 10; intercept
             a = p.Item2; // == 0.5; slope
-            double newCurrent = a * Nodes[Index].TimeInMS + b;
-            Nodes[Index].Current = Math.Round(newCurrent, 4);
+            double newCurrent = a * nodes[Index].TimeInMS + b;
+            nodes[Index].Current = Math.Round(newCurrent, 4);
 
 
             ydata = nodesClip.Select(o => o.Voltage).ToArray();
             p = Fit.Line(xdata, ydata);
             b = p.Item1; // == 10; intercept
             a = p.Item2; // == 0.5; slope
-            double newVoltage = a * Nodes[Index].TimeInMS + b;
-            Nodes[Index].Voltage = Math.Round(newVoltage, 4);
+            double newVoltage = a * nodes[Index].TimeInMS + b;
+            nodes[Index].Voltage = Math.Round(newVoltage, 4);
 
             ydata = nodesClip.Select(o => o.Temperature).ToArray();
             p = Fit.Line(xdata, ydata);
             b = p.Item1; // == 10; intercept
             a = p.Item2; // == 0.5; slope
-            double newTemperature = a * Nodes[Index].TimeInMS + b;
-            Nodes[Index].Temperature = Math.Round(newTemperature, 4);
+            double newTemperature = a * nodes[Index].TimeInMS + b;
+            nodes[Index].Temperature = Math.Round(newTemperature, 4);
 
             ydata = nodesClip.Select(o => o.Capacity).ToArray();
             p = Fit.Line(xdata, ydata);
             b = p.Item1; // == 10; intercept
             a = p.Item2; // == 0.5; slope
-            double newCapacity = a * Nodes[Index].TimeInMS + b;
-            Nodes[Index].Capacity = Math.Round(newCapacity, 4);
+            double newCapacity = a * nodes[Index].TimeInMS + b;
+            nodes[Index].Capacity = Math.Round(newCapacity, 4);
 
             ydata = nodesClip.Select(o => o.TotalCapacity).ToArray();
             p = Fit.Line(xdata, ydata);
             b = p.Item1; // == 10; intercept
             a = p.Item2; // == 0.5; slope
-            double newTotalCapacity = a * Nodes[Index].TimeInMS + b;
-            Nodes[Index].TotalCapacity = Math.Round(newTotalCapacity, 4);
+            double newTotalCapacity = a * nodes[Index].TimeInMS + b;
+            nodes[Index].TotalCapacity = Math.Round(newTotalCapacity, 4);
         }
 
         private static void RestoreUnchangedColumns()
@@ -1566,14 +1568,17 @@ namespace BCLabManager.Model
         private static void RestoreTimeInMs()
         {
             List<int> Diffs = new List<int>();
-            for (int i = 1; i < Nodes.Count; i++)
+            var nodes = Nodes.Select(o => o).Where(o => o != null).ToList();
+            for (int i = 1; i < nodes.Count; i++)
             {
+                //if (nodes[i - 1] == null)
+                //    break;
                 if (i == Index || i == Index + 1)
                     continue;
-                Diffs.Add(Nodes[i].TimeInMS - Nodes[i - 1].TimeInMS);
+                Diffs.Add(nodes[i].TimeInMS - nodes[i - 1].TimeInMS);
             }
             var diff = Diffs.GroupBy(o => o).Max(o => o.Key);
-            Nodes[Index].TimeInMS = Nodes[Index - 1].TimeInMS + diff;
+            nodes[Index].TimeInMS = nodes[Index - 1].TimeInMS + diff;
         }
 
         private static void RestoreTime()

@@ -173,7 +173,7 @@ namespace BCLabManager.Model
                     if (!File.Exists(serverPath))
                     {
                         Event evt = new Event();
-                        evt.Module = "NAS file transfer";
+                        evt.Module = Module.NAS;
                         evt.Timestamp = DateTime.Now;
                         evt.Type = EventType.Error;
                         evt.Description = $"Test File Missing!. File Name: {Path.GetFileName(tempPath)}";
@@ -187,7 +187,7 @@ namespace BCLabManager.Model
                     if (fi1.Length != fi2.Length)
                     {
                         Event evt = new Event();
-                        evt.Module = "NAS file transfer";
+                        evt.Module = Module.NAS;
                         evt.Timestamp = DateTime.Now;
                         evt.Type = EventType.Error;
                         evt.Description = $"Original file length is {fi1.Length}B, server file length is {fi2.Length}B.";

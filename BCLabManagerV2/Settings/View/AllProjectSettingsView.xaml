@@ -45,7 +45,7 @@
                         <DataGridTextColumn Header="Fully Charged Ending Time" IsReadOnly="True" Binding="{Binding Path=fully_charged_ending_time_ms}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Discharge End Voltage" IsReadOnly="True" Binding="{Binding Path=discharge_end_voltage_mv}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Threshold 1st facc" IsReadOnly="True" Binding="{Binding Path=threshold_1st_facc_mv}"></DataGridTextColumn>
-                        <DataGridTextColumn Header="Threshold 2nd facc" IsReadOnly="True" Binding="{Binding Path=_threshold2nd_facc_mv}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Threshold 2nd facc" IsReadOnly="True" Binding="{Binding Path=threshold_2nd_facc_mv}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Threshold 3rd facc" IsReadOnly="True" Binding="{Binding Path=threshold_3rd_facc_mv}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Threshold 4th facc" IsReadOnly="True" Binding="{Binding Path=threshold_4th_facc_mv}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Initial Ratio fcc" IsReadOnly="True" Binding="{Binding Path=initial_ratio_fcc}"></DataGridTextColumn>
