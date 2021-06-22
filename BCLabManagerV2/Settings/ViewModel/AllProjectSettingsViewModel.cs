@@ -159,7 +159,7 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             ProjectSetting editItem = new ProjectSetting();      //实例化一个新的model
-            ProjectSettingEditViewModel bevm = new ProjectSettingEditViewModel(editItem, _projectService.Items);      //实例化一个新的view model
+            ProjectSettingCreateViewModel bevm = new ProjectSettingCreateViewModel(editItem, _projectService.Items);      //实例化一个新的view model
             bevm.DisplayName = "Project Setting-Create";
             bevm.commandType = CommandType.Create;
             var ProjectSettingViewInstance = new ProjectSettingView();      //实例化一个新的view

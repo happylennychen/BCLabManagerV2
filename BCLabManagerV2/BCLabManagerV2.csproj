@@ -443,6 +443,7 @@
     <Compile Include="Settings\ViewModel\AllProgramTypesViewModel.cs" />
     <Compile Include="Settings\ViewModel\AllProjectsViewModel.cs" />
     <Compile Include="Services\ViewModel\BindableBaseWithName.cs" />
+    <Compile Include="Settings\ViewModel\ProjectSettingCreateViewModel.cs" />
     <Compile Include="Settings\ViewModel\TableMakerViewModel.cs" />
     <Compile Include="Settings\ViewModel\ProjectSettingEditViewModel.cs" />
     <Compile Include="Services\TableMaker\TableMakerService.cs" />
