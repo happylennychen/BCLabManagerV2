@@ -16,20 +16,16 @@ namespace BCLabManager.View
     /// <summary>
     /// Interaction logic for ProjectSettingTypeView.xaml
     /// </summary>
-    public partial class ProjectSettingView : Window
+    public partial class ProjectSettingEditView : Window
     {
-        public ProjectSettingView()
+        public ProjectSettingEditView()
         {
             InitializeComponent();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var projectSetting = DataContext as ViewModel.ProjectSettingCreateViewModel;
-            if (projectSetting.Project != null)
-            {
-                this.Close();
-            }
+            this.Close();
         }
     }
 }

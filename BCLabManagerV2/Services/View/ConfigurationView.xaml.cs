@@ -9,27 +9,26 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BCLabManager.Model;
+using BCLabManager.ViewModel;
 
 namespace BCLabManager.View
 {
     /// <summary>
-    /// Interaction logic for ProjectSettingTypeView.xaml
+    /// Interaction logic for AllBatteryType.xaml
     /// </summary>
-    public partial class ProjectSettingView : Window
+    public partial class ConfigurationView : Window
     {
-        public ProjectSettingView()
+        public ConfigurationView()
         {
             InitializeComponent();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var projectSetting = DataContext as ViewModel.ProjectSettingCreateViewModel;
-            if (projectSetting.Project != null)
-            {
-                this.Close();
-            }
+            this.Close();
         }
     }
 }

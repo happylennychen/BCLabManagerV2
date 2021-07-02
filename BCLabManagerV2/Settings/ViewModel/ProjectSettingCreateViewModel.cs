@@ -10,6 +10,7 @@ using BCLabManager.Properties;
 using Microsoft.EntityFrameworkCore;
 using Prism.Mvvm;
 using Microsoft.Win32;
+using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
@@ -378,6 +379,11 @@ namespace BCLabManager.ViewModel
             //_ProjectSettingtypeRepository.AddItem(_ProjectSettingtype);
 
             //RaisePropertyChanged("DisplayName");
+            if (Project == null)
+            {
+                MessageBox.Show("Please choose project.");
+                return;
+            }
             IsOK = true;
         }
 

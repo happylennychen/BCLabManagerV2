@@ -225,7 +225,7 @@ namespace BCLabManager
         }
         public static TableMakerProduct GenerateOCVTable(Project project, OCVModel ocvModel)
         {
-            var OutFolder = $@"{GlobalSettings.RootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
+            var OutFolder = $@"{GlobalSettings.RemotePath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
             string filePath = Path.Combine(OutFolder, ocvModel.FilePath);
             List<string> OCVHeader = GetOCVFileHeader(project);
             List<string> OCVContent = GetOCVFileContent(ocvModel.iOCVVolt);

@@ -109,7 +109,7 @@ namespace BCLabManager.Model
             testRecord.AssignedChamber = null;
             testRecord.AssignedChannel = null;
             testRecord.Status = TestStatus.Completed;
-            string root = $@"{GlobalSettings.RootPath}{batteryType}\{projectName}";
+            string root = $@"{GlobalSettings.RemotePath}{batteryType}\{projectName}";
             string temproot = $@"{GlobalSettings.LocalFolder}{batteryType}\{projectName}";
             string temptestfilepath = string.Empty;
             if (rawDataList.Count > 1)
@@ -353,7 +353,7 @@ namespace BCLabManager.Model
             testRecord.AssignedChamber = null;
             testRecord.AssignedChannel = null;
             testRecord.Status = TestStatus.Completed;
-            string root = $@"{GlobalSettings.RootPath}{GlobalSettings.TempDataFolderName}";
+            string root = $@"{GlobalSettings.RemotePath}{GlobalSettings.TempDataFolderName}";
             string temproot = $@"{GlobalSettings.LocalFolder}{GlobalSettings.TempDataFolderName}";
             string temptestfilepath = string.Empty;
             if (rawDataList.Count > 1)
@@ -395,7 +395,7 @@ namespace BCLabManager.Model
             testRecord.ProjectStr = projectName;
             testRecord.ProgramStr = programName;
             testRecord.RecipeStr = recipeName;
-            string root = $@"{GlobalSettings.RootPath}{batteryType}\{projectName}";
+            string root = $@"{GlobalSettings.RemotePath}{batteryType}\{projectName}";
             string temproot = $@"{GlobalSettings.LocalFolder}{batteryType}\{projectName}";
             string temptestfilepath = string.Empty;
             if (isRename)
@@ -421,7 +421,7 @@ namespace BCLabManager.Model
 
         internal string DataPreProcess(TestRecord record, List<string> rawDataList, bool isRename, string newName, int startIndex, DateTime st, DateTime et, string batteryType, string projectName, Program program, Recipe recipe, ITesterProcesser processer, bool isSkipDP, uint options)
         {
-            string root = $@"{GlobalSettings.RootPath}{batteryType}\{projectName}";
+            string root = $@"{GlobalSettings.RemotePath}{batteryType}\{projectName}";
             string temproot = $@"{GlobalSettings.LocalFolder}{batteryType}\{projectName}";
             string temptestfilepath = string.Empty;
             if (rawDataList.Count > 1)

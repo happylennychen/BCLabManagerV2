@@ -651,7 +651,7 @@ namespace BCLabManager.ViewModel
                     {
                         if (!_testerService.CheckFileFormat(Channel.Tester.ITesterProcesser, file))
                         {
-                            MessageBox.Show("Wrong File Format!");
+                            MessageBox.Show("File Format Check Failed!");
                             return;
                         }
                         if (!_testerService.CheckChannelNumber(Channel.Tester.ITesterProcesser, file, Channel.Name))

@@ -524,7 +524,7 @@ namespace BCLabManager
             List<string> strHHeaderComments;
             UInt32 uErr = 0;
             TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), out strHHeaderComments);
-            var OutFolder = $@"{GlobalSettings.RootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
+            var OutFolder = $@"{GlobalSettings.RemotePath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
             GenerateMiniCHFiles(OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, miniModel.iOCVVolt, miniModel.fCTABase, miniModel.fCTASlope, miniModel.poly2EstFACC, miniModel.poly2EstIR);
 
         }

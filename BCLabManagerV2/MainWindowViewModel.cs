@@ -1,4 +1,5 @@
 ﻿//#define TemplateUpgrade
+//#define Migrate
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ using Prism.Mvvm;
 using System.IO;
 using System.Windows;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace BCLabManager.ViewModel
 {
@@ -55,12 +57,20 @@ namespace BCLabManager.ViewModel
             //try
             {
                 InitializeRuningLogFolder();
+                LoadConfigration();
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
                 InitializeDatabase();
                 RuningLog.Write($"InitializeDatabase spend {sw.ElapsedMilliseconds} milliseconds\n");
                 sw.Restart();
-                LoadFromDB();
+                try
+                {
+                    LoadFromDB();
+                }
+                catch (Exception e)
+                {
+                    throw new DatabaseAccessException(e.Message, e.InnerException);
+                }
                 RuningLog.Write($"LoadFromDB spend {sw.ElapsedMilliseconds} milliseconds\n");
                 sw.Restart();
                 InitializeFolder();
@@ -82,6 +92,31 @@ namespace BCLabManager.ViewModel
             //{
             //    MessageBox.Show(e.Message);
             //}
+        }
+
+        private void LoadConfigration()
+        {
+            if (!File.Exists(GlobalSettings.ConfigurationFilePath))
+            {
+                Configuration conf = new Configuration();
+                conf.RemotePath = GlobalSettings.RemotePath;
+                conf.DatabaseHost = GlobalSettings.DatabaseHost;
+                conf.DatabaseName = GlobalSettings.DatabaseName;
+                conf.DatabaseUser = GlobalSettings.DatabaseUser;
+                conf.DatabasePassword = GlobalSettings.DatabasePassword;
+                string jsonString = JsonSerializer.Serialize(conf);
+                File.WriteAllText(GlobalSettings.ConfigurationFilePath, jsonString);
+            }
+            else
+            {
+                string jsonString = File.ReadAllText(GlobalSettings.ConfigurationFilePath);
+                Configuration conf = JsonSerializer.Deserialize<Configuration>(jsonString);
+                GlobalSettings.RemotePath = conf.RemotePath;
+                GlobalSettings.DatabaseHost = conf.DatabaseHost;
+                GlobalSettings.DatabaseName = conf.DatabaseName;
+                GlobalSettings.DatabaseUser = conf.DatabaseUser;
+                GlobalSettings.DatabasePassword = conf.DatabasePassword;
+            }
         }
 
         private void UpdateEditable()
@@ -158,8 +193,8 @@ namespace BCLabManager.ViewModel
         {
             try
             {
-                if (!Directory.Exists(GlobalSettings.RootPath))
-                    Directory.CreateDirectory(GlobalSettings.RootPath);
+                if (!Directory.Exists(GlobalSettings.RemotePath))
+                    Directory.CreateDirectory(GlobalSettings.RemotePath);
             }
             catch(Exception e)
             {
@@ -167,7 +202,7 @@ namespace BCLabManager.ViewModel
                 evt.Module = Module.NAS;
                 evt.Timestamp = DateTime.Now;
                 evt.Type = EventType.Error;
-                evt.Description = $"Cannot access NAS {GlobalSettings.RootPath}.";
+                evt.Description = $"Cannot access NAS {GlobalSettings.RemotePath}.";
                 EventService.SuperAdd(evt);
                 throw e;
             }
@@ -186,7 +221,7 @@ namespace BCLabManager.ViewModel
 
         private void InitializeTempFileFolder()
         {
-            string tempFilePath = $@"{GlobalSettings.RootPath}{GlobalSettings.TempDataFolderName}";
+            string tempFilePath = $@"{GlobalSettings.RemotePath}{GlobalSettings.TempDataFolderName}";
             if (!Directory.Exists(tempFilePath))
                 Directory.CreateDirectory(tempFilePath);
 

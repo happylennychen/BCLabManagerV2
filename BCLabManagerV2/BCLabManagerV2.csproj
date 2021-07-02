@@ -290,6 +290,7 @@
     <Compile Include="DataAccess\IJumpBehaviorRepository.cs" />
     <Compile Include="DataAccess\ICutOffBehaviorRepository.cs" />
     <Compile Include="DataAccess\IEventRepository.cs" />
+    <Compile Include="DatabaseAccessException.cs" />
     <Compile Include="Migrations\20201021020401_Event.cs" />
     <Compile Include="Migrations\20201021020401_Event.designer.cs">
       <DependentUpon>20201021020401_Event.cs</DependentUpon>
@@ -315,6 +316,7 @@
       <DependentUpon>GroupManagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\ErrorCode.cs" />
+    <Compile Include="Services\Configuration.cs" />
     <Compile Include="Services\Module.cs" />
     <Compile Include="Services\EventService.cs" />
     <Compile Include="Assets\Model\Service\ChamberServiceClass.cs" />
@@ -338,6 +340,7 @@
     <Compile Include="Services\TableMaker\RCTableMaker.cs" />
     <Compile Include="Services\TableMaker\SourceData.cs" />
     <Compile Include="Services\TableMaker\StandardDriverMaker.cs" />
+    <Compile Include="Services\ViewModel\ConfigurationViewModel.cs" />
     <Compile Include="Services\ViewModel\EventViewModel.cs" />
     <Compile Include="Services\ViewModel\AllEventsViewModel.cs" />
     <Compile Include="DataAccess\ICutOffConditionRepository.cs" />
@@ -433,6 +436,9 @@
     </Compile>
     <Compile Include="Services\Model\Event.cs" />
     <Compile Include="Services\PseudocodeProcesser.cs" />
+    <Compile Include="Services\View\AllEventsView.xaml.cs">
+      <DependentUpon>AllEventsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Model\AndroidModel.cs" />
     <Compile Include="Settings\Model\StandardModel.cs" />
     <Compile Include="Settings\Model\TableMakerModel.cs" />
@@ -460,11 +466,14 @@
     <Compile Include="Settings\View\AllProjectSettingsView.xaml.cs">
       <DependentUpon>AllProjectSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Services\View\AllEventsView.xaml.cs">
-      <DependentUpon>AllEventsView.xaml</DependentUpon>
+    <Compile Include="Services\View\ConfigurationView.xaml.cs">
+      <DependentUpon>ConfigurationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\View\AllTableMakerProductTypesView.xaml.cs">
       <DependentUpon>AllTableMakerProductTypesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\View\ProjectSettingEditView.xaml.cs">
+      <DependentUpon>ProjectSettingEditView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\View\TableMakerView.xaml.cs">
       <DependentUpon>TableMakerView.xaml</DependentUpon>
@@ -626,9 +635,6 @@
     <Compile Include="DashBoard\View\DashBoardView.xaml.cs">
       <DependentUpon>DashBoardView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DashBoard\View\DBConfigureWindow.xaml.cs">
-      <DependentUpon>DBConfigureWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DashBoard\Service\Navigator.cs" />
     <Compile Include="Programs\View\AllRecipeTemplatesView.xaml.cs">
       <DependentUpon>AllRecipeTemplatesView.xaml</DependentUpon>
@@ -697,15 +703,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Settings\View\AllProjectSettingsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Services\View\AllEventsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Settings\View\AllProjectSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Services\View\ConfigurationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Settings\View\AllTableMakerProductTypesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\View\ProjectSettingEditView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -774,10 +788,6 @@
     <Page Include="DashBoard\View\DashBoardView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="DashBoard\View\DBConfigureWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Products\View\AllProductsView.xaml">
       <Generator>MSBuild:Compile</Generator>

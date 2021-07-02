@@ -22,7 +22,6 @@ namespace BCLabManager.ViewModel
         #region Fields
 
         readonly ProjectSetting _ProjectSetting;
-        ObservableCollection<Project> _projects;
         RelayCommand _okCommand;
         bool _isOK;
 
@@ -31,14 +30,12 @@ namespace BCLabManager.ViewModel
         #region Constructor
 
         public ProjectSettingEditViewModel(
-            ProjectSetting ProjectSetting,
-            ObservableCollection<Project> projects)
+            ProjectSetting ProjectSetting)
         {
             if (ProjectSetting == null)
                 throw new ArgumentNullException("ProjectSetting");
 
             _ProjectSetting = ProjectSetting;
-            _projects = projects;
         }
 
         #endregion // Constructor
@@ -296,21 +293,6 @@ namespace BCLabManager.ViewModel
                 _ProjectSetting.Project = value;
 
                 RaisePropertyChanged("Project");
-                //design_capacity_mahr = _ProjectSetting.Project.AbsoluteMaxCapacity;
-                //limited_charge_voltage_mv = _ProjectSetting.Project.LimitedChargeVoltage;
-                //fully_charged_end_current_ma = _ProjectSetting.Project.BatteryType.FullyChargedEndCurrent;
-                //fully_charged_ending_time_ms = _ProjectSetting.Project.BatteryType.FullyChargedEndingTimeout;
-                //discharge_end_voltage_mv = _ProjectSetting.Project.BatteryType.CutoffDischargeVoltage;
-            }
-        }
-
-        public ObservableCollection<Project> AllProjects //供选项
-        {
-            get
-            {
-                ObservableCollection<Project> all = _projects;
-
-                return new ObservableCollection<Project>(all);
             }
         }
 

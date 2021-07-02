@@ -21,6 +21,7 @@ using System.IO;
 using System.Collections.ObjectModel;
 using BCLabManager.View;
 using Microsoft.Win32;
+using Npgsql;
 
 namespace BCLabManager
 {
@@ -29,7 +30,8 @@ namespace BCLabManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindowViewModel mainWindowViewModel { get; set; }
+        private MainWindowViewModel _mainWindowViewModel;
+        public MainWindowViewModel mainWindowViewModel { get { return _mainWindowViewModel; } set { _mainWindowViewModel = value; } }
         public MainWindow()
         {
             var startupWindow = new StartupWindow();
@@ -50,15 +52,25 @@ namespace BCLabManager
                 App.Current.Shutdown();
 #endif
             }
+            catch (DatabaseAccessException e)
+            {
+                startupWindow.Close();
+                MessageBox.Show($"{e.Message}\n" +
+                    $"{e.InnerException}\n" +
+                    $"\n" +
+                    $"Please setup database in the configuration window correctly!");
+            }
             catch (Exception e)
             {
+                startupWindow.Close();
                 MessageBox.Show($"{e.Message}\n" +
                     $"{e.InnerException}");
                 App.Current.Shutdown();
             }
             finally
             {
-                startupWindow.Close();
+                if(startupWindow.IsActive)
+                    startupWindow.Close();
             }
         }
         private void InitializeNavigator()
@@ -84,6 +96,24 @@ namespace BCLabManager
             allEventsView.ShowDialog();
         }
 
+
+        private void Config_Click(object sender, RoutedEventArgs e)
+        {
+            Configuration();
+        }
+        private void Configuration()
+        {
+            Configuration conf = new Configuration();
+            conf.RemotePath = GlobalSettings.RemotePath;
+            conf.DatabaseHost = GlobalSettings.DatabaseHost;
+            conf.DatabaseName = GlobalSettings.DatabaseName;
+            conf.DatabaseUser = GlobalSettings.DatabaseUser;
+            conf.DatabasePassword = GlobalSettings.DatabasePassword;
+            ConfigurationView configView = new ConfigurationView();
+            var vm = new ConfigurationViewModel(conf, ref _mainWindowViewModel);
+            configView.DataContext = vm;// new AllEventsViewModel(/*EventService*/);
+            configView.ShowDialog();
+        }
         private void UpdateUIForRequester()
         {
             AllTestersViewInstance.ButtonPanel.IsEnabled = false;

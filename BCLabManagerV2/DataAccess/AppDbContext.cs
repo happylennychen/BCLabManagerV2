@@ -42,8 +42,9 @@ namespace BCLabManager.DataAccess
             //optionsBuilder.UseNpgsql(@"host=localhost;database=HighPower;user id=postgres;password=123456;").UseSnakeCaseNamingConvention();
             //optionsBuilder.UseNpgsql(@"host=localhost;database=BCLM;user id=postgres;password=123456;").UseSnakeCaseNamingConvention();
             //optionsBuilder.UseNpgsql(@"host=localhost;database=test;user id=postgres;password=123456;").UseSnakeCaseNamingConvention();
-            optionsBuilder.UseNpgsql(@"host=10.22.4.249;database=BCLM;user id=postgres;password=123456;").UseSnakeCaseNamingConvention();
+            optionsBuilder.UseNpgsql($@"host={GlobalSettings.DatabaseHost};database={GlobalSettings.DatabaseName};user id={GlobalSettings.DatabaseUser};password={GlobalSettings.DatabasePassword};").UseSnakeCaseNamingConvention();
             //optionsBuilder.UseNpgsql(@"host=localhost;database=dptest;user id=postgres;password=123456;").UseSnakeCaseNamingConvention();
+            //optionsBuilder.UseNpgsql(@"host=10.22.4.249;database=BCLM-SZ;user id=postgres;password=123456;").UseSnakeCaseNamingConvention();
         }
     }
 }

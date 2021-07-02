@@ -174,7 +174,7 @@ namespace BCLabManager.ViewModel
         private void Edit()
         {
             ProjectSetting editItem = new ProjectSetting();      //实例化一个新的model
-            ProjectSettingEditViewModel bevm = new ProjectSettingEditViewModel(editItem, _projectService.Items);      //实例化一个新的view model
+            ProjectSettingEditViewModel bevm = new ProjectSettingEditViewModel(editItem);      //实例化一个新的view model
             bevm.Id = _selectedItem.Id;
             bevm.design_capacity_mahr = _selectedItem.design_capacity_mahr;
             bevm.limited_charge_voltage_mv = _selectedItem.limited_charge_voltage_mv;
@@ -193,10 +193,10 @@ namespace BCLabManager.ViewModel
             bevm.system_line_impedance = _selectedItem.system_line_impedance;
             bevm.is_valid = _selectedItem.is_valid;
             bevm.extend_cfg = _selectedItem.extend_cfg;
-            bevm.Project = bevm.AllProjects.SingleOrDefault(i => i.Id == _selectedItem.Project.Id);
+            bevm.Project = _selectedItem.Project;
             bevm.DisplayName = "Project Setting-Edit";
             bevm.commandType = CommandType.Edit;
-            var ProjectSettingViewInstance = new ProjectSettingView();      //实例化一个新的view
+            var ProjectSettingViewInstance = new ProjectSettingEditView();      //实例化一个新的view
             ProjectSettingViewInstance.DataContext = bevm;
             ProjectSettingViewInstance.ShowDialog();
             if (bevm.IsOK == true)
@@ -211,12 +211,28 @@ namespace BCLabManager.ViewModel
         private void SaveAs()
         {
             ProjectSetting bc = new ProjectSetting();      //实例化一个新的model
-            ProjectSettingEditViewModel bevm = new ProjectSettingEditViewModel(bc, _projectService.Items);      //实例化一个新的view model
+            ProjectSettingEditViewModel bevm = new ProjectSettingEditViewModel(bc);      //实例化一个新的view model
             bevm.design_capacity_mahr = _selectedItem.design_capacity_mahr;
-            bevm.Project = bevm.AllProjects.SingleOrDefault(i => i.Id == _selectedItem.Project.Id);
+            bevm.limited_charge_voltage_mv = _selectedItem.limited_charge_voltage_mv;
+            bevm.fully_charged_end_current_ma = _selectedItem.fully_charged_end_current_ma;
+            bevm.fully_charged_ending_time_ms = _selectedItem.fully_charged_ending_time_ms;
+            bevm.discharge_end_voltage_mv = _selectedItem.discharge_end_voltage_mv;
+            bevm.threshold_1st_facc_mv = _selectedItem.threshold_1st_facc_mv;
+            bevm.threshold_2nd_facc_mv = _selectedItem.threshold_2nd_facc_mv;
+            bevm.threshold_3rd_facc_mv = _selectedItem.threshold_3rd_facc_mv;
+            bevm.threshold_4th_facc_mv = _selectedItem.threshold_4th_facc_mv;
+            bevm.initial_ratio_fcc = _selectedItem.initial_ratio_fcc;
+            bevm.accumulated_capacity_mahr = _selectedItem.accumulated_capacity_mahr;
+            bevm.dsg_low_volt_mv = _selectedItem.dsg_low_volt_mv;
+            bevm.dsg_low_temp_01dc = _selectedItem.dsg_low_temp_01dc;
+            bevm.initial_soc_start_ocv = _selectedItem.initial_soc_start_ocv;
+            bevm.system_line_impedance = _selectedItem.system_line_impedance;
+            bevm.is_valid = _selectedItem.is_valid;
+            bevm.extend_cfg = _selectedItem.extend_cfg;
+            bevm.Project = _selectedItem.Project;
             bevm.DisplayName = "Project Setting-Save As";
             bevm.commandType = CommandType.SaveAs;
-            var ProjectSettingViewInstance = new ProjectSettingView();      //实例化一个新的view
+            var ProjectSettingViewInstance = new ProjectSettingEditView();      //实例化一个新的view
             ProjectSettingViewInstance.DataContext = bevm;
             ProjectSettingViewInstance.ShowDialog();
             if (bevm.IsOK == true)

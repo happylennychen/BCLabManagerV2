@@ -62,14 +62,14 @@ namespace BCLabManager.DataAccess
             }
             catch (Exception e)
             {
-                Event evt = new Event();
-                evt.Module = Module.Database;
-                evt.Type = EventType.Error;
-                evt.Timestamp = DateTime.Now;
-                evt.Description = $"Cannot access database. Details:\n" +
-                    $"\tMessage: {e.Message}\n" +
-                    $"\tInnerException: {e.InnerException}";
-                EventService.SuperAdd(evt);
+                //Event evt = new Event();
+                //evt.Module = Module.Database;
+                //evt.Type = EventType.Error;
+                //evt.Timestamp = DateTime.Now;
+                //evt.Description = $"Cannot access database. Details:\n" +
+                //    $"\tMessage: {e.Message}\n" +
+                //    $"\tInnerException: {e.InnerException}";
+                //EventService.SuperAdd(evt);
                 throw e;
             }
         }

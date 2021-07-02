@@ -102,29 +102,37 @@ namespace BCLabManager.Model
         {
             if (Path.GetExtension(filepath) != ".csv")
                 return false;
-
-            FileStream fs = new FileStream(filepath, FileMode.Open);
-            StreamReader sw = new StreamReader(fs);
-            int i = 0;
-            for (; i < 9; i++)
-                sw.ReadLine();
-            string columnLine = sw.ReadLine();
-            var columnList = "Step No.,Step,DWell Time(ms),TEST TIME,Cycle,Loop,Step Mode,Mode,Current(A),Voltage(V),Capacity(Ah),Total Capacity(Ah),Status".Split(',');
-            i = 0;
-            foreach (var column in columnLine.Split(','))
+            try
             {
-                if (column.StartsWith("Param"))
-                    continue;
-                if (column != columnList[i++])
+                FileStream fs = new FileStream(filepath, FileMode.Open);
+                StreamReader sw = new StreamReader(fs);
+                int i = 0;
+                for (; i < 9; i++)
+                    sw.ReadLine();
+                string columnLine = sw.ReadLine();
+                var columnList = "Step No.,Step,DWell Time(ms),TEST TIME,Cycle,Loop,Step Mode,Mode,Current(A),Voltage(V),Capacity(Ah),Total Capacity(Ah),Status".Split(',');
+                i = 0;
+                foreach (var column in columnLine.Split(','))
                 {
-                    sw.Close();
-                    fs.Close();
-                    return false;
+                    if (column.StartsWith("Param"))
+                        continue;
+                    if (column != columnList[i++])
+                    {
+                        sw.Close();
+                        fs.Close();
+                        return false;
+                    }
                 }
-            }
 
-            sw.Close();
-            fs.Close();
+                sw.Close();
+                fs.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"{e.Message}\n" +
+                    $"{e.InnerException}\n");
+                return false;
+            }
             return true;
         }
 

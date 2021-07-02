@@ -406,7 +406,7 @@ namespace BCLabManager
 
         public static TableMakerProduct GenerateRCTable(Project project, RCModel rcModel)
         {
-            var OutFolder = $@"{GlobalSettings.RootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
+            var OutFolder = $@"{GlobalSettings.RemotePath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
             string filePath = Path.Combine(OutFolder, rcModel.FilePath);//GetRCTableFilePath(project);
             var strRCHeader = GetRCFileHeader(project, rcModel.fCTABase, rcModel.fCTASlope);
             var strRCContent = GetRCFileContent(rcModel.outYValue, project.VoltagePoints, rcModel.listfTemp, rcModel.listfCurr);
