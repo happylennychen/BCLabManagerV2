@@ -241,6 +241,7 @@ namespace BCLabManager.Model
                                 return false;
                             }
                         }
+                        sw.WriteLine(DataPreprocesser.StringList[DataPreprocesser.Index - 1]);      //Issue 2655
                         //throw new ProcessException($@"Step {step1.Index} is missing");
                         break;
                     }
