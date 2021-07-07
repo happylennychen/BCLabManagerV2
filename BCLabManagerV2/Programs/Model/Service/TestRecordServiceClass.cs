@@ -158,7 +158,7 @@ namespace BCLabManager.Model
         private void CopyToServerWithRetry(string tempPath, string serverPath)
         {
 #if! Test
-            var thread = new Thread(() =>
+            //var thread = new Thread(() =>
             {
                 int i;
                 for (i = 0; i < 5; i++)
@@ -167,6 +167,7 @@ namespace BCLabManager.Model
                     {
                         break;
                     }
+                    MessageBox.Show($"Copy to server failed! i = {i}");
                 }
                 if (i == 5)
                 {
@@ -195,8 +196,8 @@ namespace BCLabManager.Model
                         MessageBox.Show(evt.Description);
                     }
                 }
-            });
-            thread.Start();
+            }//);
+            //thread.Start();
 #endif
         }
 
@@ -204,10 +205,13 @@ namespace BCLabManager.Model
         {
             File.Copy(tempPath, serverPath, true);
             if (!File.Exists(serverPath))
+            {
                 return false;
+            }
 
             FileInfo fi1 = new FileInfo(tempPath);
             FileInfo fi2 = new FileInfo(serverPath);
+            RuningLog.Write($"Source File: {tempPath}, Size: {fi1.Length}, Target File: {serverPath}, Size: {fi2.Length}, Difference: {fi1.Length - fi2.Length}\n");
             if (fi1.Length != fi2.Length)
                 return false;
 
@@ -228,6 +232,9 @@ namespace BCLabManager.Model
         {
             var newPath = Path.Combine(root, newName + Path.GetExtension(rawDataName));
             File.Copy(rawDataName, newPath, true);
+            FileInfo fi1 = new FileInfo(rawDataName);
+            FileInfo fi2 = new FileInfo(newPath);
+            RuningLog.Write($"Source File: {rawDataName}, Size: {fi1.Length}, Target File: {newPath}, Size: {fi2.Length}, Difference: {fi1.Length - fi2.Length}\n");
             //rawDataName[0] = newPath;
             return newPath;
         }

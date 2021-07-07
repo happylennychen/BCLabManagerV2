@@ -899,9 +899,12 @@ namespace BCLabManager.ViewModel
                     {
                         options |= TesterProcesserOptions.SkipTemperatureCheck;
                     }
-                    var filePath = _programService.RecipeService.TestRecordService.DataPreProcess(SelectedTestRecord.Record, evm.FileList.ToList(),
+                    string filePath = string.Empty;
+                    //for (int i = 0; i < 100; i++)
+                    {
+                        filePath = _programService.RecipeService.TestRecordService.DataPreProcess(SelectedTestRecord.Record, evm.FileList.ToList(),
                         evm.IsRename,
-                        evm.NewName,
+                        evm.NewName/* + "-" + i.ToString()*/,
                         evm.StartIndex,
                         st,
                         et,
@@ -910,6 +913,7 @@ namespace BCLabManager.ViewModel
                         SelectedProgram._program,
                         SelectedRecipe._recipe,
                         evm.Tester.ITesterProcesser, evm.IsSkipDP, options);
+                    }
                     if (filePath == string.Empty)
                         return;
                     SelectedTestRecord.Record.TestFilePath = filePath;

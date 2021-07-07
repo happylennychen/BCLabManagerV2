@@ -368,8 +368,13 @@ namespace BCLabManager.Model
                 fs.Close();
                 if (result == ErrorCode.NORMAL)
                 {
+                    FileInfo fi2 = new FileInfo(filepath);
+                    var length2 = fi2.Length;
                     File.Delete(filepath);
+                    FileInfo fi1 = new FileInfo(tempFilePath);
+                    var length1 = fi1.Length;
                     File.Move(tempFilePath, filepath);
+                    RuningLog.Write($"Source File: {tempFilePath}, Size: {fi1.Length}, Target File: {filepath}, Size: {fi2.Length}, Difference: {fi1.Length - fi2.Length}\n");
                     foreach (var evt in events)
                     {
                         EventService.SuperAdd(evt);
