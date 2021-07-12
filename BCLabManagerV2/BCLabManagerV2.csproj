@@ -284,6 +284,7 @@
     <Compile Include="Assets\Model\AssetUsageRecord.cs" />
     <Compile Include="Assets\Model\IAsset.cs" />
     <Compile Include="Assets\Model\ITesterProcesser.cs" />
+    <Compile Include="Assets\Model\TesterProcessers\PseudoProcesser.cs" />
     <Compile Include="DataAccess\JumpBehaviorRepository.cs" />
     <Compile Include="DataAccess\CutOffBehaviorRepository.cs" />
     <Compile Include="DataAccess\EventRepository.cs" />

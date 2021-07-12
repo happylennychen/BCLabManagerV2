@@ -15,7 +15,7 @@ namespace BCLabManager
         //public static string RootPath { get; set; } = @"D:\Issues\Open\BC_Lab\Data V3\";
         //public static string TempraryFolder { get; } = @"D:\Issues\Open\BC_Lab\Data test\";//AppDomain.CurrentDomain.BaseDirectory
         public static string LocalFolder { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Local Data\\");// No need for the sub folder
-        private static string _remotePath;
+        private static string _remotePath = @"\\10.3.4.16\bclab\data\";
         public static string RemotePath 
         { 
             get { return _remotePath; } 
