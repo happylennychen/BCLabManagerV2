@@ -213,5 +213,31 @@ namespace BCLabManager.Model
                     tr.ProgramStr = this.Name;
             }
         }
+
+        internal void BuildRecipes(List<RecipeTemplate> _recipeTemplates, Dictionary<int, int> dic, List<Recipe> excludeRecipes)
+        {
+            foreach (var temperature in this.Temperatures)
+            {
+                foreach (var tid in dic.Keys)
+                {
+                    var rectemp = _recipeTemplates.SingleOrDefault(o => o.Id == tid);
+                    if (excludeRecipes.Any(o => o.RecipeTemplate.Id == tid && o.Temperature == temperature))
+                        continue;
+                    var count = dic[tid];
+                    for (int i = 0; i < count; i++)
+                    {
+                        var model = new Recipe(rectemp, this.Project.BatteryType);
+                        model.Temperature = temperature;
+                        //model.RecipeTemplate = rectemp;   //加了就会报错
+                        this.Recipes.Add(model);
+                    }
+                }
+            }
+            foreach (var sub in this.Recipes)
+            {
+                foreach (var tr in sub.TestRecords)
+                    tr.ProgramStr = this.Name;
+            }
+        }
     }
 }

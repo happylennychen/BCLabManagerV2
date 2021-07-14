@@ -47,7 +47,7 @@
             <!-- FIRST NAME-->
             <Label 
       Grid.Row="2" Grid.Column="0" 
-      Content="_Type:" 
+      Content="_Battery Type:" 
       HorizontalAlignment="Right"
       />
             <ComboBox 
