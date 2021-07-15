@@ -223,7 +223,7 @@ namespace BCLabManager
         public static void GetFilePaths(ref TableMakerModel tableMakerModel)
         {
             var project = tableMakerModel.Project;
-            var programs = tableMakerModel.Programs;
+            //var programs = tableMakerModel.Programs;
             var testers = tableMakerModel.Testers;
 
             OCVModel ocvModel = new OCVModel();
@@ -254,37 +254,66 @@ namespace BCLabManager
             try
             {
                 var project = tableMakerModel.Project;
-                var programs = tableMakerModel.Programs;
+                var ocvprograms = tableMakerModel.OCVPrograms;
+                var rcprograms = tableMakerModel.RCPrograms;
+                var stage1ocvprograms = tableMakerModel.Stage1OCVPrograms;
+                var stage1rcprograms = tableMakerModel.Stage1RCPrograms;
+                var stage2ocvprograms = tableMakerModel.Stage2OCVPrograms;
+                var stage2rcprograms = tableMakerModel.Stage2RCPrograms;
                 var testers = tableMakerModel.Testers;
                 var ocvModel = tableMakerModel.OCVModel;
                 var rcModel = tableMakerModel.RCModel;
                 var miniModel = tableMakerModel.MiniModel;
                 var standardModel = tableMakerModel.StandardModel;
                 var androidModel = tableMakerModel.AndroidModel;
+                var stage1ocvModel = tableMakerModel.Stage1OCVModel;
+                var stage1rcModel = tableMakerModel.Stage1RCModel;
+                var stage1miniModel = tableMakerModel.Stage1MiniModel;
+                var stage1standardModel = tableMakerModel.Stage1StandardModel;
+                var stage1androidModel = tableMakerModel.Stage1AndroidModel;
+                var stage2ocvModel = tableMakerModel.Stage2OCVModel;
+                var stage2rcModel = tableMakerModel.Stage2RCModel;
+                var stage2miniModel = tableMakerModel.Stage2MiniModel;
+                var stage2standardModel = tableMakerModel.Stage2StandardModel;
+                var stage2androidModel = tableMakerModel.Stage2AndroidModel;
 
-                List<SourceData> ocvSource;
-                OCVTableMaker.GetOCVSource(project, programs.Where(o => o.Type.Name == "OCV").ToList(), testers, out ocvSource);
+
+                GenerateFilePackage(ocvprograms, rcprograms, project, testers, ref ocvModel, ref rcModel, ref miniModel, ref standardModel, ref androidModel);
+                GenerateFilePackage(stage1ocvprograms, stage1rcprograms, project, testers, ref stage1ocvModel, ref stage1rcModel, ref stage1miniModel, ref stage1standardModel, ref stage1androidModel);
+                GenerateFilePackage(stage2ocvprograms, stage2rcprograms, project, testers, ref stage2ocvModel, ref stage2rcModel, ref stage2miniModel, ref stage2standardModel, ref stage2androidModel);
+
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
+
+        private static void GenerateFilePackage(List<Program> ocvprograms, List<Program> rcprograms, Project project, List<Tester> testers, ref OCVModel ocvModel, ref RCModel rcModel, ref MiniModel miniModel, ref StandardModel standardModel, ref AndroidModel androidModel)
+        {
+            List<SourceData> ocvSource = null;
+            if (ocvprograms != null && ocvprograms.Count != 0)
+            {
+                OCVTableMaker.GetOCVSource(project, ocvprograms, testers, out ocvSource);
                 OCVTableMaker.GetOCVModel(ocvSource, ref ocvModel);
+                OCVTableMaker.GenerateOCVTable(project, ocvModel);
+            }
 
+            if (rcprograms != null && rcprograms.Count != 0 && ocvSource != null)
+            {
                 List<SourceData> rcSource;
-                RCTableMaker.GetRCSource(project, programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList(), testers, out rcSource);
+                RCTableMaker.GetRCSource(project, rcprograms, testers, out rcSource);
                 RCTableMaker.GetRCModel(rcSource, project, ref rcModel);
                 MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, project, ref miniModel);
 
                 StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
 
                 AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
-
-
-                OCVTableMaker.GenerateOCVTable(project, ocvModel);
                 RCTableMaker.GenerateRCTable(project, rcModel);
                 MiniDriverMaker.GenerateMiniDriver(miniModel, project);
                 StandardDriverMaker.GenerateStandardDriver(standardModel, project);
                 AndroidDriverMaker.GenerateAndroidDriver(androidModel, project);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
             }
         }
     }

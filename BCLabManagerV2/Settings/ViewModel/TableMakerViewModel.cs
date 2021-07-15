@@ -38,16 +38,40 @@ namespace BCLabManager.ViewModel
         #endregion // Constructor
 
         #region Presentation Properties
-        public bool OCVReady
+        public bool OCV1Ready
+        {
+            get
+            {
+
+                //var project = _tableMakerModel.Project;
+
+                //var programs = _tableMakerModel.Programs.Select(o => o).Where(o => o.Project.Id == project.Id && o.IsCompleted == true && (o.Type.Name == "OCV")).ToList();
+
+                //if (programs.Count >= 1)
+                //{
+                //    return true;    //需要进一步改进
+                //}
+
+                return false;
+            }
+        }
+        public bool OCV2Ready
         {
             get
             {
 
                 var project = _tableMakerModel.Project;
 
-                var programs = _tableMakerModel.Programs.Select(o => o).Where(o => o.Project.Id == project.Id && o.IsCompleted == true && (o.Type.Name == "OCV")).ToList();
+                var programs = _tableMakerModel.Stage2OCVPrograms.Select(o => o).Where(o => o.Project.Id == project.Id && o.IsCompleted == true).ToList();
 
-                if (programs.Count >= 1)
+                var recipesList = programs.Select(o => o.Recipes);
+                List<Recipe> recipes = new List<Recipe>();
+                foreach (var recs in recipesList)
+                {
+                    recipes = recipes.Concat(recs).ToList();
+                }
+
+                if (recipes.Count == 2)
                 {
                     return true;    //需要进一步改进
                 }
@@ -56,15 +80,15 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public bool RCReady
+        public bool RC1Ready
         {
             get
             {
                 var project = _tableMakerModel.Project;
 
-                var programs = _tableMakerModel.Programs.Select(o => o).Where(o => o.Project.Id == project.Id && o.IsCompleted == true && (o.Type.Name == "RC")).ToList();
+                var programs = _tableMakerModel.Stage1RCPrograms.Select(o => o).Where(o => o.Project.Id == project.Id && o.IsCompleted == true).ToList();
 
-                if (programs.Count >= 1)
+                if (programs.Count == 1)
                 {
                     return true;    //需要进一步改进
                 }
@@ -72,52 +96,118 @@ namespace BCLabManager.ViewModel
                 return false;
             }
         }
-        public bool SDReady
+
+        public bool RC2Ready
         {
-            get { return OCVReady & RCReady; }
+            get
+            {
+                var project = _tableMakerModel.Project;
+
+                var programs = _tableMakerModel.Stage2RCPrograms.Select(o => o).Where(o => o.Project.Id == project.Id && o.IsCompleted == true).ToList();
+
+                if (programs.Count == 1 && RC1Ready)
+                {
+                    return true;    //需要进一步改进
+                }
+
+                return false;
+            }
         }
-        public bool ADReady
+        public bool SD1Ready
         {
-            get { return OCVReady & RCReady; }
+            get { return (OCV1Ready|OCV2Ready) & RC1Ready; }
         }
-        public bool MiniReady
+        public bool SD2Ready
         {
-            get { return OCVReady & RCReady; }
+            get { return OCV2Ready & RC2Ready; }
         }
-        public bool LiteReady
+        public bool AD1Ready
         {
-            get { return OCVReady & RCReady; }
+            get { return (OCV1Ready | OCV2Ready) & RC1Ready; }
+        }
+        public bool AD2Ready
+        {
+            get { return OCV2Ready & RC2Ready; }
+        }
+        public bool Mini1Ready
+        {
+            get { return (OCV1Ready | OCV2Ready) & RC1Ready; }
+        }
+        public bool Mini2Ready
+        {
+            get { return OCV2Ready & RC2Ready; }
+        }
+        public bool Lite1Ready
+        {
+            get { return (OCV1Ready | OCV2Ready) & RC1Ready; }
+        }
+        public bool Lite2Ready
+        {
+            get { return OCV2Ready & RC2Ready; }
         }
 
-        public string OCVFileName
+        public string OCV1FileName
         {
             get { return _tableMakerModel.OCVModel.FilePath; }
         }
-        public string RCFileName
+
+        public string OCV2FileName
+        {
+            get { return _tableMakerModel.OCVModel.FilePath; }
+        }
+        public string RC1FileName
         {
             get { return _tableMakerModel.RCModel.FilePath; }
         }
-        public string StandardDriverCFileName
+        public string RC2FileName
+        {
+            get { return _tableMakerModel.RCModel.FilePath; }
+        }
+        public string StandardDriverC1FileName
         {
             get { return _tableMakerModel.StandardModel.FilePaths[0]; }
         }
-        public string StandardDriverHFileName
+        public string StandardDriverC2FileName
+        {
+            get { return _tableMakerModel.StandardModel.FilePaths[0]; }
+        }
+        public string StandardDriverH1FileName
         {
             get { return _tableMakerModel.StandardModel.FilePaths[1]; }
         }
-        public string AndroidDriverCFileName
+        public string StandardDriverH2FileName
+        {
+            get { return _tableMakerModel.StandardModel.FilePaths[1]; }
+        }
+        public string AndroidDriverC1FileName
         {
             get { return _tableMakerModel.AndroidModel.FilePaths[0]; }
         }
-        public string AndroidDriverHFileName
+        public string AndroidDriverC2FileName
+        {
+            get { return _tableMakerModel.AndroidModel.FilePaths[0]; }
+        }
+        public string AndroidDriverH1FileName
         {
             get { return _tableMakerModel.AndroidModel.FilePaths[1]; }
         }
-        public string MiniDriverCFileName
+        public string AndroidDriverH2FileName
+        {
+            get { return _tableMakerModel.AndroidModel.FilePaths[1]; }
+        }
+        public string MiniDriverC1FileName
         {
             get { return _tableMakerModel.MiniModel.FilePaths[0]; }
         }
-        public string MiniDriverHFileName
+        public string MiniDriverC2FileName
+        {
+            get { return _tableMakerModel.MiniModel.FilePaths[0]; }
+        }
+        public string MiniDriverH1FileName
+        {
+            get { return _tableMakerModel.MiniModel.FilePaths[1]; }
+        }
+        public string MiniDriverH2FileName
         {
             get { return _tableMakerModel.MiniModel.FilePaths[1]; }
         }
