@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Windows;
 
 namespace BCLabManager
 {
     public static class RCTableMaker
     {
         #region RC
-        public static void GetRCSource(Project project, List<Program> programs, List<Tester> testers, out List<SourceData> SDList)
+        public static void GetRCSource(Project project, List<Program> programs, List<Tester> testers, out List<SourceData> SDList, bool isRemoteData)
         {
             var trs = programs.Select(o => o.Recipes.Select(i => i.TestRecords.Where(j => j.Status == TestStatus.Completed).ToList()).ToList()).ToList();
             List<TestRecord> testRecords = new List<TestRecord>();
@@ -33,8 +34,37 @@ namespace BCLabManager
                 sd.fMeasureOffset = (float)tr.MeasurementOffset;
                 sd.fTemperature = (float)tr.Temperature;
                 sd.fTraceResis = (float)tr.TraceResistance;
+                if (SDList.Any(o => o.fCurrent == sd.fCurrent && o.fTemperature == sd.fTemperature))
+                {
+                    if (MessageBoxResult.Yes == MessageBox.Show($"Do you want to keep {tr.TestFilePath} instead of original file?", "Same Point Check", MessageBoxButton.YesNo))
+                    {
+                        var removeList = SDList.Select(o=>o).Where(o => o.fCurrent == sd.fCurrent && o.fTemperature == sd.fTemperature).ToList();
+                        foreach (var rmvsd in removeList)
+                        {
+                            SDList.Remove(rmvsd);
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
                 var tester = testers.SingleOrDefault(o => o.Name == tr.TesterStr);
-                UInt32 result = tester.ITesterProcesser.LoadRawToSource(tr.TestFilePath, ref sd);
+                var filePath = string.Empty;
+                if (isRemoteData)
+                {
+                    filePath = tr.TestFilePath;
+                }
+                else
+                {
+                    filePath = TableMakerService.GetLocalPath(tr.TestFilePath);
+                    if (!File.Exists(filePath))
+                    {
+                        MessageBox.Show($"No such file.{filePath}");
+                        return;
+                    }
+                }
+                UInt32 result = tester.ITesterProcesser.LoadRawToSource(filePath, ref sd);
                 if (result == ErrorCode.NORMAL)
                 {
                     SDList.Add(sd);
@@ -404,9 +434,18 @@ namespace BCLabManager
             slope = sCo / ssX;
         }
 
-        public static TableMakerProduct GenerateRCTable(Project project, RCModel rcModel)
+        public static TableMakerProduct GenerateRCTable(Project project, RCModel rcModel, bool isRemoteOutput)
         {
-            var OutFolder = $@"{GlobalSettings.RemotePath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
+            var rootPath = string.Empty;
+            if (isRemoteOutput)
+            {
+                rootPath = GlobalSettings.RemotePath;
+            }
+            else
+            {
+                rootPath = GlobalSettings.LocalFolder;
+            }
+            var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
             string filePath = Path.Combine(OutFolder, rcModel.FilePath);//GetRCTableFilePath(project);
             var strRCHeader = GetRCFileHeader(project, rcModel.fCTABase, rcModel.fCTASlope);
             var strRCContent = GetRCFileContent(rcModel.outYValue, project.VoltagePoints, rcModel.listfTemp, rcModel.listfCurr);

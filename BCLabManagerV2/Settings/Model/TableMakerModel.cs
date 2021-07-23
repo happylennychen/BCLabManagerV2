@@ -19,5 +19,6 @@ namespace BCLabManager.Model
         public MiniModel MiniModel { get; set; }
         public StandardModel StandardModel { get; set; }
         public AndroidModel AndroidModel { get; set; }
+        public LiteModel LiteModel { get; set; }
     }
 }

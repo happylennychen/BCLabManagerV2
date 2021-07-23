@@ -13,9 +13,56 @@ namespace BCLabManager
 {
     static public class TableMakerService
     {
+        //(A20210610)Francis, as discussed with Kyle, TM should have a unique value for distinguishing by EmulatorII
+        //value is synchronzed with EmulatorII and 10.22.4.249 DB
+        public enum PRODUCT_TYPE_ID : ushort
+        {
+            PRODTYPE_OCVBYSOC = 1,
+            PRODTYPE_SOCBYOCV,
+            PRODTYPE_OCVTXT,
+            PRODTYPE_RCTXT,
+            PRODTYPE_RC_FALCONLY,
+            PRODTYPE_HFILE_FWDRV,
+            PRODTYPE_CFILE_FWDRV,
+            PRODTYPE_HFILE_FALCONLY,
+            PRODTYPE_CFILE_FALCONLY,
+            PRODTYPE_HFILE_STANDARD,//=10
+            PRODTYPE_CFILE_STANDARD,
+            PRODTYPE_HFILE_MINI,    //=12
+            PRODTYPE_CFILE_MINI,
+            PRODTYPE_HFILE_LITE,    //=14
+            PRODTYPE_CFILE_LITE,
+            PRODTYPE_HFILE_RVTABLE, //=16, this is not synchronized to 10.22.4.249
+            PRODTYPE_CFILE_RVTABLE,
+            PRODTYPE_HFILE_KF,      //=18
+            PRODTYPE_CFILE_KF,
+            PRODTYPE_OCVTXT_STAGE0,         //=20, above, and equal to 20 are not synchronzed to 10.22.4.249 DB
+            PRODTYPE_RCTXT_STAGE0,
+            PRODTYPE_HFILE_STAGE0_STD,      //=22
+            PRODTYPE_CFILE_STAGE0_STD,
+            PRODTYPE_HFILE_STAGE0_MINI,     //=24
+            PRODTYPE_CFILE_STAGE0_MINI,
+            PRODTYPE_HFILE_STAGE0_LITE,     //=26
+            PRODTYPE_CFILE_STAGE0_LITE,
+            PRODTYPE_OCVTXT_STAGE1,         //=28
+            PRODTYPE_RCTXT_STAGE1,
+            PRODTYPE_HFILE_STAGE1_STD,      //=30
+            PRODTYPE_CFILE_STAGE1_STD,
+            PRODTYPE_HFILE_STAGE1_MINI,     //=32
+            PRODTYPE_CFILE_STAGE1_MINI,
+            PRODTYPE_HFILE_STAGE1_LITE,     //=34
+            PRODTYPE_CFILE_STAGE1_LITE,
+            PRODTYPE_MAX            //=36
+        };
         static public int iNumOfPoints { get; set; } = 65;
         static public float fPerSteps { get; set; } = 1.5625F;
         static public int iSOCStepmV { get; set; } = 16;
+
+        public static string GetLocalPath(string testFilePath)
+        {
+            return testFilePath.Replace(GlobalSettings.RemotePath, GlobalSettings.LocalFolder);
+        }
+
         public static string Version { get { return "V020"; } }
         public static List<Int32> GenerateSampleCellTempData()
         {
@@ -119,14 +166,14 @@ namespace BCLabManager
                 }
             }
         }
-        public static bool CreateFile(string strStandardH, List<string> fileContent)
+        public static bool CreateFile(string filePath, List<string> fileContent)
         {
             FileStream fs;
             StreamWriter sw;
 
             try
             {
-                fs = File.Open(strStandardH, FileMode.Create, FileAccess.Write, FileShare.None);
+                fs = File.Open(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
                 sw = new StreamWriter(fs, new UTF8Encoding(false));// Encoding.Default);
             }
             catch (Exception eh)
@@ -231,12 +278,14 @@ namespace BCLabManager
             MiniModel miniModel = new MiniModel();
             StandardModel standardModel = new StandardModel();
             AndroidModel androidModel = new AndroidModel();
+            LiteModel liteModel = new LiteModel();
 
             tableMakerModel.OCVModel = ocvModel;
             tableMakerModel.RCModel = rcModel;
             tableMakerModel.MiniModel = miniModel;
             tableMakerModel.StandardModel = standardModel;
             tableMakerModel.AndroidModel = androidModel;
+            tableMakerModel.LiteModel = liteModel;
 
             ocvModel.FilePath = OCVTableMaker.GetOCVTableFilePath(project);
             rcModel.FilePath = RCTableMaker.GetRCTableFilePath(project);
@@ -247,9 +296,11 @@ namespace BCLabManager
             standardModel.FilePaths = strFilePaths;
             GetDriverFilePaths(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "android", out strFilePaths);
             androidModel.FilePaths = strFilePaths;
+            GetDriverFilePaths(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "lite", out strFilePaths);
+            liteModel.FilePaths = strFilePaths;
         }
 
-        public static void Build(ref TableMakerModel tableMakerModel)
+        public static void Build(ref TableMakerModel tableMakerModel, bool isRemoteData, bool isRemoteOutput)
         {
             try
             {
@@ -261,13 +312,14 @@ namespace BCLabManager
                 var miniModel = tableMakerModel.MiniModel;
                 var standardModel = tableMakerModel.StandardModel;
                 var androidModel = tableMakerModel.AndroidModel;
+                var liteModel = tableMakerModel.LiteModel;
 
                 List<SourceData> ocvSource;
-                OCVTableMaker.GetOCVSource(project, programs.Where(o => o.Type.Name == "OCV").ToList(), testers, out ocvSource);
+                OCVTableMaker.GetOCVSource(project, programs.Where(o => o.Type.Name == "OCV").ToList(), testers, out ocvSource, isRemoteData);
                 OCVTableMaker.GetOCVModel(ocvSource, ref ocvModel);
 
                 List<SourceData> rcSource;
-                RCTableMaker.GetRCSource(project, programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList(), testers, out rcSource);
+                RCTableMaker.GetRCSource(project, programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList(), testers, out rcSource, isRemoteData);
                 RCTableMaker.GetRCModel(rcSource, project, ref rcModel);
                 MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, project, ref miniModel);
 
@@ -276,11 +328,14 @@ namespace BCLabManager
                 AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
 
 
-                OCVTableMaker.GenerateOCVTable(project, ocvModel);
-                RCTableMaker.GenerateRCTable(project, rcModel);
-                MiniDriverMaker.GenerateMiniDriver(miniModel, project);
-                StandardDriverMaker.GenerateStandardDriver(standardModel, project);
-                AndroidDriverMaker.GenerateAndroidDriver(androidModel, project);
+                OCVTableMaker.GenerateOCVTable(project, ocvModel, isRemoteOutput);
+                RCTableMaker.GenerateRCTable(project, rcModel, isRemoteOutput);
+                MiniDriverMaker.GenerateMiniDriver(miniModel, project, isRemoteOutput);
+                StandardDriverMaker.GenerateStandardDriver(standardModel, project, isRemoteOutput);
+                AndroidDriverMaker.GenerateAndroidDriver(androidModel, project, isRemoteOutput);
+
+                LiteDriverMaker.GetLiteModel(ocvSource, rcSource, ocvModel, rcModel, project, ref liteModel);
+                LiteDriverMaker.GenerateLiteDriver(liteModel, project, isRemoteOutput);
             }
             catch (Exception e)
             {

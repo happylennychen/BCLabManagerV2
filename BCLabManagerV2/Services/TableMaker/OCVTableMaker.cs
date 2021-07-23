@@ -13,7 +13,7 @@ namespace BCLabManager
         static public int iMinPercent = 0;
         static public int iMaxPercent = 10000;
         #region OCV
-        public static void GetOCVSource(Project project, List<Program> programs, List<Tester> testers, out List<SourceData> MaxSDList)
+        public static void GetOCVSource(Project project, List<Program> programs, List<Tester> testers, out List<SourceData> MaxSDList, bool isRemoteData)
         {
             var trs = programs.Select(o => o.Recipes.Select(i => i.TestRecords.Where(j => j.Status == TestStatus.Completed).ToList()).ToList()).ToList();
             List<TestRecord> testRecords = new List<TestRecord>();
@@ -40,8 +40,21 @@ namespace BCLabManager
                     sd.fTemperature = (float)tr.Temperature;
                     sd.fTraceResis = (float)tr.TraceResistance;
                     var tester = testers.SingleOrDefault(o => o.Name == tr.TesterStr);
-
-                    UInt32 result = tester.ITesterProcesser.LoadRawToSource(tr.TestFilePath, ref sd);
+                    var filePath = string.Empty;
+                    if (isRemoteData)
+                    {
+                        filePath = tr.TestFilePath;
+                    }
+                    else
+                    {
+                        filePath = TableMakerService.GetLocalPath(tr.TestFilePath);
+                        if (!File.Exists(filePath))
+                        {
+                            MessageBox.Show($"No such file.{filePath}");
+                            return;
+                        }
+                    }
+                    UInt32 result = tester.ITesterProcesser.LoadRawToSource(filePath, ref sd);
                     if (result == ErrorCode.NORMAL)
                     {
                         SDList.Add(sd);
@@ -223,9 +236,18 @@ namespace BCLabManager
             return result;
             #endregion
         }
-        public static TableMakerProduct GenerateOCVTable(Project project, OCVModel ocvModel)
+        public static TableMakerProduct GenerateOCVTable(Project project, OCVModel ocvModel, bool isRemoteOutput)
         {
-            var OutFolder = $@"{GlobalSettings.RemotePath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
+            var rootPath = string.Empty;
+            if (isRemoteOutput)
+            {
+                rootPath = GlobalSettings.RemotePath;
+            }
+            else
+            {
+                rootPath = GlobalSettings.LocalFolder;
+            }
+            var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
             string filePath = Path.Combine(OutFolder, ocvModel.FilePath);
             List<string> OCVHeader = GetOCVFileHeader(project);
             List<string> OCVContent = GetOCVFileContent(ocvModel.iOCVVolt);

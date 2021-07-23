@@ -161,9 +161,9 @@ namespace BCLabManager.ViewModel
                 {
                     System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                     stopwatch.Start();
-                    TableMakerService.Build(ref _tableMakerModel);
+                    TableMakerService.Build(ref _tableMakerModel, false, false);
                     var project = _tableMakerModel.Project;
-                    var folder = $@"{GlobalSettings.RemotePath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
+                    var folder = $@"{GlobalSettings.LocalFolder}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
                     string time = Math.Round(stopwatch.Elapsed.TotalSeconds, 0).ToString() + "S";
                     MessageBox.Show($"Completed. It took {time} to get the job done.");
                     Process.Start(folder);

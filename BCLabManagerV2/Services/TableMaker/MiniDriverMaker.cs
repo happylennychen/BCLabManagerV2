@@ -517,14 +517,23 @@ namespace BCLabManager
             poly2EstFACC = Fit.Polynomial(xdata, zdata, 2).ToList();        //2-order polynomial
         }
 
-        public static void GenerateMiniDriver(MiniModel miniModel, Project project)
+        public static void GenerateMiniDriver(MiniModel miniModel, Project project, bool isRemoteOutput)
         {
+            var rootPath = string.Empty;
+            if (isRemoteOutput)
+            {
+                rootPath = GlobalSettings.RemotePath;
+            }
+            else
+            {
+                rootPath = GlobalSettings.LocalFolder;
+            }
+            var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
             List<string> strFilePaths;
             TableMakerService.GetDriverFilePaths(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "mini", out strFilePaths);
             List<string> strHHeaderComments;
             UInt32 uErr = 0;
             TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), out strHHeaderComments);
-            var OutFolder = $@"{GlobalSettings.RemotePath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
             GenerateMiniCHFiles(OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, miniModel.iOCVVolt, miniModel.fCTABase, miniModel.fCTASlope, miniModel.poly2EstFACC, miniModel.poly2EstIR);
 
         }

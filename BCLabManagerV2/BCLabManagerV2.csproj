@@ -333,7 +333,9 @@
     <Compile Include="Services\RuningLog.cs" />
     <Compile Include="Services\TableMaker\AndroidDriverMaker.cs" />
     <Compile Include="Services\TableMaker\DataRow.cs" />
+    <Compile Include="Services\TableMaker\LiteDriverMaker.cs" />
     <Compile Include="Services\TableMaker\MiniDriverMaker.cs" />
+    <Compile Include="Services\TableMaker\LiteModel.cs" />
     <Compile Include="Services\TableMaker\MiniModel.cs" />
     <Compile Include="Services\TableMaker\OCVModel.cs" />
     <Compile Include="Services\TableMaker\OCVTableMaker.cs" />

@@ -17,13 +17,22 @@ namespace BCLabManager
             androidModel.outYValue = rcModel.outYValue;
         }
 
-        internal static void GenerateAndroidDriver(AndroidModel androidModel, Project project)
+        internal static void GenerateAndroidDriver(AndroidModel androidModel, Project project, bool isRemoteOutput)
         {
+            var rootPath = string.Empty;
+            if (isRemoteOutput)
+            {
+                rootPath = GlobalSettings.RemotePath;
+            }
+            else
+            {
+                rootPath = GlobalSettings.LocalFolder;
+            }
+            var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
             List<string> strFilePaths = androidModel.FilePaths;
             List<string> strHHeaderComments;
             UInt32 uErr = 0;
             TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), out strHHeaderComments);
-            var OutFolder = $@"{GlobalSettings.RemotePath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
             GenerateCHFiles(ref uErr, OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, androidModel.iOCVVolt, project.VoltagePoints, androidModel.listfTemp, androidModel.listfCurr, androidModel.outYValue, androidModel.fCTABase, androidModel.fCTASlope);
         }
         #region Driver
