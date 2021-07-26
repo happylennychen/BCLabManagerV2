@@ -464,14 +464,15 @@ namespace BCLabManager
             dbTmp1 = (float)(num) / (float)(v);
             dbTmp2 = Math.Round(dbTmp1, 0);
             dbTmp1 -= dbTmp2;
-            Int16 i16Tmp = 0, i16Curr = 1;
+            double db16Curr = 1;
+            Int16 i16Tmp = 0;
             if (ilstCurr.Count() >= 1)
             {
-                i16Curr = (short)ilstCurr[0];
-                if (i16Curr < 0)
-                    i16Curr /= -1000;
+                db16Curr = (short)ilstCurr[0];
+                if (db16Curr < 0)
+                    db16Curr /= -1000;
                 else
-                    i16Curr /= 1000;
+                    db16Curr /= 1000;
             }
             ilstOutIR = new List<short>();
             List<double> dblstDiff = new List<double>();
@@ -483,7 +484,7 @@ namespace BCLabManager
                     for (int j = 0; j < v; j++)
                     {
                         dbTmp1 = flstOCV[j] - flstRC_T[i * v + j];
-                        dblstDiff.Add(dbTmp1 / i16Curr);
+                        dblstDiff.Add(dbTmp1 / db16Curr);
                     }
                     dbTmp1 = 0;
                     for (int j = 1; j <= (int)(dblstDiff.Count() / 2); j++)
