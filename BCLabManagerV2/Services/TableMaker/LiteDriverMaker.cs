@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace BCLabManager
 {
@@ -19,6 +20,11 @@ namespace BCLabManager
             //standardModel.listfCurr = rcModel.listfCurr;
             //standardModel.listfTemp = rcModel.listfTemp;
             //standardModel.outYValue = rcModel.outYValue;
+            List<float> fLstTblM_OCV;
+            GetLstTblM_OCV(ocvSource, out fLstTblM_OCV);
+            List<float> flstTblOCVCof;
+            GetLstTblOCVCof(fLstTblM_OCV, out flstTblOCVCof);
+            liteModel.flstTblOCVCof = flstTblOCVCof;
             liteModel.ilistCurr = rcModel.listfCurr.Select(o => (short)o).ToList();
             List<float> flstKeodCont = new List<float>();
             List<float> flstAccAtEoD = new List<float>();
@@ -30,7 +36,193 @@ namespace BCLabManager
             liteModel.flstdbKeodCof = flstdbKeodCof;
         }
 
-        private static void GetDCapCof(List<short> ilstTemp, List<short> ilstCurr, List<float> flstKeodCont, List<float> flstAccAtEoD, float fullCapacity,  out List<double[]> flstdbDCapCof, out List<double[]> flstdbKeodCof)
+        private static void GetLstTblM_OCV(List<SourceData> ocvSource, out List<float> fLstTblM_OCV)
+        {
+            fLstTblM_OCV = new List<float>();
+            SourceData lowcurSample, higcurSample;
+            if (Math.Abs(ocvSource[0].fCurrent) < Math.Abs(ocvSource[1].fCurrent))
+            {
+                lowcurSample = ocvSource[0];
+                higcurSample = ocvSource[1];
+            }
+            else
+            {
+                lowcurSample = ocvSource[1];
+                higcurSample = ocvSource[0];
+            }
+
+            float fTmpVolt1;
+            int indexLow = 0, indexHigh = 0;
+            for (int fi = OCVTableMaker.iMaxPercent; fi >= OCVTableMaker.iMinPercent;
+                fi -= ((OCVTableMaker.iMaxPercent - OCVTableMaker.iMinPercent) / TableMakerService.iNumOfMiniPoints))
+            {
+                float fSoCVoltLow = 0; float fSoCVoltHigh = 0;  //default value
+                #region find <10000, Volt>, <9900, Volt> from low current data
+                float fTmpSoC1 = 0; //fTmpSoC2 = 0; //default value
+                float fSoCbk = 0; float fVoltbk = 0;    //default value
+                for (; indexLow < lowcurSample.AdjustedExpData.Count; indexLow++)
+                {
+                    fTmpVolt1 = lowcurSample.AdjustedExpData[indexLow].fVoltage;
+                    fTmpSoC1 = lowcurSample.AdjustedExpData[indexLow].fSoCAdj;
+                    if (fi >= fTmpSoC1)
+                    {
+                        if (indexLow == 0)  //first record
+                        {
+                            fSoCVoltLow = fTmpVolt1;
+                            fSoCbk = fTmpSoC1;
+                            fVoltbk = fTmpVolt1;
+                        }
+                        else
+                        {
+                            if (fi == fTmpSoC1)
+                            {
+                                fSoCVoltLow = fTmpVolt1;
+                                fSoCbk = fTmpSoC1;
+                                fVoltbk = fTmpVolt1;
+                            }
+                            else
+                            {
+                                fSoCVoltLow = fTmpVolt1;    //no modify fSoCbk, fVoltbk
+                            }
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        fSoCbk = fTmpSoC1;
+                        fVoltbk = fTmpVolt1;
+                    }
+                }   //for(;
+                if (indexLow < lowcurSample.AdjustedExpData.Count)      //in experiment range
+                {
+                    if ((Math.Abs(fSoCbk - fi) > 5) ||
+                        (Math.Abs(fi - fTmpSoC1) > 5))//SoC difference is bigger than 5, error
+                    {
+                        MessageBox.Show("Wrong");
+                    }
+                    else
+                    {
+                        //if in 5 (10000C unit) range, use linear interpolation
+                        if (fSoCbk != fTmpSoC1)     //must use this!!
+                        {
+                            fSoCVoltLow += (fVoltbk - fSoCVoltLow) * (fi - fTmpSoC1) / (fSoCbk - fTmpSoC1);
+                        }
+                    }
+                }
+                else        //out of experiment range
+                {
+                    //use linear extrapolation, use last one point copy currently and temporarily 
+                    if (fVoltbk != 0)
+                    {
+                        fSoCVoltLow = fVoltbk;
+                    }
+                    else
+                    {
+                        if (lowcurSample.AdjustedExpData.Count > 1)
+                            fSoCVoltLow = lowcurSample.AdjustedExpData[lowcurSample.AdjustedExpData.Count - 1].fVoltage;
+                    }
+                }
+                #endregion
+
+                #region find <10000, Volt>, <9900, Volt> from high current data
+                fTmpSoC1 = 0; //fTmpSoC2 = 0; //default value
+                fSoCbk = 0; fVoltbk = 0;    //default value
+                for (; indexHigh < higcurSample.AdjustedExpData.Count; indexHigh++)
+                {
+                    fTmpVolt1 = higcurSample.AdjustedExpData[indexHigh].fVoltage;
+                    fTmpSoC1 = higcurSample.AdjustedExpData[indexHigh].fSoCAdj;
+                    if (fi >= fTmpSoC1)
+                    {
+                        if (indexHigh == 0) //first record
+                        {
+                            fSoCVoltHigh = fTmpVolt1;
+                            fSoCbk = fTmpSoC1;
+                            fVoltbk = fTmpVolt1;
+                        }
+                        else
+                        {
+                            if (fi == fTmpSoC1)
+                            {
+                                fSoCVoltHigh = fTmpVolt1;
+                                fSoCbk = fTmpSoC1;
+                                fVoltbk = fTmpVolt1;
+                            }
+                            else
+                            {
+                                fSoCVoltHigh = fTmpVolt1;   //no modify fSoCbk, fVoltbk
+                            }
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        fSoCbk = fTmpSoC1;
+                        fVoltbk = fTmpVolt1;
+                    }
+                }   //for(;
+                if (indexHigh < higcurSample.AdjustedExpData.Count)     //in experiment range
+                {
+                    if ((Math.Abs(fSoCbk - fi) > 5) ||
+                        (Math.Abs(fi - fTmpSoC1) > 5))//SoC difference is bigger than 5, error
+                    {
+                        MessageBox.Show("Wrong");
+                    }
+                    else
+                    {
+                        //if in 5 (10000C unit) range, use linear interpolation
+                        if (fSoCbk != fTmpSoC1)     //must use this!!
+                        {
+                            fSoCVoltHigh += (fVoltbk - fSoCVoltHigh) * (fi - fTmpSoC1) / (fSoCbk - fTmpSoC1);
+                        }
+                    }
+                }
+                else        //out of experiment range
+                {
+                    //use linear extrapolation, use last one point copy currently and temporarily 
+                    if (fVoltbk != 0)
+                    {
+                        fSoCVoltHigh = fVoltbk;
+                    }
+                    else
+                    {
+                        if (higcurSample.AdjustedExpData.Count > 1)
+                            fSoCVoltHigh = higcurSample.AdjustedExpData[higcurSample.AdjustedExpData.Count - 1].fVoltage;
+                    }
+                }
+                #endregion
+
+                float fRsocn = (fSoCVoltLow - fSoCVoltHigh) / (Math.Abs(higcurSample.fCurrent) - Math.Abs(lowcurSample.fCurrent));
+                fTmpVolt1 = fSoCVoltLow + Math.Abs(lowcurSample.fCurrent) * fRsocn;
+                if (fTmpVolt1 > lowcurSample.fLimitChgVolt) fTmpVolt1 = lowcurSample.fLimitChgVolt;
+                if (fTmpVolt1 < lowcurSample.fCutoffDsgVolt) fTmpVolt1 = lowcurSample.fCutoffDsgVolt;
+                if (fTmpVolt1 < 0) MessageBox.Show("Minus Voltage Got");    //Fran debug
+                //iLstTblM_SOC1.Add(fi);
+                fLstTblM_OCV.Add(fTmpVolt1 + 0.5F);
+            }
+        }
+
+        private static void GetLstTblOCVCof(List<float> fLstTblM_OCV, out List<float> flstTblOCVCof)
+        {
+            flstTblOCVCof = new List<float>();
+
+            double[] xdata = new double[fLstTblM_OCV.Count];
+            double[] ydata = new double[fLstTblM_OCV.Count];
+            for (int i = 0; i < fLstTblM_OCV.Count; i++)
+            {
+                xdata[i] = Convert.ToDouble(fLstTblM_OCV[i]);        //use voltage as unit
+                xdata[i] /= 1000;
+                ydata[i] = Convert.ToDouble(OCVTableMaker.iMaxPercent - (i * 100));
+                ydata[i] /= 10000;
+            }
+
+            double[] poly2OCVCof = Fit.Polynomial(xdata, ydata, 7);        //7-order polynomial
+            for (int j = 0; j < poly2OCVCof.Length; j++)
+            {
+                flstTblOCVCof.Add((float)poly2OCVCof[poly2OCVCof.Length - j - 1]);
+            }
+        }
+
+        private static void GetDCapCof(List<short> ilstTemp, List<short> ilstCurr, List<float> flstKeodCont, List<float> flstAccAtEoD, float fullCapacity, out List<double[]> flstdbDCapCof, out List<double[]> flstdbKeodCof)
         {
             flstdbDCapCof = new List<double[]>();
             flstdbKeodCof = new List<double[]>();

@@ -57,6 +57,8 @@ namespace BCLabManager
         static public int iNumOfPoints { get; set; } = 65;
         static public float fPerSteps { get; set; } = 1.5625F;
         static public int iSOCStepmV { get; set; } = 16;
+        static public int iNumOfMiniPoints { get; set; } = 100;           //(A200831)francis, for table_mini
+        static public float fMiniTableSteps { get; set; } = 1;        //(A200831)francis, for table_mini
 
         public static string GetLocalPath(string testFilePath)
         {
