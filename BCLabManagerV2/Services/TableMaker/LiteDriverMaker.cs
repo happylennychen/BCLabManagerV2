@@ -36,7 +36,7 @@ namespace BCLabManager
             GetLstKeodCont(ref rcModel, project, out flstKeodCont, out flstAccAtEoD);
             List<double[]> flstdbDCapCof;
             List<double[]> flstdbKeodCof;
-            var ilstTemp = rcModel.listfTemp.Select(o => (short)o).ToList();
+            var ilstTemp = rcModel.listfTemp.Select(o => (short)(o * 10)).ToList();
             GetDCapCof(ilstTemp, liteModel.ilistCurr, flstKeodCont, flstAccAtEoD, project.AbsoluteMaxCapacity, out flstdbDCapCof, out flstdbKeodCof);
             liteModel.flstdbDCapCof = flstdbDCapCof;
             liteModel.flstdbKeodCof = flstdbKeodCof;
@@ -109,7 +109,7 @@ namespace BCLabManager
                                 else
                                     bDoMiniCal = false;
                                 //if (!CreateYPoints_CTAV0026(ref il16tmp, ref fMaxDiff, ref fCCount, sds.AdjustedExpData, ref uErr, bDoMiniCal))
-                                if (!CreateYPoints_CTAV26_TBLLite(uEoDVoltage, project.VoltagePoints, ref il16tmp, ref fMaxDiff, ref fCCount, sds.AdjustedExpData, ref uErr,project.AbsoluteMaxCapacity, rcModel.MinVoltage, ref fKeodAtEach, bDoMiniCal))
+                                if (!CreateYPoints_CTAV26_TBLLite(uEoDVoltage, project.VoltagePoints, ref il16tmp, ref fMaxDiff, ref fCCount, sds.AdjustedExpData, ref uErr, project.AbsoluteMaxCapacity, rcModel.MinVoltage, ref fKeodAtEach, bDoMiniCal))
                                 {
                                     bReturn &= false;
                                 }
@@ -449,7 +449,7 @@ namespace BCLabManager
             return bReturn;
         }
 
-        private static void GetLstKeodCont(ref RCModel rcModel,Project project, out List<float> flstKeodCont, out List<float> flstAccAtEoD)
+        private static void GetLstKeodCont(ref RCModel rcModel, Project project, out List<float> flstKeodCont, out List<float> flstAccAtEoD)
         {
             uint uErr = 0;
             CreateRCPoints_TableMini(2800, ref uErr, ref rcModel, rcModel.SourceList, project);
@@ -853,7 +853,7 @@ namespace BCLabManager
             output.Add("/*****************************************************************************");
             output.Add("* RCAP and KEOD Function Table Y-Axis Data");
             output.Add("****************************************************************************/");
-            strCTmp = "int\ty_data[YNUM] = {{";
+            strCTmp = "int\ty_data[YNUM] = {";
             for (int ic = 0; ic < ilstCurr.Count; ic++)
             {
                 short shtmp = ilstCurr[ic];
@@ -863,14 +863,14 @@ namespace BCLabManager
                 else
                     strCTmp += (string.Format("{0}", shtmp));
             }
-            output.Add(strCTmp + "}};\n");
+            output.Add(strCTmp + "};\n");
             output.Add("/*****************************************************************************");
             output.Add("* RCAP Function Table Coefficient Data");
             output.Add("****************************************************************************/");
-            output.Add("float dcap_cof[YNUM][FNUM3D] = {{");
+            output.Add("float dcap_cof[YNUM][FNUM3D] = {");
             for (int id = 0; id < flstdbDCapCof.Count; id++)
             {
-                strCTmp = ("\t{{");
+                strCTmp = ("\t{");
                 double[] dbtmp = flstdbDCapCof[id];
                 for (int idd = 0; idd < dbtmp.Length; idd++)
                 {
@@ -879,16 +879,16 @@ namespace BCLabManager
                     else
                         strCTmp += (string.Format("{0:F10}", dbtmp[idd]));
                 }
-                output.Add(strCTmp += "}},");
+                output.Add(strCTmp += "},");
             }
-            output.Add("}};\n");
+            output.Add("};\n");
             output.Add("/*****************************************************************************");
             output.Add("* KEOD Function Table Coefficient Data");
             output.Add("****************************************************************************/");
-            output.Add("float keod_cof[YNUM][FNUM3D] = {{");
+            output.Add("float keod_cof[YNUM][FNUM3D] = {");
             for (int id = 0; id < flstdbKeodCof.Count; id++)
             {
-                strCTmp = ("\t{{");
+                strCTmp = ("\t{");
                 double[] dbtmp = flstdbKeodCof[id];
                 for (int idd = 0; idd < dbtmp.Length; idd++)
                 {
@@ -897,9 +897,9 @@ namespace BCLabManager
                     else
                         strCTmp += (string.Format("{0:F10}", dbtmp[idd]));
                 }
-                output.Add("}},");
+                output.Add(strCTmp + "},");
             }
-            output.Add("}};\n");
+            output.Add("};\n");
             return output;
         }
     }
