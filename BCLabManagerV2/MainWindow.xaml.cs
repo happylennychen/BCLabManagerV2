@@ -1,5 +1,6 @@
 ﻿#define Show
 //#define Requester
+//#define StartWindow
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,8 +35,10 @@ namespace BCLabManager
         public MainWindowViewModel mainWindowViewModel { get { return _mainWindowViewModel; } set { _mainWindowViewModel = value; } }
         public MainWindow()
         {
+#if StartWindow
             var startupWindow = new StartupWindow();
             startupWindow.Show();
+#endif
             try
             {
 #if Show
@@ -54,7 +57,9 @@ namespace BCLabManager
             }
             catch (DatabaseAccessException e)
             {
+#if StartWindow
                 startupWindow.Close();
+#endif
                 MessageBox.Show($"{e.Message}\n" +
                     $"{e.InnerException}\n" +
                     $"\n" +
@@ -62,15 +67,19 @@ namespace BCLabManager
             }
             catch (Exception e)
             {
+#if StartWindow
                 startupWindow.Close();
+#endif
                 MessageBox.Show($"{e.Message}\n" +
                     $"{e.InnerException}");
                 App.Current.Shutdown();
             }
             finally
             {
-                if(startupWindow.IsActive)
+#if StartWindow
+                if (startupWindow.IsActive)
                     startupWindow.Close();
+#endif
             }
         }
         private void InitializeNavigator()

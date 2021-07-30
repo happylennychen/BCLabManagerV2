@@ -2,6 +2,7 @@
 using MathNet.Numerics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -26,9 +27,10 @@ namespace BCLabManager
             //standardModel.listfTemp = rcModel.listfTemp;
             //standardModel.outYValue = rcModel.outYValue;
             List<float> fLstTblM_OCV;
-            GetLstTblM_OCV(ocvSource, out fLstTblM_OCV);
+            List<int> iLstTblM_SOC1;
+            GetLstTblM_OCV(ocvSource, out fLstTblM_OCV, out iLstTblM_SOC1);
             List<float> flstTblOCVCof;
-            GetLstTblOCVCof(fLstTblM_OCV, out flstTblOCVCof);
+            GetLstTblOCVCof(fLstTblM_OCV, iLstTblM_SOC1, out flstTblOCVCof);
             liteModel.flstTblOCVCof = flstTblOCVCof;
             liteModel.ilistCurr = rcModel.listfCurr.Select(o => (short)o).ToList();
             List<float> flstKeodCont;
@@ -457,9 +459,10 @@ namespace BCLabManager
             flstAccAtEoD = flstDCapAtEoD;
         }
 
-        private static void GetLstTblM_OCV(List<SourceData> ocvSource, out List<float> fLstTblM_OCV)
+        private static void GetLstTblM_OCV(List<SourceData> ocvSource, out List<float> fLstTblM_OCV, out List<int> iLstTblM_SOC1)
         {
             fLstTblM_OCV = new List<float>();
+            iLstTblM_SOC1 = new List<int>();
             SourceData lowcurSample, higcurSample;
             if (Math.Abs(ocvSource[0].fCurrent) < Math.Abs(ocvSource[1].fCurrent))
             {
@@ -617,29 +620,100 @@ namespace BCLabManager
                 if (fTmpVolt1 > lowcurSample.fLimitChgVolt) fTmpVolt1 = lowcurSample.fLimitChgVolt;
                 if (fTmpVolt1 < lowcurSample.fCutoffDsgVolt) fTmpVolt1 = lowcurSample.fCutoffDsgVolt;
                 if (fTmpVolt1 < 0) MessageBox.Show("Minus Voltage Got");    //Fran debug
-                //iLstTblM_SOC1.Add(fi);
+                iLstTblM_SOC1.Add(fi);
                 fLstTblM_OCV.Add(fTmpVolt1 + 0.5F);
             }
         }
 
-        private static void GetLstTblOCVCof(List<float> fLstTblM_OCV, out List<float> flstTblOCVCof)
+        private static void GetLstTblOCVCof(List<float> fLstTblM_OCV, List<int> iLstTblM_SOC1, out List<float> flstTblOCVCof)
         {
             flstTblOCVCof = new List<float>();
+            CreatePolyDataFile(fLstTblM_OCV, iLstTblM_SOC1);
+            RunExcel();
+            flstTblOCVCof = LoadFromFile();
+            DeleteTmpFile();
+        }
 
-            double[] xdata = new double[fLstTblM_OCV.Count];
-            double[] ydata = new double[fLstTblM_OCV.Count];
-            for (int i = 0; i < fLstTblM_OCV.Count; i++)
+        private static void DeleteTmpFile()
+        {
+            if (File.Exists("poly_cof.txt"))
+                File.Delete("poly_cof.txt");
+            if (File.Exists("Poly_data.txt"))
+                File.Delete("Poly_data.txt");
+        }
+
+        private static List<float> LoadFromFile()
+        {
+            List<float> flstTblOCVCof = new List<float>();
+
+            var strtmpfu = "poly_cof.txt";
+            if (File.Exists(strtmpfu))
             {
-                xdata[i] = Convert.ToDouble(fLstTblM_OCV[i]);        //use voltage as unit
-                xdata[i] /= 1000;
-                ydata[i] = Convert.ToDouble(OCVTableMaker.iMaxPercent - (i * 100));
-                ydata[i] /= 10000;
+                var stmRead = new StreamReader(strtmpfu);
+
+                if (stmRead != null)
+                {
+                    flstTblOCVCof.Clear();
+                    string strcont;
+                    float fTmp;
+                    while ((strcont = stmRead.ReadLine()) != null)
+                    {
+                        if (float.TryParse(strcont, out fTmp))
+                        {
+                            flstTblOCVCof.Add(fTmp);
+                        }
+                    }
+                }
+                stmRead.Close();
             }
+            return flstTblOCVCof;
+        }
 
-            double[] poly2OCVCof = Fit.Polynomial(xdata, ydata, 7);        //7-order polynomial
-            for (int j = 0; j < poly2OCVCof.Length; j++)
+        private static void RunExcel()
+        {
+            ProcessStartInfo psInfo = new ProcessStartInfo();
+            psInfo.CreateNoWindow = false;
+            psInfo.UseShellExecute = true;
+            psInfo.FileName = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "tableVBARunner.vbs");
+            psInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            psInfo.Arguments = " \"" + Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "table_poly_coeff_Generator.xlsm") + "\" "
+                                + "TableMaker_ExcelGen" + " " + "MacroMain";
+
+            try
             {
-                flstTblOCVCof.Add((float)poly2OCVCof[poly2OCVCof.Length - j - 1]);
+                // Start the process with the info we specified.
+                // Call WaitForExit and then the using statement will close.
+                using (Process exeProcess = Process.Start(psInfo))
+                {
+                    exeProcess.WaitForExit();
+                }
+            }
+            catch
+            {
+                // Log error.
+            }
+        }
+
+        private static void CreatePolyDataFile(List<float> fLstTblM_OCV, List<int> iLstTblM_SOC1)
+        {
+            try
+            {
+                FileStream fs = File.Open("Poly_data.txt", FileMode.Create, FileAccess.Write, FileShare.None);
+                StreamWriter sw = new StreamWriter(fs, new UTF8Encoding(false));// Encoding.Default);
+                string strWriteTo = string.Format("LINEST, 7, false, true");
+                sw.WriteLine(strWriteTo);
+                for (int j = 0; j < iLstTblM_SOC1.Count; j++)
+                {
+                    strWriteTo = string.Format("{0}, {1},", Convert.ToInt16(iLstTblM_SOC1[j]), fLstTblM_OCV[j]);
+                    sw.WriteLine(strWriteTo);
+                }
+
+                sw.Close();
+                fs.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Create Poly_data.txt failed.");
             }
         }
 
@@ -834,11 +908,13 @@ namespace BCLabManager
             output.Add(string.Format("****************************************************************************/"));
             output.Add(string.Format("one_latitude_data_t fgl_cell_temp_data[FGL_TEMPERATURE_NUM] = "));
             output.Add(string.Format("{{"));
+            strCTmp = string.Empty;
             for (i = 0; i < ilstCellTempData.Count; i++)
             {
                 var tmp = string.Format("\t{{{0}, \t{1}", ilstCellTempData[i], ilstCellTempData[++i]) + "},";
                 if ((i > 2) && (i % 10 == 9))
                 {
+                    strCTmp += tmp;
                     output.Add(strCTmp);
                     strCTmp = string.Empty;
                 }
@@ -847,8 +923,8 @@ namespace BCLabManager
                     strCTmp += tmp;
                 }
             }
-            output.Add(string.Empty);
-            output.Add("}};");
+            output.Add(strCTmp);
+            output.Add("};");
             output.Add("\n");
             output.Add("/*****************************************************************************");
             output.Add("* RCAP and KEOD Function Table Y-Axis Data");
