@@ -12,11 +12,11 @@ namespace BCLabManager
 {
     public static class LiteDriverMaker
     {
-        public static List<float> fYPointACCall = new List<float>();       //for table mini, save accumulated capacity value for RC, V
-        public static List<float> flstDCapAtEoD = new List<float>();            //for table lite, save discharge-capacity when reaching EoD voltage
-        public static List<List<float>> fLstRCM_Volt = new List<List<float>>();
-        public static List<List<float>> fLstRCL_Volt = new List<List<float>>();    //for table_lite
-        public static List<float> flstKeodContent = new List<float>();
+        //public static List<float> fYPointACCall { get; set; } = new List<float>();       //for table mini, save accumulated capacity value for RC, V
+        //public static List<float> flstDCapAtEoD { get; set; } = new List<float>();            //for table lite, save discharge-capacity when reaching EoD voltage
+        public static List<List<float>> fLstRCM_Volt { get; set; } = new List<List<float>>();
+        public static List<List<float>> fLstRCL_Volt { get; set; } = new List<List<float>>();    //for table_lite
+        //public static List<float> flstKeodContent { get; set; } = new List<float>();
         public static void GetLiteModel(List<SourceData> ocvSource, List<SourceData> rcSource, OCVModel ocvModel, RCModel rcModel, Project project, ref LiteModel liteModel)
         {
             //standardModel.iOCVVolt = ocvModel.iOCVVolt;
@@ -43,10 +43,12 @@ namespace BCLabManager
             liteModel.flstdbDCapCof = flstdbDCapCof;
             liteModel.flstdbKeodCof = flstdbKeodCof;
         }
-        private static bool CreateRCPoints_TableMini(UInt32 uEoDVoltage, ref uint uErr, ref RCModel rcModel, List<SourceData> sdList, Project project)
+        private static bool CreateRCPoints_TableMini(UInt32 uEoDVoltage, ref uint uErr, ref RCModel rcModel, List<SourceData> sdList, Project project, out List<float> flstKeodContent, out List<float> flstAccAtEoD)
         {
             bool bReturn = true;	//cause below will use bReturn &= xxxx
             bool bDoMiniCal = false;
+            flstAccAtEoD = new List<float>();
+            flstKeodContent = new List<float>();
 
             foreach (List<Int32> il in rcModel.outYValue)
             {
@@ -56,7 +58,7 @@ namespace BCLabManager
             rcModel.listfTemp.Sort();
             rcModel.listfCurr.Sort();
             rcModel.listfCurr.Reverse();
-            fYPointACCall.Clear();
+            //fYPointACCall.Clear();
             List<float> fCTADiffMax = new List<float>();     //debug use, saving Max_Diff_Temp for each current_temperature
             List<Int32> iCTACountP = new List<Int32>();      //debug use, saving count number of valid calculated RawDataNode for each current_temperature
             List<float> fCTAJoules = new List<float>();      //saving Joules value, = Count_Number / 3600 for each current_temperature
@@ -73,7 +75,7 @@ namespace BCLabManager
             fDCapCof.Clear();
             fAvgPerCurrent.Clear();
             iLstRCM_SOC1.Clear();
-            flstDCapAtEoD.Clear();
+            //flstDCapAtEoD.Clear();
             for (int iRC = 0; iRC < fLstRCM_Volt.Count; iRC++)
             {
                 fLstRCM_Volt[iRC].Clear();
@@ -111,7 +113,7 @@ namespace BCLabManager
                                 else
                                     bDoMiniCal = false;
                                 //if (!CreateYPoints_CTAV0026(ref il16tmp, ref fMaxDiff, ref fCCount, sds.AdjustedExpData, ref uErr, bDoMiniCal))
-                                if (!CreateYPoints_CTAV26_TBLLite(uEoDVoltage, project.VoltagePoints, ref il16tmp, ref fMaxDiff, ref fCCount, sds.AdjustedExpData, ref uErr, project.AbsoluteMaxCapacity, rcModel.MinVoltage, ref fKeodAtEach, bDoMiniCal))
+                                if (!CreateYPoints_CTAV26_TBLLite(uEoDVoltage, project.VoltagePoints, ref il16tmp, ref fMaxDiff, ref fCCount, sds.AdjustedExpData, ref uErr, project.AbsoluteMaxCapacity, rcModel.MinVoltage, ref fKeodAtEach, ref flstAccAtEoD, bDoMiniCal))
                                 {
                                     bReturn &= false;
                                 }
@@ -207,7 +209,7 @@ namespace BCLabManager
             return bReturn;
         }
 
-        private static bool CreateYPoints_CTAV26_TBLLite(UInt32 uEoDVoltage, List<int> TableVoltagePoints, ref List<Int32> ypoints, ref float fRefMaxDiff, ref float fRefCCount, List<DataRow> inListRCData, ref UInt32 uErr, float fDesignCapacity, int iMinVoltage, ref float _fKeodAtEach, bool bDoMini = false)
+        private static bool CreateYPoints_CTAV26_TBLLite(UInt32 uEoDVoltage, List<int> TableVoltagePoints, ref List<Int32> ypoints, ref float fRefMaxDiff, ref float fRefCCount, List<DataRow> inListRCData, ref UInt32 uErr, float fDesignCapacity, int iMinVoltage, ref float _fKeodAtEach, ref List<float> flstDCapAtEoD, bool bDoMini = false)
         {
             float fCapaciDiff = 0;
             bool bReturn = false;
@@ -238,8 +240,8 @@ namespace BCLabManager
                 for (; j < inListRCData.Count; j++)
                 {
                     //(A20201015), memorize maximum accumulated capacity
-                    if (Math.Abs(inListRCData[j].fAccMah) > fAccCap)
-                        fAccCap = Math.Abs(inListRCData[j].fAccMah);
+                    //if (Math.Abs(inListRCData[j].fAccMah) > fAccCap)
+                    //    fAccCap = Math.Abs(inListRCData[j].fAccMah);
                     //(A20200813)
                     if (j >= iCountP)
                     {
@@ -406,7 +408,7 @@ namespace BCLabManager
             }
 
             //(A200902)francis, table_mini
-            fYPointACCall.Add(fAccCap);
+            //fYPointACCall.Add(fAccCap);
             //(A201208)for table lite
             if (fDCapEoD < 0.1f)
                 fDCapEoD = inListRCData[inListRCData.Count - 1].fAccMah;
@@ -454,9 +456,7 @@ namespace BCLabManager
         private static void GetLstKeodCont(ref RCModel rcModel, Project project, out List<float> flstKeodCont, out List<float> flstAccAtEoD)
         {
             uint uErr = 0;
-            CreateRCPoints_TableMini(2800, ref uErr, ref rcModel, rcModel.SourceList, project);
-            flstKeodCont = flstKeodContent;
-            flstAccAtEoD = flstDCapAtEoD;
+            CreateRCPoints_TableMini(2800, ref uErr, ref rcModel, rcModel.SourceList, project, out flstKeodCont, out flstAccAtEoD);
         }
 
         private static void GetLstTblM_OCV(List<SourceData> ocvSource, out List<float> fLstTblM_OCV, out List<int> iLstTblM_SOC1)
