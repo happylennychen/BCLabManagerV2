@@ -14,18 +14,11 @@ namespace BCLabManager
     {
         //public static List<float> fYPointACCall { get; set; } = new List<float>();       //for table mini, save accumulated capacity value for RC, V
         //public static List<float> flstDCapAtEoD { get; set; } = new List<float>();            //for table lite, save discharge-capacity when reaching EoD voltage
-        public static List<List<float>> fLstRCM_Volt { get; set; } = new List<List<float>>();
-        public static List<List<float>> fLstRCL_Volt { get; set; } = new List<List<float>>();    //for table_lite
+        //public static List<List<float>> fLstRCM_Volt { get; set; } = new List<List<float>>();
+        //public static List<List<float>> fLstRCL_Volt { get; set; } = new List<List<float>>();    //for table_lite
         //public static List<float> flstKeodContent { get; set; } = new List<float>();
-        public static void GetLiteModel(List<SourceData> ocvSource, List<SourceData> rcSource, OCVModel ocvModel, RCModel rcModel, Project project, ref LiteModel liteModel)
+        public static void GetLiteModel(UInt32 uEoDVoltage, List<SourceData> ocvSource, List<SourceData> rcSource, OCVModel ocvModel, RCModel rcModel, Project project, ref LiteModel liteModel)
         {
-            //standardModel.iOCVVolt = ocvModel.iOCVVolt;
-
-            //standardModel.fCTABase = rcModel.fCTABase;
-            //standardModel.fCTASlope = rcModel.fCTASlope;
-            //standardModel.listfCurr = rcModel.listfCurr;
-            //standardModel.listfTemp = rcModel.listfTemp;
-            //standardModel.outYValue = rcModel.outYValue;
             List<float> fLstTblM_OCV;
             List<int> iLstTblM_SOC1;
             GetLstTblM_OCV(ocvSource, out fLstTblM_OCV, out iLstTblM_SOC1);
@@ -35,7 +28,7 @@ namespace BCLabManager
             liteModel.ilistCurr = rcModel.listfCurr.Select(o => (short)o).ToList();
             List<float> flstKeodCont;
             List<float> flstAccAtEoD;
-            GetLstKeodCont(ref rcModel, project, out flstKeodCont, out flstAccAtEoD);
+            GetLstKeodCont(uEoDVoltage, ref rcModel, project, out flstKeodCont, out flstAccAtEoD);
             List<double[]> flstdbDCapCof;
             List<double[]> flstdbKeodCof;
             var ilstTemp = rcModel.listfTemp.Select(o => (short)(o * 10)).ToList();
@@ -76,11 +69,11 @@ namespace BCLabManager
             fAvgPerCurrent.Clear();
             iLstRCM_SOC1.Clear();
             //flstDCapAtEoD.Clear();
-            for (int iRC = 0; iRC < fLstRCM_Volt.Count; iRC++)
-            {
-                fLstRCM_Volt[iRC].Clear();
-            }
-            fLstRCM_Volt.Clear();
+            //for (int iRC = 0; iRC < fLstRCM_Volt.Count; iRC++)
+            //{
+            //    fLstRCM_Volt[iRC].Clear();
+            //}
+            //fLstRCM_Volt.Clear();
             for (int jj = 0; jj < (TableMakerService.iNumOfMiniPoints + 1); jj++)
             {
                 iLstRCM_SOC1.Add(((OCVTableMaker.iMaxPercent - OCVTableMaker.iMinPercent) / TableMakerService.iNumOfMiniPoints) * (TableMakerService.iNumOfMiniPoints - jj));
@@ -445,18 +438,18 @@ namespace BCLabManager
                 {
                     flstTmp.Add(iMinVoltage);
                 }
-                if (bDoMini)
-                    fLstRCM_Volt.Add(flstTmp);
-                fLstRCL_Volt.Add(flstTmp);
+                //if (bDoMini)
+                //    fLstRCM_Volt.Add(flstTmp);
+                //fLstRCL_Volt.Add(flstTmp);
             }
 
             return bReturn;
         }
 
-        private static void GetLstKeodCont(ref RCModel rcModel, Project project, out List<float> flstKeodCont, out List<float> flstAccAtEoD)
+        private static void GetLstKeodCont(UInt32 uEoDVoltage, ref RCModel rcModel, Project project, out List<float> flstKeodCont, out List<float> flstAccAtEoD)
         {
             uint uErr = 0;
-            CreateRCPoints_TableMini(2800, ref uErr, ref rcModel, rcModel.SourceList, project, out flstKeodCont, out flstAccAtEoD);
+            CreateRCPoints_TableMini(uEoDVoltage, ref uErr, ref rcModel, rcModel.SourceList, project, out flstKeodCont, out flstAccAtEoD);
         }
 
         private static void GetLstTblM_OCV(List<SourceData> ocvSource, out List<float> fLstTblM_OCV, out List<int> iLstTblM_SOC1)

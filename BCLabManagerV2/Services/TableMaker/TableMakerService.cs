@@ -302,7 +302,7 @@ namespace BCLabManager
             liteModel.FilePaths = strFilePaths;
         }
 
-        public static void Build(ref TableMakerModel tableMakerModel, bool isRemoteData, bool isRemoteOutput)
+        public static void Build(ref TableMakerModel tableMakerModel, uint uEodVoltage, bool isRemoteData, bool isRemoteOutput)
         {
             try
             {
@@ -336,7 +336,7 @@ namespace BCLabManager
                 StandardDriverMaker.GenerateStandardDriver(standardModel, project, isRemoteOutput);
                 AndroidDriverMaker.GenerateAndroidDriver(androidModel, project, isRemoteOutput);
 
-                LiteDriverMaker.GetLiteModel(ocvSource, rcSource, ocvModel, rcModel, project, ref liteModel);
+                LiteDriverMaker.GetLiteModel(uEodVoltage, ocvSource, rcSource, ocvModel, rcModel, project, ref liteModel);
                 LiteDriverMaker.GenerateLiteDriver(liteModel, project, isRemoteOutput);
             }
             catch (Exception e)
