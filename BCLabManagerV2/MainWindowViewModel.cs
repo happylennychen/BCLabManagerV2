@@ -180,23 +180,30 @@ namespace BCLabManager.ViewModel
 
         private void InitializeFolder()
         {
-            InitializeLocalAndRemoteFolder();
+            InitializeLocalFolder();
+            //InitializeRemoteFolder();
             InitializeProjectFolder();
             InitializeTempFileFolder();
-            foreach (var prj in ProjectService.Items)
-            {
-                ProjectService.CreateFolder(prj.BatteryType.Name, prj.Name);
-            }
+            //foreach (var prj in ProjectService.Items)
+            //{
+            //    ProjectService.CreateFolder(prj.BatteryType.Name, prj.Name);
+            //}
         }
 
-        private void InitializeLocalAndRemoteFolder()
+        private void InitializeLocalFolder()
+        {
+            if (!Directory.Exists(GlobalSettings.LocalFolder))
+                Directory.CreateDirectory(GlobalSettings.LocalFolder);
+        }
+
+        private void InitializeRemoteFolder()
         {
             try
             {
                 if (!Directory.Exists(GlobalSettings.RemotePath))
                     Directory.CreateDirectory(GlobalSettings.RemotePath);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Event evt = new Event();
                 evt.Module = Module.NAS;
@@ -206,24 +213,21 @@ namespace BCLabManager.ViewModel
                 EventService.SuperAdd(evt);
                 throw e;
             }
-
-            if (!Directory.Exists(GlobalSettings.LocalFolder))
-                Directory.CreateDirectory(GlobalSettings.LocalFolder);
         }
 
         private void InitializeProjectFolder()
         {
             foreach (var prj in ProjectService.Items)
             {
-                ProjectService.CreateFolder(prj.BatteryType.Name, prj.Name);
+                ProjectService.CreateFolder(GlobalSettings.LocalFolder, prj.BatteryType.Name, prj.Name);
             }
         }
 
         private void InitializeTempFileFolder()
         {
             string tempFilePath = $@"{GlobalSettings.RemotePath}{GlobalSettings.TempDataFolderName}";
-            if (!Directory.Exists(tempFilePath))
-                Directory.CreateDirectory(tempFilePath);
+            //if (!Directory.Exists(tempFilePath))
+            //    Directory.CreateDirectory(tempFilePath);
 
             tempFilePath = $@"{GlobalSettings.LocalFolder}{GlobalSettings.TempDataFolderName}";
             if (!Directory.Exists(tempFilePath))

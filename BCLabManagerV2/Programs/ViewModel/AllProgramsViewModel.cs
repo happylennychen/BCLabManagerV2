@@ -90,31 +90,31 @@ namespace BCLabManager.ViewModel
 
             _programService.Items.CollectionChanged += Items_CollectionChanged;
 
-            CreateAllFreeTestRecords(_freeTestRecordService.Items);
-            _freeTestRecordService.Items.CollectionChanged += TRItems_CollectionChanged;
+            //CreateAllFreeTestRecords(_freeTestRecordService.Items);
+            //_freeTestRecordService.Items.CollectionChanged += TRItems_CollectionChanged;
         }
 
-        private void TRItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            switch (e.Action)
-            {
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    foreach (var item in e.NewItems)
-                    {
-                        var tr = item as TestRecord;
-                        this.FreeTestRecords.Add(new TestRecordViewModel(tr));
-                    }
-                    break;
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    foreach (var item in e.OldItems)
-                    {
-                        var tr = item as TestRecord;
-                        var deletetarget = this.FreeTestRecords.SingleOrDefault(o => o.Id == tr.Id);
-                        this.FreeTestRecords.Remove(deletetarget);
-                    }
-                    break;
-            }
-        }
+        //private void TRItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        //{
+        //    switch (e.Action)
+        //    {
+        //        case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+        //            foreach (var item in e.NewItems)
+        //            {
+        //                var tr = item as TestRecord;
+        //                this.FreeTestRecords.Add(new TestRecordViewModel(tr));
+        //            }
+        //            break;
+        //        case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+        //            foreach (var item in e.OldItems)
+        //            {
+        //                var tr = item as TestRecord;
+        //                var deletetarget = this.FreeTestRecords.SingleOrDefault(o => o.Id == tr.Id);
+        //                this.FreeTestRecords.Remove(deletetarget);
+        //            }
+        //            break;
+        //    }
+        //}
 
         private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -271,47 +271,47 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ICommand CreateRCProgramCommand
-        {
-            get
-            {
-                if (_createRCProgramCommand == null)
-                {
-                    _createRCProgramCommand = new RelayCommand(
-                        param => { this.CreateRCProgram(); }
-                        );
-                }
-                return _createRCProgramCommand;
-            }
-        }
-        public ICommand EditCommand
-        {
-            get
-            {
-                if (_editCommand == null)
-                {
-                    _editCommand = new RelayCommand(
-                        param => { this.Edit(); },
-                        param => this.CanEdit
-                        );
-                }
-                return _editCommand;
-            }
-        }
-        public ICommand SaveAsCommand
-        {
-            get
-            {
-                if (_saveAsCommand == null)
-                {
-                    _saveAsCommand = new RelayCommand(
-                        param => { this.SaveAs(); },
-                        param => this.CanSaveAs
-                        );
-                }
-                return _saveAsCommand;
-            }
-        }
+        //public ICommand CreateRCProgramCommand
+        //{
+        //    get
+        //    {
+        //        if (_createRCProgramCommand == null)
+        //        {
+        //            _createRCProgramCommand = new RelayCommand(
+        //                param => { this.CreateRCProgram(); }
+        //                );
+        //        }
+        //        return _createRCProgramCommand;
+        //    }
+        //}
+        //public ICommand EditCommand
+        //{
+        //    get
+        //    {
+        //        if (_editCommand == null)
+        //        {
+        //            _editCommand = new RelayCommand(
+        //                param => { this.Edit(); },
+        //                param => this.CanEdit
+        //                );
+        //        }
+        //        return _editCommand;
+        //    }
+        //}
+        //public ICommand SaveAsCommand
+        //{
+        //    get
+        //    {
+        //        if (_saveAsCommand == null)
+        //        {
+        //            _saveAsCommand = new RelayCommand(
+        //                param => { this.SaveAs(); },
+        //                param => this.CanSaveAs
+        //                );
+        //        }
+        //        return _saveAsCommand;
+        //    }
+        //}
         public ICommand ProgramInvalidateCommand
         {
             get
@@ -340,34 +340,34 @@ namespace BCLabManager.ViewModel
                 return _abandonCommand;
             }
         }
-        public ICommand ExecuteCommand
-        {
-            get
-            {
-                if (_executeCommand == null)
-                {
-                    _executeCommand = new RelayCommand(
-                        param => { this.Execute(); },
-                        param => this.CanExecute
-                        );
-                }
-                return _executeCommand;
-            }
-        }
-        public ICommand CommitCommand
-        {
-            get
-            {
-                if (_commitCommand == null)
-                {
-                    _commitCommand = new RelayCommand(
-                        param => { this.Commit(); },
-                        param => this.CanCommit
-                        );
-                }
-                return _commitCommand;
-            }
-        }
+        //public ICommand ExecuteCommand
+        //{
+        //    get
+        //    {
+        //        if (_executeCommand == null)
+        //        {
+        //            _executeCommand = new RelayCommand(
+        //                param => { this.Execute(); },
+        //                param => this.CanExecute
+        //                );
+        //        }
+        //        return _executeCommand;
+        //    }
+        //}
+        //public ICommand CommitCommand
+        //{
+        //    get
+        //    {
+        //        if (_commitCommand == null)
+        //        {
+        //            _commitCommand = new RelayCommand(
+        //                param => { this.Commit(); },
+        //                param => this.CanCommit
+        //                );
+        //        }
+        //        return _commitCommand;
+        //    }
+        //}
         public ICommand DirectCommitCommand
         {
             get
@@ -444,226 +444,226 @@ namespace BCLabManager.ViewModel
                 _programService.SuperAdd(m);
             }
         }
-        private void CreateRCProgram()
-        {
-            Program m = new Program();      //实例化一个新的model
-            m.Type = _programTypeService.Items.SingleOrDefault(o => o.Name == "RC");
-            RCProgramEditViewModel evm = new RCProgramEditViewModel(m, _projectService.Items);      //实例化一个新的view model
-            evm.DisplayName = "Program-Create";
-            var RCProgramViewInstance = new RCProgramView();      //实例化一个新的view
-            RCProgramViewInstance.DataContext = evm;
-            RCProgramViewInstance.ShowDialog();                   //设置viewmodel属性
-            if (evm.IsOK == true)
-            {
-                _programService.RCSuperAdd(m, evm.ChargeRate, evm.IdleTime, evm.Currents.Select(o => o.Current).ToList(), evm.Temperatures.Select(o => o.Temperature).ToList(), _recipeTemplateService, _stepTemplateService);
-            }
-        }
-        private void Edit()
-        {
-            //    var oldpro = _selectedProgram._program;
-            //    var oldsubs = oldpro.Recipes;
+        //private void CreateRCProgram()
+        //{
+        //    Program m = new Program();      //实例化一个新的model
+        //    m.Type = _programTypeService.Items.SingleOrDefault(o => o.Name == "RC");
+        //    RCProgramEditViewModel evm = new RCProgramEditViewModel(m, _projectService.Items);      //实例化一个新的view model
+        //    evm.DisplayName = "Program-Create";
+        //    var RCProgramViewInstance = new RCProgramView();      //实例化一个新的view
+        //    RCProgramViewInstance.DataContext = evm;
+        //    RCProgramViewInstance.ShowDialog();                   //设置viewmodel属性
+        //    if (evm.IsOK == true)
+        //    {
+        //        _programService.RCSuperAdd(m, evm.ChargeRate, evm.IdleTime, evm.Currents.Select(o => o.Current).ToList(), evm.Temperatures.Select(o => o.Temperature).ToList(), _recipeTemplateService, _stepTemplateService);
+        //    }
+        //}
+        //private void Edit()
+        //{
+        //    var oldpro = _selectedProgram._program;
+        //    var oldsubs = oldpro.Recipes;
 
-            //    ProgramClass model = new ProgramClass();    //Edit Window要用到的model
-            //    model.Id = oldpro.Id;
-            //    model.Name = oldpro.Name;
-            //    model.Requester = oldpro.Requester;
-            //    model.RequestTime = oldpro.RequestTime;
-            //    model.Description = oldpro.Description;
-            //    model.Recipes = new ObservableCollection<RecipeClass>(oldsubs);          //这里并不希望在edit window里面修改原本的Recipes，而是想编辑一个新的Recipe,只是这个新的，是旧集合的浅复制
+        //    ProgramClass model = new ProgramClass();    //Edit Window要用到的model
+        //    model.Id = oldpro.Id;
+        //    model.Name = oldpro.Name;
+        //    model.Requester = oldpro.Requester;
+        //    model.RequestTime = oldpro.RequestTime;
+        //    model.Description = oldpro.Description;
+        //    model.Recipes = new ObservableCollection<RecipeClass>(oldsubs);          //这里并不希望在edit window里面修改原本的Recipes，而是想编辑一个新的Recipe,只是这个新的，是旧集合的浅复制
 
-            //    ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _projectService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
-            //    //viewmodel.DisplayName = "Program-Edit";
-            //    viewmodel.commandType = CommandType.Edit;
-            //    var ProgramViewInstance = new ProgramView();      //实例化一个新的view
-            //    ProgramViewInstance.DataContext = viewmodel;
-            //    ProgramViewInstance.ShowDialog();
-            //    if (viewmodel.IsOK == true)     //Add Remove操作，就是将model.Recipes里面的集合内容改变了
-            //    {
-            //        List<RecipeClass> TobeRemoved = new List<RecipeClass>();
-            //        List<RecipeClass> TobeAdded = new List<RecipeClass>();
-            //        //先改数据库，这样可以使得Id准确
-            //        using (var dbContext = new AppDbContext())
-            //        {
-            //            var dbProgram = dbContext.Programs.SingleOrDefault(i => i.Id == SelectedProgram.Id);  //没有完全取出
-            //            dbContext.Entry(dbProgram)
-            //                .Collection(p => p.Recipes)
-            //                .Load();
+        //    ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _projectService.Items, _recipeTemplateService.Items);      //实例化一个新的view model
+        //    //viewmodel.DisplayName = "Program-Edit";
+        //    viewmodel.commandType = CommandType.Edit;
+        //    var ProgramViewInstance = new ProgramView();      //实例化一个新的view
+        //    ProgramViewInstance.DataContext = viewmodel;
+        //    ProgramViewInstance.ShowDialog();
+        //    if (viewmodel.IsOK == true)     //Add Remove操作，就是将model.Recipes里面的集合内容改变了
+        //    {
+        //        List<RecipeClass> TobeRemoved = new List<RecipeClass>();
+        //        List<RecipeClass> TobeAdded = new List<RecipeClass>();
+        //        //先改数据库，这样可以使得Id准确
+        //        using (var dbContext = new AppDbContext())
+        //        {
+        //            var dbProgram = dbContext.Programs.SingleOrDefault(i => i.Id == SelectedProgram.Id);  //没有完全取出
+        //            dbContext.Entry(dbProgram)
+        //                .Collection(p => p.Recipes)
+        //                .Load();
 
-            //            bool isTgtNotContainSrc = false;    //Add to target
-            //            bool isSrcNotContainTgt = false;    //Remove from target
-            //            foreach (var sub_target in dbProgram.Recipes)     //看看在不在source中，不在则删掉
-            //            {
-            //                isSrcNotContainTgt = true;
-            //                foreach (var sub_source in model.Recipes)
-            //                {
-            //                    if (sub_target.Id == sub_source.Id)
-            //                    {
-            //                        isSrcNotContainTgt = false;
-            //                        break;
-            //                    }
-            //                }
-            //                if (isSrcNotContainTgt == true)
-            //                    TobeRemoved.Add(sub_target);
-            //            }
-            //            foreach (var sub_source in model.Recipes)
-            //            {
-            //                isTgtNotContainSrc = true;
-            //                foreach (var sub_target in dbProgram.Recipes)
-            //                {
-            //                    if (sub_target.Id == sub_source.Id)
-            //                    {
-            //                        isTgtNotContainSrc = false;
-            //                        break;
-            //                    }
-            //                }
-            //                if (isTgtNotContainSrc == true)
-            //                    TobeAdded.Add(sub_source);
-            //            }
+        //            bool isTgtNotContainSrc = false;    //Add to target
+        //            bool isSrcNotContainTgt = false;    //Remove from target
+        //            foreach (var sub_target in dbProgram.Recipes)     //看看在不在source中，不在则删掉
+        //            {
+        //                isSrcNotContainTgt = true;
+        //                foreach (var sub_source in model.Recipes)
+        //                {
+        //                    if (sub_target.Id == sub_source.Id)
+        //                    {
+        //                        isSrcNotContainTgt = false;
+        //                        break;
+        //                    }
+        //                }
+        //                if (isSrcNotContainTgt == true)
+        //                    TobeRemoved.Add(sub_target);
+        //            }
+        //            foreach (var sub_source in model.Recipes)
+        //            {
+        //                isTgtNotContainSrc = true;
+        //                foreach (var sub_target in dbProgram.Recipes)
+        //                {
+        //                    if (sub_target.Id == sub_source.Id)
+        //                    {
+        //                        isTgtNotContainSrc = false;
+        //                        break;
+        //                    }
+        //                }
+        //                if (isTgtNotContainSrc == true)
+        //                    TobeAdded.Add(sub_source);
+        //            }
 
-            //            //foreach (var sub in TobeRemoved)
-            //            //{
-            //            //    sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
-            //            //    sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
-            //            //    sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
-            //            //    sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
-            //            //    //newP.Recipes.Add(dbContext.Recipes.SingleOrDefault(o => o.Id == sub.Id));
-            //            //}
-            //            foreach (var sub in TobeRemoved)
-            //            {
-            //                dbProgram.Recipes.Remove(sub);
-            //            }
+        //            //foreach (var sub in TobeRemoved)
+        //            //{
+        //            //    sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
+        //            //    sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
+        //            //    sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
+        //            //    sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
+        //            //    //newP.Recipes.Add(dbContext.Recipes.SingleOrDefault(o => o.Id == sub.Id));
+        //            //}
+        //            foreach (var sub in TobeRemoved)
+        //            {
+        //                dbProgram.Recipes.Remove(sub);
+        //            }
 
-            //            foreach (var sub in TobeAdded)
-            //            {
-            //                //sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
-            //                //sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
-            //                //sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
-            //                //sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
-            //                //newP.Recipes.Add(dbContext.Recipes.SingleOrDefault(o => o.Id == sub.Id));
-            //            }
-            //            foreach (var sub in TobeAdded)
-            //            {
-            //                dbProgram.Recipes.Add(sub);
-            //            }
-            //            dbContext.SaveChanges();        //TobeAdded中的元素Id改变了
-            //        }
-            //        //再改model
-            //        foreach (var sub in TobeRemoved)
-            //        {
-            //            oldsubs.Remove(oldsubs.SingleOrDefault(o => o.Id == sub.Id));
-            //        }
-            //        foreach (var sub in TobeAdded)
-            //        {
-            //            oldsubs.Add(sub);
-            //        }
-            //        //再改view model
-            //        foreach (var sub in TobeRemoved)
-            //        {
-            //            oldsubs.Remove(oldsubs.SingleOrDefault(o => o.Id == sub.Id));
-            //            SelectedProgram.Recipes.Remove(SelectedProgram.Recipes.SingleOrDefault(o => o.Id == sub.Id));
-            //        }
-            //        foreach (var sub in TobeAdded)
-            //        {
-            //            SelectedProgram.Recipes.Add(new RecipeViewModel(sub));
-            //        }
-            //    }
+        //            foreach (var sub in TobeAdded)
+        //            {
+        //                //sub.ChargeTemperature = dbContext.ChargeTemperatures.SingleOrDefault(o => o.Id == sub.ChargeTemperature.Id);
+        //                //sub.ChargeCurrent = dbContext.ChargeCurrents.SingleOrDefault(o => o.Id == sub.ChargeCurrent.Id);
+        //                //sub.DischargeTemperature = dbContext.DischargeTemperatures.SingleOrDefault(o => o.Id == sub.DischargeTemperature.Id);
+        //                //sub.DischargeCurrent = dbContext.DischargeCurrents.SingleOrDefault(o => o.Id == sub.DischargeCurrent.Id);
+        //                //newP.Recipes.Add(dbContext.Recipes.SingleOrDefault(o => o.Id == sub.Id));
+        //            }
+        //            foreach (var sub in TobeAdded)
+        //            {
+        //                dbProgram.Recipes.Add(sub);
+        //            }
+        //            dbContext.SaveChanges();        //TobeAdded中的元素Id改变了
+        //        }
+        //        //再改model
+        //        foreach (var sub in TobeRemoved)
+        //        {
+        //            oldsubs.Remove(oldsubs.SingleOrDefault(o => o.Id == sub.Id));
+        //        }
+        //        foreach (var sub in TobeAdded)
+        //        {
+        //            oldsubs.Add(sub);
+        //        }
+        //        //再改view model
+        //        foreach (var sub in TobeRemoved)
+        //        {
+        //            oldsubs.Remove(oldsubs.SingleOrDefault(o => o.Id == sub.Id));
+        //            SelectedProgram.Recipes.Remove(SelectedProgram.Recipes.SingleOrDefault(o => o.Id == sub.Id));
+        //        }
+        //        foreach (var sub in TobeAdded)
+        //        {
+        //            SelectedProgram.Recipes.Add(new RecipeViewModel(sub));
+        //        }
+        //    }
 
-            //    //model.Recipes = _selectedProgram._program.Recipes;
-            //    /*
-            //    ProgramClass model = _selectedProgram._program.Clone();
-            //    ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _recipeTemplateService.Items);      //实例化一个新的view model
-            //    viewmodel.DisplayName = "Program-Edit";
-            //    viewmodel.commandType = CommandType.Edit;
-            //    var ProgramViewInstance = new ProgramView();      //实例化一个新的view
-            //    ProgramViewInstance.DataContext = viewmodel;
-            //    ProgramViewInstance.ShowDialog();
-            //    if (viewmodel.IsOK == true)
-            //    {
-            //        using (var dbContext = new AppDbContext())
-            //        {
-            //            var program = dbContext.Programs.SingleOrDefault(i => i.Id == SelectedProgram.Id);  //没有完全取出
-            //            dbContext.Entry(program)
-            //                .Collection(p => p.Recipes)
-            //                .Load();
-            //            //program.Update(model);
-            //            bool isTgtNotContainSrc = false;    //Add to target
-            //            bool isSrcNotContainTgt = false;    //Remove from target
-            //            List<RecipeClass> TobeRemoved = new List<RecipeClass>();
-            //            List<RecipeClass> TobeAdded = new List<RecipeClass>();
-            //            foreach (var sub_target in program.Recipes)     //看看在不在source中，不在则删掉
-            //            {
-            //                isSrcNotContainTgt = true;
-            //                foreach (var sub_source in model.Recipes)
-            //                {
-            //                    if (sub_target.Id == sub_source.Id)
-            //                    {
-            //                        isSrcNotContainTgt = false;
-            //                        break;
-            //                    }
-            //                }
-            //                if (isSrcNotContainTgt == true)
-            //                    TobeRemoved.Add(sub_target);
-            //            }
-            //            foreach (var sub_source in model.Recipes)
-            //            {
-            //                isTgtNotContainSrc = true;
-            //                foreach (var sub_target in program.Recipes)
-            //                {
-            //                    if (sub_target.Id == sub_source.Id)
-            //                    {
-            //                        isTgtNotContainSrc = false;
-            //                        break;
-            //                    }
-            //                }
-            //                if (isTgtNotContainSrc == true)
-            //                    TobeAdded.Add(sub_source);
-            //            }
-            //            foreach (var sub in TobeRemoved)
-            //            {
-            //                program.Recipes.Remove(sub);
-            //                //var subs = dbContext.Recipes;       //手动递归删除
-            //                //subs.Remove(sub);
-            //            }
-            //            foreach (var sub in TobeAdded)
-            //            {
-            //                program.Recipes.Add(sub);
-            //            }
-            //            dbContext.SaveChanges();
-            //            SelectedProgram._program = program;
+        //    //model.Recipes = _selectedProgram._program.Recipes;
+        //    /*
+        //    ProgramClass model = _selectedProgram._program.Clone();
+        //    ProgramEditViewModel viewmodel = new ProgramEditViewModel(model, _recipeTemplateService.Items);      //实例化一个新的view model
+        //    viewmodel.DisplayName = "Program-Edit";
+        //    viewmodel.commandType = CommandType.Edit;
+        //    var ProgramViewInstance = new ProgramView();      //实例化一个新的view
+        //    ProgramViewInstance.DataContext = viewmodel;
+        //    ProgramViewInstance.ShowDialog();
+        //    if (viewmodel.IsOK == true)
+        //    {
+        //        using (var dbContext = new AppDbContext())
+        //        {
+        //            var program = dbContext.Programs.SingleOrDefault(i => i.Id == SelectedProgram.Id);  //没有完全取出
+        //            dbContext.Entry(program)
+        //                .Collection(p => p.Recipes)
+        //                .Load();
+        //            //program.Update(model);
+        //            bool isTgtNotContainSrc = false;    //Add to target
+        //            bool isSrcNotContainTgt = false;    //Remove from target
+        //            List<RecipeClass> TobeRemoved = new List<RecipeClass>();
+        //            List<RecipeClass> TobeAdded = new List<RecipeClass>();
+        //            foreach (var sub_target in program.Recipes)     //看看在不在source中，不在则删掉
+        //            {
+        //                isSrcNotContainTgt = true;
+        //                foreach (var sub_source in model.Recipes)
+        //                {
+        //                    if (sub_target.Id == sub_source.Id)
+        //                    {
+        //                        isSrcNotContainTgt = false;
+        //                        break;
+        //                    }
+        //                }
+        //                if (isSrcNotContainTgt == true)
+        //                    TobeRemoved.Add(sub_target);
+        //            }
+        //            foreach (var sub_source in model.Recipes)
+        //            {
+        //                isTgtNotContainSrc = true;
+        //                foreach (var sub_target in program.Recipes)
+        //                {
+        //                    if (sub_target.Id == sub_source.Id)
+        //                    {
+        //                        isTgtNotContainSrc = false;
+        //                        break;
+        //                    }
+        //                }
+        //                if (isTgtNotContainSrc == true)
+        //                    TobeAdded.Add(sub_source);
+        //            }
+        //            foreach (var sub in TobeRemoved)
+        //            {
+        //                program.Recipes.Remove(sub);
+        //                //var subs = dbContext.Recipes;       //手动递归删除
+        //                //subs.Remove(sub);
+        //            }
+        //            foreach (var sub in TobeAdded)
+        //            {
+        //                program.Recipes.Add(sub);
+        //            }
+        //            dbContext.SaveChanges();
+        //            SelectedProgram._program = program;
 
-            //            //SelectedProgram.UpdateRecipes();        //修改viewmodel中的子项
+        //            //SelectedProgram.UpdateRecipes();        //修改viewmodel中的子项
 
-            //            List<RecipeViewModel> all =
-            //                (from sub in program.Recipes
-            //                 select new RecipeViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
+        //            List<RecipeViewModel> all =
+        //                (from sub in program.Recipes
+        //                 select new RecipeViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
-            //            //foreach (RecipeModelViewModel batmod in all)
-            //            //batmod.PropertyChanged += this.OnRecipeModelViewModelPropertyChanged;
+        //            //foreach (RecipeModelViewModel batmod in all)
+        //            //batmod.PropertyChanged += this.OnRecipeModelViewModelPropertyChanged;
 
-            //            SelectedProgram.Recipes = new ObservableCollection<RecipeViewModel>(all);     //再转换成Observable
-            //            RaisePropertyChanged("Recipes");
-            //        }
-            //    }
-            //        */
-        }
-        private bool CanEdit
-        {
-            get { return _selectedProgram != null; }
-        }
-        private void SaveAs()
-        {
-            Program m = _selectedProgram._program.Clone();
-            ProgramEditViewModel evm = new ProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items, _programTypeService.Items, _programService.Items);      //实例化一个新的view model
-            evm.DisplayName = "Program-Save As";
-            //evm.commandType = CommandType.SaveAs;
-            var ProgramViewInstance = new ProgramView();      //实例化一个新的view
-            ProgramViewInstance.DataContext = evm;
-            ProgramViewInstance.ShowDialog();
-            if (evm.IsOK == true)
-            {
-                _programService.SuperAdd(m);
-            }
-        }
+        //            SelectedProgram.Recipes = new ObservableCollection<RecipeViewModel>(all);     //再转换成Observable
+        //            RaisePropertyChanged("Recipes");
+        //        }
+        //    }
+        //        */
+        //}
+        //private bool CanEdit
+        //{
+        //    get { return _selectedProgram != null; }
+        //}
+        //private void SaveAs()
+        //{
+        //    Program m = _selectedProgram._program.Clone();
+        //    ProgramEditViewModel evm = new ProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items, _programTypeService.Items, _programService.Items);      //实例化一个新的view model
+        //    evm.DisplayName = "Program-Save As";
+        //    //evm.commandType = CommandType.SaveAs;
+        //    var ProgramViewInstance = new ProgramView();      //实例化一个新的view
+        //    ProgramViewInstance.DataContext = evm;
+        //    ProgramViewInstance.ShowDialog();
+        //    if (evm.IsOK == true)
+        //    {
+        //        _programService.SuperAdd(m);
+        //    }
+        //}
         private void ProgramInvalidate()
         {
             if (MessageBox.Show("Are you sure?", "Invalidate Program", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
@@ -686,152 +686,152 @@ namespace BCLabManager.ViewModel
         {
             get { return _selectedRecipe != null; }
         }
-        private void Execute()
-        //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
-        {
-            var model = new TestRecord();
-            TestRecordExecuteViewModel evm = new TestRecordExecuteViewModel
-                (
-                //testRecord.Record,      //将model传给ExecuteViewModel      //??????????????????????????
-                model,
-                SelectedProgram.Project.BatteryType,
-                _batteryService.Items,
-                _testerService.Items,
-                _channelService.Items,
-                _chamberService.Items,
-                _selectedProgram.Type
-                );
-            evm.Temperature = _selectedRecipe.Temperature;
-            if (_selectedProgram._program.Type.Name == "EV")
-            {
-                if (_selectedProgram.Name.Contains("Dynamic"))
-                    evm.Current = 0;
-            }
-            else
-            {
-                var index = _selectedRecipe.Name.IndexOf('A');
-                if (index != -1)
-                {
-                    var currStr = _selectedRecipe.Name.Remove(index);
-                    try
-                    {
-                        var currInA = Convert.ToDouble(currStr);
-                        evm.Current = currInA * 1000;
-                    }
-                    catch (Exception e)
-                    {
-                        //MessageBox.Show("Error when converting");
-                        //return;
-                    }
-                }
-            }
-            evm.DisplayName = "Test-Execute";
-            var TestRecordViewInstance = new ExecuteView();
-            TestRecordViewInstance.DataContext = evm;
-            TestRecordViewInstance.ShowDialog();
-            if (evm.IsOK == true)
-            {
-                _programService.RecipeService.TestRecordService.Execute(
-                    SelectedTestRecord.Record,
-                    SelectedProgram.Project.BatteryType.Name,
-                    SelectedProgram.Project.Name,
-                    evm.Battery, evm.Chamber,
-                    evm.Tester.Name,
-                    evm.Channel,
-                    evm.Current,
-                    evm.Temperature,
-                    evm.StartTime,
-                    evm.MeasurementGain,
-                    evm.MeasurementOffset,
-                    evm.TraceResistance,
-                    evm.CapacityDifference,
-                    evm.Operator,
-                    SelectedProgram.Name,
-                    $"{SelectedRecipe.Temperature}Deg-{SelectedRecipe.Name}"    //Use this to represent RecipeStr
-                    );
-                if (!evm.IsSkip)
-                {
-                    _batteryService.Execute(evm.Battery, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
-                    _channelService.Execute(evm.Channel, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
-                    if (evm.Chamber != null)
-                        _chamberService.Execute(evm.Chamber, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
-                }
-            }
-        }
+        //private void Execute()
+        ////相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
+        //{
+        //    var model = new TestRecord();
+        //    TestRecordExecuteViewModel evm = new TestRecordExecuteViewModel
+        //        (
+        //        //testRecord.Record,      //将model传给ExecuteViewModel      //??????????????????????????
+        //        model,
+        //        SelectedProgram.Project.BatteryType,
+        //        _batteryService.Items,
+        //        _testerService.Items,
+        //        _channelService.Items,
+        //        _chamberService.Items,
+        //        _selectedProgram.Type
+        //        );
+        //    evm.Temperature = _selectedRecipe.Temperature;
+        //    if (_selectedProgram._program.Type.Name == "EV")
+        //    {
+        //        if (_selectedProgram.Name.Contains("Dynamic"))
+        //            evm.Current = 0;
+        //    }
+        //    else
+        //    {
+        //        var index = _selectedRecipe.Name.IndexOf('A');
+        //        if (index != -1)
+        //        {
+        //            var currStr = _selectedRecipe.Name.Remove(index);
+        //            try
+        //            {
+        //                var currInA = Convert.ToDouble(currStr);
+        //                evm.Current = currInA * 1000;
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                //MessageBox.Show("Error when converting");
+        //                //return;
+        //            }
+        //        }
+        //    }
+        //    evm.DisplayName = "Test-Execute";
+        //    var TestRecordViewInstance = new ExecuteView();
+        //    TestRecordViewInstance.DataContext = evm;
+        //    TestRecordViewInstance.ShowDialog();
+        //    if (evm.IsOK == true)
+        //    {
+        //        _programService.RecipeService.TestRecordService.Execute(
+        //            SelectedTestRecord.Record,
+        //            SelectedProgram.Project.BatteryType.Name,
+        //            SelectedProgram.Project.Name,
+        //            evm.Battery, evm.Chamber,
+        //            evm.Tester.Name,
+        //            evm.Channel,
+        //            evm.Current,
+        //            evm.Temperature,
+        //            evm.StartTime,
+        //            evm.MeasurementGain,
+        //            evm.MeasurementOffset,
+        //            evm.TraceResistance,
+        //            evm.CapacityDifference,
+        //            evm.Operator,
+        //            SelectedProgram.Name,
+        //            $"{SelectedRecipe.Temperature}Deg-{SelectedRecipe.Name}"    //Use this to represent RecipeStr
+        //            );
+        //        if (!evm.IsSkip)
+        //        {
+        //            _batteryService.Execute(evm.Battery, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
+        //            _channelService.Execute(evm.Channel, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
+        //            if (evm.Chamber != null)
+        //                _chamberService.Execute(evm.Chamber, evm.StartTime, SelectedProgram.Name, SelectedRecipe.Name);
+        //        }
+        //    }
+        //}
         private bool CanExecute
         {
             get { return _selectedTestRecord != null && _selectedTestRecord.Status == TestStatus.Waiting; }
         }
-        private void Commit()
-        //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
-        {
-            TestRecordViewModel testRecord = SelectedTestRecord;
-            //TestRecordClass m = new TestRecordClass();
-            //m.BatteryTypeStr = testRecord.Record.BatteryTypeStr;
-            //m.ProjectStr = testRecord.Record.ProjectStr;
-            //m.ProgramStr = testRecord.Record.ProgramStr;
-            //m.RecipeStr = testRecord.Record.RecipeStr;
-            TestRecordCommitViewModel evm = new TestRecordCommitViewModel
-                (
-                testRecord.Record      //??????????????????????????
-                                       //m
-                );
-            evm.DisplayName = "Test-Commit";
-            var TestRecordCommitViewInstance = new CommitView();
-            TestRecordCommitViewInstance.DataContext = evm;
-            TestRecordCommitViewInstance.ShowDialog();
-            if (evm.IsOK == true)
-            {
-                if (!evm.IsSkip)
-                {
-                    _batteryService.Commit(testRecord.Record.AssignedBattery, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name, evm.NewCycle);
-                    _channelService.Commit(testRecord.Record.AssignedChannel, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
-                    if (testRecord.Record.AssignedChamber != null)
-                        _chamberService.Commit(testRecord.Record.AssignedChamber, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
-                }
-                try
-                {
-                    DateTime[] time = _testerService.GetTimeFromRawData(testRecord.Record.AssignedChannel.Tester.ITesterProcesser, evm.FileList);
-                    if (time != null)
-                    {
-                        Header header = new Header();
-                        header.Type = SelectedProgram.Type.ToString();
-                        header.TestTime = time[0].ToString("yyyy-MM-dd");
-                        header.Equipment = testRecord.Record.AssignedChannel.Tester.Manufacturer + " " + testRecord.TesterStr;
-                        header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufacturer;
-                        header.BatteryModel = SelectedProgram.Project.BatteryType.Name;
-                        header.CycleCount = evm.NewCycle.ToString();
-                        header.Temperature = testRecord.Record.Temperature.ToString();
-                        header.Current = testRecord.Record.Current.ToString();
-                        header.MeasurementGain = testRecord.MeasurementGain.ToString();
-                        header.MeasurementOffset = testRecord.MeasurementOffset.ToString();
-                        header.TraceResistance = testRecord.TraceResistance.ToString();
-                        header.CapacityDifference = testRecord.CapacityDifference.ToString();
-                        header.AbsoluteMaxCapacity = SelectedProgram.Project.AbsoluteMaxCapacity.ToString();//.BatteryType.TypicalCapacity.ToString();
-                        header.LimitedChargeVoltage = SelectedProgram.Project.LimitedChargeVoltage.ToString();
-                        //header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
-                        header.CutoffDischargeVoltage = SelectedProgram.Project.BatteryType.CutoffDischargeVoltage.ToString();
-                        header.Tester = testRecord.Operator;
-                        _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, evm.FileList.ToList(), evm.IsRename, evm.NewName, time[0], time[1], SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
-                    }
-                    else
-                    {
-                        Header header = new Header();
-                        header.Type = string.Empty;
-                        _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, evm.FileList.ToList(), evm.IsRename, evm.NewName, DateTime.MinValue, DateTime.MinValue, SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
-                    }
-                }
-                catch (Exception e)
-                {
-                    //_programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), DateTime.MinValue, DateTime.MinValue, SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, SelectedProgram.Description);
-                    MessageBox.Show(e.Message);
-                }
-            }
-        }
-        private bool CanCommit
-        {
-            get { return _selectedTestRecord != null && _selectedTestRecord.Status == TestStatus.Executing; }
-        }
+        //private void Commit()
+        ////相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
+        //{
+        //    TestRecordViewModel testRecord = SelectedTestRecord;
+        //    //TestRecordClass m = new TestRecordClass();
+        //    //m.BatteryTypeStr = testRecord.Record.BatteryTypeStr;
+        //    //m.ProjectStr = testRecord.Record.ProjectStr;
+        //    //m.ProgramStr = testRecord.Record.ProgramStr;
+        //    //m.RecipeStr = testRecord.Record.RecipeStr;
+        //    TestRecordCommitViewModel evm = new TestRecordCommitViewModel
+        //        (
+        //        testRecord.Record      //??????????????????????????
+        //                               //m
+        //        );
+        //    evm.DisplayName = "Test-Commit";
+        //    var TestRecordCommitViewInstance = new CommitView();
+        //    TestRecordCommitViewInstance.DataContext = evm;
+        //    TestRecordCommitViewInstance.ShowDialog();
+        //    if (evm.IsOK == true)
+        //    {
+        //        if (!evm.IsSkip)
+        //        {
+        //            _batteryService.Commit(testRecord.Record.AssignedBattery, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name, evm.NewCycle);
+        //            _channelService.Commit(testRecord.Record.AssignedChannel, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
+        //            if (testRecord.Record.AssignedChamber != null)
+        //                _chamberService.Commit(testRecord.Record.AssignedChamber, evm.EndTime, SelectedProgram.Name, SelectedRecipe.Name);
+        //        }
+        //        try
+        //        {
+        //            DateTime[] time = _testerService.GetTimeFromRawData(testRecord.Record.AssignedChannel.Tester.ITesterProcesser, evm.FileList);
+        //            if (time != null)
+        //            {
+        //                Header header = new Header();
+        //                header.Type = SelectedProgram.Type.ToString();
+        //                header.TestTime = time[0].ToString("yyyy-MM-dd");
+        //                header.Equipment = testRecord.Record.AssignedChannel.Tester.Manufacturer + " " + testRecord.TesterStr;
+        //                header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufacturer;
+        //                header.BatteryModel = SelectedProgram.Project.BatteryType.Name;
+        //                header.CycleCount = evm.NewCycle.ToString();
+        //                header.Temperature = testRecord.Record.Temperature.ToString();
+        //                header.Current = testRecord.Record.Current.ToString();
+        //                header.MeasurementGain = testRecord.MeasurementGain.ToString();
+        //                header.MeasurementOffset = testRecord.MeasurementOffset.ToString();
+        //                header.TraceResistance = testRecord.TraceResistance.ToString();
+        //                header.CapacityDifference = testRecord.CapacityDifference.ToString();
+        //                header.AbsoluteMaxCapacity = SelectedProgram.Project.AbsoluteMaxCapacity.ToString();//.BatteryType.TypicalCapacity.ToString();
+        //                header.LimitedChargeVoltage = SelectedProgram.Project.LimitedChargeVoltage.ToString();
+        //                //header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
+        //                header.CutoffDischargeVoltage = SelectedProgram.Project.BatteryType.CutoffDischargeVoltage.ToString();
+        //                header.Tester = testRecord.Operator;
+        //                _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, evm.FileList.ToList(), evm.IsRename, evm.NewName, time[0], time[1], SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
+        //            }
+        //            else
+        //            {
+        //                Header header = new Header();
+        //                header.Type = string.Empty;
+        //                _programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, evm.FileList.ToList(), evm.IsRename, evm.NewName, DateTime.MinValue, DateTime.MinValue, SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, header);
+        //            }
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            //_programService.RecipeService.TestRecordService.Commit(testRecord.Record, evm.Comment, CreateRawDataList(evm.FileList), DateTime.MinValue, DateTime.MinValue, SelectedProgram.Project.BatteryType.Name, SelectedProgram.Project.Name, SelectedProgram.Description);
+        //            MessageBox.Show(e.Message);
+        //        }
+        //    }
+        //}
+        //private bool CanCommit
+        //{
+        //    get { return _selectedTestRecord != null && _selectedTestRecord.Status == TestStatus.Executing; }
+        //}
         private void DirectCommit()
         //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
         {
@@ -903,7 +903,7 @@ namespace BCLabManager.ViewModel
                     //for (int i = 0; i < 100; i++)
                     {
                         filePath = _programService.RecipeService.TestRecordService.DataPreProcess(SelectedTestRecord.Record, evm.FileList.ToList(),
-                        evm.IsRename,
+                        //evm.IsRename,
                         evm.NewName/* + "-" + i.ToString()*/,
                         evm.StartIndex,
                         st,
@@ -1023,8 +1023,8 @@ namespace BCLabManager.ViewModel
         }
         #endregion //Private Helper
 
-
-        #region Free Test Records
+#if false
+#region Free Test Records
 
 
 
@@ -1391,6 +1391,7 @@ namespace BCLabManager.ViewModel
         {
             get { return SelectedFreeTestRecord != null && SelectedFreeTestRecord.Status == TestStatus.Completed; }
         }
-        #endregion
+#endregion
+#endif
     }
 }

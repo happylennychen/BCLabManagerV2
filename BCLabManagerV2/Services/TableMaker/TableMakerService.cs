@@ -320,10 +320,6 @@ namespace BCLabManager
                 var standardModel = tableMakerModel.StandardModel;
                 var androidModel = tableMakerModel.AndroidModel;
                 var liteModel = tableMakerModel.LiteModel;
-
-                //List<SourceData> ocvSource;
-                //OCVTableMaker.GetOCVSource(project, programs.Where(o => o.Type.Name == "OCV").ToList(), testers, out ocvSource, isRemoteData);
-//=======
                 var stage1ocvModel = tableMakerModel.Stage1OCVModel;
                 var stage1rcModel = tableMakerModel.Stage1RCModel;
                 var stage1miniModel = tableMakerModel.Stage1MiniModel;
@@ -339,8 +335,6 @@ namespace BCLabManager
 
 
                 GenerateFilePackage(ocvprograms, rcprograms, project, testers, uEodVoltage, ref ocvModel, ref rcModel, ref miniModel, ref standardModel, ref androidModel, ref liteModel);
-                //GenerateFilePackage(stage1ocvprograms, stage1rcprograms, project, testers, ref stage1ocvModel, ref stage1rcModel, ref stage1miniModel, ref stage1standardModel, ref stage1androidModel);
-                //GenerateFilePackage(stage2ocvprograms, stage2rcprograms, project, testers, ref stage2ocvModel, ref stage2rcModel, ref stage2miniModel, ref stage2standardModel, ref stage2androidModel);
 
 
             }
@@ -356,7 +350,6 @@ namespace BCLabManager
             if (ocvprograms != null && ocvprograms.Count != 0)
             {
                 OCVTableMaker.GetOCVSource(project, ocvprograms, testers, out ocvSource);
-//>>>>>>> DataGroupingForTableMaker
                 OCVTableMaker.GetOCVModel(ocvSource, ref ocvModel);
                 OCVTableMaker.GenerateOCVTable(project, ocvModel);
             }
@@ -364,29 +357,13 @@ namespace BCLabManager
             if (rcprograms != null && rcprograms.Count != 0 && ocvSource != null)
             {
                 List<SourceData> rcSource;
-//<<<<<<< HEAD
-                //RCTableMaker.GetRCSource(project, programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList(), testers, out rcSource, isRemoteData);
-                //=======
                 RCTableMaker.GetRCSource(project, rcprograms, testers, out rcSource);
-                //>>>>>>> DataGroupingForTableMaker
                 RCTableMaker.GetRCModel(rcSource, project, ref rcModel);
                 MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, project, ref miniModel);
 
                 StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
 
                 AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
-//<<<<<<< HEAD
-
-
-                //OCVTableMaker.GenerateOCVTable(project, ocvModel, isRemoteOutput);
-                //RCTableMaker.GenerateRCTable(project, rcModel, isRemoteOutput);
-                //MiniDriverMaker.GenerateMiniDriver(miniModel, project, isRemoteOutput);
-                //StandardDriverMaker.GenerateStandardDriver(standardModel, project, isRemoteOutput);
-                //AndroidDriverMaker.GenerateAndroidDriver(androidModel, project, isRemoteOutput);
-
-                //LiteDriverMaker.GetLiteModel(uEodVoltage, ocvSource, rcSource, ocvModel, rcModel, project, ref liteModel);
-                //LiteDriverMaker.GenerateLiteDriver(liteModel, project, isRemoteOutput);
-                //=======
                 RCTableMaker.GenerateRCTable(project, rcModel);
                 MiniDriverMaker.GenerateMiniDriver(miniModel, project);
                 StandardDriverMaker.GenerateStandardDriver(standardModel, project);
@@ -394,7 +371,6 @@ namespace BCLabManager
 
                 LiteDriverMaker.GetLiteModel(uEodVoltage, ocvSource, rcSource, ocvModel, rcModel, project, ref liteModel);
                 LiteDriverMaker.GenerateLiteDriver(liteModel, project);
-                //>>>>>>> DataGroupingForTableMaker
             }
         }
     }

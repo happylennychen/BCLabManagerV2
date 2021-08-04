@@ -18,16 +18,10 @@ namespace BCLabManager.Model
         {
             DatabaseAdd(item);
             Items.Add(item);
-            CreateFolder(item.BatteryType.Name, item.Name);
+            CreateFolder(GlobalSettings.LocalFolder, item.BatteryType.Name, item.Name);
         }
 
-        public void CreateFolder(string batteryType, string project)
-        {
-            CreateFolder(GlobalSettings.RemotePath, batteryType, project);
-            CreateFolder(GlobalSettings.LocalFolder, batteryType, project);
-        }
-
-        private void CreateFolder(string rootPath, string batteryType, string project)
+        public void CreateFolder(string rootPath, string batteryType, string project)
         {
             string testFilePath = $@"{rootPath}{batteryType}\{project}\{GlobalSettings.TestDataFolderName}";
             string evResultPath = $@"{rootPath}{batteryType}\{project}\{GlobalSettings.EvResultFolderName}";

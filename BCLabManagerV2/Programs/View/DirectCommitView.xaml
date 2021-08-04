@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        Title="{Binding Path=DisplayName}" Height="830" Width="500" WindowStartupLocation="CenterScreen">
+        Title="{Binding Path=DisplayName}" Height="830" Width="650" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid Margin="4">
             <Grid.ColumnDefinitions>
@@ -249,12 +249,12 @@
       Grid.Row="29" Grid.Column="0" Grid.ColumnSpan="3" 
                 Content="Rename Raw Data As:"
       HorizontalAlignment="Center"
-                IsChecked="{Binding Path=IsRename}"
+                IsChecked="{Binding Path=IsRename}" Visibility="Collapsed"
       />
-            <TextBox 
+            <Label 
       x:Name="NewNameTxt" IsEnabled="{Binding ElementName=ReNameCheckBox, Path=IsChecked}"
       Grid.Row="30" Grid.Column="2" 
-      Text="{Binding Path=NewName, ValidatesOnDataErrors=True, UpdateSourceTrigger=LostFocus}" 
+      Content="{Binding Path=NewName, ValidatesOnDataErrors=True, UpdateSourceTrigger=LostFocus}" 
       Validation.ErrorTemplate="{x:Null}"
       />
             <Label 
