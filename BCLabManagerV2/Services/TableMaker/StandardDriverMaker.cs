@@ -17,19 +17,19 @@ namespace BCLabManager
             standardModel.outYValue = rcModel.outYValue;
         }
 
-        internal static void GenerateStandardDriver(StandardModel standardModel, Project project, bool isRemoteOutput)
+        internal static void GenerateStandardDriver(StandardModel standardModel, Project project)
         {
             var rootPath = string.Empty;
-            if (isRemoteOutput)
-            {
-                rootPath = GlobalSettings.RemotePath;
-            }
-            else
-            {
+            //if (isRemoteOutput)
+            //{
+            //    rootPath = GlobalSettings.RemotePath;
+            //}
+            //else
+            //{
                 rootPath = GlobalSettings.LocalFolder;
-            }
+            //}
             var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
-            List<string> strFilePaths = standardModel.FilePaths;
+            List<string> strFilePaths = standardModel.FileNames;
             List<string> strHHeaderComments;
             UInt32 uErr = 0;
             TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), out strHHeaderComments);

@@ -184,16 +184,17 @@ namespace BCLabManager.ViewModel
             TableMakerModel tableMakerModel = new TableMakerModel();
             tableMakerModel.Project = _selectedItem._project;
             tableMakerModel.Testers = _testerService.Items.ToList();
-            tableMakerModel.Programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == tableMakerModel.Project.Id && o.IsInvalid == false && (o.Type.Name == "RC" || o.Type.Name == "OCV")).ToList();
+            var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == tableMakerModel.Project.Id && o.IsInvalid == false).ToList();
+            tableMakerModel.OCVPrograms = programs.Select(o => o).Where(o => o.Type.Name == "OCV").ToList();
+            tableMakerModel.RCPrograms = programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList();
+            tableMakerModel.Stage1OCVPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1OCV").ToList();
+            tableMakerModel.Stage1RCPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1RC").ToList();
+            tableMakerModel.Stage2OCVPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1OCV" || o.Type.Name == "Stage2OCV").ToList();
+            tableMakerModel.Stage2RCPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1RC"|| o.Type.Name == "Stage2RC").ToList();
             TableMakerViewModel tableMakerViewModel = new TableMakerViewModel(tableMakerModel);
             TableMakerView tableMakerView = new TableMakerView();
             tableMakerView.DataContext = tableMakerViewModel;
             tableMakerView.ShowDialog();
-            //var testers = _testerService.Items.ToList();
-            //var project = _selectedItem._project;
-            //var programs = _programService.Items.Select(o=>o).Where(o=>o.Project.Id == project.Id && o.IsInvalid == false && (o.Type.Name == "RC" || o.Type.Name == "OCV")).ToList();
-            //project.VoltagePoints = LoadVCFGFile(@"D:\Issues\Open\BC_Lab\Table Maker\30Q.vcfg");
-            //TableMaker.Make(project, programs, testers, true, true, true, true, true);
         }
         private void Create()
         {

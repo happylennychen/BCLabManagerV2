@@ -11,7 +11,7 @@ namespace BCLabManager
     public static class RCTableMaker
     {
         #region RC
-        public static void GetRCSource(Project project, List<Program> programs, List<Tester> testers, out List<SourceData> SDList, bool isRemoteData)
+        public static void GetRCSource(Project project, List<Program> programs, List<Tester> testers, out List<SourceData> SDList)
         {
             var trs = programs.Select(o => o.Recipes.Select(i => i.TestRecords.Where(j => j.Status == TestStatus.Completed).ToList()).ToList()).ToList();
             List<TestRecord> testRecords = new List<TestRecord>();
@@ -51,19 +51,19 @@ namespace BCLabManager
                 }
                 var tester = testers.SingleOrDefault(o => o.Name == tr.TesterStr);
                 var filePath = string.Empty;
-                if (isRemoteData)
-                {
-                    filePath = tr.TestFilePath;
-                }
-                else
-                {
+                //if (isRemoteData)
+                //{
+                //    filePath = tr.TestFilePath;
+                //}
+                //else
+                //{
                     filePath = TableMakerService.GetLocalPath(tr.TestFilePath);
                     if (!File.Exists(filePath))
                     {
                         MessageBox.Show($"No such file.{filePath}");
                         return;
                     }
-                }
+                //}
                 UInt32 result = tester.ITesterProcesser.LoadRawToSource(filePath, ref sd);
                 if (result == ErrorCode.NORMAL)
                 {
@@ -434,19 +434,19 @@ namespace BCLabManager
             slope = sCo / ssX;
         }
 
-        public static TableMakerProduct GenerateRCTable(Project project, RCModel rcModel, bool isRemoteOutput)
+        public static TableMakerProduct GenerateRCTable(Project project, RCModel rcModel)
         {
             var rootPath = string.Empty;
-            if (isRemoteOutput)
-            {
-                rootPath = GlobalSettings.RemotePath;
-            }
-            else
-            {
+            //if (isRemoteOutput)
+            //{
+            //    rootPath = GlobalSettings.RemotePath;
+            //}
+            //else
+            //{
                 rootPath = GlobalSettings.LocalFolder;
-            }
+            //}
             var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
-            string filePath = Path.Combine(OutFolder, rcModel.FilePath);//GetRCTableFilePath(project);
+            string filePath = Path.Combine(OutFolder, rcModel.FileName);//GetRCTableFilePath(project);
             var strRCHeader = GetRCFileHeader(project, rcModel.fCTABase, rcModel.fCTASlope);
             var strRCContent = GetRCFileContent(rcModel.outYValue, project.VoltagePoints, rcModel.listfTemp, rcModel.listfCurr);
             //UInt32 uErr = 0;
@@ -457,11 +457,11 @@ namespace BCLabManager
             tmp.Project = project;
             return tmp;
         }
-        public static string GetRCTableFilePath(Project project)
+        public static string GetRCTableFileName(Project project)
         {
             string sFileSeperator = "_";
             //(A170308)Francis, falconly use file output folder
-            string outputFilePath = "RC" + sFileSeperator + project.BatteryType.Manufacturer +
+            string outputFileName = "RC" + sFileSeperator + project.BatteryType.Manufacturer +
                                 sFileSeperator + project.BatteryType.Name +
                                 sFileSeperator + project.AbsoluteMaxCapacity + "mAhr" +
                                 sFileSeperator + project.LimitedChargeVoltage + "mV" +
@@ -469,7 +469,7 @@ namespace BCLabManager
                                 sFileSeperator + TableMakerService.Version +
                                 sFileSeperator + DateTime.Now.ToString("yyyyMMddHHmmss") +
                                 ".txt";
-            return outputFilePath;
+            return outputFileName;
         }
         private static List<string> GetRCFileHeader(Project project, double fCTABase, double fCTASlope)
         {

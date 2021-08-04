@@ -21,18 +21,37 @@
                 <RowDefinition Height="4" />
                 <RowDefinition Height="50" />
             </Grid.RowDefinitions>
-            <GroupBox Header="Products">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="4"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="Stage1">
                 <StackPanel>
-                    <Label Name="OCVLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=OCVReady, Mode=OneTime}" Margin="5" Content="{Binding Path=OCVFileName}"></Label>
-                    <Label Name="RCLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=RCReady, Mode=OneTime}" Margin="5" Content="{Binding Path=RCFileName}"></Label>
-                    <Label Name="SDCLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=SDReady, Mode=OneTime}" Margin="5" Content="{Binding Path=StandardDriverCFileName}"></Label>
-                    <Label Name="SDHLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=SDReady, Mode=OneTime}" Margin="5" Content="{Binding Path=StandardDriverHFileName}"></Label>
-                    <Label Name="ADCLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=ADReady, Mode=OneTime}" Margin="5" Content="{Binding Path=AndroidDriverCFileName}"></Label>
-                    <Label Name="ADHLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=ADReady, Mode=OneTime}" Margin="5" Content="{Binding Path=AndroidDriverHFileName}"></Label>
-                    <Label Name="MiniCLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=MiniReady, Mode=OneTime}" Margin="5" Content="{Binding Path=MiniDriverCFileName}"></Label>
-                    <Label Name="MiniHLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=MiniReady, Mode=OneTime}" Margin="5" Content="{Binding Path=MiniDriverHFileName}"></Label>
+                    <Label Name="OCVLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=OCV1Ready, Mode=OneTime}" Margin="5" Content="{Binding Path=OCV1FileName}"></Label>
+                    <Label Name="RCLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=RC1Ready, Mode=OneTime}" Margin="5" Content="{Binding Path=RC1FileName}"></Label>
+                    <Label Name="SDCLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=SD1Ready, Mode=OneTime}" Margin="5" Content="{Binding Path=StandardDriverC1FileName}"></Label>
+                    <Label Name="SDHLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=SD1Ready, Mode=OneTime}" Margin="5" Content="{Binding Path=StandardDriverH1FileName}"></Label>
+                    <Label Name="ADCLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=AD1Ready, Mode=OneTime}" Margin="5" Content="{Binding Path=AndroidDriverC1FileName}"></Label>
+                    <Label Name="ADHLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=AD1Ready, Mode=OneTime}" Margin="5" Content="{Binding Path=AndroidDriverH1FileName}"></Label>
+                    <Label Name="MiniCLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=Mini1Ready, Mode=OneTime}" Margin="5" Content="{Binding Path=MiniDriverC1FileName}"></Label>
+                    <Label Name="MiniHLabel" Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=Mini1Ready, Mode=OneTime}" Margin="5" Content="{Binding Path=MiniDriverH1FileName}"></Label>
                     <Label Name="LiteCLabel" Style="{StaticResource LabelBG}" IsEnabled="False" Margin="5">Lite Driver C File</Label>
                     <Label Name="LiteHLabel" Style="{StaticResource LabelBG}" IsEnabled="False" Margin="5">Lite Driver H File</Label>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Stage2" Grid.Column="2">
+                <StackPanel>
+                    <Label Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=OCV2Ready, Mode=OneTime}" Margin="5" Content="{Binding Path=OCV2FileName}"></Label>
+                    <Label Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=RC2Ready, Mode=OneTime}" Margin="5" Content="{Binding Path=RC2FileName}"></Label>
+                    <Label Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=SD2Ready, Mode=OneTime}" Margin="5" Content="{Binding Path=StandardDriverC2FileName}"></Label>
+                    <Label Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=SD2Ready, Mode=OneTime}" Margin="5" Content="{Binding Path=StandardDriverH2FileName}"></Label>
+                    <Label Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=AD2Ready, Mode=OneTime}" Margin="5" Content="{Binding Path=AndroidDriverC2FileName}"></Label>
+                    <Label Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=AD2Ready, Mode=OneTime}" Margin="5" Content="{Binding Path=AndroidDriverH2FileName}"></Label>
+                    <Label Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=Mini2Ready, Mode=OneTime}" Margin="5" Content="{Binding Path=MiniDriverC2FileName}"></Label>
+                    <Label Style="{StaticResource LabelBG}" IsEnabled="{Binding Path=Mini2Ready, Mode=OneTime}" Margin="5" Content="{Binding Path=MiniDriverH2FileName}"></Label>
+                    <Label Style="{StaticResource LabelBG}" IsEnabled="False" Margin="5">Lite Driver C File</Label>
+                    <Label Style="{StaticResource LabelBG}" IsEnabled="False" Margin="5">Lite Driver H File</Label>
                 </StackPanel>
             </GroupBox>
             <Button 

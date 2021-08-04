@@ -10,6 +10,6 @@ namespace BCLabManager.Model
         public double fCTASlope { get; set; }
         public List<double> poly2EstFACC { get; set; } = new List<double>();
         public List<double> poly2EstIR { get; set; } = new List<double>();
-        public List<string> FilePaths { get; set; }
+        public List<string> FileNames { get; set; }
     }
 }

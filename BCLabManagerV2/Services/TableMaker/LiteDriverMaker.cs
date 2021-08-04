@@ -758,19 +758,19 @@ namespace BCLabManager
             }
         }
 
-        public static void GenerateLiteDriver(LiteModel liteModel, Project project, bool isRemoteOutput)
+        public static void GenerateLiteDriver(LiteModel liteModel, Project project)
         {
             var rootPath = string.Empty;
-            if (isRemoteOutput)
-            {
-                rootPath = GlobalSettings.RemotePath;
-            }
-            else
-            {
+            //if (isRemoteOutput)
+            //{
+            //    rootPath = GlobalSettings.RemotePath;
+            //}
+            //else
+            //{
                 rootPath = GlobalSettings.LocalFolder;
-            }
+            //}
             var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
-            List<string> strFilePaths = liteModel.FilePaths;
+            List<string> strFilePaths = liteModel.FileNames;
             List<string> strHHeaderComments;
             UInt32 uErr = 0;
             TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), out strHHeaderComments);

@@ -9,6 +9,6 @@ namespace BCLabManager.Model
         public List<Int32> iOCVVolt { get; set; }
         public int MinVoltage { get; set; }
         public int MaxVoltage { get; set; }
-        public string FilePath { get; set; }
+        public string FileName { get; set; }
     }
 }

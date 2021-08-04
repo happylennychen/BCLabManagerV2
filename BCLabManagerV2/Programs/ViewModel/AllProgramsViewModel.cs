@@ -433,7 +433,7 @@ namespace BCLabManager.ViewModel
         private void Create()
         {
             Program m = new Program();      //实例化一个新的model
-            ProgramEditViewModel evm = new ProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items, _programTypeService.Items);      //实例化一个新的view model
+            ProgramEditViewModel evm = new ProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items, _programTypeService.Items, _programService.Items);      //实例化一个新的view model
             evm.DisplayName = "Program-Create";
             evm.commandType = CommandType.Create;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view
@@ -653,7 +653,7 @@ namespace BCLabManager.ViewModel
         private void SaveAs()
         {
             Program m = _selectedProgram._program.Clone();
-            ProgramEditViewModel evm = new ProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items, _programTypeService.Items);      //实例化一个新的view model
+            ProgramEditViewModel evm = new ProgramEditViewModel(m, _projectService.Items, _recipeTemplateService.Items, _programTypeService.Items, _programService.Items);      //实例化一个新的view model
             evm.DisplayName = "Program-Save As";
             //evm.commandType = CommandType.SaveAs;
             var ProgramViewInstance = new ProgramView();      //实例化一个新的view

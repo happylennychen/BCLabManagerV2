@@ -6,7 +6,7 @@ namespace BCLabManager.Model
     {
         public List<int> iOCVVolt { get; set; }
 
-        public List<string> FilePaths { get; internal set; }
+        public List<string> FileNames { get; internal set; }
         public double fCTABase { get; internal set; }
         public double fCTASlope { get; internal set; }
         public List<float> listfCurr { get; internal set; }

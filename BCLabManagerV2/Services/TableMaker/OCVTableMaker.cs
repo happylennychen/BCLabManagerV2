@@ -13,7 +13,7 @@ namespace BCLabManager
         static public int iMinPercent = 0;
         static public int iMaxPercent = 10000;
         #region OCV
-        public static void GetOCVSource(Project project, List<Program> programs, List<Tester> testers, out List<SourceData> MaxSDList, bool isRemoteData)
+        public static void GetOCVSource(Project project, List<Program> programs, List<Tester> testers, out List<SourceData> MaxSDList)
         {
             var trs = programs.Select(o => o.Recipes.Select(i => i.TestRecords.Where(j => j.Status == TestStatus.Completed).ToList()).ToList()).ToList();
             List<TestRecord> testRecords = new List<TestRecord>();
@@ -41,19 +41,19 @@ namespace BCLabManager
                     sd.fTraceResis = (float)tr.TraceResistance;
                     var tester = testers.SingleOrDefault(o => o.Name == tr.TesterStr);
                     var filePath = string.Empty;
-                    if (isRemoteData)
+                    //if (isRemoteData)
+                    //{
+                    //    filePath = tr.TestFilePath;
+                    //}
+                    //else
+                    //{
+                    filePath = TableMakerService.GetLocalPath(tr.TestFilePath);
+                    if (!File.Exists(filePath))
                     {
-                        filePath = tr.TestFilePath;
+                        MessageBox.Show($"No such file.{filePath}");
+                        return;
                     }
-                    else
-                    {
-                        filePath = TableMakerService.GetLocalPath(tr.TestFilePath);
-                        if (!File.Exists(filePath))
-                        {
-                            MessageBox.Show($"No such file.{filePath}");
-                            return;
-                        }
-                    }
+                    //}
                     UInt32 result = tester.ITesterProcesser.LoadRawToSource(filePath, ref sd);
                     if (result == ErrorCode.NORMAL)
                     {
@@ -236,19 +236,19 @@ namespace BCLabManager
             return result;
             #endregion
         }
-        public static TableMakerProduct GenerateOCVTable(Project project, OCVModel ocvModel, bool isRemoteOutput)
+        public static TableMakerProduct GenerateOCVTable(Project project, OCVModel ocvModel)
         {
             var rootPath = string.Empty;
-            if (isRemoteOutput)
-            {
-                rootPath = GlobalSettings.RemotePath;
-            }
-            else
-            {
-                rootPath = GlobalSettings.LocalFolder;
-            }
+            //if (isRemoteOutput)
+            //{
+            //    rootPath = GlobalSettings.RemotePath;
+            //}
+            //else
+            //{
+            rootPath = GlobalSettings.LocalFolder;
+            //}
             var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
-            string filePath = Path.Combine(OutFolder, ocvModel.FilePath);
+            string filePath = Path.Combine(OutFolder, ocvModel.FileName);
             List<string> OCVHeader = GetOCVFileHeader(project);
             List<string> OCVContent = GetOCVFileContent(ocvModel.iOCVVolt);
             //UInt32 result = 0;
@@ -260,7 +260,7 @@ namespace BCLabManager
             tmp.Project = project;
             return tmp;
         }
-        public static string GetOCVTableFilePath(Project project)
+        public static string GetOCVTableFileName(Project project)
         {
             string sFileSeperator = "_";
             //(A170308)Francis, falconly use file output folder

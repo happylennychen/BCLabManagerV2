@@ -192,7 +192,7 @@ namespace BCLabManager
             fs.Close();
             return true;
         }
-        public static bool GetDriverFilePaths(string manufacturer, string betteryType, string absMaxCap, string type, out List<string> strFilePaths)
+        public static bool GetDriverFileNames(string manufacturer, string betteryType, string absMaxCap, string type, out List<string> strFilePaths)
         {
             bool bReturn = false;
             string strTmpFile = "";
@@ -269,10 +269,10 @@ namespace BCLabManager
             return bReturn;
         }
 
-        public static void GetFilePaths(ref TableMakerModel tableMakerModel)
+        public static void GetFileNames(ref TableMakerModel tableMakerModel)
         {
             var project = tableMakerModel.Project;
-            var programs = tableMakerModel.Programs;
+            //var programs = tableMakerModel.Programs;
             var testers = tableMakerModel.Testers;
 
             OCVModel ocvModel = new OCVModel();
@@ -289,25 +289,30 @@ namespace BCLabManager
             tableMakerModel.AndroidModel = androidModel;
             tableMakerModel.LiteModel = liteModel;
 
-            ocvModel.FilePath = OCVTableMaker.GetOCVTableFilePath(project);
-            rcModel.FilePath = RCTableMaker.GetRCTableFilePath(project);
-            List<string> strFilePaths;
-            GetDriverFilePaths(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "mini", out strFilePaths);
-            miniModel.FilePaths = strFilePaths;
-            GetDriverFilePaths(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "standard", out strFilePaths);
-            standardModel.FilePaths = strFilePaths;
-            GetDriverFilePaths(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "android", out strFilePaths);
-            androidModel.FilePaths = strFilePaths;
-            GetDriverFilePaths(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "lite", out strFilePaths);
-            liteModel.FilePaths = strFilePaths;
+            ocvModel.FileName = OCVTableMaker.GetOCVTableFileName(project);
+            rcModel.FileName = RCTableMaker.GetRCTableFileName(project);
+            List<string> strFileNames;
+            GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "mini", out strFileNames);
+            miniModel.FileNames = strFileNames;
+            GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "standard", out strFileNames);
+            standardModel.FileNames = strFileNames;
+            GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "android", out strFileNames);
+            androidModel.FileNames = strFileNames;
+            GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "lite", out strFileNames);
+            liteModel.FileNames = strFileNames;
         }
 
-        public static void Build(ref TableMakerModel tableMakerModel, uint uEodVoltage, bool isRemoteData, bool isRemoteOutput)
+        public static void Build(ref TableMakerModel tableMakerModel, uint uEodVoltage)
         {
             try
             {
                 var project = tableMakerModel.Project;
-                var programs = tableMakerModel.Programs;
+                var ocvprograms = tableMakerModel.OCVPrograms;
+                var rcprograms = tableMakerModel.RCPrograms;
+                var stage1ocvprograms = tableMakerModel.Stage1OCVPrograms;
+                var stage1rcprograms = tableMakerModel.Stage1RCPrograms;
+                var stage2ocvprograms = tableMakerModel.Stage2OCVPrograms;
+                var stage2rcprograms = tableMakerModel.Stage2RCPrograms;
                 var testers = tableMakerModel.Testers;
                 var ocvModel = tableMakerModel.OCVModel;
                 var rcModel = tableMakerModel.RCModel;
@@ -316,32 +321,80 @@ namespace BCLabManager
                 var androidModel = tableMakerModel.AndroidModel;
                 var liteModel = tableMakerModel.LiteModel;
 
-                List<SourceData> ocvSource;
-                OCVTableMaker.GetOCVSource(project, programs.Where(o => o.Type.Name == "OCV").ToList(), testers, out ocvSource, isRemoteData);
-                OCVTableMaker.GetOCVModel(ocvSource, ref ocvModel);
+                //List<SourceData> ocvSource;
+                //OCVTableMaker.GetOCVSource(project, programs.Where(o => o.Type.Name == "OCV").ToList(), testers, out ocvSource, isRemoteData);
+//=======
+                var stage1ocvModel = tableMakerModel.Stage1OCVModel;
+                var stage1rcModel = tableMakerModel.Stage1RCModel;
+                var stage1miniModel = tableMakerModel.Stage1MiniModel;
+                var stage1standardModel = tableMakerModel.Stage1StandardModel;
+                var stage1androidModel = tableMakerModel.Stage1AndroidModel;
+                var stage1liteModel = tableMakerModel.Stage1LiteModel;
+                var stage2ocvModel = tableMakerModel.Stage2OCVModel;
+                var stage2rcModel = tableMakerModel.Stage2RCModel;
+                var stage2miniModel = tableMakerModel.Stage2MiniModel;
+                var stage2standardModel = tableMakerModel.Stage2StandardModel;
+                var stage2androidModel = tableMakerModel.Stage2AndroidModel;
+                var stage2liteModel = tableMakerModel.Stage2LiteModel;
 
+
+                GenerateFilePackage(ocvprograms, rcprograms, project, testers, uEodVoltage, ref ocvModel, ref rcModel, ref miniModel, ref standardModel, ref androidModel, ref liteModel);
+                //GenerateFilePackage(stage1ocvprograms, stage1rcprograms, project, testers, ref stage1ocvModel, ref stage1rcModel, ref stage1miniModel, ref stage1standardModel, ref stage1androidModel);
+                //GenerateFilePackage(stage2ocvprograms, stage2rcprograms, project, testers, ref stage2ocvModel, ref stage2rcModel, ref stage2miniModel, ref stage2standardModel, ref stage2androidModel);
+
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
+
+        private static void GenerateFilePackage(List<Program> ocvprograms, List<Program> rcprograms, Project project, List<Tester> testers, uint uEodVoltage, ref OCVModel ocvModel, ref RCModel rcModel, ref MiniModel miniModel, ref StandardModel standardModel, ref AndroidModel androidModel, ref LiteModel liteModel)
+        {
+            List<SourceData> ocvSource = null;
+            if (ocvprograms != null && ocvprograms.Count != 0)
+            {
+                OCVTableMaker.GetOCVSource(project, ocvprograms, testers, out ocvSource);
+//>>>>>>> DataGroupingForTableMaker
+                OCVTableMaker.GetOCVModel(ocvSource, ref ocvModel);
+                OCVTableMaker.GenerateOCVTable(project, ocvModel);
+            }
+
+            if (rcprograms != null && rcprograms.Count != 0 && ocvSource != null)
+            {
                 List<SourceData> rcSource;
-                RCTableMaker.GetRCSource(project, programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList(), testers, out rcSource, isRemoteData);
+//<<<<<<< HEAD
+                //RCTableMaker.GetRCSource(project, programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList(), testers, out rcSource, isRemoteData);
+                //=======
+                RCTableMaker.GetRCSource(project, rcprograms, testers, out rcSource);
+                //>>>>>>> DataGroupingForTableMaker
                 RCTableMaker.GetRCModel(rcSource, project, ref rcModel);
                 MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, project, ref miniModel);
 
                 StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
 
                 AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
+//<<<<<<< HEAD
 
 
-                OCVTableMaker.GenerateOCVTable(project, ocvModel, isRemoteOutput);
-                RCTableMaker.GenerateRCTable(project, rcModel, isRemoteOutput);
-                MiniDriverMaker.GenerateMiniDriver(miniModel, project, isRemoteOutput);
-                StandardDriverMaker.GenerateStandardDriver(standardModel, project, isRemoteOutput);
-                AndroidDriverMaker.GenerateAndroidDriver(androidModel, project, isRemoteOutput);
+                //OCVTableMaker.GenerateOCVTable(project, ocvModel, isRemoteOutput);
+                //RCTableMaker.GenerateRCTable(project, rcModel, isRemoteOutput);
+                //MiniDriverMaker.GenerateMiniDriver(miniModel, project, isRemoteOutput);
+                //StandardDriverMaker.GenerateStandardDriver(standardModel, project, isRemoteOutput);
+                //AndroidDriverMaker.GenerateAndroidDriver(androidModel, project, isRemoteOutput);
+
+                //LiteDriverMaker.GetLiteModel(uEodVoltage, ocvSource, rcSource, ocvModel, rcModel, project, ref liteModel);
+                //LiteDriverMaker.GenerateLiteDriver(liteModel, project, isRemoteOutput);
+                //=======
+                RCTableMaker.GenerateRCTable(project, rcModel);
+                MiniDriverMaker.GenerateMiniDriver(miniModel, project);
+                StandardDriverMaker.GenerateStandardDriver(standardModel, project);
+                AndroidDriverMaker.GenerateAndroidDriver(androidModel, project);
 
                 LiteDriverMaker.GetLiteModel(uEodVoltage, ocvSource, rcSource, ocvModel, rcModel, project, ref liteModel);
-                LiteDriverMaker.GenerateLiteDriver(liteModel, project, isRemoteOutput);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
+                LiteDriverMaker.GenerateLiteDriver(liteModel, project);
+                //>>>>>>> DataGroupingForTableMaker
             }
         }
     }

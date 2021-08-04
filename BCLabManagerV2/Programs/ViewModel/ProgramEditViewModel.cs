@@ -23,6 +23,7 @@ namespace BCLabManager.ViewModel
         ObservableCollection<Project> _projects;
         ObservableCollection<ProgramType> _programTypes;
         private ObservableCollection<RecipeTemplate> _recipeTemplates;
+        private ObservableCollection<Program> _programs;
 
         //RecipeTemplateViewModel _selectedRecipeTemplate;
         //RecipeViewModel _selectedRecipe;
@@ -40,12 +41,14 @@ namespace BCLabManager.ViewModel
             Program programmodel,
             ObservableCollection<Project> projects,
             ObservableCollection<RecipeTemplate> RecipeTemplates,
-            ObservableCollection<ProgramType> programTypes)
+            ObservableCollection<ProgramType> programTypes,
+            ObservableCollection<Program> programs)
         {
             _program = programmodel;
             _projects = projects;
             _programTypes = programTypes;
             _recipeTemplates = RecipeTemplates;
+            _programs = programs;
             this.CreateAllRecipeTemplates(RecipeTemplates);
             this.CreateRecipes();
         }
@@ -302,36 +305,37 @@ namespace BCLabManager.ViewModel
             var dic = new Dictionary<int, int>();
             foreach (var recVM in AllRecipeTemplates)
             {
-                if(recVM.IsSelected)
+                if (recVM.IsSelected)
                 {
                     if (recVM.Count == 0)
                         recVM.Count = 1;
                     dic.Add(recVM.Id, recVM.Count);
                 }
             }
-            _program.BuildRecipes(_recipeTemplates.ToList(), dic);
-            //foreach (var temperature in _program.Temperatures)
-            //{
-            //    var query = AllRecipeTemplates.Where(o => o.IsSelected).Select(o => o._recipeTemplate).ToList();
-            //    foreach (var rectemp in query)
-            //    {
-            //        var model = new Recipe(rectemp, Project.BatteryType);
-            //        model.Temperature = temperature;
-            //        _program.Recipes.Add(model);
-            //    }
-            //}
-            //foreach (var sub in _program.Recipes)
-            //{
-            //    foreach (var tr in sub.TestRecords)
-            //        tr.ProgramStr = this.Name;
-            //}
+            if (_program.Type.Name == "Stage2RC")
+            {
+                var stage1program = _programs.SingleOrDefault(o => o.Project.Id == _program.Project.Id && o.Type.Name == "Stage1RC");
+                if (stage1program != null)
+                {
+                    _program.BuildRecipes(_recipeTemplates.ToList(), dic, stage1program.Recipes.ToList());
+                }
+                else
+                {
+                    MessageBox.Show("Please create Stage1RC program before creating Stage2RC program.");
+                    IsOK = false;
+                    return;
+                }
+            }
+            else
+                _program.BuildRecipes(_recipeTemplates.ToList(), dic);
             IsOK = true;
         }
 
         private List<int> GetTemperatureList(string temperatures)
         {
             List<int> output = null;
-            try {
+            try
+            {
                 output = temperatures.Trim(',').Split(',').Select(o => Convert.ToInt32(o)).ToList();
             }
             catch (Exception e)
