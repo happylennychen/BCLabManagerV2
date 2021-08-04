@@ -531,7 +531,6 @@
     <Compile Include="Products\Model\TableMakerProduct.cs" />
     <Compile Include="Products\Model\EmulatorResult.cs" />
     <Compile Include="Settings\Model\TableMakerProductType.cs" />
-    <Compile Include="Programs\Model\Service\Header.cs" />
     <Compile Include="Settings\Model\Service\ProgramTypeServiceClass.cs" />
     <Compile Include="Settings\Model\Service\ProjectServiceClass.cs" />
     <Compile Include="Programs\Model\Service\ProgramServiceClass.cs" />

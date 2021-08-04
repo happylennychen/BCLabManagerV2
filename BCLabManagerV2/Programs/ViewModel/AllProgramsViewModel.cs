@@ -945,31 +945,31 @@ namespace BCLabManager.ViewModel
                     _channelService.Commit(evm.Channel, et, SelectedProgram.Name, SelectedRecipe.Name);
                     if (evm.Chamber != null)
                         _chamberService.Commit(evm.Chamber, et, SelectedProgram.Name, SelectedRecipe.Name);
-                    Header header = new Header();
-                    if (time != null)
-                    {
-                        header.Type = SelectedProgram.Type.ToString();
-                        header.TestTime = time[0].ToString("yyyy-MM-dd");
-                        header.Equipment = evm.Channel.Tester.Manufacturer + " " + evm.Channel.Tester.Name;
-                        header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufacturer;
-                        header.BatteryModel = SelectedProgram.Project.BatteryType.Name;
-                        header.CycleCount = evm.NewCycle.ToString();
-                        header.Temperature = model.Temperature.ToString();
-                        header.Current = model.Current.ToString();
-                        header.MeasurementGain = model.MeasurementGain.ToString();
-                        header.MeasurementOffset = model.MeasurementOffset.ToString();
-                        header.TraceResistance = model.TraceResistance.ToString();
-                        header.CapacityDifference = model.CapacityDifference.ToString();
-                        header.AbsoluteMaxCapacity = SelectedProgram.Project.AbsoluteMaxCapacity.ToString();//.BatteryType.TypicalCapacity.ToString();
-                        header.LimitedChargeVoltage = SelectedProgram.Project.LimitedChargeVoltage.ToString();
-                        //header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
-                        header.CutoffDischargeVoltage = SelectedProgram.Project.BatteryType.CutoffDischargeVoltage.ToString();
-                        header.Tester = model.Operator;
-                    }
-                    else
-                    {
-                        header.Type = string.Empty;
-                    }
+                    //Header header = new Header();
+                    //if (time != null)
+                    //{
+                    //    header.Type = SelectedProgram.Type.ToString();
+                    //    header.TestTime = time[0].ToString("yyyy-MM-dd");
+                    //    header.Equipment = evm.Channel.Tester.Manufacturer + " " + evm.Channel.Tester.Name;
+                    //    header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufacturer;
+                    //    header.BatteryModel = SelectedProgram.Project.BatteryType.Name;
+                    //    header.CycleCount = evm.NewCycle.ToString();
+                    //    header.Temperature = model.Temperature.ToString();
+                    //    header.Current = model.Current.ToString();
+                    //    header.MeasurementGain = model.MeasurementGain.ToString();
+                    //    header.MeasurementOffset = model.MeasurementOffset.ToString();
+                    //    header.TraceResistance = model.TraceResistance.ToString();
+                    //    header.CapacityDifference = model.CapacityDifference.ToString();
+                    //    header.AbsoluteMaxCapacity = SelectedProgram.Project.AbsoluteMaxCapacity.ToString();//.BatteryType.TypicalCapacity.ToString();
+                    //    header.LimitedChargeVoltage = SelectedProgram.Project.LimitedChargeVoltage.ToString();
+                    //    //header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
+                    //    header.CutoffDischargeVoltage = SelectedProgram.Project.BatteryType.CutoffDischargeVoltage.ToString();
+                    //    header.Tester = model.Operator;
+                    //}
+                    //else
+                    //{
+                    //    header.Type = string.Empty;
+                    //}
                     SelectedTestRecord.NewCycle = evm.NewCycle;
                     _programService.RecipeService.TestRecordService.CommitV2(
                     SelectedTestRecord.Record, evm.Comment, filePath, st, et);
