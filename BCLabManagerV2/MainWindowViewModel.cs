@@ -44,6 +44,7 @@ namespace BCLabManager.ViewModel
         public ProjectSettingServiceClass ProjectSettingService { get; set; } = new ProjectSettingServiceClass();
         public ProgramTypeServiceClass ProgramTypeService { get; set; } = new ProgramTypeServiceClass();
         public TableMakerProductTypeServiceClass TableMakerProductTypeService { get; set; } = new TableMakerProductTypeServiceClass();
+        public TableMakerRecordServiceClass TableMakerRecordService { get; set; } = new TableMakerRecordServiceClass();
         public TableMakerProductServiceClass TableMakerProductService { get; set; } = new TableMakerProductServiceClass();
         public TestRecordServiceClass FreeTestRecordService { get; set; } = new TestRecordServiceClass();
 
@@ -306,6 +307,7 @@ namespace BCLabManager.ViewModel
                 ProgramTypeService.Items = new ObservableCollection<ProgramType>(uow.ProgramTypes.GetAll());
                 TableMakerProductTypeService.Items = new ObservableCollection<TableMakerProductType>(uow.TableMakerProductTypes.GetAll());
                 TableMakerProductService.Items = new ObservableCollection<TableMakerProduct>(uow.TableMakerProducts.GetAll());
+                TableMakerRecordService.Items = new ObservableCollection<TableMakerRecord>(uow.TableMakerRecords.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
                 FreeTestRecordService.Items = new ObservableCollection<TestRecord>(uow.TestRecords.GetAllFreeTestRecords());

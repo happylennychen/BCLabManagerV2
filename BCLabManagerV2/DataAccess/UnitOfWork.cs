@@ -18,6 +18,7 @@ namespace BCLabManager.DataAccess
         public IChannelRepository Channels { get; private set; }
         public IChamberRepository Chambers { get; private set; }
         public IProgramTypeRepository ProgramTypes { get; private set; }
+        public ITableMakerRecordRepository TableMakerRecords { get; private set; }
         public ITableMakerProductRepository TableMakerProducts { get; private set; }
         public ITableMakerProductTypeRepository TableMakerProductTypes { get; private set; }
         public ITestRecordRepository TestRecords { get; private set; }
@@ -60,6 +61,7 @@ namespace BCLabManager.DataAccess
             Projects = new ProjectRepository(_context);
             ProjectSettings = new ProjectSettingRepository(_context);
             ProgramTypes = new ProgramTypeRepository(_context);
+            TableMakerRecords = new TableMakerRecordRepository(_context);
             TableMakerProducts = new TableMakerProductRepository(_context);
             TableMakerProductTypes = new TableMakerProductTypeRepository(_context);
             Events = new EventRepository(_context);

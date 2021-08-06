@@ -251,7 +251,7 @@ namespace BCLabManager.ViewModel
                 {
                     System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                     stopwatch.Start();
-                    TableMakerService.Build(ref _tableMakerModel, 2800);
+                    TableMakerService.Build(ref _tableMakerModel, 2800, "Some description");
                     var project = _tableMakerModel.Project;
                     var folder = $@"{GlobalSettings.LocalFolder}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
                     string time = Math.Round(stopwatch.Elapsed.TotalSeconds, 0).ToString() + "S";

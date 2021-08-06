@@ -6,6 +6,8 @@ namespace BCLabManager
 {
     public static class AndroidDriverMaker
     {
+        static public TableMakerProductType AndroidCType { get; set; }
+        static public TableMakerProductType AndroidHType { get; set; }
         public static void GetAndroidModel(OCVModel ocvModel, RCModel rcModel, ref AndroidModel androidModel)
         {
             androidModel.iOCVVolt = ocvModel.iOCVVolt;
@@ -17,7 +19,7 @@ namespace BCLabManager
             androidModel.outYValue = rcModel.outYValue;
         }
 
-        internal static void GenerateAndroidDriver(AndroidModel androidModel, Project project)
+        internal static List<TableMakerProduct> GenerateAndroidDriver(AndroidModel androidModel, Project project)
         {
             var rootPath = string.Empty;
             //if (isRemoteOutput)
@@ -33,28 +35,38 @@ namespace BCLabManager
             List<string> strHHeaderComments;
             UInt32 uErr = 0;
             TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), out strHHeaderComments);
-            GenerateCHFiles(ref uErr, OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, androidModel.iOCVVolt, project.VoltagePoints, androidModel.listfTemp, androidModel.listfCurr, androidModel.outYValue, androidModel.fCTABase, androidModel.fCTASlope);
+            return GenerateCHFiles(ref uErr, OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, androidModel.iOCVVolt, project.VoltagePoints, androidModel.listfTemp, androidModel.listfCurr, androidModel.outYValue, androidModel.fCTABase, androidModel.fCTASlope);
         }
         #region Driver
 
         //Initialize content of H file, currently using hard coding in code, but hopely we can read it from file, a sample file in particular folder
 
-        private static bool GenerateCHFiles(ref UInt32 uErr, string OutFolder, string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
+        private static List<TableMakerProduct> GenerateCHFiles(ref UInt32 uErr, string OutFolder, string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
         {
-            bool bReturn;
-            string standardCFilePath = System.IO.Path.Combine(OutFolder, strCFileStandardName);
-            string standardHFilePath = System.IO.Path.Combine(OutFolder, strHFileStandardName);
+            string cFilePath = System.IO.Path.Combine(OutFolder, strCFileStandardName);
+            string hFilePath = System.IO.Path.Combine(OutFolder, strHFileStandardName);
 
             List<string> hFileContent = GetHFileContent(strHFileStandardName, strHHeaderComments, ilstOCVVolt, voltList, listfCurr, listfTemp, fCTABase, fCTASlope);
-            TableMakerService.CreateFile(standardHFilePath, hFileContent);
+            TableMakerService.CreateFileFromLines(hFilePath, hFileContent);
 
             List<string> cFileContent = GetCFileContent(strCFileStandardName, strHFileStandardName, strHHeaderComments, ilstOCVVolt, voltList, listfTemp, listfCurr, outYValue, fCTABase, fCTASlope);
-            TableMakerService.CreateFile(standardCFilePath, cFileContent);
+            TableMakerService.CreateFileFromLines(cFilePath, cFileContent);
 
-            bReturn = true;
-            uErr = 1;
 
-            return bReturn;
+            List<TableMakerProduct> output = new List<TableMakerProduct>();
+            TableMakerProduct ctmp = new TableMakerProduct();
+            ctmp.FilePath = cFilePath;
+            ctmp.IsValid = true;
+            ctmp.Type = AndroidCType;
+            output.Add(ctmp);
+
+            TableMakerProduct htmp = new TableMakerProduct();
+            htmp.FilePath = hFilePath;
+            htmp.IsValid = true;
+            htmp.Type = AndroidHType;
+            output.Add(htmp);
+
+            return output;
         }
         private static List<string> GetCFileContent(string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
         {

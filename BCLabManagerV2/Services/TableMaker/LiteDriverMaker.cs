@@ -12,11 +12,8 @@ namespace BCLabManager
 {
     public static class LiteDriverMaker
     {
-        //public static List<float> fYPointACCall { get; set; } = new List<float>();       //for table mini, save accumulated capacity value for RC, V
-        //public static List<float> flstDCapAtEoD { get; set; } = new List<float>();            //for table lite, save discharge-capacity when reaching EoD voltage
-        //public static List<List<float>> fLstRCM_Volt { get; set; } = new List<List<float>>();
-        //public static List<List<float>> fLstRCL_Volt { get; set; } = new List<List<float>>();    //for table_lite
-        //public static List<float> flstKeodContent { get; set; } = new List<float>();
+        static public TableMakerProductType LiteCType { get; set; }
+        static public TableMakerProductType LiteHType { get; set; }
         public static void GetLiteModel(UInt32 uEoDVoltage, List<SourceData> ocvSource, List<SourceData> rcSource, OCVModel ocvModel, RCModel rcModel, Project project, ref LiteModel liteModel)
         {
             List<float> fLstTblM_OCV;
@@ -758,7 +755,7 @@ namespace BCLabManager
             }
         }
 
-        public static void GenerateLiteDriver(LiteModel liteModel, Project project)
+        public static List<TableMakerProduct> GenerateLiteDriver(LiteModel liteModel, Project project)
         {
             var rootPath = string.Empty;
             //if (isRemoteOutput)
@@ -774,18 +771,32 @@ namespace BCLabManager
             List<string> strHHeaderComments;
             UInt32 uErr = 0;
             TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), out strHHeaderComments);
-            GenerateCHFiles(OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, liteModel);
+            return GenerateCHFiles(OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, liteModel);
         }
-        private static bool GenerateCHFiles(string OutFolder, string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, LiteModel liteModel)
+        private static List<TableMakerProduct> GenerateCHFiles(string OutFolder, string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, LiteModel liteModel)
         {
-            string standardCFilePath = System.IO.Path.Combine(OutFolder, strCFileStandardName);
-            string standardHFilePath = System.IO.Path.Combine(OutFolder, strHFileStandardName);
+            string cFilePath = System.IO.Path.Combine(OutFolder, strCFileStandardName);
+            string hFilePath = System.IO.Path.Combine(OutFolder, strHFileStandardName);
 
             List<string> hFileContent = GetHFileContent(strHFileStandardName, strHHeaderComments, liteModel.ilistCurr.Count);
-            TableMakerService.CreateFile(standardHFilePath, hFileContent);
+            TableMakerService.CreateFileFromLines(hFilePath, hFileContent);
             List<string> cFileContent = GetCFileContent(strCFileStandardName, strHFileStandardName, strHHeaderComments, liteModel.ilistCurr, liteModel.flstdbDCapCof, liteModel.flstdbKeodCof, liteModel.flstTblOCVCof);
-            TableMakerService.CreateFile(standardCFilePath, cFileContent);
-            return true;
+            TableMakerService.CreateFileFromLines(cFilePath, cFileContent);
+
+            List<TableMakerProduct> output = new List<TableMakerProduct>();
+            TableMakerProduct ctmp = new TableMakerProduct();
+            ctmp.FilePath = cFilePath;
+            ctmp.IsValid = true;
+            ctmp.Type = LiteCType;
+            output.Add(ctmp);
+
+            TableMakerProduct htmp = new TableMakerProduct();
+            htmp.FilePath = hFilePath;
+            htmp.IsValid = true;
+            htmp.Type = LiteHType;
+            output.Add(htmp);
+
+            return output;
         }
 
         private static List<string> GetHFileContent(string strStandardH, List<string> strHHeaderComments, int currNum)

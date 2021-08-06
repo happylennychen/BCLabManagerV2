@@ -13,16 +13,8 @@ namespace BCLabManager
         static public int iMinPercent = 0;
         static public int iMaxPercent = 10000;
         #region OCV
-        public static void GetOCVSource(Project project, List<Program> programs, List<Tester> testers, out List<SourceData> MaxSDList)
+        public static void GetOCVSource(Project project, List<TestRecord> testRecords, List<Tester> testers, out List<SourceData> MaxSDList)
         {
-            var trs = programs.Select(o => o.Recipes.Select(i => i.TestRecords.Where(j => j.Status == TestStatus.Completed).ToList()).ToList()).ToList();
-            List<TestRecord> testRecords = new List<TestRecord>();
-            foreach (var tr in trs)
-            {
-                foreach (var t in tr)
-                    testRecords = testRecords.Concat(t).ToList();
-            }
-            testRecords = testRecords.Where(o => o.Status == TestStatus.Completed).ToList();
             MaxSDList = new List<SourceData>();
             foreach (var grp in testRecords.GroupBy(o => o.Current))
             {
@@ -253,7 +245,7 @@ namespace BCLabManager
             List<string> OCVContent = GetOCVFileContent(ocvModel.iOCVVolt);
             //UInt32 result = 0;
             //GenerateOCVTableFile(ref result, filePath, OCVHeader, OCVContent);
-            TableMakerService.CreateFile(filePath, OCVHeader.Concat(OCVContent).ToList());
+            TableMakerService.CreateFileFromLines(filePath, OCVHeader.Concat(OCVContent).ToList());
             TableMakerProduct tmp = new TableMakerProduct();
             tmp.FilePath = filePath;
             tmp.IsValid = true;

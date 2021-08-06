@@ -25,6 +25,7 @@ namespace BCLabManager.DataAccess
         public DbSet<Program> Programs { get; set; }
         public DbSet<ProgramType> ProgramTypes { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<TableMakerRecord> TableMakerRecords { get; set; }
         public DbSet<TableMakerProduct> TableMakerProducts { get; set; }
         public DbSet<TableMakerProductType> TableMakerProductTypes { get; set; }
         public DbSet<Coefficient> Coefficients { get; set; }

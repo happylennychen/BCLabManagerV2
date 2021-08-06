@@ -185,8 +185,8 @@ namespace BCLabManager.ViewModel
             tableMakerModel.Project = _selectedItem._project;
             tableMakerModel.Testers = _testerService.Items.ToList();
             var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == tableMakerModel.Project.Id && o.IsInvalid == false).ToList();
-            tableMakerModel.OCVPrograms = programs.Select(o => o).Where(o => o.Type.Name == "OCV").ToList();
-            tableMakerModel.RCPrograms = programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList();
+            tableMakerModel.OCVRecords = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV").ToList());
+            tableMakerModel.RCRecords = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList());
             tableMakerModel.Stage1OCVPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1OCV").ToList();
             tableMakerModel.Stage1RCPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1RC").ToList();
             tableMakerModel.Stage2OCVPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1OCV" || o.Type.Name == "Stage2OCV").ToList();
@@ -196,6 +196,20 @@ namespace BCLabManager.ViewModel
             tableMakerView.DataContext = tableMakerViewModel;
             tableMakerView.ShowDialog();
         }
+
+        private List<TestRecord> GetRecordsFromPrograms(List<Program> programs)
+        {
+            var trs = programs.Select(o => o.Recipes.Select(i => i.TestRecords.Where(j => j.Status == TestStatus.Completed).ToList()).ToList()).ToList();
+            List<TestRecord> testRecords = new List<TestRecord>();
+            foreach (var tr in trs)
+            {
+                foreach (var t in tr)
+                    testRecords = testRecords.Concat(t).ToList();
+            }
+            testRecords = testRecords.Where(o => o.Status == TestStatus.Completed).ToList();
+            return testRecords;
+        }
+
         private void Create()
         {
             Project proj = new Project();      //实例化一个新的model

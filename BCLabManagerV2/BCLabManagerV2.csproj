@@ -285,12 +285,14 @@
     <Compile Include="Assets\Model\IAsset.cs" />
     <Compile Include="Assets\Model\ITesterProcesser.cs" />
     <Compile Include="Assets\Model\TesterProcessers\PseudoProcesser.cs" />
+    <Compile Include="DataAccess\ITableMakerRecordRepository.cs" />
     <Compile Include="DataAccess\JumpBehaviorRepository.cs" />
     <Compile Include="DataAccess\CutOffBehaviorRepository.cs" />
     <Compile Include="DataAccess\EventRepository.cs" />
     <Compile Include="DataAccess\IJumpBehaviorRepository.cs" />
     <Compile Include="DataAccess\ICutOffBehaviorRepository.cs" />
     <Compile Include="DataAccess\IEventRepository.cs" />
+    <Compile Include="DataAccess\TableMakerProductRepository.cs" />
     <Compile Include="DatabaseAccessException.cs" />
     <Compile Include="Migrations\20201021020401_Event.cs" />
     <Compile Include="Migrations\20201021020401_Event.designer.cs">
@@ -304,6 +306,12 @@
     <Compile Include="Migrations\20210129083304_TemplateUpgrade.designer.cs">
       <DependentUpon>20210129083304_TemplateUpgrade.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20210805095003_TMRecord.cs" />
+    <Compile Include="Migrations\20210805095003_TMRecord.designer.cs">
+      <DependentUpon>20210805095003_TMRecord.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Services\TableMaker\TableMakerRecordServieClass.cs" />
+    <Compile Include="Services\TableMaker\TableMakerRecord.cs" />
     <Compile Include="Programs\Model\CutOffBehavior.cs" />
     <Compile Include="Programs\Model\Condition.cs" />
     <Compile Include="Programs\Model\JumpBehavior.cs" />
@@ -360,7 +368,7 @@
     <Compile Include="DataAccess\RecipeTemplateGroupRepository.cs" />
     <Compile Include="DataAccess\TesterActionRepository.cs" />
     <Compile Include="DataAccess\StepV2Repository.cs" />
-    <Compile Include="DataAccess\TableMakerProductRepository.cs" />
+    <Compile Include="DataAccess\TableMakerRecordRepository.cs" />
     <Compile Include="DataAccess\ITableMakerProductTypeRepository.cs" />
     <Compile Include="DataAccess\TableMakerProductTypeRepository.cs" />
     <Compile Include="Migrations\20200609031253_Init.cs" />

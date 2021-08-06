@@ -13,8 +13,8 @@ namespace BCLabManager.Model
     {
         public Project Project { get; set; }
         public List<Tester> Testers { get; set; }
-        public List<Program> RCPrograms { get; set; }
-        public List<Program> OCVPrograms { get; set; }
+        public List<TestRecord> RCRecords { get; set; }
+        public List<TestRecord> OCVRecords { get; set; }
         public List<Program> Stage1RCPrograms { get; set; }
         public List<Program> Stage1OCVPrograms { get; set; }
         public List<Program> Stage2RCPrograms { get; set; }

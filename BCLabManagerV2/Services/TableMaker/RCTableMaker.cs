@@ -11,16 +11,8 @@ namespace BCLabManager
     public static class RCTableMaker
     {
         #region RC
-        public static void GetRCSource(Project project, List<Program> programs, List<Tester> testers, out List<SourceData> SDList)
+        public static void GetRCSource(Project project, List<TestRecord> testRecords, List<Tester> testers, out List<SourceData> SDList)
         {
-            var trs = programs.Select(o => o.Recipes.Select(i => i.TestRecords.Where(j => j.Status == TestStatus.Completed).ToList()).ToList()).ToList();
-            List<TestRecord> testRecords = new List<TestRecord>();
-            foreach (var tr in trs)
-            {
-                foreach (var t in tr)
-                    testRecords = testRecords.Concat(t).ToList();
-            }
-            testRecords = testRecords.Where(o => o.Status == TestStatus.Completed).ToList();
             SDList = new List<SourceData>();
             foreach (var tr in testRecords)
             {
@@ -450,7 +442,7 @@ namespace BCLabManager
             var strRCHeader = GetRCFileHeader(project, rcModel.fCTABase, rcModel.fCTASlope);
             var strRCContent = GetRCFileContent(rcModel.outYValue, project.VoltagePoints, rcModel.listfTemp, rcModel.listfCurr);
             //UInt32 uErr = 0;
-            TableMakerService.CreateFile(filePath, strRCHeader.Concat(strRCContent).ToList());
+            TableMakerService.CreateFileFromLines(filePath, strRCHeader.Concat(strRCContent).ToList());
             TableMakerProduct tmp = new TableMakerProduct();
             tmp.FilePath = filePath;
             tmp.IsValid = true;

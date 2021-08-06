@@ -65,7 +65,7 @@ namespace BCLabManager
             return testFilePath.Replace(GlobalSettings.RemotePath, GlobalSettings.LocalFolder);
         }
 
-        public static string Version { get { return "V020"; } }
+        public static string Version { get { return "V01"; } }
         public static List<Int32> GenerateSampleCellTempData()
         {
             List<Int32> ilstCellTempData = new List<Int32>();
@@ -168,7 +168,7 @@ namespace BCLabManager
                 }
             }
         }
-        public static bool CreateFile(string filePath, List<string> fileContent)
+        public static bool CreateFileFromLines(string filePath, List<string> fileContent)
         {
             FileStream fs;
             StreamWriter sw;
@@ -302,13 +302,13 @@ namespace BCLabManager
             liteModel.FileNames = strFileNames;
         }
 
-        public static void Build(ref TableMakerModel tableMakerModel, uint uEodVoltage)
+        public static void Build(ref TableMakerModel tableMakerModel, uint uEodVoltage, string description)
         {
             try
             {
                 var project = tableMakerModel.Project;
-                var ocvprograms = tableMakerModel.OCVPrograms;
-                var rcprograms = tableMakerModel.RCPrograms;
+                var ocvRecords = tableMakerModel.OCVRecords;
+                var rcRecords = tableMakerModel.RCRecords;
                 var stage1ocvprograms = tableMakerModel.Stage1OCVPrograms;
                 var stage1rcprograms = tableMakerModel.Stage1RCPrograms;
                 var stage2ocvprograms = tableMakerModel.Stage2OCVPrograms;
@@ -334,9 +334,20 @@ namespace BCLabManager
                 var stage2liteModel = tableMakerModel.Stage2LiteModel;
 
 
-                GenerateFilePackage(ocvprograms, rcprograms, project, testers, uEodVoltage, ref ocvModel, ref rcModel, ref miniModel, ref standardModel, ref androidModel, ref liteModel);
-
-
+                TableMakerRecordServiceClass tmrs = new TableMakerRecordServiceClass();
+                TableMakerRecord tmr = new TableMakerRecord();
+                tmr.EOD = uEodVoltage;
+                tmr.Description = description;
+                tmr.IsValid = true;
+                tmr.OCVSources = ocvRecords;
+                tmr.RCSources = rcRecords;
+                tmr.Project = project;
+                tmr.TableMakerVersion = Version;
+                tmr.VoltagePoints = project.VoltagePoints;
+                tmr.Timestamp = DateTime.Now;
+                var products = GenerateFilePackage(tmr.Timestamp, ocvRecords, rcRecords, project, testers, uEodVoltage, ref ocvModel, ref rcModel, ref miniModel, ref standardModel, ref androidModel, ref liteModel);
+                tmr.Products = products;
+                tmrs.SuperAdd(tmr);
             }
             catch (Exception e)
             {
@@ -344,34 +355,36 @@ namespace BCLabManager
             }
         }
 
-        private static void GenerateFilePackage(List<Program> ocvprograms, List<Program> rcprograms, Project project, List<Tester> testers, uint uEodVoltage, ref OCVModel ocvModel, ref RCModel rcModel, ref MiniModel miniModel, ref StandardModel standardModel, ref AndroidModel androidModel, ref LiteModel liteModel)
+        private static List<TableMakerProduct> GenerateFilePackage(DateTime timestamp, List<TestRecord> ocvRecords, List<TestRecord> rcRecords, Project project, List<Tester> testers, uint uEodVoltage, ref OCVModel ocvModel, ref RCModel rcModel, ref MiniModel miniModel, ref StandardModel standardModel, ref AndroidModel androidModel, ref LiteModel liteModel)
         {
+            List<TableMakerProduct> products = new List<TableMakerProduct>();
             List<SourceData> ocvSource = null;
-            if (ocvprograms != null && ocvprograms.Count != 0)
+            if (ocvRecords != null && ocvRecords.Count != 0)
             {
-                OCVTableMaker.GetOCVSource(project, ocvprograms, testers, out ocvSource);
+                OCVTableMaker.GetOCVSource(project, ocvRecords, testers, out ocvSource);
                 OCVTableMaker.GetOCVModel(ocvSource, ref ocvModel);
-                OCVTableMaker.GenerateOCVTable(project, ocvModel);
+                products.Add(OCVTableMaker.GenerateOCVTable(project, ocvModel));
             }
 
-            if (rcprograms != null && rcprograms.Count != 0 && ocvSource != null)
+            if (rcRecords != null && rcRecords.Count != 0 && ocvSource != null)
             {
                 List<SourceData> rcSource;
-                RCTableMaker.GetRCSource(project, rcprograms, testers, out rcSource);
+                RCTableMaker.GetRCSource(project, rcRecords, testers, out rcSource);
                 RCTableMaker.GetRCModel(rcSource, project, ref rcModel);
                 MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, project, ref miniModel);
 
                 StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
 
                 AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
-                RCTableMaker.GenerateRCTable(project, rcModel);
-                MiniDriverMaker.GenerateMiniDriver(miniModel, project);
-                StandardDriverMaker.GenerateStandardDriver(standardModel, project);
-                AndroidDriverMaker.GenerateAndroidDriver(androidModel, project);
+                products.Add(RCTableMaker.GenerateRCTable(project, rcModel));
+                products.AddRange(MiniDriverMaker.GenerateMiniDriver(miniModel, project));
+                products.AddRange(StandardDriverMaker.GenerateStandardDriver(standardModel, project));
+                products.AddRange(AndroidDriverMaker.GenerateAndroidDriver(androidModel, project));
 
                 LiteDriverMaker.GetLiteModel(uEodVoltage, ocvSource, rcSource, ocvModel, rcModel, project, ref liteModel);
-                LiteDriverMaker.GenerateLiteDriver(liteModel, project);
+                products.AddRange(LiteDriverMaker.GenerateLiteDriver(liteModel, project));
             }
+            return products;
         }
     }
 }

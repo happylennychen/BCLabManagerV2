@@ -11,8 +11,8 @@ namespace BCLabManager.DataAccess
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private AppDbContext _context = null;
-        private DbSet<T> table = null;
+        public AppDbContext _context = null;
+        public DbSet<T> table = null;
         public Repository()
         {
             this._context = new AppDbContext();
