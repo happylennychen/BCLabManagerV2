@@ -37,7 +37,7 @@ namespace BCLabManager
         //public static string DatabaseHost { get; set; } = "10.22.4.249";
         public static string DatabaseHost { get; set; } = "localhost";
         //public static string DatabaseName { get; set; } = "BCLM";
-        public static string DatabaseName { get; set; } = "StageDesign";
+        public static string DatabaseName { get; set; } = "TMRecord";
         public static string DatabaseUser { get; set; } = "postgres";
         public static string DatabasePassword { get; set; } = "123456";
     }

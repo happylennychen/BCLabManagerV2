@@ -302,7 +302,7 @@ namespace BCLabManager
             liteModel.FileNames = strFileNames;
         }
 
-        public static void Build(ref TableMakerModel tableMakerModel, uint uEodVoltage, string description)
+        public static void Build(ref TableMakerModel tableMakerModel, uint uEodVoltage, string description, TableMakerRecordServiceClass tableMakerRecordService)
         {
             try
             {
@@ -334,13 +334,13 @@ namespace BCLabManager
                 var stage2liteModel = tableMakerModel.Stage2LiteModel;
 
 
-                TableMakerRecordServiceClass tmrs = new TableMakerRecordServiceClass();
+                TableMakerRecordServiceClass tmrs = tableMakerRecordService;
                 TableMakerRecord tmr = new TableMakerRecord();
                 tmr.EOD = uEodVoltage;
                 tmr.Description = description;
                 tmr.IsValid = true;
-                tmr.OCVSources = ocvRecords;
-                tmr.RCSources = rcRecords;
+                tmr.OCVSources = ocvRecords.Select(o=>o.TestFilePath).ToList();
+                tmr.RCSources = rcRecords.Select(o => o.TestFilePath).ToList();
                 tmr.Project = project;
                 tmr.TableMakerVersion = Version;
                 tmr.VoltagePoints = project.VoltagePoints;

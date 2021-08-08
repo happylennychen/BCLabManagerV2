@@ -23,6 +23,7 @@ namespace BCLabManager.ViewModel
         #region Fields
 
         TableMakerModel _tableMakerModel;
+        TableMakerRecordServiceClass _tableMakerRecordService;
         RelayCommand _generateCommand;
         bool _isOK;
 
@@ -30,9 +31,10 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public TableMakerViewModel(TableMakerModel tableMakerModel)
+        public TableMakerViewModel(TableMakerModel tableMakerModel, TableMakerRecordServiceClass tableMakerRecordService)
         {
             _tableMakerModel = tableMakerModel;
+            _tableMakerRecordService = tableMakerRecordService;
             TableMakerService.GetFileNames(ref _tableMakerModel);
         }
         #endregion // Constructor
@@ -251,7 +253,7 @@ namespace BCLabManager.ViewModel
                 {
                     System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                     stopwatch.Start();
-                    TableMakerService.Build(ref _tableMakerModel, 2800, "Some description");
+                    TableMakerService.Build(ref _tableMakerModel, 2800, "Some description", _tableMakerRecordService);
                     var project = _tableMakerModel.Project;
                     var folder = $@"{GlobalSettings.LocalFolder}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
                     string time = Math.Round(stopwatch.Elapsed.TotalSeconds, 0).ToString() + "S";

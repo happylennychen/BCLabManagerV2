@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210805095003_TMRecord")]
+    [Migration("20210808095733_TMRecord")]
     partial class TMRecord
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1302,9 +1302,17 @@ namespace BCLabManager.Migrations
                         .HasColumnName("is_valid")
                         .HasColumnType("boolean");
 
+                    b.Property<List<string>>("OCVSources")
+                        .HasColumnName("ocv_sources")
+                        .HasColumnType("text[]");
+
                     b.Property<int?>("ProjectId")
                         .HasColumnName("project_id")
                         .HasColumnType("integer");
+
+                    b.Property<List<string>>("RCSources")
+                        .HasColumnName("rc_sources")
+                        .HasColumnType("text[]");
 
                     b.Property<string>("TableMakerVersion")
                         .HasColumnName("table_maker_version")
@@ -1423,14 +1431,6 @@ namespace BCLabManager.Migrations
                         .HasColumnName("status")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("TableMakerRecordId")
-                        .HasColumnName("table_maker_record_id")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("TableMakerRecordId1")
-                        .HasColumnName("table_maker_record_id1")
-                        .HasColumnType("integer");
-
                     b.Property<double>("Temperature")
                         .HasColumnName("temperature")
                         .HasColumnType("double precision");
@@ -1461,12 +1461,6 @@ namespace BCLabManager.Migrations
 
                     b.HasIndex("RecipeId")
                         .HasName("ix_test_records_recipe_id");
-
-                    b.HasIndex("TableMakerRecordId")
-                        .HasName("ix_test_records_table_maker_record_id");
-
-                    b.HasIndex("TableMakerRecordId1")
-                        .HasName("ix_test_records_table_maker_record_id1");
 
                     b.ToTable("test_records");
                 });
@@ -1791,16 +1785,6 @@ namespace BCLabManager.Migrations
                         .WithMany("TestRecords")
                         .HasForeignKey("RecipeId")
                         .HasConstraintName("fk_test_records_recipes_recipe_id");
-
-                    b.HasOne("BCLabManager.Model.TableMakerRecord", null)
-                        .WithMany("OCVSources")
-                        .HasForeignKey("TableMakerRecordId")
-                        .HasConstraintName("fk_test_records_table_maker_records_table_maker_record_id");
-
-                    b.HasOne("BCLabManager.Model.TableMakerRecord", null)
-                        .WithMany("RCSources")
-                        .HasForeignKey("TableMakerRecordId1")
-                        .HasConstraintName("fk_test_records_table_maker_records_table_maker_record_id1");
                 });
 #pragma warning restore 612, 618
         }

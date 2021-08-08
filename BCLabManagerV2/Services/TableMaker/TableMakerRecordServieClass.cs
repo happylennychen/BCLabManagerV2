@@ -58,23 +58,6 @@ namespace BCLabManager.Model
         {
             using (var uow = new UnitOfWork(new AppDbContext()))
             {
-                //item.Type = uow.TableMakerProductTypes.GetById(item.Type.Id);
-                List<TestRecord> otrs = new List<TestRecord>();
-                foreach (var tr in item.OCVSources)
-                {
-                    otrs.Add(uow.TestRecords.GetById(tr.Id));
-                }
-                item.OCVSources = otrs;
-
-                List<TestRecord> rctrs = new List<TestRecord>();
-                foreach (var tr in item.RCSources)
-                {
-                    rctrs.Add(uow.TestRecords.GetById(tr.Id));
-                }
-                item.RCSources = rctrs;
-                var bid = item.Project.BatteryType.Id;
-                //item.Project = uow.Projects.GetById(item.Project.Id);
-                //item.Project.BatteryType = uow.BatteryTypes.GetById(bid);
                 uow.TableMakerRecords.Insert(item);
                 uow.Commit();
             }

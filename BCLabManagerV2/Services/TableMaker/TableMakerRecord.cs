@@ -39,14 +39,14 @@ namespace BCLabManager.Model
             get { return _isvalid; }
             set { SetProperty(ref _isvalid, value); }
         }
-        private List<TestRecord> _ocvSources = new List<TestRecord>();
-        public List<TestRecord> OCVSources 
+        private List<string> _ocvSources = new List<string>();
+        public List<string> OCVSources 
         { 
             get { return _ocvSources; } 
             set { SetProperty(ref _ocvSources, value); }
         }
-        private List<TestRecord> _rcSources = new List<TestRecord>();
-        public List<TestRecord> RCSources
+        private List<string> _rcSources = new List<string>();
+        public List<string> RCSources
         {
             get { return _rcSources; }
             set { SetProperty(ref _rcSources, value); }

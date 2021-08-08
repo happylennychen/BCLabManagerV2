@@ -31,6 +31,7 @@ namespace BCLabManager.ViewModel
         private ProgramServiceClass _programService;
         private ProjectSettingServiceClass _projectSettingService;
         private TableMakerProductServiceClass _tableMakerProductService;
+        private TableMakerRecordServiceClass _tableMakerRecordService;
         private TesterServiceClass _testerService;
         private BatteryTypeServiceClass _batteryTypeService;
 
@@ -38,7 +39,7 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllProjectsViewModel(TesterServiceClass testerService, ProjectServiceClass projectService, BatteryTypeServiceClass batteryTypeServie, ProgramServiceClass programService, ProjectSettingServiceClass projectSettingService, TableMakerProductServiceClass tableMakerProductService)
+        public AllProjectsViewModel(TesterServiceClass testerService, ProjectServiceClass projectService, BatteryTypeServiceClass batteryTypeServie, ProgramServiceClass programService, ProjectSettingServiceClass projectSettingService, TableMakerProductServiceClass tableMakerProductService, TableMakerRecordServiceClass tableMakerRecordService)
         {
             _testerService = testerService;
             _projectService = projectService;
@@ -46,6 +47,7 @@ namespace BCLabManager.ViewModel
             _programService = programService;
             _projectSettingService = projectSettingService;
             _tableMakerProductService = tableMakerProductService;
+            _tableMakerRecordService = tableMakerRecordService;
             this.CreateAllProjects(_projectService.Items);
             _projectService.Items.CollectionChanged += Items_CollectionChanged;
         }
@@ -191,7 +193,7 @@ namespace BCLabManager.ViewModel
             tableMakerModel.Stage1RCPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1RC").ToList();
             tableMakerModel.Stage2OCVPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1OCV" || o.Type.Name == "Stage2OCV").ToList();
             tableMakerModel.Stage2RCPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1RC"|| o.Type.Name == "Stage2RC").ToList();
-            TableMakerViewModel tableMakerViewModel = new TableMakerViewModel(tableMakerModel);
+            TableMakerViewModel tableMakerViewModel = new TableMakerViewModel(tableMakerModel, _tableMakerRecordService);
             TableMakerView tableMakerView = new TableMakerView();
             tableMakerView.DataContext = tableMakerViewModel;
             tableMakerView.ShowDialog();

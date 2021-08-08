@@ -306,9 +306,9 @@
     <Compile Include="Migrations\20210129083304_TemplateUpgrade.designer.cs">
       <DependentUpon>20210129083304_TemplateUpgrade.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\20210805095003_TMRecord.cs" />
-    <Compile Include="Migrations\20210805095003_TMRecord.designer.cs">
-      <DependentUpon>20210805095003_TMRecord.cs</DependentUpon>
+    <Compile Include="Migrations\20210808095733_TMRecord.cs" />
+    <Compile Include="Migrations\20210808095733_TMRecord.designer.cs">
+      <DependentUpon>20210808095733_TMRecord.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\TableMaker\TableMakerRecordServieClass.cs" />
     <Compile Include="Services\TableMaker\TableMakerRecord.cs" />

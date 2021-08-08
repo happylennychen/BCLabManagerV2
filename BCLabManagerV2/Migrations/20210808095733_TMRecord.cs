@@ -11,16 +11,6 @@ namespace BCLabManager.Migrations
         {
             migrationBuilder.AddColumn<int>(
                 name: "table_maker_record_id",
-                table: "test_records",
-                nullable: true);
-
-            migrationBuilder.AddColumn<int>(
-                name: "table_maker_record_id1",
-                table: "test_records",
-                nullable: true);
-
-            migrationBuilder.AddColumn<int>(
-                name: "table_maker_record_id",
                 table: "table_maker_products",
                 nullable: true);
 
@@ -35,6 +25,8 @@ namespace BCLabManager.Migrations
                     eod = table.Column<long>(nullable: false),
                     voltage_points = table.Column<List<int>>(nullable: true),
                     is_valid = table.Column<bool>(nullable: false),
+                    ocv_sources = table.Column<List<string>>(nullable: true),
+                    rc_sources = table.Column<List<string>>(nullable: true),
                     description = table.Column<string>(nullable: true),
                     timestamp = table.Column<DateTime>(nullable: false)
                 },
@@ -48,16 +40,6 @@ namespace BCLabManager.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "ix_test_records_table_maker_record_id",
-                table: "test_records",
-                column: "table_maker_record_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_test_records_table_maker_record_id1",
-                table: "test_records",
-                column: "table_maker_record_id1");
 
             migrationBuilder.CreateIndex(
                 name: "ix_table_maker_products_table_maker_record_id",
@@ -76,22 +58,6 @@ namespace BCLabManager.Migrations
                 principalTable: "table_maker_records",
                 principalColumn: "id",
                 onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "fk_test_records_table_maker_records_table_maker_record_id",
-                table: "test_records",
-                column: "table_maker_record_id",
-                principalTable: "table_maker_records",
-                principalColumn: "id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "fk_test_records_table_maker_records_table_maker_record_id1",
-                table: "test_records",
-                column: "table_maker_record_id1",
-                principalTable: "table_maker_records",
-                principalColumn: "id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -100,36 +66,12 @@ namespace BCLabManager.Migrations
                 name: "fk_table_maker_products_table_maker_records_table_maker_record",
                 table: "table_maker_products");
 
-            migrationBuilder.DropForeignKey(
-                name: "fk_test_records_table_maker_records_table_maker_record_id",
-                table: "test_records");
-
-            migrationBuilder.DropForeignKey(
-                name: "fk_test_records_table_maker_records_table_maker_record_id1",
-                table: "test_records");
-
             migrationBuilder.DropTable(
                 name: "table_maker_records");
 
             migrationBuilder.DropIndex(
-                name: "ix_test_records_table_maker_record_id",
-                table: "test_records");
-
-            migrationBuilder.DropIndex(
-                name: "ix_test_records_table_maker_record_id1",
-                table: "test_records");
-
-            migrationBuilder.DropIndex(
                 name: "ix_table_maker_products_table_maker_record_id",
                 table: "table_maker_products");
-
-            migrationBuilder.DropColumn(
-                name: "table_maker_record_id",
-                table: "test_records");
-
-            migrationBuilder.DropColumn(
-                name: "table_maker_record_id1",
-                table: "test_records");
 
             migrationBuilder.DropColumn(
                 name: "table_maker_record_id",
