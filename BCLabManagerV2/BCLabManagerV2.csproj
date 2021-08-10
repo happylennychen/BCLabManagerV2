@@ -405,6 +405,7 @@
     <Compile Include="Products\ViewModel\AllTableMakerProductsViewModel.cs" />
     <Compile Include="Products\ViewModel\TableMakerProductEditViewModel.cs" />
     <Compile Include="Products\ViewModel\TableMakerProductViewModel.cs" />
+    <Compile Include="TableMaker\ViewModel\TableMakerConfirmationViewModel.cs" />
     <Compile Include="TableMaker\View\AllTableMakerProductsView.xaml.cs">
       <DependentUpon>AllTableMakerProductsView.xaml</DependentUpon>
     </Compile>
@@ -486,6 +487,9 @@
     </Compile>
     <Compile Include="Settings\View\ProjectSettingEditView.xaml.cs">
       <DependentUpon>ProjectSettingEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TableMaker\View\TableMakerConfirmationWindow.xaml.cs">
+      <DependentUpon>TableMakerConfirmationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="TableMaker\View\TableMakerView.xaml.cs">
       <DependentUpon>TableMakerView.xaml</DependentUpon>
@@ -730,6 +734,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\View\ProjectSettingEditView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TableMaker\View\TableMakerConfirmationWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -414,6 +414,7 @@ namespace BCLabManager.ViewModel
                 );    //ViewModel初始化
 
             dashBoardViewModel = new DashBoardViewModel(BatteryService, ChannelService, ChamberService, ProgramService);
+            tableMakerViewModel = new TableMakerViewModel(ProjectService, TableMakerRecordService, TableMakerProductService, ProgramService);
         }
         #endregion // Constructor
 
@@ -436,6 +437,7 @@ namespace BCLabManager.ViewModel
         public AllProgramsViewModel allProgramsViewModel { get; set; }  //其中需要显示Programs, Recipes, Test1, Test2, TestSteps
 
         public DashBoardViewModel dashBoardViewModel { get; set; }
+        public TableMakerViewModel tableMakerViewModel { get; set; }
         #endregion // Presentation Properties
 
     }

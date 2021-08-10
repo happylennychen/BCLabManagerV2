@@ -16,9 +16,9 @@ namespace BCLabManager.View
     /// <summary>
     /// Interaction logic for BatteryTypeView.xaml
     /// </summary>
-    public partial class TableMakerView : UserControl
+    public partial class TableMakerConfirmationWindow : Window
     {
-        public TableMakerView()
+        public TableMakerConfirmationWindow()
         {
             InitializeComponent();
         }

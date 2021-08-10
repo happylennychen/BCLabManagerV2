@@ -106,6 +106,9 @@
             <!--<TabItem Header="Products(v0.1)">
                 <v:AllProductsView x:Name="AllProductsViewInstance"></v:AllProductsView>
             </TabItem>-->
+            <TabItem Header="Table Maker">
+                <v:TableMakerView x:Name="TableMakerViewInstance" DataContext="{Binding Path=tableMakerViewModel}"></v:TableMakerView>
+            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>

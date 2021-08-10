@@ -183,33 +183,20 @@ namespace BCLabManager.ViewModel
         #region Private Helper
         private void TableMakerDialog()
         {
-            TableMakerModel tableMakerModel = new TableMakerModel();
-            tableMakerModel.Project = _selectedItem._project;
-            tableMakerModel.Testers = _testerService.Items.ToList();
-            var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == tableMakerModel.Project.Id && o.IsInvalid == false).ToList();
-            tableMakerModel.OCVRecords = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV").ToList());
-            tableMakerModel.RCRecords = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList());
-            tableMakerModel.Stage1OCVPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1OCV").ToList();
-            tableMakerModel.Stage1RCPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1RC").ToList();
-            tableMakerModel.Stage2OCVPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1OCV" || o.Type.Name == "Stage2OCV").ToList();
-            tableMakerModel.Stage2RCPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1RC"|| o.Type.Name == "Stage2RC").ToList();
-            TableMakerViewModel tableMakerViewModel = new TableMakerViewModel(tableMakerModel, _tableMakerRecordService);
-            TableMakerView tableMakerView = new TableMakerView();
-            tableMakerView.DataContext = tableMakerViewModel;
-            tableMakerView.ShowDialog();
-        }
-
-        private List<TestRecord> GetRecordsFromPrograms(List<Program> programs)
-        {
-            var trs = programs.Select(o => o.Recipes.Select(i => i.TestRecords.Where(j => j.Status == TestStatus.Completed).ToList()).ToList()).ToList();
-            List<TestRecord> testRecords = new List<TestRecord>();
-            foreach (var tr in trs)
-            {
-                foreach (var t in tr)
-                    testRecords = testRecords.Concat(t).ToList();
-            }
-            testRecords = testRecords.Where(o => o.Status == TestStatus.Completed).ToList();
-            return testRecords;
+            //TableMakerModel tableMakerModel = new TableMakerModel();
+            //tableMakerModel.Project = _selectedItem._project;
+            //tableMakerModel.Testers = _testerService.Items.ToList();
+            //var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == tableMakerModel.Project.Id && o.IsInvalid == false).ToList();
+            //tableMakerModel.OCVRecords = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV").ToList());
+            //tableMakerModel.RCRecords = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList());
+            //tableMakerModel.Stage1OCVPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1OCV").ToList();
+            //tableMakerModel.Stage1RCPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1RC").ToList();
+            //tableMakerModel.Stage2OCVPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1OCV" || o.Type.Name == "Stage2OCV").ToList();
+            //tableMakerModel.Stage2RCPrograms = programs.Select(o => o).Where(o => o.Type.Name == "Stage1RC"|| o.Type.Name == "Stage2RC").ToList();
+            //TableMakerViewModel tableMakerViewModel = new TableMakerViewModel(tableMakerModel, _tableMakerRecordService);
+            //TableMakerView tableMakerView = new TableMakerView();
+            //tableMakerView.DataContext = tableMakerViewModel;
+            //tableMakerView.ShowDialog();
         }
 
         private void Create()

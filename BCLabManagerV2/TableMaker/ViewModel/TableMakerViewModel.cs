@@ -22,8 +22,11 @@ namespace BCLabManager.ViewModel
     {
         #region Fields
 
-        TableMakerModel _tableMakerModel;
-        TableMakerRecordServiceClass _tableMakerRecordService;
+        private TableMakerModel _tableMakerModel;
+        private ProjectServiceClass _projectService;
+        private TableMakerRecordServiceClass _tableMakerRecordService;
+        private TableMakerProductServiceClass _tableMakerProductService;
+        private ProgramServiceClass _programService;
         RelayCommand _generateCommand;
         bool _isOK;
 
@@ -31,243 +34,136 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public TableMakerViewModel(TableMakerModel tableMakerModel, TableMakerRecordServiceClass tableMakerRecordService)
+        public TableMakerViewModel(/*TableMakerModel tableMakerModel*/ProjectServiceClass projectService, TableMakerRecordServiceClass tableMakerRecordService, TableMakerProductServiceClass tableMakerProductService, ProgramServiceClass programService)
         {
-            _tableMakerModel = tableMakerModel;
+            //_tableMakerModel = tableMakerModel;
+            _projectService = projectService;
             _tableMakerRecordService = tableMakerRecordService;
-            TableMakerService.GetFileNames(ref _tableMakerModel);
+            _tableMakerProductService = tableMakerProductService;
+            _programService = programService;
         }
         #endregion // Constructor
 
         #region Presentation Properties
-        public bool OCV1Ready
+        public string Version { get { return TableMakerService.Version; } }
+        public ObservableCollection<Project> Projects
         {
             get
             {
-
-                //var project = _tableMakerModel.Project;
-
-                //var programs = _tableMakerModel.Programs.Select(o => o).Where(o => o.Project.Id == project.Id && o.IsCompleted == true && (o.Type.Name == "OCV")).ToList();
-
-                //if (programs.Count >= 1)
-                //{
-                //    return true;    //需要进一步改进
-                //}
-
-                return false;
+                return _projectService.Items;
             }
         }
-        public bool OCV2Ready
+        private Project _project;
+        public Project Project
+        {
+            get { return _project; }
+            set
+            {
+                SetProperty(ref _project, value);
+                string strVP = string.Empty;
+                foreach (var vp in _project.VoltagePoints)
+                {
+                    if (vp == _project.VoltagePoints.Last())
+                        strVP += vp;
+                    else
+                        strVP += vp + ", ";
+                }
+                VoltagePoints = strVP;
+
+
+                var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _project.Id && o.IsInvalid == false).ToList();
+                var records = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
+                SourceList = records.Select(o => o.TestFilePath).ToList();
+            }
+        }
+        private Project _stage1Project;
+        public Project Stage1Project
+        {
+            get { return _stage1Project; }
+            set
+            {
+                SetProperty(ref _stage1Project, value);
+
+
+                var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage1Project.Id && o.IsInvalid == false).ToList();
+                var records = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
+                Stage1SourceList = records.Select(o => o.TestFilePath).ToList();
+            }
+        }
+        private uint _eod;
+        public uint EOD
+        {
+            get { return _eod; }
+            set { SetProperty(ref _eod, value); }
+        }
+        private string _description;
+        public string Description
+        {
+            get { return _description; }
+            set { SetProperty(ref _description, value); }
+        }
+        private string _voltagePoints;
+        //[NotMapped]
+        public string VoltagePoints
+        {
+            get { return _voltagePoints; }
+            set { SetProperty(ref _voltagePoints, value); }
+        }
+        private List<string> _sourceList;
+        //[NotMapped]
+        public List<string> SourceList
+        {
+            get { return _sourceList; }
+            set { SetProperty(ref _sourceList, value); }
+        }
+        private List<string> _stage1SourceList;
+        //[NotMapped]
+        public List<string> Stage1SourceList
+        {
+            get { return _stage1SourceList; }
+            set { SetProperty(ref _stage1SourceList, value); }
+        }
+
+        public ObservableCollection<TableMakerRecord> Records
         {
             get
             {
-
-                var project = _tableMakerModel.Project;
-
-                var programs = _tableMakerModel.Stage2OCVPrograms.Select(o => o).Where(o => o.Project.Id == project.Id && o.IsCompleted == true).ToList();
-
-                var recipesList = programs.Select(o => o.Recipes);
-                List<Recipe> recipes = new List<Recipe>();
-                foreach (var recs in recipesList)
-                {
-                    recipes = recipes.Concat(recs).ToList();
-                }
-
-                if (recipes.Count == 2)
-                {
-                    return true;    //需要进一步改进
-                }
-
-                return false;
+                return _tableMakerRecordService.Items;
             }
         }
-
-        public bool RC1Ready
+        private TableMakerRecord _selectedRecord;
+        public TableMakerRecord SelectedRecord
         {
-            get
+            get { return _selectedRecord; }
+            set
             {
-                var project = _tableMakerModel.Project;
-
-                var programs = _tableMakerModel.Stage1RCPrograms.Select(o => o).Where(o => o.Project.Id == project.Id && o.IsCompleted == true).ToList();
-
-                if (programs.Count == 1)
-                {
-                    return true;    //需要进一步改进
-                }
-
-                return false;
+                SetProperty(ref _selectedRecord, value);
+                //Products = new ObservableCollection<TableMakerProduct>(_selectedRecord.Products);
+                RaisePropertyChanged("Products");
             }
         }
 
-        public bool RC2Ready
-        {
-            get
-            {
-                var project = _tableMakerModel.Project;
-
-                var programs = _tableMakerModel.Stage2RCPrograms.Select(o => o).Where(o => o.Project.Id == project.Id && o.IsCompleted == true).ToList();
-
-                if (programs.Count == 1 && RC1Ready)
-                {
-                    return true;    //需要进一步改进
-                }
-
-                return false;
-            }
-        }
-        public bool SD1Ready
-        {
-            get { return (OCV1Ready|OCV2Ready) & RC1Ready; }
-        }
-        public bool SD2Ready
-        {
-            get { return OCV2Ready & RC2Ready; }
-        }
-        public bool AD1Ready
-        {
-            get { return (OCV1Ready | OCV2Ready) & RC1Ready; }
-        }
-        public bool AD2Ready
-        {
-            get { return OCV2Ready & RC2Ready; }
-        }
-        public bool Mini1Ready
-        {
-            get { return (OCV1Ready | OCV2Ready) & RC1Ready; }
-        }
-        public bool Mini2Ready
-        {
-            get { return OCV2Ready & RC2Ready; }
-        }
-        public bool Lite1Ready
-        {
-            get { return (OCV1Ready | OCV2Ready) & RC1Ready; }
-        }
-        public bool Lite2Ready
-        {
-            get { return OCV2Ready & RC2Ready; }
-        }
-
-        public string OCV1FileName
-        {
-            get { return _tableMakerModel.OCVModel.FileName; }
-        }
-
-        public string OCV2FileName
-        {
-            get { return _tableMakerModel.OCVModel.FileName; }
-        }
-        public string RC1FileName
-        {
-            get { return _tableMakerModel.RCModel.FileName; }
-        }
-        public string RC2FileName
-        {
-            get { return _tableMakerModel.RCModel.FileName; }
-        }
-        public string StandardDriverC1FileName
-        {
-            get { return _tableMakerModel.StandardModel.FileNames[0]; }
-        }
-        public string StandardDriverC2FileName
-        {
-            get { return _tableMakerModel.StandardModel.FileNames[0]; }
-        }
-        public string StandardDriverH1FileName
-        {
-            get { return _tableMakerModel.StandardModel.FileNames[1]; }
-        }
-        public string StandardDriverH2FileName
-        {
-            get { return _tableMakerModel.StandardModel.FileNames[1]; }
-        }
-        public string AndroidDriverC1FileName
-        {
-            get { return _tableMakerModel.AndroidModel.FileNames[0]; }
-        }
-        public string AndroidDriverC2FileName
-        {
-            get { return _tableMakerModel.AndroidModel.FileNames[0]; }
-        }
-        public string AndroidDriverH1FileName
-        {
-            get { return _tableMakerModel.AndroidModel.FileNames[1]; }
-        }
-        public string AndroidDriverH2FileName
-        {
-            get { return _tableMakerModel.AndroidModel.FileNames[1]; }
-        }
-        public string MiniDriverC1FileName
-        {
-            get { return _tableMakerModel.MiniModel.FileNames[0]; }
-        }
-        public string MiniDriverC2FileName
-        {
-            get { return _tableMakerModel.MiniModel.FileNames[0]; }
-        }
-        public string MiniDriverH1FileName
-        {
-            get { return _tableMakerModel.MiniModel.FileNames[1]; }
-        }
-        public string MiniDriverH2FileName
-        {
-            get { return _tableMakerModel.MiniModel.FileNames[1]; }
-        }
-        /// <summary>
-        /// Returns a command that saves the customer.
-        /// </summary>
-        public ICommand GenerateCommand
-        {
-            get
-            {
-                if (_generateCommand == null)
-                {
-                    _generateCommand = new RelayCommand(
-                        param => { this.Generate(); }
-                        );
-                }
-                return _generateCommand;
-            }
-        }
-
-
-        public bool IsOK
-        {
-            get { return _isOK; }
-            set { _isOK = value; }
-        }
-
+        public List<TableMakerProduct> Products { get { return _selectedRecord.Products; } }
         #endregion // Presentation Properties
 
         #region Public Methods
 
-        /// <summary>
-        /// Saves the customer to the repository.  This method is invoked by the SaveCommand.
-        /// </summary>
-        public void Generate()
-        {
-            //TableMakerService.Make(_tableMakerModel.Project, _tableMakerModel.Programs, _tableMakerModel.Testers, OCVReady, RCReady, SDReady, ADReady, MiniReady);
-            Thread t = new Thread(() =>
-            {
-                if (MessageBox.Show("It will take a while to get the work done, Continue?", "Generate Tables and Drivers.", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-                {
-                    System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-                    stopwatch.Start();
-                    TableMakerService.Build(ref _tableMakerModel, 2800, "Some description", _tableMakerRecordService);
-                    var project = _tableMakerModel.Project;
-                    var folder = $@"{GlobalSettings.LocalFolder}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
-                    string time = Math.Round(stopwatch.Elapsed.TotalSeconds, 0).ToString() + "S";
-                    MessageBox.Show($"Completed. It took {time} to get the job done.");
-                    Process.Start(folder);
-                }
-            });
-            t.Start();
-        }
 
         #endregion // Public Methods
 
         #region Private Helpers
-
+        private List<TestRecord> GetRecordsFromPrograms(List<Program> programs)
+        {
+            var trs = programs.Select(o => o.Recipes.Select(i => i.TestRecords.Where(j => j.Status == TestStatus.Completed).ToList()).ToList()).ToList();
+            List<TestRecord> testRecords = new List<TestRecord>();
+            foreach (var tr in trs)
+            {
+                foreach (var t in tr)
+                    testRecords = testRecords.Concat(t).ToList();
+            }
+            testRecords = testRecords.Where(o => o.Status == TestStatus.Completed).ToList();
+            return testRecords;
+        }
         #endregion // Private Helpers
     }
 }
