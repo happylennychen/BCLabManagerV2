@@ -12,6 +12,7 @@ using Prism.Mvvm;
 using System.Threading;
 using System.Diagnostics;
 using System.Windows;
+using BCLabManager.View;
 
 namespace BCLabManager.ViewModel
 {
@@ -61,20 +62,20 @@ namespace BCLabManager.ViewModel
             set
             {
                 SetProperty(ref _stage2project, value);
-                string strVP = string.Empty;
-                foreach (var vp in _stage2project.VoltagePoints)
-                {
-                    if (vp == _stage2project.VoltagePoints.Last())
-                        strVP += vp;
-                    else
-                        strVP += vp + ", ";
-                }
-                VoltagePoints = strVP;
+                //string strVP = string.Empty;
+                //foreach (var vp in _stage2project.VoltagePoints)
+                //{
+                //    if (vp == _stage2project.VoltagePoints.Last())
+                //        strVP += vp;
+                //    else
+                //        strVP += vp + ", ";
+                //}
+                //VoltagePoints = strVP;
 
 
-                var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage2project.Id && o.IsInvalid == false).ToList();
-                var records = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
-                Stage2SourceList = records.Select(o => o.TestFilePath).ToList();
+                //var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage2project.Id && o.IsInvalid == false).ToList();
+                //var records = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
+                //Stage2SourceList = records.Select(o => o.TestFilePath).ToList();
             }
         }
         private Project _stage1Project;
@@ -86,9 +87,9 @@ namespace BCLabManager.ViewModel
                 SetProperty(ref _stage1Project, value);
 
 
-                var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage1Project.Id && o.IsInvalid == false).ToList();
-                var records = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
-                Stage1SourceList = records.Select(o => new Stage1Source(o.TestFilePath, false)).ToList();
+                //var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage1Project.Id && o.IsInvalid == false).ToList();
+                //var records = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
+                //Stage1SourceList = records.Select(o => new Stage1Source(o.TestFilePath, false)).ToList();
             }
         }
         private uint _eod;
@@ -212,7 +213,67 @@ namespace BCLabManager.ViewModel
 
         private void BuildStage2Table()
         {
-            throw new NotImplementedException();
+
+            OCVModel ocvModel = new OCVModel();
+            RCModel rcModel = new RCModel();
+            MiniModel miniModel = new MiniModel();
+            StandardModel standardModel = new StandardModel();
+            AndroidModel androidModel = new AndroidModel();
+            LiteModel liteModel = new LiteModel();
+
+            //tableMakerModel.OCVModel = ocvModel;
+            //tableMakerModel.RCModel = rcModel;
+            //tableMakerModel.MiniModel = miniModel;
+            //tableMakerModel.StandardModel = standardModel;
+            //tableMakerModel.AndroidModel = androidModel;
+            //tableMakerModel.LiteModel = liteModel;
+            var project = Stage2Project;
+            ocvModel.FileName = OCVTableMaker.GetOCVTableFileName(project);
+            rcModel.FileName = RCTableMaker.GetRCTableFileName(project);
+            List<string> strFileNames;
+            TableMakerService.GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "mini", out strFileNames);
+            miniModel.FileNames = strFileNames;
+            TableMakerService.GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "standard", out strFileNames);
+            standardModel.FileNames = strFileNames;
+            TableMakerService.GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "android", out strFileNames);
+            androidModel.FileNames = strFileNames;
+            TableMakerService.GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "lite", out strFileNames);
+            liteModel.FileNames = strFileNames;
+
+            TableMakerConfirmationViewModel tmcvm = new TableMakerConfirmationViewModel();
+            tmcvm.AndroidDriverCFileName = androidModel.FileNames[0];
+            tmcvm.AndroidDriverHFileName = androidModel.FileNames[1];
+            tmcvm.MiniDriverCFileName = miniModel.FileNames[0];
+            tmcvm.MiniDriverHFileName = miniModel.FileNames[1];
+            tmcvm.StandardDriverCFileName = standardModel.FileNames[0];
+            tmcvm.StandardDriverHFileName = standardModel.FileNames[1];
+            tmcvm.LiteDriverCFileName = liteModel.FileNames[0];
+            tmcvm.LiteDriverHFileName = liteModel.FileNames[1];
+            tmcvm.OCVFileName = ocvModel.FileName;
+            tmcvm.RCFileName = rcModel.FileName;
+            tmcvm.OCVReady = true;
+            tmcvm.RCReady = true;
+            TableMakerConfirmationWindow tmcw = new TableMakerConfirmationWindow();
+            tmcw.DataContext = tmcvm;
+            tmcw.ShowDialog();
+            if (tmcvm.IsOK)
+            {
+                Thread t = new Thread(() =>
+                {
+                    //if (MessageBox.Show("It will take a while to get the work done, Continue?", "Generate Tables and Drivers.", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                    //{
+                    //    System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+                    //    stopwatch.Start();
+                    //    TableMakerService.Build(ref _tableMakerModel, 800, "Some description", _tableMakerRecordService);
+                    //    //var project = _tableMakerModel.Project;
+                    //    var folder = $@"{GlobalSettings.LocalFolder}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
+                    //    string time = Math.Round(stopwatch.Elapsed.TotalSeconds, 0).ToString() + "S";
+                    //    MessageBox.Show($"Completed. It took {time} to get the job done.");
+                    //    Process.Start(folder);
+                    //}
+                });
+                t.Start();
+            }
         }
         #endregion // Private Helpers
     }

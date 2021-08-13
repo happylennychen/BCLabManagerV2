@@ -21,220 +21,71 @@ namespace BCLabManager.ViewModel
     public class TableMakerConfirmationViewModel : BindableBaseWithName//, IDataErrorInfo
     {
         #region Fields
-
-        TableMakerModel _tableMakerModel;
-        ProjectServiceClass _projectService;
-        TableMakerRecordServiceClass _tableMakerRecordService;
-        TableMakerProductServiceClass _tableMakerProductService;
-        RelayCommand _generateCommand;
-        bool _isOK;
+        RelayCommand _okCommand;
 
         #endregion // Fields
 
         #region Constructor
 
-        public TableMakerConfirmationViewModel(/*TableMakerModel tableMakerModel*/ProjectServiceClass projectService, TableMakerRecordServiceClass tableMakerRecordService, TableMakerProductServiceClass tableMakerProductService)
+        public TableMakerConfirmationViewModel()
         {
-            //_tableMakerModel = tableMakerModel;
-            _projectService = projectService;
-            _tableMakerRecordService = tableMakerRecordService;
-            _tableMakerProductService = tableMakerProductService;
-            TableMakerService.GetFileNames(ref _tableMakerModel);
         }
         #endregion // Constructor
 
         #region Presentation Properties
-        public bool OCV1Ready
+        public bool OCVReady { get; set; }
+
+        public bool RCReady { get; set; }
+        public bool SDReady
         {
-            get
-            {
-
-                //var project = _tableMakerModel.Project;
-
-                //var programs = _tableMakerModel.Programs.Select(o => o).Where(o => o.Project.Id == project.Id && o.IsCompleted == true && (o.Type.Name == "OCV")).ToList();
-
-                //if (programs.Count >= 1)
-                //{
-                //    return true;    //需要进一步改进
-                //}
-
-                return false;
-            }
+            get { return OCVReady & RCReady; }
         }
-        public bool OCV2Ready
+        public bool ADReady
         {
-            get
-            {
-
-                var project = _tableMakerModel.Project;
-
-                var programs = _tableMakerModel.Stage2OCVPrograms.Select(o => o).Where(o => o.Project.Id == project.Id && o.IsCompleted == true).ToList();
-
-                var recipesList = programs.Select(o => o.Recipes);
-                List<Recipe> recipes = new List<Recipe>();
-                foreach (var recs in recipesList)
-                {
-                    recipes = recipes.Concat(recs).ToList();
-                }
-
-                if (recipes.Count == 2)
-                {
-                    return true;    //需要进一步改进
-                }
-
-                return false;
-            }
+            get { return OCVReady & RCReady; }
+        }
+        public bool MiniReady
+        {
+            get { return OCVReady & RCReady; }
+        }
+        public bool LiteReady
+        {
+            get { return OCVReady & RCReady; }
         }
 
-        public bool RC1Ready
-        {
-            get
-            {
-                var project = _tableMakerModel.Project;
-
-                var programs = _tableMakerModel.Stage1RCPrograms.Select(o => o).Where(o => o.Project.Id == project.Id && o.IsCompleted == true).ToList();
-
-                if (programs.Count == 1)
-                {
-                    return true;    //需要进一步改进
-                }
-
-                return false;
-            }
-        }
-
-        public bool RC2Ready
-        {
-            get
-            {
-                var project = _tableMakerModel.Project;
-
-                var programs = _tableMakerModel.Stage2RCPrograms.Select(o => o).Where(o => o.Project.Id == project.Id && o.IsCompleted == true).ToList();
-
-                if (programs.Count == 1 && RC1Ready)
-                {
-                    return true;    //需要进一步改进
-                }
-
-                return false;
-            }
-        }
-        public bool SD1Ready
-        {
-            get { return (OCV1Ready|OCV2Ready) & RC1Ready; }
-        }
-        public bool SD2Ready
-        {
-            get { return OCV2Ready & RC2Ready; }
-        }
-        public bool AD1Ready
-        {
-            get { return (OCV1Ready | OCV2Ready) & RC1Ready; }
-        }
-        public bool AD2Ready
-        {
-            get { return OCV2Ready & RC2Ready; }
-        }
-        public bool Mini1Ready
-        {
-            get { return (OCV1Ready | OCV2Ready) & RC1Ready; }
-        }
-        public bool Mini2Ready
-        {
-            get { return OCV2Ready & RC2Ready; }
-        }
-        public bool Lite1Ready
-        {
-            get { return (OCV1Ready | OCV2Ready) & RC1Ready; }
-        }
-        public bool Lite2Ready
-        {
-            get { return OCV2Ready & RC2Ready; }
-        }
-
-        public string OCV1FileName
-        {
-            get { return _tableMakerModel.OCVModel.FileName; }
-        }
-
-        public string OCV2FileName
-        {
-            get { return _tableMakerModel.OCVModel.FileName; }
-        }
-        public string RC1FileName
-        {
-            get { return _tableMakerModel.RCModel.FileName; }
-        }
-        public string RC2FileName
-        {
-            get { return _tableMakerModel.RCModel.FileName; }
-        }
-        public string StandardDriverC1FileName
-        {
-            get { return _tableMakerModel.StandardModel.FileNames[0]; }
-        }
-        public string StandardDriverC2FileName
-        {
-            get { return _tableMakerModel.StandardModel.FileNames[0]; }
-        }
-        public string StandardDriverH1FileName
-        {
-            get { return _tableMakerModel.StandardModel.FileNames[1]; }
-        }
-        public string StandardDriverH2FileName
-        {
-            get { return _tableMakerModel.StandardModel.FileNames[1]; }
-        }
-        public string AndroidDriverC1FileName
-        {
-            get { return _tableMakerModel.AndroidModel.FileNames[0]; }
-        }
-        public string AndroidDriverC2FileName
-        {
-            get { return _tableMakerModel.AndroidModel.FileNames[0]; }
-        }
-        public string AndroidDriverH1FileName
-        {
-            get { return _tableMakerModel.AndroidModel.FileNames[1]; }
-        }
-        public string AndroidDriverH2FileName
-        {
-            get { return _tableMakerModel.AndroidModel.FileNames[1]; }
-        }
-        public string MiniDriverC1FileName
-        {
-            get { return _tableMakerModel.MiniModel.FileNames[0]; }
-        }
-        public string MiniDriverC2FileName
-        {
-            get { return _tableMakerModel.MiniModel.FileNames[0]; }
-        }
-        public string MiniDriverH1FileName
-        {
-            get { return _tableMakerModel.MiniModel.FileNames[1]; }
-        }
-        public string MiniDriverH2FileName
-        {
-            get { return _tableMakerModel.MiniModel.FileNames[1]; }
-        }
+        public string OCVFileName { get; set; }
+        public string RCFileName { get; set; }
+        public string StandardDriverCFileName { get; set; }
+        public string StandardDriverHFileName { get; set; }
+        public string AndroidDriverCFileName { get; set; }
+        public string AndroidDriverHFileName { get; set; }
+        public string MiniDriverCFileName { get; set; }
+        public string MiniDriverHFileName { get; set; }
+        public string LiteDriverCFileName { get; set; }
+        public string LiteDriverHFileName { get; set; }
         /// <summary>
         /// Returns a command that saves the customer.
         /// </summary>
-        public ICommand GenerateCommand
+        public ICommand OKCommand
         {
             get
             {
-                if (_generateCommand == null)
+                if (_okCommand == null)
                 {
-                    _generateCommand = new RelayCommand(
-                        param => { this.Generate(); }
+                    _okCommand = new RelayCommand(
+                        param => { this.OK(); }
                         );
                 }
-                return _generateCommand;
+                return _okCommand;
             }
         }
 
+        private void OK()
+        {
+            IsOK = true;
+        }
 
+        private bool _isOK;
         public bool IsOK
         {
             get { return _isOK; }
@@ -253,17 +104,17 @@ namespace BCLabManager.ViewModel
             //TableMakerService.Make(_tableMakerModel.Project, _tableMakerModel.Programs, _tableMakerModel.Testers, OCVReady, RCReady, SDReady, ADReady, MiniReady);
             Thread t = new Thread(() =>
             {
-                if (MessageBox.Show("It will take a while to get the work done, Continue?", "Generate Tables and Drivers.", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-                {
-                    System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-                    stopwatch.Start();
-                    TableMakerService.Build(ref _tableMakerModel, 2800, "Some description", _tableMakerRecordService);
-                    var project = _tableMakerModel.Project;
-                    var folder = $@"{GlobalSettings.LocalFolder}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
-                    string time = Math.Round(stopwatch.Elapsed.TotalSeconds, 0).ToString() + "S";
-                    MessageBox.Show($"Completed. It took {time} to get the job done.");
-                    Process.Start(folder);
-                }
+                //if (MessageBox.Show("It will take a while to get the work done, Continue?", "Generate Tables and Drivers.", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                //{
+                //    System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+                //    stopwatch.Start();
+                //    TableMakerService.Build(ref _tableMakerModel, 800, "Some description", _tableMakerRecordService);
+                //    var project = _tableMakerModel.Project;
+                //    var folder = $@"{GlobalSettings.LocalFolder}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
+                //    string time = Math.Round(stopwatch.Elapsed.TotalSeconds, 0).ToString() + "S";
+                //    MessageBox.Show($"Completed. It took {time} to get the job done.");
+                //    Process.Start(folder);
+                //}
             });
             t.Start();
         }

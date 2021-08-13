@@ -282,13 +282,6 @@ namespace BCLabManager
             AndroidModel androidModel = new AndroidModel();
             LiteModel liteModel = new LiteModel();
 
-            tableMakerModel.OCVModel = ocvModel;
-            tableMakerModel.RCModel = rcModel;
-            tableMakerModel.MiniModel = miniModel;
-            tableMakerModel.StandardModel = standardModel;
-            tableMakerModel.AndroidModel = androidModel;
-            tableMakerModel.LiteModel = liteModel;
-
             ocvModel.FileName = OCVTableMaker.GetOCVTableFileName(project);
             rcModel.FileName = RCTableMaker.GetRCTableFileName(project);
             List<string> strFileNames;
