@@ -188,11 +188,11 @@ namespace BCLabManager
             {
                 if ((i == listfTemp.Count - 1))
                 {
-                    strCTmp = string.Format("{0}", (Convert.ToInt16(listfTemp[i])) * 10);
+                    strCTmp = string.Format("{0}", (Convert.ToInt16(listfTemp[i] * 10)));
                 }
                 else
                 {
-                    strCTmp = string.Format("{0},", (Convert.ToInt16(listfTemp[i])) * 10);
+                    strCTmp = string.Format("{0},", (Convert.ToInt16(listfTemp[i] * 10)));
                 }
                 line += (strCTmp);
             }
