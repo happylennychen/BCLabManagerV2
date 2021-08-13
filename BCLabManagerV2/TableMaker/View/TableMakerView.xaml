@@ -20,7 +20,13 @@
         <CollectionViewSource x:Key="ProductCVS" Source="{Binding Path=Products}">
         </CollectionViewSource>
 
-        <CollectionViewSource x:Key="projectCVS" Source="{Binding Path=Projects}">
+        <CollectionViewSource x:Key="project1CVS" Source="{Binding Path=Projects}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Id" Direction="Ascending"></scm:SortDescription>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+        <CollectionViewSource x:Key="project2CVS" Source="{Binding Path=Projects}">
             <CollectionViewSource.SortDescriptions>
                 <scm:SortDescription PropertyName="Id" Direction="Ascending"></scm:SortDescription>
             </CollectionViewSource.SortDescriptions>
@@ -73,7 +79,7 @@
                 <DockPanel>
                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
                         <Label>Project:</Label>
-                        <ComboBox Margin="0,0,5,0" ItemsSource="{Binding Source={StaticResource projectCVS}}" SelectedItem="{Binding Path=Stage2Project}" MinWidth="150"></ComboBox>
+                        <ComboBox Margin="0,0,5,0" ItemsSource="{Binding Source={StaticResource project2CVS}}" SelectedItem="{Binding Path=Stage2Project}" MinWidth="150"></ComboBox>
                     </StackPanel>
                     <DataGrid GridLinesVisibility="None" Background="White"
                           AutoGenerateColumns="False"
@@ -88,7 +94,7 @@
                 <DockPanel>
                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
                         <Label>Project:</Label>
-                        <ComboBox Margin="0,0,5,0" ItemsSource="{Binding Source={StaticResource projectCVS}}" SelectedItem="{Binding Path=Stage1Project}" MinWidth="150"></ComboBox>
+                        <ComboBox Margin="0,0,5,0" ItemsSource="{Binding Source={StaticResource project1CVS}}" SelectedItem="{Binding Path=Stage1Project}" MinWidth="150"></ComboBox>
                     </StackPanel>
                     <DataGrid GridLinesVisibility="None" Background="White"
                           AutoGenerateColumns="False"

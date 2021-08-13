@@ -62,20 +62,20 @@ namespace BCLabManager.ViewModel
             set
             {
                 SetProperty(ref _stage2project, value);
-                //string strVP = string.Empty;
-                //foreach (var vp in _stage2project.VoltagePoints)
-                //{
-                //    if (vp == _stage2project.VoltagePoints.Last())
-                //        strVP += vp;
-                //    else
-                //        strVP += vp + ", ";
-                //}
-                //VoltagePoints = strVP;
+                string strVP = string.Empty;
+                foreach (var vp in _stage2project.VoltagePoints)
+                {
+                    if (vp == _stage2project.VoltagePoints.Last())
+                        strVP += vp;
+                    else
+                        strVP += vp + ", ";
+                }
+                VoltagePoints = strVP;
 
 
-                //var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage2project.Id && o.IsInvalid == false).ToList();
-                //var records = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
-                //Stage2SourceList = records.Select(o => o.TestFilePath).ToList();
+                var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage2project.Id && o.IsInvalid == false).ToList();
+                var records = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
+                Stage2SourceList = records.Select(o => o.TestFilePath).ToList();
             }
         }
         private Project _stage1Project;
@@ -87,9 +87,9 @@ namespace BCLabManager.ViewModel
                 SetProperty(ref _stage1Project, value);
 
 
-                //var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage1Project.Id && o.IsInvalid == false).ToList();
-                //var records = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
-                //Stage1SourceList = records.Select(o => new Stage1Source(o.TestFilePath, false)).ToList();
+                var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage1Project.Id && o.IsInvalid == false).ToList();
+                var records = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
+                Stage1SourceList = records.Select(o => new Stage1Source(o.TestFilePath, false)).ToList();
             }
         }
         private uint _eod;
