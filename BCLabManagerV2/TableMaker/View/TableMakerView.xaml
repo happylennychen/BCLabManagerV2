@@ -38,8 +38,8 @@
                 <DockPanel Grid.Row="0" LastChildFill="True" VerticalAlignment="Center">
                     <Label Margin="5,0,0,0">Version:</Label>
                     <Label Margin="0,0,5,0" Content="{Binding Path=Version}" FontWeight="Black"></Label>
-                    <Label Margin="5,0,0,0">Project:</Label>
-                    <ComboBox Margin="0,0,5,0" ItemsSource="{Binding Path=Projects}" SelectedItem="{Binding Path=Project}" Width="150"></ComboBox>
+                    <!--<Label Margin="5,0,0,0">Project:</Label>
+                    <ComboBox Margin="0,0,5,0" ItemsSource="{Binding Path=Projects}" SelectedItem="{Binding Path=Project}" Width="150"></ComboBox>-->
                     <Label Margin="5,0,0,0">EOD(mV):</Label>
                     <TextBox Margin="0,0,5,0" Text="{Binding Path=EOD}" Width="50"></TextBox>
                     <Label Margin="5,0,0,0">Description:</Label>
@@ -54,26 +54,35 @@
         </GroupBox>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="40*"></ColumnDefinition>
                 <ColumnDefinition Width="5"></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition Width="5"></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="40*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="3"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
+            </Grid.RowDefinitions>
             <GroupBox Grid.Column="0" BorderThickness="2" Header="Stage 2 Raw data file path">
-                <DataGrid GridLinesVisibility="None" Background="White"
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                        <Label>Project:</Label>
+                        <ComboBox Margin="0,0,5,0" ItemsSource="{Binding Path=Projects}" SelectedItem="{Binding Path=Project}" MinWidth="150"></ComboBox>
+                    </StackPanel>
+                    <DataGrid GridLinesVisibility="None" Background="White"
                           AutoGenerateColumns="False"
                           ItemsSource="{Binding Source={StaticResource SourceListCVS}}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="File Path" IsReadOnly="True" Binding="{Binding}"></DataGridTextColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="File Path" IsReadOnly="True" Binding="{Binding}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
             </GroupBox>
             <GroupBox Grid.Column="2" BorderThickness="2" Header="Stage 1 Raw data file path">
                 <DockPanel>
                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
                         <Label>Project:</Label>
-                        <ComboBox ItemsSource="{Binding Path=Projects}" SelectedItem="{Binding Path=Stage1Project}"></ComboBox>
+                        <ComboBox Margin="0,0,5,0" ItemsSource="{Binding Path=Projects}" SelectedItem="{Binding Path=Stage1Project}" MinWidth="150"></ComboBox>
                     </StackPanel>
                     <DataGrid GridLinesVisibility="None" Background="White"
                           AutoGenerateColumns="False"
@@ -84,14 +93,11 @@
                     </DataGrid>
                 </DockPanel>
             </GroupBox>
-            <Grid  Grid.Column="4">
-                <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition Height="5"></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                </Grid.RowDefinitions>
-                <Button Margin="10" Height="100" Width="120">Build Stage1 Table</Button>
-                <Button Grid.Row="2" Margin="10" Height="100" Width="120">Build Stage2 Table</Button>
+            <Grid  Grid.Column="0" Grid.Row="2">
+                <Button Margin="10" Width="120">Build Stage2 Table</Button>
+            </Grid>
+            <Grid  Grid.Column="2" Grid.Row="2">
+                <Button Margin="10" Width="120">Build Stage1 Table</Button>
             </Grid>
         </Grid>
         <GroupBox BorderThickness="2" Grid.Row="4" Header="Outputs">
