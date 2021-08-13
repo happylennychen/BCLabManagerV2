@@ -345,7 +345,7 @@ namespace BCLabManager
                 }
                 if (fAvgSoc > 10000) fAvgSoc = 10000.0F;
                 //if (fAvgSoc < 0) fAvgSoc = -9999.0F;
-                if (fAvgSoc < 0) fAvgSoc = 0;//fAvgSoc -= 1.0F;
+                //if (fAvgSoc < 0) fAvgSoc = 0;//fAvgSoc -= 1.0F;
                 ypoints.Add(Convert.ToInt32(Math.Round(fAvgSoc, 0)));
                 //i += 1;
                 if (i >= TableVoltagePoints.Count)

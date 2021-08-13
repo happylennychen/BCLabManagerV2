@@ -670,7 +670,7 @@ namespace BCLabManager.Model
                             bReachHighVolt = true;
                         }
                         //(20201109)for leon miss
-                        else if ((Math.Abs(fCurrn) > 0))
+                        else if ((fCurrn < 0) && ((Math.Abs(fCurrn - output.fCurrent)) < (Math.Abs(output.fCurrent) * 0.1)))
                         {
                             bReachHighVolt = true;
                         }
@@ -788,7 +788,7 @@ namespace BCLabManager.Model
                                     //if (Math.Abs(fVoltn - fVoltOld) > 5)
                                     if (((fVoltn - fVoltOld) * fVoltageDiff) < 0)       //check voltage changing direction, in charging, voltage should increase, vice versa
                                     {
-                                        if ((Math.Abs(fVoltn - fVoltOld) > 10.0F) &&    //if changing tolence is bigger than 10mV in 2 seconds
+                                        if ((Math.Abs(fVoltn - fVoltOld) > 5.0F) &&    //if changing tolence is bigger than 10mV in 2 seconds
                                             (iElipseTime < 2))
                                         {
                                             result = 1;
