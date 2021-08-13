@@ -27,7 +27,8 @@ namespace BCLabManager.ViewModel
         private TableMakerRecordServiceClass _tableMakerRecordService;
         private TableMakerProductServiceClass _tableMakerProductService;
         private ProgramServiceClass _programService;
-        RelayCommand _generateCommand;
+        RelayCommand _buildStage2TableCommand;
+        RelayCommand _buildStage1TableCommand;
         bool _isOK;
 
         #endregion // Fields
@@ -53,17 +54,17 @@ namespace BCLabManager.ViewModel
                 return _projectService.Items;
             }
         }
-        private Project _project;
-        public Project Project
+        private Project _stage2project;
+        public Project Stage2Project
         {
-            get { return _project; }
+            get { return _stage2project; }
             set
             {
-                SetProperty(ref _project, value);
+                SetProperty(ref _stage2project, value);
                 string strVP = string.Empty;
-                foreach (var vp in _project.VoltagePoints)
+                foreach (var vp in _stage2project.VoltagePoints)
                 {
-                    if (vp == _project.VoltagePoints.Last())
+                    if (vp == _stage2project.VoltagePoints.Last())
                         strVP += vp;
                     else
                         strVP += vp + ", ";
@@ -71,9 +72,9 @@ namespace BCLabManager.ViewModel
                 VoltagePoints = strVP;
 
 
-                var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _project.Id && o.IsInvalid == false).ToList();
+                var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage2project.Id && o.IsInvalid == false).ToList();
                 var records = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
-                SourceList = records.Select(o => o.TestFilePath).ToList();
+                Stage2SourceList = records.Select(o => o.TestFilePath).ToList();
             }
         }
         private Project _stage1Project;
@@ -87,7 +88,7 @@ namespace BCLabManager.ViewModel
 
                 var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage1Project.Id && o.IsInvalid == false).ToList();
                 var records = GetRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
-                Stage1SourceList = records.Select(o => o.TestFilePath).ToList();
+                Stage1SourceList = records.Select(o => new Stage1Source(o.TestFilePath, false)).ToList();
             }
         }
         private uint _eod;
@@ -109,16 +110,16 @@ namespace BCLabManager.ViewModel
             get { return _voltagePoints; }
             set { SetProperty(ref _voltagePoints, value); }
         }
-        private List<string> _sourceList;
+        private List<string> _stage2sourceList;
         //[NotMapped]
-        public List<string> SourceList
+        public List<string> Stage2SourceList
         {
-            get { return _sourceList; }
-            set { SetProperty(ref _sourceList, value); }
+            get { return _stage2sourceList; }
+            set { SetProperty(ref _stage2sourceList, value); }
         }
-        private List<string> _stage1SourceList;
+        private List<Stage1Source> _stage1SourceList;
         //[NotMapped]
-        public List<string> Stage1SourceList
+        public List<Stage1Source> Stage1SourceList
         {
             get { return _stage1SourceList; }
             set { SetProperty(ref _stage1SourceList, value); }
@@ -147,7 +148,20 @@ namespace BCLabManager.ViewModel
         #endregion // Presentation Properties
 
         #region Public Methods
-
+        public ICommand BuildStage2TableCommand
+        {
+            get
+            {
+                if (_buildStage2TableCommand == null)
+                {
+                    _buildStage2TableCommand = new RelayCommand(
+                        param => { this.BuildStage2Table(); },
+                        param => this.CanBuildStage2Table
+                        );
+                }
+                return _buildStage2TableCommand;
+            }
+        }
 
         #endregion // Public Methods
 
@@ -163,6 +177,42 @@ namespace BCLabManager.ViewModel
             }
             testRecords = testRecords.Where(o => o.Status == TestStatus.Completed).ToList();
             return testRecords;
+        }
+
+        public bool CanBuildStage2Table
+        {
+            get
+            {
+                if (Stage2SourceList == null)
+                    return false;
+                if (VoltagePoints == null)
+                    return false;
+                if (VoltagePoints.Count() == 0)
+                    return false;
+
+                var ocvPrograms = _programService.Items.Select(o => o).Where(o => o.Project.Id == Stage2Project.Id && o.IsInvalid == false && (o.Type.Name == "OCV")).ToList();
+                var rcPrograms = _programService.Items.Select(o => o).Where(o => o.Project.Id == Stage2Project.Id && o.IsInvalid == false && (o.Type.Name == "RC")).ToList();
+
+                if (ocvPrograms.Count >= 1)
+                {
+                    var ocvRecords = GetRecordsFromPrograms(ocvPrograms);
+                    if (ocvRecords.Count < 2)
+                        return false;
+                }
+
+                if (rcPrograms.Count < 1)
+                {
+                    //var rcRecords = GetRecordsFromPrograms(rcPrograms);
+                    //if (rcRecords.Count != rcPrograms.Sum(p => p.Recipes.Count * p.Temperatures.Count))
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        private void BuildStage2Table()
+        {
+            throw new NotImplementedException();
         }
         #endregion // Private Helpers
     }
