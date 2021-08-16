@@ -755,7 +755,7 @@ namespace BCLabManager
             }
         }
 
-        public static List<TableMakerProduct> GenerateLiteDriver(LiteModel liteModel, Project project)
+        public static List<TableMakerProduct> GenerateLiteDriver(LiteModel liteModel, string time, Project project)
         {
             var rootPath = string.Empty;
             //if (isRemoteOutput)
@@ -766,7 +766,11 @@ namespace BCLabManager
             //{
                 rootPath = GlobalSettings.LocalFolder;
             //}
-            var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
+            var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
+            if (!Directory.Exists(OutFolder))
+            {
+                Directory.CreateDirectory(OutFolder);
+            }
             List<string> strFilePaths = liteModel.FileNames;
             List<string> strHHeaderComments;
             UInt32 uErr = 0;

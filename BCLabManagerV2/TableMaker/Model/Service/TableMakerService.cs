@@ -192,7 +192,7 @@ namespace BCLabManager
             fs.Close();
             return true;
         }
-        public static bool GetDriverFileNames(string manufacturer, string betteryType, string absMaxCap, string type, out List<string> strFilePaths)
+        public static bool GetDriverFileNames(string manufacturer, string betteryType, string absMaxCap, string type, string description, out List<string> strFilePaths)
         {
             bool bReturn = false;
             string strTmpFile = "";
@@ -201,8 +201,8 @@ namespace BCLabManager
             if (true)
             {
                 strTmpFile = manufacturer + "_" + betteryType + "_" + absMaxCap.ToString() + "mAhr";
-                string strCFileStandardName = $"{strTmpFile}_{type}_{DateTime.Now.ToString("yyyyMMddHHmmss")}.c";
-                string strHFileStandardName = $"{strTmpFile}_{type}_{DateTime.Now.ToString("yyyyMMddHHmmss")}.h";
+                string strCFileStandardName = $"{strTmpFile}_{type}_{description}.c";
+                string strHFileStandardName = $"{strTmpFile}_{type}_{description}.h";
                 strFilePaths.Add(strCFileStandardName);
                 strFilePaths.Add(strHFileStandardName);
             }
@@ -271,112 +271,111 @@ namespace BCLabManager
 
         public static void GetFileNames(ref TableMakerModel tableMakerModel)
         {
-            var project = tableMakerModel.Project;
-            //var programs = tableMakerModel.Programs;
-            var testers = tableMakerModel.Testers;
+            //var project = tableMakerModel.Project;
+            //var testers = tableMakerModel.Testers;
 
-            OCVModel ocvModel = new OCVModel();
-            RCModel rcModel = new RCModel();
-            MiniModel miniModel = new MiniModel();
-            StandardModel standardModel = new StandardModel();
-            AndroidModel androidModel = new AndroidModel();
-            LiteModel liteModel = new LiteModel();
+            //OCVModel ocvModel = new OCVModel();
+            //RCModel rcModel = new RCModel();
+            //MiniModel miniModel = new MiniModel();
+            //StandardModel standardModel = new StandardModel();
+            //AndroidModel androidModel = new AndroidModel();
+            //LiteModel liteModel = new LiteModel();
 
-            ocvModel.FileName = OCVTableMaker.GetOCVTableFileName(project);
-            rcModel.FileName = RCTableMaker.GetRCTableFileName(project);
-            List<string> strFileNames;
-            GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "mini", out strFileNames);
-            miniModel.FileNames = strFileNames;
-            GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "standard", out strFileNames);
-            standardModel.FileNames = strFileNames;
-            GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "android", out strFileNames);
-            androidModel.FileNames = strFileNames;
-            GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "lite", out strFileNames);
-            liteModel.FileNames = strFileNames;
+            //ocvModel.FileName = OCVTableMaker.GetOCVTableFileName(project);
+            //rcModel.FileName = RCTableMaker.GetRCTableFileName(project);
+            //List<string> strFileNames;
+            //GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "mini", out strFileNames);
+            //miniModel.FileNames = strFileNames;
+            //GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "standard", out strFileNames);
+            //standardModel.FileNames = strFileNames;
+            //GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "android", out strFileNames);
+            //androidModel.FileNames = strFileNames;
+            //GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "lite", out strFileNames);
+            //liteModel.FileNames = strFileNames;
         }
 
         public static void Build(ref TableMakerModel tableMakerModel, uint uEodVoltage, string description, TableMakerRecordServiceClass tableMakerRecordService)
         {
-            try
-            {
-                var project = tableMakerModel.Project;
-                var ocvRecords = tableMakerModel.OCVRecords;
-                var rcRecords = tableMakerModel.RCRecords;
-                var stage1ocvprograms = tableMakerModel.Stage1OCVPrograms;
-                var stage1rcprograms = tableMakerModel.Stage1RCPrograms;
-                var stage2ocvprograms = tableMakerModel.Stage2OCVPrograms;
-                var stage2rcprograms = tableMakerModel.Stage2RCPrograms;
-                var testers = tableMakerModel.Testers;
-                var ocvModel = tableMakerModel.OCVModel;
-                var rcModel = tableMakerModel.RCModel;
-                var miniModel = tableMakerModel.MiniModel;
-                var standardModel = tableMakerModel.StandardModel;
-                var androidModel = tableMakerModel.AndroidModel;
-                var liteModel = tableMakerModel.LiteModel;
-                var stage1ocvModel = tableMakerModel.Stage1OCVModel;
-                var stage1rcModel = tableMakerModel.Stage1RCModel;
-                var stage1miniModel = tableMakerModel.Stage1MiniModel;
-                var stage1standardModel = tableMakerModel.Stage1StandardModel;
-                var stage1androidModel = tableMakerModel.Stage1AndroidModel;
-                var stage1liteModel = tableMakerModel.Stage1LiteModel;
-                var stage2ocvModel = tableMakerModel.Stage2OCVModel;
-                var stage2rcModel = tableMakerModel.Stage2RCModel;
-                var stage2miniModel = tableMakerModel.Stage2MiniModel;
-                var stage2standardModel = tableMakerModel.Stage2StandardModel;
-                var stage2androidModel = tableMakerModel.Stage2AndroidModel;
-                var stage2liteModel = tableMakerModel.Stage2LiteModel;
+            //try
+            //{
+            //    var project = tableMakerModel.Project;
+            //    var ocvRecords = tableMakerModel.OCVRecords;
+            //    var rcRecords = tableMakerModel.RCRecords;
+            //    var stage1ocvprograms = tableMakerModel.Stage1OCVPrograms;
+            //    var stage1rcprograms = tableMakerModel.Stage1RCPrograms;
+            //    var stage2ocvprograms = tableMakerModel.Stage2OCVPrograms;
+            //    var stage2rcprograms = tableMakerModel.Stage2RCPrograms;
+            //    var testers = tableMakerModel.Testers;
+            //    var ocvModel = tableMakerModel.OCVModel;
+            //    var rcModel = tableMakerModel.RCModel;
+            //    var miniModel = tableMakerModel.MiniModel;
+            //    var standardModel = tableMakerModel.StandardModel;
+            //    var androidModel = tableMakerModel.AndroidModel;
+            //    var liteModel = tableMakerModel.LiteModel;
+            //    var stage1ocvModel = tableMakerModel.Stage1OCVModel;
+            //    var stage1rcModel = tableMakerModel.Stage1RCModel;
+            //    var stage1miniModel = tableMakerModel.Stage1MiniModel;
+            //    var stage1standardModel = tableMakerModel.Stage1StandardModel;
+            //    var stage1androidModel = tableMakerModel.Stage1AndroidModel;
+            //    var stage1liteModel = tableMakerModel.Stage1LiteModel;
+            //    var stage2ocvModel = tableMakerModel.Stage2OCVModel;
+            //    var stage2rcModel = tableMakerModel.Stage2RCModel;
+            //    var stage2miniModel = tableMakerModel.Stage2MiniModel;
+            //    var stage2standardModel = tableMakerModel.Stage2StandardModel;
+            //    var stage2androidModel = tableMakerModel.Stage2AndroidModel;
+            //    var stage2liteModel = tableMakerModel.Stage2LiteModel;
 
 
-                TableMakerRecordServiceClass tmrs = tableMakerRecordService;
-                TableMakerRecord tmr = new TableMakerRecord();
-                tmr.EOD = uEodVoltage;
-                tmr.Description = description;
-                tmr.IsValid = true;
-                tmr.OCVSources = ocvRecords.Select(o=>o.TestFilePath).ToList();
-                tmr.RCSources = rcRecords.Select(o => o.TestFilePath).ToList();
-                tmr.Project = project;
-                tmr.TableMakerVersion = Version;
-                tmr.VoltagePoints = project.VoltagePoints;
-                tmr.Timestamp = DateTime.Now;
-                var products = GenerateFilePackage(tmr.Timestamp, ocvRecords, rcRecords, project, testers, uEodVoltage, ref ocvModel, ref rcModel, ref miniModel, ref standardModel, ref androidModel, ref liteModel);
-                tmr.Products = products;
-                tmrs.SuperAdd(tmr);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
+            //    TableMakerRecordServiceClass tmrs = tableMakerRecordService;
+            //    TableMakerRecord tmr = new TableMakerRecord();
+            //    tmr.EOD = uEodVoltage;
+            //    tmr.Description = description;
+            //    tmr.IsValid = true;
+            //    tmr.OCVSources = ocvRecords.Select(o=>o.TestFilePath).ToList();
+            //    tmr.RCSources = rcRecords.Select(o => o.TestFilePath).ToList();
+            //    tmr.Project = project;
+            //    tmr.TableMakerVersion = Version;
+            //    tmr.VoltagePoints = project.VoltagePoints;
+            //    tmr.Timestamp = DateTime.Now;
+            //    var products = GenerateFilePackage(tmr.Timestamp, ocvRecords, rcRecords, project, testers, uEodVoltage, ref ocvModel, ref rcModel, ref miniModel, ref standardModel, ref androidModel, ref liteModel);
+            //    tmr.Products = products;
+            //    tmrs.SuperAdd(tmr);
+            //}
+            //catch (Exception e)
+            //{
+            //    MessageBox.Show(e.Message);
+            //}
         }
 
         private static List<TableMakerProduct> GenerateFilePackage(DateTime timestamp, List<TestRecord> ocvRecords, List<TestRecord> rcRecords, Project project, List<Tester> testers, uint uEodVoltage, ref OCVModel ocvModel, ref RCModel rcModel, ref MiniModel miniModel, ref StandardModel standardModel, ref AndroidModel androidModel, ref LiteModel liteModel)
         {
             List<TableMakerProduct> products = new List<TableMakerProduct>();
-            List<SourceData> ocvSource = null;
-            if (ocvRecords != null && ocvRecords.Count != 0)
-            {
-                OCVTableMaker.GetOCVSource(project, ocvRecords, testers, out ocvSource);
-                OCVTableMaker.GetOCVModel(ocvSource, ref ocvModel);
-                products.Add(OCVTableMaker.GenerateOCVTable(project, ocvModel));
-            }
+            //List<SourceData> ocvSource = null;
+            //if (ocvRecords != null && ocvRecords.Count != 0)
+            //{
+            //    OCVTableMaker.GetOCVSource(project, ocvRecords, testers, out ocvSource);
+            //    OCVTableMaker.GetOCVModel(ocvSource, ref ocvModel);
+            //    products.Add(OCVTableMaker.GenerateOCVTable(project, ocvModel));
+            //}
 
-            if (rcRecords != null && rcRecords.Count != 0 && ocvSource != null)
-            {
-                List<SourceData> rcSource;
-                RCTableMaker.GetRCSource(project, rcRecords, testers, out rcSource);
-                RCTableMaker.GetRCModel(rcSource, project, ref rcModel);
-                MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, project, ref miniModel);
+            //if (rcRecords != null && rcRecords.Count != 0 && ocvSource != null)
+            //{
+            //    List<SourceData> rcSource;
+            //    RCTableMaker.GetRCSource(project, rcRecords, testers, out rcSource);
+            //    RCTableMaker.GetRCModel(rcSource, project, ref rcModel);
+            //    MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, project, ref miniModel);
 
-                StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
+            //    StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
 
-                AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
-                products.Add(RCTableMaker.GenerateRCTable(project, rcModel));
-                products.AddRange(MiniDriverMaker.GenerateMiniDriver(miniModel, project));
-                products.AddRange(StandardDriverMaker.GenerateStandardDriver(standardModel, project));
-                products.AddRange(AndroidDriverMaker.GenerateAndroidDriver(androidModel, project));
+            //    AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
+            //    products.Add(RCTableMaker.GenerateRCTable(project, rcModel));
+            //    products.AddRange(MiniDriverMaker.GenerateMiniDriver(miniModel, project));
+            //    products.AddRange(StandardDriverMaker.GenerateStandardDriver(standardModel, project));
+            //    products.AddRange(AndroidDriverMaker.GenerateAndroidDriver(androidModel, project));
 
-                LiteDriverMaker.GetLiteModel(uEodVoltage, ocvSource, rcSource, ocvModel, rcModel, project, ref liteModel);
-                products.AddRange(LiteDriverMaker.GenerateLiteDriver(liteModel, project));
-            }
+            //    LiteDriverMaker.GetLiteModel(uEodVoltage, ocvSource, rcSource, ocvModel, rcModel, project, ref liteModel);
+            //    products.AddRange(LiteDriverMaker.GenerateLiteDriver(liteModel, project));
+            //}
             return products;
         }
     }

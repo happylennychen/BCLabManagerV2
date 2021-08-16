@@ -228,7 +228,7 @@ namespace BCLabManager
             return result;
             #endregion
         }
-        public static TableMakerProduct GenerateOCVTable(Project project, OCVModel ocvModel)
+        public static TableMakerProduct GenerateOCVTable(Project project, string time, OCVModel ocvModel)
         {
             var rootPath = string.Empty;
             //if (isRemoteOutput)
@@ -239,7 +239,11 @@ namespace BCLabManager
             //{
             rootPath = GlobalSettings.LocalFolder;
             //}
-            var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
+            var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
+            if (!Directory.Exists(OutFolder))
+            {
+                Directory.CreateDirectory(OutFolder);
+            }
             string filePath = Path.Combine(OutFolder, ocvModel.FileName);
             List<string> OCVHeader = GetOCVFileHeader(project);
             List<string> OCVContent = GetOCVFileContent(ocvModel.iOCVVolt);
@@ -252,7 +256,7 @@ namespace BCLabManager
             tmp.Project = project;
             return tmp;
         }
-        public static string GetOCVTableFileName(Project project)
+        public static string GetOCVTableFileName(Project project, string description)
         {
             string sFileSeperator = "_";
             //(A170308)Francis, falconly use file output folder
@@ -262,7 +266,7 @@ namespace BCLabManager
                                 sFileSeperator + project.LimitedChargeVoltage + "mV" +
                                 sFileSeperator + project.CutoffDischargeVoltage + "mV" +
                                 sFileSeperator + TableMakerService.Version +
-                                sFileSeperator + DateTime.Now.ToString("yyyyMMddHHmmss") +
+                                sFileSeperator + description +
                                 "_Arm.txt";
             return outputFilePath;
         }

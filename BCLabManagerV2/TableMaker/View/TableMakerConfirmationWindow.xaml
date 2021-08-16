@@ -34,8 +34,8 @@
             </StackPanel>
             <Button 
       Grid.Row="4" Grid.Column="2"
-      Command="{Binding Path=GenerateCommand}"
-      Content="_Generate"
+      Command="{Binding Path=OKCommand}"
+      Content="_OK" Click="OK_Click"
       HorizontalAlignment="Right"
       MinWidth="100" 
                 Height="30" Margin="15,0"

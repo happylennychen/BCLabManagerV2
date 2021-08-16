@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using BCLabManager.Model;
 
 namespace BCLabManager
@@ -19,7 +20,7 @@ namespace BCLabManager
             standardModel.outYValue = rcModel.outYValue;
         }
 
-        internal static List<TableMakerProduct> GenerateStandardDriver(StandardModel standardModel, Project project)
+        internal static List<TableMakerProduct> GenerateStandardDriver(StandardModel standardModel, string time, Project project)
         {
             var rootPath = string.Empty;
             //if (isRemoteOutput)
@@ -30,7 +31,11 @@ namespace BCLabManager
             //{
                 rootPath = GlobalSettings.LocalFolder;
             //}
-            var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
+            var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
+            if (!Directory.Exists(OutFolder))
+            {
+                Directory.CreateDirectory(OutFolder);
+            }
             List<string> strFilePaths = standardModel.FileNames;
             List<string> strHHeaderComments;
             UInt32 uErr = 0;

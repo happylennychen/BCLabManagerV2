@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using BCLabManager.Model;
 
 namespace BCLabManager
@@ -19,7 +20,7 @@ namespace BCLabManager
             androidModel.outYValue = rcModel.outYValue;
         }
 
-        internal static List<TableMakerProduct> GenerateAndroidDriver(AndroidModel androidModel, Project project)
+        internal static List<TableMakerProduct> GenerateAndroidDriver(AndroidModel androidModel, string time, Project project)
         {
             var rootPath = string.Empty;
             //if (isRemoteOutput)
@@ -30,7 +31,11 @@ namespace BCLabManager
             //{
                 rootPath = GlobalSettings.LocalFolder;
             //}
-            var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
+            var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
+            if (!Directory.Exists(OutFolder))
+            {
+                Directory.CreateDirectory(OutFolder);
+            }
             List<string> strFilePaths = androidModel.FileNames;
             List<string> strHHeaderComments;
             UInt32 uErr = 0;

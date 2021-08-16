@@ -414,7 +414,7 @@ namespace BCLabManager.ViewModel
                 );    //ViewModel初始化
 
             dashBoardViewModel = new DashBoardViewModel(BatteryService, ChannelService, ChamberService, ProgramService);
-            tableMakerViewModel = new TableMakerViewModel(ProjectService, TableMakerRecordService, TableMakerProductService, ProgramService);
+            tableMakerViewModel = new TableMakerViewModel(ProjectService, TableMakerRecordService, TableMakerProductService, ProgramService, TesterService);
         }
         #endregion // Constructor
 

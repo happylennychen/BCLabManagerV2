@@ -426,7 +426,7 @@ namespace BCLabManager
             slope = sCo / ssX;
         }
 
-        public static TableMakerProduct GenerateRCTable(Project project, RCModel rcModel)
+        public static TableMakerProduct GenerateRCTable(Project project, string time, RCModel rcModel)
         {
             var rootPath = string.Empty;
             //if (isRemoteOutput)
@@ -437,7 +437,11 @@ namespace BCLabManager
             //{
                 rootPath = GlobalSettings.LocalFolder;
             //}
-            var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
+            var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
+            if (!Directory.Exists(OutFolder))
+            {
+                Directory.CreateDirectory(OutFolder);
+            }
             string filePath = Path.Combine(OutFolder, rcModel.FileName);//GetRCTableFilePath(project);
             var strRCHeader = GetRCFileHeader(project, rcModel.fCTABase, rcModel.fCTASlope);
             var strRCContent = GetRCFileContent(rcModel.outYValue, project.VoltagePoints, rcModel.listfTemp, rcModel.listfCurr);
@@ -449,7 +453,7 @@ namespace BCLabManager
             tmp.Project = project;
             return tmp;
         }
-        public static string GetRCTableFileName(Project project)
+        public static string GetRCTableFileName(Project project, string description)
         {
             string sFileSeperator = "_";
             //(A170308)Francis, falconly use file output folder
@@ -459,7 +463,7 @@ namespace BCLabManager
                                 sFileSeperator + project.LimitedChargeVoltage + "mV" +
                                 sFileSeperator + project.CutoffDischargeVoltage + "mV" +
                                 sFileSeperator + TableMakerService.Version +
-                                sFileSeperator + DateTime.Now.ToString("yyyyMMddHHmmss") +
+                                sFileSeperator + description +
                                 ".txt";
             return outputFileName;
         }
