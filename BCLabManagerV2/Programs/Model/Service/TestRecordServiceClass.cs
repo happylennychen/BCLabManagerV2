@@ -374,7 +374,9 @@ namespace BCLabManager.Model
             }
             //#endif
             var TestFilePath = $@"{remoteProjectPath}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(localTestFileFullPath)}";
-            FileTransferHelper.FileCopyWithMD5Check(localTestFileFullPath, TestFilePath);
+            MD5 = FileTransferHelper.FileCopyWithMD5Check(localTestFileFullPath, TestFilePath);
+            if (MD5 == string.Empty)
+                return string.Empty;
             if (TestFilePath == "")
             {
                 MessageBox.Show("Test File Path Empty!");

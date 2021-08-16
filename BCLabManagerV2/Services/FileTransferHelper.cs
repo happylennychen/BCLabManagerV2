@@ -12,7 +12,7 @@ namespace BCLabManager
 {
     static public class FileTransferHelper
     {
-        public static void FileCopyWithMD5Check(string sourcePath, string targetPath)
+        public static string FileCopyWithMD5Check(string sourcePath, string targetPath)
         {
 #if !Test
             string localMD5Code, remoteMD5Code;
@@ -31,8 +31,9 @@ namespace BCLabManager
                 evt.Description = $"Test File MD5 Check Failed!. File Name: {Path.GetFileName(sourcePath)}";
                 EventService.SuperAdd(evt);
                 MessageBox.Show(evt.Description);
-                return;
+                return string.Empty;
             }
+            return localMD5Code;
 #endif
         }
 
