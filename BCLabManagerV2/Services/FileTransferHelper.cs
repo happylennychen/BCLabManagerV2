@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,50 +12,49 @@ namespace BCLabManager
 {
     static public class FileTransferHelper
     {
-        public static void FileCopyWithRetry(string sourcePath, string targetPath)
+        public static void FileCopyWithMD5Check(string sourcePath, string targetPath)
         {
-#if! Test
-            //var thread = new Thread(() =>
+#if !Test
+            string localMD5Code, remoteMD5Code;
+            localMD5Code = GetMD5(new FileStream(sourcePath, FileMode.Open));
+            if (!FileCopyWithLog(sourcePath, targetPath))
             {
-                int i;
-                for (i = 0; i < 5; i++)
-                {
-                    if (FileCopyWithLog(sourcePath, targetPath))
-                    {
-                        break;
-                    }
-                    MessageBox.Show($"Copy to server failed! i = {i}");
-                }
-                if (i == 5)
-                {
-                    if (!File.Exists(targetPath))
-                    {
-                        Event evt = new Event();
-                        evt.Module = Module.NAS;
-                        evt.Timestamp = DateTime.Now;
-                        evt.Type = EventType.Error;
-                        evt.Description = $"Test File Missing!. File Name: {Path.GetFileName(sourcePath)}";
-                        EventService.SuperAdd(evt);
-                        MessageBox.Show(evt.Description);
-                        return;
-                    }
-
-                    FileInfo fi1 = new FileInfo(sourcePath);
-                    FileInfo fi2 = new FileInfo(targetPath);
-                    if (fi1.Length != fi2.Length)
-                    {
-                        Event evt = new Event();
-                        evt.Module = Module.NAS;
-                        evt.Timestamp = DateTime.Now;
-                        evt.Type = EventType.Error;
-                        evt.Description = $"Original file length is {fi1.Length}B, server file length is {fi2.Length}B.";
-                        EventService.SuperAdd(evt);
-                        MessageBox.Show(evt.Description);
-                    }
-                }
-            }//);
-            //thread.Start();
+                MessageBox.Show($"Copy to server failed!");
+            }
+            remoteMD5Code = GetMD5(new FileStream(targetPath, FileMode.Open));
+            if (localMD5Code != remoteMD5Code)
+            {
+                Event evt = new Event();
+                evt.Module = Module.NAS;
+                evt.Timestamp = DateTime.Now;
+                evt.Type = EventType.Error;
+                evt.Description = $"Test File MD5 Check Failed!. File Name: {Path.GetFileName(sourcePath)}";
+                EventService.SuperAdd(evt);
+                MessageBox.Show(evt.Description);
+                return;
+            }
 #endif
+        }
+
+        private static string GetMD5(FileStream fs)
+        {
+            using (MD5 md5Hash = MD5.Create())
+            {
+                // Convert the input string to a byte array and compute the hash.
+                byte[] data = md5Hash.ComputeHash(fs);
+
+                // Create a new Stringbuilder to collect the bytes
+                // and create a string.
+                StringBuilder sBuilder = new StringBuilder();
+
+                // Loop through each byte of the hashed data 
+                // and format each one as a hexadecimal string.
+                for (int i = 0; i < data.Length; i++)
+                {
+                    sBuilder.Append(data[i].ToString("x2"));
+                }
+                return sBuilder.ToString();
+            }
         }
 
         public static bool FileCopyWithLog(string sourcePath, string targetPath)

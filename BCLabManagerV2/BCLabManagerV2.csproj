@@ -310,6 +310,10 @@
     <Compile Include="Migrations\20210808095733_TMRecord.designer.cs">
       <DependentUpon>20210808095733_TMRecord.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20210816082729_TestRecordMD5.cs" />
+    <Compile Include="Migrations\20210816082729_TestRecordMD5.designer.cs">
+      <DependentUpon>20210816082729_TestRecordMD5.cs</DependentUpon>
+    </Compile>
     <Compile Include="TableMaker\Model\Service\TableMakerRecordServieClass.cs" />
     <Compile Include="TableMaker\Model\TableMakerRecord.cs" />
     <Compile Include="Programs\Model\CutOffBehavior.cs" />

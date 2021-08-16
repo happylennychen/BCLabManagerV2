@@ -900,6 +900,7 @@ namespace BCLabManager.ViewModel
                         options |= TesterProcesserOptions.SkipTemperatureCheck;
                     }
                     string filePath = string.Empty;
+                    string MD5 = string.Empty;
                     //for (int i = 0; i < 100; i++)
                     {
                         filePath = _programService.RecipeService.TestRecordService.DataPreProcess(SelectedTestRecord.Record, evm.FileList.ToList(),
@@ -912,7 +913,7 @@ namespace BCLabManager.ViewModel
                         SelectedProgram.Project.Name,
                         SelectedProgram._program,
                         SelectedRecipe._recipe,
-                        evm.Tester.ITesterProcesser, evm.IsSkipDP, options);
+                        evm.Tester.ITesterProcesser, evm.IsSkipDP, options, out MD5);
                     }
                     if (filePath == string.Empty)
                         return;
@@ -972,7 +973,7 @@ namespace BCLabManager.ViewModel
                     //}
                     SelectedTestRecord.NewCycle = evm.NewCycle;
                     _programService.RecipeService.TestRecordService.CommitV2(
-                    SelectedTestRecord.Record, evm.Comment, filePath, st, et);
+                    SelectedTestRecord.Record, evm.Comment, filePath, st, et, MD5);
                     _programService.RecipeService.UpdateTime(SelectedRecipe._recipe);
                     _programService.UpdateTime(SelectedProgram._program);
                     _programService.RecipeService.RecipeTemplateService.UpdateEditable(SelectedRecipe._recipe.RecipeTemplate);

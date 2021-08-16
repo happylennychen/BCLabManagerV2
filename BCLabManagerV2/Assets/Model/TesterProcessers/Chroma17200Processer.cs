@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -373,8 +374,7 @@ namespace BCLabManager.Model
                     File.Delete(filepath);
                     FileInfo fi1 = new FileInfo(tempFilePath);
                     var length1 = fi1.Length;
-                    File.Move(tempFilePath, filepath);
-                    RuningLog.Write($"Source File: {tempFilePath}, Size: {fi1.Length}, Target File: {filepath}, Size: {fi2.Length}, Difference: {fi1.Length - fi2.Length}\n");
+                    FileTransferHelper.FileCopyWithLog(tempFilePath, filepath);
                     foreach (var evt in events)
                     {
                         EventService.SuperAdd(evt);
@@ -548,7 +548,6 @@ namespace BCLabManager.Model
 
             try
             {
-                //File.Copy(filePath, tempFilePath);
                 stmCSV = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 stmContent = new StreamReader(stmCSV);
             }

@@ -239,7 +239,7 @@ namespace BCLabManager.Model
             DatabaseUpdate(testRecord);
         }
 #if false
-#region free
+        #region free
         internal void ExecuteFree(TestRecord testRecord, Battery battery, Chamber chamber, string testerStr, Channel channel, DateTime startTime, double measurementGain, double measurementOffset, double traceResistance, double capacityDifference, string @operator)
         {
             testRecord.BatteryTypeStr = battery.BatteryType.Name;
@@ -335,10 +335,11 @@ namespace BCLabManager.Model
             }
             SuperUpdate(testRecord);
         }
-#endregion
+        #endregion
 #endif
-        internal string DataPreProcess(TestRecord record, List<string> rawDataFullPathList/*, bool isRename*/, string newName, int startIndex, DateTime st, DateTime et, string batteryType, string projectName, Program program, Recipe recipe, ITesterProcesser processer, bool isSkipDP, uint options)
+        internal string DataPreProcess(TestRecord record, List<string> rawDataFullPathList/*, bool isRename*/, string newName, int startIndex, DateTime st, DateTime et, string batteryType, string projectName, Program program, Recipe recipe, ITesterProcesser processer, bool isSkipDP, uint options, out string MD5)
         {
+            MD5 = string.Empty;
             string remoteProjectPath = $@"{GlobalSettings.RemotePath}{batteryType}\{projectName}";
             string localProjectPath = $@"{GlobalSettings.LocalFolder}{batteryType}\{projectName}";
             string localTestFileFullPath = string.Empty;
@@ -352,7 +353,7 @@ namespace BCLabManager.Model
             {
                 //if (isRename)
                 //{
-                    localTestFileFullPath = Path.Combine($@"{localProjectPath}\{GlobalSettings.TestDataFolderName}", newName + Path.GetExtension(rawDataFullPathList[0]));
+                localTestFileFullPath = Path.Combine($@"{localProjectPath}\{GlobalSettings.TestDataFolderName}", newName + Path.GetExtension(rawDataFullPathList[0]));
                 //}
                 //else
                 //{
@@ -373,7 +374,7 @@ namespace BCLabManager.Model
             }
             //#endif
             var TestFilePath = $@"{remoteProjectPath}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(localTestFileFullPath)}";
-            FileTransferHelper.FileCopyWithRetry(localTestFileFullPath, TestFilePath);
+            FileTransferHelper.FileCopyWithMD5Check(localTestFileFullPath, TestFilePath);
             if (TestFilePath == "")
             {
                 MessageBox.Show("Test File Path Empty!");
@@ -382,7 +383,7 @@ namespace BCLabManager.Model
             return TestFilePath;
         }
 
-        internal void CommitV2(TestRecord testRecord, string comment, string filePath, DateTime startTime, DateTime completeTime)
+        internal void CommitV2(TestRecord testRecord, string comment, string filePath, DateTime startTime, DateTime completeTime, string MD5)
         {
             testRecord.Comment = comment;
             testRecord.StartTime = startTime;
@@ -392,6 +393,7 @@ namespace BCLabManager.Model
             testRecord.AssignedChannel = null;
             testRecord.Status = TestStatus.Completed;
             testRecord.TestFilePath = filePath;
+            testRecord.MD5 = MD5;
             SuperUpdate(testRecord);
         }
     }
