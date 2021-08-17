@@ -550,12 +550,12 @@ namespace BCLabManager
             short iEnlargeIR = 10000;
             FileStream fswrite = null;
             StreamWriter FileContent = null;
-            var strMiniC = System.IO.Path.Combine(OutFolder, strCFileMiniName);
-            var strMiniH = System.IO.Path.Combine(OutFolder, strHFileMiniName);
+            var localMiniCPath = System.IO.Path.Combine(OutFolder, strCFileMiniName);
+            var loaclMiniHPath = System.IO.Path.Combine(OutFolder, strHFileMiniName);
             #region create Driver H file
             try
             {
-                fswrite = File.Open(strMiniH, FileMode.Create, FileAccess.Write, FileShare.None);
+                fswrite = File.Open(loaclMiniHPath, FileMode.Create, FileAccess.Write, FileShare.None);
                 FileContent = new StreamWriter(fswrite, new UTF8Encoding(false));// Encoding.Default);
             }
             catch { }
@@ -609,7 +609,7 @@ namespace BCLabManager
             #region create Driver C file
             try
             {
-                fswrite = File.Open(strMiniC, FileMode.Create, FileAccess.Write, FileShare.None);
+                fswrite = File.Open(localMiniCPath, FileMode.Create, FileAccess.Write, FileShare.None);
                 FileContent = new StreamWriter(fswrite, new UTF8Encoding(false));// Encoding.Default);
             }
             catch (Exception ec)
@@ -732,14 +732,18 @@ namespace BCLabManager
             #endregion
 
 
+            string targetPath = FileTransferHelper.GetRemotePath(localMiniCPath,5);
+            FileTransferHelper.FileCopyWithMD5Check(localMiniCPath, targetPath);
             TableMakerProduct ctmp = new TableMakerProduct();
-            ctmp.FilePath = strMiniC;
+            ctmp.FilePath = targetPath;
             ctmp.IsValid = true;
             ctmp.Type = MiniCType;
             output.Add(ctmp);
 
+            targetPath = FileTransferHelper.GetRemotePath(loaclMiniHPath,5);
+            FileTransferHelper.FileCopyWithMD5Check(loaclMiniHPath, targetPath);
             TableMakerProduct htmp = new TableMakerProduct();
-            htmp.FilePath = strMiniH;
+            htmp.FilePath = targetPath;
             htmp.IsValid = true;
             htmp.Type = MiniHType;
             output.Add(htmp);

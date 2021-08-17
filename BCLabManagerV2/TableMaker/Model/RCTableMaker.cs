@@ -447,8 +447,10 @@ namespace BCLabManager
             var strRCContent = GetRCFileContent(rcModel.outYValue, project.VoltagePoints, rcModel.listfTemp, rcModel.listfCurr);
             //UInt32 uErr = 0;
             TableMakerService.CreateFileFromLines(filePath, strRCHeader.Concat(strRCContent).ToList());
+            string targetPath = FileTransferHelper.GetRemotePath(filePath, 5);
+            FileTransferHelper.FileCopyWithMD5Check(filePath, targetPath);
             TableMakerProduct tmp = new TableMakerProduct();
-            tmp.FilePath = filePath;
+            tmp.FilePath = targetPath;
             tmp.IsValid = true;
             tmp.Project = project;
             return tmp;

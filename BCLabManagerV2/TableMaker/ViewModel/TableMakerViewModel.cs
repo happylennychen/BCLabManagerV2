@@ -13,6 +13,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Windows;
 using BCLabManager.View;
+using System.IO;
 
 namespace BCLabManager.ViewModel
 {
@@ -274,6 +275,11 @@ namespace BCLabManager.ViewModel
                         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                         stopwatch.Start();
                         string time = DateTime.Now.ToString("yyyyMMddHHmmss");
+                        var OutFolder = $@"{GlobalSettings.RemotePath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
+                        if (!Directory.Exists(OutFolder))
+                        {
+                            Directory.CreateDirectory(OutFolder);
+                        }
                         //TableMakerService.Build(ref _tableMakerModel, 800, "Some description", _tableMakerRecordService);
                         //var project = _tableMakerModel.Project;
                         var tmrs = _tableMakerRecordService;

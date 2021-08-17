@@ -48,25 +48,29 @@ namespace BCLabManager
 
         private static List<TableMakerProduct> GenerateCHFiles(ref UInt32 uErr, string OutFolder, string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
         {
-            string cFilePath = System.IO.Path.Combine(OutFolder, strCFileStandardName);
-            string hFilePath = System.IO.Path.Combine(OutFolder, strHFileStandardName);
+            string localcFilePath = System.IO.Path.Combine(OutFolder, strCFileStandardName);
+            string localhFilePath = System.IO.Path.Combine(OutFolder, strHFileStandardName);
 
             List<string> hFileContent = GetHFileContent(strHFileStandardName, strHHeaderComments, ilstOCVVolt, voltList, listfCurr, listfTemp, fCTABase, fCTASlope);
-            TableMakerService.CreateFileFromLines(hFilePath, hFileContent);
+            TableMakerService.CreateFileFromLines(localhFilePath, hFileContent);
 
             List<string> cFileContent = GetCFileContent(strCFileStandardName, strHFileStandardName, strHHeaderComments, ilstOCVVolt, voltList, listfTemp, listfCurr, outYValue, fCTABase, fCTASlope);
-            TableMakerService.CreateFileFromLines(cFilePath, cFileContent);
+            TableMakerService.CreateFileFromLines(localcFilePath, cFileContent);
 
 
+            string targetPath = FileTransferHelper.GetRemotePath(localcFilePath, 5);
+            FileTransferHelper.FileCopyWithMD5Check(localcFilePath, targetPath);
             List<TableMakerProduct> output = new List<TableMakerProduct>();
             TableMakerProduct ctmp = new TableMakerProduct();
-            ctmp.FilePath = cFilePath;
+            ctmp.FilePath = targetPath;
             ctmp.IsValid = true;
             ctmp.Type = AndroidCType;
             output.Add(ctmp);
 
+            targetPath = FileTransferHelper.GetRemotePath(localhFilePath, 5);
+            FileTransferHelper.FileCopyWithMD5Check(localhFilePath, targetPath);
             TableMakerProduct htmp = new TableMakerProduct();
-            htmp.FilePath = hFilePath;
+            htmp.FilePath = targetPath;
             htmp.IsValid = true;
             htmp.Type = AndroidHType;
             output.Add(htmp);

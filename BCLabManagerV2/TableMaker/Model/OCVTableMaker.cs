@@ -39,7 +39,8 @@ namespace BCLabManager
                     //}
                     //else
                     //{
-                    filePath = TableMakerService.GetLocalPath(tr.TestFilePath);
+                    //filePath = TableMakerService.GetLocalPath(tr.TestFilePath);
+                    filePath = FileTransferHelper.GetLocalPath(tr.TestFilePath, 4);
                     if (!File.Exists(filePath))
                     {
                         MessageBox.Show($"No such file.{filePath}");
@@ -250,8 +251,10 @@ namespace BCLabManager
             //UInt32 result = 0;
             //GenerateOCVTableFile(ref result, filePath, OCVHeader, OCVContent);
             TableMakerService.CreateFileFromLines(filePath, OCVHeader.Concat(OCVContent).ToList());
+            string targetPath = FileTransferHelper.GetRemotePath(filePath, 5);
+            FileTransferHelper.FileCopyWithMD5Check(filePath, targetPath);
             TableMakerProduct tmp = new TableMakerProduct();
-            tmp.FilePath = filePath;
+            tmp.FilePath = targetPath;
             tmp.IsValid = true;
             tmp.Project = project;
             return tmp;

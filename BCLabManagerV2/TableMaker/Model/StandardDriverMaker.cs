@@ -44,25 +44,29 @@ namespace BCLabManager
         }
         private static List<TableMakerProduct> GenerateCHFiles(ref UInt32 uErr, string OutFolder, string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
         {
-            string standardCFilePath = System.IO.Path.Combine(OutFolder, strCFileStandardName);
-            string standardHFilePath = System.IO.Path.Combine(OutFolder, strHFileStandardName);
+            string localCFilePath = System.IO.Path.Combine(OutFolder, strCFileStandardName);
+            string localHFilePath = System.IO.Path.Combine(OutFolder, strHFileStandardName);
 
             List<string> hFileContent = GetHFileContent(strHFileStandardName, strHHeaderComments, ilstOCVVolt, voltList, listfCurr, listfTemp, fCTABase, fCTASlope);
-            TableMakerService.CreateFileFromLines(standardHFilePath, hFileContent);
+            TableMakerService.CreateFileFromLines(localHFilePath, hFileContent);
 
             List<string> cFileContent = GetCFileContent(strCFileStandardName, strHFileStandardName, strHHeaderComments, ilstOCVVolt, voltList, listfTemp, listfCurr, outYValue, fCTABase, fCTASlope);
-            TableMakerService.CreateFileFromLines(standardCFilePath, cFileContent);
+            TableMakerService.CreateFileFromLines(localCFilePath, cFileContent);
 
 
+            string targetPath = FileTransferHelper.GetRemotePath(localCFilePath, 5);
+            FileTransferHelper.FileCopyWithMD5Check(localCFilePath, targetPath);
             List<TableMakerProduct> output = new List<TableMakerProduct>();
             TableMakerProduct ctmp = new TableMakerProduct();
-            ctmp.FilePath = standardCFilePath;
+            ctmp.FilePath = targetPath;
             ctmp.IsValid = true;
             ctmp.Type = StandardCType;
             output.Add(ctmp);
 
+            targetPath = FileTransferHelper.GetRemotePath(localHFilePath, 5);
+            FileTransferHelper.FileCopyWithMD5Check(localHFilePath, targetPath);
             TableMakerProduct htmp = new TableMakerProduct();
-            htmp.FilePath = standardHFilePath;
+            htmp.FilePath = targetPath;
             htmp.IsValid = true;
             htmp.Type = StandardHType;
             output.Add(htmp);

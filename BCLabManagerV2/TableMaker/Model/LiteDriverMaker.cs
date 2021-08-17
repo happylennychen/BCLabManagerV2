@@ -779,23 +779,29 @@ namespace BCLabManager
         }
         private static List<TableMakerProduct> GenerateCHFiles(string OutFolder, string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, LiteModel liteModel)
         {
-            string cFilePath = System.IO.Path.Combine(OutFolder, strCFileStandardName);
-            string hFilePath = System.IO.Path.Combine(OutFolder, strHFileStandardName);
+            string localCFilePath = System.IO.Path.Combine(OutFolder, strCFileStandardName);
+            string localHFilePath = System.IO.Path.Combine(OutFolder, strHFileStandardName);
 
             List<string> hFileContent = GetHFileContent(strHFileStandardName, strHHeaderComments, liteModel.ilistCurr.Count);
-            TableMakerService.CreateFileFromLines(hFilePath, hFileContent);
+            TableMakerService.CreateFileFromLines(localHFilePath, hFileContent);
             List<string> cFileContent = GetCFileContent(strCFileStandardName, strHFileStandardName, strHHeaderComments, liteModel.ilistCurr, liteModel.flstdbDCapCof, liteModel.flstdbKeodCof, liteModel.flstTblOCVCof);
-            TableMakerService.CreateFileFromLines(cFilePath, cFileContent);
+            TableMakerService.CreateFileFromLines(localCFilePath, cFileContent);
 
+
+            string targetPath = FileTransferHelper.GetRemotePath(localCFilePath, 5);
+            FileTransferHelper.FileCopyWithMD5Check(localCFilePath, targetPath);
             List<TableMakerProduct> output = new List<TableMakerProduct>();
             TableMakerProduct ctmp = new TableMakerProduct();
-            ctmp.FilePath = cFilePath;
+            ctmp.FilePath = targetPath;
             ctmp.IsValid = true;
             ctmp.Type = LiteCType;
             output.Add(ctmp);
 
+
+            targetPath = FileTransferHelper.GetRemotePath(localHFilePath, 5);
+            FileTransferHelper.FileCopyWithMD5Check(localHFilePath, targetPath);
             TableMakerProduct htmp = new TableMakerProduct();
-            htmp.FilePath = hFilePath;
+            htmp.FilePath = targetPath;
             htmp.IsValid = true;
             htmp.Type = LiteHType;
             output.Add(htmp);

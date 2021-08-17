@@ -15,13 +15,13 @@ namespace BCLabManager
         public static string FileCopyWithMD5Check(string sourcePath, string targetPath)
         {
 #if !Test
-            string localMD5Code, remoteMD5Code;
-            localMD5Code = GetMD5(new FileStream(sourcePath, FileMode.Open));
             if (!FileCopyWithLog(sourcePath, targetPath))
             {
                 MessageBox.Show($"Copy to server failed!");
             }
-            remoteMD5Code = GetMD5(new FileStream(targetPath, FileMode.Open));
+            string localMD5Code, remoteMD5Code;
+            localMD5Code = GetMD5(sourcePath);
+            remoteMD5Code = GetMD5(targetPath);
             if (localMD5Code != remoteMD5Code)
             {
                 Event evt = new Event();
@@ -37,8 +37,11 @@ namespace BCLabManager
 #endif
         }
 
-        private static string GetMD5(FileStream fs)
+        private static string GetMD5(string path)
         {
+            string output = string.Empty;
+            FileStream fs = new FileStream(path, FileMode.Open);
+
             using (MD5 md5Hash = MD5.Create())
             {
                 // Convert the input string to a byte array and compute the hash.
@@ -54,23 +57,35 @@ namespace BCLabManager
                 {
                     sBuilder.Append(data[i].ToString("x2"));
                 }
-                return sBuilder.ToString();
+                output = sBuilder.ToString();
             }
+            fs.Close();
+            return output;
         }
 
         public static bool FileCopyWithLog(string sourcePath, string targetPath)
         {
-            File.Copy(sourcePath, targetPath, true);
-            if (!File.Exists(targetPath))
+            try
             {
+                if (!File.Exists(sourcePath))
+                    return false;
+                File.Copy(sourcePath, targetPath, true);
+                if (!File.Exists(targetPath))
+                {
+                    return false;
+                }
+
+                FileInfo fi1 = new FileInfo(sourcePath);
+                FileInfo fi2 = new FileInfo(targetPath);
+                RuningLog.Write($"Source File: {sourcePath}, Size: {fi1.Length}, Target File: {targetPath}, Size: {fi2.Length}, Difference: {fi1.Length - fi2.Length}\n");
+                if (fi1.Length != fi2.Length)
+                    return false;
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
                 return false;
             }
-
-            FileInfo fi1 = new FileInfo(sourcePath);
-            FileInfo fi2 = new FileInfo(targetPath);
-            RuningLog.Write($"Source File: {sourcePath}, Size: {fi1.Length}, Target File: {targetPath}, Size: {fi2.Length}, Difference: {fi1.Length - fi2.Length}\n");
-            if (fi1.Length != fi2.Length)
-                return false;
 
             return true;
         }
@@ -101,6 +116,27 @@ namespace BCLabManager
                 }
             }
             return fileFullPath;
+        }
+
+        public static string GetRemotePath(string path, int level)
+        {
+            int index = FindNthCharInString(path, '\\', level);
+            var substring = path.Substring(0, index + 1);
+            return path.Replace(substring, GlobalSettings.RemotePath);
+        }
+
+        public static string GetLocalPath(string path, int level)
+        {
+            int index = FindNthCharInString(path, '\\', level);
+            var substring = path.Substring(0, index + 1);
+            return path.Replace(substring, GlobalSettings.LocalFolder);
+        }
+        private static int FindNthCharInString(string str, char v, int count)
+        {
+            int index = str.Length - 1;
+            for (int i = 0; i < count; i++)
+                index = str.LastIndexOf(v, index - 1);
+            return index;
         }
     }
 }
