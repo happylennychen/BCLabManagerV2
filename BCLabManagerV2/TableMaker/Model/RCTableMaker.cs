@@ -30,7 +30,7 @@ namespace BCLabManager
                 {
                     if (MessageBoxResult.Yes == MessageBox.Show($"Do you want to keep {tr.TestFilePath} instead of original file?", "Same Point Check", MessageBoxButton.YesNo))
                     {
-                        var removeList = SDList.Select(o=>o).Where(o => o.fCurrent == sd.fCurrent && o.fTemperature == sd.fTemperature).ToList();
+                        var removeList = SDList.Select(o => o).Where(o => o.fCurrent == sd.fCurrent && o.fTemperature == sd.fTemperature).ToList();
                         foreach (var rmvsd in removeList)
                         {
                             SDList.Remove(rmvsd);
@@ -49,12 +49,12 @@ namespace BCLabManager
                 //}
                 //else
                 //{
-                    filePath = TableMakerService.GetLocalPath(tr.TestFilePath);
-                    if (!File.Exists(filePath))
-                    {
-                        MessageBox.Show($"No such file.{filePath}");
-                        return;
-                    }
+                filePath = TableMakerService.GetLocalPath(tr.TestFilePath);
+                if (!File.Exists(filePath))
+                {
+                    MessageBox.Show($"No such file.{filePath}");
+                    return;
+                }
                 //}
                 UInt32 result = tester.ITesterProcesser.LoadRawToSource(filePath, ref sd);
                 if (result == ErrorCode.NORMAL)
@@ -72,7 +72,7 @@ namespace BCLabManager
                 //}
             }
         }
-        public static void GetRCModel(List<SourceData> SDList, Project project, ref RCModel rcModel)
+        public static void GetRCModel(List<SourceData> SDList, int capacity, List<int> VoltagePoints, ref RCModel rcModel)
         {
             RCModel output = rcModel;
             output.SourceList = SDList;
@@ -93,9 +93,9 @@ namespace BCLabManager
                 }
             }
             UInt32 uErr = 0;
-            CreateRCPoints_TableMini(ref uErr, ref output, SDList, project);
+            CreateRCPoints_TableMini(ref uErr, ref output, SDList, capacity, VoltagePoints);
         }
-        private static bool CreateRCPoints_TableMini(ref uint uErr, ref RCModel output, List<SourceData> sdList, Project project)
+        private static bool CreateRCPoints_TableMini(ref uint uErr, ref RCModel output, List<SourceData> sdList, int capacity, List<int> VoltagePoints)
         {
             bool bReturn = true;	//cause below will use bReturn &= xxxx
 
@@ -131,7 +131,7 @@ namespace BCLabManager
                                 }
                                 else
                                 {
-                                    if (!CreateYPoints_CTAV0026(project.VoltagePoints, ref il16tmp, ref fMaxDiff, ref fCCount, sds.AdjustedExpData, ref uErr, project.AbsoluteMaxCapacity, 0))
+                                    if (!CreateYPoints_CTAV0026(VoltagePoints, ref il16tmp, ref fMaxDiff, ref fCCount, sds.AdjustedExpData, ref uErr, capacity, 0))
                                     {
                                         bReturn &= false;
                                     }
@@ -435,7 +435,7 @@ namespace BCLabManager
             //}
             //else
             //{
-                rootPath = GlobalSettings.LocalFolder;
+            rootPath = GlobalSettings.LocalFolder;
             //}
             var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
             if (!Directory.Exists(OutFolder))
@@ -502,6 +502,31 @@ namespace BCLabManager
             strRCHeader.Add(string.Format("//CTABase = {0}", fCTABase));
             strRCHeader.Add(string.Format("//CTASlope = {0}", fCTASlope));
             return strRCHeader;
+        }
+
+        public static void GetStage1RCModel(List<SourceData> stage1RcSource, int capacity, List<int> voltagePoints, List<TestRecord> rcStage1Records, List<TestRecord> rcStage2Records, ref RCModel rcModel)
+        {
+            List<double> stage1Currents = GetCurrentsFromRecords(rcStage1Records);
+            List<double> stage2Currents = GetCurrentsFromRecords(rcStage2Records);
+            List<double> stage1Temperatures = GetTemperaturesFromRecords(rcStage1Records);
+            List<double> stage2Temperatures = GetTemperaturesFromRecords(rcStage2Records);
+            List<double> newCurrents, newTemperatures;
+            GetNewPoints(stage1Currents, stage1Temperatures, stage2Currents, stage2Temperatures, out newCurrents, out newTemperatures);
+        }
+
+        private static void GetNewPoints(List<double> stage1Currents, List<double> stage1Temperatures, List<double> stage2Currents, List<double> stage2Temperatures, out List<double> newCurrents, out List<double> newTemperatures)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static List<double> GetTemperaturesFromRecords(List<TestRecord> records)
+        {
+            return records.Select(o => o.Temperature).Distinct().OrderBy(o => o).ToList();
+        }
+
+        private static List<double> GetCurrentsFromRecords(List<TestRecord> records)
+        {
+            return records.Select(o => o.Current).Distinct().OrderBy(o => o).ToList();
         }
 
         private static List<string> GetRCFileContent(List<List<Int32>> rcYval, List<int> TableVoltagePoints, List<float> listfTemp, List<float> listfCurr)

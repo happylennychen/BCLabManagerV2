@@ -58,18 +58,18 @@ namespace BCLabManager.ViewModel
                 return _projectService.Items;
             }
         }
-        private Project _stage2project;
+        private Project _stage2Project;
         public Project Stage2Project
         {
-            get { return _stage2project; }
+            get { return _stage2Project; }
             set
             {
-                SetProperty(ref _stage2project, value);
-                _voltagePoints = _stage2project.VoltagePoints;
+                SetProperty(ref _stage2Project, value);
+                _voltagePoints = _stage2Project.VoltagePoints;
                 RaisePropertyChanged("VoltagePoints");
 
 
-                var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage2project.Id && o.IsInvalid == false).ToList();
+                var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage2Project.Id && o.IsInvalid == false).ToList();
                 var records = GetCompletedRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
                 Stage2SourceList = records.Select(o => o.TestFilePath).ToList();
             }
@@ -84,7 +84,7 @@ namespace BCLabManager.ViewModel
 
 
                 var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage1Project.Id && o.IsInvalid == false).ToList();
-                var records = GetCompletedRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
+                var records = GetCompletedRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList());
                 Stage1SourceList = records.Select(o => new Stage1Source(o.TestFilePath, false)).ToList();
             }
         }
@@ -172,6 +172,20 @@ namespace BCLabManager.ViewModel
                 return _buildStage2TableCommand;
             }
         }
+        public ICommand BuildStage1TableCommand
+        {
+            get
+            {
+                if (_buildStage1TableCommand == null)
+                {
+                    _buildStage1TableCommand = new RelayCommand(
+                        param => { this.BuildStage1Table(); },
+                        param => this.CanBuildStage1Table
+                        );
+                }
+                return _buildStage1TableCommand;
+            }
+        }
 
         #endregion // Public Methods
 
@@ -216,6 +230,18 @@ namespace BCLabManager.ViewModel
                     //if (rcRecords.Count != rcPrograms.Sum(p => p.Recipes.Count * p.Temperatures.Count))
                     return false;
                 }
+                return true;
+            }
+        }
+
+        public bool CanBuildStage1Table
+        {
+            get
+            {
+                if (CanBuildStage2Table == false)
+                    return false;
+                if (Stage1SourceList == null)
+                    return false;
                 return true;
             }
         }
@@ -287,7 +313,7 @@ namespace BCLabManager.ViewModel
                         tmr.EOD = EOD;
                         tmr.Description = Description;
                         tmr.IsValid = true;
-                        var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage2project.Id && o.IsInvalid == false).ToList();
+                        var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage2Project.Id && o.IsInvalid == false).ToList();
                         var ocvRecords = GetCompletedRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV").ToList());
                         var rcRecords = GetCompletedRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList());
                         tmr.OCVSources = ocvRecords.Select(o => o.TestFilePath).ToList();
@@ -311,7 +337,7 @@ namespace BCLabManager.ViewModel
                         {
                             List<SourceData> rcSource;
                             RCTableMaker.GetRCSource(project, rcRecords, testers, out rcSource);
-                            RCTableMaker.GetRCModel(rcSource, project, ref rcModel);
+                            RCTableMaker.GetRCModel(rcSource, project.AbsoluteMaxCapacity, project.VoltagePoints, ref rcModel);
                             MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, project, ref miniModel);
 
                             StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
@@ -330,6 +356,132 @@ namespace BCLabManager.ViewModel
                         tmrs.SuperAdd(tmr);
 
                         var folder = $@"{GlobalSettings.LocalFolder}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
+                        string timespan = Math.Round(stopwatch.Elapsed.TotalSeconds, 0).ToString() + "S";
+                        MessageBox.Show($"Completed. It took {timespan} to get the job done.");
+                        Process.Start(folder);
+                    }
+                }//);
+                //t.Start();
+            }
+        }
+        private void BuildStage1Table()
+        {
+            string stage1 = "stage1";
+            OCVModel ocvModel = new OCVModel();
+            RCModel rcModel = new RCModel();
+            MiniModel miniModel = new MiniModel();
+            StandardModel standardModel = new StandardModel();
+            AndroidModel androidModel = new AndroidModel();
+            LiteModel liteModel = new LiteModel();
+
+            //tableMakerModel.OCVModel = ocvModel;
+            //tableMakerModel.RCModel = rcModel;
+            //tableMakerModel.MiniModel = miniModel;
+            //tableMakerModel.StandardModel = standardModel;
+            //tableMakerModel.AndroidModel = androidModel;
+            //tableMakerModel.LiteModel = liteModel;
+
+            var stage2project = Stage2Project;
+            var stage1project = Stage1Project;
+            ocvModel.FileName = OCVTableMaker.GetOCVTableFileName(stage2project, stage1);
+            rcModel.FileName = RCTableMaker.GetRCTableFileName(stage2project, stage1);
+            List<string> strFileNames;
+            TableMakerService.GetDriverFileNames(stage2project.BatteryType.Manufacturer, stage2project.BatteryType.Name, stage2project.AbsoluteMaxCapacity.ToString(), "mini", stage1, out strFileNames);
+            miniModel.FileNames = strFileNames;
+            TableMakerService.GetDriverFileNames(stage2project.BatteryType.Manufacturer, stage2project.BatteryType.Name, stage2project.AbsoluteMaxCapacity.ToString(), "standard", stage1, out strFileNames);
+            standardModel.FileNames = strFileNames;
+            TableMakerService.GetDriverFileNames(stage2project.BatteryType.Manufacturer, stage2project.BatteryType.Name, stage2project.AbsoluteMaxCapacity.ToString(), "android", stage1, out strFileNames);
+            androidModel.FileNames = strFileNames;
+            TableMakerService.GetDriverFileNames(stage2project.BatteryType.Manufacturer, stage2project.BatteryType.Name, stage2project.AbsoluteMaxCapacity.ToString(), "lite", stage1, out strFileNames);
+            liteModel.FileNames = strFileNames;
+
+            var testers = _testerService.Items.ToList();
+            TableMakerConfirmationViewModel tmcvm = new TableMakerConfirmationViewModel();
+            tmcvm.AndroidDriverCFileName = androidModel.FileNames[0];
+            tmcvm.AndroidDriverHFileName = androidModel.FileNames[1];
+            tmcvm.MiniDriverCFileName = miniModel.FileNames[0];
+            tmcvm.MiniDriverHFileName = miniModel.FileNames[1];
+            tmcvm.StandardDriverCFileName = standardModel.FileNames[0];
+            tmcvm.StandardDriverHFileName = standardModel.FileNames[1];
+            tmcvm.LiteDriverCFileName = liteModel.FileNames[0];
+            tmcvm.LiteDriverHFileName = liteModel.FileNames[1];
+            tmcvm.OCVFileName = ocvModel.FileName;
+            tmcvm.RCFileName = rcModel.FileName;
+            tmcvm.OCVReady = true;
+            tmcvm.RCReady = true;
+            TableMakerConfirmationWindow tmcw = new TableMakerConfirmationWindow();
+            tmcw.DataContext = tmcvm;
+            tmcw.ShowDialog();
+            if (tmcvm.IsOK)
+            {
+                //Thread t = new Thread(() =>
+                {
+                    if (MessageBox.Show("It will take a while to get the work done, Continue?", "Generate Tables and Drivers.", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                    {
+                        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+                        stopwatch.Start();
+                        string time = DateTime.Now.ToString("yyyyMMddHHmmss");
+                        //var OutFolder = $@"{GlobalSettings.RemotePath}{stage1project.BatteryType.Name}\{stage1project.Name}\{GlobalSettings.ProductFolderName}\{time}";
+                        //if (!Directory.Exists(OutFolder))
+                        //{
+                        //    Directory.CreateDirectory(OutFolder);
+                        //}
+                        var tmrs = _tableMakerRecordService;
+                        TableMakerRecord tmr = new TableMakerRecord();
+                        tmr.EOD = EOD;
+                        tmr.Description = Description;
+                        tmr.IsValid = true;
+                        var stage2programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage2Project.Id && o.IsInvalid == false).ToList();
+                        var ocvStage2Records = GetCompletedRecordsFromPrograms(stage2programs.Select(o => o).Where(o => o.Type.Name == "OCV").ToList());
+                        var rcStage2Records = GetCompletedRecordsFromPrograms(stage2programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList());
+
+                        var rcStage1Source = Stage1SourceList.Where(o => o.IsCheck == true).Select(o => o.FilePath).ToList();
+                        var rcStage1programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage1Project.Id && o.IsInvalid == false && o.Type.Name == "RC").ToList();
+                        var rcStage1Records = GetCompletedRecordsFromPrograms(rcStage1programs);
+                        rcStage1Records = rcStage1Records.Where(o => rcStage1Source.Contains(o.TestFilePath)).ToList();
+
+                        tmr.OCVSources = ocvStage2Records.Select(o => o.TestFilePath).ToList();
+                        tmr.RCSources = rcStage2Records.Select(o => o.TestFilePath).ToList().Concat(rcStage1Source).ToList();
+                        tmr.Project = stage1project;
+                        tmr.TableMakerVersion = Version;
+                        tmr.VoltagePoints = _voltagePoints;
+                        tmr.Timestamp = DateTime.Now;
+
+                        List<TableMakerProduct> products = new List<TableMakerProduct>();
+                        List<SourceData> ocvSource = null;
+                        if (ocvStage2Records != null && ocvStage2Records.Count != 0)
+                        {
+                            OCVTableMaker.GetOCVSource(stage2project, ocvStage2Records, testers, out ocvSource);
+                            OCVTableMaker.GetOCVModel(ocvSource, ref ocvModel);
+                            products.Add(OCVTableMaker.GenerateOCVTable(stage2project, time, ocvModel));
+                        }
+
+                        if (rcStage2Records != null && rcStage2Records.Count != 0 && ocvSource != null)
+                        {
+                            List<SourceData> stage2RcSource;
+                            List<SourceData> stage1RcSource;
+                            RCTableMaker.GetRCSource(stage2project, rcStage2Records, testers, out stage2RcSource);
+                            RCTableMaker.GetRCModel(stage2RcSource, stage1project.AbsoluteMaxCapacity, stage2project.VoltagePoints, ref rcModel); //做出中间table
+                            RCTableMaker.GetRCSource(stage1project, rcStage1Records, testers, out stage1RcSource);
+                            RCTableMaker.GetStage1RCModel(stage1RcSource, stage1project.AbsoluteMaxCapacity, stage2project.VoltagePoints, rcStage1Records, rcStage2Records, ref rcModel);
+                            MiniDriverMaker.GetMiniModel(ocvSource, stage2RcSource, ocvModel, rcModel, stage2project, ref miniModel);
+
+                            StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
+
+                            AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
+                            products.Add(RCTableMaker.GenerateRCTable(stage2project, time, rcModel));
+                            products.AddRange(MiniDriverMaker.GenerateMiniDriver(miniModel, time, stage2project));
+                            products.AddRange(StandardDriverMaker.GenerateStandardDriver(standardModel, time, stage2project));
+                            products.AddRange(AndroidDriverMaker.GenerateAndroidDriver(androidModel, time, stage2project));
+
+                            LiteDriverMaker.GetLiteModel(EOD, ocvSource, stage2RcSource, ocvModel, rcModel, stage2project, ref liteModel);
+                            products.AddRange(LiteDriverMaker.GenerateLiteDriver(liteModel, time, stage2project));
+                        }
+
+                        tmr.Products = products;
+                        tmrs.SuperAdd(tmr);
+
+                        var folder = $@"{GlobalSettings.LocalFolder}{stage2project.BatteryType.Name}\{stage2project.Name}\{GlobalSettings.ProductFolderName}\{time}";
                         string timespan = Math.Round(stopwatch.Elapsed.TotalSeconds, 0).ToString() + "S";
                         MessageBox.Show($"Completed. It took {timespan} to get the job done.");
                         Process.Start(folder);
