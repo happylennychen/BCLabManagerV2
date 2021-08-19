@@ -39,5 +39,10 @@ namespace BCLabManager.Model
         public SourceData()
         {
         }
+
+        public SourceData ShallowCopy()
+        {
+            return (SourceData)this.MemberwiseClone();
+        }
     }
 }

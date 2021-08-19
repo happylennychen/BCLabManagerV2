@@ -426,22 +426,25 @@ namespace BCLabManager.ViewModel
                         //{
                         //    Directory.CreateDirectory(OutFolder);
                         //}
+
+                        var stage2programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage2Project.Id && o.IsInvalid == false).ToList();
+                        var ocvStage2Records = GetCompletedRecordsFromPrograms(stage2programs.Select(o => o).Where(o => o.Type.Name == "OCV").ToList());
+                        var rcStage2Records = GetCompletedRecordsFromPrograms(stage2programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList());
+
+                        var rcStage1Files = Stage1SourceList.Where(o => o.IsCheck == true).Select(o => o.FilePath).ToList();
+                        var rcStage1programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage1Project.Id && o.IsInvalid == false && o.Type.Name == "RC").ToList();
+                        var rcStage1Records = GetCompletedRecordsFromPrograms(rcStage1programs);
+                        rcStage1Records = rcStage1Records.Where(o => rcStage1Files.Contains(o.TestFilePath)).ToList();
+                        List<TestRecord> newRecords = RCTableMaker.GetNewRecords(rcStage2Records, rcStage1Records);
+
                         var tmrs = _tableMakerRecordService;
                         TableMakerRecord tmr = new TableMakerRecord();
                         tmr.EOD = EOD;
                         tmr.Description = Description;
                         tmr.IsValid = true;
-                        var stage2programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage2Project.Id && o.IsInvalid == false).ToList();
-                        var ocvStage2Records = GetCompletedRecordsFromPrograms(stage2programs.Select(o => o).Where(o => o.Type.Name == "OCV").ToList());
-                        var rcStage2Records = GetCompletedRecordsFromPrograms(stage2programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList());
-
-                        var rcStage1Source = Stage1SourceList.Where(o => o.IsCheck == true).Select(o => o.FilePath).ToList();
-                        var rcStage1programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage1Project.Id && o.IsInvalid == false && o.Type.Name == "RC").ToList();
-                        var rcStage1Records = GetCompletedRecordsFromPrograms(rcStage1programs);
-                        rcStage1Records = rcStage1Records.Where(o => rcStage1Source.Contains(o.TestFilePath)).ToList();
 
                         tmr.OCVSources = ocvStage2Records.Select(o => o.TestFilePath).ToList();
-                        tmr.RCSources = rcStage2Records.Select(o => o.TestFilePath).ToList().Concat(rcStage1Source).ToList();
+                        tmr.RCSources = rcStage2Records.Select(o => o.TestFilePath).ToList().Concat(rcStage1Files).ToList();
                         tmr.Project = stage1project;
                         tmr.TableMakerVersion = Version;
                         tmr.VoltagePoints = _voltagePoints;
@@ -449,7 +452,6 @@ namespace BCLabManager.ViewModel
 
                         List<TableMakerProduct> products = new List<TableMakerProduct>();
                         List<SourceData> ocvSource = null;
-                        List<TestRecord> newRecords = RCTableMaker.GetNewRecords(rcStage2Records, rcStage1Records);
                         if (ocvStage2Records != null && ocvStage2Records.Count != 0)
                         {
                             OCVTableMaker.GetOCVSource(stage2project, ocvStage2Records, testers, out ocvSource);
@@ -459,8 +461,11 @@ namespace BCLabManager.ViewModel
 
                         if (rcStage2Records != null && rcStage2Records.Count != 0 && ocvSource != null)
                         {
-                            List<SourceData> rcSource;
-                            RCTableMaker.GetRCSource(stage1project, newRecords, testers, out rcSource);
+                            List<SourceData> rcStage2Source;
+                            List<SourceData> rcStage1Source;
+                            RCTableMaker.GetRCSource(stage1project, rcStage2Records, testers, out rcStage2Source);
+                            RCTableMaker.GetRCSource(stage1project, rcStage1Records, testers, out rcStage1Source);
+                            List<SourceData> rcSource = RCTableMaker.GetNewSources(rcStage2Source, rcStage1Source);
                             RCTableMaker.GetRCModel(rcSource, stage1project.AbsoluteMaxCapacity, _voltagePoints, ref rcModel); //做出中间table
                             MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, _voltagePoints, ref miniModel);
 
