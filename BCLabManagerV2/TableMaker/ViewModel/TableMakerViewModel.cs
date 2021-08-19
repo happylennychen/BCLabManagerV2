@@ -85,7 +85,7 @@ namespace BCLabManager.ViewModel
 
                 var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage1Project.Id && o.IsInvalid == false).ToList();
                 var records = GetCompletedRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList());
-                Stage1SourceList = records.Select(o => new Stage1Source(o.TestFilePath, false)).ToList();
+                Stage1SourceList = records.OrderBy(o => o.Temperature).ThenBy(o => o.Current).Select(o => new Stage1Source(o.TestFilePath, false)).ToList();
             }
         }
         private uint _eod;
@@ -338,17 +338,17 @@ namespace BCLabManager.ViewModel
                             List<SourceData> rcSource;
                             RCTableMaker.GetRCSource(project, rcRecords, testers, out rcSource);
                             RCTableMaker.GetRCModel(rcSource, project.AbsoluteMaxCapacity, project.VoltagePoints, ref rcModel);
-                            MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, project, ref miniModel);
+                            MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, project.VoltagePoints, ref miniModel);
 
                             StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
 
                             AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
-                            products.Add(RCTableMaker.GenerateRCTable(project, time, rcModel));
+                            products.Add(RCTableMaker.GenerateRCTable(project, _voltagePoints, time, rcModel));
                             products.AddRange(MiniDriverMaker.GenerateMiniDriver(miniModel, time, project));
-                            products.AddRange(StandardDriverMaker.GenerateStandardDriver(standardModel, time, project));
-                            products.AddRange(AndroidDriverMaker.GenerateAndroidDriver(androidModel, time, project));
+                            products.AddRange(StandardDriverMaker.GenerateStandardDriver(standardModel, time, project, _voltagePoints));
+                            products.AddRange(AndroidDriverMaker.GenerateAndroidDriver(androidModel, time, project, _voltagePoints));
 
-                            LiteDriverMaker.GetLiteModel(EOD, ocvSource, rcSource, ocvModel, rcModel, project, ref liteModel);
+                            LiteDriverMaker.GetLiteModel(EOD, ocvSource, rcSource, ocvModel, rcModel, project, _voltagePoints, ref liteModel);
                             products.AddRange(LiteDriverMaker.GenerateLiteDriver(liteModel, time, project));
                         }
 
@@ -383,16 +383,16 @@ namespace BCLabManager.ViewModel
 
             var stage2project = Stage2Project;
             var stage1project = Stage1Project;
-            ocvModel.FileName = OCVTableMaker.GetOCVTableFileName(stage2project, stage1);
-            rcModel.FileName = RCTableMaker.GetRCTableFileName(stage2project, stage1);
+            ocvModel.FileName = OCVTableMaker.GetOCVTableFileName(stage1project, stage1);
+            rcModel.FileName = RCTableMaker.GetRCTableFileName(stage1project, stage1);
             List<string> strFileNames;
-            TableMakerService.GetDriverFileNames(stage2project.BatteryType.Manufacturer, stage2project.BatteryType.Name, stage2project.AbsoluteMaxCapacity.ToString(), "mini", stage1, out strFileNames);
+            TableMakerService.GetDriverFileNames(stage1project.BatteryType.Manufacturer, stage1project.BatteryType.Name, stage1project.AbsoluteMaxCapacity.ToString(), "mini", stage1, out strFileNames);
             miniModel.FileNames = strFileNames;
-            TableMakerService.GetDriverFileNames(stage2project.BatteryType.Manufacturer, stage2project.BatteryType.Name, stage2project.AbsoluteMaxCapacity.ToString(), "standard", stage1, out strFileNames);
+            TableMakerService.GetDriverFileNames(stage1project.BatteryType.Manufacturer, stage1project.BatteryType.Name, stage1project.AbsoluteMaxCapacity.ToString(), "standard", stage1, out strFileNames);
             standardModel.FileNames = strFileNames;
-            TableMakerService.GetDriverFileNames(stage2project.BatteryType.Manufacturer, stage2project.BatteryType.Name, stage2project.AbsoluteMaxCapacity.ToString(), "android", stage1, out strFileNames);
+            TableMakerService.GetDriverFileNames(stage1project.BatteryType.Manufacturer, stage1project.BatteryType.Name, stage1project.AbsoluteMaxCapacity.ToString(), "android", stage1, out strFileNames);
             androidModel.FileNames = strFileNames;
-            TableMakerService.GetDriverFileNames(stage2project.BatteryType.Manufacturer, stage2project.BatteryType.Name, stage2project.AbsoluteMaxCapacity.ToString(), "lite", stage1, out strFileNames);
+            TableMakerService.GetDriverFileNames(stage1project.BatteryType.Manufacturer, stage1project.BatteryType.Name, stage1project.AbsoluteMaxCapacity.ToString(), "lite", stage1, out strFileNames);
             liteModel.FileNames = strFileNames;
 
             var testers = _testerService.Items.ToList();
@@ -449,39 +449,37 @@ namespace BCLabManager.ViewModel
 
                         List<TableMakerProduct> products = new List<TableMakerProduct>();
                         List<SourceData> ocvSource = null;
+                        List<TestRecord> newRecords = RCTableMaker.GetNewRecords(rcStage2Records, rcStage1Records);
                         if (ocvStage2Records != null && ocvStage2Records.Count != 0)
                         {
                             OCVTableMaker.GetOCVSource(stage2project, ocvStage2Records, testers, out ocvSource);
                             OCVTableMaker.GetOCVModel(ocvSource, ref ocvModel);
-                            products.Add(OCVTableMaker.GenerateOCVTable(stage2project, time, ocvModel));
+                            products.Add(OCVTableMaker.GenerateOCVTable(stage1project, time, ocvModel));
                         }
 
                         if (rcStage2Records != null && rcStage2Records.Count != 0 && ocvSource != null)
                         {
-                            List<SourceData> stage2RcSource;
-                            List<SourceData> stage1RcSource;
-                            RCTableMaker.GetRCSource(stage2project, rcStage2Records, testers, out stage2RcSource);
-                            RCTableMaker.GetRCModel(stage2RcSource, stage1project.AbsoluteMaxCapacity, stage2project.VoltagePoints, ref rcModel); //做出中间table
-                            RCTableMaker.GetRCSource(stage1project, rcStage1Records, testers, out stage1RcSource);
-                            RCTableMaker.GetStage1RCModel(stage1RcSource, stage1project.AbsoluteMaxCapacity, stage2project.VoltagePoints, rcStage1Records, rcStage2Records, ref rcModel);
-                            MiniDriverMaker.GetMiniModel(ocvSource, stage2RcSource, ocvModel, rcModel, stage2project, ref miniModel);
+                            List<SourceData> rcSource;
+                            RCTableMaker.GetRCSource(stage1project, newRecords, testers, out rcSource);
+                            RCTableMaker.GetRCModel(rcSource, stage1project.AbsoluteMaxCapacity, _voltagePoints, ref rcModel); //做出中间table
+                            MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, _voltagePoints, ref miniModel);
 
                             StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
 
                             AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
-                            products.Add(RCTableMaker.GenerateRCTable(stage2project, time, rcModel));
-                            products.AddRange(MiniDriverMaker.GenerateMiniDriver(miniModel, time, stage2project));
-                            products.AddRange(StandardDriverMaker.GenerateStandardDriver(standardModel, time, stage2project));
-                            products.AddRange(AndroidDriverMaker.GenerateAndroidDriver(androidModel, time, stage2project));
+                            products.Add(RCTableMaker.GenerateRCTable(stage1project, _voltagePoints, time, rcModel));
+                            products.AddRange(MiniDriverMaker.GenerateMiniDriver(miniModel, time, stage1project));
+                            products.AddRange(StandardDriverMaker.GenerateStandardDriver(standardModel, time, stage1project, _voltagePoints));
+                            products.AddRange(AndroidDriverMaker.GenerateAndroidDriver(androidModel, time, stage1project, _voltagePoints));
 
-                            LiteDriverMaker.GetLiteModel(EOD, ocvSource, stage2RcSource, ocvModel, rcModel, stage2project, ref liteModel);
-                            products.AddRange(LiteDriverMaker.GenerateLiteDriver(liteModel, time, stage2project));
+                            LiteDriverMaker.GetLiteModel(EOD, ocvSource, rcSource, ocvModel, rcModel, stage1project, _voltagePoints, ref liteModel);
+                            products.AddRange(LiteDriverMaker.GenerateLiteDriver(liteModel, time, stage1project));
                         }
 
                         tmr.Products = products;
                         tmrs.SuperAdd(tmr);
 
-                        var folder = $@"{GlobalSettings.LocalFolder}{stage2project.BatteryType.Name}\{stage2project.Name}\{GlobalSettings.ProductFolderName}\{time}";
+                        var folder = $@"{GlobalSettings.LocalFolder}{stage1project.BatteryType.Name}\{stage1project.Name}\{GlobalSettings.ProductFolderName}\{time}";
                         string timespan = Math.Round(stopwatch.Elapsed.TotalSeconds, 0).ToString() + "S";
                         MessageBox.Show($"Completed. It took {timespan} to get the job done.");
                         Process.Start(folder);

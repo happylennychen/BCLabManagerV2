@@ -426,7 +426,7 @@ namespace BCLabManager
             slope = sCo / ssX;
         }
 
-        public static TableMakerProduct GenerateRCTable(Project project, string time, RCModel rcModel)
+        public static TableMakerProduct GenerateRCTable(Project project, List<int> VoltagePoints, string time, RCModel rcModel)
         {
             var rootPath = string.Empty;
             //if (isRemoteOutput)
@@ -444,7 +444,7 @@ namespace BCLabManager
             }
             string filePath = Path.Combine(OutFolder, rcModel.FileName);//GetRCTableFilePath(project);
             var strRCHeader = GetRCFileHeader(project, rcModel.fCTABase, rcModel.fCTASlope);
-            var strRCContent = GetRCFileContent(rcModel.outYValue, project.VoltagePoints, rcModel.listfTemp, rcModel.listfCurr);
+            var strRCContent = GetRCFileContent(rcModel.outYValue, VoltagePoints, rcModel.listfTemp, rcModel.listfCurr);
             //UInt32 uErr = 0;
             TableMakerService.CreateFileFromLines(filePath, strRCHeader.Concat(strRCContent).ToList());
             string targetPath = FileTransferHelper.GetRemotePath(filePath, 5);
@@ -504,19 +504,112 @@ namespace BCLabManager
             return strRCHeader;
         }
 
-        public static void GetStage1RCModel(List<SourceData> stage1RcSource, int capacity, List<int> voltagePoints, List<TestRecord> rcStage1Records, List<TestRecord> rcStage2Records, ref RCModel rcModel)
+        public static List<TestRecord> GetNewRecords(List<TestRecord> rcStage2Records, List<TestRecord> rcStage1Records)
         {
+            List<TestRecord> output = new List<TestRecord>();
             List<double> stage1Currents = GetCurrentsFromRecords(rcStage1Records);
             List<double> stage2Currents = GetCurrentsFromRecords(rcStage2Records);
             List<double> stage1Temperatures = GetTemperaturesFromRecords(rcStage1Records);
             List<double> stage2Temperatures = GetTemperaturesFromRecords(rcStage2Records);
             List<double> newCurrents, newTemperatures;
             GetNewPoints(stage1Currents, stage1Temperatures, stage2Currents, stage2Temperatures, out newCurrents, out newTemperatures);
+            foreach (var curr in newCurrents)
+            {
+                foreach (var temp in newTemperatures)
+                {
+                    var record = rcStage1Records.SingleOrDefault(o => o.Current == curr && o.Temperature == temp);
+                    if (record != null)     //新资料
+                    {
+                        output.Add(record);
+                    }
+                    else
+                    {
+                        record = rcStage2Records.SingleOrDefault(o => o.Current == curr && o.Temperature == temp);
+
+                        if (record != null)     //旧资料
+                        {
+                            output.Add(record);
+                        }
+                        else if (record == null)  //需要填充的资料
+                        {
+                            if (stage1Currents.Contains(curr))    //新电流
+                            {
+                                var temps = rcStage1Records.Where(o => o.Current == curr).Select(o => o.Temperature);   //找到新电流对应的所有温度
+                                var nearestTemp = temps.OrderBy(o => Math.Abs(o - temp)).First();  //再从中找到温度最接近的那一个
+                                var stage1Rec = rcStage1Records.SingleOrDefault(o => o.Temperature == nearestTemp && o.Current == curr);
+                                TestRecord blendrec = stage1Rec.ShallowCopy();
+                                blendrec.Temperature = temp;    //修改电流
+                                output.Add(blendrec);
+                            }
+                            else if (stage1Temperatures.Contains(temp))
+                            {
+                                var currs = rcStage1Records.Where(o => o.Temperature == temp).Select(o => o.Current);
+                                var nearestCurr = currs.OrderBy(o => Math.Abs(o - curr)).First();
+                                var stage1Rec = rcStage1Records.SingleOrDefault(o => o.Current == nearestCurr && o.Temperature == temp);
+                                var blendrec = stage1Rec.ShallowCopy();
+                                blendrec.Current = curr;
+                                output.Add(blendrec);
+                            }
+                        }
+                    }
+                }
+            }
+            return output;
         }
 
         private static void GetNewPoints(List<double> stage1Currents, List<double> stage1Temperatures, List<double> stage2Currents, List<double> stage2Temperatures, out List<double> newCurrents, out List<double> newTemperatures)
         {
-            throw new NotImplementedException();
+            newCurrents = new List<double>();
+            newTemperatures = new List<double>();
+            stage1Currents.Sort();
+            stage1Temperatures.Sort();
+            stage2Currents.Sort();
+            stage2Temperatures.Sort();
+            foreach (var oldCurr in stage2Currents)
+            {
+                bool isReplaced = false;
+                foreach (var newCurr in stage1Currents)
+                {
+                    if (Math.Abs(newCurr - oldCurr) < 500)
+                    {
+                        newCurrents.Add(newCurr);
+                        isReplaced = true;
+                        break;
+                    }
+                }
+                if (!isReplaced)
+                {
+                    newCurrents.Add(oldCurr);
+                }
+            }
+            foreach (var newCurr in stage1Currents)
+            {
+                if (!newCurrents.Contains(newCurr))
+                    newCurrents.Add(newCurr);
+            }
+
+            foreach (var oldTemp in stage2Temperatures)
+            {
+                bool isReplaced = false;
+                foreach (var newTemp in stage1Temperatures)
+                {
+                    if (Math.Abs(newTemp - oldTemp) < 5)
+                    {
+                        newTemperatures.Add(newTemp);
+                        isReplaced = true;
+                        break;
+                    }
+                }
+                if (!isReplaced)
+                {
+                    newTemperatures.Add(oldTemp);
+                }
+            }
+            foreach (var newTemp in stage1Temperatures)
+            {
+                if (!newTemperatures.Contains(newTemp))
+                    newTemperatures.Add(newTemp);
+            }
         }
 
         private static List<double> GetTemperaturesFromRecords(List<TestRecord> records)

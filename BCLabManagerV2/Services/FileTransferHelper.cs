@@ -1,4 +1,5 @@
-﻿using BCLabManager.Model;
+﻿#define Test
+using BCLabManager.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,6 +35,8 @@ namespace BCLabManager
                 return string.Empty;
             }
             return localMD5Code;
+#else
+            return string.Empty;
 #endif
         }
 

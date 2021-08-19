@@ -14,7 +14,7 @@ namespace BCLabManager
     {
         static public TableMakerProductType LiteCType { get; set; }
         static public TableMakerProductType LiteHType { get; set; }
-        public static void GetLiteModel(UInt32 uEoDVoltage, List<SourceData> ocvSource, List<SourceData> rcSource, OCVModel ocvModel, RCModel rcModel, Project project, ref LiteModel liteModel)
+        public static void GetLiteModel(UInt32 uEoDVoltage, List<SourceData> ocvSource, List<SourceData> rcSource, OCVModel ocvModel, RCModel rcModel, Project project, List<int> VoltagePoints, ref LiteModel liteModel)
         {
             List<float> fLstTblM_OCV;
             List<int> iLstTblM_SOC1;
@@ -25,7 +25,7 @@ namespace BCLabManager
             liteModel.ilistCurr = rcModel.listfCurr.Select(o => (short)o).ToList();
             List<float> flstKeodCont;
             List<float> flstAccAtEoD;
-            GetLstKeodCont(uEoDVoltage, ref rcModel, project, out flstKeodCont, out flstAccAtEoD);
+            GetLstKeodCont(uEoDVoltage, ref rcModel, project, VoltagePoints, out flstKeodCont, out flstAccAtEoD);
             List<double[]> flstdbDCapCof;
             List<double[]> flstdbKeodCof;
             var ilstTemp = rcModel.listfTemp.Select(o => (short)(o * 10)).ToList();
@@ -33,7 +33,7 @@ namespace BCLabManager
             liteModel.flstdbDCapCof = flstdbDCapCof;
             liteModel.flstdbKeodCof = flstdbKeodCof;
         }
-        private static bool CreateRCPoints_TableMini(UInt32 uEoDVoltage, ref uint uErr, ref RCModel rcModel, List<SourceData> sdList, Project project, out List<float> flstKeodContent, out List<float> flstAccAtEoD)
+        private static bool CreateRCPoints_TableMini(UInt32 uEoDVoltage, ref uint uErr, ref RCModel rcModel, List<SourceData> sdList, Project project, List<int> VoltagePoints, out List<float> flstKeodContent, out List<float> flstAccAtEoD)
         {
             bool bReturn = true;	//cause below will use bReturn &= xxxx
             bool bDoMiniCal = false;
@@ -103,7 +103,7 @@ namespace BCLabManager
                                 else
                                     bDoMiniCal = false;
                                 //if (!CreateYPoints_CTAV0026(ref il16tmp, ref fMaxDiff, ref fCCount, sds.AdjustedExpData, ref uErr, bDoMiniCal))
-                                if (!CreateYPoints_CTAV26_TBLLite(uEoDVoltage, project.VoltagePoints, ref il16tmp, ref fMaxDiff, ref fCCount, sds.AdjustedExpData, ref uErr, project.AbsoluteMaxCapacity, rcModel.MinVoltage, ref fKeodAtEach, ref flstAccAtEoD, bDoMiniCal))
+                                if (!CreateYPoints_CTAV26_TBLLite(uEoDVoltage, VoltagePoints, ref il16tmp, ref fMaxDiff, ref fCCount, sds.AdjustedExpData, ref uErr, project.AbsoluteMaxCapacity, rcModel.MinVoltage, ref fKeodAtEach, ref flstAccAtEoD, bDoMiniCal))
                                 {
                                     bReturn &= false;
                                 }
@@ -443,10 +443,10 @@ namespace BCLabManager
             return bReturn;
         }
 
-        private static void GetLstKeodCont(UInt32 uEoDVoltage, ref RCModel rcModel, Project project, out List<float> flstKeodCont, out List<float> flstAccAtEoD)
+        private static void GetLstKeodCont(UInt32 uEoDVoltage, ref RCModel rcModel, Project project, List<int> VoltagePoints, out List<float> flstKeodCont, out List<float> flstAccAtEoD)
         {
             uint uErr = 0;
-            CreateRCPoints_TableMini(uEoDVoltage, ref uErr, ref rcModel, rcModel.SourceList, project, out flstKeodCont, out flstAccAtEoD);
+            CreateRCPoints_TableMini(uEoDVoltage, ref uErr, ref rcModel, rcModel.SourceList, project, VoltagePoints, out flstKeodCont, out flstAccAtEoD);
         }
 
         private static void GetLstTblM_OCV(List<SourceData> ocvSource, out List<float> fLstTblM_OCV, out List<int> iLstTblM_SOC1)

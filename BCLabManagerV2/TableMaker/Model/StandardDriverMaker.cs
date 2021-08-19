@@ -20,7 +20,7 @@ namespace BCLabManager
             standardModel.outYValue = rcModel.outYValue;
         }
 
-        internal static List<TableMakerProduct> GenerateStandardDriver(StandardModel standardModel, string time, Project project)
+        internal static List<TableMakerProduct> GenerateStandardDriver(StandardModel standardModel, string time, Project project, List<int> VoltagePoints)
         {
             var rootPath = string.Empty;
             //if (isRemoteOutput)
@@ -40,7 +40,7 @@ namespace BCLabManager
             List<string> strHHeaderComments;
             UInt32 uErr = 0;
             TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), out strHHeaderComments);
-            return GenerateCHFiles(ref uErr, OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, standardModel.iOCVVolt, project.VoltagePoints, standardModel.listfTemp, standardModel.listfCurr, standardModel.outYValue, standardModel.fCTABase, standardModel.fCTASlope);
+            return GenerateCHFiles(ref uErr, OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, standardModel.iOCVVolt, VoltagePoints, standardModel.listfTemp, standardModel.listfCurr, standardModel.outYValue, standardModel.fCTABase, standardModel.fCTASlope);
         }
         private static List<TableMakerProduct> GenerateCHFiles(ref UInt32 uErr, string OutFolder, string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
         {

@@ -15,7 +15,7 @@ namespace BCLabManager
         static public TableMakerProductType MiniCType { get; set; }
         static public TableMakerProductType MiniHType { get; set; }
         #region Mini
-        public static void GetMiniModel(List<SourceData> ocvSource, List<SourceData> rcSource, OCVModel ocvModel, RCModel rcModel, Project project, ref MiniModel miniModel)
+        public static void GetMiniModel(List<SourceData> ocvSource, List<SourceData> rcSource, OCVModel ocvModel, RCModel rcModel, List<int> VoltagePoints, ref MiniModel miniModel)
         {
             MiniModel output = miniModel;
             output.iOCVVolt = ocvModel.iOCVVolt;
@@ -32,7 +32,7 @@ namespace BCLabManager
             GetLstTblM_OCV(ocvSource, out flstOCV);
             GetLstOutIR(num, iNumOfMiniPoints + 1, rcModel.listfCurr, flstOCV, flstRC_T, out ilstOutIR);
             List<float> flstTotalAcc;
-            GetLstTotalAcc(out flstTotalAcc, project, rcSource, rcModel);
+            GetLstTotalAcc(out flstTotalAcc, VoltagePoints, rcSource, rcModel);
             List<double> poly2EstFACC;
             List<double> poly2EstIR;
             GetPoly(rcModel.listfTemp, ilstOutIR, flstTotalAcc, out poly2EstFACC, out poly2EstIR);
@@ -275,13 +275,12 @@ namespace BCLabManager
 
         }
 
-        private static void GetLstTotalAcc(out List<float> flstTotalAcc, Project project, List<SourceData> rcSource, RCModel rcModel)
+        private static void GetLstTotalAcc(out List<float> flstTotalAcc, List<int> TableVoltagePoints, List<SourceData> rcSource, RCModel rcModel)
         {
             flstTotalAcc = new List<float>();
             List<float> fYPointACCall = new List<float>();
             var listfTemp = rcModel.listfTemp;
             var listfCurr = rcModel.listfCurr;
-            var TableVoltagePoints = project.VoltagePoints;
 
             foreach (float ft in listfTemp)     //from low temperature to list
             {

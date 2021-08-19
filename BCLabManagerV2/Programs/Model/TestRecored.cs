@@ -227,6 +227,11 @@ namespace BCLabManager.Model
         {
             this.Status = TestStatus.Abandoned;
         }
+
+        public TestRecord ShallowCopy()
+        {
+            return (TestRecord)this.MemberwiseClone();
+        }
     }
     public class TestRecordAddedEventArgs : EventArgs
     {

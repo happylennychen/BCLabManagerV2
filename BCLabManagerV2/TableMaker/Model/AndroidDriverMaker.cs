@@ -20,7 +20,7 @@ namespace BCLabManager
             androidModel.outYValue = rcModel.outYValue;
         }
 
-        internal static List<TableMakerProduct> GenerateAndroidDriver(AndroidModel androidModel, string time, Project project)
+        internal static List<TableMakerProduct> GenerateAndroidDriver(AndroidModel androidModel, string time, Project project, List<int> VoltagePoints)
         {
             var rootPath = string.Empty;
             //if (isRemoteOutput)
@@ -40,7 +40,7 @@ namespace BCLabManager
             List<string> strHHeaderComments;
             UInt32 uErr = 0;
             TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), out strHHeaderComments);
-            return GenerateCHFiles(ref uErr, OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, androidModel.iOCVVolt, project.VoltagePoints, androidModel.listfTemp, androidModel.listfCurr, androidModel.outYValue, androidModel.fCTABase, androidModel.fCTASlope);
+            return GenerateCHFiles(ref uErr, OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, androidModel.iOCVVolt, VoltagePoints, androidModel.listfTemp, androidModel.listfCurr, androidModel.outYValue, androidModel.fCTABase, androidModel.fCTASlope);
         }
         #region Driver
 
@@ -181,11 +181,11 @@ namespace BCLabManager
             {
                 if ((i == listfTemp.Count - 1))
                 {
-                    strCTmp = string.Format("{0}", (Convert.ToInt16(listfTemp[i])) * 10);
+                    strCTmp = string.Format("{0}", (Convert.ToInt16(listfTemp[i] * 10)));
                 }
                 else
                 {
-                    strCTmp = string.Format("{0}, ", (Convert.ToInt16(listfTemp[i])) * 10);
+                    strCTmp = string.Format("{0},", (Convert.ToInt16(listfTemp[i] * 10)));
                 }
                 line += (strCTmp);
             }
