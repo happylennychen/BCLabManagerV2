@@ -435,7 +435,6 @@ namespace BCLabManager.ViewModel
                         var rcStage1programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage1Project.Id && o.IsInvalid == false && o.Type.Name == "RC").ToList();
                         var rcStage1Records = GetCompletedRecordsFromPrograms(rcStage1programs);
                         rcStage1Records = rcStage1Records.Where(o => rcStage1Files.Contains(o.TestFilePath)).ToList();
-                        List<TestRecord> newRecords = RCTableMaker.GetNewRecords(rcStage2Records, rcStage1Records);
 
                         var tmrs = _tableMakerRecordService;
                         TableMakerRecord tmr = new TableMakerRecord();

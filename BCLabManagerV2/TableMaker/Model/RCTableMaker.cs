@@ -504,59 +504,6 @@ namespace BCLabManager
             return strRCHeader;
         }
 
-        public static List<TestRecord> GetNewRecords(List<TestRecord> rcStage2Records, List<TestRecord> rcStage1Records)
-        {
-            List<TestRecord> output = new List<TestRecord>();
-            List<double> stage1Currents = GetCurrentsFromRecords(rcStage1Records);
-            List<double> stage2Currents = GetCurrentsFromRecords(rcStage2Records);
-            List<double> stage1Temperatures = GetTemperaturesFromRecords(rcStage1Records);
-            List<double> stage2Temperatures = GetTemperaturesFromRecords(rcStage2Records);
-            List<double> newCurrents, newTemperatures;
-            GetNewPoints(stage1Currents, stage1Temperatures, stage2Currents, stage2Temperatures, out newCurrents, out newTemperatures);
-            foreach (var curr in newCurrents)
-            {
-                foreach (var temp in newTemperatures)
-                {
-                    var record = rcStage1Records.SingleOrDefault(o => o.Current == curr && o.Temperature == temp);
-                    if (record != null)     //新资料
-                    {
-                        output.Add(record);
-                    }
-                    else
-                    {
-                        record = rcStage2Records.SingleOrDefault(o => o.Current == curr && o.Temperature == temp);
-
-                        if (record != null)     //旧资料
-                        {
-                            output.Add(record);
-                        }
-                        else if (record == null)  //需要填充的资料
-                        {
-                            if (stage1Currents.Contains(curr))    //新电流
-                            {
-                                var temps = rcStage1Records.Where(o => o.Current == curr).Select(o => o.Temperature);   //找到新电流对应的所有温度
-                                var nearestTemp = temps.OrderBy(o => Math.Abs(o - temp)).First();  //再从中找到温度最接近的那一个
-                                var stage1Rec = rcStage1Records.SingleOrDefault(o => o.Temperature == nearestTemp && o.Current == curr);
-                                TestRecord blendrec = stage1Rec.ShallowCopy();
-                                blendrec.Temperature = temp;    //修改电流
-                                output.Add(blendrec);
-                            }
-                            else if (stage1Temperatures.Contains(temp))
-                            {
-                                var currs = rcStage1Records.Where(o => o.Temperature == temp).Select(o => o.Current);
-                                var nearestCurr = currs.OrderBy(o => Math.Abs(o - curr)).First();
-                                var stage1Rec = rcStage1Records.SingleOrDefault(o => o.Current == nearestCurr && o.Temperature == temp);
-                                var blendrec = stage1Rec.ShallowCopy();
-                                blendrec.Current = curr;
-                                output.Add(blendrec);
-                            }
-                        }
-                    }
-                }
-            }
-            return output;
-        }
-
         public static List<SourceData> GetNewSources(List<SourceData> rcStage2Sources, List<SourceData> rcStage1Sources)
         {
             List<SourceData> output = new List<SourceData>();
@@ -662,16 +609,6 @@ namespace BCLabManager
                 if (!newTemperatures.Contains(newTemp))
                     newTemperatures.Add(newTemp);
             }
-        }
-
-        private static List<double> GetTemperaturesFromRecords(List<TestRecord> records)
-        {
-            return records.Select(o => o.Temperature).Distinct().OrderBy(o => o).ToList();
-        }
-
-        private static List<double> GetCurrentsFromRecords(List<TestRecord> records)
-        {
-            return records.Select(o => o.Current).Distinct().OrderBy(o => o).ToList();
         }
         private static List<double> GetTemperaturesFromSources(List<SourceData> sources)
         {
