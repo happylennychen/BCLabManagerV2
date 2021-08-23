@@ -12,8 +12,6 @@ namespace BCLabManager
 {
     public static class LiteDriverMaker
     {
-        static public TableMakerProductType LiteCType { get; set; }
-        static public TableMakerProductType LiteHType { get; set; }
         public static void GetLiteModel(UInt32 uEoDVoltage, List<SourceData> ocvSource, List<SourceData> rcSource, OCVModel ocvModel, RCModel rcModel, Project project, List<int> VoltagePoints, ref LiteModel liteModel)
         {
             List<float> fLstTblM_OCV;
@@ -755,7 +753,7 @@ namespace BCLabManager
             }
         }
 
-        public static List<TableMakerProduct> GenerateLiteDriver(LiteModel liteModel, string time, Project project)
+        public static List<TableMakerProduct> GenerateLiteDriver(Stage stage, LiteModel liteModel, string time, Project project)
         {
             var rootPath = string.Empty;
             //if (isRemoteOutput)
@@ -764,7 +762,7 @@ namespace BCLabManager
             //}
             //else
             //{
-                rootPath = GlobalSettings.LocalFolder;
+            rootPath = GlobalSettings.LocalFolder;
             //}
             var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
             if (!Directory.Exists(OutFolder))
@@ -772,19 +770,22 @@ namespace BCLabManager
                 Directory.CreateDirectory(OutFolder);
             }
             List<string> strFilePaths = liteModel.FileNames;
-            List<string> strHHeaderComments;
+            List<string> strHHeaderComments, strCHeaderComments;
             UInt32 uErr = 0;
-            TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), out strHHeaderComments);
-            return GenerateCHFiles(OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, liteModel);
+            int type_id = TableMakerService.GetFileTypeID("LiteH", stage);
+            TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), type_id.ToString(), out strHHeaderComments);
+            type_id = TableMakerService.GetFileTypeID("LiteC", stage);
+            TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), type_id.ToString(), out strCHeaderComments);
+            return GenerateCHFiles(stage, OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, strCHeaderComments, liteModel);
         }
-        private static List<TableMakerProduct> GenerateCHFiles(string OutFolder, string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, LiteModel liteModel)
+        private static List<TableMakerProduct> GenerateCHFiles(Stage stage, string OutFolder, string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<string> strCHeaderComments, LiteModel liteModel)
         {
             string localCFilePath = System.IO.Path.Combine(OutFolder, strCFileStandardName);
             string localHFilePath = System.IO.Path.Combine(OutFolder, strHFileStandardName);
 
             List<string> hFileContent = GetHFileContent(strHFileStandardName, strHHeaderComments, liteModel.ilistCurr.Count);
             TableMakerService.CreateFileFromLines(localHFilePath, hFileContent);
-            List<string> cFileContent = GetCFileContent(strCFileStandardName, strHFileStandardName, strHHeaderComments, liteModel.ilistCurr, liteModel.flstdbDCapCof, liteModel.flstdbKeodCof, liteModel.flstTblOCVCof);
+            List<string> cFileContent = GetCFileContent(strCFileStandardName, strHFileStandardName, strCHeaderComments, liteModel.ilistCurr, liteModel.flstdbDCapCof, liteModel.flstdbKeodCof, liteModel.flstTblOCVCof);
             TableMakerService.CreateFileFromLines(localCFilePath, cFileContent);
 
 
@@ -794,7 +795,7 @@ namespace BCLabManager
             TableMakerProduct ctmp = new TableMakerProduct();
             ctmp.FilePath = targetPath;
             ctmp.IsValid = true;
-            ctmp.Type = LiteCType;
+            ctmp.Type = TableMakerService.GetFileType("LiteC", stage);
             output.Add(ctmp);
 
 
@@ -803,7 +804,7 @@ namespace BCLabManager
             TableMakerProduct htmp = new TableMakerProduct();
             htmp.FilePath = targetPath;
             htmp.IsValid = true;
-            htmp.Type = LiteHType;
+            htmp.Type = TableMakerService.GetFileType("LiteH", stage);
             output.Add(htmp);
 
             return output;
@@ -820,17 +821,6 @@ namespace BCLabManager
                 if (i == iLineCmtHCFile)
                 {
                     output.Add(shc + strStandardH);
-                }
-                else if (i == strHHeaderComments.Count - 2)
-                {
-                    //(A20210610)Francis, add a unique value
-                    string strCTmp;
-                    //if (tblSample.u16StageX == 2)
-                    strCTmp = "* " + "type_id = " + string.Format("{0:D}", TableMakerService.PRODUCT_TYPE_ID.PRODTYPE_HFILE_LITE);
-                    output.Add(strCTmp);
-                    //(E20210610)
-
-                    output.Add(shc);
                 }
                 else
                 {
@@ -881,16 +871,6 @@ namespace BCLabManager
                 if (i == iLineCmtHCFile)
                 {
                     output.Add(shc + strCFileName);
-                }
-                else if (i == strHHeaderComments.Count - 2)
-                {
-                    //(A20210610)Francis, add a unique value
-                    //if (tblSample.u16StageX == 2)
-                    strCTmp = "* " + "type_id = " + string.Format("{0:D}", TableMakerService.PRODUCT_TYPE_ID.PRODTYPE_HFILE_LITE);
-                    output.Add(strCTmp);
-                    //(E20210610)
-
-                    output.Add(shc);
                 }
                 else
                 {

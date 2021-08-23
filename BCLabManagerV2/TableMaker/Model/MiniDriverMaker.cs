@@ -13,8 +13,6 @@ namespace BCLabManager
     {
         static public int iNumOfMiniPoints { get; set; } = 100;           //(A200831)francis, for table_mini
         static public float fMiniTableSteps { get; set; } = 1;        //(A200831)francis, for table_mini
-        static public TableMakerProductType MiniCType { get; set; }
-        static public TableMakerProductType MiniHType { get; set; }
         #region Mini
         public static void GetMiniModel(List<SourceData> ocvSource, List<SourceData> rcSource, OCVModel ocvModel, RCModel rcModel, List<int> VoltagePoints, ref MiniModel miniModel)
         {
@@ -682,7 +680,7 @@ namespace BCLabManager
             poly2EstFACC = Fit.Polynomial(xdata, zdata, 2).ToList();        //2-order polynomial
         }
 
-        public static List<TableMakerProduct> GenerateMiniDriver(MiniModel miniModel, string time, Project project)
+        public static List<TableMakerProduct> GenerateMiniDriver(Stage stage, MiniModel miniModel, string time, Project project)
         {
             var rootPath = string.Empty;
             //if (isRemoteOutput)
@@ -699,14 +697,18 @@ namespace BCLabManager
                 Directory.CreateDirectory(OutFolder);
             }
             List<string> strFilePaths = miniModel.FileNames;
-            List<string> strHHeaderComments;
+            List<string> strHHeaderComments, strCHeaderComments;
             UInt32 uErr = 0;
-            TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), out strHHeaderComments);
-            return GenerateMiniCHFiles(OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, miniModel.iOCVVolt, miniModel.fCTABase, miniModel.fCTASlope, miniModel.poly2EstFACC, miniModel.poly2EstIR);
+            int type_id = TableMakerService.GetFileTypeID("MiniH", stage);
+            TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), type_id.ToString(), out strHHeaderComments);
+
+            type_id = TableMakerService.GetFileTypeID("MiniC", stage);
+            TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), type_id.ToString(), out strCHeaderComments);
+            return GenerateMiniCHFiles(stage, OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, strCHeaderComments, miniModel.iOCVVolt, miniModel.fCTABase, miniModel.fCTASlope, miniModel.poly2EstFACC, miniModel.poly2EstIR);
 
         }
 
-        private static List<TableMakerProduct> GenerateMiniCHFiles(string OutFolder, string strCFileMiniName, string strHFileMiniName, List<string> strHHeaderComments, List<int> ilstOCVVolt, double fCTABase, double fCTASlope, List<double> poly2EstFACC, List<double> poly2EstIR)
+        private static List<TableMakerProduct> GenerateMiniCHFiles(Stage stage, string OutFolder, string strCFileMiniName, string strHFileMiniName, List<string> strHHeaderComments, List<string> strCHeaderComments, List<int> ilstOCVVolt, double fCTABase, double fCTASlope, List<double> poly2EstFACC, List<double> poly2EstIR)
         {
             List<TableMakerProduct> output = new List<TableMakerProduct>();
             short iEnlargeIR = 10000;
@@ -723,9 +725,18 @@ namespace BCLabManager
             catch { }
 
             int i = 0;
+            int iLineCmtHCFile = 4;
             foreach (string shc in strHHeaderComments)
             {
-                FileContent.WriteLine(shc);
+                if (i == iLineCmtHCFile)
+                {
+                    FileContent.WriteLine(shc + strHFileMiniName);
+                }
+                else
+                {
+                    FileContent.WriteLine(shc);
+                }
+                i++;
             }
 
             var ilstCellTempData = TableMakerService.GenerateSampleCellTempData();
@@ -779,10 +790,17 @@ namespace BCLabManager
             }
 
             i = 0;
-            foreach (string scc in strHHeaderComments)
+            foreach (string scc in strCHeaderComments)
             {
-
-                FileContent.WriteLine(scc);
+                if (i == iLineCmtHCFile)
+                {
+                    FileContent.WriteLine(scc + strHFileMiniName);
+                }
+                else
+                {
+                    FileContent.WriteLine(scc);
+                }
+                i++;
             }
             #region write C file content to
             FileContent.WriteLine(string.Format("#include \"{0}\"", strHFileMiniName));
@@ -899,7 +917,7 @@ namespace BCLabManager
             TableMakerProduct ctmp = new TableMakerProduct();
             ctmp.FilePath = targetPath;
             ctmp.IsValid = true;
-            ctmp.Type = MiniCType;
+            ctmp.Type = TableMakerService.GetFileType("MiniC", stage);
             output.Add(ctmp);
 
             targetPath = FileTransferHelper.GetRemotePath(loaclMiniHPath,5);
@@ -907,7 +925,7 @@ namespace BCLabManager
             TableMakerProduct htmp = new TableMakerProduct();
             htmp.FilePath = targetPath;
             htmp.IsValid = true;
-            htmp.Type = MiniHType;
+            htmp.Type = TableMakerService.GetFileType("MiniH", stage);
             output.Add(htmp);
 
             return output;

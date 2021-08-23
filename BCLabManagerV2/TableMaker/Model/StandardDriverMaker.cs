@@ -7,8 +7,6 @@ namespace BCLabManager
 {
     public static class StandardDriverMaker
     {
-        static public TableMakerProductType StandardCType { get; set; }
-        static public TableMakerProductType StandardHType { get; set; }
         public static void GetStandardModel(OCVModel ocvModel, RCModel rcModel, ref StandardModel standardModel)
         {
             standardModel.iOCVVolt = ocvModel.iOCVVolt;
@@ -20,7 +18,7 @@ namespace BCLabManager
             standardModel.outYValue = rcModel.outYValue;
         }
 
-        internal static List<TableMakerProduct> GenerateStandardDriver(StandardModel standardModel, string time, Project project, List<int> VoltagePoints)
+        internal static List<TableMakerProduct> GenerateStandardDriver(Stage stage, StandardModel standardModel, string time, Project project, List<int> VoltagePoints)
         {
             var rootPath = string.Empty;
             //if (isRemoteOutput)
@@ -37,12 +35,15 @@ namespace BCLabManager
                 Directory.CreateDirectory(OutFolder);
             }
             List<string> strFilePaths = standardModel.FileNames;
-            List<string> strHHeaderComments;
+            List<string> strHHeaderComments, strCHeaderComments;
             UInt32 uErr = 0;
-            TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), out strHHeaderComments);
-            return GenerateCHFiles(ref uErr, OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, standardModel.iOCVVolt, VoltagePoints, standardModel.listfTemp, standardModel.listfCurr, standardModel.outYValue, standardModel.fCTABase, standardModel.fCTASlope);
+            int type_id = TableMakerService.GetFileTypeID("StandardH", stage);
+            TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), type_id.ToString(), out strHHeaderComments);
+            type_id = TableMakerService.GetFileTypeID("StandardC", stage);
+            TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), type_id.ToString(), out strCHeaderComments);
+            return GenerateCHFiles(stage, ref uErr, OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, strCHeaderComments, standardModel.iOCVVolt, VoltagePoints, standardModel.listfTemp, standardModel.listfCurr, standardModel.outYValue, standardModel.fCTABase, standardModel.fCTASlope);
         }
-        private static List<TableMakerProduct> GenerateCHFiles(ref UInt32 uErr, string OutFolder, string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
+        private static List<TableMakerProduct> GenerateCHFiles(Stage stage, ref UInt32 uErr, string OutFolder, string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<string> strCHeaderComments, List<int> ilstOCVVolt, List<int> voltList, List<float> listfTemp, List<float> listfCurr, List<List<int>> outYValue, double fCTABase, double fCTASlope)
         {
             string localCFilePath = System.IO.Path.Combine(OutFolder, strCFileStandardName);
             string localHFilePath = System.IO.Path.Combine(OutFolder, strHFileStandardName);
@@ -50,7 +51,7 @@ namespace BCLabManager
             List<string> hFileContent = GetHFileContent(strHFileStandardName, strHHeaderComments, ilstOCVVolt, voltList, listfCurr, listfTemp, fCTABase, fCTASlope);
             TableMakerService.CreateFileFromLines(localHFilePath, hFileContent);
 
-            List<string> cFileContent = GetCFileContent(strCFileStandardName, strHFileStandardName, strHHeaderComments, ilstOCVVolt, voltList, listfTemp, listfCurr, outYValue, fCTABase, fCTASlope);
+            List<string> cFileContent = GetCFileContent(strCFileStandardName, strHFileStandardName, strCHeaderComments, ilstOCVVolt, voltList, listfTemp, listfCurr, outYValue, fCTABase, fCTASlope);
             TableMakerService.CreateFileFromLines(localCFilePath, cFileContent);
 
 
@@ -60,7 +61,7 @@ namespace BCLabManager
             TableMakerProduct ctmp = new TableMakerProduct();
             ctmp.FilePath = targetPath;
             ctmp.IsValid = true;
-            ctmp.Type = StandardCType;
+            ctmp.Type = TableMakerService.GetFileType("StandardC", stage);
             output.Add(ctmp);
 
             targetPath = FileTransferHelper.GetRemotePath(localHFilePath, 5);
@@ -68,7 +69,7 @@ namespace BCLabManager
             TableMakerProduct htmp = new TableMakerProduct();
             htmp.FilePath = targetPath;
             htmp.IsValid = true;
-            htmp.Type = StandardHType;
+            htmp.Type = TableMakerService.GetFileType("StandardH", stage);
             output.Add(htmp);
 
             return output;

@@ -6,8 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows;
+using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using MathNet.Numerics;
+using Microsoft.EntityFrameworkCore;
 
 namespace BCLabManager
 {
@@ -192,8 +194,9 @@ namespace BCLabManager
             fs.Close();
             return true;
         }
-        public static bool GetDriverFileNames(string manufacturer, string betteryType, string absMaxCap, string type, string description, out List<string> strFilePaths)
+        public static bool GetDriverFileNames(string manufacturer, string betteryType, string absMaxCap, string type, Stage stage, out List<string> strFilePaths)
         {
+            string description = (stage == Stage.N1) ? "stage1" : "stage2";
             bool bReturn = false;
             string strTmpFile = "";
             strFilePaths = new List<string>();
@@ -209,7 +212,7 @@ namespace BCLabManager
 
             return bReturn;
         }
-        public static bool InitializeHeaderInfor(ref UInt32 uErr, string manufacturer, string betteryType, string absMaxCap, string limitChgVolt, string cutOffDsgVolt, out List<string> strHHeaderComments)
+        public static bool InitializeHeaderInfor(ref UInt32 uErr, string manufacturer, string betteryType, string absMaxCap, string limitChgVolt, string cutOffDsgVolt, string typeID, out List<string> strHHeaderComments)
         {
             bool bReturn = false;
             strHHeaderComments = new List<string>();
@@ -221,14 +224,14 @@ namespace BCLabManager
                 string fAndroidFullCap = absMaxCap;
                 string fAndroidLimitChgVoltage = limitChgVolt;
                 string fAndroidCutoffDsgVoltage = cutOffDsgVolt;
-                string strAndroidEquip = "";
-                string strAndroidTester = "";
-                string strAndroidBatteryID = "";
+                //string strAndroidEquip = "";
+                //string strAndroidTester = "";
+                //string strAndroidBatteryID = "";
 
 
                 #region add comment header string content for C and H file
                 strHHeaderComments.Add(string.Format("/*****************************************************************************"));
-                strHHeaderComments.Add(string.Format("* Copyright(c) O2Micro, 2019. All rights reserved."));
+                strHHeaderComments.Add(string.Format("* Copyright(c) O2Micro, 2021. All rights reserved."));
                 strHHeaderComments.Add(string.Format("*"));
                 strHHeaderComments.Add(string.Format("* O2Micro battery gauge driver"));
                 strHHeaderComments.Add(string.Format("* File: "));  //4
@@ -253,13 +256,14 @@ namespace BCLabManager
                 strHHeaderComments.Add(string.Format("* Absolute Max Capacity(mAhr): {0}", fAndroidFullCap));
                 strHHeaderComments.Add(string.Format("* Limited Charge Voltage(mV): {0}", fAndroidLimitChgVoltage));
                 strHHeaderComments.Add(string.Format("* Cutoff Discharge Voltage(mV): {0}", fAndroidCutoffDsgVoltage));
-                strHHeaderComments.Add(string.Format("* Equipment: {0}", strAndroidEquip)); //26
-                strHHeaderComments.Add(string.Format("* Tester: {0}", strAndroidTester));   //27
-                strHHeaderComments.Add(string.Format("* Battery ID: {0}", strAndroidBatteryID));    //28
-                                                                                                    //(A141024)Francis, add Version/Date/Comment 3 string into header comment of txt file
-                strHHeaderComments.Add(string.Format("* Version = "));
-                strHHeaderComments.Add(string.Format("* Date = "));
-                strHHeaderComments.Add(string.Format("* Comment = "));
+                //strHHeaderComments.Add(string.Format("* Equipment: {0}", strAndroidEquip)); //26
+                //strHHeaderComments.Add(string.Format("* Tester: {0}", strAndroidTester));   //27
+                //strHHeaderComments.Add(string.Format("* Battery ID: {0}", strAndroidBatteryID));    //28
+                //(A141024)Francis, add Version/Date/Comment 3 string into header comment of txt file
+                //strHHeaderComments.Add(string.Format("* Version = "));
+                //strHHeaderComments.Add(string.Format("* Date = "));
+                //strHHeaderComments.Add(string.Format("* Comment = "));
+                strHHeaderComments.Add(string.Format("* type_id = {0}", typeID));
                 //(E141024)
                 strHHeaderComments.Add(string.Format("*****************************************************************************/"));
                 strHHeaderComments.Add(string.Format(""));
@@ -269,114 +273,78 @@ namespace BCLabManager
             return bReturn;
         }
 
-        public static void GetFileNames(ref TableMakerModel tableMakerModel)
+        internal static TableMakerProductType GetFileType(string v, Stage stage)
         {
-            //var project = tableMakerModel.Project;
-            //var testers = tableMakerModel.Testers;
-
-            //OCVModel ocvModel = new OCVModel();
-            //RCModel rcModel = new RCModel();
-            //MiniModel miniModel = new MiniModel();
-            //StandardModel standardModel = new StandardModel();
-            //AndroidModel androidModel = new AndroidModel();
-            //LiteModel liteModel = new LiteModel();
-
-            //ocvModel.FileName = OCVTableMaker.GetOCVTableFileName(project);
-            //rcModel.FileName = RCTableMaker.GetRCTableFileName(project);
-            //List<string> strFileNames;
-            //GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "mini", out strFileNames);
-            //miniModel.FileNames = strFileNames;
-            //GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "standard", out strFileNames);
-            //standardModel.FileNames = strFileNames;
-            //GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "android", out strFileNames);
-            //androidModel.FileNames = strFileNames;
-            //GetDriverFileNames(project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), "lite", out strFileNames);
-            //liteModel.FileNames = strFileNames;
+            List<TableMakerProductType> types;
+            using (var uow = new UnitOfWork(new AppDbContext()))
+            {
+                types = uow.TableMakerProductTypes.GetAll().ToList();
+            }
+            var id = GetFileTypeID(v, stage);
+            return types.SingleOrDefault(o => o.Id == id);
         }
 
-        public static void Build(ref TableMakerModel tableMakerModel, uint uEodVoltage, string description, TableMakerRecordServiceClass tableMakerRecordService)
+        internal static int GetFileTypeID(string v, Stage stage)
         {
-            //try
-            //{
-            //    var project = tableMakerModel.Project;
-            //    var ocvRecords = tableMakerModel.OCVRecords;
-            //    var rcRecords = tableMakerModel.RCRecords;
-            //    var stage1ocvprograms = tableMakerModel.Stage1OCVPrograms;
-            //    var stage1rcprograms = tableMakerModel.Stage1RCPrograms;
-            //    var stage2ocvprograms = tableMakerModel.Stage2OCVPrograms;
-            //    var stage2rcprograms = tableMakerModel.Stage2RCPrograms;
-            //    var testers = tableMakerModel.Testers;
-            //    var ocvModel = tableMakerModel.OCVModel;
-            //    var rcModel = tableMakerModel.RCModel;
-            //    var miniModel = tableMakerModel.MiniModel;
-            //    var standardModel = tableMakerModel.StandardModel;
-            //    var androidModel = tableMakerModel.AndroidModel;
-            //    var liteModel = tableMakerModel.LiteModel;
-            //    var stage1ocvModel = tableMakerModel.Stage1OCVModel;
-            //    var stage1rcModel = tableMakerModel.Stage1RCModel;
-            //    var stage1miniModel = tableMakerModel.Stage1MiniModel;
-            //    var stage1standardModel = tableMakerModel.Stage1StandardModel;
-            //    var stage1androidModel = tableMakerModel.Stage1AndroidModel;
-            //    var stage1liteModel = tableMakerModel.Stage1LiteModel;
-            //    var stage2ocvModel = tableMakerModel.Stage2OCVModel;
-            //    var stage2rcModel = tableMakerModel.Stage2RCModel;
-            //    var stage2miniModel = tableMakerModel.Stage2MiniModel;
-            //    var stage2standardModel = tableMakerModel.Stage2StandardModel;
-            //    var stage2androidModel = tableMakerModel.Stage2AndroidModel;
-            //    var stage2liteModel = tableMakerModel.Stage2LiteModel;
-
-
-            //    TableMakerRecordServiceClass tmrs = tableMakerRecordService;
-            //    TableMakerRecord tmr = new TableMakerRecord();
-            //    tmr.EOD = uEodVoltage;
-            //    tmr.Description = description;
-            //    tmr.IsValid = true;
-            //    tmr.OCVSources = ocvRecords.Select(o=>o.TestFilePath).ToList();
-            //    tmr.RCSources = rcRecords.Select(o => o.TestFilePath).ToList();
-            //    tmr.Project = project;
-            //    tmr.TableMakerVersion = Version;
-            //    tmr.VoltagePoints = project.VoltagePoints;
-            //    tmr.Timestamp = DateTime.Now;
-            //    var products = GenerateFilePackage(tmr.Timestamp, ocvRecords, rcRecords, project, testers, uEodVoltage, ref ocvModel, ref rcModel, ref miniModel, ref standardModel, ref androidModel, ref liteModel);
-            //    tmr.Products = products;
-            //    tmrs.SuperAdd(tmr);
-            //}
-            //catch (Exception e)
-            //{
-            //    MessageBox.Show(e.Message);
-            //}
-        }
-
-        private static List<TableMakerProduct> GenerateFilePackage(DateTime timestamp, List<TestRecord> ocvRecords, List<TestRecord> rcRecords, Project project, List<Tester> testers, uint uEodVoltage, ref OCVModel ocvModel, ref RCModel rcModel, ref MiniModel miniModel, ref StandardModel standardModel, ref AndroidModel androidModel, ref LiteModel liteModel)
-        {
-            List<TableMakerProduct> products = new List<TableMakerProduct>();
-            //List<SourceData> ocvSource = null;
-            //if (ocvRecords != null && ocvRecords.Count != 0)
-            //{
-            //    OCVTableMaker.GetOCVSource(project, ocvRecords, testers, out ocvSource);
-            //    OCVTableMaker.GetOCVModel(ocvSource, ref ocvModel);
-            //    products.Add(OCVTableMaker.GenerateOCVTable(project, ocvModel));
-            //}
-
-            //if (rcRecords != null && rcRecords.Count != 0 && ocvSource != null)
-            //{
-            //    List<SourceData> rcSource;
-            //    RCTableMaker.GetRCSource(project, rcRecords, testers, out rcSource);
-            //    RCTableMaker.GetRCModel(rcSource, project, ref rcModel);
-            //    MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, project, ref miniModel);
-
-            //    StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
-
-            //    AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
-            //    products.Add(RCTableMaker.GenerateRCTable(project, rcModel));
-            //    products.AddRange(MiniDriverMaker.GenerateMiniDriver(miniModel, project));
-            //    products.AddRange(StandardDriverMaker.GenerateStandardDriver(standardModel, project));
-            //    products.AddRange(AndroidDriverMaker.GenerateAndroidDriver(androidModel, project));
-
-            //    LiteDriverMaker.GetLiteModel(uEodVoltage, ocvSource, rcSource, ocvModel, rcModel, project, ref liteModel);
-            //    products.AddRange(LiteDriverMaker.GenerateLiteDriver(liteModel, project));
-            //}
-            return products;
+            int id = -1;
+            switch (stage)
+            {
+                case Stage.N0:
+                    {
+                        switch (v)
+                        {
+                            case "OCV": id = 20; break;
+                            case "RC": id = 21; break;
+                            case "StandardH": id = 22; break;
+                            case "StandardC": id = 23; break;
+                            case "MiniH": id = 24; break;
+                            case "MiniC": id = 25; break;
+                            case "LiteH": id = 26; break;
+                            case "LiteC": id = 27; break;
+                            case "AndroidH": id = 36; break;
+                            case "AndroidC": id = 37; break;
+                            default: id = -1; break;
+                        }
+                    }
+                    break;
+                case Stage.N1:
+                    {
+                        switch (v)
+                        {
+                            case "OCV": id = 28; break;
+                            case "RC": id = 29; break;
+                            case "StandardH": id = 30; break;
+                            case "StandardC": id = 31; break;
+                            case "MiniH": id = 32; break;
+                            case "MiniC": id = 33; break;
+                            case "LiteH": id = 34; break;
+                            case "LiteC": id = 35; break;
+                            case "AndroidH": id = 38; break;
+                            case "AndroidC": id = 39; break;
+                            default: id = -1; break;
+                        }
+                    }
+                    break;
+                case Stage.N2:
+                    {
+                        switch (v)
+                        {
+                            case "OCV": id = 3; break;
+                            case "RC": id = 4; break;
+                            case "StandardH": id = 10; break;
+                            case "StandardC": id = 11; break;
+                            case "MiniH": id = 12; break;
+                            case "MiniC": id = 13; break;
+                            case "LiteH": id = 14; break;
+                            case "LiteC": id = 15; break;
+                            case "AndroidH": id = 6; break;
+                            case "AndroidC": id = 7; break;
+                            default: id = -1; break;
+                        }
+                    }
+                    break;
+            }
+            return id;
         }
     }
 }

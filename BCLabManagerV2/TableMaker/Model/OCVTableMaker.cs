@@ -229,7 +229,7 @@ namespace BCLabManager
             return result;
             #endregion
         }
-        public static TableMakerProduct GenerateOCVTable(Project project, string time, OCVModel ocvModel)
+        public static TableMakerProduct GenerateOCVTable(Stage stage, Project project, string time, OCVModel ocvModel)
         {
             var rootPath = string.Empty;
             //if (isRemoteOutput)
@@ -246,7 +246,7 @@ namespace BCLabManager
                 Directory.CreateDirectory(OutFolder);
             }
             string filePath = Path.Combine(OutFolder, ocvModel.FileName);
-            List<string> OCVHeader = GetOCVFileHeader(project);
+            List<string> OCVHeader = GetOCVFileHeader(stage, project);
             List<string> OCVContent = GetOCVFileContent(ocvModel.iOCVVolt);
             //UInt32 result = 0;
             //GenerateOCVTableFile(ref result, filePath, OCVHeader, OCVContent);
@@ -257,23 +257,26 @@ namespace BCLabManager
             tmp.FilePath = targetPath;
             tmp.IsValid = true;
             tmp.Project = project;
+            tmp.Type = TableMakerService.GetFileType("OCV", stage);
             return tmp;
         }
-        public static string GetOCVTableFileName(Project project, string description)
+        public static string GetOCVTableFileName(Project project, Stage stage)
         {
+            string description = (stage == Stage.N1) ? "stage1" : "stage2";
             string sFileSeperator = "_";
             //(A170308)Francis, falconly use file output folder
-            string outputFilePath = "OCV" + sFileSeperator + project.BatteryType.Manufacturer +
-                                sFileSeperator + project.BatteryType.Name +
-                                sFileSeperator + project.AbsoluteMaxCapacity.ToString() + "mAhr" +
-                                sFileSeperator + project.LimitedChargeVoltage + "mV" +
-                                sFileSeperator + project.CutoffDischargeVoltage + "mV" +
-                                sFileSeperator + TableMakerService.Version +
-                                sFileSeperator + description +
-                                "_Arm.txt";
+            //string outputFilePath = "OCV" + sFileSeperator + project.BatteryType.Manufacturer +
+            //                    sFileSeperator + project.BatteryType.Name +
+            //                    sFileSeperator + project.AbsoluteMaxCapacity.ToString() + "mAhr" +
+            //                    sFileSeperator + project.LimitedChargeVoltage + "mV" +
+            //                    sFileSeperator + project.CutoffDischargeVoltage + "mV" +
+            //                    sFileSeperator + TableMakerService.Version +
+            //                    sFileSeperator + description +
+            //                    "_Arm.txt";
+            string outputFilePath = project.BatteryType.Manufacturer + sFileSeperator + project.BatteryType.Name + sFileSeperator + project.AbsoluteMaxCapacity.ToString() + "mAhr" + sFileSeperator + "OCV" + sFileSeperator + description + ".txt";
             return outputFilePath;
         }
-        private static List<string> GetOCVFileHeader(Project project)
+        private static List<string> GetOCVFileHeader(Stage stage, Project project)
         {
             //(E170317)
 
@@ -303,6 +306,8 @@ namespace BCLabManager
             strOCVHeader.Add(string.Format("//Version = "));
             strOCVHeader.Add(string.Format("//Date = "));
             strOCVHeader.Add(string.Format("//Comment = "));
+            int type_id = TableMakerService.GetFileTypeID("OCV", stage);
+            strOCVHeader.Add(string.Format("//type_id = {0}", type_id.ToString()));
             //(E141024)
             strOCVHeader.Add(string.Format(""));
             return strOCVHeader;

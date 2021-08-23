@@ -426,7 +426,7 @@ namespace BCLabManager
             slope = sCo / ssX;
         }
 
-        public static TableMakerProduct GenerateRCTable(Project project, List<int> VoltagePoints, string time, RCModel rcModel)
+        public static TableMakerProduct GenerateRCTable(Stage stage, Project project, List<int> VoltagePoints, string time, RCModel rcModel)
         {
             var rootPath = string.Empty;
             //if (isRemoteOutput)
@@ -443,7 +443,7 @@ namespace BCLabManager
                 Directory.CreateDirectory(OutFolder);
             }
             string filePath = Path.Combine(OutFolder, rcModel.FileName);//GetRCTableFilePath(project);
-            var strRCHeader = GetRCFileHeader(project, rcModel.fCTABase, rcModel.fCTASlope);
+            var strRCHeader = GetRCFileHeader(stage, project, rcModel.fCTABase, rcModel.fCTASlope);
             var strRCContent = GetRCFileContent(rcModel.outYValue, VoltagePoints, rcModel.listfTemp, rcModel.listfCurr);
             //UInt32 uErr = 0;
             TableMakerService.CreateFileFromLines(filePath, strRCHeader.Concat(strRCContent).ToList());
@@ -453,23 +453,26 @@ namespace BCLabManager
             tmp.FilePath = targetPath;
             tmp.IsValid = true;
             tmp.Project = project;
+            tmp.Type = TableMakerService.GetFileType("RC", stage);
             return tmp;
         }
-        public static string GetRCTableFileName(Project project, string description)
+        public static string GetRCTableFileName(Project project, Stage stage)
         {
+            string description = (stage == Stage.N1) ? "stage1" : "stage2";
             string sFileSeperator = "_";
             //(A170308)Francis, falconly use file output folder
-            string outputFileName = "RC" + sFileSeperator + project.BatteryType.Manufacturer +
-                                sFileSeperator + project.BatteryType.Name +
-                                sFileSeperator + project.AbsoluteMaxCapacity + "mAhr" +
-                                sFileSeperator + project.LimitedChargeVoltage + "mV" +
-                                sFileSeperator + project.CutoffDischargeVoltage + "mV" +
-                                sFileSeperator + TableMakerService.Version +
-                                sFileSeperator + description +
-                                ".txt";
-            return outputFileName;
+            //string outputFilePath = "OCV" + sFileSeperator + project.BatteryType.Manufacturer +
+            //                    sFileSeperator + project.BatteryType.Name +
+            //                    sFileSeperator + project.AbsoluteMaxCapacity.ToString() + "mAhr" +
+            //                    sFileSeperator + project.LimitedChargeVoltage + "mV" +
+            //                    sFileSeperator + project.CutoffDischargeVoltage + "mV" +
+            //                    sFileSeperator + TableMakerService.Version +
+            //                    sFileSeperator + description +
+            //                    "_Arm.txt";
+            string outputFilePath = project.BatteryType.Manufacturer + sFileSeperator + project.BatteryType.Name + sFileSeperator + project.AbsoluteMaxCapacity.ToString() + "mAhr" + sFileSeperator + "RC" + sFileSeperator + description + ".txt";
+            return outputFilePath;
         }
-        private static List<string> GetRCFileHeader(Project project, double fCTABase, double fCTASlope)
+        private static List<string> GetRCFileHeader(Stage stage, Project project, double fCTABase, double fCTASlope)
         {
             List<string> strRCHeader = new List<string>();
 
@@ -498,6 +501,8 @@ namespace BCLabManager
             strRCHeader.Add(string.Format("//Date = "));
             strRCHeader.Add(string.Format("//Comment = "));
             strRCHeader.Add(string.Format(""));
+            int type_id = TableMakerService.GetFileTypeID("RC", stage);
+            strRCHeader.Add(string.Format("//type_id = {0}", type_id.ToString()));
             //(A20200826)Francis, for new CTA string, add after header comment
             strRCHeader.Add(string.Format("//CTABase = {0}", fCTABase));
             strRCHeader.Add(string.Format("//CTASlope = {0}", fCTASlope));

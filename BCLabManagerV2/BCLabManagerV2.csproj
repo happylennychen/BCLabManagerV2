@@ -409,6 +409,7 @@
     <Compile Include="Products\ViewModel\AllTableMakerProductsViewModel.cs" />
     <Compile Include="Products\ViewModel\TableMakerProductEditViewModel.cs" />
     <Compile Include="Products\ViewModel\TableMakerProductViewModel.cs" />
+    <Compile Include="TableMaker\ViewModel\Stage.cs" />
     <Compile Include="TableMaker\ViewModel\Stage1Source.cs" />
     <Compile Include="TableMaker\ViewModel\TableMakerConfirmationViewModel.cs" />
     <Compile Include="TableMaker\View\AllTableMakerProductsView.xaml.cs">
