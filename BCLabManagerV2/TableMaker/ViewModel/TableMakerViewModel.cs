@@ -362,6 +362,7 @@ namespace BCLabManager.ViewModel
                         var tmrs = _tableMakerRecordService;
                         TableMakerRecord tmr = new TableMakerRecord();
                         tmr.EOD = EOD;
+                        tmr.TableMakerVersion = TableMakerService.Version;
                         tmr.Description = Description;
                         tmr.IsValid = true;
                         tmr.OCVSources = ocvRecords.Select(o => o.TestFilePath).ToList();

@@ -314,6 +314,10 @@
     <Compile Include="Migrations\20210816082729_TestRecordMD5.designer.cs">
       <DependentUpon>20210816082729_TestRecordMD5.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20210823090126_ProductMD5.cs" />
+    <Compile Include="Migrations\20210823090126_ProductMD5.designer.cs">
+      <DependentUpon>20210823090126_ProductMD5.cs</DependentUpon>
+    </Compile>
     <Compile Include="TableMaker\Model\Service\TableMakerRecordServieClass.cs" />
     <Compile Include="TableMaker\Model\TableMakerRecord.cs" />
     <Compile Include="Programs\Model\CutOffBehavior.cs" />
@@ -409,7 +413,7 @@
     <Compile Include="Products\ViewModel\AllTableMakerProductsViewModel.cs" />
     <Compile Include="Products\ViewModel\TableMakerProductEditViewModel.cs" />
     <Compile Include="Products\ViewModel\TableMakerProductViewModel.cs" />
-    <Compile Include="TableMaker\ViewModel\Stage.cs" />
+    <Compile Include="TableMaker\Model\Stage.cs" />
     <Compile Include="TableMaker\ViewModel\Stage1Source.cs" />
     <Compile Include="TableMaker\ViewModel\TableMakerConfirmationViewModel.cs" />
     <Compile Include="TableMaker\View\AllTableMakerProductsView.xaml.cs">
@@ -460,7 +464,6 @@
     </Compile>
     <Compile Include="TableMaker\Model\AndroidModel.cs" />
     <Compile Include="TableMaker\Model\StandardModel.cs" />
-    <Compile Include="TableMaker\Model\TableMakerModel.cs" />
     <Compile Include="Settings\Model\Service\ProjectSettingServieClass.cs" />
     <Compile Include="Settings\Model\Service\TableMakerProductTypeServiceClass.cs" />
     <Compile Include="Settings\ViewModel\AllProjectSettingsViewModel.cs" />

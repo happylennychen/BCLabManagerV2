@@ -252,9 +252,10 @@ namespace BCLabManager
             //GenerateOCVTableFile(ref result, filePath, OCVHeader, OCVContent);
             TableMakerService.CreateFileFromLines(filePath, OCVHeader.Concat(OCVContent).ToList());
             string targetPath = FileTransferHelper.GetRemotePath(filePath, 5);
-            FileTransferHelper.FileCopyWithMD5Check(filePath, targetPath);
+            var MD5 = FileTransferHelper.FileCopyWithMD5Check(filePath, targetPath);
             TableMakerProduct tmp = new TableMakerProduct();
             tmp.FilePath = targetPath;
+            tmp.MD5 = MD5;
             tmp.IsValid = true;
             tmp.Project = project;
             tmp.Type = TableMakerService.GetFileType("OCV", stage);

@@ -10,6 +10,12 @@ namespace BCLabManager.Model
             get { return _filePath; }
             set { SetProperty(ref _filePath, value); }
         }
+        private string _MD5;
+        public string MD5
+        {
+            get { return _MD5; }
+            set { SetProperty(ref _MD5, value); }
+        }
         private TableMakerProductType _type;
         public TableMakerProductType Type
         {

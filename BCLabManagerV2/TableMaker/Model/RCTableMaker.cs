@@ -448,9 +448,10 @@ namespace BCLabManager
             //UInt32 uErr = 0;
             TableMakerService.CreateFileFromLines(filePath, strRCHeader.Concat(strRCContent).ToList());
             string targetPath = FileTransferHelper.GetRemotePath(filePath, 5);
-            FileTransferHelper.FileCopyWithMD5Check(filePath, targetPath);
+            var MD5 = FileTransferHelper.FileCopyWithMD5Check(filePath, targetPath);
             TableMakerProduct tmp = new TableMakerProduct();
             tmp.FilePath = targetPath;
+            tmp.MD5 = MD5;
             tmp.IsValid = true;
             tmp.Project = project;
             tmp.Type = TableMakerService.GetFileType("RC", stage);
