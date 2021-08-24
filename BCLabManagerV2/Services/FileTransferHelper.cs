@@ -84,7 +84,7 @@ namespace BCLabManager
                 if (fi1.Length != fi2.Length)
                     return false;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.Message);
                 return false;
@@ -128,18 +128,66 @@ namespace BCLabManager
             return path.Replace(substring, GlobalSettings.RemotePath);
         }
 
-        public static string GetLocalPath(string path, int level)
+        public static string GetLocalPath(string path, int level)       //替换从末尾算起第level层的斜杠左边的路径
         {
             int index = FindNthCharInString(path, '\\', level);
             var substring = path.Substring(0, index + 1);
             return path.Replace(substring, GlobalSettings.LocalFolder);
         }
-        private static int FindNthCharInString(string str, char v, int count)
+        private static int FindNthCharInString(string str, char v, int count)   //找到str中第count个v对应的index
         {
             int index = str.Length - 1;
             for (int i = 0; i < count; i++)
                 index = str.LastIndexOf(v, index - 1);
             return index;
+        }
+
+        public static string GetLocalPath(string path)       //不带level，需要根据路径中的特性找到对应的level
+        {
+            int level = GetLevel(path);
+            int index = FindNthCharInString(path, '\\', level);
+            var substring = path.Substring(0, index + 1);
+            return path.Replace(substring, GlobalSettings.LocalFolder);
+        }
+
+        public static string GetRemotePath(string path)
+        {
+            int level = GetLevel(path);
+            int index = FindNthCharInString(path, '\\', level);
+            var substring = path.Substring(0, index + 1);
+            return path.Replace(substring, GlobalSettings.RemotePath);
+        }
+
+        private static int GetLevel(string path)
+        {
+            int level = -1;
+            if (path.Contains(GlobalSettings.LocalFolder))
+            {
+                level = GetRelativeLevel(path, GlobalSettings.LocalFolder);
+            }
+            else if (path.Contains(GlobalSettings.RemotePath))
+            {
+                level = GetRelativeLevel(path, GlobalSettings.RemotePath);
+            }
+            else if (path.Contains(GlobalSettings.TestDataFolderName))
+            {
+                level = GetRelativeLevel(path, GlobalSettings.TestDataFolderName);
+                level += 2;
+            }
+            else if (path.Contains(GlobalSettings.ProductFolderName))
+            {
+                level = GetRelativeLevel(path, GlobalSettings.ProductFolderName);
+                level += 2;
+            }
+            return level;
+        }
+
+        private static int GetRelativeLevel(string path, string str)
+        {
+            var index = path.IndexOf(str);
+            var sub = path.Substring(index);
+            var level = sub.Count(x => x == '\\');
+            return level;
         }
     }
 }
