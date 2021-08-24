@@ -153,7 +153,15 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public List<TableMakerProduct> Products { get { return _selectedRecord.Products; } }
+        public List<TableMakerProduct> Products 
+        { 
+            get 
+            {
+                if (_selectedRecord == null)
+                    return null;
+                return _selectedRecord.Products; 
+            } 
+        }
         #endregion // Presentation Properties
 
         #region Public Methods
