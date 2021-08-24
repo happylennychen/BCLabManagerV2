@@ -182,10 +182,10 @@ namespace BCLabManager
             return level;
         }
 
-        private static int GetRelativeLevel(string path, string str)
+        public static int GetRelativeLevel(string path, string str)
         {
             var index = path.IndexOf(str);
-            var sub = path.Substring(index);
+            var sub = path.Substring(index+str.Length);
             var level = sub.Count(x => x == '\\');
             return level;
         }
