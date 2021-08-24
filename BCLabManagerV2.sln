@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCLabManagerV2", "BCLabMana
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{1B138FC9-3D46-48AD-91E1-CFBD003345B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debug", "Debug\Debug.csproj", "{9B75F7CF-4213-4CAF-8A67-13216FB35B1C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debug", "CodeDebug\Debug.csproj", "{9B75F7CF-4213-4CAF-8A67-13216FB35B1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -158,7 +158,7 @@ namespace BCLabManager
             return path.Replace(substring, GlobalSettings.RemotePath);
         }
 
-        private static int GetLevel(string path)
+        public static int GetLevel(string path)
         {
             int level = -1;
             if (path.Contains(GlobalSettings.LocalFolder))
