@@ -375,14 +375,14 @@ namespace BCLabManager.ViewModel
                         tmr.IsValid = true;
                         tmr.OCVSources = ocvRecords.Select(o => o.TestFilePath).ToList();
                         tmr.RCSources = rcSources;
-                        tmr.Project = stage2Project;
+                        tmr.Project = baseProject;
                         tmr.TableMakerVersion = Version;
                         tmr.VoltagePoints = _voltagePoints;
                         tmr.Timestamp = timestamp;
                         tmr.Products = products;
                         tmrs.SuperAdd(tmr);
 
-                        var folder = $@"{GlobalSettings.LocalFolder}{stage2Project.BatteryType.Name}\{stage2Project.Name}\{GlobalSettings.ProductFolderName}\{time}";
+                        var folder = $@"{GlobalSettings.LocalFolder}{baseProject.BatteryType.Name}\{baseProject.Name}\{GlobalSettings.ProductFolderName}\{time}";
                         string timespan = Math.Round(stopwatch.Elapsed.TotalSeconds, 0).ToString() + "S";
                         MessageBox.Show($"Completed. It took {timespan} to get the job done.");
                         Process.Start(folder);

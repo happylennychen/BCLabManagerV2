@@ -257,7 +257,7 @@ namespace BCLabManager
             tmp.FilePath = targetPath;
             tmp.MD5 = MD5;
             tmp.IsValid = true;
-            tmp.Project = project;
+            //tmp.Project = project;
             tmp.Type = TableMakerService.GetFileType("OCV", stage);
             return tmp;
         }
