@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCLabManagerV2", "BCLabManagerV2\BCLabManagerV2.csproj", "{C8DD48FD-4981-4CCD-8EF4-7C3A8CB89B75}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{1B138FC9-3D46-48AD-91E1-CFBD003345B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debug", "CodeDebug\Debug.csproj", "{9B75F7CF-4213-4CAF-8A67-13216FB35B1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,22 @@ Global
 		{C8DD48FD-4981-4CCD-8EF4-7C3A8CB89B75}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C8DD48FD-4981-4CCD-8EF4-7C3A8CB89B75}.Release|x86.ActiveCfg = Release|x86
 		{C8DD48FD-4981-4CCD-8EF4-7C3A8CB89B75}.Release|x86.Build.0 = Release|x86
+		{1B138FC9-3D46-48AD-91E1-CFBD003345B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B138FC9-3D46-48AD-91E1-CFBD003345B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B138FC9-3D46-48AD-91E1-CFBD003345B4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1B138FC9-3D46-48AD-91E1-CFBD003345B4}.Debug|x86.Build.0 = Debug|Any CPU
+		{1B138FC9-3D46-48AD-91E1-CFBD003345B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B138FC9-3D46-48AD-91E1-CFBD003345B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B138FC9-3D46-48AD-91E1-CFBD003345B4}.Release|x86.ActiveCfg = Release|Any CPU
+		{1B138FC9-3D46-48AD-91E1-CFBD003345B4}.Release|x86.Build.0 = Release|Any CPU
+		{9B75F7CF-4213-4CAF-8A67-13216FB35B1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B75F7CF-4213-4CAF-8A67-13216FB35B1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B75F7CF-4213-4CAF-8A67-13216FB35B1C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9B75F7CF-4213-4CAF-8A67-13216FB35B1C}.Debug|x86.Build.0 = Debug|Any CPU
+		{9B75F7CF-4213-4CAF-8A67-13216FB35B1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B75F7CF-4213-4CAF-8A67-13216FB35B1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B75F7CF-4213-4CAF-8A67-13216FB35B1C}.Release|x86.ActiveCfg = Release|Any CPU
+		{9B75F7CF-4213-4CAF-8A67-13216FB35B1C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

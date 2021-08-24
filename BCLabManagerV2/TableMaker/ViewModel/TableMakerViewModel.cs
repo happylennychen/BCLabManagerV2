@@ -339,7 +339,11 @@ namespace BCLabManager.ViewModel
                             List<SourceData> rcStage2Source;
                             List<SourceData> rcStage1Source;
                             RCTableMaker.GetRCSource(stage1Project, rcStage2Records, testers, out rcStage2Source);
+                            if (rcStage2Source == null)
+                                return;
                             RCTableMaker.GetRCSource(stage1Project, rcStage1Records, testers, out rcStage1Source);
+                            if (rcStage1Source == null)
+                                return;
                             List<SourceData> rcSource = RCTableMaker.GetNewSources(rcStage2Source, rcStage1Source);
                             RCTableMaker.GetRCModel(rcSource, stage1Project.AbsoluteMaxCapacity, _voltagePoints, ref rcModel); //做出中间table
                             MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, _voltagePoints, ref miniModel);
