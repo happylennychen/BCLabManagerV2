@@ -93,6 +93,11 @@ namespace BCLabManager
             return true;
         }
 
+        public static bool CheckFileMD5(string filePath, string MD5)
+        {
+            return MD5 == GetMD5(filePath);
+        }
+
         public static string FileCombine(List<string> rawDataFullPathList, string fileFullPath)   //默认按顺序导入
         {
             bool isFirst = true;

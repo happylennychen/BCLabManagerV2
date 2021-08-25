@@ -60,6 +60,11 @@ namespace BCLabManager
                     filePath = tr.TestFilePath;
                 }
                 //}
+                if (!FileTransferHelper.CheckFileMD5(filePath, tr.MD5))
+                {
+                    MessageBox.Show($"{filePath} MD5 Check Failed!");
+                    return;
+                }
                 UInt32 result = tester.ITesterProcesser.LoadRawToSource(filePath, ref sd);
                 if (result == ErrorCode.NORMAL)
                 {
