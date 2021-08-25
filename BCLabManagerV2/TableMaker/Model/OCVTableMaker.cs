@@ -43,8 +43,12 @@ namespace BCLabManager
                     filePath = FileTransferHelper.GetLocalPath(tr.TestFilePath, 4);
                     if (!File.Exists(filePath))
                     {
-                        MessageBox.Show($"No such file.{filePath}");
-                        return;
+                        if (!File.Exists(tr.TestFilePath))
+                        {
+                            MessageBox.Show($"No such file.{filePath}");
+                            return;
+                        }
+                        filePath = tr.TestFilePath;
                     }
                     //}
                     UInt32 result = tester.ITesterProcesser.LoadRawToSource(filePath, ref sd);
