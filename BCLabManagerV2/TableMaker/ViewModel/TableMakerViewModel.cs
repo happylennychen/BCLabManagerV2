@@ -150,6 +150,7 @@ namespace BCLabManager.ViewModel
                 SetProperty(ref _selectedRecord, value);
                 //Products = new ObservableCollection<TableMakerProduct>(_selectedRecord.Products);
                 RaisePropertyChanged("Products");
+                RaisePropertyChanged("Sources");
             }
         }
 
@@ -160,7 +161,16 @@ namespace BCLabManager.ViewModel
                 if (_selectedRecord == null)
                     return null;
                 return _selectedRecord.Products; 
-            } 
+            }
+        }
+        public List<string> Sources
+        {
+            get
+            {
+                if (_selectedRecord == null)
+                    return null;
+                return _selectedRecord.OCVSources.Concat(_selectedRecord.RCSources).ToList();
+            }
         }
         #endregion // Presentation Properties
 
