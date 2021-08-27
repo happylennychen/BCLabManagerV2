@@ -219,7 +219,8 @@ namespace BCLabManager.Model
             testRecord.Status = TestStatus.Invalid;
             try
             {
-                File.Move(testRecord.TestFilePath, testRecord.TestFilePath + "_INVALID");
+                if (File.Exists(testRecord.TestFilePath))
+                    File.Move(testRecord.TestFilePath, testRecord.TestFilePath + "_INVALID");
             }
             catch (Exception e)
             {
@@ -231,10 +232,11 @@ namespace BCLabManager.Model
         internal void Abandon(TestRecord testRecord)
         {
             testRecord.Status = TestStatus.Abandoned;
+            testRecord.TestFilePath += "_ABANDONED";
             if (testRecord.TestFilePath != string.Empty)
             {
-                File.Move(testRecord.TestFilePath, testRecord.TestFilePath + "_ABANDONED");
-                testRecord.TestFilePath += "_ABANDONED";
+                if (File.Exists(testRecord.TestFilePath))
+                    File.Move(testRecord.TestFilePath, testRecord.TestFilePath + "_ABANDONED");
             }
             DatabaseUpdate(testRecord);
         }

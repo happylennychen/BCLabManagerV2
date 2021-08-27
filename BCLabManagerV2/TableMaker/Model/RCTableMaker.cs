@@ -11,9 +11,10 @@ namespace BCLabManager
     public static class RCTableMaker
     {
         #region RC
-        public static void GetRCSource(Project project, List<TestRecord> testRecords, List<Tester> testers, out List<SourceData> SDList)
+        public static void GetRCSource(Project project, List<TestRecord> testRecords, List<Tester> testers, out List<SourceData> SDList, out List<string> Sources)
         {
             SDList = new List<SourceData>();
+            Sources = new List<string>();
             foreach (var tr in testRecords)
             {
                 SourceData sd = new SourceData();
@@ -54,21 +55,24 @@ namespace BCLabManager
                 {
                     if (!File.Exists(tr.TestFilePath))
                     {
-                        MessageBox.Show($"No such file.{filePath}");
+                        MessageBox.Show($"No such file.{tr.TestFilePath}");
                         return;
                     }
-                    filePath = tr.TestFilePath;
+                    FileTransferHelper.FileCopyWithLog(tr.TestFilePath, filePath);
+                    //filePath = tr.TestFilePath;
                 }
                 //}
-                if (!FileTransferHelper.CheckFileMD5(filePath, tr.MD5))
-                {
-                    MessageBox.Show($"{filePath} MD5 Check Failed!");
-                    return;
-                }
+                if (tr.MD5 != null && tr.MD5 != string.Empty)
+                    if (!FileTransferHelper.CheckFileMD5(filePath, tr.MD5))
+                    {
+                        MessageBox.Show($"{filePath} MD5 Check Failed!");
+                        return;
+                    }
                 UInt32 result = tester.ITesterProcesser.LoadRawToSource(filePath, ref sd);
                 if (result == ErrorCode.NORMAL)
                 {
                     SDList.Add(sd);
+                    Sources.Add(tr.TestFilePath);
                 }
                 //string filePath = Path.Combine("D:\\Issues\\Open\\BC_Lab\\Table Maker\\Francis 30Q Source Data", Path.GetFileName(tr.TestFilePath));
                 //if (File.Exists(filePath))

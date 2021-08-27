@@ -137,7 +137,7 @@
                             <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
                             <DataGridTextColumn Header="Is Valid" IsReadOnly="True" Binding="{Binding Path=IsValid}"></DataGridTextColumn>
                             <DataGridTextColumn Header="Project" IsReadOnly="True" Binding="{Binding Path=Project}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="TM Version" IsReadOnly="True" Binding="{Binding Path=Version}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="TM Version" IsReadOnly="True" Binding="{Binding Path=TableMakerVersion}"></DataGridTextColumn>
                             <DataGridTextColumn Header="EOD" IsReadOnly="True" Binding="{Binding Path=EOD}"></DataGridTextColumn>
                             <DataGridTextColumn Header="Timestamp" IsReadOnly="True" Binding="{Binding Path=Timestamp}"></DataGridTextColumn>
                             <DataGridTextColumn Header="Description" IsReadOnly="True" Binding="{Binding Path=Description}"></DataGridTextColumn>

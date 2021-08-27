@@ -13,9 +13,10 @@ namespace BCLabManager
         static public int iMinPercent = 0;
         static public int iMaxPercent = 10000;
         #region OCV
-        public static void GetOCVSource(Project project, List<TestRecord> testRecords, List<Tester> testers, out List<SourceData> MaxSDList)
+        public static void GetOCVSource(Project project, List<TestRecord> testRecords, List<Tester> testers, out List<SourceData> MaxSDList, out List<string> Sources)
         {
             MaxSDList = new List<SourceData>();
+            Sources = new List<string>();
             foreach (var grp in testRecords.GroupBy(o => o.Current))
             {
                 List<SourceData> SDList = new List<SourceData>();   //找出最大的sd
@@ -45,21 +46,24 @@ namespace BCLabManager
                     {
                         if (!File.Exists(tr.TestFilePath))
                         {
-                            MessageBox.Show($"No such file.{filePath}");
+                            MessageBox.Show($"No such file.{tr.TestFilePath}");
                             return;
                         }
-                        filePath = tr.TestFilePath;
+                        //filePath = tr.TestFilePath;
+                        FileTransferHelper.FileCopyWithLog(tr.TestFilePath, filePath);
                     }
                     //}
-                    if (!FileTransferHelper.CheckFileMD5(filePath, tr.MD5))
-                    {
-                        MessageBox.Show($"{filePath} MD5 Check Failed!");
-                        return;
-                    }
+                    if (tr.MD5 != null && tr.MD5 != string.Empty)
+                        if (!FileTransferHelper.CheckFileMD5(filePath, tr.MD5))
+                        {
+                            MessageBox.Show($"{filePath} MD5 Check Failed!");
+                            return;
+                        }
                     UInt32 result = tester.ITesterProcesser.LoadRawToSource(filePath, ref sd);
                     if (result == ErrorCode.NORMAL)
                     {
                         SDList.Add(sd);
+                        Sources.Add(tr.TestFilePath);
                     }
                     //string filePath = Path.Combine("D:\\Issues\\Open\\BC_Lab\\Table Maker\\Francis 30Q Source Data", Path.GetFileName(tr.TestFilePath));
                     //if (File.Exists(filePath))

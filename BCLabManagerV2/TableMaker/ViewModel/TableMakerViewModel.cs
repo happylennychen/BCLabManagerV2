@@ -312,6 +312,7 @@ namespace BCLabManager.ViewModel
             if (tmcvm.IsOK)
             {
                 //Thread t = new Thread(() =>
+                try
                 {
                     if (MessageBox.Show("It will take a while to get the work done, Continue?", "Generate Tables and Drivers.", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                     {
@@ -329,13 +330,16 @@ namespace BCLabManager.ViewModel
                         List<TableMakerProduct> products = new List<TableMakerProduct>();
 
                         List<SourceData> ocvSource = null;
+                        List<string> ocvSourceFiles = null;
                         if (ocvRecords != null && ocvRecords.Count != 0)
                         {
-                            OCVTableMaker.GetOCVSource(stage2Project, ocvRecords, testers, out ocvSource);
+                            OCVTableMaker.GetOCVSource(stage2Project, ocvRecords, testers, out ocvSource, out ocvSourceFiles);
+                            if (ocvSource == null)
+                                return;
                             OCVTableMaker.GetOCVModel(ocvSource, ref ocvModel);
                             products.Add(OCVTableMaker.GenerateOCVTable(stage, baseProject, time, ocvModel));
                         }
-                        List<string> rcSources;
+                        List<string> rcSourceFiles = null;
                         if (stage1Project != null)
                         {
                             var rcStage2Records = GetCompletedRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList());
@@ -344,16 +348,19 @@ namespace BCLabManager.ViewModel
                             var rcStage1programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage1Project.Id && o.IsInvalid == false && o.Type.Name == "RC").ToList();
                             var rcStage1Records = GetCompletedRecordsFromPrograms(rcStage1programs);
                             rcStage1Records = rcStage1Records.Where(o => rcStage1Files.Contains(o.TestFilePath)).ToList();
-                            rcSources = rcStage2Records.Select(o => o.TestFilePath).ToList().Concat(rcStage1Files).ToList();
+                            //rcSources = rcStage2Records.Select(o => o.TestFilePath).ToList().Concat(rcStage1Files).ToList();
 
                             List<SourceData> rcStage2Source;
                             List<SourceData> rcStage1Source;
-                            RCTableMaker.GetRCSource(stage1Project, rcStage2Records, testers, out rcStage2Source);
+                            List<string> stage1RcSourceFiles = null;
+                            List<string> stage2RcSourceFiles = null;
+                            RCTableMaker.GetRCSource(stage1Project, rcStage2Records, testers, out rcStage2Source, out stage2RcSourceFiles);
                             if (rcStage2Source == null)
                                 return;
-                            RCTableMaker.GetRCSource(stage1Project, rcStage1Records, testers, out rcStage1Source);
+                            RCTableMaker.GetRCSource(stage1Project, rcStage1Records, testers, out rcStage1Source, out stage1RcSourceFiles);
                             if (rcStage1Source == null)
                                 return;
+                            rcSourceFiles = stage1RcSourceFiles.Concat(stage2RcSourceFiles).ToList();
                             List<SourceData> rcSource = RCTableMaker.GetNewSources(rcStage2Source, rcStage1Source);
                             RCTableMaker.GetRCModel(rcSource, stage1Project.AbsoluteMaxCapacity, _voltagePoints, ref rcModel); //做出中间table
                             MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, _voltagePoints, ref miniModel);
@@ -364,10 +371,12 @@ namespace BCLabManager.ViewModel
                         else
                         {
                             var rcRecords = GetCompletedRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList());
-                            rcSources = rcRecords.Select(o => o.TestFilePath).ToList();
+                            //rcSources = rcRecords.Select(o => o.TestFilePath).ToList();
 
                             List<SourceData> rcSource;
-                            RCTableMaker.GetRCSource(stage2Project, rcRecords, testers, out rcSource);
+                            RCTableMaker.GetRCSource(stage2Project, rcRecords, testers, out rcSource, out rcSourceFiles);
+                            if (rcSource == null)
+                                return;
                             RCTableMaker.GetRCModel(rcSource, stage2Project.AbsoluteMaxCapacity, _voltagePoints, ref rcModel);
                             MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, _voltagePoints, ref miniModel);
                             StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
@@ -387,8 +396,8 @@ namespace BCLabManager.ViewModel
                         tmr.TableMakerVersion = TableMakerService.Version;
                         tmr.Description = Description;
                         tmr.IsValid = true;
-                        tmr.OCVSources = ocvRecords.Select(o => o.TestFilePath).ToList();
-                        tmr.RCSources = rcSources;
+                        tmr.OCVSources = ocvSourceFiles;
+                        tmr.RCSources = rcSourceFiles;
                         tmr.Project = baseProject;
                         tmr.TableMakerVersion = Version;
                         tmr.VoltagePoints = _voltagePoints;
@@ -401,7 +410,12 @@ namespace BCLabManager.ViewModel
                         MessageBox.Show($"Completed. It took {timespan} to get the job done.");
                         Process.Start(folder);
                     }
-                }//);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+                //);
                 //t.Start();
             }
         }
