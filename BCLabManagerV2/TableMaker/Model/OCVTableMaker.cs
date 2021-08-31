@@ -13,7 +13,7 @@ namespace BCLabManager
         static public int iMinPercent = 0;
         static public int iMaxPercent = 10000;
         #region OCV
-        public static void GetOCVSource(Project project, List<TestRecord> testRecords, List<Tester> testers, out List<SourceData> MaxSDList, out List<string> Sources)
+        public static bool GetOCVSource(Project project, List<TestRecord> testRecords, List<Tester> testers, out List<SourceData> MaxSDList, out List<string> Sources)
         {
             MaxSDList = new List<SourceData>();
             Sources = new List<string>();
@@ -41,13 +41,19 @@ namespace BCLabManager
                     //else
                     //{
                     //filePath = TableMakerService.GetLocalPath(tr.TestFilePath);
-                    filePath = FileTransferHelper.GetLocalPath(tr.TestFilePath, 4);
+                    filePath = FileTransferHelper.GetLocalPath(tr.TestFilePath);
                     if (!File.Exists(filePath))
                     {
                         if (!File.Exists(tr.TestFilePath))
                         {
                             MessageBox.Show($"No such file.{tr.TestFilePath}");
-                            return;
+                            Event evt = new Event();
+                            evt.Module = Module.FileOperation;
+                            evt.Timestamp = DateTime.Now;
+                            evt.Type = EventType.Error;
+                            evt.Description = $"Cannot access file {tr.TestFilePath}.";
+                            EventService.SuperAdd(evt);
+                            return false;
                         }
                         //filePath = tr.TestFilePath;
                         FileTransferHelper.FileCopyWithLog(tr.TestFilePath, filePath);
@@ -57,7 +63,13 @@ namespace BCLabManager
                         if (!FileTransferHelper.CheckFileMD5(filePath, tr.MD5))
                         {
                             MessageBox.Show($"{filePath} MD5 Check Failed!");
-                            return;
+                            Event evt = new Event();
+                            evt.Module = Module.FileOperation;
+                            evt.Timestamp = DateTime.Now;
+                            evt.Type = EventType.Error;
+                            evt.Description = $"{filePath} MD5 Check Failed!";
+                            EventService.SuperAdd(evt);
+                            return false;
                         }
                     UInt32 result = tester.ITesterProcesser.LoadRawToSource(filePath, ref sd);
                     if (result == ErrorCode.NORMAL)
@@ -78,6 +90,7 @@ namespace BCLabManager
                 SourceData maxSD = SDList.OrderByDescending(o => o.fAccmAhrCap).First();
                 MaxSDList.Add(maxSD);
             }
+            return true;
         }
         public static void GetOCVModel(List<SourceData> MaxSDList, ref OCVModel ocvModel)
         {
@@ -264,7 +277,7 @@ namespace BCLabManager
             //UInt32 result = 0;
             //GenerateOCVTableFile(ref result, filePath, OCVHeader, OCVContent);
             TableMakerService.CreateFileFromLines(filePath, OCVHeader.Concat(OCVContent).ToList());
-            string targetPath = FileTransferHelper.GetRemotePath(filePath, 5);
+            string targetPath = FileTransferHelper.GetRemotePath(filePath);
             var MD5 = FileTransferHelper.FileCopyWithMD5Check(filePath, targetPath);
             TableMakerProduct tmp = new TableMakerProduct();
             tmp.FilePath = targetPath;

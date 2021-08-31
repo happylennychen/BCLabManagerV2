@@ -342,7 +342,7 @@ namespace BCLabManager.Model
         internal string DataPreProcess(TestRecord record, List<string> rawDataFullPathList/*, bool isRename*/, string newName, int startIndex, DateTime st, DateTime et, string batteryType, string projectName, Program program, Recipe recipe, ITesterProcesser processer, bool isSkipDP, uint options, out string MD5)
         {
             MD5 = string.Empty;
-            string remoteProjectPath = $@"{GlobalSettings.RemotePath}{batteryType}\{projectName}";
+            string remoteProjectPath = $@"{GlobalSettings.UniversalPath}{batteryType}\{projectName}";
             string localProjectPath = $@"{GlobalSettings.LocalFolder}{batteryType}\{projectName}";
             string localTestFileFullPath = string.Empty;
             if (rawDataFullPathList.Count > 1)

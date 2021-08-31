@@ -24,7 +24,7 @@ namespace BCLabManager.Model
 
         public void FileOperation(TableMakerProduct item)
         {
-            string root = $@"{GlobalSettings.RemotePath}{item.Project.BatteryType.Name}\{item.Project.Name}";
+            string root = $@"{GlobalSettings.UniversalPath}{item.Project.BatteryType.Name}\{item.Project.Name}";
             string temproot = $@"{GlobalSettings.LocalFolder}{item.Project.BatteryType.Name}\{item.Project.Name}";
             string temptestfilepath = string.Empty;
             temptestfilepath = CopyToFolder(item.FilePath, temproot);

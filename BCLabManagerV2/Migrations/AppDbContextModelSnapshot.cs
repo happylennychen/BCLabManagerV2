@@ -702,9 +702,9 @@ namespace BCLabManager.Migrations
                         .HasColumnName("name")
                         .HasColumnType("text");
 
-                    b.Property<List<int>>("VoltagePoints")
+                    b.Property<List<uint>>("VoltagePoints")
                         .HasColumnName("voltage_points")
-                        .HasColumnType("integer[]");
+                        .HasColumnType("bigint[]");
 
                     b.HasKey("Id")
                         .HasName("pk_projects");
@@ -1324,9 +1324,9 @@ namespace BCLabManager.Migrations
                         .HasColumnName("timestamp")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<List<int>>("VoltagePoints")
+                    b.Property<List<uint>>("VoltagePoints")
                         .HasColumnName("voltage_points")
-                        .HasColumnType("integer[]");
+                        .HasColumnType("bigint[]");
 
                     b.HasKey("Id")
                         .HasName("pk_table_maker_records");

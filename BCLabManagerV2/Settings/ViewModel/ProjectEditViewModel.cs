@@ -236,23 +236,8 @@ namespace BCLabManager.ViewModel
             dialog.Title = "Load Voltage Points";
             if (dialog.ShowDialog() == true)
             {
-                VoltagePoints = string.Join(",", LoadVCFGFile(dialog.FileName));
+                VoltagePoints = string.Join(",", Utilities.LoadVCFGFile(dialog.FileName));
             }
-        }
-        private List<UInt32> LoadVCFGFile(string fullpath)
-        {
-            List<UInt32> output = new List<uint>();
-            FileStream file = new FileStream(fullpath, FileMode.Open);
-            StreamReader sr = new StreamReader(file);
-            string line;
-            while ((line = sr.ReadLine()) != null)
-            {
-                output.Add(Convert.ToUInt32(line));
-            }
-            sr.Close();
-            file.Close();
-            output.Sort();
-            return output;
         }
 
         public CommandType commandType

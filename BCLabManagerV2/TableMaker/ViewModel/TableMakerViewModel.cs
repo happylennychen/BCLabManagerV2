@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Windows;
 using BCLabManager.View;
 using System.IO;
+using Microsoft.Win32;
 
 namespace BCLabManager.ViewModel
 {
@@ -31,6 +32,7 @@ namespace BCLabManager.ViewModel
         private TesterServiceClass _testerService;
         RelayCommand _buildStage2TableCommand;
         RelayCommand _buildStage1TableCommand;
+        RelayCommand _voltagePointsLoadCommand;
         bool _isOK;
 
         #endregion // Fields
@@ -203,6 +205,19 @@ namespace BCLabManager.ViewModel
                 return _buildStage1TableCommand;
             }
         }
+        public ICommand VoltagePointsLoadCommand
+        {
+            get
+            {
+                if (_voltagePointsLoadCommand == null)
+                {
+                    _voltagePointsLoadCommand = new RelayCommand(
+                        param => { this.Load(); }
+                        );
+                }
+                return _voltagePointsLoadCommand;
+            }
+        }
 
         #endregion // Public Methods
 
@@ -320,7 +335,7 @@ namespace BCLabManager.ViewModel
                         stopwatch.Start();
                         var timestamp = DateTime.Now;
                         string time = timestamp.ToString("yyyyMMddHHmmss");
-                        var OutFolder = $@"{GlobalSettings.RemotePath}{baseProject.BatteryType.Name}\{baseProject.Name}\{GlobalSettings.ProductFolderName}\{time}";
+                        var OutFolder = $@"{GlobalSettings.UniversalPath}{baseProject.BatteryType.Name}\{baseProject.Name}\{GlobalSettings.ProductFolderName}\{time}";
                         if (!Directory.Exists(OutFolder))
                         {
                             Directory.CreateDirectory(OutFolder);
@@ -333,7 +348,8 @@ namespace BCLabManager.ViewModel
                         List<string> ocvSourceFiles = null;
                         if (ocvRecords != null && ocvRecords.Count != 0)
                         {
-                            OCVTableMaker.GetOCVSource(stage2Project, ocvRecords, testers, out ocvSource, out ocvSourceFiles);
+                            if(!OCVTableMaker.GetOCVSource(stage2Project, ocvRecords, testers, out ocvSource, out ocvSourceFiles))
+                                return;
                             if (ocvSource == null)
                                 return;
                             OCVTableMaker.GetOCVModel(ocvSource, ref ocvModel);
@@ -354,10 +370,12 @@ namespace BCLabManager.ViewModel
                             List<SourceData> rcStage1Source;
                             List<string> stage1RcSourceFiles = null;
                             List<string> stage2RcSourceFiles = null;
-                            RCTableMaker.GetRCSource(stage1Project, rcStage2Records, testers, out rcStage2Source, out stage2RcSourceFiles);
+                            if(!RCTableMaker.GetRCSource(stage1Project, rcStage2Records, testers, out rcStage2Source, out stage2RcSourceFiles))
+                                return;
                             if (rcStage2Source == null)
                                 return;
-                            RCTableMaker.GetRCSource(stage1Project, rcStage1Records, testers, out rcStage1Source, out stage1RcSourceFiles);
+                            if (!RCTableMaker.GetRCSource(stage1Project, rcStage1Records, testers, out rcStage1Source, out stage1RcSourceFiles))
+                                return;
                             if (rcStage1Source == null)
                                 return;
                             rcSourceFiles = stage1RcSourceFiles.Concat(stage2RcSourceFiles).ToList();
@@ -441,6 +459,18 @@ namespace BCLabManager.ViewModel
         {
             Stage stage = Stage.N1;
             BuildTables(stage, Stage2Project, Stage1Project);
+        }
+
+        private void Load()
+        {
+            var dialog = new OpenFileDialog();
+            string voltagepoints = string.Empty;
+            dialog.DefaultExt = ".vcfg";
+            dialog.Title = "Load Voltage Points";
+            if (dialog.ShowDialog() == true)
+            {
+                _voltagePoints = Utilities.LoadVCFGFile(dialog.FileName);
+            }
         }
         #endregion // Private Helpers
     }

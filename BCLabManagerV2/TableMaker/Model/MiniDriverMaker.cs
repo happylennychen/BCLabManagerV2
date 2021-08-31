@@ -912,7 +912,7 @@ namespace BCLabManager
             #endregion
 
 
-            string targetPath = FileTransferHelper.GetRemotePath(localMiniCPath,5);
+            string targetPath = FileTransferHelper.GetRemotePath(localMiniCPath);
             var MD5 = FileTransferHelper.FileCopyWithMD5Check(localMiniCPath, targetPath);
             TableMakerProduct ctmp = new TableMakerProduct();
             ctmp.FilePath = targetPath;
@@ -921,7 +921,7 @@ namespace BCLabManager
             ctmp.Type = TableMakerService.GetFileType("MiniC", stage);
             output.Add(ctmp);
 
-            targetPath = FileTransferHelper.GetRemotePath(loaclMiniHPath,5);
+            targetPath = FileTransferHelper.GetRemotePath(loaclMiniHPath);
             FileTransferHelper.FileCopyWithMD5Check(loaclMiniHPath, targetPath);
             TableMakerProduct htmp = new TableMakerProduct();
             htmp.FilePath = targetPath;

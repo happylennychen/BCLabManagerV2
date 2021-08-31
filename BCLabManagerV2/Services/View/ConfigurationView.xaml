@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" Title="Configuration Window"
-             Height="300" Width="500" WindowStartupLocation="CenterScreen">
+             Height="500" Width="500" WindowStartupLocation="CenterScreen">
     <Window.Resources>
     </Window.Resources>
     <DockPanel>
@@ -19,21 +19,35 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition></RowDefinition>
+                <RowDefinition Height="180"></RowDefinition>
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
             <Label HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0">Remote Folder Path</Label>
-            <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" Grid.Row="0" Width="300" Text="{Binding Path=RemotePath,Mode=TwoWay}"></TextBox>
-            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1">Database Host</Label>
-            <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" Grid.Row="1" Width="300" Text="{Binding Path=DatabaseHost,Mode=TwoWay}"></TextBox>
-            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2">Database Name</Label>
-            <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" Grid.Row="2" Width="300" Text="{Binding Path=DatabaseName,Mode=TwoWay}"></TextBox>
-            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3">Database User</Label>
-            <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" Grid.Row="3" Width="300" Text="{Binding Path=DatabaseUser,Mode=TwoWay}"></TextBox>
-            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="4">Database Password</Label>
-            <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" Grid.Row="4" Width="300" Text="{Binding Path=DatabasePassword,Mode=TwoWay}"></TextBox>
+            <Label HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" Grid.Row="0" Width="300" Content="{Binding Path=RemotePath,Mode=TwoWay}"></Label>
+            <GroupBox FontSize="11" Header="Test Environment" Width="400" Grid.Row="1" Grid.ColumnSpan="3">
+                <DockPanel HorizontalAlignment="Center">
+                    <DockPanel DockPanel.Dock="Top">
+                        <CheckBox x:Name="EnableTestCheckBox" VerticalAlignment="Center" IsChecked="{Binding Path=EnableTest, Mode=TwoWay}"></CheckBox>
+                        <Label> Enable</Label>
+                    </DockPanel>
+                    <DockPanel DockPanel.Dock="Top">
+                        <Label>Mapping Folder Path</Label>
+                        <TextBox Margin="5,0" Text="{Binding Path=MappingPath, Mode=TwoWay}" IsEnabled="{Binding ElementName=EnableTestCheckBox, Path=IsChecked}"></TextBox>
+                    </DockPanel>
+                    <TextBlock Margin="20" TextWrapping="Wrap" FontStyle="Italic">If user enbled test environment, BCLM will use mapping folder instead of Remote Folder to access files. But all the UI and/or database will use remote foler path.</TextBlock>
+                </DockPanel>
+            </GroupBox>
+            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2">Database Host</Label>
+            <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" Grid.Row="2" Width="300" Text="{Binding Path=DatabaseHost,Mode=TwoWay}"></TextBox>
+            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3">Database Name</Label>
+            <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" Grid.Row="3" Width="300" Text="{Binding Path=DatabaseName,Mode=TwoWay}"></TextBox>
+            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="4">Database User</Label>
+            <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" Grid.Row="4" Width="300" Text="{Binding Path=DatabaseUser,Mode=TwoWay}"></TextBox>
+            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" Grid.Row="5">Database Password</Label>
+            <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" Grid.Row="5" Width="300" Text="{Binding Path=DatabasePassword,Mode=TwoWay}"></TextBox>
         </Grid>
     </DockPanel>
 </Window>

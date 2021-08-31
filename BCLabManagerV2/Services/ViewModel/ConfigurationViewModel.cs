@@ -26,15 +26,13 @@ namespace BCLabManager.ViewModel
         //private EventService _eventService;
         RelayCommand _okCommand;
         private Configuration _configuration;
-        private MainWindowViewModel _mainWindowViewModel;
         #endregion // Fields
 
         #region Constructor
 
-        public ConfigurationViewModel(Configuration conf, ref MainWindowViewModel mainWindowViewModel)
+        public ConfigurationViewModel(Configuration conf)
         {
             _configuration = conf;
-            _mainWindowViewModel = mainWindowViewModel;
         }
 
         #endregion // Constructor
@@ -48,6 +46,16 @@ namespace BCLabManager.ViewModel
         {
             get { return _configuration.RemotePath; }
             set { _configuration.RemotePath = value;}
+        }
+        public bool EnableTest
+        {
+            get { return _configuration.EnableTest; }
+            set { _configuration.EnableTest = value; }
+        }
+        public string MappingPath
+        {
+            get { return _configuration.MappingPath; }
+            set { _configuration.MappingPath = value; }
         }
         public string DatabaseHost
         {
@@ -89,6 +97,8 @@ namespace BCLabManager.ViewModel
             Thread t = new Thread(() =>
             {
                 GlobalSettings.RemotePath = _configuration.RemotePath;
+                GlobalSettings.EnableTest = _configuration.EnableTest;
+                GlobalSettings.MappingPath = _configuration.MappingPath;
                 GlobalSettings.DatabaseHost = _configuration.DatabaseHost;
                 GlobalSettings.DatabaseName = _configuration.DatabaseName;
                 GlobalSettings.DatabaseUser = _configuration.DatabaseUser;

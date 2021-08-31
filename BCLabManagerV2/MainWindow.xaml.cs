@@ -114,12 +114,14 @@ namespace BCLabManager
         {
             Configuration conf = new Configuration();
             conf.RemotePath = GlobalSettings.RemotePath;
+            conf.EnableTest = GlobalSettings.EnableTest;
+            conf.MappingPath = GlobalSettings.MappingPath;
             conf.DatabaseHost = GlobalSettings.DatabaseHost;
             conf.DatabaseName = GlobalSettings.DatabaseName;
             conf.DatabaseUser = GlobalSettings.DatabaseUser;
             conf.DatabasePassword = GlobalSettings.DatabasePassword;
             ConfigurationView configView = new ConfigurationView();
-            var vm = new ConfigurationViewModel(conf, ref _mainWindowViewModel);
+            var vm = new ConfigurationViewModel(conf);
             configView.DataContext = vm;// new AllEventsViewModel(/*EventService*/);
             configView.ShowDialog();
         }
@@ -131,7 +133,6 @@ namespace BCLabManager
             AllChambersViewInstance.ButtonPanel.IsEnabled = false;
             AllProgramTypesViewInstance.Visibility = Visibility.Collapsed;
             AllTableMakerProductTypesViewInstance.Visibility = Visibility.Collapsed;
-            AllTableMakerProductsViewInstance.Visibility = Visibility.Collapsed;
             AllProgramsViewInstance.RecipeButtonPanel.IsEnabled = false;
             AllProgramsViewInstance.FreeTestRecordButtonPanel.IsEnabled = false;
             AllProgramsViewInstance.DirectCommitBtn.IsEnabled = false;

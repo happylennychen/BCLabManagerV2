@@ -101,6 +101,8 @@ namespace BCLabManager.ViewModel
             {
                 Configuration conf = new Configuration();
                 conf.RemotePath = GlobalSettings.RemotePath;
+                conf.EnableTest = GlobalSettings.EnableTest;
+                conf.MappingPath = GlobalSettings.MappingPath;
                 conf.DatabaseHost = GlobalSettings.DatabaseHost;
                 conf.DatabaseName = GlobalSettings.DatabaseName;
                 conf.DatabaseUser = GlobalSettings.DatabaseUser;
@@ -113,6 +115,8 @@ namespace BCLabManager.ViewModel
                 string jsonString = File.ReadAllText(GlobalSettings.ConfigurationFilePath);
                 Configuration conf = JsonSerializer.Deserialize<Configuration>(jsonString);
                 GlobalSettings.RemotePath = conf.RemotePath;
+                GlobalSettings.EnableTest = conf.EnableTest;
+                GlobalSettings.MappingPath = conf.MappingPath;
                 GlobalSettings.DatabaseHost = conf.DatabaseHost;
                 GlobalSettings.DatabaseName = conf.DatabaseName;
                 GlobalSettings.DatabaseUser = conf.DatabaseUser;
@@ -207,7 +211,7 @@ namespace BCLabManager.ViewModel
             catch (Exception e)
             {
                 Event evt = new Event();
-                evt.Module = Module.NAS;
+                evt.Module = Module.FileOperation;
                 evt.Timestamp = DateTime.Now;
                 evt.Type = EventType.Error;
                 evt.Description = $"Cannot access NAS {GlobalSettings.RemotePath}.";
@@ -226,9 +230,9 @@ namespace BCLabManager.ViewModel
 
         private void InitializeTempFileFolder()
         {
-            string tempFilePath = $@"{GlobalSettings.RemotePath}{GlobalSettings.TempDataFolderName}";
-            //if (!Directory.Exists(tempFilePath))
-            //    Directory.CreateDirectory(tempFilePath);
+            string tempFilePath = $@"{GlobalSettings.UniversalPath}{GlobalSettings.TempDataFolderName}";
+            if (!Directory.Exists(tempFilePath))
+                Directory.CreateDirectory(tempFilePath);
 
             tempFilePath = $@"{GlobalSettings.LocalFolder}{GlobalSettings.TempDataFolderName}";
             if (!Directory.Exists(tempFilePath))

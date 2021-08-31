@@ -79,19 +79,14 @@
                     </Grid>
                     <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="30*"></RowDefinition>
+                            <RowDefinition Height="50*"></RowDefinition>
                             <RowDefinition Height="4"></RowDefinition>
-                            <RowDefinition Height="30*"></RowDefinition>
-                            <RowDefinition Height="4"></RowDefinition>
-                            <RowDefinition Height="30*"></RowDefinition>
+                            <RowDefinition Height="50*"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Border x:Name="ProjectBorder">
                             <v:AllProjectsView x:Name="AllProjectsViewInstance" DataContext="{Binding Path=allProjectsViewModel}"></v:AllProjectsView>
                         </Border>
-                        <Border Grid.Row="2">
-                            <v:AllTableMakerProductsView x:Name="AllTableMakerProductsViewInstance" DataContext="{Binding Path=allTableMakerProductsViewModel}"></v:AllTableMakerProductsView>
-                        </Border>
-                        <Border Grid.Row="4" x:Name="ProjectSettingBorder">
+                        <Border Grid.Row="2" x:Name="ProjectSettingBorder">
                             <v:AllProjectSettingsView x:Name="AllProjectSettingsViewInstance" DataContext="{Binding Path=allProjectSettingsViewModel}"></v:AllProjectSettingsView>
                         </Border>
                     </Grid>

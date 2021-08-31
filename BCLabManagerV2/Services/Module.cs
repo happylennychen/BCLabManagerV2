@@ -12,6 +12,6 @@ namespace BCLabManager.Model
     {
         public static string DataPreprocessor { get; } = "Data Preprocessor";
         public static string Database { get; } = "Database";
-        public static string NAS { get; } = "NAS";
+        public static string FileOperation { get; } = "FileOperation";
     }
 }

@@ -25,6 +25,29 @@ namespace BCLabManager
                     _remotePath = value;
                 else
                     _remotePath = $@"{value}\";
+            }
+        }
+        public static bool EnableTest { get; set; } = false;
+        private static string _mappingPath = @"D:\BCLM Mapping Folder\";
+        public static string MappingPath
+        {
+            get { return _mappingPath; }
+            set
+            {
+                if (value.EndsWith(@"\"))
+                    _mappingPath = value;
+                else
+                    _mappingPath = $@"{value}\";
+            }
+        }
+        public static string UniversalPath 
+        { 
+            get 
+            {
+                if (!EnableTest)
+                    return RemotePath;
+                else
+                    return MappingPath;
             } 
         }
         public static string TestDataFolderName { get; } = "Test Data";

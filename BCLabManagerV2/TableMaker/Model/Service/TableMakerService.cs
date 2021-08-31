@@ -62,11 +62,6 @@ namespace BCLabManager
         static public int iNumOfMiniPoints { get; set; } = 100;           //(A200831)francis, for table_mini
         static public float fMiniTableSteps { get; set; } = 1;        //(A200831)francis, for table_mini
 
-        public static string GetLocalPath(string testFilePath)
-        {
-            return testFilePath.Replace(GlobalSettings.RemotePath, GlobalSettings.LocalFolder);
-        }
-
         public static string Version { get { return "V01"; } }
         public static List<Int32> GenerateSampleCellTempData()
         {

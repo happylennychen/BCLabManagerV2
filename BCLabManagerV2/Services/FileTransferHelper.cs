@@ -26,7 +26,7 @@ namespace BCLabManager
             if (localMD5Code != remoteMD5Code)
             {
                 Event evt = new Event();
-                evt.Module = Module.NAS;
+                evt.Module = Module.FileOperation;
                 evt.Timestamp = DateTime.Now;
                 evt.Type = EventType.Error;
                 evt.Description = $"Test File MD5 Check Failed!. File Name: {Path.GetFileName(sourcePath)}";
@@ -125,12 +125,20 @@ namespace BCLabManager
             }
             return fileFullPath;
         }
+        public static string GetRemotePath(string path)
+        {
+            return path.Replace(GlobalSettings.LocalFolder, GlobalSettings.UniversalPath);
+        }
 
-        public static string GetRemotePath(string path, int level)
+        public static string GetLocalPath(string path)
+        {
+            return path.Replace(GlobalSettings.RemotePath, GlobalSettings.LocalFolder);
+        }
+        /*public static string GetRemotePath(string path, int level)
         {
             int index = FindNthCharInString(path, '\\', level);
             var substring = path.Substring(0, index + 1);
-            return path.Replace(substring, GlobalSettings.RemotePath);
+            return path.Replace(substring, GlobalSettings.UniversalPath);
         }
 
         public static string GetLocalPath(string path, int level)       //替换从末尾算起第level层的斜杠左边的路径
@@ -146,7 +154,7 @@ namespace BCLabManager
                 index = str.LastIndexOf(v, index - 1);
             return index;
         }
-
+        
         public static string GetLocalPath(string path)       //不带level，需要根据路径中的特性找到对应的level
         {
             int level = GetLevel(path);
@@ -160,7 +168,7 @@ namespace BCLabManager
             int level = GetLevel(path);
             int index = FindNthCharInString(path, '\\', level);
             var substring = path.Substring(0, index + 1);
-            return path.Replace(substring, GlobalSettings.RemotePath);
+            return path.Replace(substring, GlobalSettings.UniversalPath);
         }
 
         public static int GetLevel(string path)
@@ -170,9 +178,9 @@ namespace BCLabManager
             {
                 level = GetRelativeLevel(path, GlobalSettings.LocalFolder);
             }
-            else if (path.Contains(GlobalSettings.RemotePath))
+            else if (path.Contains(GlobalSettings.UniversalPath))
             {
-                level = GetRelativeLevel(path, GlobalSettings.RemotePath);
+                level = GetRelativeLevel(path, GlobalSettings.UniversalPath);
             }
             else if (path.Contains(GlobalSettings.TestDataFolderName))
             {
@@ -194,5 +202,6 @@ namespace BCLabManager
             var level = sub.Count(x => x == '\\');
             return level;
         }
+        */
     }
 }

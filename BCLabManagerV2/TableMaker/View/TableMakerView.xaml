@@ -62,7 +62,7 @@
                 </DockPanel>
                 <DockPanel Grid.Row="2" LastChildFill="True" VerticalAlignment="Center">
                     <Label DockPanel.Dock="Left">Voltage Points:</Label>
-                    <Button DockPanel.Dock="Right" Command="{Binding Path=VoltagePointSeclectCommand}">...</Button>
+                    <Button DockPanel.Dock="Right" Command="{Binding Path=VoltagePointLoadCommand}">...</Button>
                     <Label Content="{Binding Path=VoltagePoints}"></Label>
                 </DockPanel>
             </Grid>
