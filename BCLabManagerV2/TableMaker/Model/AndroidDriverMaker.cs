@@ -59,8 +59,11 @@ namespace BCLabManager
             TableMakerService.CreateFileFromLines(localcFilePath, cFileContent);
 
 
-            string targetPath = FileTransferHelper.GetRemotePath(localcFilePath);
-            var MD5 = FileTransferHelper.FileCopyWithMD5Check(localcFilePath, targetPath);
+            //string targetPath = FileTransferHelper.Local2Universal(localcFilePath);
+            //var MD5 = FileTransferHelper.FileCopyWithMD5Check(localcFilePath, targetPath);
+            //targetPath = FileTransferHelper.Mapping2Remote(targetPath);
+            string targetPath, MD5;
+            FileTransferHelper.FileUpload(localcFilePath, out targetPath, out MD5);
             List<TableMakerProduct> output = new List<TableMakerProduct>();
             TableMakerProduct ctmp = new TableMakerProduct();
             ctmp.FilePath = targetPath;
@@ -69,8 +72,10 @@ namespace BCLabManager
             ctmp.Type = TableMakerService.GetFileType("AndroidC", stage);
             output.Add(ctmp);
 
-            targetPath = FileTransferHelper.GetRemotePath(localhFilePath);
-            FileTransferHelper.FileCopyWithMD5Check(localhFilePath, targetPath);
+            //targetPath = FileTransferHelper.Local2Universal(localhFilePath);
+            //FileTransferHelper.FileCopyWithMD5Check(localhFilePath, targetPath);
+            //targetPath = FileTransferHelper.Mapping2Remote(targetPath);
+            FileTransferHelper.FileUpload(localhFilePath, out targetPath, out MD5);
             TableMakerProduct htmp = new TableMakerProduct();
             htmp.FilePath = targetPath;
             htmp.MD5 = MD5;

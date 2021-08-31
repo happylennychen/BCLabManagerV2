@@ -411,15 +411,9 @@
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Products\Model\ReleasePackage.cs" />
     <Compile Include="Products\Model\Service\TableMakerProductServieClass.cs" />
-    <Compile Include="Products\ViewModel\AllTableMakerProductsViewModel.cs" />
-    <Compile Include="Products\ViewModel\TableMakerProductEditViewModel.cs" />
-    <Compile Include="Products\ViewModel\TableMakerProductViewModel.cs" />
     <Compile Include="TableMaker\Model\Stage.cs" />
     <Compile Include="TableMaker\ViewModel\Stage1Source.cs" />
     <Compile Include="TableMaker\ViewModel\TableMakerConfirmationViewModel.cs" />
-    <Compile Include="TableMaker\View\AllTableMakerProductsView.xaml.cs">
-      <DependentUpon>AllTableMakerProductsView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TableMaker\View\TableMakerProductView.xaml.cs">
       <DependentUpon>TableMakerProductView.xaml</DependentUpon>
     </Compile>
@@ -699,10 +693,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TableMaker\View\AllTableMakerProductsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="TableMaker\View\TableMakerProductView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -929,6 +919,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Service\" />
+    <Folder Include="Products\ViewModel\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

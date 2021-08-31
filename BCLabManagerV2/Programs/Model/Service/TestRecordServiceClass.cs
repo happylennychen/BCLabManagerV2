@@ -343,19 +343,19 @@ namespace BCLabManager.Model
         {
             MD5 = string.Empty;
             string remoteProjectPath = $@"{GlobalSettings.UniversalPath}{batteryType}\{projectName}";
-            string localProjectPath = $@"{GlobalSettings.LocalFolder}{batteryType}\{projectName}";
+            string localPath = $@"{GlobalSettings.LocalFolder}{batteryType}\{projectName}";
             string localTestFileFullPath = string.Empty;
             if (rawDataFullPathList.Count > 1)
             {
 
-                var fileFullPath = $@"{localProjectPath}\{GlobalSettings.TestDataFolderName}\{newName}";
+                var fileFullPath = $@"{localPath}\{GlobalSettings.TestDataFolderName}\{newName}";
                 localTestFileFullPath = FileTransferHelper.FileCombine(rawDataFullPathList, fileFullPath);
             }
             else
             {
                 //if (isRename)
                 //{
-                localTestFileFullPath = Path.Combine($@"{localProjectPath}\{GlobalSettings.TestDataFolderName}", newName + Path.GetExtension(rawDataFullPathList[0]));
+                localTestFileFullPath = Path.Combine($@"{localPath}\{GlobalSettings.TestDataFolderName}", newName + Path.GetExtension(rawDataFullPathList[0]));
                 //}
                 //else
                 //{
@@ -375,8 +375,11 @@ namespace BCLabManager.Model
                 }
             }
             //#endif
-            var TestFilePath = $@"{remoteProjectPath}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(localTestFileFullPath)}";
-            MD5 = FileTransferHelper.FileCopyWithMD5Check(localTestFileFullPath, TestFilePath);
+            //var TestFilePath = FileTransferHelper.Local2Universal(localPath);
+            //MD5 = FileTransferHelper.FileCopyWithMD5Check(localTestFileFullPath, TestFilePath);
+            //TestFilePath = FileTransferHelper.Mapping2Remote(TestFilePath);
+            string TestFilePath;
+            FileTransferHelper.FileUpload(localPath, out TestFilePath, out MD5);
             if (MD5 == string.Empty)
                 return string.Empty;
             if (TestFilePath == "")

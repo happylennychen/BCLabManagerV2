@@ -45,7 +45,6 @@ namespace BCLabManager.ViewModel
         public ProgramTypeServiceClass ProgramTypeService { get; set; } = new ProgramTypeServiceClass();
         public TableMakerProductTypeServiceClass TableMakerProductTypeService { get; set; } = new TableMakerProductTypeServiceClass();
         public TableMakerRecordServiceClass TableMakerRecordService { get; set; } = new TableMakerRecordServiceClass();
-        public TableMakerProductServiceClass TableMakerProductService { get; set; } = new TableMakerProductServiceClass();
         public TestRecordServiceClass FreeTestRecordService { get; set; } = new TestRecordServiceClass();
 
         #endregion // Fields
@@ -310,8 +309,6 @@ namespace BCLabManager.ViewModel
                 ProjectSettingService.Items = new ObservableCollection<ProjectSetting>(uow.ProjectSettings.GetAll());
                 ProgramTypeService.Items = new ObservableCollection<ProgramType>(uow.ProgramTypes.GetAll());
                 TableMakerProductTypeService.Items = new ObservableCollection<TableMakerProductType>(uow.TableMakerProductTypes.GetAll());
-                TableMakerProductService.Items = new ObservableCollection<TableMakerProduct>(uow.TableMakerProducts.GetAll());
-                TableMakerRecordService.Items = new ObservableCollection<TableMakerRecord>(uow.TableMakerRecords.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
                 FreeTestRecordService.Items = new ObservableCollection<TestRecord>(uow.TestRecords.GetAllFreeTestRecords());
@@ -376,15 +373,13 @@ namespace BCLabManager.ViewModel
         {
             allBatteryTypesViewModel = new AllBatteryTypesViewModel(BatteryTypeService, BatteryService);    //ViewModel初始化
 
-            allProjectsViewModel = new AllProjectsViewModel(TesterService, ProjectService, BatteryTypeService, ProgramService, ProjectSettingService, TableMakerProductService, TableMakerRecordService);    //ViewModel初始化
+            allProjectsViewModel = new AllProjectsViewModel(TesterService, ProjectService, BatteryTypeService, ProgramService, ProjectSettingService, TableMakerRecordService);    //ViewModel初始化
 
             allProjectSettingsViewModel = new AllProjectSettingsViewModel(ProjectSettingService, ProjectService);    //ViewModel初始化
 
             allProgramTypesViewModel = new AllProgramTypesViewModel(ProgramTypeService);    //ViewModel初始化
 
             allTableMakerProductTypesViewModel = new AllTableMakerProductTypesViewModel(TableMakerProductTypeService);    //ViewModel初始化
-
-            allTableMakerProductsViewModel = new AllTableMakerProductsViewModel(TableMakerProductService, TableMakerProductTypeService, ProjectService);    //ViewModel初始化
 
             allBatteriesViewModel = new AllBatteriesViewModel(BatteryService, BatteryTypeService);    //ViewModel初始化
 
@@ -418,7 +413,7 @@ namespace BCLabManager.ViewModel
                 );    //ViewModel初始化
 
             dashBoardViewModel = new DashBoardViewModel(BatteryService, ChannelService, ChamberService, ProgramService);
-            tableMakerViewModel = new TableMakerViewModel(ProjectService, TableMakerRecordService, TableMakerProductService, ProgramService, TesterService);
+            tableMakerViewModel = new TableMakerViewModel(ProjectService, TableMakerRecordService, ProgramService, TesterService);
         }
         #endregion // Constructor
 
@@ -428,7 +423,6 @@ namespace BCLabManager.ViewModel
         public AllProjectSettingsViewModel allProjectSettingsViewModel { get; set; }  //其中需要显示Projects
         public AllProgramTypesViewModel allProgramTypesViewModel { get; set; }  //其中需要显示Projects
         public AllTableMakerProductTypesViewModel allTableMakerProductTypesViewModel { get; set; }  //
-        public AllTableMakerProductsViewModel allTableMakerProductsViewModel { get; set; }  //
         public AllBatteriesViewModel allBatteriesViewModel { get; set; }  //其中需要显示Batteries和Records
 
         public AllTestersViewModel allTestersViewModel { get; set; }  //其中需要显示Testers和Channels

@@ -30,7 +30,6 @@ namespace BCLabManager.ViewModel
         private ProjectServiceClass _projectService;
         private ProgramServiceClass _programService;
         private ProjectSettingServiceClass _projectSettingService;
-        private TableMakerProductServiceClass _tableMakerProductService;
         private TableMakerRecordServiceClass _tableMakerRecordService;
         private TesterServiceClass _testerService;
         private BatteryTypeServiceClass _batteryTypeService;
@@ -39,14 +38,13 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public AllProjectsViewModel(TesterServiceClass testerService, ProjectServiceClass projectService, BatteryTypeServiceClass batteryTypeServie, ProgramServiceClass programService, ProjectSettingServiceClass projectSettingService, TableMakerProductServiceClass tableMakerProductService, TableMakerRecordServiceClass tableMakerRecordService)
+        public AllProjectsViewModel(TesterServiceClass testerService, ProjectServiceClass projectService, BatteryTypeServiceClass batteryTypeServie, ProgramServiceClass programService, ProjectSettingServiceClass projectSettingService, TableMakerRecordServiceClass tableMakerRecordService)
         {
             _testerService = testerService;
             _projectService = projectService;
             _batteryTypeService = batteryTypeServie;
             _programService = programService;
             _projectSettingService = projectSettingService;
-            _tableMakerProductService = tableMakerProductService;
             _tableMakerRecordService = tableMakerRecordService;
             this.CreateAllProjects(_projectService.Items);
             _projectService.Items.CollectionChanged += Items_CollectionChanged;

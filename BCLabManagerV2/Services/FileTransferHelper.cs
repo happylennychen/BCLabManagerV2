@@ -125,14 +125,36 @@ namespace BCLabManager
             }
             return fileFullPath;
         }
-        public static string GetRemotePath(string path)
+        public static string Local2Remote(string path)
         {
-            return path.Replace(GlobalSettings.LocalFolder, GlobalSettings.UniversalPath);
+            if (path.Contains(GlobalSettings.LocalFolder))
+                return path.Replace(GlobalSettings.LocalFolder, GlobalSettings.RemotePath);
+            else return path;
         }
 
-        public static string GetLocalPath(string path)
+        public static string Remote2Local(string path)
         {
-            return path.Replace(GlobalSettings.RemotePath, GlobalSettings.LocalFolder);
+            if (path.Contains(GlobalSettings.RemotePath))
+                return path.Replace(GlobalSettings.RemotePath, GlobalSettings.LocalFolder);
+            else return path;
+        }
+        public static string Mapping2Remote(string path)
+        {
+            if (path.Contains(GlobalSettings.MappingPath))
+                return path.Replace(GlobalSettings.MappingPath, GlobalSettings.RemotePath);
+            else return path;
+        }
+        public static string Remote2Mapping(string path)
+        {
+            if (path.Contains(GlobalSettings.RemotePath))
+                return path.Replace(GlobalSettings.RemotePath, GlobalSettings.MappingPath);
+            else return path;
+        }
+        public static string Local2Universal(string path)
+        {
+            if (path.Contains(GlobalSettings.LocalFolder))
+                return path.Replace(GlobalSettings.LocalFolder, GlobalSettings.UniversalPath);
+            else return path;
         }
         /*public static string GetRemotePath(string path, int level)
         {
@@ -203,5 +225,11 @@ namespace BCLabManager
             return level;
         }
         */
+        public static void FileUpload(string localPath, out string remotePath, out string MD5)
+        {
+            remotePath = FileTransferHelper.Local2Universal(localPath);
+            MD5 = FileTransferHelper.FileCopyWithMD5Check(localPath, remotePath);
+            remotePath = FileTransferHelper.Mapping2Remote(remotePath);
+        }
     }
 }

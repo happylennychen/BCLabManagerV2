@@ -27,7 +27,6 @@ namespace BCLabManager.ViewModel
 
         private ProjectServiceClass _projectService;
         private TableMakerRecordServiceClass _tableMakerRecordService;
-        private TableMakerProductServiceClass _tableMakerProductService;
         private ProgramServiceClass _programService;
         private TesterServiceClass _testerService;
         RelayCommand _buildStage2TableCommand;
@@ -39,12 +38,11 @@ namespace BCLabManager.ViewModel
 
         #region Constructor
 
-        public TableMakerViewModel(/*TableMakerModel tableMakerModel*/ProjectServiceClass projectService, TableMakerRecordServiceClass tableMakerRecordService, TableMakerProductServiceClass tableMakerProductService, ProgramServiceClass programService, TesterServiceClass testerService)
+        public TableMakerViewModel(/*TableMakerModel tableMakerModel*/ProjectServiceClass projectService, TableMakerRecordServiceClass tableMakerRecordService, ProgramServiceClass programService, TesterServiceClass testerService)
         {
             //_tableMakerModel = tableMakerModel;
             _projectService = projectService;
             _tableMakerRecordService = tableMakerRecordService;
-            _tableMakerProductService = tableMakerProductService;
             _programService = programService;
             _testerService = testerService;
         }
