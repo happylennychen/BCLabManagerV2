@@ -32,7 +32,7 @@ namespace BCLabManager.ViewModel
         RelayCommand _buildStage2TableCommand;
         RelayCommand _buildStage1TableCommand;
         RelayCommand _voltagePointsLoadCommand;
-        bool _isOK;
+        RelayCommand _deleteRecordCommand;
 
         #endregion // Fields
 
@@ -216,6 +216,20 @@ namespace BCLabManager.ViewModel
                 return _voltagePointsLoadCommand;
             }
         }
+        public ICommand DeleteRecordCommand
+        {
+            get
+            {
+                if (_deleteRecordCommand == null)
+                {
+                    _deleteRecordCommand = new RelayCommand(
+                        param => { this.DeleteRecord(); },
+                        param => this.CanDeleteRecord
+                        );
+                }
+                return _deleteRecordCommand;
+            }
+        }
 
         #endregion // Public Methods
 
@@ -275,6 +289,8 @@ namespace BCLabManager.ViewModel
                 return true;
             }
         }
+
+        public bool CanDeleteRecord { get { if (_selectedRecord != null && _selectedRecord.IsValid) return true; else return false; } }
 
         private void BuildStage2Table()
         {
@@ -420,8 +436,9 @@ namespace BCLabManager.ViewModel
                         tmr.Timestamp = timestamp;
                         tmr.Products = products;
                         tmrs.SuperAdd(tmr);
+                        RaisePropertyChanged("TableMakerRecords");
 
-                        var folder = $@"{GlobalSettings.LocalFolder}{baseProject.BatteryType.Name}\{baseProject.Name}\{GlobalSettings.ProductFolderName}\{time}";
+                        var folder = $@"{GlobalSettings.UniversalPath}{baseProject.BatteryType.Name}\{baseProject.Name}\{GlobalSettings.ProductFolderName}\{time}";
                         string timespan = Math.Round(stopwatch.Elapsed.TotalSeconds, 0).ToString() + "S";
                         MessageBox.Show($"Completed. It took {timespan} to get the job done.");
                         Process.Start(folder);
@@ -464,10 +481,21 @@ namespace BCLabManager.ViewModel
             var dialog = new OpenFileDialog();
             string voltagepoints = string.Empty;
             dialog.DefaultExt = ".vcfg";
+            dialog.Filter = "Voltage Points File|*.vcfg";
             dialog.Title = "Load Voltage Points";
             if (dialog.ShowDialog() == true)
             {
                 _voltagePoints = Utilities.LoadVCFGFile(dialog.FileName);
+                RaisePropertyChanged("VoltagePoints");
+            }
+        }
+
+        private void DeleteRecord()
+        {
+            if (MessageBoxResult.OK == MessageBox.Show("Are you sure to remove this record?", "Deleting Record", MessageBoxButton.OKCancel))
+            {
+                _selectedRecord.IsValid = false;
+                _tableMakerRecordService.SuperUpdate(_selectedRecord);
             }
         }
         #endregion // Private Helpers

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BCLabManager.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,18 @@ namespace BCLabManager.View
         public TableMakerView()
         {
             InitializeComponent();
+        }
+
+        private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
+        {
+            TableMakerRecord tmr = e.Item as TableMakerRecord;
+            if (tmr != null)
+            {
+                if (tmr.IsValid)
+                    e.Accepted = true;
+                else
+                    e.Accepted = false;
+            }
         }
     }
 }

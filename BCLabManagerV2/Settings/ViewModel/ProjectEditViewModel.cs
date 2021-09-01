@@ -233,6 +233,7 @@ namespace BCLabManager.ViewModel
         {
             var dialog = new OpenFileDialog();
             dialog.DefaultExt = ".vcfg";
+            dialog.Filter = "Voltage Points File|*.vcfg";
             dialog.Title = "Load Voltage Points";
             if (dialog.ShowDialog() == true)
             {

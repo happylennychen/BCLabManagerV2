@@ -14,7 +14,7 @@
         <CollectionViewSource x:Key="Stage1SourceListCVS" Source="{Binding Path=Stage1SourceList}">
         </CollectionViewSource>
 
-        <CollectionViewSource x:Key="RecordCVS" Source="{Binding Path=Records}">
+        <CollectionViewSource x:Key="RecordCVS" Source="{Binding Path=Records}" Filter="CollectionViewSource_Filter">
         </CollectionViewSource>
 
         <CollectionViewSource x:Key="ProductCVS" Source="{Binding Path=Products}">
@@ -62,7 +62,7 @@
                 </DockPanel>
                 <DockPanel Grid.Row="2" LastChildFill="True" VerticalAlignment="Center">
                     <Label DockPanel.Dock="Left">Voltage Points:</Label>
-                    <Button DockPanel.Dock="Right" Command="{Binding Path=VoltagePointLoadCommand}">...</Button>
+                    <Button DockPanel.Dock="Right" Command="{Binding Path=VoltagePointsLoadCommand}">...</Button>
                     <Label Content="{Binding Path=VoltagePoints}"></Label>
                 </DockPanel>
             </Grid>
@@ -129,21 +129,29 @@
                     <RowDefinition Height="50*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <GroupBox Header="Records" Grid.RowSpan="3">
-                    <DataGrid AutoGenerateColumns="False"  Background="White"
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition Height="2"></RowDefinition>
+                            <RowDefinition Height="30"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <DataGrid AutoGenerateColumns="False"  Background="White"
                         ItemsSource="{Binding Source={StaticResource RecordCVS}}"
                         SelectedItem="{Binding Path=SelectedRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
                         >
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Is Valid" IsReadOnly="True" Binding="{Binding Path=IsValid}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Project" IsReadOnly="True" Binding="{Binding Path=Project}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="TM Version" IsReadOnly="True" Binding="{Binding Path=TableMakerVersion}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="EOD" IsReadOnly="True" Binding="{Binding Path=EOD}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Timestamp" IsReadOnly="True" Binding="{Binding Path=Timestamp}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Description" IsReadOnly="True" Binding="{Binding Path=Description}"></DataGridTextColumn>
-                            <!--<DataGridTextColumn Header="Voltage Points" IsReadOnly="True" Binding="{Binding Path=VoltagePoints}"></DataGridTextColumn>-->
-                        </DataGrid.Columns>
-                    </DataGrid>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Is Valid" IsReadOnly="True" Binding="{Binding Path=IsValid}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Project" IsReadOnly="True" Binding="{Binding Path=Project}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="TM Version" IsReadOnly="True" Binding="{Binding Path=TableMakerVersion}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="EOD" IsReadOnly="True" Binding="{Binding Path=EOD}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Timestamp" IsReadOnly="True" Binding="{Binding Path=Timestamp}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Description" IsReadOnly="True" Binding="{Binding Path=Description}"></DataGridTextColumn>
+                                <!--<DataGridTextColumn Header="Voltage Points" IsReadOnly="True" Binding="{Binding Path=VoltagePoints}"></DataGridTextColumn>-->
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button Grid.Row="2" HorizontalAlignment="Right" Width="80" Margin="4" Command="{Binding Path=DeleteRecordCommand}">Delete</Button>
+                    </Grid>
                 </GroupBox>
                 <GroupBox Header="Sources" Grid.Column="2" Grid.Row="0">
                     <DataGrid GridLinesVisibility="None" Background="White"

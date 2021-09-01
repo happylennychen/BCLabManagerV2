@@ -311,6 +311,7 @@ namespace BCLabManager.ViewModel
                 TableMakerProductTypeService.Items = new ObservableCollection<TableMakerProductType>(uow.TableMakerProductTypes.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
+                TableMakerRecordService.Items = new ObservableCollection<TableMakerRecord>(uow.TableMakerRecords.GetAll("Products"));
                 FreeTestRecordService.Items = new ObservableCollection<TestRecord>(uow.TestRecords.GetAllFreeTestRecords());
 
                 //ProgramService.RecipeTemplateService = RecipeTemplateService;
