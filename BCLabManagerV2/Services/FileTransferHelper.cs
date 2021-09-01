@@ -150,11 +150,36 @@ namespace BCLabManager
                 return path.Replace(GlobalSettings.RemotePath, GlobalSettings.MappingPath);
             else return path;
         }
+        public static string Remote2Universal(string path)
+        {
+            string output = path;
+            if (GlobalSettings.EnableTest)
+            {
+                if (path.Contains(GlobalSettings.RemotePath))
+                    output = path.Replace(GlobalSettings.RemotePath, GlobalSettings.MappingPath);
+            }
+            return output;
+        }
         public static string Local2Universal(string path)
         {
             if (path.Contains(GlobalSettings.LocalFolder))
                 return path.Replace(GlobalSettings.LocalFolder, GlobalSettings.UniversalPath);
             else return path;
+        }
+        public static string Universal2Local(string path)
+        {
+            string output = path;
+            if (GlobalSettings.EnableTest)
+            {
+                if (path.Contains(GlobalSettings.MappingPath))
+                    output = path.Replace(GlobalSettings.MappingPath, GlobalSettings.LocalFolder);
+            }
+            else
+            {
+                if (path.Contains(GlobalSettings.RemotePath))
+                    output = path.Replace(GlobalSettings.RemotePath, GlobalSettings.LocalFolder);
+            }
+            return output;
         }
         /*public static string GetRemotePath(string path, int level)
         {

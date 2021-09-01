@@ -223,7 +223,7 @@ namespace BCLabManager.ViewModel
         {
             foreach (var prj in ProjectService.Items)
             {
-                ProjectService.CreateFolder(GlobalSettings.LocalFolder, prj.BatteryType.Name, prj.Name);
+                ProjectService.CreateFolder(prj.BatteryType.Name, prj.Name);
             }
         }
 

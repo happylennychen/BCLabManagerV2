@@ -379,7 +379,7 @@ namespace BCLabManager.Model
             //MD5 = FileTransferHelper.FileCopyWithMD5Check(localTestFileFullPath, TestFilePath);
             //TestFilePath = FileTransferHelper.Mapping2Remote(TestFilePath);
             string TestFilePath;
-            FileTransferHelper.FileUpload(localPath, out TestFilePath, out MD5);
+            FileTransferHelper.FileUpload(localTestFileFullPath, out TestFilePath, out MD5);
             if (MD5 == string.Empty)
                 return string.Empty;
             if (TestFilePath == "")

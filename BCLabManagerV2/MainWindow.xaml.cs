@@ -125,6 +125,74 @@ namespace BCLabManager
             configView.DataContext = vm;// new AllEventsViewModel(/*EventService*/);
             configView.ShowDialog();
         }
+
+        private void FileCheck_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> MissingList = new List<string>();
+            List<string> BrokenList = new List<string>();
+            List<string> MD5EmptyList = new List<string>();
+            foreach (var tmr in mainWindowViewModel.TableMakerRecordService.Items)
+            {
+                foreach (var tmp in tmr.Products)
+                {
+                    string filepath = FileTransferHelper.Remote2Universal(tmp.FilePath);
+                    if (!File.Exists(filepath))
+                    {
+                        MissingList.Add(filepath);
+                    }
+                    else
+                    {
+                        if (tmp.MD5 != null && tmp.MD5 != string.Empty)
+                        {
+                            if (!FileTransferHelper.CheckFileMD5(filepath, tmp.MD5))
+                            {
+                                BrokenList.Add(filepath);
+                            }
+                        }
+                        else
+                        {
+                            MD5EmptyList.Add(filepath);
+                        }
+                    }
+                }
+            }
+
+            foreach (var tr in mainWindowViewModel.ProgramService.RecipeService.TestRecordService.Items)
+            {
+                string filepath = FileTransferHelper.Remote2Universal(tr.TestFilePath);
+                if (!File.Exists(filepath))
+                {
+                    MissingList.Add(filepath);
+                }
+                else
+                {
+                    if (tr.MD5 != null && tr.MD5 != string.Empty)
+                    {
+                        if (!FileTransferHelper.CheckFileMD5(filepath, tr.MD5))
+                        {
+                            BrokenList.Add(filepath);
+                        }
+                    }
+                    else
+                    {
+                        MD5EmptyList.Add(filepath);
+                    }
+                }
+            }
+            //if(MessageBoxResult.Yes == MessageBox.Show($"{MissingList.Count} files are missing.\n" +
+            //    $"{BrokenList.Count} files are broken.\n" +
+            //    $"{MD5EmptyList.Count} files' MD5 is empty,\n\nClick Yes to repair them, click No to cancel.", "File Check", MessageBoxButton.YesNo))
+            //{
+            //    foreach (var missingFP in MissingList)
+            //    {
+            //        var localFP = FileTransferHelper.Universal2Local(missingFP);
+            //        if(File.Exists(localFP))
+            //        {
+            //            if(FileTransferHelper.CheckFileMD5())
+            //        }
+            //    }
+            //}
+        }
         private void UpdateUIForRequester()
         {
             AllTestersViewInstance.ButtonPanel.IsEnabled = false;

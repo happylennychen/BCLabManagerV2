@@ -18,7 +18,7 @@ namespace BCLabManager.Model
         {
             DatabaseAdd(item);
             Items.Add(item);
-            CreateFolder(GlobalSettings.LocalFolder, item.BatteryType.Name, item.Name);
+            CreateFolder(item.BatteryType.Name, item.Name);
         }
 
         public void CreateFolder(string rootPath, string batteryType, string project)
@@ -39,6 +39,11 @@ namespace BCLabManager.Model
                 Directory.CreateDirectory(sourceFilePath);
             if (!Directory.Exists(headerPath))
                 Directory.CreateDirectory(headerPath);
+        }
+        public void CreateFolder(string batteryType, string project)
+        {
+            CreateFolder(GlobalSettings.LocalFolder, batteryType, project);
+            CreateFolder(GlobalSettings.UniversalPath, batteryType, project);
         }
 
         public void DatabaseAdd(Project item)

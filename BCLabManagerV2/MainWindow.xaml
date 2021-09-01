@@ -11,6 +11,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Events" Click="Event_Click"></MenuItem>
             <MenuItem Header="Configuration" Click="Config_Click"></MenuItem>
+            <MenuItem Header="File Check" Click="FileCheck_Click"></MenuItem>
         </Menu>
         <TabControl x:Name="MainTab">
             <TabItem Header="Dashboard">
