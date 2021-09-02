@@ -128,13 +128,13 @@ namespace BCLabManager
         }
         private void LocalFileExistenceCheck_Click(object sender, RoutedEventArgs e)
         {
-            List<string> list = FileExistenceCheck(FileTransferHelper.Remote2Local);
+            List<string[]> list = FileExistenceCheck(FileTransferHelper.Remote2Local);
             if (list.Count > 0)
             {
                 string str = $"{list.Count} Missing Files:\n";
-                foreach (var filePath in list)
+                foreach (var arr in list)
                 {
-                    str += $"{filePath}\n";
+                    str += $"{arr[0]}\n";
                 }
                 RuningLog.Write(str);
                 MessageBox.Show($"{list.Count} files are missing. Check running log for the details.");
@@ -144,13 +144,13 @@ namespace BCLabManager
         }
         private void RemoteFileExistenceCheck_Click(object sender, RoutedEventArgs e)
         {
-            List<string> list = FileExistenceCheck(FileTransferHelper.Remote2Universal);
+            List<string[]> list = FileExistenceCheck(FileTransferHelper.Remote2Universal);
             if (list.Count > 0)
             {
                 string str = $"{list.Count} Missing Files:\n";
-                foreach (var filePath in list)
+                foreach (var arr in list)
                 {
-                    str += $"{filePath}\n";
+                    str += $"{arr[0]}\n";
                 }
                 RuningLog.Write(str);
                 MessageBox.Show($"{list.Count} files are missing. Check running log for the details.");
@@ -159,45 +159,6 @@ namespace BCLabManager
                 MessageBox.Show($"All files are existed.");
         }
 
-        private List<string> FileExistenceCheck(Func<string, string> relocate)
-        {
-            List<string> MissingList = new List<string>();
-            //List<string> RestoreList = new List<string>();
-            foreach (var tmr in mainWindowViewModel.TableMakerRecordService.Items)
-            {
-                foreach (var tmp in tmr.Products)
-                {
-                    if (tmp.FilePath == string.Empty || tmp.FilePath == null)
-                        continue;
-                    string filepath = relocate(tmp.FilePath);
-                    if (!File.Exists(filepath))
-                    {
-                        MissingList.Add(tmp.FilePath);
-                        //if (filemove(tmp.FilePath, tmp.MD5))
-                        //    RestoreList.Add(tmp.FilePath);
-                    }
-                }
-            }
-
-            foreach (var tr in mainWindowViewModel.ProgramService.RecipeService.TestRecordService.Items)
-            {
-                if (tr.TestFilePath == string.Empty || tr.TestFilePath == null)
-                    continue;
-                string filepath = relocate(tr.TestFilePath);
-                if (!File.Exists(filepath))
-                {
-                    MissingList.Add(tr.TestFilePath);
-                    //if (filemove(tr.TestFilePath, tr.MD5))
-                    //    RestoreList.Add(tr.TestFilePath);
-                }
-            }
-            //str += $"{RestoreList.Count} restored:\n";
-            //foreach (var filePath in RestoreList)
-            //{
-            //    str += $"{filePath}\n";
-            //}
-            return MissingList;
-        }
 
         private void FileCheck_Click(object sender, RoutedEventArgs e)
         {
@@ -334,14 +295,226 @@ namespace BCLabManager
             Title = $"{array[0]}-R {array[1]}";
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void LocalFileMD5Check_Click(object sender, RoutedEventArgs e)
+        {
+            List<string[]> list = FileMD5Check(FileTransferHelper.Remote2Local);
+            if (list.Count > 0)
+            {
+                var emptylist = list.Where(o => o[1] == null || o[1] == string.Empty).ToList();
+                var brokenlist = list.Where(o => o[1] != null && o[1] != string.Empty).ToList();
+                string str = $"{brokenlist.Count} broken Files:\n";
+                foreach (var arr in brokenlist)
+                {
+                    str += $"{arr[0]}, {arr[1]}\n";
+                }
+                str = $"{emptylist.Count} MD5 Empty Files:\n";
+                foreach (var arr in emptylist)
+                {
+                    str += $"{arr[0]}, {arr[1]}\n";
+                }
+                RuningLog.Write(str);
+                MessageBox.Show($"{brokenlist.Count} files are broken.\n" +
+                    $"{emptylist.Count} files' MD5 is empty.\n" +
+                    $" Check running log for the details.");
+            }
+            else
+                MessageBox.Show($"All files are fine.");
+        }
+
+        private void RemoteFileMD5Check_Click(object sender, RoutedEventArgs e)
+        {
+            List<string[]> list = FileMD5Check(FileTransferHelper.Remote2Universal);
+            if (list.Count > 0)
+            {
+                var emptylist = list.Where(o => o[1] == null || o[1] == string.Empty).ToList();
+                var brokenlist = list.Where(o => o[1] != null && o[1] != string.Empty).ToList();
+                string str = $"{brokenlist.Count} broken Files:\n";
+                foreach (var arr in brokenlist)
+                {
+                    str += $"{arr[0]}, {arr[1]}\n";
+                }
+                str = $"{emptylist.Count} MD5 Empty Files:\n";
+                foreach (var arr in emptylist)
+                {
+                    str += $"{arr[0]}, {arr[1]}\n";
+                }
+                RuningLog.Write(str);
+                MessageBox.Show($"{brokenlist.Count} files are broken.\n" +
+                    $"{emptylist.Count} files' MD5 is empty.\n" +
+                    $" Check running log for the details.");
+            }
+            else
+                MessageBox.Show($"All files are fine.");
+        }
+        private void LocalFileRestore_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> RestoreList = new List<string>();
+            List<string[]> list = FileExistenceCheck(FileTransferHelper.Remote2Local);
+            foreach (var file in list)
+            {
+                if (FileTransferHelper.FileDownload(file[0], file[1]))
+                    RestoreList.Add(file[0]);
+            }
+            string str = $"{RestoreList.Count} files restored:\n";
+            foreach (var file in RestoreList)
+            {
+                str += $"{file}\n";
+            }
+            RuningLog.Write(str);
+            MessageBox.Show($"{RestoreList.Count} files restored.\n" +
+                $" Check running log for the details.");
+        }
+        private void RemoteFileRestore_Click(object sender, RoutedEventArgs e)
         {
 
         }
-
-        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        private void LocalFileMD5Repair_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+        private void RemoteFileMD5Repair_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> MissingList = new List<string>();
+            List<string> BrokenList = new List<string>();
+            List<string> MD5EmptyList = new List<string>();
+            List<string> RestoreList = new List<string>();
+            List<string> RestoreMD5List = new List<string>();
+            foreach (var tmr in mainWindowViewModel.TableMakerRecordService.Items)
+            {
+                foreach (var tmp in tmr.Products)
+                {
+                    string filepath = FileTransferHelper.Remote2Universal(tmp.FilePath);
+                    if (File.Exists(filepath))
+                    {
+                        if (tmp.MD5 != null && tmp.MD5 != string.Empty)
+                        {
+                            //if (!FileTransferHelper.CheckFileMD5(filepath, tmp.MD5))
+                            //{
+                            //    if (Restore(filepath, tmp.MD5))
+                            //        RestoreList.Add(filepath);
+                            //}
+                        }
+                        else
+                        {
+                            using (var context = new AppDbContext())
+                            {
+                                var dbtmp = context.TableMakerProducts.SingleOrDefault(o => o.Id == tmp.Id);
+                                dbtmp.MD5 = FileTransferHelper.GetMD5(filepath);
+                                context.SaveChanges();
+                            }
+                            RestoreMD5List.Add(filepath);
+                        }
+                    }
+                }
+            }
+
+            foreach (var tr in mainWindowViewModel.ProgramService.RecipeService.TestRecordService.Items)
+            {
+                string filepath = FileTransferHelper.Remote2Universal(tr.TestFilePath);
+                if (File.Exists(filepath))
+                {
+                    if (tr.MD5 != null && tr.MD5 != string.Empty)
+                    {
+                        //if (!FileTransferHelper.CheckFileMD5(filepath, tr.MD5))
+                        //{
+                        //    if (Restore(filepath, tr.MD5))
+                        //        RestoreList.Add(filepath);
+                        //}
+                    }
+                    else
+                    {
+                        MD5EmptyList.Add(filepath);
+                        using (var context = new AppDbContext())
+                        {
+                            var dbtr = context.TestRecords.SingleOrDefault(o => o.Id == tr.Id);
+                            dbtr.MD5 = FileTransferHelper.GetMD5(filepath);
+                            context.SaveChanges();
+                        }
+                        RestoreMD5List.Add(filepath);
+                    }
+                }
+            }
+            MessageBox.Show($"{MissingList.Count} files are missing.\n" +
+                $"{BrokenList.Count} files are broken.\n" +
+                $"{MD5EmptyList.Count} files' MD5 is empty,\n" +
+                $"{RestoreList.Count} files restored.\n" +
+                $"{RestoreMD5List.Count} files' MD5 is restored");
+        }
+
+        private List<string[]> FileExistenceCheck(Func<string, string> relocate)
+        {
+            List<string[]> MissingList = new List<string[]>();
+            foreach (var tmr in mainWindowViewModel.TableMakerRecordService.Items)
+            {
+                foreach (var tmp in tmr.Products)
+                {
+                    if (tmp.FilePath == string.Empty || tmp.FilePath == null)
+                        continue;
+                    string filepath = relocate(tmp.FilePath);
+                    if (!File.Exists(filepath))
+                    {
+                        MissingList.Add(new string[] { tmp.FilePath, tmp.MD5 });
+                    }
+                }
+            }
+
+            foreach (var tr in mainWindowViewModel.ProgramService.RecipeService.TestRecordService.Items)
+            {
+                if (tr.TestFilePath == string.Empty || tr.TestFilePath == null)
+                    continue;
+                string filepath = relocate(tr.TestFilePath);
+                if (!File.Exists(filepath))
+                {
+                    MissingList.Add(new string[] { tr.TestFilePath, tr.MD5 });
+                }
+            }
+            return MissingList;
+        }
+
+        private List<string[]> FileMD5Check(Func<string, string> relocate)
+        {
+            List<string[]> BrokenList = new List<string[]>();
+            //List<string> RestoreList = new List<string>();
+            foreach (var tmr in mainWindowViewModel.TableMakerRecordService.Items)
+            {
+                foreach (var tmp in tmr.Products)
+                {
+                    if (tmp.FilePath == string.Empty || tmp.FilePath == null)
+                        continue;
+                    string filepath = relocate(tmp.FilePath);
+                    if (tmp.MD5 != null && tmp.MD5 != string.Empty)
+                    {
+                        if (!FileTransferHelper.CheckFileMD5(filepath, tmp.MD5))
+                        {
+                            BrokenList.Add(new string[] { filepath, tmp.MD5 }); //Wrong MD5
+                        }
+                    }
+                    else
+                    {
+                        BrokenList.Add(new string[] { filepath, tmp.MD5 }); //Empty MD5
+                    }
+                }
+            }
+
+            foreach (var tr in mainWindowViewModel.ProgramService.RecipeService.TestRecordService.Items)
+            {
+                if (tr.TestFilePath == string.Empty || tr.TestFilePath == null)
+                    continue;
+                string filepath = relocate(tr.TestFilePath);
+                if (tr.MD5 != null && tr.MD5 != string.Empty)
+                {
+                    if (File.Exists(filepath))
+                        if (!FileTransferHelper.CheckFileMD5(filepath, tr.MD5))
+                        {
+                            BrokenList.Add(new string[] { filepath, tr.MD5 }); //Wrong MD5
+                        }
+                }
+                else
+                {
+                    BrokenList.Add(new string[] { filepath, tr.MD5 }); //Empty MD5
+                }
+            }
+            return BrokenList;
         }
     }
 }

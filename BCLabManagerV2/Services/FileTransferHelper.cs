@@ -16,14 +16,14 @@ namespace BCLabManager
         public static string FileCopyWithMD5Check(string sourcePath, string targetPath)
         {
 #if !Test
-            if (!FileCopyWithLog(sourcePath, targetPath))
+            if (!FileCopy(sourcePath, targetPath))
             {
                 MessageBox.Show($"File copy failed!");
             }
-            string localMD5Code, remoteMD5Code;
-            localMD5Code = GetMD5(sourcePath);
-            remoteMD5Code = GetMD5(targetPath);
-            if (localMD5Code != remoteMD5Code)
+            string sourceMD5, targetMD5;
+            sourceMD5 = GetMD5(sourcePath);
+            targetMD5 = GetMD5(targetPath);
+            if (sourceMD5 != targetMD5)
             {
                 Event evt = new Event();
                 evt.Module = Module.FileOperation;
@@ -34,7 +34,7 @@ namespace BCLabManager
                 MessageBox.Show(evt.Description);
                 return string.Empty;
             }
-            return localMD5Code;
+            return sourceMD5;
 #else
             return string.Empty;
 #endif
@@ -66,23 +66,11 @@ namespace BCLabManager
             return output;
         }
 
-        public static bool FileCopyWithLog(string sourcePath, string targetPath)
+        public static bool FileCopy(string sourcePath, string targetPath)
         {
             try
             {
-                if (!File.Exists(sourcePath))
-                    return false;
                 File.Copy(sourcePath, targetPath, true);
-                if (!File.Exists(targetPath))
-                {
-                    return false;
-                }
-
-                FileInfo fi1 = new FileInfo(sourcePath);
-                FileInfo fi2 = new FileInfo(targetPath);
-                RuningLog.Write($"Source File: {sourcePath}, Size: {fi1.Length}, Target File: {targetPath}, Size: {fi2.Length}, Difference: {fi1.Length - fi2.Length}\n");
-                if (fi1.Length != fi2.Length)
-                    return false;
             }
             catch (Exception e)
             {

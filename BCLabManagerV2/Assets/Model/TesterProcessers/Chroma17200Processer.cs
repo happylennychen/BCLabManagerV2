@@ -374,7 +374,7 @@ namespace BCLabManager.Model
                     File.Delete(filepath);
                     FileInfo fi1 = new FileInfo(tempFilePath);
                     var length1 = fi1.Length;
-                    FileTransferHelper.FileCopyWithLog(tempFilePath, filepath);
+                    FileTransferHelper.FileCopy(tempFilePath, filepath);
                     foreach (var evt in events)
                     {
                         EventService.SuperAdd(evt);

@@ -361,7 +361,7 @@ namespace BCLabManager.Model
                 //{
                 //    localTestFileFullPath = Path.Combine($@"{localProjectPath}\{GlobalSettings.TestDataFolderName}", Path.GetFileName(rawDataFullPathList[0]));
                 //}
-                FileTransferHelper.FileCopyWithLog(rawDataFullPathList[0], localTestFileFullPath);
+                FileTransferHelper.FileCopy(rawDataFullPathList[0], localTestFileFullPath);
             }
             //#if !Test
             TesterServiceClass ts = new TesterServiceClass();
