@@ -23,6 +23,7 @@ using System.Collections.ObjectModel;
 using BCLabManager.View;
 using Microsoft.Win32;
 using Npgsql;
+using Path = System.IO.Path;
 
 namespace BCLabManager
 {
@@ -129,6 +130,7 @@ namespace BCLabManager
         private void FileCheck_Click(object sender, RoutedEventArgs e)
         {
             List<string> MissingList = new List<string>();
+            List<string> RestoreList = new List<string>();
             List<string> BrokenList = new List<string>();
             List<string> MD5EmptyList = new List<string>();
             foreach (var tmr in mainWindowViewModel.TableMakerRecordService.Items)
@@ -139,6 +141,8 @@ namespace BCLabManager
                     if (!File.Exists(filepath))
                     {
                         MissingList.Add(filepath);
+                        if (Restore(filepath, tmp.MD5))
+                            RestoreList.Add(filepath);
                     }
                     else
                     {
@@ -147,11 +151,15 @@ namespace BCLabManager
                             if (!FileTransferHelper.CheckFileMD5(filepath, tmp.MD5))
                             {
                                 BrokenList.Add(filepath);
+                                if (Restore(filepath, tmp.MD5))
+                                    RestoreList.Add(filepath);
                             }
                         }
                         else
                         {
                             MD5EmptyList.Add(filepath);
+                            //if (Restore(filepath, tmp.MD5))
+                            //    RestoreList.Add(filepath);
                         }
                     }
                 }
@@ -163,6 +171,8 @@ namespace BCLabManager
                 if (!File.Exists(filepath))
                 {
                     MissingList.Add(filepath);
+                    if (Restore(filepath, tr.MD5))
+                        RestoreList.Add(filepath);
                 }
                 else
                 {
@@ -171,28 +181,52 @@ namespace BCLabManager
                         if (!FileTransferHelper.CheckFileMD5(filepath, tr.MD5))
                         {
                             BrokenList.Add(filepath);
+                            if (Restore(filepath, tr.MD5))
+                                RestoreList.Add(filepath);
                         }
                     }
                     else
                     {
                         MD5EmptyList.Add(filepath);
+                        //if (Restore(filepath, tr.MD5))
+                        //    RestoreList.Add(filepath);
                     }
                 }
             }
-            //if(MessageBoxResult.Yes == MessageBox.Show($"{MissingList.Count} files are missing.\n" +
-            //    $"{BrokenList.Count} files are broken.\n" +
-            //    $"{MD5EmptyList.Count} files' MD5 is empty,\n\nClick Yes to repair them, click No to cancel.", "File Check", MessageBoxButton.YesNo))
-            //{
-            //    foreach (var missingFP in MissingList)
-            //    {
-            //        var localFP = FileTransferHelper.Universal2Local(missingFP);
-            //        if(File.Exists(localFP))
-            //        {
-            //            if(FileTransferHelper.CheckFileMD5())
-            //        }
-            //    }
-            //}
+            MessageBox.Show($"{MissingList.Count} files are missing.\n" +
+                $"{BrokenList.Count} files are broken.\n" +
+                $"{MD5EmptyList.Count} files' MD5 is empty,\n" +
+                $"{RestoreList.Count} files restored.");
         }
+
+        private bool Restore(string filepath, string MD5)
+        {
+            string localPath = FileTransferHelper.Universal2Local(filepath);
+            if (File.Exists(localPath))
+            {
+                if (MD5 != null && MD5 != string.Empty)
+                {
+                    if (FileTransferHelper.CheckFileMD5(localPath, MD5))
+                    {
+                        var direc = Path.GetDirectoryName(filepath);
+                        if (!Directory.Exists(direc))
+                            Directory.CreateDirectory(direc);
+                        File.Copy(localPath, filepath, true);
+                        return true;
+                    }
+                }
+                else
+                {
+                    var direc = Path.GetDirectoryName(filepath);
+                    if (!Directory.Exists(direc))
+                        Directory.CreateDirectory(direc);
+                    File.Copy(localPath, filepath, true);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void UpdateUIForRequester()
         {
             AllTestersViewInstance.ButtonPanel.IsEnabled = false;
