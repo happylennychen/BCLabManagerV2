@@ -11,7 +11,12 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Events" Click="Event_Click"></MenuItem>
             <MenuItem Header="Configuration" Click="Config_Click"></MenuItem>
-            <MenuItem Header="File Check" Click="FileCheck_Click"></MenuItem>
+            <MenuItem Header="Integrity Check">
+                <MenuItem Header="Local File Existence Check" Click="LocalFileExistenceCheck_Click"></MenuItem>
+                <MenuItem Header="Remote File Existence Check" Click="RemoteFileExistenceCheck_Click"></MenuItem>
+                <!--<MenuItem Header="Local File MD5 Check" Click="LocalFileMD5Check_Click"></MenuItem>-->
+                <!--<MenuItem Header="Remote File MD5 Check" Click="RemoteFileMD5Check_Click"></MenuItem>-->
+            </MenuItem>
         </Menu>
         <TabControl x:Name="MainTab">
             <TabItem Header="Dashboard">

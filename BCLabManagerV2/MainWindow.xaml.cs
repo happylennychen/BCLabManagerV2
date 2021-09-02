@@ -126,13 +126,86 @@ namespace BCLabManager
             configView.DataContext = vm;// new AllEventsViewModel(/*EventService*/);
             configView.ShowDialog();
         }
+        private void LocalFileExistenceCheck_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> list = FileExistenceCheck(FileTransferHelper.Remote2Local);
+            if (list.Count > 0)
+            {
+                string str = $"{list.Count} Missing Files:\n";
+                foreach (var filePath in list)
+                {
+                    str += $"{filePath}\n";
+                }
+                RuningLog.Write(str);
+                MessageBox.Show($"{list.Count} files are missing. Check running log for the details.");
+            }
+            else
+                MessageBox.Show($"All files are existed.");
+        }
+        private void RemoteFileExistenceCheck_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> list = FileExistenceCheck(FileTransferHelper.Remote2Universal);
+            if (list.Count > 0)
+            {
+                string str = $"{list.Count} Missing Files:\n";
+                foreach (var filePath in list)
+                {
+                    str += $"{filePath}\n";
+                }
+                RuningLog.Write(str);
+                MessageBox.Show($"{list.Count} files are missing. Check running log for the details.");
+            }
+            else
+                MessageBox.Show($"All files are existed.");
+        }
+
+        private List<string> FileExistenceCheck(Func<string, string> relocate)
+        {
+            List<string> MissingList = new List<string>();
+            //List<string> RestoreList = new List<string>();
+            foreach (var tmr in mainWindowViewModel.TableMakerRecordService.Items)
+            {
+                foreach (var tmp in tmr.Products)
+                {
+                    if (tmp.FilePath == string.Empty || tmp.FilePath == null)
+                        continue;
+                    string filepath = relocate(tmp.FilePath);
+                    if (!File.Exists(filepath))
+                    {
+                        MissingList.Add(tmp.FilePath);
+                        //if (filemove(tmp.FilePath, tmp.MD5))
+                        //    RestoreList.Add(tmp.FilePath);
+                    }
+                }
+            }
+
+            foreach (var tr in mainWindowViewModel.ProgramService.RecipeService.TestRecordService.Items)
+            {
+                if (tr.TestFilePath == string.Empty || tr.TestFilePath == null)
+                    continue;
+                string filepath = relocate(tr.TestFilePath);
+                if (!File.Exists(filepath))
+                {
+                    MissingList.Add(tr.TestFilePath);
+                    //if (filemove(tr.TestFilePath, tr.MD5))
+                    //    RestoreList.Add(tr.TestFilePath);
+                }
+            }
+            //str += $"{RestoreList.Count} restored:\n";
+            //foreach (var filePath in RestoreList)
+            //{
+            //    str += $"{filePath}\n";
+            //}
+            return MissingList;
+        }
 
         private void FileCheck_Click(object sender, RoutedEventArgs e)
         {
             List<string> MissingList = new List<string>();
-            List<string> RestoreList = new List<string>();
             List<string> BrokenList = new List<string>();
             List<string> MD5EmptyList = new List<string>();
+            List<string> RestoreList = new List<string>();
+            List<string> RestoreMD5List = new List<string>();
             foreach (var tmr in mainWindowViewModel.TableMakerRecordService.Items)
             {
                 foreach (var tmp in tmr.Products)
@@ -158,8 +231,13 @@ namespace BCLabManager
                         else
                         {
                             MD5EmptyList.Add(filepath);
-                            //if (Restore(filepath, tmp.MD5))
-                            //    RestoreList.Add(filepath);
+                            using (var context = new AppDbContext())
+                            {
+                                var dbtmp = context.TableMakerProducts.SingleOrDefault(o => o.Id == tmp.Id);
+                                dbtmp.MD5 = FileTransferHelper.GetMD5(filepath);
+                                context.SaveChanges();
+                            }
+                            RestoreMD5List.Add(filepath);
                         }
                     }
                 }
@@ -188,15 +266,21 @@ namespace BCLabManager
                     else
                     {
                         MD5EmptyList.Add(filepath);
-                        //if (Restore(filepath, tr.MD5))
-                        //    RestoreList.Add(filepath);
+                        using (var context = new AppDbContext())
+                        {
+                            var dbtr = context.TestRecords.SingleOrDefault(o => o.Id == tr.Id);
+                            dbtr.MD5 = FileTransferHelper.GetMD5(filepath);
+                            context.SaveChanges();
+                        }
+                        RestoreMD5List.Add(filepath);
                     }
                 }
             }
             MessageBox.Show($"{MissingList.Count} files are missing.\n" +
                 $"{BrokenList.Count} files are broken.\n" +
                 $"{MD5EmptyList.Count} files' MD5 is empty,\n" +
-                $"{RestoreList.Count} files restored.");
+                $"{RestoreList.Count} files restored.\n" +
+                $"{RestoreMD5List.Count} files' MD5 is restored");
         }
 
         private bool Restore(string filepath, string MD5)
@@ -248,6 +332,16 @@ namespace BCLabManager
             //Title = "BCLM-R v0.2.0.5";
             var array = Title.Split();
             Title = $"{array[0]}-R {array[1]}";
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

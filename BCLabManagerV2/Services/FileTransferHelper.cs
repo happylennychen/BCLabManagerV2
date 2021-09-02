@@ -40,7 +40,7 @@ namespace BCLabManager
 #endif
         }
 
-        private static string GetMD5(string path)
+        public static string GetMD5(string path)
         {
             string output = string.Empty;
             FileStream fs = new FileStream(path, FileMode.Open);
@@ -126,7 +126,7 @@ namespace BCLabManager
             return fileFullPath;
         }
 
-        internal static bool FileDownload(string remotePath, string MD5)
+        public static bool FileDownload(string remotePath, string MD5)
         {
             var localPath = FileTransferHelper.Remote2Local(remotePath);
             var universalPath = FileTransferHelper.Remote2Universal(remotePath);
@@ -149,12 +149,47 @@ namespace BCLabManager
             if (MD5 != null && MD5 != string.Empty)
                 if (!FileTransferHelper.CheckFileMD5(localPath, MD5))
                 {
-                    MessageBox.Show($"{universalPath} MD5 Check Failed!");
+                    MessageBox.Show($"{remotePath} MD5 Check Failed!");
                     Event evt = new Event();
                     evt.Module = Module.FileOperation;
                     evt.Timestamp = DateTime.Now;
                     evt.Type = EventType.Error;
-                    evt.Description = $"{universalPath} MD5 Check Failed!";
+                    evt.Description = $"{remotePath} MD5 Check Failed!";
+                    EventService.SuperAdd(evt);
+                    return false;
+                }
+            return true;
+        }
+
+        public static bool FileRestore(string remotePath, string MD5)
+        {
+            var localPath = FileTransferHelper.Remote2Local(remotePath);
+            var universalPath = FileTransferHelper.Remote2Universal(remotePath);
+            if (!File.Exists(universalPath))
+            {
+                if (!File.Exists(localPath))
+                {
+                    MessageBox.Show($"No such file.{remotePath}");
+                    Event evt = new Event();
+                    evt.Module = Module.FileOperation;
+                    evt.Timestamp = DateTime.Now;
+                    evt.Type = EventType.Error;
+                    evt.Description = $"Cannot access file {remotePath}.";
+                    EventService.SuperAdd(evt);
+                    return false;
+                }
+                FileTransferHelper.FileCopyWithMD5Check(localPath, universalPath);
+            }
+            //}
+            if (MD5 != null && MD5 != string.Empty)
+                if (!FileTransferHelper.CheckFileMD5(universalPath, MD5))
+                {
+                    MessageBox.Show($"{remotePath} MD5 Check Failed!");
+                    Event evt = new Event();
+                    evt.Module = Module.FileOperation;
+                    evt.Timestamp = DateTime.Now;
+                    evt.Type = EventType.Error;
+                    evt.Description = $"{remotePath} MD5 Check Failed!";
                     EventService.SuperAdd(evt);
                     return false;
                 }
