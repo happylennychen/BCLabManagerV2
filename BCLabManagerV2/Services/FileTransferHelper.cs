@@ -18,7 +18,7 @@ namespace BCLabManager
 #if !Test
             if (!FileCopyWithLog(sourcePath, targetPath))
             {
-                MessageBox.Show($"Copy to server failed!");
+                MessageBox.Show($"File copy failed!");
             }
             string localMD5Code, remoteMD5Code;
             localMD5Code = GetMD5(sourcePath);
@@ -125,6 +125,42 @@ namespace BCLabManager
             }
             return fileFullPath;
         }
+
+        internal static bool FileDownload(string remotePath, string MD5)
+        {
+            var localPath = FileTransferHelper.Remote2Local(remotePath);
+            var universalPath = FileTransferHelper.Remote2Universal(remotePath);
+            if (!File.Exists(localPath))
+            {
+                if (!File.Exists(universalPath))
+                {
+                    MessageBox.Show($"No such file.{remotePath}");
+                    Event evt = new Event();
+                    evt.Module = Module.FileOperation;
+                    evt.Timestamp = DateTime.Now;
+                    evt.Type = EventType.Error;
+                    evt.Description = $"Cannot access file {remotePath}.";
+                    EventService.SuperAdd(evt);
+                    return false;
+                }
+                FileTransferHelper.FileCopyWithMD5Check(universalPath, localPath);
+            }
+            //}
+            if (MD5 != null && MD5 != string.Empty)
+                if (!FileTransferHelper.CheckFileMD5(localPath, MD5))
+                {
+                    MessageBox.Show($"{universalPath} MD5 Check Failed!");
+                    Event evt = new Event();
+                    evt.Module = Module.FileOperation;
+                    evt.Timestamp = DateTime.Now;
+                    evt.Type = EventType.Error;
+                    evt.Description = $"{universalPath} MD5 Check Failed!";
+                    EventService.SuperAdd(evt);
+                    return false;
+                }
+            return true;
+        }
+
         public static string Local2Remote(string path)
         {
             if (path.Contains(GlobalSettings.LocalFolder))

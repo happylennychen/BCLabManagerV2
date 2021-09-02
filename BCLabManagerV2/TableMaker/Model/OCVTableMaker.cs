@@ -33,7 +33,7 @@ namespace BCLabManager
                     sd.fTemperature = (float)tr.Temperature;
                     sd.fTraceResis = (float)tr.TraceResistance;
                     var tester = testers.SingleOrDefault(o => o.Name == tr.TesterStr);
-                    var filePath = string.Empty;
+                    var localPath = string.Empty;
                     //if (isRemoteData)
                     //{
                     //    filePath = tr.TestFilePath;
@@ -41,37 +41,10 @@ namespace BCLabManager
                     //else
                     //{
                     //filePath = TableMakerService.GetLocalPath(tr.TestFilePath);
-                    filePath = FileTransferHelper.Remote2Local(tr.TestFilePath);
-                    if (!File.Exists(filePath))
-                    {
-                        if (!File.Exists(tr.TestFilePath))
-                        {
-                            MessageBox.Show($"No such file.{tr.TestFilePath}");
-                            Event evt = new Event();
-                            evt.Module = Module.FileOperation;
-                            evt.Timestamp = DateTime.Now;
-                            evt.Type = EventType.Error;
-                            evt.Description = $"Cannot access file {tr.TestFilePath}.";
-                            EventService.SuperAdd(evt);
-                            return false;
-                        }
-                        //filePath = tr.TestFilePath;
-                        FileTransferHelper.FileCopyWithLog(tr.TestFilePath, filePath);
-                    }
-                    //}
-                    if (tr.MD5 != null && tr.MD5 != string.Empty)
-                        if (!FileTransferHelper.CheckFileMD5(filePath, tr.MD5))
-                        {
-                            MessageBox.Show($"{filePath} MD5 Check Failed!");
-                            Event evt = new Event();
-                            evt.Module = Module.FileOperation;
-                            evt.Timestamp = DateTime.Now;
-                            evt.Type = EventType.Error;
-                            evt.Description = $"{filePath} MD5 Check Failed!";
-                            EventService.SuperAdd(evt);
-                            return false;
-                        }
-                    UInt32 result = tester.ITesterProcesser.LoadRawToSource(filePath, ref sd);
+                    if (!FileTransferHelper.FileDownload(tr.TestFilePath, tr.MD5))
+                        return false;
+                    localPath = FileTransferHelper.Remote2Local(tr.TestFilePath);
+                    UInt32 result = tester.ITesterProcesser.LoadRawToSource(localPath, ref sd);
                     if (result == ErrorCode.NORMAL)
                     {
                         SDList.Add(sd);
