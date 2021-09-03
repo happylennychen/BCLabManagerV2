@@ -1,5 +1,4 @@
-﻿//#define Test
-using BCLabManager.Model;
+﻿using BCLabManager.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,12 +12,17 @@ namespace BCLabManager
 {
     static public class FileTransferHelper
     {
-        public static string FileCopyWithMD5Check(string sourcePath, string targetPath)
+        public static bool FileCopyWithMD5Check(string sourcePath, string targetPath, out string MD5) //文件拷贝，用MD5检查保证拷贝的可靠性
         {
-#if !Test
-            if (!FileCopy(sourcePath, targetPath))
+            MD5 = null;
+            try
             {
-                MessageBox.Show($"File copy failed!");
+                File.Copy(sourcePath, targetPath, true);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"File copy failed!\n{e.Message}");
+                return false;
             }
             string sourceMD5, targetMD5;
             sourceMD5 = GetMD5(sourcePath);
@@ -32,12 +36,10 @@ namespace BCLabManager
                 evt.Description = $"Test File MD5 Check Failed!. File Name: {Path.GetFileName(sourcePath)}";
                 EventService.SuperAdd(evt);
                 MessageBox.Show(evt.Description);
-                return string.Empty;
+                return false;
             }
-            return sourceMD5;
-#else
-            return string.Empty;
-#endif
+            MD5 = sourceMD5;
+            return true;
         }
 
         public static string GetMD5(string path)
@@ -64,21 +66,6 @@ namespace BCLabManager
             }
             fs.Close();
             return output;
-        }
-
-        public static bool FileCopy(string sourcePath, string targetPath)
-        {
-            try
-            {
-                File.Copy(sourcePath, targetPath, true);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-                return false;
-            }
-
-            return true;
         }
 
         public static bool CheckFileMD5(string filePath, string MD5)
@@ -114,38 +101,34 @@ namespace BCLabManager
             return fileFullPath;
         }
 
-        public static bool FileDownload(string remotePath, string MD5)
+        public static bool FileDownload(string remotePath, string MD5)      //从远程目录copy下来，过程中检查MD5
         {
             var localPath = FileTransferHelper.Remote2Local(remotePath);
             var universalPath = FileTransferHelper.Remote2Universal(remotePath);
-            if (!File.Exists(localPath))
+            if (!File.Exists(universalPath))
             {
-                if (!File.Exists(universalPath))
-                {
-                    MessageBox.Show($"No such file.{remotePath}");
-                    Event evt = new Event();
-                    evt.Module = Module.FileOperation;
-                    evt.Timestamp = DateTime.Now;
-                    evt.Type = EventType.Error;
-                    evt.Description = $"Cannot access file {remotePath}.";
-                    EventService.SuperAdd(evt);
-                    return false;
-                }
-                FileTransferHelper.FileCopyWithMD5Check(universalPath, localPath);
+                //MessageBox.Show($"No such file.{remotePath}");
+                //Event evt = new Event();
+                //evt.Module = Module.FileOperation;
+                //evt.Timestamp = DateTime.Now;
+                //evt.Type = EventType.Error;
+                //evt.Description = $"Cannot access file {remotePath}.";
+                //EventService.SuperAdd(evt);
+                return false;
             }
-            //}
-            if (MD5 != null && MD5 != string.Empty)
-                if (!FileTransferHelper.CheckFileMD5(localPath, MD5))
-                {
-                    MessageBox.Show($"{remotePath} MD5 Check Failed!");
-                    Event evt = new Event();
-                    evt.Module = Module.FileOperation;
-                    evt.Timestamp = DateTime.Now;
-                    evt.Type = EventType.Error;
-                    evt.Description = $"{remotePath} MD5 Check Failed!";
-                    EventService.SuperAdd(evt);
-                    return false;
-                }
+
+            try
+            {
+                File.Copy(universalPath, localPath, true);
+            }
+            catch (Exception e)
+            {
+                //MessageBox.Show($"File copy failed!\n{e.Message}");
+                return false;
+            }
+            var md5 = GetMD5(localPath);
+            if (md5 != MD5)
+                return false;
             return true;
         }
 
@@ -166,7 +149,8 @@ namespace BCLabManager
                     EventService.SuperAdd(evt);
                     return false;
                 }
-                FileTransferHelper.FileCopyWithMD5Check(localPath, universalPath);
+                string md5;
+                FileTransferHelper.FileCopyWithMD5Check(localPath, universalPath, out md5);
             }
             //}
             if (MD5 != null && MD5 != string.Empty)
@@ -312,7 +296,7 @@ namespace BCLabManager
         public static void FileUpload(string localPath, out string remotePath, out string MD5)
         {
             remotePath = FileTransferHelper.Local2Universal(localPath);
-            MD5 = FileTransferHelper.FileCopyWithMD5Check(localPath, remotePath);
+            FileTransferHelper.FileCopyWithMD5Check(localPath, remotePath, out MD5);
             remotePath = FileTransferHelper.Mapping2Remote(remotePath);
         }
     }

@@ -372,7 +372,7 @@ namespace BCLabManager
         {
 
         }
-        private void RemoteFileMD5Repair_Click(object sender, RoutedEventArgs e)
+        private void RemoteFileMD5Commit_Click(object sender, RoutedEventArgs e)
         {
             List<string> MissingList = new List<string>();
             List<string> BrokenList = new List<string>();
@@ -384,17 +384,9 @@ namespace BCLabManager
                 foreach (var tmp in tmr.Products)
                 {
                     string filepath = FileTransferHelper.Remote2Universal(tmp.FilePath);
-                    if (File.Exists(filepath))
+                    if (tmp.MD5 == null || tmp.MD5 == string.Empty)
                     {
-                        if (tmp.MD5 != null && tmp.MD5 != string.Empty)
-                        {
-                            //if (!FileTransferHelper.CheckFileMD5(filepath, tmp.MD5))
-                            //{
-                            //    if (Restore(filepath, tmp.MD5))
-                            //        RestoreList.Add(filepath);
-                            //}
-                        }
-                        else
+                        if (File.Exists(filepath))
                         {
                             using (var context = new AppDbContext())
                             {
@@ -411,17 +403,9 @@ namespace BCLabManager
             foreach (var tr in mainWindowViewModel.ProgramService.RecipeService.TestRecordService.Items)
             {
                 string filepath = FileTransferHelper.Remote2Universal(tr.TestFilePath);
-                if (File.Exists(filepath))
+                if (tr.MD5 == null || tr.MD5 == string.Empty)
                 {
-                    if (tr.MD5 != null && tr.MD5 != string.Empty)
-                    {
-                        //if (!FileTransferHelper.CheckFileMD5(filepath, tr.MD5))
-                        //{
-                        //    if (Restore(filepath, tr.MD5))
-                        //        RestoreList.Add(filepath);
-                        //}
-                    }
-                    else
+                    if (File.Exists(filepath))
                     {
                         MD5EmptyList.Add(filepath);
                         using (var context = new AppDbContext())

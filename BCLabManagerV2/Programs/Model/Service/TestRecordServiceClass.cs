@@ -353,15 +353,17 @@ namespace BCLabManager.Model
             }
             else
             {
-                //if (isRename)
-                //{
                 localTestFileFullPath = Path.Combine($@"{localPath}\{GlobalSettings.TestDataFolderName}", newName + Path.GetExtension(rawDataFullPathList[0]));
-                //}
-                //else
-                //{
-                //    localTestFileFullPath = Path.Combine($@"{localProjectPath}\{GlobalSettings.TestDataFolderName}", Path.GetFileName(rawDataFullPathList[0]));
-                //}
-                FileTransferHelper.FileCopy(rawDataFullPathList[0], localTestFileFullPath);
+
+                try
+                {
+                    File.Copy(rawDataFullPathList[0], localTestFileFullPath, true);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                    return string.Empty;
+                }
             }
             //#if !Test
             TesterServiceClass ts = new TesterServiceClass();

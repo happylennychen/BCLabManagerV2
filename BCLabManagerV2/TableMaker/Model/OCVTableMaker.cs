@@ -13,58 +13,6 @@ namespace BCLabManager
         static public int iMinPercent = 0;
         static public int iMaxPercent = 10000;
         #region OCV
-        public static bool GetOCVSource(Project project, List<TestRecord> testRecords, List<Tester> testers, out List<SourceData> MaxSDList, out List<string> Sources)
-        {
-            MaxSDList = new List<SourceData>();
-            Sources = new List<string>();
-            foreach (var grp in testRecords.GroupBy(o => o.Current))
-            {
-                List<SourceData> SDList = new List<SourceData>();   //找出最大的sd
-                foreach (var tr in grp)
-                {
-                    SourceData sd = new SourceData();
-                    sd.fAbsMaxCap = project.AbsoluteMaxCapacity;
-                    sd.fCapacityDiff = (float)tr.CapacityDifference;
-                    sd.fCurrent = (float)tr.Current * (-1);
-                    sd.fCutoffDsgVolt = project.CutoffDischargeVoltage;
-                    sd.fLimitChgVolt = project.LimitedChargeVoltage;
-                    sd.fMeasureGain = (float)tr.MeasurementGain;
-                    sd.fMeasureOffset = (float)tr.MeasurementOffset;
-                    sd.fTemperature = (float)tr.Temperature;
-                    sd.fTraceResis = (float)tr.TraceResistance;
-                    var tester = testers.SingleOrDefault(o => o.Name == tr.TesterStr);
-                    var localPath = string.Empty;
-                    //if (isRemoteData)
-                    //{
-                    //    filePath = tr.TestFilePath;
-                    //}
-                    //else
-                    //{
-                    //filePath = TableMakerService.GetLocalPath(tr.TestFilePath);
-                    if (!FileTransferHelper.FileDownload(tr.TestFilePath, tr.MD5))
-                        return false;
-                    localPath = FileTransferHelper.Remote2Local(tr.TestFilePath);
-                    UInt32 result = tester.ITesterProcesser.LoadRawToSource(localPath, ref sd);
-                    if (result == ErrorCode.NORMAL)
-                    {
-                        SDList.Add(sd);
-                        Sources.Add(tr.TestFilePath);
-                    }
-                    //string filePath = Path.Combine("D:\\Issues\\Open\\BC_Lab\\Table Maker\\Francis 30Q Source Data", Path.GetFileName(tr.TestFilePath));
-                    //if (File.Exists(filePath))
-                    //{
-                    //    UInt32 result = tester.ITesterProcesser.LoadRawToSource(filePath, ref sd);
-                    //    if (result == ErrorCode.NORMAL)
-                    //    {
-                    //        SDList.Add(sd);
-                    //    }
-                    //}
-                }
-                SourceData maxSD = SDList.OrderByDescending(o => o.fAccmAhrCap).First();
-                MaxSDList.Add(maxSD);
-            }
-            return true;
-        }
         public static void GetOCVModel(List<SourceData> MaxSDList, ref OCVModel ocvModel)
         {
             OCVModel output = ocvModel;
@@ -251,7 +199,8 @@ namespace BCLabManager
             //GenerateOCVTableFile(ref result, filePath, OCVHeader, OCVContent);
             TableMakerService.CreateFileFromLines(filePath, OCVHeader.Concat(OCVContent).ToList());
             string targetPath = FileTransferHelper.Local2Universal(filePath);
-            var MD5 = FileTransferHelper.FileCopyWithMD5Check(filePath, targetPath);
+            string MD5;
+            FileTransferHelper.FileCopyWithMD5Check(filePath, targetPath, out MD5);
             targetPath = FileTransferHelper.Mapping2Remote(targetPath);
             TableMakerProduct tmp = new TableMakerProduct();
             tmp.FilePath = targetPath;

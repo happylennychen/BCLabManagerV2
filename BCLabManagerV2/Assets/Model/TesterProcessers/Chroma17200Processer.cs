@@ -369,12 +369,16 @@ namespace BCLabManager.Model
                 fs.Close();
                 if (result == ErrorCode.NORMAL)
                 {
-                    FileInfo fi2 = new FileInfo(filepath);
-                    var length2 = fi2.Length;
                     File.Delete(filepath);
-                    FileInfo fi1 = new FileInfo(tempFilePath);
-                    var length1 = fi1.Length;
-                    FileTransferHelper.FileCopy(tempFilePath, filepath);
+
+                    try
+                    {
+                        File.Copy(tempFilePath, filepath, true);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message);
+                    }
                     foreach (var evt in events)
                     {
                         EventService.SuperAdd(evt);

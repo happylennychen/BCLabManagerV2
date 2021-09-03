@@ -136,6 +136,53 @@ namespace BCLabManager
             return ilstCellTempData;
         }
 
+        public static bool GetSource(Project project, List<TestRecord> testRecords, List<Tester> testers, out List<SourceData> SDList, out List<string> Sources)
+        {
+            SDList = new List<SourceData>();
+            Sources = new List<string>();
+            foreach (var tr in testRecords)
+            {
+                SourceData sd = new SourceData();
+                sd.fAbsMaxCap = project.AbsoluteMaxCapacity;
+                sd.fCapacityDiff = (float)tr.CapacityDifference;
+                sd.fCurrent = (float)tr.Current * (-1);
+                sd.fCutoffDsgVolt = project.CutoffDischargeVoltage;
+                sd.fLimitChgVolt = project.LimitedChargeVoltage;
+                sd.fMeasureGain = (float)tr.MeasurementGain;
+                sd.fMeasureOffset = (float)tr.MeasurementOffset;
+                sd.fTemperature = (float)tr.Temperature;
+                sd.fTraceResis = (float)tr.TraceResistance;
+                if (SDList.Any(o => o.fCurrent == sd.fCurrent && o.fTemperature == sd.fTemperature))
+                {
+                    if (MessageBoxResult.Yes == MessageBox.Show($"Do you want to keep {tr.TestFilePath} instead of original file?", "Same Point Check", MessageBoxButton.YesNo))
+                    {
+                        var removeList = SDList.Select(o => o).Where(o => o.fCurrent == sd.fCurrent && o.fTemperature == sd.fTemperature).ToList();
+                        foreach (var rmvsd in removeList)
+                        {
+                            SDList.Remove(rmvsd);
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                var tester = testers.SingleOrDefault(o => o.Name == tr.TesterStr);
+                var localPath = FileTransferHelper.Remote2Local(tr.TestFilePath);
+                if (!File.Exists(localPath)) //本地不存在
+                {
+                    if (!FileTransferHelper.FileDownload(tr.TestFilePath, tr.MD5))  //下载不成功
+                        return false;
+                }
+                UInt32 result = tester.ITesterProcesser.LoadRawToSource(localPath, ref sd);
+                if (result == ErrorCode.NORMAL)
+                {
+                    SDList.Add(sd);
+                    Sources.Add(tr.TestFilePath);
+                }
+            }
+            return true;
+        }
         public static List<float> GetOCVSocPoints()
         {
             var lstfPoints = new List<float>();

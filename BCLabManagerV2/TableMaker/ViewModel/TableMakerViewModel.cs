@@ -362,7 +362,7 @@ namespace BCLabManager.ViewModel
                         List<string> ocvSourceFiles = null;
                         if (ocvRecords != null && ocvRecords.Count != 0)
                         {
-                            if(!OCVTableMaker.GetOCVSource(stage2Project, ocvRecords, testers, out ocvSource, out ocvSourceFiles))
+                            if(!TableMakerService.GetSource(stage2Project, ocvRecords, testers, out ocvSource, out ocvSourceFiles))
                                 return;
                             if (ocvSource == null)
                                 return;
@@ -384,11 +384,11 @@ namespace BCLabManager.ViewModel
                             List<SourceData> rcStage1Source;
                             List<string> stage1RcSourceFiles = null;
                             List<string> stage2RcSourceFiles = null;
-                            if(!RCTableMaker.GetRCSource(stage1Project, rcStage2Records, testers, out rcStage2Source, out stage2RcSourceFiles))
+                            if(!TableMakerService.GetSource(stage1Project, rcStage2Records, testers, out rcStage2Source, out stage2RcSourceFiles))
                                 return;
                             if (rcStage2Source == null)
                                 return;
-                            if (!RCTableMaker.GetRCSource(stage1Project, rcStage1Records, testers, out rcStage1Source, out stage1RcSourceFiles))
+                            if (!TableMakerService.GetSource(stage1Project, rcStage1Records, testers, out rcStage1Source, out stage1RcSourceFiles))
                                 return;
                             if (rcStage1Source == null)
                                 return;
@@ -406,7 +406,7 @@ namespace BCLabManager.ViewModel
                             //rcSources = rcRecords.Select(o => o.TestFilePath).ToList();
 
                             List<SourceData> rcSource;
-                            RCTableMaker.GetRCSource(stage2Project, rcRecords, testers, out rcSource, out rcSourceFiles);
+                            TableMakerService.GetSource(stage2Project, rcRecords, testers, out rcSource, out rcSourceFiles);
                             if (rcSource == null)
                                 return;
                             RCTableMaker.GetRCModel(rcSource, stage2Project.AbsoluteMaxCapacity, _voltagePoints, ref rcModel);

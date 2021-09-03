@@ -11,66 +11,6 @@ namespace BCLabManager
     public static class RCTableMaker
     {
         #region RC
-        public static bool GetRCSource(Project project, List<TestRecord> testRecords, List<Tester> testers, out List<SourceData> SDList, out List<string> Sources)
-        {
-            SDList = new List<SourceData>();
-            Sources = new List<string>();
-            foreach (var tr in testRecords)
-            {
-                SourceData sd = new SourceData();
-                sd.fAbsMaxCap = project.AbsoluteMaxCapacity;
-                sd.fCapacityDiff = (float)tr.CapacityDifference;
-                sd.fCurrent = (float)tr.Current * (-1);
-                sd.fCutoffDsgVolt = project.CutoffDischargeVoltage;
-                sd.fLimitChgVolt = project.LimitedChargeVoltage;
-                sd.fMeasureGain = (float)tr.MeasurementGain;
-                sd.fMeasureOffset = (float)tr.MeasurementOffset;
-                sd.fTemperature = (float)tr.Temperature;
-                sd.fTraceResis = (float)tr.TraceResistance;
-                if (SDList.Any(o => o.fCurrent == sd.fCurrent && o.fTemperature == sd.fTemperature))
-                {
-                    if (MessageBoxResult.Yes == MessageBox.Show($"Do you want to keep {tr.TestFilePath} instead of original file?", "Same Point Check", MessageBoxButton.YesNo))
-                    {
-                        var removeList = SDList.Select(o => o).Where(o => o.fCurrent == sd.fCurrent && o.fTemperature == sd.fTemperature).ToList();
-                        foreach (var rmvsd in removeList)
-                        {
-                            SDList.Remove(rmvsd);
-                        }
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-                var tester = testers.SingleOrDefault(o => o.Name == tr.TesterStr);
-                var localPath = string.Empty;
-                //if (isRemoteData)
-                //{
-                //    filePath = tr.TestFilePath;
-                //}
-                //else
-                //{
-                if (!FileTransferHelper.FileDownload(tr.TestFilePath, tr.MD5))
-                    return false;
-                localPath = FileTransferHelper.Remote2Local(tr.TestFilePath);
-                UInt32 result = tester.ITesterProcesser.LoadRawToSource(localPath, ref sd);
-                if (result == ErrorCode.NORMAL)
-                {
-                    SDList.Add(sd);
-                    Sources.Add(tr.TestFilePath);
-                }
-                //string filePath = Path.Combine("D:\\Issues\\Open\\BC_Lab\\Table Maker\\Francis 30Q Source Data", Path.GetFileName(tr.TestFilePath));
-                //if (File.Exists(filePath))
-                //{
-                //    UInt32 result = tester.ITesterProcesser.LoadRawToSource(filePath, ref sd);
-                //    if (result == ErrorCode.NORMAL)
-                //    {
-                //        SDList.Add(sd);
-                //    }
-                //}
-            }
-            return true;
-        }
         public static void GetRCModel(List<SourceData> SDList, int capacity, List<int> VoltagePoints, ref RCModel rcModel)
         {
             RCModel output = rcModel;
@@ -447,7 +387,8 @@ namespace BCLabManager
             //UInt32 uErr = 0;
             TableMakerService.CreateFileFromLines(filePath, strRCHeader.Concat(strRCContent).ToList());
             string targetPath = FileTransferHelper.Local2Universal(filePath);
-            var MD5 = FileTransferHelper.FileCopyWithMD5Check(filePath, targetPath);
+            string MD5;
+            FileTransferHelper.FileCopyWithMD5Check(filePath, targetPath, out MD5);
             targetPath = FileTransferHelper.Mapping2Remote(targetPath);
             TableMakerProduct tmp = new TableMakerProduct();
             tmp.FilePath = targetPath;
