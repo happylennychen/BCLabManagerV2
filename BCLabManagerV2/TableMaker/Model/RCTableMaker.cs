@@ -367,31 +367,20 @@ namespace BCLabManager
 
         public static TableMakerProduct GenerateRCTable(Stage stage, Project project, List<int> VoltagePoints, string time, RCModel rcModel)
         {
-            var rootPath = string.Empty;
-            //if (isRemoteOutput)
-            //{
-            //    rootPath = GlobalSettings.RemotePath;
-            //}
-            //else
-            //{
-            rootPath = GlobalSettings.LocalFolder;
-            //}
-            var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
+            var OutFolder = $@"{GlobalSettings.LocalFolder}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
             if (!Directory.Exists(OutFolder))
             {
                 Directory.CreateDirectory(OutFolder);
             }
-            string filePath = Path.Combine(OutFolder, rcModel.FileName);//GetRCTableFilePath(project);
+            string localPath = Path.Combine(OutFolder, rcModel.FileName);//GetRCTableFilePath(project);
             var strRCHeader = GetRCFileHeader(stage, project, rcModel.fCTABase, rcModel.fCTASlope);
             var strRCContent = GetRCFileContent(rcModel.outYValue, VoltagePoints, rcModel.listfTemp, rcModel.listfCurr);
             //UInt32 uErr = 0;
-            TableMakerService.CreateFileFromLines(filePath, strRCHeader.Concat(strRCContent).ToList());
-            string targetPath = FileTransferHelper.Local2Universal(filePath);
-            string MD5;
-            FileTransferHelper.FileCopyWithMD5Check(filePath, targetPath, out MD5);
-            targetPath = FileTransferHelper.Mapping2Remote(targetPath);
+            TableMakerService.CreateFileFromLines(localPath, strRCHeader.Concat(strRCContent).ToList());
+            string remotePath, MD5;
+            FileTransferHelper.FileUpload(localPath, out remotePath, out MD5);
             TableMakerProduct tmp = new TableMakerProduct();
-            tmp.FilePath = targetPath;
+            tmp.FilePath = remotePath;
             tmp.MD5 = MD5;
             tmp.IsValid = true;
             //tmp.Project = project;

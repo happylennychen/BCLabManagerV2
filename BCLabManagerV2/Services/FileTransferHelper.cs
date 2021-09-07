@@ -21,7 +21,7 @@ namespace BCLabManager
             }
             catch (Exception e)
             {
-                MessageBox.Show($"File copy failed!\n{e.Message}");
+                //MessageBox.Show($"File copy failed!\n{e.Message}");
                 return false;
             }
             string sourceMD5, targetMD5;
@@ -29,13 +29,13 @@ namespace BCLabManager
             targetMD5 = GetMD5(targetPath);
             if (sourceMD5 != targetMD5)
             {
-                Event evt = new Event();
-                evt.Module = Module.FileOperation;
-                evt.Timestamp = DateTime.Now;
-                evt.Type = EventType.Error;
-                evt.Description = $"Test File MD5 Check Failed!. File Name: {Path.GetFileName(sourcePath)}";
-                EventService.SuperAdd(evt);
-                MessageBox.Show(evt.Description);
+                //Event evt = new Event();
+                //evt.Module = Module.FileOperation;
+                //evt.Timestamp = DateTime.Now;
+                //evt.Type = EventType.Error;
+                //evt.Description = $"Test File MD5 Check Failed!. File Name: {Path.GetFileName(sourcePath)}";
+                //EventService.SuperAdd(evt);
+                //MessageBox.Show(evt.Description);
                 return false;
             }
             MD5 = sourceMD5;
@@ -101,7 +101,16 @@ namespace BCLabManager
             return fileFullPath;
         }
 
-        public static bool FileDownload(string remotePath, string MD5)      //从远程目录copy下来，过程中检查MD5
+        public static bool FileUpload(string localPath, out string remotePath, out string MD5)  //从本地目录copy到远程目录，过程中检查MD5
+        {
+            remotePath = string.Empty;
+            var universalPath = FileTransferHelper.Local2Universal(localPath);
+            if (!FileTransferHelper.FileCopyWithMD5Check(localPath, universalPath, out MD5))
+                return false;
+            remotePath = FileTransferHelper.Universal2Remote(universalPath);
+            return true;
+        }
+        public static bool FileDownload(string remotePath, string MD5)      //从远程目录copy下来，并对比本地MD5和database中的MD5
         {
             var localPath = FileTransferHelper.Remote2Local(remotePath);
             var universalPath = FileTransferHelper.Remote2Universal(remotePath);
@@ -132,98 +141,42 @@ namespace BCLabManager
             return true;
         }
 
-        public static bool FileRestore(string remotePath, string MD5)
-        {
-            var localPath = FileTransferHelper.Remote2Local(remotePath);
-            var universalPath = FileTransferHelper.Remote2Universal(remotePath);
-            if (!File.Exists(universalPath))
-            {
-                if (!File.Exists(localPath))
-                {
-                    MessageBox.Show($"No such file.{remotePath}");
-                    Event evt = new Event();
-                    evt.Module = Module.FileOperation;
-                    evt.Timestamp = DateTime.Now;
-                    evt.Type = EventType.Error;
-                    evt.Description = $"Cannot access file {remotePath}.";
-                    EventService.SuperAdd(evt);
-                    return false;
-                }
-                string md5;
-                FileTransferHelper.FileCopyWithMD5Check(localPath, universalPath, out md5);
-            }
-            //}
-            if (MD5 != null && MD5 != string.Empty)
-                if (!FileTransferHelper.CheckFileMD5(universalPath, MD5))
-                {
-                    MessageBox.Show($"{remotePath} MD5 Check Failed!");
-                    Event evt = new Event();
-                    evt.Module = Module.FileOperation;
-                    evt.Timestamp = DateTime.Now;
-                    evt.Type = EventType.Error;
-                    evt.Description = $"{remotePath} MD5 Check Failed!";
-                    EventService.SuperAdd(evt);
-                    return false;
-                }
-            return true;
-        }
+        //public static bool FileRestore(string remotePath, string MD5)
+        //{
+        //    var localPath = FileTransferHelper.Remote2Local(remotePath);
+        //    var universalPath = FileTransferHelper.Remote2Universal(remotePath);
+        //    if (!File.Exists(universalPath))
+        //    {
+        //        if (!File.Exists(localPath))
+        //        {
+        //            MessageBox.Show($"No such file.{remotePath}");
+        //            Event evt = new Event();
+        //            evt.Module = Module.FileOperation;
+        //            evt.Timestamp = DateTime.Now;
+        //            evt.Type = EventType.Error;
+        //            evt.Description = $"Cannot access file {remotePath}.";
+        //            EventService.SuperAdd(evt);
+        //            return false;
+        //        }
+        //        string md5;
+        //        FileTransferHelper.FileCopyWithMD5Check(localPath, universalPath, out md5);
+        //    }
+        //    //}
+        //    if (MD5 != null && MD5 != string.Empty)
+        //        if (!FileTransferHelper.CheckFileMD5(universalPath, MD5))
+        //        {
+        //            MessageBox.Show($"{remotePath} MD5 Check Failed!");
+        //            Event evt = new Event();
+        //            evt.Module = Module.FileOperation;
+        //            evt.Timestamp = DateTime.Now;
+        //            evt.Type = EventType.Error;
+        //            evt.Description = $"{remotePath} MD5 Check Failed!";
+        //            EventService.SuperAdd(evt);
+        //            return false;
+        //        }
+        //    return true;
+        //}
 
-        public static string Local2Remote(string path)
-        {
-            if (path.Contains(GlobalSettings.LocalFolder))
-                return path.Replace(GlobalSettings.LocalFolder, GlobalSettings.RemotePath);
-            else return path;
-        }
-
-        public static string Remote2Local(string path)
-        {
-            if (path.Contains(GlobalSettings.RemotePath))
-                return path.Replace(GlobalSettings.RemotePath, GlobalSettings.LocalFolder);
-            else return path;
-        }
-        public static string Mapping2Remote(string path)
-        {
-            if (path.Contains(GlobalSettings.MappingPath))
-                return path.Replace(GlobalSettings.MappingPath, GlobalSettings.RemotePath);
-            else return path;
-        }
-        public static string Remote2Mapping(string path)
-        {
-            if (path.Contains(GlobalSettings.RemotePath))
-                return path.Replace(GlobalSettings.RemotePath, GlobalSettings.MappingPath);
-            else return path;
-        }
-        public static string Remote2Universal(string path)
-        {
-            string output = path;
-            if (GlobalSettings.EnableTest)
-            {
-                if (path.Contains(GlobalSettings.RemotePath))
-                    output = path.Replace(GlobalSettings.RemotePath, GlobalSettings.MappingPath);
-            }
-            return output;
-        }
-        public static string Local2Universal(string path)
-        {
-            if (path.Contains(GlobalSettings.LocalFolder))
-                return path.Replace(GlobalSettings.LocalFolder, GlobalSettings.UniversalPath);
-            else return path;
-        }
-        public static string Universal2Local(string path)
-        {
-            string output = path;
-            if (GlobalSettings.EnableTest)
-            {
-                if (path.Contains(GlobalSettings.MappingPath))
-                    output = path.Replace(GlobalSettings.MappingPath, GlobalSettings.LocalFolder);
-            }
-            else
-            {
-                if (path.Contains(GlobalSettings.RemotePath))
-                    output = path.Replace(GlobalSettings.RemotePath, GlobalSettings.LocalFolder);
-            }
-            return output;
-        }
         /*public static string GetRemotePath(string path, int level)
         {
             int index = FindNthCharInString(path, '\\', level);
@@ -293,11 +246,73 @@ namespace BCLabManager
             return level;
         }
         */
-        public static void FileUpload(string localPath, out string remotePath, out string MD5)
+        #region relocate
+        public static string Local2Remote(string path)
         {
-            remotePath = FileTransferHelper.Local2Universal(localPath);
-            FileTransferHelper.FileCopyWithMD5Check(localPath, remotePath, out MD5);
-            remotePath = FileTransferHelper.Mapping2Remote(remotePath);
+            if (path.Contains(GlobalSettings.LocalFolder))
+                return path.Replace(GlobalSettings.LocalFolder, GlobalSettings.RemotePath);
+            else return path;
         }
+
+        public static string Remote2Local(string path)  //数据库里都是remote path，从数据库获得的文件名，要转成local，必须调用此函数
+        {
+            if (path.Contains(GlobalSettings.RemotePath))
+                return path.Replace(GlobalSettings.RemotePath, GlobalSettings.LocalFolder);
+            else return path;
+        }
+        public static string Mapping2Remote(string path)
+        {
+            if (path.Contains(GlobalSettings.MappingPath))
+                return path.Replace(GlobalSettings.MappingPath, GlobalSettings.RemotePath);
+            else return path;
+        }
+        public static string Remote2Mapping(string path)
+        {
+            if (path.Contains(GlobalSettings.RemotePath))
+                return path.Replace(GlobalSettings.RemotePath, GlobalSettings.MappingPath);
+            else return path;
+        }
+        public static string Remote2Universal(string path)
+        {
+            string output = path;
+            if (GlobalSettings.EnableTest)
+            {
+                if (path.Contains(GlobalSettings.RemotePath))
+                    output = path.Replace(GlobalSettings.RemotePath, GlobalSettings.MappingPath);
+            }
+            return output;
+        }
+        public static string Local2Universal(string path)
+        {
+            if (path.Contains(GlobalSettings.LocalFolder))
+                return path.Replace(GlobalSettings.LocalFolder, GlobalSettings.UniversalPath);
+            else return path;
+        }
+        public static string Universal2Local(string path)
+        {
+            string output = path;
+            if (GlobalSettings.EnableTest)
+            {
+                if (path.Contains(GlobalSettings.MappingPath))
+                    output = path.Replace(GlobalSettings.MappingPath, GlobalSettings.LocalFolder);
+            }
+            else
+            {
+                if (path.Contains(GlobalSettings.RemotePath))
+                    output = path.Replace(GlobalSettings.RemotePath, GlobalSettings.LocalFolder);
+            }
+            return output;
+        }
+        public static string Universal2Remote(string path)
+        {
+            string output = path;
+            if (GlobalSettings.EnableTest)
+            {
+                if (path.Contains(GlobalSettings.MappingPath))
+                    output = path.Replace(GlobalSettings.MappingPath, GlobalSettings.RemotePath);
+            }
+            return output;
+        }
+        #endregion
     }
 }

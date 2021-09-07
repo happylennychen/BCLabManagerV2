@@ -178,35 +178,21 @@ namespace BCLabManager
         }
         public static TableMakerProduct GenerateOCVTable(Stage stage, Project project, string time, OCVModel ocvModel)
         {
-            var rootPath = string.Empty;
-            //if (isRemoteOutput)
-            //{
-            //    rootPath = GlobalSettings.RemotePath;
-            //}
-            //else
-            //{
-            rootPath = GlobalSettings.LocalFolder;
-            //}
-            var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
+            var OutFolder = $@"{GlobalSettings.LocalFolder}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
             if (!Directory.Exists(OutFolder))
             {
                 Directory.CreateDirectory(OutFolder);
             }
-            string filePath = Path.Combine(OutFolder, ocvModel.FileName);
+            string localPath = Path.Combine(OutFolder, ocvModel.FileName);
             List<string> OCVHeader = GetOCVFileHeader(stage, project);
             List<string> OCVContent = GetOCVFileContent(ocvModel.iOCVVolt);
-            //UInt32 result = 0;
-            //GenerateOCVTableFile(ref result, filePath, OCVHeader, OCVContent);
-            TableMakerService.CreateFileFromLines(filePath, OCVHeader.Concat(OCVContent).ToList());
-            string targetPath = FileTransferHelper.Local2Universal(filePath);
-            string MD5;
-            FileTransferHelper.FileCopyWithMD5Check(filePath, targetPath, out MD5);
-            targetPath = FileTransferHelper.Mapping2Remote(targetPath);
+            TableMakerService.CreateFileFromLines(localPath, OCVHeader.Concat(OCVContent).ToList());
+            string remotePath, MD5;
+            FileTransferHelper.FileUpload(localPath, out remotePath, out MD5);
             TableMakerProduct tmp = new TableMakerProduct();
-            tmp.FilePath = targetPath;
+            tmp.FilePath = remotePath;
             tmp.MD5 = MD5;
             tmp.IsValid = true;
-            //tmp.Project = project;
             tmp.Type = TableMakerService.GetFileType("OCV", stage);
             return tmp;
         }

@@ -16,10 +16,11 @@
                 <MenuItem Header="Remote File Existence Check" Click="RemoteFileExistenceCheck_Click"></MenuItem>
                 <MenuItem Header="Local File MD5 Check" Click="LocalFileMD5Check_Click"></MenuItem>
                 <MenuItem Header="Remote File MD5 Check" Click="RemoteFileMD5Check_Click"></MenuItem>
-                <MenuItem Header="Local File Restore" Click="LocalFileRestore_Click"></MenuItem>
+                <MenuItem Header="Local File Restore" Click="LocalMissingFileRestore_Click"></MenuItem>
                 <MenuItem Header="Remote File Existence Restore" Click="RemoteFileRestore_Click"></MenuItem>
                 <MenuItem Header="Local File MD5 Repair" Click="LocalFileMD5Repair_Click"></MenuItem>
                 <MenuItem Header="Remote File MD5 Commit" Click="RemoteFileMD5Commit_Click"></MenuItem>
+                <MenuItem Header="Temporary Method" Click="TemporaryMethod_Click"></MenuItem>
             </MenuItem>
         </Menu>
         <TabControl x:Name="MainTab">
