@@ -305,7 +305,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                return "!";
+                return null;
             }
         }
 
