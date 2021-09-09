@@ -465,25 +465,35 @@ namespace BCLabManager
             List<string[]> list = FileMD5Check(FileTransferHelper.Remote2Local);
             if (list.Count > 0)
             {
-                var emptylist = list.Where(o => o[1] == null || o[1] == string.Empty).ToList();
-                var brokenlist = list.Where(o => o[1] != null && o[1] != string.Empty).ToList();
-                string str = $"{brokenlist.Count} MD5 Broken Files:\n";
-                foreach (var arr in brokenlist)
+                string str = string.Empty;
+                foreach(var item in list)
                 {
-                    str += $"{arr[0]}, {arr[1]}\n";
-                }
-                str += $"{emptylist.Count} MD5 Empty Files:\n";
-                foreach (var arr in emptylist)
-                {
-                    str += $"{arr[0]}\n";
+                    var localMD5 = FileTransferHelper.GetMD5(item[0]);
+                    var remotePath = FileTransferHelper.Local2Remote(item[0]);
+                    var remoteMD5 = FileTransferHelper.GetMD5(remotePath);
+                    str += $"Local File Path: {item[0]}, Local File MD5: {localMD5}\n" +
+                        $"Remote File Path: {remotePath}, Remote File MD5: {remoteMD5}\n" +
+                        $"MD5 in database: {item[1]}\n";
                 }
                 RuningLog.Write(str);
-                MessageBox.Show($"{brokenlist.Count} files' MD5 are broken.\n" +
-                    $"{emptylist.Count} files' MD5 are empty.\n" +
+                MessageBox.Show($"{list.Count} local files are broken.\n" +
                     $" Check running log for the details.");
             }
             else
                 MessageBox.Show($"All files are fine.");
+        }
+        private void TemporaryMethod2_Click(object sender, RoutedEventArgs e)  //查某个文件的MD5码
+        {
+            string filePath = string.Empty;
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "Select the file you want to check.";
+            openFileDialog.Multiselect = false;
+            if(openFileDialog.ShowDialog() == true)
+            {
+                filePath = openFileDialog.FileName;
+                var MD5 = FileTransferHelper.GetMD5(filePath);
+                MessageBox.Show(MD5);
+            }
         }
 
         private void UpdateFileName(TestRecord tr)

@@ -20,7 +20,8 @@
                 <MenuItem Header="Remote File MD5 Check" Click="RemoteFileMD5Check_Click"></MenuItem>
                 <MenuItem Header="Remote File MD5 Commit" Click="RemoteFileMD5Commit_Click"></MenuItem>
                 <MenuItem Header="Temporary Method (Recipe Template Rename)" Click="TemporaryMethod_Click"></MenuItem>
-                <MenuItem Header="Temporary Method (MD5 check)" Click="TemporaryMethod1_Click"></MenuItem>
+                <MenuItem Header="Temporary Method (Missing Files MD5 check)" Click="TemporaryMethod1_Click"></MenuItem>
+                <MenuItem Header="Temporary Method (One File MD5 check)" Click="TemporaryMethod2_Click"></MenuItem>
             </MenuItem>
         </Menu>
         <TabControl x:Name="MainTab">
