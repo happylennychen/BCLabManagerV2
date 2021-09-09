@@ -69,6 +69,17 @@
                 <scm:SortDescription PropertyName="Index" Direction="Ascending"></scm:SortDescription>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
+
+        <!--The tool tip for the TextBox to display the validation error message.-->
+        <Style x:Key="textBoxInError" TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <DockPanel>
         <GroupBox Header="Recipe Template" DockPanel.Dock="Top">
@@ -91,10 +102,9 @@
       Content="11A-17A-3A-N5" Foreground="Gray"
       HorizontalAlignment="Center"
       />
-                        <TextBox 
+                        <TextBox Style="{StaticResource textBoxInError}"
       x:Name="NameTxt"
       Text="{Binding Path=Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
-      Validation.ErrorTemplate="{x:Null}"
       />
                     </DockPanel>
                 </Grid>

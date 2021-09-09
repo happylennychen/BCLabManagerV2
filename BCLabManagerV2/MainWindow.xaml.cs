@@ -152,7 +152,8 @@ namespace BCLabManager
         }
         private void LocalFileExistenceCheck_Click(object sender, RoutedEventArgs e)    //将本地缺失文件列表放入Running Log
         {
-            List<string[]> list = FileExistenceCheck(FileTransferHelper.Remote2Local);
+            uint existNum;
+            List<string[]> list = FileExistenceCheck(FileTransferHelper.Remote2Local, out existNum);
             if (list.Count > 0)
             {
                 string str = $"{list.Count} Missing Files:\n";
@@ -164,11 +165,12 @@ namespace BCLabManager
                 MessageBox.Show($"{list.Count} files are missing. Check running log for the details.");
             }
             else
-                MessageBox.Show($"All files are existed.");
+                MessageBox.Show($"All {existNum.ToString()} files are existed.");
         }
         private void RemoteFileExistenceCheck_Click(object sender, RoutedEventArgs e)   //将远程缺失文件列表放入Running Log
         {
-            List<string[]> list = FileExistenceCheck(FileTransferHelper.Remote2Universal);
+            uint existNum;
+            List<string[]> list = FileExistenceCheck(FileTransferHelper.Remote2Universal, out existNum);
             if (list.Count > 0)
             {
                 string str = $"{list.Count} Missing Files:\n";
@@ -180,7 +182,7 @@ namespace BCLabManager
                 MessageBox.Show($"{list.Count} files are missing. Check running log for the details.");
             }
             else
-                MessageBox.Show($"All files are existed.");
+                MessageBox.Show($"All {existNum.ToString()} files are existed.");
         }
 
         private void LocalFileMD5Check_Click(object sender, RoutedEventArgs e)  //将本地损坏文件和没有MD5的文件列表放入Running Log
@@ -195,7 +197,7 @@ namespace BCLabManager
                 {
                     str += $"{arr[0]}, {arr[1]}\n";
                 }
-                str = $"{emptylist.Count} MD5 Empty Files:\n";
+                str += $"{emptylist.Count} MD5 Empty Files:\n";
                 foreach (var arr in emptylist)
                 {
                     str += $"{arr[0]}\n";
@@ -241,24 +243,30 @@ namespace BCLabManager
             Thread t = new Thread(() =>
             {
                 List<string> RestoreList = new List<string>();
-                List<string[]> list = FileExistenceCheck(FileTransferHelper.Remote2Local);
-                foreach (var item in list)
+                uint existNum;
+                List<string[]> list = FileExistenceCheck(FileTransferHelper.Remote2Local, out existNum);
+                if (list.Count > 0)
                 {
-                    if (FileTransferHelper.FileDownload(item[0], item[1]))
-                        RestoreList.Add(item[0]);
+                    foreach (var item in list)
+                    {
+                        if (FileTransferHelper.FileDownload(item[0], item[1]))
+                            RestoreList.Add(item[0]);
+                    }
+                    string str = $"{RestoreList.Count} files restored:\n";
+                    foreach (var file in RestoreList)
+                    {
+                        str += $"{file}\n";
+                    }
+                    RuningLog.Write(str);
+                    MessageBox.Show($"{RestoreList.Count} files restored.\n" +
+                        $" Check running log for the details.");
                 }
-                string str = $"{RestoreList.Count} files restored:\n";
-                foreach (var file in RestoreList)
-                {
-                    str += $"{file}\n";
-                }
-                RuningLog.Write(str);
-                MessageBox.Show($"{RestoreList.Count} files restored.\n" +
-                    $" Check running log for the details.");
+                else
+                    MessageBox.Show($"All {existNum.ToString()} files are existed.");
             });
             t.Start();
         }
-        private void RemoteFileRestore_Click(object sender, RoutedEventArgs e)
+        private void RemoteMissingFileRestore_Click(object sender, RoutedEventArgs e)
         {
 
         }
@@ -318,9 +326,10 @@ namespace BCLabManager
             t.Start();
         }
 
-        private List<string[]> FileExistenceCheck(Func<string, string> relocate)//检查所有文件是否存在，如果不存在，就放入返回值里。返回数组元素0是文件地址，1是MD5
+        private List<string[]> FileExistenceCheck(Func<string, string> relocate, out uint existNum)//检查所有文件是否存在，如果不存在，就放入返回值里。返回数组元素0是文件地址，1是MD5
         {
             List<string[]> MissingList = new List<string[]>();
+            existNum = 0;
             foreach (var tmr in mainWindowViewModel.TableMakerRecordService.Items)
             {
                 foreach (var tmp in tmr.Products)
@@ -332,6 +341,8 @@ namespace BCLabManager
                     {
                         MissingList.Add(new string[] { tmp.FilePath, tmp.MD5 });
                     }
+                    else
+                        existNum++;
                 }
             }
 
@@ -344,11 +355,13 @@ namespace BCLabManager
                 {
                     MissingList.Add(new string[] { tr.TestFilePath, tr.MD5 });
                 }
+                else
+                    existNum++;
             }
             return MissingList;
         }
 
-        private List<string[]> FileMD5Check(Func<string, string> relocate)  //检查所有文件的MD5，如果MD5是空的，或者MD5是错的，就放入返回值里。不考虑文件不存在的情况。返回数组元素0是文件地址，1是MD5
+        private List<string[]> FileMD5Check(Func<string, string> relocate)  //检查所有文件的MD5，如果MD5是空的，或者MD5是错的，就放入返回值里。不考虑文件不存在的情况。返回数组元素0是文件地址，1是数据库中记录的MD5
         {
             List<string[]> BrokenList = new List<string[]>();
             //List<string> RestoreList = new List<string>();
@@ -445,6 +458,32 @@ namespace BCLabManager
                     context.SaveChanges();
                 }
             }
+        }
+
+        private void TemporaryMethod1_Click(object sender, RoutedEventArgs e)  //查某个文件的MD5码
+        {
+            List<string[]> list = FileMD5Check(FileTransferHelper.Remote2Local);
+            if (list.Count > 0)
+            {
+                var emptylist = list.Where(o => o[1] == null || o[1] == string.Empty).ToList();
+                var brokenlist = list.Where(o => o[1] != null && o[1] != string.Empty).ToList();
+                string str = $"{brokenlist.Count} MD5 Broken Files:\n";
+                foreach (var arr in brokenlist)
+                {
+                    str += $"{arr[0]}, {arr[1]}\n";
+                }
+                str += $"{emptylist.Count} MD5 Empty Files:\n";
+                foreach (var arr in emptylist)
+                {
+                    str += $"{arr[0]}\n";
+                }
+                RuningLog.Write(str);
+                MessageBox.Show($"{brokenlist.Count} files' MD5 are broken.\n" +
+                    $"{emptylist.Count} files' MD5 are empty.\n" +
+                    $" Check running log for the details.");
+            }
+            else
+                MessageBox.Show($"All files are fine.");
         }
 
         private void UpdateFileName(TestRecord tr)

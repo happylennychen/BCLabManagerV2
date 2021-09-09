@@ -15,7 +15,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class RecipeTemplateEditViewModel : BindableBaseWithName//, IDataErrorInfo
+    public class RecipeTemplateEditViewModel : BindableBaseWithName, IDataErrorInfo
     {
         #region Fields
         public readonly RecipeTemplate _RecipeTemplate;            //为了将其添加到Program里面去(见ProgramViewModel Add)，不得不开放给viewmodel。以后再想想有没有别的办法。
@@ -299,6 +299,29 @@ namespace BCLabManager.ViewModel
         {
             get { return SelectedStep != null; }
             //get { return true; }
+        }
+
+        public string Error
+        {
+            get
+            {
+                return "!";
+            }
+        }
+
+        public string this[string columnName]
+        {
+            get 
+            { 
+                if(columnName == "Name")
+                {
+                    if(Name!=null && Name.Contains('_'))
+                    {
+                        return "Do not use \"_\"";
+                    }
+                }
+                return string.Empty;
+            }
         }
 
         #endregion // Private Helpers

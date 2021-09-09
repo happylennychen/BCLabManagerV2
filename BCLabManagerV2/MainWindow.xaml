@@ -11,16 +11,16 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Events" Click="Event_Click"></MenuItem>
             <MenuItem Header="Configuration" Click="Config_Click"></MenuItem>
-            <MenuItem Header="Integrity Check">
+            <MenuItem Header="Utilities">
                 <MenuItem Header="Local File Existence Check" Click="LocalFileExistenceCheck_Click"></MenuItem>
-                <MenuItem Header="Remote File Existence Check" Click="RemoteFileExistenceCheck_Click"></MenuItem>
+                <MenuItem Header="Local Missing File Restore" Click="LocalMissingFileRestore_Click"></MenuItem>
                 <MenuItem Header="Local File MD5 Check" Click="LocalFileMD5Check_Click"></MenuItem>
+                <MenuItem Header="Remote File Existence Check" Click="RemoteFileExistenceCheck_Click"></MenuItem>
+                <MenuItem Header="Remote Missing File Restore" Click="RemoteMissingFileRestore_Click"></MenuItem>
                 <MenuItem Header="Remote File MD5 Check" Click="RemoteFileMD5Check_Click"></MenuItem>
-                <MenuItem Header="Local File Restore" Click="LocalMissingFileRestore_Click"></MenuItem>
-                <MenuItem Header="Remote File Existence Restore" Click="RemoteFileRestore_Click"></MenuItem>
-                <MenuItem Header="Local File MD5 Repair" Click="LocalFileMD5Repair_Click"></MenuItem>
                 <MenuItem Header="Remote File MD5 Commit" Click="RemoteFileMD5Commit_Click"></MenuItem>
-                <MenuItem Header="Temporary Method" Click="TemporaryMethod_Click"></MenuItem>
+                <MenuItem Header="Temporary Method (Recipe Template Rename)" Click="TemporaryMethod_Click"></MenuItem>
+                <MenuItem Header="Temporary Method (MD5 check)" Click="TemporaryMethod1_Click"></MenuItem>
             </MenuItem>
         </Menu>
         <TabControl x:Name="MainTab">
