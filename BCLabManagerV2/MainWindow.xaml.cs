@@ -236,7 +236,7 @@ namespace BCLabManager
             else
                 MessageBox.Show($"All files are fine.");
         }
-        private void LocalMissingFileRestore_Click(object sender, RoutedEventArgs e)
+        private void LocalMissingFileDownload_Click(object sender, RoutedEventArgs e)
         {
             if (MessageBoxResult.Cancel == MessageBox.Show("It may take a long time to download, are you sure to proceed?", "Local File Restore", MessageBoxButton.OKCancel))
                 return;
@@ -268,13 +268,35 @@ namespace BCLabManager
         }
         private void RemoteMissingFileRestore_Click(object sender, RoutedEventArgs e)
         {
-
+            if (MessageBoxResult.Cancel == MessageBox.Show("It may take a long time to download, are you sure to proceed?", "Local File Restore", MessageBoxButton.OKCancel))
+                return;
+            Thread t = new Thread(() =>
+            {
+                List<string> RestoreList = new List<string>();
+                uint existNum;
+                List<string[]> list = FileExistenceCheck(FileTransferHelper.Remote2Universal, out existNum);
+                if (list.Count > 0)
+                {
+                    foreach (var item in list)
+                    {
+                        if (FileTransferHelper.FileRestore(item[0], item[1]))
+                            RestoreList.Add(item[0]);
+                    }
+                    string str = $"{RestoreList.Count} files restored:\n";
+                    foreach (var file in RestoreList)
+                    {
+                        str += $"{file}\n";
+                    }
+                    RuningLog.Write(str);
+                    MessageBox.Show($"{RestoreList.Count} files restored.\n" +
+                        $" Check running log for the details.");
+                }
+                else
+                    MessageBox.Show($"All {existNum.ToString()} files are existed.");
+            });
+            t.Start();
         }
-        private void LocalFileMD5Repair_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-        private void RemoteFileMD5Commit_Click(object sender, RoutedEventArgs e)    //计算远程文件的MD5，提交到数据库
+        private void RemoteFileMD5Commit_Click(object sender, RoutedEventArgs e)    //如果远程文件存在，但没有MD5，则计算远程文件的MD5，提交到数据库
         {
             Thread t = new Thread(() =>
             {
@@ -460,7 +482,7 @@ namespace BCLabManager
             }
         }
 
-        private void TemporaryMethod1_Click(object sender, RoutedEventArgs e)  //查某个文件的MD5码
+        private void TemporaryMethod1_Click(object sender, RoutedEventArgs e)  //查MD5错误文件的MD5码
         {
             List<string[]> list = FileMD5Check(FileTransferHelper.Remote2Local);
             if (list.Count > 0)
@@ -482,7 +504,7 @@ namespace BCLabManager
             else
                 MessageBox.Show($"All files are fine.");
         }
-        private void TemporaryMethod2_Click(object sender, RoutedEventArgs e)  //查某个文件的MD5码
+        private void TemporaryMethod2_Click(object sender, RoutedEventArgs e)  //查单个文件的MD5码
         {
             string filePath = string.Empty;
             OpenFileDialog openFileDialog = new OpenFileDialog();
