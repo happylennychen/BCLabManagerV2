@@ -268,7 +268,7 @@ namespace BCLabManager
         }
         private void RemoteMissingFileRestore_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBoxResult.Cancel == MessageBox.Show("It may take a long time to download, are you sure to proceed?", "Local File Restore", MessageBoxButton.OKCancel))
+            if (MessageBoxResult.Cancel == MessageBox.Show("It may take a long time to download, are you sure to proceed?", "Remote File Restore", MessageBoxButton.OKCancel))
                 return;
             Thread t = new Thread(() =>
             {
