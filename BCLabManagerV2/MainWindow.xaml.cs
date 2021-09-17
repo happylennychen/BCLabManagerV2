@@ -213,28 +213,43 @@ namespace BCLabManager
 
         private void RemoteFileMD5Check_Click(object sender, RoutedEventArgs e) //将远程损坏文件和没有MD5的文件列表放入Running Log
         {
-            List<string[]> list = FileMD5Check(FileTransferHelper.Remote2Universal);
-            if (list.Count > 0)
+            if (MessageBoxResult.Cancel == MessageBox.Show("It may take a long time to download, are you sure to proceed?", "Remote File MD5 Check", MessageBoxButton.OKCancel))
+                return;
+            Thread t = new Thread(() =>
             {
-                var emptylist = list.Where(o => o[1] == null || o[1] == string.Empty).ToList();
-                var brokenlist = list.Where(o => o[1] != null && o[1] != string.Empty).ToList();
-                string str = $"{brokenlist.Count} MD5 Broken Files:\n";
-                foreach (var arr in brokenlist)
+                List<string[]> list;
+                try
                 {
-                    str += $"{arr[0]}, {arr[1]}\n";
+                    list = FileMD5Check(FileTransferHelper.Remote2Universal);
                 }
-                str = $"{emptylist.Count} MD5 Empty Files:\n";
-                foreach (var arr in emptylist)
+                catch (Exception error)
                 {
-                    str += $"{arr[0]}\n";
+                    MessageBox.Show($"MD5 Check Failed.\n{error.Message}");
+                    return;
                 }
-                RuningLog.Write(str);
-                MessageBox.Show($"{brokenlist.Count} files' MD5 are broken.\n" +
-                    $"{emptylist.Count} files' MD5 are empty.\n" +
-                    $" Check running log for the details.");
-            }
-            else
-                MessageBox.Show($"All files are fine.");
+                if (list!=null && list.Count > 0)
+                {
+                    var emptylist = list.Where(o => o[1] == null || o[1] == string.Empty).ToList();
+                    var brokenlist = list.Where(o => o[1] != null && o[1] != string.Empty).ToList();
+                    string str = $"{brokenlist.Count} MD5 Broken Files:\n";
+                    foreach (var arr in brokenlist)
+                    {
+                        str += $"{arr[0]}, {arr[1]}\n";
+                    }
+                    str = $"{emptylist.Count} MD5 Empty Files:\n";
+                    foreach (var arr in emptylist)
+                    {
+                        str += $"{arr[0]}\n";
+                    }
+                    RuningLog.Write(str);
+                    MessageBox.Show($"{brokenlist.Count} files' MD5 are broken.\n" +
+                        $"{emptylist.Count} files' MD5 are empty.\n" +
+                        $" Check running log for the details.");
+                }
+                else
+                    MessageBox.Show($"All files are fine.");
+            });
+            t.Start();
         }
         private void LocalMissingFileDownload_Click(object sender, RoutedEventArgs e)
         {
@@ -488,7 +503,7 @@ namespace BCLabManager
             if (list.Count > 0)
             {
                 string str = string.Empty;
-                foreach(var item in list)
+                foreach (var item in list)
                 {
                     var localMD5 = FileTransferHelper.GetMD5(item[0]);
                     var remotePath = FileTransferHelper.Local2Remote(item[0]);
@@ -510,7 +525,7 @@ namespace BCLabManager
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Title = "Select the file you want to check.";
             openFileDialog.Multiselect = false;
-            if(openFileDialog.ShowDialog() == true)
+            if (openFileDialog.ShowDialog() == true)
             {
                 filePath = openFileDialog.FileName;
                 var MD5 = FileTransferHelper.GetMD5(filePath);
