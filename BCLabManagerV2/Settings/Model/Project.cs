@@ -69,7 +69,20 @@ namespace BCLabManager.Model
             set { SetProperty(ref _voltagePoints, value); }
         }
         //public ObservableCollection<TableMakerProduct> TableMakerProducts { get; set; } = new ObservableCollection<TableMakerProduct>();
-        //public ObservableCollection<ProjectSetting> ProjectSettings { get; set; } = new ObservableCollection<ProjectSetting>();
+        public ObservableCollection<ProjectSetting> ProjectSettings { get; set; } = new ObservableCollection<ProjectSetting>();
+        public uint DefaultEOD
+        {
+            get 
+            {
+                if (ProjectSettings.Count > 0)
+                {
+                    var ps = ProjectSettings.SingleOrDefault(o => o.is_valid == true);
+                    return (uint)ps.discharge_end_voltage_mv;
+                }
+                else
+                    return 0;
+            }
+        }
         public ObservableCollection<EmulatorResult> EmulatorResults { get; set; } = new ObservableCollection<EmulatorResult>();
         public ObservableCollection<ReleasePackage> ReleasePackages { get; set; } = new ObservableCollection<ReleasePackage>();
 
