@@ -257,27 +257,34 @@ namespace BCLabManager
                 return;
             Thread t = new Thread(() =>
             {
-                List<string> RestoreList = new List<string>();
-                uint existNum;
-                List<string[]> list = FileExistenceCheck(FileTransferHelper.Remote2Local, out existNum);
-                if (list.Count > 0)
+                try
                 {
-                    foreach (var item in list)
+                    List<string> RestoreList = new List<string>();
+                    uint existNum;
+                    List<string[]> list = FileExistenceCheck(FileTransferHelper.Remote2Local, out existNum);
+                    if (list.Count > 0)
                     {
-                        if (FileTransferHelper.FileDownload(item[0], item[1]))
-                            RestoreList.Add(item[0]);
+                        foreach (var item in list)
+                        {
+                            if (FileTransferHelper.FileDownload(item[0], item[1]))
+                                RestoreList.Add(item[0]);
+                        }
+                        string str = $"{RestoreList.Count} files restored:\n";
+                        foreach (var file in RestoreList)
+                        {
+                            str += $"{file}\n";
+                        }
+                        RuningLog.Write(str);
+                        MessageBox.Show($"{RestoreList.Count} files restored.\n" +
+                            $" Check running log for the details.");
                     }
-                    string str = $"{RestoreList.Count} files restored:\n";
-                    foreach (var file in RestoreList)
-                    {
-                        str += $"{file}\n";
-                    }
-                    RuningLog.Write(str);
-                    MessageBox.Show($"{RestoreList.Count} files restored.\n" +
-                        $" Check running log for the details.");
+                    else
+                        MessageBox.Show($"All {existNum.ToString()} files are existed.");
                 }
-                else
-                    MessageBox.Show($"All {existNum.ToString()} files are existed.");
+                catch(Exception error)
+                {
+                    MessageBox.Show($"Local File Restore Failed.\n{error.Message}");
+                }
             });
             t.Start();
         }
@@ -287,27 +294,34 @@ namespace BCLabManager
                 return;
             Thread t = new Thread(() =>
             {
-                List<string> RestoreList = new List<string>();
-                uint existNum;
-                List<string[]> list = FileExistenceCheck(FileTransferHelper.Remote2Universal, out existNum);
-                if (list.Count > 0)
+                try
                 {
-                    foreach (var item in list)
+                    List<string> RestoreList = new List<string>();
+                    uint existNum;
+                    List<string[]> list = FileExistenceCheck(FileTransferHelper.Remote2Universal, out existNum);
+                    if (list.Count > 0)
                     {
-                        if (FileTransferHelper.FileRestore(item[0], item[1]))
-                            RestoreList.Add(item[0]);
+                        foreach (var item in list)
+                        {
+                            if (FileTransferHelper.FileRestore(item[0], item[1]))
+                                RestoreList.Add(item[0]);
+                        }
+                        string str = $"{RestoreList.Count} files restored:\n";
+                        foreach (var file in RestoreList)
+                        {
+                            str += $"{file}\n";
+                        }
+                        RuningLog.Write(str);
+                        MessageBox.Show($"{RestoreList.Count} files restored.\n" +
+                            $" Check running log for the details.");
                     }
-                    string str = $"{RestoreList.Count} files restored:\n";
-                    foreach (var file in RestoreList)
-                    {
-                        str += $"{file}\n";
-                    }
-                    RuningLog.Write(str);
-                    MessageBox.Show($"{RestoreList.Count} files restored.\n" +
-                        $" Check running log for the details.");
+                    else
+                        MessageBox.Show($"All {existNum.ToString()} files are existed.");
                 }
-                else
-                    MessageBox.Show($"All {existNum.ToString()} files are existed.");
+                catch (Exception error)
+                {
+                    MessageBox.Show($"Remote File Restore Failed.\n{error.Message}");
+                }
             });
             t.Start();
         }
