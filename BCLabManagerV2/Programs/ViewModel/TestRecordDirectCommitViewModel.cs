@@ -114,6 +114,7 @@ namespace BCLabManager.ViewModel
                 _battery = value;
 
                 RaisePropertyChanged("Battery");
+                FileNameUpdate();
             }
         }
 
@@ -153,8 +154,6 @@ namespace BCLabManager.ViewModel
                 _chamber = value;
 
                 RaisePropertyChanged("Chamber");
-                //if (_chamber.AssetUseCount > 0)
-                //    MessageBox.Show("Please note that this one is in use by another test");
             }
         }
 
@@ -197,6 +196,7 @@ namespace BCLabManager.ViewModel
                     select i).ToList();
 
                 AllChannels = new ObservableCollection<Channel>(allstring);
+                FileNameUpdate();
             }
         }
 
@@ -226,6 +226,7 @@ namespace BCLabManager.ViewModel
                 _channel = value;
 
                 RaisePropertyChanged("Channel");
+                FileNameUpdate();
             }
         }
 
@@ -591,13 +592,23 @@ namespace BCLabManager.ViewModel
                     {
                         case OperationType.Execute:
                             _okCommand = new RelayCommand(
-                                param => { this.OK(); }//,
-                                //param => this.CanExecute
+                                param => { this.OK(); },
+                                param => this.CanOK
                                 );
                             break;
                     }
                 }
                 return _okCommand;
+            }
+        }
+        private bool CanOK
+        {
+            get
+            {
+                if (Channel != null && Battery != null && FileList != null && FileList.Count > 0)
+                    return true;
+                else
+                    return false;
             }
         }
         /// <summary>
@@ -644,34 +655,39 @@ namespace BCLabManager.ViewModel
             dialog.Multiselect = true;
             if (dialog.ShowDialog() == true)
             {
-                TesterServiceClass _testerService = new TesterServiceClass();
-                if (Channel != null)
+                FileList = new ObservableCollection<string>(dialog.FileNames.ToList());
+                FileNameUpdate();
+            }
+        }
+
+        private void FileNameUpdate()
+        {
+            TesterServiceClass _testerService = new TesterServiceClass();
+            if (Channel != null && Battery != null && FileList != null && FileList.Count > 0)
+            {
+                foreach (var file in FileList)
                 {
-                    foreach (var file in dialog.FileNames)
+                    if (!_testerService.CheckFileFormat(Channel.Tester.ITesterProcesser, file))
                     {
-                        if (!_testerService.CheckFileFormat(Channel.Tester.ITesterProcesser, file))
-                        {
-                            MessageBox.Show("File Format Check Failed!");
-                            return;
-                        }
-                        if (!_testerService.CheckChannelNumber(Channel.Tester.ITesterProcesser, file, Channel.Name))
-                        {
-                            MessageBox.Show("Wrong channel!");
-                            return;
-                        }
+                        MessageBox.Show("File Format Check Failed!");
+                        return;
                     }
-
-                    FileList = new ObservableCollection<string>(dialog.FileNames.ToList());
-                    DateTime[] time = _testerService.GetTimeFromRawData(Channel.Tester.ITesterProcesser, FileList);
-                    if (time != null)
-                        NewName = $@"{_programStr}_{_recipeStr}_{_tester.Name}_{_channel.Name}_{_battery.Name}_{time[0].ToString("yyyyMMddHHmmss")}";
-                    else
-                        NewName = $@"{_programStr}_{_recipeStr}_{_tester.Name}_{_channel.Name}_{_battery.Name}";
+                    if (!_testerService.CheckChannelNumber(Channel.Tester.ITesterProcesser, file, Channel.Name))
+                    {
+                        MessageBox.Show("Wrong channel!");
+                        return;
+                    }
                 }
+
+                DateTime[] time = _testerService.GetTimeFromRawData(Channel.Tester.ITesterProcesser, FileList);
+                if (time != null)
+                    NewName = $@"{_programStr}_{_recipeStr}_{_tester.Name}_{_channel.Name}_{_battery.Name}_{time[0].ToString("yyyyMMddHHmmss")}";
                 else
-                {
+                    NewName = $@"{_programStr}_{_recipeStr}_{_tester.Name}_{_channel.Name}_{_battery.Name}";
+            }
+            else
+            {
 
-                }
             }
         }
 
