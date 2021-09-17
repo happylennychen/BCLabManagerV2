@@ -71,6 +71,7 @@ namespace BCLabManager.ViewModel
                 var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage2Project.Id && o.IsInvalid == false).ToList();
                 var records = GetCompletedRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
                 Stage2SourceList = records.Select(o => o.TestFilePath).ToList();
+                EOD = _stage2Project.DefaultEOD;
             }
         }
         private Project _stage1Project;
@@ -85,6 +86,7 @@ namespace BCLabManager.ViewModel
                 var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage1Project.Id && o.IsInvalid == false).ToList();
                 var records = GetCompletedRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList());
                 Stage1SourceList = records.OrderBy(o => o.Temperature).ThenBy(o => o.Current).Select(o => new Stage1Source(o.TestFilePath, false)).ToList();
+                EOD = _stage1Project.DefaultEOD;
             }
         }
         private uint _eod;
@@ -251,6 +253,8 @@ namespace BCLabManager.ViewModel
         {
             get
             {
+                if (EOD == 0)
+                    return false;
                 if (Stage2SourceList == null)
                     return false;
                 if (VoltagePoints == null)
