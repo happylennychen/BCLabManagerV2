@@ -605,7 +605,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                if (Channel != null && Battery != null && FileList != null && FileList.Count > 0)
+                if (Channel != null && Battery != null && FileList != null && FileList.Count > 0 && NewName!=null && NewName!=string.Empty && NewName.Contains(Channel.Name) && NewName.Contains(Tester.Name))
                     return true;
                 else
                     return false;
