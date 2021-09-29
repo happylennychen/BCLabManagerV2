@@ -1,6 +1,7 @@
 ﻿using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace BCLabManager.Model
     public class BatteryType : BindableBase
     {
         public int Id { get; set; }
+        public ObservableCollection<Project> Projects { get; set; } = new ObservableCollection<Project>();
         private string _manufacturer;
         public string Manufacturer
         {
