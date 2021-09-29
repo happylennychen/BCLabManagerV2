@@ -22,6 +22,7 @@
                 <MenuItem Header="Temporary Method (Recipe Template Rename)" Click="TemporaryMethod_Click" Visibility="Collapsed"></MenuItem>
                 <MenuItem Header="Temporary Method (Broken Files MD5 check)" Click="TemporaryMethod1_Click" Visibility="Collapsed"></MenuItem>
                 <MenuItem Header="Temporary Method (One File MD5 check)" Click="TemporaryMethod2_Click" Visibility="Collapsed"></MenuItem>
+                <MenuItem Header="Dicharge Voltage Rasing Problem Report" Click="DischargeVoltageRasingCheck_Click"></MenuItem>
             </MenuItem>
         </Menu>
         <TabControl x:Name="MainTab">

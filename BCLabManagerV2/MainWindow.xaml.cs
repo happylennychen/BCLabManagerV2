@@ -459,6 +459,11 @@ namespace BCLabManager
             return BrokenList;
         }
 
+        private void DischargeVoltageRasingCheck_Click(object sender, RoutedEventArgs e)
+        {
+            Configuration();
+        }
+
         #region Temporary Method
         private void TemporaryMethod_Click(object sender, RoutedEventArgs e)
         {
@@ -576,5 +581,10 @@ namespace BCLabManager
             return tr.TestFilePath.Replace(recname, tr.RecipeStr);
         }
         #endregion
+    }
+
+    public class DischargeVoltageRasingLog
+    {
+        public BatteryType BatteryType { get; set; }
     }
 }
