@@ -70,6 +70,7 @@ namespace BCLabManager.Model
         }
         //public ObservableCollection<TableMakerProduct> TableMakerProducts { get; set; } = new ObservableCollection<TableMakerProduct>();
         public ObservableCollection<ProjectSetting> ProjectSettings { get; set; } = new ObservableCollection<ProjectSetting>();
+        public ObservableCollection<Program> Programs { get; set; } = new ObservableCollection<Program>();
         public uint DefaultEOD
         {
             get 

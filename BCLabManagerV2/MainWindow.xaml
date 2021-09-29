@@ -23,6 +23,7 @@
                 <MenuItem Header="Temporary Method (Broken Files MD5 check)" Click="TemporaryMethod1_Click" Visibility="Collapsed"></MenuItem>
                 <MenuItem Header="Temporary Method (One File MD5 check)" Click="TemporaryMethod2_Click" Visibility="Collapsed"></MenuItem>
             </MenuItem>
+            <MenuItem Header="Performance" Click="Performance_Click"></MenuItem>
         </Menu>
         <TabControl x:Name="MainTab">
             <TabItem Header="Dashboard">

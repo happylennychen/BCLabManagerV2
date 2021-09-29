@@ -25,6 +25,7 @@ using Microsoft.Win32;
 using Npgsql;
 using Path = System.IO.Path;
 using System.Threading;
+using System.Collections;
 
 namespace BCLabManager
 {
@@ -227,7 +228,7 @@ namespace BCLabManager
                     MessageBox.Show($"MD5 Check Failed.\n{error.Message}");
                     return;
                 }
-                if (list!=null && list.Count > 0)
+                if (list != null && list.Count > 0)
                 {
                     var emptylist = list.Where(o => o[1] == null || o[1] == string.Empty).ToList();
                     var brokenlist = list.Where(o => o[1] != null && o[1] != string.Empty).ToList();
@@ -281,7 +282,7 @@ namespace BCLabManager
                     else
                         MessageBox.Show($"All {existNum.ToString()} files are existed.");
                 }
-                catch(Exception error)
+                catch (Exception error)
                 {
                     MessageBox.Show($"Local File Restore Failed.\n{error.Message}");
                 }
@@ -576,5 +577,259 @@ namespace BCLabManager
             return tr.TestFilePath.Replace(recname, tr.RecipeStr);
         }
         #endregion
+
+
+        private void Performance_Click(object sender, RoutedEventArgs e)
+        {
+            Dictionary<DateTime, int> dailyTP, monthlyTH;
+            Dictionary<YearWeek, int> weeklyTP;
+            Dictionary<DateTime, double> dailyOR;
+            Dictionary<string, Dictionary<string, TimeSpan>> projectTime;
+            using (var dbContext = new AppDbContext())
+            {
+                var trs = dbContext.TestRecords.ToList().Where(o => o.StartTime != DateTime.MinValue && (o.Status == TestStatus.Completed || o.Status != TestStatus.Invalid || o.Status == TestStatus.Executing));
+                dailyTP = GetDailyThroughputs(trs, TestStatus.Completed);
+                weeklyTP = GetWeeklyThroughputs(trs, TestStatus.Completed);
+                monthlyTH = GetMonthlyThroughputs(trs, TestStatus.Completed);
+
+                dailyOR = GetDailyOccupancyRatio(trs);
+
+                var projects = dbContext.Projects
+                    .Include(prj => prj.Programs)
+                        .ThenInclude(prog => prog.Recipes)
+                            .ThenInclude(rec => rec.TestRecords).ToList();
+                foreach (var prj in projects)
+                {
+                    foreach (var prog in prj.Programs)
+                    {
+                        dbContext.Entry(prog).Reference(p => p.Type).Load();
+                    }
+                }
+                projectTime = GetProjectTime(projects);
+
+            }
+            if (dailyTP != null)
+            {
+                /*foreach (var key in dailyTP.Keys)
+                {
+                    //Console.WriteLine($"{key.Year}/{key.Month}/{key.Day}, {dic[key]}");
+                    RuningLog.Write($"{key.Year}/{key.Month}/{key.Day}, {dailyTP[key]}\n");
+                }
+                RuningLog.Write($"=============================================================\n");
+                if (monthlyTH != null)
+                {
+                    foreach (var key in monthlyTH.Keys)
+                    {
+                        //Console.WriteLine($"{key.Year}/{key.Month}/{key.Day}, {dic[key]}");
+                        RuningLog.Write($"{key.Year}/{key.Month}, {monthlyTH[key]}\n");
+                    }
+                }
+                RuningLog.Write($"=============================================================\n");
+                if (weeklyTP != null)
+                {
+                    foreach (var key in weeklyTP.Keys)
+                    {
+                        //Console.WriteLine($"{key.Year}/{key.Month}/{key.Day}, {dic[key]}");
+                        RuningLog.Write($"{key.Year} W{key.Week}, {weeklyTP[key]}\n");
+                    }
+                }
+                if (dailyOR != null)
+                {
+                    foreach (var key in dailyOR.Keys)
+                    {
+                        //Console.WriteLine($"{key.Year}/{key.Month}/{key.Day}, {dic[key]}");
+                        RuningLog.Write($"{key.Year}/{key.Month}/{key.Day}, {dailyOR[key]}\n");
+                    }
+                }*/
+                if (projectTime != null)
+                {
+                    foreach (var prj in projectTime.Keys)
+                    {
+                        foreach (var type in projectTime[prj].Keys)
+                        {
+                            var t = projectTime[prj][type];
+                            RuningLog.Write($"{prj}, {type}, {t.TotalDays}\n");
+                        }
+                    }
+                }
+            }
+        }
+
+        private Dictionary<string, Dictionary<string, TimeSpan>> GetProjectTime(List<Project> projects)
+        {
+            Dictionary<string, Dictionary<string, TimeSpan>> output = new Dictionary<string, Dictionary<string, TimeSpan>>();
+            foreach (var prj in projects)
+            {
+                string prjStr = prj.Name;
+                Dictionary<string, TimeSpan> programsTime = new Dictionary<string, TimeSpan>();
+                foreach (var prog in prj.Programs)
+                {
+                    var programType = prog.Type.Name;
+                    if (!programsTime.ContainsKey(programType))
+                    {
+                        TimeSpan ts = GetProgramTimeSpan(prog);
+                        programsTime.Add(programType, ts);
+                    }
+                    else
+                    {
+                        TimeSpan ts = GetProgramTimeSpan(prog);
+                        //ts += programsTime[programType];
+                        programsTime[programType] += ts;
+                    }
+                }
+                if (programsTime.Count != 0)
+                    output.Add(prjStr, programsTime);
+            }
+            return output;
+        }
+
+        private TimeSpan GetProgramTimeSpan(Program prog)
+        {
+            TimeSpan output = TimeSpan.Zero;
+            foreach (var rec in prog.Recipes)
+            {
+                output += GetRecipeTimeSpan(rec);
+            }
+            return output;
+        }
+
+        private TimeSpan GetRecipeTimeSpan(Recipe rec)
+        {
+            TimeSpan output = TimeSpan.Zero;
+            foreach (var tr in rec.TestRecords)
+            {
+                if (tr.StartTime != DateTime.MinValue && tr.EndTime != DateTime.MinValue)
+                    output += tr.EndTime - tr.StartTime;
+            }
+            return output;
+        }
+
+        private Dictionary<DateTime, double> GetDailyOccupancyRatio(IEnumerable<TestRecord> trs)
+        {
+            Dictionary<DateTime, double> output = new Dictionary<DateTime, double>();
+            var startTime = trs.Min(o => o.StartTime);
+            var endTime = trs.Max(o => o.EndTime);
+            for (DateTime t = startTime.Date; t < endTime.Date + TimeSpan.FromDays(1); t += TimeSpan.FromDays(1))
+            {
+                if (!output.ContainsKey(t))
+                    output.Add(t, GetOccupancyRatio(t, trs));
+            }
+            return output;
+        }
+
+        private double GetOccupancyRatio(DateTime t, IEnumerable<TestRecord> trs)
+        {
+            var endTime = new DateTime(t.Year, t.Month, t.Day, 23, 59, 59, 999);
+            var innerTRs = trs.Where(tr => (tr.StartTime > t && tr.EndTime < endTime));
+            var overTRs = trs.Where(tr => (tr.StartTime < t && tr.EndTime > endTime));
+            var leftTRs = trs.Where(tr => (tr.StartTime < t && tr.EndTime > t && tr.EndTime < endTime));
+            var rightTRs = trs.Where(tr => (tr.StartTime > t && tr.StartTime < endTime && tr.EndTime > endTime));
+            TimeSpan ts = TimeSpan.Zero;
+            foreach (var tr in overTRs)
+            {
+                ts += (endTime - t);
+            }
+            foreach (var tr in innerTRs)
+            {
+                ts += (tr.EndTime - tr.StartTime);
+            }
+            foreach (var tr in leftTRs)
+            {
+                ts += (tr.EndTime - t);
+            }
+            foreach (var tr in rightTRs)
+            {
+                ts += (endTime - tr.StartTime);
+            }
+            return (ts.TotalMilliseconds) / (4 * (endTime - t).TotalMilliseconds);
+        }
+
+        private Dictionary<DateTime, int> GetDailyThroughputs(IEnumerable<TestRecord> trs, TestStatus ts)
+        {
+            Dictionary<DateTime, int> output = new Dictionary<DateTime, int>();
+            var startTime = trs.Min(o => o.StartTime);
+            var endTime = trs.Max(o => o.EndTime);
+            var selectedTRs = trs.Where(o => o.Status == ts);
+            for (DateTime t = startTime.Date; t < endTime.Date + TimeSpan.FromDays(1); t += TimeSpan.FromDays(1))
+            {
+                var num = selectedTRs.Count(o => o.EndTime.Date == t.Date);
+                output.Add(t, num);
+            }
+            return output;
+        }
+
+        private Dictionary<YearWeek, int> GetWeeklyThroughputs(IEnumerable<TestRecord> trs, TestStatus ts)
+        {
+            Dictionary<YearWeek, int> output = new Dictionary<YearWeek, int>(new YearWeekComparer());
+            var dailyThroughpus = GetDailyThroughputs(trs, ts);
+            foreach (var t in dailyThroughpus.Keys)
+            {
+                var week = GetWeek(t);
+                //var weekStr = $"{ week[0]} W{week[1]}";
+                if (!output.Keys.Contains(week))
+                {
+                    output.Add(week, dailyThroughpus[t]);
+                }
+                else
+                {
+                    output[week] += dailyThroughpus[t];
+                }
+            }
+            return output;
+        }
+
+        private YearWeek GetWeek(DateTime t)
+        {
+            var year = t.Year;
+            var week = 1 + t.DayOfYear / 7;
+            return new YearWeek { Year = year, Week = week };
+        }
+
+        private Dictionary<DateTime, int> GetMonthlyThroughputs(IEnumerable<TestRecord> trs, TestStatus ts)
+        {
+            Dictionary<DateTime, int> output = new Dictionary<DateTime, int>();
+            var dailyThroughpus = GetDailyThroughputs(trs, ts);
+            foreach (var t in dailyThroughpus.Keys)
+            {
+                DateTime month = GetMonth(t);
+                if (!output.Keys.Contains(month))
+                {
+                    output.Add(month, dailyThroughpus[t]);
+                }
+                else
+                {
+                    output[month] += dailyThroughpus[t];
+                }
+            }
+            return output;
+        }
+
+        private DateTime GetMonth(DateTime t)
+        {
+            DateTime output = new DateTime(t.Year, t.Month, 1);
+            return output;
+        }
+    }
+
+    class YearWeek
+    {
+        public int Year { get; set; }
+        public int Week { get; set; }
+    }
+    class YearWeekComparer : EqualityComparer<YearWeek>
+    {
+
+        public override bool Equals(YearWeek x, YearWeek y)
+        {
+            if (x.Year == y.Year && x.Week == y.Week)
+                return true;
+            else
+                return false;
+        }
+
+        public override int GetHashCode(YearWeek obj)
+        {
+            return (obj.Year * obj.Week).GetHashCode();
+        }
     }
 }
