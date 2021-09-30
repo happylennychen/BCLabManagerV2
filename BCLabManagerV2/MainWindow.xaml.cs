@@ -227,7 +227,7 @@ namespace BCLabManager
                     MessageBox.Show($"MD5 Check Failed.\n{error.Message}");
                     return;
                 }
-                if (list!=null && list.Count > 0)
+                if (list != null && list.Count > 0)
                 {
                     var emptylist = list.Where(o => o[1] == null || o[1] == string.Empty).ToList();
                     var brokenlist = list.Where(o => o[1] != null && o[1] != string.Empty).ToList();
@@ -281,7 +281,7 @@ namespace BCLabManager
                     else
                         MessageBox.Show($"All {existNum.ToString()} files are existed.");
                 }
-                catch(Exception error)
+                catch (Exception error)
                 {
                     MessageBox.Show($"Local File Restore Failed.\n{error.Message}");
                 }
@@ -461,7 +461,52 @@ namespace BCLabManager
 
         private void DischargeVoltageRasingCheck_Click(object sender, RoutedEventArgs e)
         {
-            Configuration();
+            List<DischargeVoltageRasingLog> dischargeVoltageRasingLogs = new List<DischargeVoltageRasingLog>();
+            List<TestRecord> trs;
+            using (var dbContext = new AppDbContext())
+            {
+                trs = dbContext.TestRecords
+                    .Include(tr=>tr.Recipe.Program.Project.BatteryType)
+                    .Include(tr=>tr.Recipe.Program.Type)
+                    //.Include(tr => tr.Recipe)
+                    //    .ThenInclude(rec => rec.Program)
+                    //        .ThenInclude(pro => pro.Project)
+                    //            .ThenInclude(prj => prj.BatteryType).ToList()
+                                .Where(tr => tr.TesterStr == "17200" && tr.TestFilePath != string.Empty).ToList();
+            }
+            if (trs != null)
+            {
+                foreach (var tr in trs)
+                {
+                    dischargeVoltageRasingLogs.AddRange(GetDischargeVoltageRaisingLogs(tr));
+                }
+            }
+        }
+        private void UpdateProjectIdForTMP_Click(object sender, RoutedEventArgs e)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                //trs = dbContext.TestRecords
+                //    .Include(tr => tr.Recipe.Program.Project.BatteryType)
+                //    .Include(tr => tr.Recipe.Program.Type)
+                //                .Where(tr => tr.TesterStr == "17200" && tr.TestFilePath != string.Empty).ToList();
+                var tmrs = dbContext.TableMakerRecords.Include(tmr => tmr.Project).Include(tmr=>tmr.Products).ToList();
+                foreach (var tmr in tmrs)
+                {
+                    foreach (var tmp in tmr.Products)
+                    {
+                        tmp.Project = tmr.Project;
+                        tmp.IsValid = tmr.IsValid;
+                    }
+                }
+                dbContext.SaveChanges();
+
+            }
+        }
+
+        private IEnumerable<DischargeVoltageRasingLog> GetDischargeVoltageRaisingLogs(TestRecord tr)
+        {
+            throw new NotImplementedException();
         }
 
         #region Temporary Method
@@ -585,6 +630,7 @@ namespace BCLabManager
 
     public class DischargeVoltageRasingLog
     {
-        public BatteryType BatteryType { get; set; }
+        public TestRecord TestRecord { get; set; }
+        public List<DataRow> ErrorFrame { get; set; } = new List<DataRow>();
     }
 }

@@ -13,6 +13,7 @@ namespace BCLabManager.DataAccess
             : base(context)
         {
         }
+
         public IEnumerable<TestRecord> GetAllFreeTestRecords()
         {
             return GetAll().Where(o => o.ProjectStr == null && o.ProgramStr == string.Empty && o.RecipeStr == string.Empty);
