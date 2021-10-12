@@ -990,7 +990,7 @@ namespace BCLabManager.Model
         public static bool IsFirstDischargeChecked { get; set; }
 
 
-        private static ChromaNode GetNodeFromeString(string value)
+        public static ChromaNode GetNodeFromeString(string value)
         {
             if (value != null)
             {

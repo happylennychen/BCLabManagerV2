@@ -22,5 +22,11 @@ namespace BCLabManager
             sw.Close();
             fs.Close();
         }
+        static public void NewLog(string logName = "")
+        {
+            if (logName != "")
+                logName = '-' + logName;
+            GlobalSettings.RunningLogFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Running Log\\", $"{DateTime.Now.ToString("yyyyMMddHHmmss")}{logName}.log");
+        }
     }
 }

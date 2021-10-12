@@ -25,6 +25,7 @@ using Microsoft.Win32;
 using Npgsql;
 using Path = System.IO.Path;
 using System.Threading;
+using System.Text.Json;
 
 namespace BCLabManager
 {
@@ -461,27 +462,247 @@ namespace BCLabManager
 
         private void DischargeVoltageRasingCheck_Click(object sender, RoutedEventArgs e)
         {
-            List<DischargeVoltageRasingLog> dischargeVoltageRasingLogs = new List<DischargeVoltageRasingLog>();
+            //List<ChromaNode> nodes = new List<ChromaNode>();
             List<TestRecord> trs;
+            List<Battery> batts;
+            List<Channel> chnls;
             using (var dbContext = new AppDbContext())
             {
                 trs = dbContext.TestRecords
-                    .Include(tr=>tr.Recipe.Program.Project.BatteryType)
-                    .Include(tr=>tr.Recipe.Program.Type)
-                    //.Include(tr => tr.Recipe)
-                    //    .ThenInclude(rec => rec.Program)
-                    //        .ThenInclude(pro => pro.Project)
-                    //            .ThenInclude(prj => prj.BatteryType).ToList()
-                                .Where(tr => tr.TesterStr == "17200" && tr.TestFilePath != string.Empty).ToList();
+                    .Include(tr => tr.Recipe.Program.Project.BatteryType)
+                    .Include(tr => tr.Recipe.Program.Type)
+                                //.Include(tr => tr.Recipe)
+                                //    .ThenInclude(rec => rec.Program)
+                                //        .ThenInclude(pro => pro.Project)
+                                //            .ThenInclude(prj => prj.BatteryType).ToList()
+                                .Where(tr => tr.Status!=TestStatus.Abandoned && tr.TesterStr == "17200" && tr.TestFilePath != string.Empty).ToList();
+                batts = dbContext.Batteries.Include(batt => batt.BatteryType).ToList();
+                chnls = dbContext.Channels.Include(chnl => chnl.Tester).ToList();
             }
+            var batteryTypes = trs.Select(tr => tr.Recipe.Program.Project.BatteryType).Distinct().ToList();
+            var projects = trs.Select(tr => tr.Recipe.Program.Project).Distinct().ToList();
+            var programs = trs.Select(tr => tr.Recipe.Program).Distinct().ToList();
+            var recipes = trs.Select(tr => tr.Recipe).Distinct().ToList();
+            Dictionary<TestRecord, List<List<ChromaNode>>> ErrorDetailLogs = new Dictionary<TestRecord, List<List<ChromaNode>>>();
+            Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs = new Dictionary<TestRecord, List<ErrorDescriptor>>();
             if (trs != null)
             {
                 foreach (var tr in trs)
                 {
-                    dischargeVoltageRasingLogs.AddRange(GetDischargeVoltageRaisingLogs(tr));
+                    //dischargeVoltageRasingLogs.AddRange(GetDischargeVoltageRaisingLogs(tr));
+                    try
+                    {
+                        List<List<ChromaNode>> nodesList;
+                        var err = GetDischargeVoltageRaisingNodes(tr, out nodesList);
+                        if (err != ErrorCode.NORMAL)
+                        {
+                            MessageBox.Show($"GetDischargeVoltageRaisingNodes failed.{tr.TestFilePath}");
+                        }
+                        if (err == ErrorCode.NORMAL && nodesList.Count > 0)
+                        {
+                            ErrorDetailLogs.Add(tr, nodesList);
+                        }
+                    }
+                    catch (Exception err)
+                    {
+                        RuningLog.Write($"{tr.TestFilePath}\n{err.Message}!\n");
+                    }
+                }
+                foreach (var key in ErrorDetailLogs.Keys)
+                {
+                    List<ErrorDescriptor> BriefList = new List<ErrorDescriptor>();
+                    int i = 1;
+                    foreach (var frame in ErrorDetailLogs[key])
+                    {
+                        ErrorDescriptor ed = GetErrorFrameBrief(frame, i);
+                        BriefList.Add(ed);
+                        i++;
+                    }
+                    ErrorBriefLogs.Add(key, BriefList);
+                }
+                var newBriefLogs = new Dictionary<TestRecord, List<ErrorDescriptor>>();
+                foreach (var ebl in ErrorBriefLogs)
+                {
+                    var BriefList = ebl.Value;
+                    var newBriefList = BriefList.Where(ed => ed.FrameLength > 2 && ed.RaisedVoltage > 0.0003 && ed.MaxDelta > 0.0003).ToList();
+                    if (newBriefList.Count > 0)
+                        newBriefLogs.Add(ebl.Key, newBriefList);
+                }
+                ErrorBriefLogs = newBriefLogs;
+                var newDetailLogs = new Dictionary<TestRecord, List<List<ChromaNode>>>();
+                foreach (var edl in ErrorDetailLogs)
+                {
+                    if (!ErrorBriefLogs.Keys.Contains(edl.Key))
+                        continue;
+                    var briefs = ErrorBriefLogs[edl.Key];
+                    var nodesList = edl.Value;
+                    var newFrameList = new List<List<ChromaNode>>();
+                    foreach (var ed in briefs)
+                    {
+                        newFrameList.Add(nodesList[ed.Index-1]);
+                    }
+                    if (newFrameList.Count > 0)
+                        newDetailLogs.Add(edl.Key, newFrameList);
+                }
+                ErrorDetailLogs = newDetailLogs;
+            }
+            RuningLog.NewLog("Summary");
+            RuningLog.Write($"----------------------------Summary--------------------------\n");
+            RuningLog.Write($"Total Test Records: {trs.Count}\n");
+            RuningLog.Write($"Total Error Test Records: {ErrorDetailLogs.Count}\n");
+            var errorFrameNumber = ErrorDetailLogs.Sum(o => o.Value.Sum(p => p.Count));
+            RuningLog.Write($"Total Error Frames: {errorFrameNumber}\n");
+            RuningLog.NewLog("Occur Rate");
+            RuningLog.Write($"----------------------------Occur Rate--------------------------\n");
+            foreach (var bt in batteryTypes)
+            {
+                var a = trs.Count(tr => tr.Recipe.Program.Project.BatteryType == bt);
+                var b = ErrorDetailLogs.Keys.Count(tr => tr.Recipe.Program.Project.BatteryType == bt);
+                if (b == 0)
+                    continue;
+                var c = bt.Projects.Sum(prj => prj.Programs.Sum(pro => pro.Recipes.Count));
+                var d = bt.Projects.Sum(prj => prj.Programs.Sum(pro => pro.Recipes.Count(rec => rec.TestRecords.Any(tr => ErrorDetailLogs.Keys.Contains(tr)))));
+                var E = bt.Projects.Sum(prj => prj.Programs.Count);
+                var f = bt.Projects.Sum(prj => prj.Programs.Count(pro => pro.Recipes.Any(rec => rec.TestRecords.Any(tr => ErrorDetailLogs.Keys.Contains(tr)))));
+                var g = bt.Projects.Count;
+                var h = bt.Projects.Count(prj => prj.Programs.Any(pro => pro.Recipes.Any(rec => rec.TestRecords.Any(tr => ErrorDetailLogs.Keys.Contains(tr)))));
+                RuningLog.Write($"Battery Type:{bt.Name},Project OR:{h}\\{g}, Program OR:{f}\\{E},Recipe OR:{d}\\{c},TR OR:{b}\\{a}\n");
+                foreach (var prj in bt.Projects)
+                {
+                    a = trs.Count(tr => tr.Recipe.Program.Project == prj);
+                    b = ErrorDetailLogs.Keys.Count(tr => tr.Recipe.Program.Project == prj);
+                    if (b == 0)
+                        continue;
+                    c = prj.Programs.Sum(pro => pro.Recipes.Count);
+                    d = prj.Programs.Sum(pro => pro.Recipes.Count(rec => rec.TestRecords.Any(tr => ErrorDetailLogs.Keys.Contains(tr))));
+                    E = prj.Programs.Count;
+                    f = prj.Programs.Count(pro => pro.Recipes.Any(rec => rec.TestRecords.Any(tr => ErrorDetailLogs.Keys.Contains(tr))));
+                    RuningLog.Write($"\tProject:{prj.Name},Program OR:{f}\\{E},Recipe OR:{d}\\{c},TR OR:{b}\\{a}\n");
+                    foreach (var pro in prj.Programs)
+                    {
+                        a = trs.Count(tr => tr.Recipe.Program == pro);
+                        b = ErrorDetailLogs.Keys.Count(tr => tr.Recipe.Program == pro);
+                        if (b == 0)
+                            continue;
+                        c = pro.Recipes.Count;
+                        d = pro.Recipes.Count(rec => rec.TestRecords.Any(tr => ErrorDetailLogs.Keys.Contains(tr)));
+                        RuningLog.Write($"\t\tProgram: {pro.Name},Recipe OR:{d}\\{c},TR OR:{b}\\{a}\n");
+                        foreach (var rec in pro.Recipes)
+                        {
+                            a = trs.Count(tr => tr.Recipe == rec);
+                            b = ErrorDetailLogs.Keys.Count(tr => tr.Recipe == rec);
+                            if (b == 0)
+                                continue;
+                            RuningLog.Write($"\t\t\tRecipe: {rec.Name}, OR:{b}\\{a}\n");
+                            foreach (var tr1 in rec.TestRecords)
+                            {
+                                a = trs.Count(tr => tr == tr1);
+                                b = ErrorDetailLogs.Keys.Count(tr => tr == tr1);
+                                if (b == 0)
+                                    continue;
+                                RuningLog.Write($"\t\t\t\tTest Record: {tr1.TestFilePath}, OR:{b}\\{a}\n");
+                                if (ErrorDetailLogs.Keys.Contains(tr1))
+                                {
+                                    int i = 1;
+                                    foreach (var log in ErrorBriefLogs[tr1])
+                                    {
+                                        RuningLog.Write($"\t\t\t\t\t{i},Length:{log.FrameLength},Raised Vol:{log.RaisedVoltage},Avrerage Vol:{log.AvrVoltage},Average Curr:{log.AvrCurrent},Average Temp:{log.AvrTemperature},Min Delta:{log.MinDelta},Max Delta:{log.MaxDelta}, Avrerage Delta:{log.AvrDelta}\n");
+                                        i++;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
+            RuningLog.NewLog("Assets Occur Rate");
+            RuningLog.Write($"----------------------------Assets Occur Rate--------------------------\n");
+            foreach (var batt in batts)
+            {
+                var a = trs.Count(tr => tr.BatteryTypeStr == batt.BatteryType.Name && tr.BatteryStr == batt.Name);
+                var b = ErrorDetailLogs.Keys.Count(tr => tr.BatteryTypeStr == batt.BatteryType.Name && tr.BatteryStr == batt.Name);
+                if (b == 0)
+                    continue;
+                RuningLog.Write($"\tBattery:{batt.BatteryType.Name}-{batt.Name},{b}\\{a}\n");
+            }
+            foreach (var chnl in chnls)
+            {
+                var a = trs.Count(tr => tr.TesterStr == chnl.Tester.Name && tr.ChannelStr == chnl.Name);
+                var b = ErrorDetailLogs.Keys.Count(tr => tr.TesterStr == chnl.Tester.Name && tr.ChannelStr == chnl.Name);
+                if (b == 0)
+                    continue;
+                RuningLog.Write($"\tChannl:{chnl.Tester.Name}-{chnl.Name},{b}\\{a}\n");
+            }
+            RuningLog.NewLog("Details");
+            RuningLog.Write($"----------------------------Details--------------------------\n");
+            foreach (var log in ErrorDetailLogs)
+            {
+                var tr = log.Key;
+                var nodesList = log.Value;
+                RuningLog.Write($"{nodesList.Count} error frames in {tr.TestFilePath}\n");
+                int i = 1;
+                foreach (var nodes in nodesList)
+                {
+                    RuningLog.Write($"\tThe {i}st frame({nodes.Count}):\n");
+                    foreach (var node in nodes)
+                    {
+                        RuningLog.Write($"\t\t{node.StepNo},{node.Step},{node.TimeInMS},{node.Time},{node.Cycle},{node.Loop},{node.StepMode},{node.Mode},{node.Current},{node.Voltage},{node.Temperature},{node.Capacity},{node.TotalCapacity},{node.Status}\n");
+                    }
+                    i++;
+                }
+            }
+
+            /*RuningLog.Write($"----------------------------Briefs--------------------------\n");
+            int errorNumber = 0;
+            RuningLog.Write($"No,Length,MinVol,MaxVol,RaisedVol,AvrVol,MinCurr,MaxCurr,AvrCurr,MinTemp,MaxTemp,AvrTemp,MinDelta,MaxDelta,AvrDelta\n");
+            foreach (var log in ErrorBriefLogs)
+            {
+                var tr = log.Key;
+                var briefs = log.Value;
+                errorNumber += briefs.Count;
+                int i = 1;
+                foreach (var brief in briefs)
+                {
+                    RuningLog.Write($"{i},{brief.FrameLength},{brief.MinVoltage},{brief.MaxVoltage},{brief.RaisedVoltage},{brief.AvrVoltage},{brief.MinCurrent},{brief.MaxCurrent},{brief.AvrCurrent},{brief.MinTemperature},{brief.MaxTemperature},{brief.AvrTemperature},{brief.MinDelta},{brief.MaxDelta},{brief.AvrDelta}\n");
+                    i++;
+                }
+            }*/
         }
+
+        private ErrorDescriptor GetErrorFrameBrief(List<ChromaNode> frame, int index)
+        {
+            ErrorDescriptor ed = new ErrorDescriptor();
+            ed.Index = index;
+            ed.FrameLength = frame.Count;
+            ed.MinCurrent = Math.Round(frame.Min(o => o.Current), 5);
+            ed.MaxCurrent = Math.Round(frame.Max(o => o.Current), 5);
+            ed.AvrCurrent = Math.Round(frame.Average(o => o.Current), 5);
+            ed.MinTemperature = Math.Round(frame.Min(o => o.Temperature), 5);
+            ed.MaxTemperature = Math.Round(frame.Max(o => o.Temperature), 5);
+            ed.AvrTemperature = Math.Round(frame.Average(o => o.Temperature), 5);
+            ed.MinVoltage = Math.Round(frame.Min(o => o.Voltage), 5);
+            ed.MaxVoltage = Math.Round(frame.Max(o => o.Voltage), 5);
+            ed.AvrVoltage = Math.Round(frame.Average(o => o.Voltage), 5);
+            ed.RaisedVoltage = Math.Round(ed.MaxVoltage - ed.MinVoltage, 5);
+            ed.MinDelta = 9999;
+            ed.MaxDelta = 0;
+            ed.AvrDelta = 0;
+            for (int i = 1; i < frame.Count; i++)
+            {
+                var delta = frame[i].Voltage - frame[i - 1].Voltage;
+                ed.AvrDelta += delta;
+                if (delta < ed.MinDelta)
+                    ed.MinDelta = delta;
+                if (delta > ed.MaxDelta)
+                    ed.MaxDelta = delta;
+            }
+            ed.AvrDelta /= (frame.Count - 1);
+            ed.MinDelta = Math.Round(ed.MinDelta, 5);
+            ed.MaxDelta = Math.Round(ed.MaxDelta, 5);
+            ed.AvrDelta = Math.Round(ed.AvrDelta, 5);
+            return ed;
+        }
+
         private void UpdateProjectIdForTMP_Click(object sender, RoutedEventArgs e)
         {
             using (var dbContext = new AppDbContext())
@@ -490,7 +711,7 @@ namespace BCLabManager
                 //    .Include(tr => tr.Recipe.Program.Project.BatteryType)
                 //    .Include(tr => tr.Recipe.Program.Type)
                 //                .Where(tr => tr.TesterStr == "17200" && tr.TestFilePath != string.Empty).ToList();
-                var tmrs = dbContext.TableMakerRecords.Include(tmr => tmr.Project).Include(tmr=>tmr.Products).ToList();
+                var tmrs = dbContext.TableMakerRecords.Include(tmr => tmr.Project).Include(tmr => tmr.Products).ToList();
                 foreach (var tmr in tmrs)
                 {
                     foreach (var tmp in tmr.Products)
@@ -504,9 +725,77 @@ namespace BCLabManager
             }
         }
 
-        private IEnumerable<DischargeVoltageRasingLog> GetDischargeVoltageRaisingLogs(TestRecord tr)
+        private uint GetDischargeVoltageRaisingNodes(TestRecord tr, out List<List<ChromaNode>> nodesList)
         {
-            throw new NotImplementedException();
+            nodesList = new List<List<ChromaNode>>();
+            //List<ChromaNode> nodes;
+            SourceData sd = new SourceData();
+            var localPath = FileTransferHelper.Remote2Local(tr.TestFilePath);
+            if (!File.Exists(localPath)) //本地不存在
+            {
+                if (!FileTransferHelper.FileDownload(tr.TestFilePath, tr.MD5))  //下载不成功
+                    return ErrorCode.UNDEFINED;
+            }
+
+            FileStream fs = new FileStream(localPath, FileMode.Open);
+            StreamReader sr = new StreamReader(fs);
+            int lineIndex = 0;
+            for (; lineIndex < 10; lineIndex++)     //第十行以后都是数据
+            {
+                sr.ReadLine();
+            }
+            bool isInErrFrame = false;
+            double previousVoltage, voltage = 9999;
+            ChromaNode previousNode, node = null;
+            while (true)
+            {
+                lineIndex++;
+                var line = sr.ReadLine();
+                if (line == null)
+                    break;
+                previousNode = node;
+                previousVoltage = voltage;
+                node = DataPreprocesser.GetNodeFromeString(line);
+                if (node == null)
+                {
+                    RuningLog.Write($"----------{tr.TestFilePath} line:{lineIndex}\n");
+                    break;
+                }
+                voltage = node.Voltage;
+                if (previousNode == null)
+                    continue;
+                if (node.Current >= 0 && !isInErrFrame)
+                    continue;
+                //if (previousVoltage == 0)
+                //{
+                //    previousVoltage = node.Voltage;
+                //    continue;
+                //}
+                if (node.StepMode == ActionMode.REST)
+                    continue;
+                if (previousVoltage < voltage & !isInErrFrame) //刚刚遇到错误
+                {
+                    isInErrFrame = true;
+                    var nodes = new List<ChromaNode>();
+                    nodes.Add(previousNode);
+                    nodes.Add(node);
+                    nodesList.Add(nodes);
+                }
+                else if (previousVoltage < voltage & isInErrFrame)  //继续遇到错误
+                {
+                    var nodes = nodesList.Last();
+                    nodes.Add(node);
+                }
+                else if (previousVoltage >= voltage && isInErrFrame)    //离开错误
+                {
+                    isInErrFrame = false;
+                }
+                else
+                {
+                }
+            }
+
+            return ErrorCode.NORMAL;
         }
 
         #region Temporary Method
@@ -628,9 +917,22 @@ namespace BCLabManager
         #endregion
     }
 
-    public class DischargeVoltageRasingLog
+    public class ErrorDescriptor
     {
-        public TestRecord TestRecord { get; set; }
-        public List<DataRow> ErrorFrame { get; set; } = new List<DataRow>();
+        public int Index { get; set; }
+        public int FrameLength { get; set; }
+        public double MinDelta { get; set; }
+        public double MaxDelta { get; set; }
+        public double AvrDelta { get; set; }
+        public double MinCurrent { get; set; }
+        public double MaxCurrent { get; set; }
+        public double AvrCurrent { get; set; }
+        public double MinVoltage { get; set; }
+        public double MaxVoltage { get; set; }
+        public double AvrVoltage { get; set; }
+        public double RaisedVoltage { get; set; }
+        public double MinTemperature { get; set; }
+        public double MaxTemperature { get; set; }
+        public double AvrTemperature { get; set; }
     }
 }
