@@ -488,8 +488,36 @@ namespace BCLabManager
             //var projects = trs.Select(tr => tr.Recipe.Program.Project).Distinct().ToList();
             //var programs = trs.Select(tr => tr.Recipe.Program).Distinct().ToList();
             //var recipes = trs.Select(tr => tr.Recipe).Distinct().ToList();
-            Dictionary<TestRecord, List<List<ChromaNode>>> ErrorDetailLogs = new Dictionary<TestRecord, List<List<ChromaNode>>>();
-            Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs = new Dictionary<TestRecord, List<ErrorDescriptor>>();
+            Dictionary<TestRecord, List<List<ChromaNode>>> ErrorDetailLogs;
+            Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs;
+            GetErrorLog(trs, out ErrorDetailLogs, out ErrorBriefLogs);
+            Report(trs, batteryTypes, batts, chnls, ErrorBriefLogs);    //case1
+            var errorBriefLogs = Filter(ErrorBriefLogs, 0.001);
+            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case2
+            errorBriefLogs = Filter(ErrorBriefLogs, 0.003);
+            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case3
+            errorBriefLogs = Filter(ErrorBriefLogs, 0.005);
+            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case4
+            errorBriefLogs = Filter(ErrorBriefLogs, 0.01);
+            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case5
+            trs = trs.Where(tr => tr.Recipe.Program.Type.Name == "RC" || tr.Recipe.Program.Type.Name == "OCV").ToList();
+            GetErrorLog(trs, out ErrorDetailLogs, out ErrorBriefLogs);
+            Report(trs, batteryTypes, batts, chnls, ErrorBriefLogs);    //case6
+            errorBriefLogs = Filter(ErrorBriefLogs, 0.001);
+            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case7
+            errorBriefLogs = Filter(ErrorBriefLogs, 0.003);
+            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case8
+            errorBriefLogs = Filter(ErrorBriefLogs, 0.005);
+            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case9
+            errorBriefLogs = Filter(ErrorBriefLogs, 0.01);
+            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case10
+
+        }
+
+        private void GetErrorLog(List<TestRecord> trs, out Dictionary<TestRecord, List<List<ChromaNode>>> ErrorDetailLogs, out Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs)
+        {
+            ErrorDetailLogs = new Dictionary<TestRecord, List<List<ChromaNode>>>();
+            ErrorBriefLogs = new Dictionary<TestRecord, List<ErrorDescriptor>>();
             if (trs != null)
             {
                 foreach (var tr in trs)
@@ -559,62 +587,80 @@ namespace BCLabManager
                 #endregion
                 */
             }
+        }
+
+        private Dictionary<TestRecord, List<ErrorDescriptor>> Filter(Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs, double threshold)
+        {
+            var newBriefLogs = new Dictionary<TestRecord, List<ErrorDescriptor>>();
+            foreach (var ebl in ErrorBriefLogs)
+            {
+                var BriefList = ebl.Value;
+                //var newBriefList = BriefList.Where(ed => ed.FrameLength > 2 && ed.RaisedVoltage > 0.0003 && ed.MaxDelta > 0.0003).ToList(); //case 2
+                var newBriefList = BriefList.Where(ed => ed.MaxDelta > threshold).ToList(); //case 3
+                if (newBriefList.Count > 0)
+                    newBriefLogs.Add(ebl.Key, newBriefList);
+            }
+            return newBriefLogs;
+        }
+
+        private void Report(List<TestRecord> trs, List<BatteryType> batteryTypes, List<Battery> batts, List<Channel> chnls, Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs)
+        {
             RuningLog.NewLog("Summary");
             RuningLog.Write($"----------------------------Summary--------------------------\n");
             RuningLog.Write($"Total Test Records: {trs.Count}\n");
-            RuningLog.Write($"Total Error Test Records: {ErrorDetailLogs.Count}\n");
-            var errorFrameNumber = ErrorDetailLogs.Sum(o => o.Value.Sum(p => p.Count));
+            RuningLog.Write($"Total Error Test Records: {ErrorBriefLogs.Count}\n");
+            var errorFrameNumber = ErrorBriefLogs.Sum(o => o.Value.Count);
             RuningLog.Write($"Total Error Frames: {errorFrameNumber}\n");
             RuningLog.NewLog("Occur Rate");
             RuningLog.Write($"----------------------------Occur Rate--------------------------\n");
             foreach (var bt in batteryTypes)
             {
                 var a = trs.Count(tr => tr.Recipe.Program.Project.BatteryType == bt);
-                var b = ErrorDetailLogs.Keys.Count(tr => tr.Recipe.Program.Project.BatteryType == bt);
+                var b = ErrorBriefLogs.Keys.Count(tr => tr.Recipe.Program.Project.BatteryType == bt);
                 if (b == 0)
                     continue;
                 var c = bt.Projects.Sum(prj => prj.Programs.Sum(pro => pro.Recipes.Count));
-                var d = bt.Projects.Sum(prj => prj.Programs.Sum(pro => pro.Recipes.Count(rec => rec.TestRecords.Any(tr => ErrorDetailLogs.Keys.Contains(tr)))));
+                var d = bt.Projects.Sum(prj => prj.Programs.Sum(pro => pro.Recipes.Count(rec => rec.TestRecords.Any(tr => ErrorBriefLogs.Keys.Contains(tr)))));
                 var E = bt.Projects.Sum(prj => prj.Programs.Count);
-                var f = bt.Projects.Sum(prj => prj.Programs.Count(pro => pro.Recipes.Any(rec => rec.TestRecords.Any(tr => ErrorDetailLogs.Keys.Contains(tr)))));
+                var f = bt.Projects.Sum(prj => prj.Programs.Count(pro => pro.Recipes.Any(rec => rec.TestRecords.Any(tr => ErrorBriefLogs.Keys.Contains(tr)))));
                 var g = bt.Projects.Count;
-                var h = bt.Projects.Count(prj => prj.Programs.Any(pro => pro.Recipes.Any(rec => rec.TestRecords.Any(tr => ErrorDetailLogs.Keys.Contains(tr)))));
+                var h = bt.Projects.Count(prj => prj.Programs.Any(pro => pro.Recipes.Any(rec => rec.TestRecords.Any(tr => ErrorBriefLogs.Keys.Contains(tr)))));
                 RuningLog.Write($"Battery Type:{bt.Name},Project OR:{h}\\{g}, Program OR:{f}\\{E},Recipe OR:{d}\\{c},TR OR:{b}\\{a}\n");
                 foreach (var prj in bt.Projects)
                 {
                     a = trs.Count(tr => tr.Recipe.Program.Project == prj);
-                    b = ErrorDetailLogs.Keys.Count(tr => tr.Recipe.Program.Project == prj);
+                    b = ErrorBriefLogs.Keys.Count(tr => tr.Recipe.Program.Project == prj);
                     if (b == 0)
                         continue;
                     c = prj.Programs.Sum(pro => pro.Recipes.Count);
-                    d = prj.Programs.Sum(pro => pro.Recipes.Count(rec => rec.TestRecords.Any(tr => ErrorDetailLogs.Keys.Contains(tr))));
+                    d = prj.Programs.Sum(pro => pro.Recipes.Count(rec => rec.TestRecords.Any(tr => ErrorBriefLogs.Keys.Contains(tr))));
                     E = prj.Programs.Count;
-                    f = prj.Programs.Count(pro => pro.Recipes.Any(rec => rec.TestRecords.Any(tr => ErrorDetailLogs.Keys.Contains(tr))));
+                    f = prj.Programs.Count(pro => pro.Recipes.Any(rec => rec.TestRecords.Any(tr => ErrorBriefLogs.Keys.Contains(tr))));
                     RuningLog.Write($"\tProject:{prj.Name},Program OR:{f}\\{E},Recipe OR:{d}\\{c},TR OR:{b}\\{a}\n");
                     foreach (var pro in prj.Programs)
                     {
                         a = trs.Count(tr => tr.Recipe.Program == pro);
-                        b = ErrorDetailLogs.Keys.Count(tr => tr.Recipe.Program == pro);
+                        b = ErrorBriefLogs.Keys.Count(tr => tr.Recipe.Program == pro);
                         if (b == 0)
                             continue;
                         c = pro.Recipes.Count;
-                        d = pro.Recipes.Count(rec => rec.TestRecords.Any(tr => ErrorDetailLogs.Keys.Contains(tr)));
+                        d = pro.Recipes.Count(rec => rec.TestRecords.Any(tr => ErrorBriefLogs.Keys.Contains(tr)));
                         RuningLog.Write($"\t\tProgram: {pro.Name},Recipe OR:{d}\\{c},TR OR:{b}\\{a}\n");
                         foreach (var rec in pro.Recipes)
                         {
                             a = trs.Count(tr => tr.Recipe == rec);
-                            b = ErrorDetailLogs.Keys.Count(tr => tr.Recipe == rec);
+                            b = ErrorBriefLogs.Keys.Count(tr => tr.Recipe == rec);
                             if (b == 0)
                                 continue;
                             RuningLog.Write($"\t\t\tRecipe: {rec.Name}, OR:{b}\\{a}\n");
                             foreach (var tr1 in rec.TestRecords)
                             {
                                 a = trs.Count(tr => tr == tr1);
-                                b = ErrorDetailLogs.Keys.Count(tr => tr == tr1);
+                                b = ErrorBriefLogs.Keys.Count(tr => tr == tr1);
                                 if (b == 0)
                                     continue;
                                 RuningLog.Write($"\t\t\t\tTest Record: {tr1.TestFilePath}, OR:{b}\\{a}\n");
-                                if (ErrorDetailLogs.Keys.Contains(tr1))
+                                if (ErrorBriefLogs.Keys.Contains(tr1))
                                 {
                                     int i = 1;
                                     foreach (var log in ErrorBriefLogs[tr1])
@@ -633,7 +679,7 @@ namespace BCLabManager
             foreach (var batt in batts)
             {
                 var a = trs.Count(tr => tr.BatteryTypeStr == batt.BatteryType.Name && tr.BatteryStr == batt.Name);
-                var b = ErrorDetailLogs.Keys.Count(tr => tr.BatteryTypeStr == batt.BatteryType.Name && tr.BatteryStr == batt.Name);
+                var b = ErrorBriefLogs.Keys.Count(tr => tr.BatteryTypeStr == batt.BatteryType.Name && tr.BatteryStr == batt.Name);
                 if (b == 0)
                     continue;
                 RuningLog.Write($"\tBattery:{batt.BatteryType.Name}-{batt.Name},{b}\\{a}\n");
@@ -641,7 +687,7 @@ namespace BCLabManager
             foreach (var chnl in chnls)
             {
                 var a = trs.Count(tr => tr.TesterStr == chnl.Tester.Name && tr.ChannelStr == chnl.Name);
-                var b = ErrorDetailLogs.Keys.Count(tr => tr.TesterStr == chnl.Tester.Name && tr.ChannelStr == chnl.Name);
+                var b = ErrorBriefLogs.Keys.Count(tr => tr.TesterStr == chnl.Tester.Name && tr.ChannelStr == chnl.Name);
                 if (b == 0)
                     continue;
                 RuningLog.Write($"\tChannl:{chnl.Tester.Name}-{chnl.Name},{b}\\{a}\n");
@@ -808,7 +854,8 @@ namespace BCLabManager
                 {
                 }
             }
-
+            sr.Close();
+            fs.Close();
             return ErrorCode.NORMAL;
         }
 
