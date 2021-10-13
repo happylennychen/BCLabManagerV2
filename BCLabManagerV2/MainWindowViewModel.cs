@@ -61,7 +61,7 @@ namespace BCLabManager.ViewModel
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
                 InitializeDatabase();
-                RuningLog.Write($"InitializeDatabase spend {sw.ElapsedMilliseconds} milliseconds\n");
+                RunningLog.Write($"InitializeDatabase spend {sw.ElapsedMilliseconds} milliseconds\n");
                 sw.Restart();
                 try
                 {
@@ -71,17 +71,17 @@ namespace BCLabManager.ViewModel
                 {
                     throw new DatabaseAccessException(e.Message, e.InnerException);
                 }
-                RuningLog.Write($"LoadFromDB spend {sw.ElapsedMilliseconds} milliseconds\n");
+                RunningLog.Write($"LoadFromDB spend {sw.ElapsedMilliseconds} milliseconds\n");
                 sw.Restart();
                 InitializeFolder();
-                RuningLog.Write($"InitializeFolder spend {sw.ElapsedMilliseconds} milliseconds\n");
+                RunningLog.Write($"InitializeFolder spend {sw.ElapsedMilliseconds} milliseconds\n");
                 sw.Restart();
                 //InitializeTempFileFolder();
                 CreateProcesserForTesters();
-                RuningLog.Write($"CreateProcesserForTesters spend {sw.ElapsedMilliseconds} milliseconds\n");
+                RunningLog.Write($"CreateProcesserForTesters spend {sw.ElapsedMilliseconds} milliseconds\n");
                 sw.Restart();
                 CreateViewModels();
-                RuningLog.Write($"CreateViewModels spend {sw.ElapsedMilliseconds} milliseconds\n");
+                RunningLog.Write($"CreateViewModels spend {sw.ElapsedMilliseconds} milliseconds\n");
                 sw.Restart();
                 //以下三个函数只用调用一次即可
                 //UpdateStatus();

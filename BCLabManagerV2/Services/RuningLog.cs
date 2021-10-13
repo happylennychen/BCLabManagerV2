@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager
 {
-    static public class RuningLog
+    static public class RunningLog
     {
         //static private StreamWriter sw;
         //static void Init()

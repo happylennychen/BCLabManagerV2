@@ -162,7 +162,7 @@ namespace BCLabManager
                 {
                     str += $"{arr[0]}\n";
                 }
-                RuningLog.Write(str);
+                RunningLog.Write(str);
                 MessageBox.Show($"{list.Count} files are missing. Check running log for the details.");
             }
             else
@@ -179,7 +179,7 @@ namespace BCLabManager
                 {
                     str += $"{arr[0]}\n";
                 }
-                RuningLog.Write(str);
+                RunningLog.Write(str);
                 MessageBox.Show($"{list.Count} files are missing. Check running log for the details.");
             }
             else
@@ -203,7 +203,7 @@ namespace BCLabManager
                 {
                     str += $"{arr[0]}\n";
                 }
-                RuningLog.Write(str);
+                RunningLog.Write(str);
                 MessageBox.Show($"{brokenlist.Count} files' MD5 are broken.\n" +
                     $"{emptylist.Count} files' MD5 are empty.\n" +
                     $" Check running log for the details.");
@@ -242,7 +242,7 @@ namespace BCLabManager
                     {
                         str += $"{arr[0]}\n";
                     }
-                    RuningLog.Write(str);
+                    RunningLog.Write(str);
                     MessageBox.Show($"{brokenlist.Count} files' MD5 are broken.\n" +
                         $"{emptylist.Count} files' MD5 are empty.\n" +
                         $" Check running log for the details.");
@@ -275,7 +275,7 @@ namespace BCLabManager
                         {
                             str += $"{file}\n";
                         }
-                        RuningLog.Write(str);
+                        RunningLog.Write(str);
                         MessageBox.Show($"{RestoreList.Count} files restored.\n" +
                             $" Check running log for the details.");
                     }
@@ -312,7 +312,7 @@ namespace BCLabManager
                         {
                             str += $"{file}\n";
                         }
-                        RuningLog.Write(str);
+                        RunningLog.Write(str);
                         MessageBox.Show($"{RestoreList.Count} files restored.\n" +
                             $" Check running log for the details.");
                     }
@@ -491,7 +491,7 @@ namespace BCLabManager
             Dictionary<TestRecord, List<List<ChromaNode>>> ErrorDetailLogs;
             Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs;
             GetErrorLog(trs, out ErrorDetailLogs, out ErrorBriefLogs);
-            Report(trs, batteryTypes, batts, chnls, ErrorBriefLogs);    //case1
+            /*Report(trs, batteryTypes, batts, chnls, ErrorBriefLogs);    //case1
             var errorBriefLogs = Filter(ErrorBriefLogs, 0.001);
             Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case2
             errorBriefLogs = Filter(ErrorBriefLogs, 0.003);
@@ -510,8 +510,56 @@ namespace BCLabManager
             errorBriefLogs = Filter(ErrorBriefLogs, 0.005);
             Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case9
             errorBriefLogs = Filter(ErrorBriefLogs, 0.01);
-            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case10
+            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case10*/
+            double[] thresholds = new double[] {0, 0.001, 0.003, 0.005, 0.01 };
+            BriefReport(trs, ErrorBriefLogs, thresholds);
 
+        }
+
+        private void BriefReport(List<TestRecord> trs, Dictionary<TestRecord, List<ErrorDescriptor>> errorBriefLogs, double[] thresholds)
+        {
+            foreach (var th in thresholds)
+            {
+                RunningLog.Write($"-------------------Threshold = {th.ToString()}-----------------------\n");
+                Dictionary<DateTime, int[]> numbersDic = new Dictionary<DateTime, int[]>();
+                var startPoint = errorBriefLogs.Keys.Min(o => o.StartTime);
+                var endPoint = errorBriefLogs.Keys.Max(o => o.StartTime);
+
+                for (DateTime dt = startPoint.Date; dt <= endPoint.Date; dt += TimeSpan.FromDays(1))
+                {
+                    int n1, n2, n3;
+                    var dailyTRs = trs.Where(tr => tr.StartTime.Date == dt).ToList();
+                    if (dailyTRs == null || dailyTRs.Count == 0)
+                        continue;
+                    n1 = dailyTRs.Count;
+                    var dailyEBLs = errorBriefLogs.Select(o => o).Where(o => o.Key.StartTime.Date == dt).ToDictionary(o=>o.Key, o=>o.Value);
+                    if (dailyEBLs == null || dailyEBLs.Count == 0)
+                    {
+                        n2 = 0;
+                        n3 = 0;
+                    }
+                    else
+                    {
+                        var dailyEBLs1 = Filter(dailyEBLs, th);
+                        if (dailyEBLs1 == null || dailyEBLs1.Count == 0)
+                        {
+                            n2 = 0;
+                            n3 = 0;
+                        }
+                        else
+                        {
+                            n2 = dailyEBLs1.Count;
+                            n3 = dailyEBLs1.Sum(o => o.Value.Count);
+                        }
+                    }
+                    var numbers = new int[3] { n1, n2, n3 };
+                    numbersDic.Add(dt, numbers);
+                }
+                foreach (var item in numbersDic)
+                {
+                    RunningLog.Write($"{item.Key.ToString("yyyy-MM-dd")},{item.Value[0]},{item.Value[1]},{item.Value[2]}\n");
+                }
+            }
         }
 
         private void GetErrorLog(List<TestRecord> trs, out Dictionary<TestRecord, List<List<ChromaNode>>> ErrorDetailLogs, out Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs)
@@ -538,7 +586,7 @@ namespace BCLabManager
                     }
                     catch (Exception err)
                     {
-                        RuningLog.Write($"{tr.TestFilePath}\n{err.Message}!\n");
+                        RunningLog.Write($"{tr.TestFilePath}\n{err.Message}!\n");
                     }
                 }
                 foreach (var key in ErrorDetailLogs.Keys)
@@ -605,14 +653,14 @@ namespace BCLabManager
 
         private void Report(List<TestRecord> trs, List<BatteryType> batteryTypes, List<Battery> batts, List<Channel> chnls, Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs)
         {
-            RuningLog.NewLog("Summary");
-            RuningLog.Write($"----------------------------Summary--------------------------\n");
-            RuningLog.Write($"Total Test Records: {trs.Count}\n");
-            RuningLog.Write($"Total Error Test Records: {ErrorBriefLogs.Count}\n");
+            RunningLog.NewLog("Summary");
+            RunningLog.Write($"----------------------------Summary--------------------------\n");
+            RunningLog.Write($"Total Test Records: {trs.Count}\n");
+            RunningLog.Write($"Total Error Test Records: {ErrorBriefLogs.Count}\n");
             var errorFrameNumber = ErrorBriefLogs.Sum(o => o.Value.Count);
-            RuningLog.Write($"Total Error Frames: {errorFrameNumber}\n");
-            RuningLog.NewLog("Occur Rate");
-            RuningLog.Write($"----------------------------Occur Rate--------------------------\n");
+            RunningLog.Write($"Total Error Frames: {errorFrameNumber}\n");
+            RunningLog.NewLog("Occur Rate");
+            RunningLog.Write($"----------------------------Occur Rate--------------------------\n");
             foreach (var bt in batteryTypes)
             {
                 var a = trs.Count(tr => tr.Recipe.Program.Project.BatteryType == bt);
@@ -625,7 +673,7 @@ namespace BCLabManager
                 var f = bt.Projects.Sum(prj => prj.Programs.Count(pro => pro.Recipes.Any(rec => rec.TestRecords.Any(tr => ErrorBriefLogs.Keys.Contains(tr)))));
                 var g = bt.Projects.Count;
                 var h = bt.Projects.Count(prj => prj.Programs.Any(pro => pro.Recipes.Any(rec => rec.TestRecords.Any(tr => ErrorBriefLogs.Keys.Contains(tr)))));
-                RuningLog.Write($"Battery Type:{bt.Name},Project OR:{h}\\{g}, Program OR:{f}\\{E},Recipe OR:{d}\\{c},TR OR:{b}\\{a}\n");
+                RunningLog.Write($"Battery Type:{bt.Name},Project OR:{h}\\{g}, Program OR:{f}\\{E},Recipe OR:{d}\\{c},TR OR:{b}\\{a}\n");
                 foreach (var prj in bt.Projects)
                 {
                     a = trs.Count(tr => tr.Recipe.Program.Project == prj);
@@ -636,7 +684,7 @@ namespace BCLabManager
                     d = prj.Programs.Sum(pro => pro.Recipes.Count(rec => rec.TestRecords.Any(tr => ErrorBriefLogs.Keys.Contains(tr))));
                     E = prj.Programs.Count;
                     f = prj.Programs.Count(pro => pro.Recipes.Any(rec => rec.TestRecords.Any(tr => ErrorBriefLogs.Keys.Contains(tr))));
-                    RuningLog.Write($"\tProject:{prj.Name},Program OR:{f}\\{E},Recipe OR:{d}\\{c},TR OR:{b}\\{a}\n");
+                    RunningLog.Write($"\tProject:{prj.Name},Program OR:{f}\\{E},Recipe OR:{d}\\{c},TR OR:{b}\\{a}\n");
                     foreach (var pro in prj.Programs)
                     {
                         a = trs.Count(tr => tr.Recipe.Program == pro);
@@ -645,27 +693,27 @@ namespace BCLabManager
                             continue;
                         c = pro.Recipes.Count;
                         d = pro.Recipes.Count(rec => rec.TestRecords.Any(tr => ErrorBriefLogs.Keys.Contains(tr)));
-                        RuningLog.Write($"\t\tProgram: {pro.Name},Recipe OR:{d}\\{c},TR OR:{b}\\{a}\n");
+                        RunningLog.Write($"\t\tProgram: {pro.Name},Recipe OR:{d}\\{c},TR OR:{b}\\{a}\n");
                         foreach (var rec in pro.Recipes)
                         {
                             a = trs.Count(tr => tr.Recipe == rec);
                             b = ErrorBriefLogs.Keys.Count(tr => tr.Recipe == rec);
                             if (b == 0)
                                 continue;
-                            RuningLog.Write($"\t\t\tRecipe: {rec.Name}, OR:{b}\\{a}\n");
+                            RunningLog.Write($"\t\t\tRecipe: {rec.Name}, OR:{b}\\{a}\n");
                             foreach (var tr1 in rec.TestRecords)
                             {
                                 a = trs.Count(tr => tr == tr1);
                                 b = ErrorBriefLogs.Keys.Count(tr => tr == tr1);
                                 if (b == 0)
                                     continue;
-                                RuningLog.Write($"\t\t\t\tTest Record: {tr1.TestFilePath}, OR:{b}\\{a}\n");
+                                RunningLog.Write($"\t\t\t\tTest Record: {tr1.TestFilePath}, OR:{b}\\{a}\n");
                                 if (ErrorBriefLogs.Keys.Contains(tr1))
                                 {
                                     int i = 1;
                                     foreach (var log in ErrorBriefLogs[tr1])
                                     {
-                                        RuningLog.Write($"\t\t\t\t\t{i},Length:{log.FrameLength},Raised Vol:{log.RaisedVoltage},Avrerage Vol:{log.AvrVoltage},Average Curr:{log.AvrCurrent},Average Temp:{log.AvrTemperature},Min Delta:{log.MinDelta},Max Delta:{log.MaxDelta}, Avrerage Delta:{log.AvrDelta}\n");
+                                        RunningLog.Write($"\t\t\t\t\t{i},Length:{log.FrameLength},Raised Vol:{log.RaisedVoltage},Avrerage Vol:{log.AvrVoltage},Average Curr:{log.AvrCurrent},Average Temp:{log.AvrTemperature},Min Delta:{log.MinDelta},Max Delta:{log.MaxDelta}, Avrerage Delta:{log.AvrDelta}\n");
                                         i++;
                                     }
                                 }
@@ -674,15 +722,15 @@ namespace BCLabManager
                     }
                 }
             }
-            RuningLog.NewLog("Assets Occur Rate");
-            RuningLog.Write($"----------------------------Assets Occur Rate--------------------------\n");
+            RunningLog.NewLog("Assets Occur Rate");
+            RunningLog.Write($"----------------------------Assets Occur Rate--------------------------\n");
             foreach (var batt in batts)
             {
                 var a = trs.Count(tr => tr.BatteryTypeStr == batt.BatteryType.Name && tr.BatteryStr == batt.Name);
                 var b = ErrorBriefLogs.Keys.Count(tr => tr.BatteryTypeStr == batt.BatteryType.Name && tr.BatteryStr == batt.Name);
                 if (b == 0)
                     continue;
-                RuningLog.Write($"\tBattery:{batt.BatteryType.Name}-{batt.Name},{b}\\{a}\n");
+                RunningLog.Write($"\tBattery:{batt.BatteryType.Name}-{batt.Name},{b}\\{a}\n");
             }
             foreach (var chnl in chnls)
             {
@@ -690,7 +738,7 @@ namespace BCLabManager
                 var b = ErrorBriefLogs.Keys.Count(tr => tr.TesterStr == chnl.Tester.Name && tr.ChannelStr == chnl.Name);
                 if (b == 0)
                     continue;
-                RuningLog.Write($"\tChannl:{chnl.Tester.Name}-{chnl.Name},{b}\\{a}\n");
+                RunningLog.Write($"\tChannl:{chnl.Tester.Name}-{chnl.Name},{b}\\{a}\n");
             }
             /*RuningLog.NewLog("Details");
             RuningLog.Write($"----------------------------Details--------------------------\n");
@@ -817,7 +865,7 @@ namespace BCLabManager
                 node = DataPreprocesser.GetNodeFromeString(line);
                 if (node == null)
                 {
-                    RuningLog.Write($"----------{tr.TestFilePath} line:{lineIndex}\n");
+                    RunningLog.Write($"----------{tr.TestFilePath} line:{lineIndex}\n");
                     break;
                 }
                 voltage = node.Voltage;
@@ -926,7 +974,7 @@ namespace BCLabManager
                         $"Remote File Path: {remotePath}, Remote File MD5: {remoteMD5}\n" +
                         $"MD5 in database: {item[1]}\n";
                 }
-                RuningLog.Write(str);
+                RunningLog.Write(str);
                 MessageBox.Show($"{list.Count} local files are broken.\n" +
                     $" Check running log for the details.");
             }
