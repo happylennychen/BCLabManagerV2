@@ -475,14 +475,19 @@ namespace BCLabManager
                                 //    .ThenInclude(rec => rec.Program)
                                 //        .ThenInclude(pro => pro.Project)
                                 //            .ThenInclude(prj => prj.BatteryType).ToList()
-                                .Where(tr => tr.Status!=TestStatus.Abandoned && tr.TesterStr == "17200" && tr.TestFilePath != string.Empty).ToList();
+                                .Where(tr =>
+                                tr.Status != TestStatus.Abandoned
+                                && tr.TesterStr == "17200"
+                                && tr.TestFilePath != string.Empty
+                                /*&&(tr.Recipe.Program.Type.Name == "RC" || tr.Recipe.Program.Type.Name == "OCV")*/
+                                ).ToList();
                 batts = dbContext.Batteries.Include(batt => batt.BatteryType).ToList();
                 chnls = dbContext.Channels.Include(chnl => chnl.Tester).ToList();
             }
             var batteryTypes = trs.Select(tr => tr.Recipe.Program.Project.BatteryType).Distinct().ToList();
-            var projects = trs.Select(tr => tr.Recipe.Program.Project).Distinct().ToList();
-            var programs = trs.Select(tr => tr.Recipe.Program).Distinct().ToList();
-            var recipes = trs.Select(tr => tr.Recipe).Distinct().ToList();
+            //var projects = trs.Select(tr => tr.Recipe.Program.Project).Distinct().ToList();
+            //var programs = trs.Select(tr => tr.Recipe.Program).Distinct().ToList();
+            //var recipes = trs.Select(tr => tr.Recipe).Distinct().ToList();
             Dictionary<TestRecord, List<List<ChromaNode>>> ErrorDetailLogs = new Dictionary<TestRecord, List<List<ChromaNode>>>();
             Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs = new Dictionary<TestRecord, List<ErrorDescriptor>>();
             if (trs != null)
@@ -520,13 +525,19 @@ namespace BCLabManager
                     }
                     ErrorBriefLogs.Add(key, BriefList);
                 }
+                /*
+                #region 过滤
                 var newBriefLogs = new Dictionary<TestRecord, List<ErrorDescriptor>>();
                 foreach (var ebl in ErrorBriefLogs)
                 {
+                    //if (ebl.Key.Recipe.Program.Type.Name == "RC" || ebl.Key.Recipe.Program.Type.Name == "OCV")
+                    //{
                     var BriefList = ebl.Value;
-                    var newBriefList = BriefList.Where(ed => ed.FrameLength > 2 && ed.RaisedVoltage > 0.0003 && ed.MaxDelta > 0.0003).ToList();
+                    //var newBriefList = BriefList.Where(ed => ed.FrameLength > 2 && ed.RaisedVoltage > 0.0003 && ed.MaxDelta > 0.0003).ToList(); //case 2
+                    var newBriefList = BriefList.Where(ed => ed.RaisedVoltage > 0.0005 && ed.MaxDelta > 0.0005).ToList(); //case 3
                     if (newBriefList.Count > 0)
                         newBriefLogs.Add(ebl.Key, newBriefList);
+                    //}
                 }
                 ErrorBriefLogs = newBriefLogs;
                 var newDetailLogs = new Dictionary<TestRecord, List<List<ChromaNode>>>();
@@ -539,12 +550,14 @@ namespace BCLabManager
                     var newFrameList = new List<List<ChromaNode>>();
                     foreach (var ed in briefs)
                     {
-                        newFrameList.Add(nodesList[ed.Index-1]);
+                        newFrameList.Add(nodesList[ed.Index - 1]);
                     }
                     if (newFrameList.Count > 0)
                         newDetailLogs.Add(edl.Key, newFrameList);
                 }
                 ErrorDetailLogs = newDetailLogs;
+                #endregion
+                */
             }
             RuningLog.NewLog("Summary");
             RuningLog.Write($"----------------------------Summary--------------------------\n");
@@ -633,7 +646,7 @@ namespace BCLabManager
                     continue;
                 RuningLog.Write($"\tChannl:{chnl.Tester.Name}-{chnl.Name},{b}\\{a}\n");
             }
-            RuningLog.NewLog("Details");
+            /*RuningLog.NewLog("Details");
             RuningLog.Write($"----------------------------Details--------------------------\n");
             foreach (var log in ErrorDetailLogs)
             {
@@ -650,7 +663,7 @@ namespace BCLabManager
                     }
                     i++;
                 }
-            }
+            }*/
 
             /*RuningLog.Write($"----------------------------Briefs--------------------------\n");
             int errorNumber = 0;
@@ -771,6 +784,7 @@ namespace BCLabManager
                 //    previousVoltage = node.Voltage;
                 //    continue;
                 //}
+                //if (node.StepMode != ActionMode.CC_DISCHARGE)
                 if (node.StepMode == ActionMode.REST)
                     continue;
                 if (previousVoltage < voltage & !isInErrFrame) //刚刚遇到错误
