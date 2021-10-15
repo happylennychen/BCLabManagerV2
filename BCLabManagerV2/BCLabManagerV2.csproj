@@ -348,7 +348,7 @@
     <Compile Include="Assets\Model\TesterProcessers\ProcessException.cs" />
     <Compile Include="Assets\Model\TesterProcessers\ZKEEBC_X_Processer.cs" />
     <Compile Include="Services\FileTransferHelper.cs" />
-    <Compile Include="Services\RuningLog.cs" />
+    <Compile Include="Services\RunningLog.cs" />
     <Compile Include="TableMaker\Model\AndroidDriverMaker.cs" />
     <Compile Include="TableMaker\Model\DataRow.cs" />
     <Compile Include="TableMaker\Model\LiteDriverMaker.cs" />

@@ -491,32 +491,102 @@ namespace BCLabManager
             Dictionary<TestRecord, List<List<ChromaNode>>> ErrorDetailLogs;
             Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs;
             GetErrorLog(trs, out ErrorDetailLogs, out ErrorBriefLogs);
-            /*Report(trs, batteryTypes, batts, chnls, ErrorBriefLogs);    //case1
+            /*GeneralReport(trs, batteryTypes, batts, chnls, ErrorBriefLogs);    //case1
             var errorBriefLogs = Filter(ErrorBriefLogs, 0.001);
-            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case2
+            GeneralReport(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case2
             errorBriefLogs = Filter(ErrorBriefLogs, 0.003);
-            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case3
+            GeneralReport(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case3
             errorBriefLogs = Filter(ErrorBriefLogs, 0.005);
-            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case4
+            GeneralReport(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case4
             errorBriefLogs = Filter(ErrorBriefLogs, 0.01);
-            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case5
+            GeneralReport(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case5
             trs = trs.Where(tr => tr.Recipe.Program.Type.Name == "RC" || tr.Recipe.Program.Type.Name == "OCV").ToList();
             GetErrorLog(trs, out ErrorDetailLogs, out ErrorBriefLogs);
-            Report(trs, batteryTypes, batts, chnls, ErrorBriefLogs);    //case6
+            GeneralReport(trs, batteryTypes, batts, chnls, ErrorBriefLogs);    //case6
             errorBriefLogs = Filter(ErrorBriefLogs, 0.001);
-            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case7
+            GeneralReport(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case7
             errorBriefLogs = Filter(ErrorBriefLogs, 0.003);
-            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case8
+            GeneralReport(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case8
             errorBriefLogs = Filter(ErrorBriefLogs, 0.005);
-            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case9
+            GeneralReport(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case9
             errorBriefLogs = Filter(ErrorBriefLogs, 0.01);
-            Report(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case10*/
-            double[] thresholds = new double[] {0, 0.001, 0.003, 0.005, 0.01 };
-            BriefReport(trs, ErrorBriefLogs, thresholds);
+            GeneralReport(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case10*/
+            double[] thresholds = new double[] { 0, 0.001, 0.003, 0.005, 0.01 };
+            //TimeRelativityReport(trs, ErrorBriefLogs, thresholds);
+            //TemperatureRelativityReport(trs, ErrorBriefLogs, thresholds);
+            CurrentRelativityReport(trs, ErrorBriefLogs, thresholds);
 
         }
 
-        private void BriefReport(List<TestRecord> trs, Dictionary<TestRecord, List<ErrorDescriptor>> errorBriefLogs, double[] thresholds)
+        private void CurrentRelativityReport(List<TestRecord> trs, Dictionary<TestRecord, List<ErrorDescriptor>> errorBriefLogs, double[] thresholds)
+        {
+            Dictionary<int, List<int>> numbersDic = new Dictionary<int, List<int>>();
+            //var startPoint = errorBriefLogs.Values.Min(o => o.Min(p=>p.MinTemperature));
+            //var endPoint = errorBriefLogs.Values.Max(o => o.Max(p => p.MinTemperature));
+
+            List<ErrorDescriptor> BriefList = new List<ErrorDescriptor>();
+            foreach (var item in errorBriefLogs)
+            {
+                BriefList.AddRange(item.Value);
+            }
+            var startPoint = BriefList.Min(p => p.AvrCurrent);
+            var endPoint = BriefList.Max(p => p.AvrCurrent);
+
+            for (int curr = (int)Math.Round(startPoint); curr <= Math.Round(endPoint); curr += 1)
+            {
+                //var dailyEBLs = errorBriefLogs.Select(o => o).Where(o => o.Key.StartTime.Date == dt).ToDictionary(o => o.Key, o => o.Value);
+                var subBriefs = BriefList.Where(o => o.AvrCurrent >= curr && o.AvrCurrent < curr + 1).ToList();
+                List<int> numbers = new List<int>();
+                foreach (var th in thresholds)
+                {
+                    numbers.Add(Filter(subBriefs, th).Count);
+                }
+                numbersDic.Add(curr, numbers);
+            }
+            foreach (var item in numbersDic)
+            {
+                string str = string.Empty;
+                foreach (var n in item.Value)
+                {
+                    str += n + ",";
+                }
+                str.Remove(str.Length - 2);
+                RunningLog.Write($"{item.Key},{str}\n");
+            }
+        }
+
+        private void TemperatureRelativityReport(List<TestRecord> trs, Dictionary<TestRecord, List<ErrorDescriptor>> errorBriefLogs, double[] thresholds)
+        {
+            foreach (var th in thresholds)
+            {
+                RunningLog.Write($"-------------------Threshold = {th.ToString()}-----------------------\n");
+                Dictionary<int, int> numbersDic = new Dictionary<int, int>();
+                //var startPoint = errorBriefLogs.Values.Min(o => o.Min(p=>p.MinTemperature));
+                //var endPoint = errorBriefLogs.Values.Max(o => o.Max(p => p.MinTemperature));
+
+                List<ErrorDescriptor> BriefList = new List<ErrorDescriptor>();
+                foreach (var item in errorBriefLogs)
+                {
+                    BriefList.AddRange(item.Value);
+                }
+                var startPoint = BriefList.Min(p => p.MinTemperature);
+                var endPoint = BriefList.Max(p => p.MinTemperature);
+
+                for (int temp = (int)Math.Round(startPoint); temp <= Math.Round(endPoint); temp += 1)
+                {
+                    //var dailyEBLs = errorBriefLogs.Select(o => o).Where(o => o.Key.StartTime.Date == dt).ToDictionary(o => o.Key, o => o.Value);
+                    var subBriefs = BriefList.Where(o => o.MinTemperature >= temp && o.MinTemperature < temp + 1).ToList();
+                    var subBriefs1 = Filter(subBriefs, th);
+                    numbersDic.Add(temp, subBriefs1.Count);
+                }
+                foreach (var item in numbersDic)
+                {
+                    RunningLog.Write($"{item.Key},{item.Value}\n");
+                }
+            }
+        }
+
+        private void TimeRelativityReport(List<TestRecord> trs, Dictionary<TestRecord, List<ErrorDescriptor>> errorBriefLogs, double[] thresholds)
         {
             foreach (var th in thresholds)
             {
@@ -532,7 +602,7 @@ namespace BCLabManager
                     if (dailyTRs == null || dailyTRs.Count == 0)
                         continue;
                     n1 = dailyTRs.Count;
-                    var dailyEBLs = errorBriefLogs.Select(o => o).Where(o => o.Key.StartTime.Date == dt).ToDictionary(o=>o.Key, o=>o.Value);
+                    var dailyEBLs = errorBriefLogs.Select(o => o).Where(o => o.Key.StartTime.Date == dt).ToDictionary(o => o.Key, o => o.Value);
                     if (dailyEBLs == null || dailyEBLs.Count == 0)
                     {
                         n2 = 0;
@@ -650,8 +720,12 @@ namespace BCLabManager
             }
             return newBriefLogs;
         }
+        private List<ErrorDescriptor> Filter(List<ErrorDescriptor> BriefList, double threshold)
+        {
+            return BriefList.Where(ed => ed.MaxDelta > threshold).ToList();
+        }
 
-        private void Report(List<TestRecord> trs, List<BatteryType> batteryTypes, List<Battery> batts, List<Channel> chnls, Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs)
+        private void GeneralReport(List<TestRecord> trs, List<BatteryType> batteryTypes, List<Battery> batts, List<Channel> chnls, Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs)
         {
             RunningLog.NewLog("Summary");
             RunningLog.Write($"----------------------------Summary--------------------------\n");
@@ -873,6 +947,11 @@ namespace BCLabManager
                     continue;
                 if (node.Current >= 0 && !isInErrFrame)
                     continue;
+                if(node.Current>=0 && isInErrFrame)
+                {
+                    isInErrFrame = false;
+                    continue;
+                }
                 //if (previousVoltage == 0)
                 //{
                 //    previousVoltage = node.Voltage;
