@@ -29,6 +29,13 @@ namespace BCLabManager.Model
     public class TestRecord : BindableBase
     {
         public int Id { get; set; }
+
+        private Recipe _recipe;
+        public Recipe Recipe
+        {
+            get { return _recipe; }
+            set { SetProperty(ref _recipe, value); }
+        }
         private TestStatus status = TestStatus.Waiting;
         public TestStatus Status
         {

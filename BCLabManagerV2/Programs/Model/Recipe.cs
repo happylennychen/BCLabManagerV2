@@ -103,6 +103,12 @@ namespace BCLabManager.Model
         //    set { SetProperty(ref _temperature, value); }
         //}
         //正常来说一个Recipe应该只包含一个TestRecord。但是考虑到有时候测试会无效，所以这里需要用一个List来处理。
+        private Program _program;
+        public Program Program
+        {
+            get { return _program; }
+            set { SetProperty(ref _program, value); }
+        }
         public ObservableCollection<TestRecord> TestRecords { get; set; } = new ObservableCollection<TestRecord>();
 
         public ObservableCollection<StepRuntime> StepRuntimes { get; set; } = new ObservableCollection<StepRuntime>();

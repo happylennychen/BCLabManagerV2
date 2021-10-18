@@ -37,6 +37,7 @@ namespace BCLabManager.Model
             get { return _batteryType; }
             set { SetProperty(ref _batteryType, value); }
         }
+        public ObservableCollection<Program> Programs { get; set; } = new ObservableCollection<Program>();
         private string _description;
         public string Description
         {
