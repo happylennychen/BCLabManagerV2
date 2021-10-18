@@ -470,7 +470,10 @@ namespace BCLabManager
             {
                 trs = dbContext.TestRecords
                     .Include(tr => tr.Recipe.Program.Project.BatteryType)
+                    .Include(tr=>tr.Recipe.Program.Project.ReleasePackages)
                     .Include(tr => tr.Recipe.Program.Type)
+                    .Include(tr=>tr.EmulatorResults)
+                        .ThenInclude(er=>er.lib_fg)
                                 //.Include(tr => tr.Recipe)
                                 //    .ThenInclude(rec => rec.Program)
                                 //        .ThenInclude(pro => pro.Project)
