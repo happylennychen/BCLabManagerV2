@@ -581,7 +581,7 @@ namespace BCLabManager
 
         private void Performance_Click(object sender, RoutedEventArgs e)
         {
-            Dictionary<DateTime, int> dailyTP, monthlyTH;
+            /*Dictionary<DateTime, int> dailyTP, monthlyTH;
             Dictionary<YearWeek, int> weeklyTP;
             Dictionary<DateTime, double> dailyOR;
             Dictionary<string, Dictionary<string, TimeSpan>> projectTime;
@@ -607,52 +607,73 @@ namespace BCLabManager
                 }
                 projectTime = GetProjectTime(projects);
 
-            }
-            if (dailyTP != null)
+            }*/
+            //if (dailyTP != null)
+            //{
+            /*foreach (var key in dailyTP.Keys)
             {
-                /*foreach (var key in dailyTP.Keys)
+                //Console.WriteLine($"{key.Year}/{key.Month}/{key.Day}, {dic[key]}");
+                RuningLog.Write($"{key.Year}/{key.Month}/{key.Day}, {dailyTP[key]}\n");
+            }
+            RuningLog.Write($"=============================================================\n");
+            if (monthlyTH != null)
+            {
+                foreach (var key in monthlyTH.Keys)
                 {
                     //Console.WriteLine($"{key.Year}/{key.Month}/{key.Day}, {dic[key]}");
-                    RuningLog.Write($"{key.Year}/{key.Month}/{key.Day}, {dailyTP[key]}\n");
-                }
-                RuningLog.Write($"=============================================================\n");
-                if (monthlyTH != null)
-                {
-                    foreach (var key in monthlyTH.Keys)
-                    {
-                        //Console.WriteLine($"{key.Year}/{key.Month}/{key.Day}, {dic[key]}");
-                        RuningLog.Write($"{key.Year}/{key.Month}, {monthlyTH[key]}\n");
-                    }
-                }
-                RuningLog.Write($"=============================================================\n");
-                if (weeklyTP != null)
-                {
-                    foreach (var key in weeklyTP.Keys)
-                    {
-                        //Console.WriteLine($"{key.Year}/{key.Month}/{key.Day}, {dic[key]}");
-                        RuningLog.Write($"{key.Year} W{key.Week}, {weeklyTP[key]}\n");
-                    }
-                }
-                if (dailyOR != null)
-                {
-                    foreach (var key in dailyOR.Keys)
-                    {
-                        //Console.WriteLine($"{key.Year}/{key.Month}/{key.Day}, {dic[key]}");
-                        RuningLog.Write($"{key.Year}/{key.Month}/{key.Day}, {dailyOR[key]}\n");
-                    }
-                }*/
-                if (projectTime != null)
-                {
-                    foreach (var prj in projectTime.Keys)
-                    {
-                        foreach (var type in projectTime[prj].Keys)
-                        {
-                            var t = projectTime[prj][type];
-                            RuningLog.Write($"{prj}, {type}, {t.TotalDays}\n");
-                        }
-                    }
+                    RuningLog.Write($"{key.Year}/{key.Month}, {monthlyTH[key]}\n");
                 }
             }
+            RuningLog.Write($"=============================================================\n");
+            if (weeklyTP != null)
+            {
+                foreach (var key in weeklyTP.Keys)
+                {
+                    //Console.WriteLine($"{key.Year}/{key.Month}/{key.Day}, {dic[key]}");
+                    RuningLog.Write($"{key.Year} W{key.Week}, {weeklyTP[key]}\n");
+                }
+            }
+            if (dailyOR != null)
+            {
+                foreach (var key in dailyOR.Keys)
+                {
+                    //Console.WriteLine($"{key.Year}/{key.Month}/{key.Day}, {dic[key]}");
+                    RuningLog.Write($"{key.Year}/{key.Month}/{key.Day}, {dailyOR[key]}\n");
+                }
+            }*/
+            /*if (projectTime != null)
+            {
+                foreach (var prj in projectTime.Keys)
+                {
+                    foreach (var type in projectTime[prj].Keys)
+                    {
+                        var t = projectTime[prj][type];
+                        RuningLog.Write($"{prj}, {type}, {t.TotalDays}\n");
+                    }
+                }
+            }*/
+            //}
+            List<TestRecord> trs;
+            using (var dbContext = new AppDbContext())
+            {
+                trs = dbContext.TestRecords
+                    .Include(tr => tr.Recipe.Program.Project.BatteryType)
+                    .Include(tr => tr.Recipe.Program.Project.ReleasePackages)
+                    .Include(tr => tr.Recipe.Program.Type)
+                    .Include(tr => tr.EmulatorResults)
+                        .ThenInclude(er => er.lib_fg)
+                                //.Include(tr => tr.Recipe)
+                                //    .ThenInclude(rec => rec.Program)
+                                //        .ThenInclude(pro => pro.Project)
+                                //            .ThenInclude(prj => prj.BatteryType).ToList()
+                                .Where(tr =>
+                                tr.Status != TestStatus.Abandoned
+                                && tr.TesterStr == "17200"
+                                && tr.TestFilePath != string.Empty
+                                /*&&(tr.Recipe.Program.Type.Name == "RC" || tr.Recipe.Program.Type.Name == "OCV")*/
+                                ).ToList();
+            }
+            var batteryTypes = trs.Select(tr => tr.Recipe.Program.Project.BatteryType).Distinct().ToList();
         }
 
         private Dictionary<string, Dictionary<string, TimeSpan>> GetProjectTime(List<Project> projects)
