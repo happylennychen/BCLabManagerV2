@@ -15,7 +15,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Program object.
     /// </summary>
-    public class ProgramEditViewModel : BindableBaseWithName//, IDataErrorInfo
+    public class ProgramEditViewModel : BindableBaseWithName, IDataErrorInfo
     {
         #region Fields
 
@@ -385,7 +385,70 @@ namespace BCLabManager.ViewModel
         {
             get { return IsNewProgram; }
         }
+        public string Error
+        {
+            get
+            {
+                return null;
+            }
+        }
 
-        #endregion // Private Helpers
+        public string this[string columnName]
+        {
+            get
+            {
+                if (columnName == "Name")
+                {
+                    if (Name != null && Name.Length > 30 )
+                    {
+                        return "长度超出范围";
+                    }
+
+                    if(Name != null && Name.Contains("_"))
+                        {
+                            return "Do not use \"_\"";
+                        }
+                    if (Name == string.Empty)
+                    {
+                        return "不能为空 ";
+                    }
+                }
+
+                if (columnName == "Requester")
+                {
+                    if (Requester != null && Requester.Length > 30)
+                    {
+                        return "长度超出范围";
+                    }
+
+                  
+                    if (Requester == string.Empty)
+                    {
+                        return "不能为空 ";
+                    }
+                }
+
+                if(columnName == "Temperatures")
+                {
+                    if (Temperatures != null && Temperatures.Length > 30)
+                    {
+                        return "长度超出范围";
+                    }
+
+
+                    if (Temperatures == string.Empty)
+                    {
+                        return "不能为空 ";
+                    }
+                }
+                return string.Empty;
+
+
+
+            }
+
+
+            #endregion // Private Helpers
+        }
     }
 }

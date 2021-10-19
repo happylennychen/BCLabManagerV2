@@ -8,13 +8,14 @@ using BCLabManager.View;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Prism.Mvvm;
+using System.ComponentModel;
 
 namespace BCLabManager.ViewModel
 {
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class TestRecordInvalidateViewModel : BindableBaseWithName//, IDataErrorInfo
+    public class TestRecordInvalidateViewModel : BindableBaseWithName, IDataErrorInfo
     {
         #region Fields
         RelayCommand _okCommand;
@@ -68,6 +69,32 @@ namespace BCLabManager.ViewModel
         {
             get { return _isOK; }
             set { _isOK = value; }
+        }
+
+        public string Error
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                if (columnName == "Comment")
+                {
+                    if (Comment == string.Empty)
+                    {
+                        return "length";
+                    }
+                }
+                return string.Empty;
+
+
+
+            }
         }
     }
 }

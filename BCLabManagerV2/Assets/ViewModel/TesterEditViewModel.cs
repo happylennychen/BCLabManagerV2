@@ -8,6 +8,7 @@ using BCLabManager.DataAccess;
 using System.Windows.Input;
 using BCLabManager.Properties;
 using Prism.Mvvm;
+using System.ComponentModel;
 
 namespace BCLabManager.ViewModel
 {
@@ -15,7 +16,7 @@ namespace BCLabManager.ViewModel
     /// Editable: true
     /// Updateable: no need
     /// </summary>
-    public class TesterEditViewModel : BindableBaseWithName//, IDataErrorInfo
+    public class TesterEditViewModel : BindableBaseWithName, IDataErrorInfo
     {
         #region Fields
 
@@ -148,6 +149,47 @@ namespace BCLabManager.ViewModel
             get { return IsNewTester; }
         }
 
+        public string Error
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                if (columnName == "Manufacturer")
+                {
+                    if (Manufacturer != null && Manufacturer.Length > 30)
+                    {
+                        return "长度超出范围";
+                    }
+
+                    if (Manufacturer == string.Empty)
+                    {
+                        return "不能为空";
+                    }
+                }
+
+                if (columnName == "Name")
+                {
+                    if (Name != null && Name.Length > 30)
+                    {
+                        return "长度超出范围";
+                    }
+
+                    if (Name == string.Empty)
+                    {
+                        return "不能为空";
+                    }
+                }
+
+                return string.Empty;
+            }
+        }
         #endregion // Private Helpers
     }
 }

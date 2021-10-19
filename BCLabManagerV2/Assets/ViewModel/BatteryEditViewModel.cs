@@ -25,7 +25,7 @@ namespace BCLabManager.ViewModel
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class BatteryEditViewModel : BindableBaseWithName//, IDataErrorInfo
+    public class BatteryEditViewModel : BindableBaseWithName, IDataErrorInfo
     {
         #region Fields
 
@@ -132,7 +132,7 @@ namespace BCLabManager.ViewModel
 
         public ObservableCollection<BatteryType> AllBatteryTypes
         {
-            get;set;
+            get; set;
         }
 
         /// <summary>
@@ -237,6 +237,33 @@ namespace BCLabManager.ViewModel
         {
             get { return IsNewBattery; }
         }
+
+        public string Error
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                if (columnName == "Name" || columnName == "CycleCount")
+                {
+                    if ((Name != null && Name.Length > 30)  || (CycleCount != null && CycleCount.ToString().Length >30))
+                    {
+                        return "length";
+                    }
+                }
+                return string.Empty;
+
+
+
+            }
+        }
+      
 
         #endregion // Private Helpers
     }

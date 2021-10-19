@@ -21,6 +21,15 @@
         <DataTemplate x:Key="Temperature">
             <TextBox Text="{Binding Path=Temperature}"></TextBox>
         </DataTemplate>
+        <Style x:Key="textBoxInError" TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <DockPanel>
         <GroupBox Header="Program" DockPanel.Dock="Top">
@@ -63,10 +72,10 @@
       Content="RC-N1/OCV-0.3C/MISC-Init-N1/EV-Dynamic-N1" Foreground="Gray"
       HorizontalAlignment="Center"
       />
-                    <TextBox 
+                    <TextBox Style="{StaticResource textBoxInError}"
       x:Name="NameTxt"
       Text="{Binding Path=Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
-      Validation.ErrorTemplate="{x:Null}"
+      
       />
                 </DockPanel>
 
@@ -103,11 +112,11 @@
       HorizontalAlignment="Right"
       Target="{Binding ElementName=RequesterTxt}" 
       />
-                <TextBox 
+                <TextBox Style="{StaticResource textBoxInError}"
       x:Name="RequesterTxt"
       Grid.Row="6" Grid.Column="2" 
       Text="{Binding Path=Requester, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
-      Validation.ErrorTemplate="{x:Null}"
+     
       />
 
                 <Label 
@@ -139,11 +148,12 @@
       Grid.Row="14" Grid.Column="0" 
       Content="Temperatuers:" 
       HorizontalAlignment="Right"
+      Target="{Binding ElementName=TemperaturesTxt}" 
       />
-                <TextBox 
+                <TextBox Style="{StaticResource textBoxInError}"
       Grid.Row="14" Grid.Column="2" 
       Text="{Binding Path=Temperatures, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-      Validation.ErrorTemplate="{x:Null}"
+      
       />
 
             </Grid>
@@ -157,7 +167,26 @@
       HorizontalAlignment="Right"
       Margin="4,2" 
       MinWidth="60" 
-      />
+      >
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                               
+                                <Condition Binding="{Binding Path=(Validation.HasError), ElementName=NameTxt}" Value="False"/>
+                                <Condition Binding="{Binding Path=(Validation.HasError), ElementName=RequesterTxt}" Value="False"/>
+                                
+                                
+
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="True"/>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
 
         <GroupBox Header="Recipes" Width="500">
             <Grid>
