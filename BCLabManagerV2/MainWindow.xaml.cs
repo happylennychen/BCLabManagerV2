@@ -3,29 +3,19 @@
 //#define StartWindow
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+//using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using BCLabManager.ViewModel;
 using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
-using System.Collections.ObjectModel;
 using BCLabManager.View;
 using Microsoft.Win32;
-using Npgsql;
 using Path = System.IO.Path;
 using System.Threading;
-using System.Collections;
+using System.Linq;
 
 namespace BCLabManager
 {
@@ -654,12 +644,17 @@ namespace BCLabManager
             }*/
             //}
             List<TestRecord> trs;
+            List<LibFG> lib_fgs;
             using (var dbContext = new AppDbContext())
             {
                 trs = dbContext.TestRecords
                     .Include(tr => tr.Recipe.Program.Project.BatteryType)
                     .Include(tr => tr.Recipe.Program.Project.ReleasePackages)
                     .Include(tr => tr.Recipe.Program.Type)
+                    .Include(tr => tr.EmulatorResults)
+                        .ThenInclude(er => er.table_maker_cfile)
+                    .Include(tr => tr.EmulatorResults)
+                        .ThenInclude(er => er.table_maker_hfile)
                     .Include(tr => tr.EmulatorResults)
                         .ThenInclude(er => er.lib_fg)
                                 //.Include(tr => tr.Recipe)
@@ -672,8 +667,82 @@ namespace BCLabManager
                                 && tr.TestFilePath != string.Empty
                                 /*&&(tr.Recipe.Program.Type.Name == "RC" || tr.Recipe.Program.Type.Name == "OCV")*/
                                 ).ToList();
+                lib_fgs = dbContext.lib_fgs.ToList().ToList();  //不管是valid还是invalid，对它的评估都是valid
             }
             var batteryTypes = trs.Select(tr => tr.Recipe.Program.Project.BatteryType).Distinct().ToList();
+            //var ers = trs.Select(tr => tr.EmulatorResults.SingleOrDefault(er=>er.is_valid)).Distinct().ToList();
+            foreach (var bt in batteryTypes)
+            {
+                RuningLog.Write($"{bt.Name}\n");
+                foreach (var pj in bt.Projects)
+                {
+                    var erGroup = pj.EmulatorResults.GroupBy(er => er.lib_fg).Select(o => o.Key);
+                    if (erGroup == null || erGroup.Count() == 0)
+                        continue;
+                    DateTime projectCompeleteDate = GetProjectEndTime(pj);
+                    RuningLog.Write($"\t{pj.Name}\n");
+                    foreach (var item in erGroup)
+                    {
+                        var lib = item;
+                        RuningLog.Write($"\t\t{lib.libfg_dll_path}\n");
+                        List<EmulatorResult> ers = pj.EmulatorResults.Where(er => er.lib_fg == lib).ToList();
+                        var tmpGroup = ers.Where(er => er.table_maker_cfile != null && er.table_maker_hfile != null).GroupBy(er => new { er.table_maker_cfile, er.table_maker_hfile }).Select(o => o.Key).ToList();
+                        foreach (var t in tmpGroup)
+                        {
+                            RuningLog.Write($"\t\t{t.table_maker_cfile.FilePath}\n");
+                            RuningLog.Write($"\t\t{t.table_maker_hfile.FilePath}\n");
+                        }
+                        bool isEVpass = IsEVPass(pj, lib);
+                        if (isEVpass)
+                        {
+                            RuningLog.Write($"\t\t\tEV_PASS");
+                        }
+                        else
+                        {
+                            RuningLog.Write($"\t\t\tEV_NOT_PASS");
+                        }
+                        var part = pj.EmulatorResults.Count(er => er.lib_fg == lib && er.is_valid);
+                        var total = trs.Count(tr => tr.Recipe.Program.Project == pj && tr.Recipe.Program.Type.Name == "EV" && tr.Status == TestStatus.Completed);
+                        RuningLog.Write($"\t{part}/{total}\n");
+                        bool isReleased = IsReleased(pj, lib);
+                        if (isReleased)
+                        {
+                            RuningLog.Write($"\t\t\tRELEASED\n");
+                        }
+                        else
+                        {
+                            RuningLog.Write($"\t\t\tNOT_RELEASED\n");
+                        }
+                    }
+                }
+            }
+        }
+
+        private DateTime GetProjectEndTime(Project pj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool IsReleased(Project pj, LibFG lib_fg)
+        {
+            return pj.ReleasePackages.Where(rp => rp.is_valid).Any(rp => rp.lib_fg == lib_fg);
+        }
+
+        private bool IsEVPass(Project pj, LibFG lib_fg)
+        {
+            List<Program> evPros = pj.Programs.Where(o => o.Type.Name == "EV").ToList();
+            List<TestRecord> trs = new List<TestRecord>();
+            foreach (var pro in evPros)
+            {
+                foreach (var rec in pro.Recipes)
+                {
+                    foreach (var tr in rec.TestRecords.Where(o => o.Status == TestStatus.Completed))
+                    {
+                        trs.Add(tr);
+                    }
+                }
+            }
+            return trs.All(tr => tr.EmulatorResults.Where(er => er.is_valid).Any(er => er.lib_fg == lib_fg));
         }
 
         private Dictionary<string, Dictionary<string, TimeSpan>> GetProjectTime(List<Project> projects)

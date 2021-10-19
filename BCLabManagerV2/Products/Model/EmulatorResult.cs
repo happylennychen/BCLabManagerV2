@@ -104,5 +104,17 @@ namespace BCLabManager.Model
             get { return _isvalid; }
             set { SetProperty(ref _isvalid, value); }
         }
+        private TableMakerProduct _table_maker_cfile;
+        public TableMakerProduct table_maker_cfile
+        {
+            get { return _table_maker_cfile; }
+            set { SetProperty(ref _table_maker_cfile, value); }
+        }
+        private TableMakerProduct _table_maker_hfile;
+        public TableMakerProduct table_maker_hfile
+        {
+            get { return _table_maker_hfile; }
+            set { SetProperty(ref _table_maker_hfile, value); }
+        }
     }
 }
