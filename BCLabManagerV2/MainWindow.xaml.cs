@@ -515,9 +515,9 @@ namespace BCLabManager
             errorBriefLogs = Filter(ErrorBriefLogs, 0.01);
             GeneralReport(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case10*/
             double[] thresholds = new double[] { 0, 0.001, 0.003, 0.005, 0.01 };
-            //TimeRelativityReport(trs, ErrorBriefLogs, thresholds);
+            TimeRelativityReport(trs, ErrorBriefLogs, thresholds);
             //TemperatureRelativityReport(trs, ErrorBriefLogs, thresholds);
-            CurrentRelativityReport(trs, ErrorBriefLogs, thresholds);
+            //CurrentRelativityReport(trs, ErrorBriefLogs, thresholds);
 
         }
 
@@ -594,43 +594,38 @@ namespace BCLabManager
             foreach (var th in thresholds)
             {
                 RunningLog.Write($"-------------------Threshold = {th.ToString()}-----------------------\n");
-                Dictionary<DateTime, int[]> numbersDic = new Dictionary<DateTime, int[]>();
+                Dictionary<DateTime, int> numbersDic = new Dictionary<DateTime, int>();
                 var startPoint = errorBriefLogs.Keys.Min(o => o.StartTime);
                 var endPoint = errorBriefLogs.Keys.Max(o => o.StartTime);
 
                 for (DateTime dt = startPoint.Date; dt <= endPoint.Date; dt += TimeSpan.FromDays(1))
                 {
-                    int n1, n2, n3;
+                    int n;
                     var dailyTRs = trs.Where(tr => tr.StartTime.Date == dt).ToList();
                     if (dailyTRs == null || dailyTRs.Count == 0)
                         continue;
-                    n1 = dailyTRs.Count;
                     var dailyEBLs = errorBriefLogs.Select(o => o).Where(o => o.Key.StartTime.Date == dt).ToDictionary(o => o.Key, o => o.Value);
                     if (dailyEBLs == null || dailyEBLs.Count == 0)
                     {
-                        n2 = 0;
-                        n3 = 0;
+                        n = 0;
                     }
                     else
                     {
                         var dailyEBLs1 = Filter(dailyEBLs, th);
                         if (dailyEBLs1 == null || dailyEBLs1.Count == 0)
                         {
-                            n2 = 0;
-                            n3 = 0;
+                            n = 0;
                         }
                         else
                         {
-                            n2 = dailyEBLs1.Count;
-                            n3 = dailyEBLs1.Sum(o => o.Value.Count);
+                            n = dailyEBLs1.Sum(o => o.Value.Count);
                         }
                     }
-                    var numbers = new int[3] { n1, n2, n3 };
-                    numbersDic.Add(dt, numbers);
+                    numbersDic.Add(dt, n);
                 }
                 foreach (var item in numbersDic)
                 {
-                    RunningLog.Write($"{item.Key.ToString("yyyy-MM-dd")},{item.Value[0]},{item.Value[1]},{item.Value[2]}\n");
+                    RunningLog.Write($"{item.Key.ToString("yyyy-MM-dd")},{item.Value}\n");
                 }
             }
         }
