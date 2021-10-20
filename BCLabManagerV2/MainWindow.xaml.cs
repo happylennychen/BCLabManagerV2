@@ -666,9 +666,8 @@ namespace BCLabManager
 
             //var batteryTypes = trs.Select(tr => tr.Recipe.Program.Project.BatteryType).Distinct().ToList();
             //var ers = trs.Select(tr => tr.EmulatorResults.SingleOrDefault(er=>er.is_valid)).Distinct().ToList();
-            foreach (var bt in bts.OrderBy(o => o.Id))
+            /*foreach (var bt in bts.OrderBy(o => o.Id))
             {
-                RuningLog.Write($"{bt.Name}\n");
                 foreach (var prj in bt.Projects.OrderBy(o => o.Id))
                 {
                     var erGroup = prj.EmulatorResults.GroupBy(er => er.lib_fg).Select(o => o.Key);
@@ -714,6 +713,33 @@ namespace BCLabManager
                         else
                         {
                             RuningLog.Write($"\t\t\tNOT_RELEASED\n");
+                        }
+                    }
+                }
+            }*/
+            foreach (var bt in bts.OrderBy(o => o.Id))
+            {
+                foreach (var prj in bt.Projects)
+                {
+                    foreach (var tmr in prj.TableMakerRecords.Where(tmr=>tmr.IsValid))
+                    {
+                        foreach (var tmp in tmr.Products.Where(tmp=>tmp.IsValid))
+                        {
+                            var prj_ers = prj.EmulatorResults.Where(er => er.table_maker_cfile == tmp && er.is_valid).ToList();
+                            if (prj_ers.Count == 0)
+                            {
+                                RuningLog.Write($"{bt.Name},{prj.Name},{tmr.Timestamp.ToString("yyyy/MM/dd")},{tmp.FilePath}\n");
+                                continue;
+                            }
+                            var libs = prj_ers.Select(o => o.lib_fg).Distinct().ToList();
+                            foreach (var lib in libs.Where(o=>o.is_valid))
+                            {
+                                var part = prj.EmulatorResults.Count(er => er.lib_fg == lib && er.is_valid);
+                                var total = trs.Count(tr => tr.Recipe.Program.Project == prj && tr.Recipe.Program.Type.Name == "EV" && tr.Status == TestStatus.Completed);
+                                bool isEVpass = IsEVPass(prj, lib);
+                                bool isReleased = IsReleased(prj, lib);
+                                RuningLog.Write($"{bt.Name},{prj.Name},{tmr.Timestamp.ToString("yyyy/MM/dd")},{tmp.FilePath},{lib.libfg_dll_path},{part}/{total},{isEVpass}, {isReleased}\n");
+                            }
                         }
                     }
                 }
