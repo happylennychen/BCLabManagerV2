@@ -652,9 +652,9 @@ namespace BCLabManager
                     .Include(tr => tr.Recipe.Program.Project.ReleasePackages)
                     .Include(tr => tr.Recipe.Program.Type)
                     .Include(tr => tr.EmulatorResults)
-                        .ThenInclude(er => er.table_maker_cfile)
+                        .ThenInclude(er => er.table_maker_cfile.TableMakerRecord)
                     .Include(tr => tr.EmulatorResults)
-                        .ThenInclude(er => er.table_maker_hfile)
+                        .ThenInclude(er => er.table_maker_hfile.TableMakerRecord)
                     .Include(tr => tr.EmulatorResults)
                         .ThenInclude(er => er.lib_fg)
                                 //.Include(tr => tr.Recipe)
@@ -679,7 +679,6 @@ namespace BCLabManager
                     var erGroup = pj.EmulatorResults.GroupBy(er => er.lib_fg).Select(o => o.Key);
                     if (erGroup == null || erGroup.Count() == 0)
                         continue;
-                    DateTime projectCompeleteDate = GetProjectEndTime(pj);
                     RuningLog.Write($"\t{pj.Name}\n");
                     foreach (var item in erGroup)
                     {
@@ -689,6 +688,9 @@ namespace BCLabManager
                         var tmpGroup = ers.Where(er => er.table_maker_cfile != null && er.table_maker_hfile != null).GroupBy(er => new { er.table_maker_cfile, er.table_maker_hfile }).Select(o => o.Key).ToList();
                         foreach (var t in tmpGroup)
                         {
+                            if (t.table_maker_cfile.TableMakerRecord != t.table_maker_hfile.TableMakerRecord)
+                                MessageBox.Show("Not Possible");
+                            RuningLog.Write($"\t\t{t.table_maker_cfile.TableMakerRecord.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")}\n");
                             RuningLog.Write($"\t\t{t.table_maker_cfile.FilePath}\n");
                             RuningLog.Write($"\t\t{t.table_maker_hfile.FilePath}\n");
                         }
@@ -716,11 +718,6 @@ namespace BCLabManager
                     }
                 }
             }
-        }
-
-        private DateTime GetProjectEndTime(Project pj)
-        {
-            throw new NotImplementedException();
         }
 
         private bool IsReleased(Project pj, LibFG lib_fg)
