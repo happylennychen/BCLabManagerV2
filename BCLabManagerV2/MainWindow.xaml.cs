@@ -643,48 +643,43 @@ namespace BCLabManager
                 }
             }*/
             //}
+            List<BatteryType> bts;
+            List<Project> prjs;
+            List<Program> pros;
+            List<Recipe> recs;
             List<TestRecord> trs;
             List<LibFG> lib_fgs;
             using (var dbContext = new AppDbContext())
             {
-                trs = dbContext.TestRecords
-                    .Include(tr => tr.Recipe.Program.Project.BatteryType)
-                    .Include(tr => tr.Recipe.Program.Project.ReleasePackages)
-                    .Include(tr => tr.Recipe.Program.Type)
-                    .Include(tr => tr.EmulatorResults)
-                        .ThenInclude(er => er.table_maker_cfile.TableMakerRecord)
-                    .Include(tr => tr.EmulatorResults)
-                        .ThenInclude(er => er.table_maker_hfile.TableMakerRecord)
-                    .Include(tr => tr.EmulatorResults)
-                        .ThenInclude(er => er.lib_fg)
-                                //.Include(tr => tr.Recipe)
-                                //    .ThenInclude(rec => rec.Program)
-                                //        .ThenInclude(pro => pro.Project)
-                                //            .ThenInclude(prj => prj.BatteryType).ToList()
-                                .Where(tr =>
-                                tr.Status != TestStatus.Abandoned
-                                && tr.TesterStr == "17200"
-                                && tr.TestFilePath != string.Empty
-                                /*&&(tr.Recipe.Program.Type.Name == "RC" || tr.Recipe.Program.Type.Name == "OCV")*/
-                                ).ToList();
-                lib_fgs = dbContext.lib_fgs.ToList().ToList();  //不管是valid还是invalid，对它的评估都是valid
+                bts = dbContext.BatteryTypes.ToList();
+                prjs = dbContext.Projects.ToList();
+                pros = dbContext.Programs.ToList();
+                var pts = dbContext.ProgramTypes.ToList();
+                recs = dbContext.Recipes.ToList();
+                trs = dbContext.TestRecords.ToList().Where(tr => tr.Recipe != null && tr.TesterStr == "17200").ToList();
+                var ers = dbContext.EmulatorResults.ToList();
+                var rps = dbContext.ReleasePackages.ToList();
+                var tmrs = dbContext.TableMakerRecords.ToList();
+                var tmps = dbContext.TableMakerProducts.ToList();
+                lib_fgs = dbContext.lib_fgs.ToList();  //不管是valid还是invalid，对它的评估都是valid
             }
-            var batteryTypes = trs.Select(tr => tr.Recipe.Program.Project.BatteryType).Distinct().ToList();
+
+            //var batteryTypes = trs.Select(tr => tr.Recipe.Program.Project.BatteryType).Distinct().ToList();
             //var ers = trs.Select(tr => tr.EmulatorResults.SingleOrDefault(er=>er.is_valid)).Distinct().ToList();
-            foreach (var bt in batteryTypes)
+            foreach (var bt in bts)
             {
                 RuningLog.Write($"{bt.Name}\n");
-                foreach (var pj in bt.Projects)
+                foreach (var prj in bt.Projects)
                 {
-                    var erGroup = pj.EmulatorResults.GroupBy(er => er.lib_fg).Select(o => o.Key);
+                    var erGroup = prj.EmulatorResults.GroupBy(er => er.lib_fg).Select(o => o.Key);
                     if (erGroup == null || erGroup.Count() == 0)
                         continue;
-                    RuningLog.Write($"\t{pj.Name}\n");
+                    RuningLog.Write($"\t{prj.Name}\n");
                     foreach (var item in erGroup)
                     {
                         var lib = item;
                         RuningLog.Write($"\t\t{lib.libfg_dll_path}\n");
-                        List<EmulatorResult> ers = pj.EmulatorResults.Where(er => er.lib_fg == lib).ToList();
+                        List<EmulatorResult> ers = prj.EmulatorResults.Where(er => er.lib_fg == lib).ToList();
                         var tmpGroup = ers.Where(er => er.table_maker_cfile != null && er.table_maker_hfile != null).GroupBy(er => new { er.table_maker_cfile, er.table_maker_hfile }).Select(o => o.Key).ToList();
                         foreach (var t in tmpGroup)
                         {
@@ -694,7 +689,7 @@ namespace BCLabManager
                             RuningLog.Write($"\t\t{t.table_maker_cfile.FilePath}\n");
                             RuningLog.Write($"\t\t{t.table_maker_hfile.FilePath}\n");
                         }
-                        bool isEVpass = IsEVPass(pj, lib);
+                        bool isEVpass = IsEVPass(prj, lib);
                         if (isEVpass)
                         {
                             RuningLog.Write($"\t\t\tEV_PASS");
@@ -703,10 +698,10 @@ namespace BCLabManager
                         {
                             RuningLog.Write($"\t\t\tEV_NOT_PASS");
                         }
-                        var part = pj.EmulatorResults.Count(er => er.lib_fg == lib && er.is_valid);
-                        var total = trs.Count(tr => tr.Recipe.Program.Project == pj && tr.Recipe.Program.Type.Name == "EV" && tr.Status == TestStatus.Completed);
+                        var part = prj.EmulatorResults.Count(er => er.lib_fg == lib && er.is_valid);
+                        var total = trs.Count(tr => tr.Recipe.Program.Project == prj && tr.Recipe.Program.Type.Name == "EV" && tr.Status == TestStatus.Completed);
                         RuningLog.Write($"\t{part}/{total}\n");
-                        bool isReleased = IsReleased(pj, lib);
+                        bool isReleased = IsReleased(prj, lib);
                         if (isReleased)
                         {
                             RuningLog.Write($"\t\t\tRELEASED\n");
@@ -718,6 +713,7 @@ namespace BCLabManager
                     }
                 }
             }
+
         }
 
         private bool IsReleased(Project pj, LibFG lib_fg)
@@ -728,17 +724,7 @@ namespace BCLabManager
         private bool IsEVPass(Project pj, LibFG lib_fg)
         {
             List<Program> evPros = pj.Programs.Where(o => o.Type.Name == "EV").ToList();
-            List<TestRecord> trs = new List<TestRecord>();
-            foreach (var pro in evPros)
-            {
-                foreach (var rec in pro.Recipes)
-                {
-                    foreach (var tr in rec.TestRecords.Where(o => o.Status == TestStatus.Completed))
-                    {
-                        trs.Add(tr);
-                    }
-                }
-            }
+            var trs = evPros.SelectMany(pro => pro.Recipes.SelectMany(rec=>rec.TestRecords)).Where(tr=>tr.TesterStr=="17200" && tr.Status == TestStatus.Completed).ToList();
             return trs.All(tr => tr.EmulatorResults.Where(er => er.is_valid).Any(er => er.lib_fg == lib_fg));
         }
 
