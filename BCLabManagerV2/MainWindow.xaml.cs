@@ -666,29 +666,34 @@ namespace BCLabManager
 
             //var batteryTypes = trs.Select(tr => tr.Recipe.Program.Project.BatteryType).Distinct().ToList();
             //var ers = trs.Select(tr => tr.EmulatorResults.SingleOrDefault(er=>er.is_valid)).Distinct().ToList();
-            foreach (var bt in bts)
+            foreach (var bt in bts.OrderBy(o => o.Id))
             {
                 RuningLog.Write($"{bt.Name}\n");
-                foreach (var prj in bt.Projects)
+                foreach (var prj in bt.Projects.OrderBy(o => o.Id))
                 {
                     var erGroup = prj.EmulatorResults.GroupBy(er => er.lib_fg).Select(o => o.Key);
                     if (erGroup == null || erGroup.Count() == 0)
                         continue;
                     RuningLog.Write($"\t{prj.Name}\n");
-                    foreach (var item in erGroup)
+                    foreach (var item in erGroup.OrderBy(o => o.Id))
                     {
                         var lib = item;
-                        RuningLog.Write($"\t\t{lib.libfg_dll_path}\n");
                         List<EmulatorResult> ers = prj.EmulatorResults.Where(er => er.lib_fg == lib).ToList();
                         var tmpGroup = ers.Where(er => er.table_maker_cfile != null && er.table_maker_hfile != null).GroupBy(er => new { er.table_maker_cfile, er.table_maker_hfile }).Select(o => o.Key).ToList();
-                        foreach (var t in tmpGroup)
+                        if (tmpGroup.Count == 0)
                         {
-                            if (t.table_maker_cfile.TableMakerRecord != t.table_maker_hfile.TableMakerRecord)
-                                MessageBox.Show("Not Possible");
-                            RuningLog.Write($"\t\t{t.table_maker_cfile.TableMakerRecord.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")}\n");
-                            RuningLog.Write($"\t\t{t.table_maker_cfile.FilePath}\n");
-                            RuningLog.Write($"\t\t{t.table_maker_hfile.FilePath}\n");
+                            RuningLog.Write($"\t\tTable Maker Product is not in the record\n");
                         }
+                        else
+                            foreach (var t in tmpGroup)
+                            {
+                                if (t.table_maker_cfile.TableMakerRecord != t.table_maker_hfile.TableMakerRecord)
+                                    MessageBox.Show("Not Possible");
+                                RuningLog.Write($"\t\t{t.table_maker_cfile.TableMakerRecord.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")}\n");
+                                RuningLog.Write($"\t\t{t.table_maker_cfile.FilePath}\n");
+                                RuningLog.Write($"\t\t{t.table_maker_hfile.FilePath}\n");
+                            }
+                        RuningLog.Write($"\t\t\t{lib.libfg_dll_path}\n");
                         bool isEVpass = IsEVPass(prj, lib);
                         if (isEVpass)
                         {
@@ -724,7 +729,7 @@ namespace BCLabManager
         private bool IsEVPass(Project pj, LibFG lib_fg)
         {
             List<Program> evPros = pj.Programs.Where(o => o.Type.Name == "EV").ToList();
-            var trs = evPros.SelectMany(pro => pro.Recipes.SelectMany(rec=>rec.TestRecords)).Where(tr=>tr.TesterStr=="17200" && tr.Status == TestStatus.Completed).ToList();
+            var trs = evPros.SelectMany(pro => pro.Recipes.SelectMany(rec => rec.TestRecords)).Where(tr => tr.TesterStr == "17200" && tr.Status == TestStatus.Completed).ToList();
             return trs.All(tr => tr.EmulatorResults.Where(er => er.is_valid).Any(er => er.lib_fg == lib_fg));
         }
 
