@@ -470,10 +470,10 @@ namespace BCLabManager
             {
                 trs = dbContext.TestRecords
                     .Include(tr => tr.Recipe.Program.Project.BatteryType)
-                    .Include(tr=>tr.Recipe.Program.Project.ReleasePackages)
+                    .Include(tr => tr.Recipe.Program.Project.ReleasePackages)
                     .Include(tr => tr.Recipe.Program.Type)
-                    .Include(tr=>tr.EmulatorResults)
-                        .ThenInclude(er=>er.lib_fg)
+                    .Include(tr => tr.EmulatorResults)
+                        .ThenInclude(er => er.lib_fg)
                                 //.Include(tr => tr.Recipe)
                                 //    .ThenInclude(rec => rec.Program)
                                 //        .ThenInclude(pro => pro.Project)
@@ -514,7 +514,7 @@ namespace BCLabManager
             GeneralReport(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case9
             errorBriefLogs = Filter(ErrorBriefLogs, 0.01);
             GeneralReport(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case10*/
-            double[] thresholds = new double[] { 0, 0.001, 0.003, 0.005, 0.01 };
+            double[] thresholds = new double[] { 0, 0.001, 0.003, 0.005, 0.01, 0.03, 0.05, 0.1, 0.3, 0.5 };
             TimeRelativityReport(trs, ErrorBriefLogs, thresholds);
             //TemperatureRelativityReport(trs, ErrorBriefLogs, thresholds);
             //CurrentRelativityReport(trs, ErrorBriefLogs, thresholds);
@@ -591,10 +591,12 @@ namespace BCLabManager
 
         private void TimeRelativityReport(List<TestRecord> trs, Dictionary<TestRecord, List<ErrorDescriptor>> errorBriefLogs, double[] thresholds)
         {
+            var dailyOR = GetDailyOccupancyRatio(trs);
             foreach (var th in thresholds)
             {
-                RunningLog.Write($"-------------------Threshold = {th.ToString()}-----------------------\n");
-                Dictionary<DateTime, int> numbersDic = new Dictionary<DateTime, int>();
+                //RunningLog.Write($"-------------------Threshold = {th.ToString()}-----------------------\n");
+                RunningLog.NewLog($"TH {th.ToString()}.csv");
+                Dictionary<DateTime, double> numbersDic = new Dictionary<DateTime, double>();
                 var startPoint = errorBriefLogs.Keys.Min(o => o.StartTime);
                 var endPoint = errorBriefLogs.Keys.Max(o => o.StartTime);
 
@@ -621,7 +623,8 @@ namespace BCLabManager
                             n = dailyEBLs1.Sum(o => o.Value.Count);
                         }
                     }
-                    numbersDic.Add(dt, n);
+                    var ratio = dailyOR[dt];
+                    numbersDic.Add(dt, n / ratio);
                 }
                 foreach (var item in numbersDic)
                 {
@@ -630,6 +633,46 @@ namespace BCLabManager
             }
         }
 
+
+        private Dictionary<DateTime, double> GetDailyOccupancyRatio(IEnumerable<TestRecord> trs)
+        {
+            Dictionary<DateTime, double> output = new Dictionary<DateTime, double>();
+            var startTime = trs.Min(o => o.StartTime);
+            var endTime = trs.Max(o => o.EndTime);
+            for (DateTime t = startTime.Date; t < endTime.Date + TimeSpan.FromDays(1); t += TimeSpan.FromDays(1))
+            {
+                if (!output.ContainsKey(t))
+                    output.Add(t, GetOccupancyRatio(t, trs));
+            }
+            return output;
+        }
+
+        private double GetOccupancyRatio(DateTime t, IEnumerable<TestRecord> trs)
+        {
+            var endTime = new DateTime(t.Year, t.Month, t.Day, 23, 59, 59, 999);
+            var innerTRs = trs.Where(tr => (tr.StartTime > t && tr.EndTime < endTime));
+            var overTRs = trs.Where(tr => (tr.StartTime < t && tr.EndTime > endTime));
+            var leftTRs = trs.Where(tr => (tr.StartTime < t && tr.EndTime > t && tr.EndTime < endTime));
+            var rightTRs = trs.Where(tr => (tr.StartTime > t && tr.StartTime < endTime && tr.EndTime > endTime));
+            TimeSpan ts = TimeSpan.Zero;
+            foreach (var tr in overTRs)
+            {
+                ts += (endTime - t);
+            }
+            foreach (var tr in innerTRs)
+            {
+                ts += (tr.EndTime - tr.StartTime);
+            }
+            foreach (var tr in leftTRs)
+            {
+                ts += (tr.EndTime - t);
+            }
+            foreach (var tr in rightTRs)
+            {
+                ts += (endTime - tr.StartTime);
+            }
+            return (ts.TotalMilliseconds) / (4 * (endTime - t).TotalMilliseconds);
+        }
         private void GetErrorLog(List<TestRecord> trs, out Dictionary<TestRecord, List<List<ChromaNode>>> ErrorDetailLogs, out Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs)
         {
             ErrorDetailLogs = new Dictionary<TestRecord, List<List<ChromaNode>>>();
@@ -937,7 +980,10 @@ namespace BCLabManager
                 node = DataPreprocesser.GetNodeFromeString(line);
                 if (node == null)
                 {
-                    RunningLog.Write($"----------{tr.TestFilePath} line:{lineIndex}\n");
+                    sr.Close();
+                    fs.Close();
+                    if (!FileTransferHelper.FileDownload(tr.TestFilePath, tr.MD5))  //下载不成功
+                        RunningLog.Write($"----------{tr.TestFilePath} line:{lineIndex}\n");
                     break;
                 }
                 voltage = node.Voltage;
@@ -945,7 +991,7 @@ namespace BCLabManager
                     continue;
                 if (node.Current >= 0 && !isInErrFrame)
                     continue;
-                if(node.Current>=0 && isInErrFrame)
+                if (node.Current >= 0 && isInErrFrame)
                 {
                     isInErrFrame = false;
                     continue;
