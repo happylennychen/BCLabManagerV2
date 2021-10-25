@@ -474,10 +474,6 @@ namespace BCLabManager
                     .Include(tr => tr.Recipe.Program.Type)
                     .Include(tr => tr.EmulatorResults)
                         .ThenInclude(er => er.lib_fg)
-                                //.Include(tr => tr.Recipe)
-                                //    .ThenInclude(rec => rec.Program)
-                                //        .ThenInclude(pro => pro.Project)
-                                //            .ThenInclude(prj => prj.BatteryType).ToList()
                                 .Where(tr =>
                                 tr.Status != TestStatus.Abandoned
                                 && tr.TesterStr == "17200"
@@ -494,6 +490,7 @@ namespace BCLabManager
             Dictionary<TestRecord, List<List<ChromaNode>>> ErrorDetailLogs;
             Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs;
             GetErrorLog(trs, out ErrorDetailLogs, out ErrorBriefLogs);
+            GeneralReport2(batteryTypes, ErrorBriefLogs);
             /*GeneralReport(trs, batteryTypes, batts, chnls, ErrorBriefLogs);    //case1
             var errorBriefLogs = Filter(ErrorBriefLogs, 0.001);
             GeneralReport(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case2
@@ -514,8 +511,8 @@ namespace BCLabManager
             GeneralReport(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case9
             errorBriefLogs = Filter(ErrorBriefLogs, 0.01);
             GeneralReport(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case10*/
-            double[] thresholds = new double[] { 0, 0.001, 0.003, 0.005, 0.01, 0.03, 0.05, 0.1, 0.3, 0.5 };
-            TimeRelativityReport(trs, ErrorBriefLogs, thresholds);
+            //double[] thresholds = new double[] { 0, 0.001, 0.003, 0.005, 0.01, 0.03, 0.05, 0.1, 0.3, 0.5 };
+            //TimeRelativityReport(trs, ErrorBriefLogs, thresholds);
             //TemperatureRelativityReport(trs, ErrorBriefLogs, thresholds);
             //CurrentRelativityReport(trs, ErrorBriefLogs, thresholds);
 
@@ -890,6 +887,45 @@ namespace BCLabManager
                 }
             }*/
         }
+        private void GeneralReport2(List<BatteryType> batteryTypes, Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs)
+        {
+            RunningLog.NewLog("Error Count");
+            RunningLog.Write("File Path,Total,1~5,6~10,11~15,16~20,21~25,26~30,31~35,36~40,41~45,46~50,51~55,56~60,61~65,66~70,71~75,76~80,81~85,86~\n");
+            var pros = batteryTypes.SelectMany(bt => bt.Projects.SelectMany(prj => prj.Programs)).OrderBy(pro => pro.StartTime).ToList();
+            foreach (var pro in pros)
+            {
+                var trs = pro.Recipes.SelectMany(rec => rec.TestRecords).ToList();
+                bool isDynamic = IsDynamic(pro);
+
+                if (!isDynamic)
+                {
+                    foreach (var tr in trs)
+                    {
+                        if (ErrorBriefLogs.Keys.Contains(tr))
+                        {
+                            var n1 = ErrorBriefLogs[tr].Count(o => o.FrameLength <= 5);
+                            var n2 = ErrorBriefLogs[tr].Count(o => o.FrameLength > 5);
+                            RunningLog.Write($"{tr.TestFilePath},{ErrorBriefLogs[tr].Count},{n1},{n2}\n");
+                            /*int i = 1;
+                            foreach (var log in ErrorBriefLogs[tr])
+                            {
+                                RunningLog.Write($"\t{i},Length:{log.FrameLength},Raised Vol:{log.RaisedVoltage},Avrerage Vol:{log.AvrVoltage},Average Curr:{log.AvrCurrent},Average Temp:{log.AvrTemperature},Min Delta:{log.MinDelta},Max Delta:{log.MaxDelta}, Avrerage Delta:{log.AvrDelta}\n");
+                                i++;
+                            }*/
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool IsDynamic(Program pro)
+        {
+            if (pro.Type.Name == "RC" || pro.Type.Name == "OCV")
+                return false;
+            if (pro.Name.ToUpper().Contains("INIT") || pro.Name.ToUpper().Contains("STATIC"))
+                return false;
+            return true;
+        }
 
         private ErrorDescriptor GetErrorFrameBrief(List<ChromaNode> frame, int index)
         {
@@ -969,6 +1005,7 @@ namespace BCLabManager
             bool isInErrFrame = false;
             double previousVoltage, voltage = 9999;
             ChromaNode previousNode, node = null;
+            var th = 0.005;
             while (true)
             {
                 lineIndex++;
@@ -1004,7 +1041,7 @@ namespace BCLabManager
                 //if (node.StepMode != ActionMode.CC_DISCHARGE)
                 if (node.StepMode == ActionMode.REST)
                     continue;
-                if (previousVoltage < voltage & !isInErrFrame) //刚刚遇到错误
+                if ((voltage - previousVoltage > th) & !isInErrFrame) //刚刚遇到错误
                 {
                     isInErrFrame = true;
                     var nodes = new List<ChromaNode>();
@@ -1012,12 +1049,12 @@ namespace BCLabManager
                     nodes.Add(node);
                     nodesList.Add(nodes);
                 }
-                else if (previousVoltage < voltage & isInErrFrame)  //继续遇到错误
+                else if ((voltage - previousVoltage > th) & isInErrFrame)  //继续遇到错误
                 {
                     var nodes = nodesList.Last();
                     nodes.Add(node);
                 }
-                else if (previousVoltage >= voltage && isInErrFrame)    //离开错误
+                else if ((voltage - previousVoltage <= th) && isInErrFrame)    //离开错误
                 {
                     isInErrFrame = false;
                 }
