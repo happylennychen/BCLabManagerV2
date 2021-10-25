@@ -490,7 +490,8 @@ namespace BCLabManager
             Dictionary<TestRecord, List<List<ChromaNode>>> ErrorDetailLogs;
             Dictionary<TestRecord, List<ErrorDescriptor>> ErrorBriefLogs;
             GetErrorLog(trs, out ErrorDetailLogs, out ErrorBriefLogs);
-            GeneralReport2(batteryTypes, ErrorBriefLogs);
+            //GeneralReport2(batteryTypes, ErrorBriefLogs);
+            GeneralReport3(batteryTypes, ErrorDetailLogs);
             /*GeneralReport(trs, batteryTypes, batts, chnls, ErrorBriefLogs);    //case1
             var errorBriefLogs = Filter(ErrorBriefLogs, 0.001);
             GeneralReport(trs, batteryTypes, batts, chnls, errorBriefLogs);    //case2
@@ -516,6 +517,29 @@ namespace BCLabManager
             //TemperatureRelativityReport(trs, ErrorBriefLogs, thresholds);
             //CurrentRelativityReport(trs, ErrorBriefLogs, thresholds);
 
+        }
+
+        private void GeneralReport3(List<BatteryType> batteryTypes, Dictionary<TestRecord, List<List<ChromaNode>>> ErrorDetailLogs)
+        {
+            RunningLog.NewLog("Details");
+            foreach (var log in ErrorDetailLogs.Where(o=>o.Value.Any(p=>p.Count>5)))
+            {
+                var tr = log.Key;
+                if (IsDynamic(tr.Recipe.Program))
+                    continue;
+                var nodesList = log.Value;
+                RunningLog.Write($"{tr.TestFilePath}\n");
+                int i = 1;
+                foreach (var nodes in nodesList.Where(o=>o.Count>5))
+                {
+                    RunningLog.Write($"\tThe {i}st frame({nodes.Count}):\n");
+                    foreach (var node in nodes)
+                    {
+                        RunningLog.Write($"\t\t{node.StepNo},{node.Step},{node.TimeInMS},{node.Time},{node.Cycle},{node.Loop},{node.StepMode},{node.Mode},{node.Current},{node.Voltage},{node.Temperature},{node.Capacity},{node.TotalCapacity},{node.Status}\n");
+                    }
+                    i++;
+                }
+            }
         }
 
         private void CurrentRelativityReport(List<TestRecord> trs, Dictionary<TestRecord, List<ErrorDescriptor>> errorBriefLogs, double[] thresholds)
@@ -852,28 +876,28 @@ namespace BCLabManager
                     continue;
                 RunningLog.Write($"\tChannl:{chnl.Tester.Name}-{chnl.Name},{b}\\{a}\n");
             }
-            /*RuningLog.NewLog("Details");
-            RuningLog.Write($"----------------------------Details--------------------------\n");
+            /*RunningLog.NewLog("Details");
+            RunningLog.Write($"----------------------------Details--------------------------\n");
             foreach (var log in ErrorDetailLogs)
             {
                 var tr = log.Key;
                 var nodesList = log.Value;
-                RuningLog.Write($"{nodesList.Count} error frames in {tr.TestFilePath}\n");
+                RunningLog.Write($"{nodesList.Count} error frames in {tr.TestFilePath}\n");
                 int i = 1;
                 foreach (var nodes in nodesList)
                 {
-                    RuningLog.Write($"\tThe {i}st frame({nodes.Count}):\n");
+                    RunningLog.Write($"\tThe {i}st frame({nodes.Count}):\n");
                     foreach (var node in nodes)
                     {
-                        RuningLog.Write($"\t\t{node.StepNo},{node.Step},{node.TimeInMS},{node.Time},{node.Cycle},{node.Loop},{node.StepMode},{node.Mode},{node.Current},{node.Voltage},{node.Temperature},{node.Capacity},{node.TotalCapacity},{node.Status}\n");
+                        RunningLog.Write($"\t\t{node.StepNo},{node.Step},{node.TimeInMS},{node.Time},{node.Cycle},{node.Loop},{node.StepMode},{node.Mode},{node.Current},{node.Voltage},{node.Temperature},{node.Capacity},{node.TotalCapacity},{node.Status}\n");
                     }
                     i++;
                 }
             }*/
 
-            /*RuningLog.Write($"----------------------------Briefs--------------------------\n");
+            /*RunningLog.Write($"----------------------------Briefs--------------------------\n");
             int errorNumber = 0;
-            RuningLog.Write($"No,Length,MinVol,MaxVol,RaisedVol,AvrVol,MinCurr,MaxCurr,AvrCurr,MinTemp,MaxTemp,AvrTemp,MinDelta,MaxDelta,AvrDelta\n");
+            RunningLog.Write($"No,Length,MinVol,MaxVol,RaisedVol,AvrVol,MinCurr,MaxCurr,AvrCurr,MinTemp,MaxTemp,AvrTemp,MinDelta,MaxDelta,AvrDelta\n");
             foreach (var log in ErrorBriefLogs)
             {
                 var tr = log.Key;
@@ -882,7 +906,7 @@ namespace BCLabManager
                 int i = 1;
                 foreach (var brief in briefs)
                 {
-                    RuningLog.Write($"{i},{brief.FrameLength},{brief.MinVoltage},{brief.MaxVoltage},{brief.RaisedVoltage},{brief.AvrVoltage},{brief.MinCurrent},{brief.MaxCurrent},{brief.AvrCurrent},{brief.MinTemperature},{brief.MaxTemperature},{brief.AvrTemperature},{brief.MinDelta},{brief.MaxDelta},{brief.AvrDelta}\n");
+                    RunningLog.Write($"{i},{brief.FrameLength},{brief.MinVoltage},{brief.MaxVoltage},{brief.RaisedVoltage},{brief.AvrVoltage},{brief.MinCurrent},{brief.MaxCurrent},{brief.AvrCurrent},{brief.MinTemperature},{brief.MaxTemperature},{brief.AvrTemperature},{brief.MinDelta},{brief.MaxDelta},{brief.AvrDelta}\n");
                     i++;
                 }
             }*/
