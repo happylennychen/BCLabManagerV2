@@ -649,6 +649,9 @@ namespace BCLabManager
             List<Recipe> recs;
             List<TestRecord> trs;
             List<LibFG> lib_fgs;
+            List<TableMakerRecord> tmrs;
+            List<TableMakerProduct> tmps;
+            List<EmulatorResult> ers;
             using (var dbContext = new AppDbContext())
             {
                 bts = dbContext.BatteryTypes.ToList();
@@ -657,11 +660,11 @@ namespace BCLabManager
                 var pts = dbContext.ProgramTypes.ToList();
                 recs = dbContext.Recipes.ToList();
                 trs = dbContext.TestRecords.ToList().Where(tr => tr.Recipe != null && tr.TesterStr == "17200").ToList();
-                var ers = dbContext.EmulatorResults.ToList();
+                ers = dbContext.EmulatorResults.ToList().Where(er=>er.is_valid).ToList();
                 var rps = dbContext.ReleasePackages.ToList();
-                var tmrs = dbContext.TableMakerRecords.ToList();
-                var tmps = dbContext.TableMakerProducts.ToList();
-                lib_fgs = dbContext.lib_fgs.ToList();  //不管是valid还是invalid，对它的评估都是valid
+                tmrs = dbContext.TableMakerRecords.ToList().Where(tmr=>tmr.IsValid).ToList();
+                tmps = dbContext.TableMakerProducts.ToList().Where(tmp=>tmp.IsValid).ToList();
+                lib_fgs = dbContext.lib_fgs.ToList().Where(lib=>lib.is_valid).ToList();  //不管是valid还是invalid，对它的评估都是valid
             }
 
             //var batteryTypes = trs.Select(tr => tr.Recipe.Program.Project.BatteryType).Distinct().ToList();
@@ -744,7 +747,17 @@ namespace BCLabManager
                     }
                 }
             }
-
+            var supportedBTs = tmrs.Select(tmr => tmr.Project.BatteryType).Distinct().ToList();
+            var products = tmrs.SelectMany(tmr => tmr.Products).ToList();
+            List<TableMakerProduct> EVP = new List<TableMakerProduct>();
+            foreach (var pd in products)
+            {
+                var pd_ers = ers.Where(er => er.table_maker_cfile == pd && er.lib_fg.is_valid).ToList(); 
+                var evtrs = trs.Where(tr => tr.Recipe.Program.Project == pd.Project && tr.Recipe.Program.Type.Name == "EV" && tr.Status == TestStatus.Completed).ToList();
+                if (pd_ers.Count == evtrs.Count)
+                    EVP.Add(pd);
+            }
+            RuningLog.Write($"{supportedBTs.Count}, {products.Count}, {EVP.Count}\n");
         }
 
         private bool IsReleased(Project pj, LibFG lib_fg)
@@ -754,8 +767,7 @@ namespace BCLabManager
 
         private bool IsEVPass(Project pj, LibFG lib_fg)
         {
-            List<Program> evPros = pj.Programs.Where(o => o.Type.Name == "EV").ToList();
-            var trs = evPros.SelectMany(pro => pro.Recipes.SelectMany(rec => rec.TestRecords)).Where(tr => tr.TesterStr == "17200" && tr.Status == TestStatus.Completed).ToList();
+            var trs = pj.Programs.Where(o => o.Type.Name == "EV").SelectMany(pro => pro.Recipes.SelectMany(rec => rec.TestRecords)).Where(tr => tr.TesterStr == "17200" && tr.Status == TestStatus.Completed).ToList();
             return trs.All(tr => tr.EmulatorResults.Where(er => er.is_valid).Any(er => er.lib_fg == lib_fg));
         }
 
