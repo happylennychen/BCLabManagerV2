@@ -257,8 +257,9 @@ namespace BCLabManager.ViewModel
             {
                 if (_selectedRecipe != null)
                 {
+                    ObservableCollection<StepV2> steps = _selectedRecipe._recipe.RecipeTemplate.GetNormalSteps();
                     List<StepV2ViewModel> all =
-                        (from sub in _selectedRecipe._recipe.RecipeTemplate.StepV2s
+                        (from sub in steps
                          select new StepV2ViewModel(sub)).ToList();   //先生成viewmodel list(每一个model生成一个viewmodel，然后拼成list)
 
                     //foreach (RecipeModelViewModel batmod in all)

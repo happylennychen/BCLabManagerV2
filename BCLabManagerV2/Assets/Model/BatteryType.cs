@@ -69,6 +69,36 @@ namespace BCLabManager.Model
             get { return _fullyChargedEndCurrent; }
             set { SetProperty(ref _fullyChargedEndCurrent, value); }
         }
+        private Int32 _chargeCurrent;
+        public Int32 ChargeCurrent
+        {
+            get { return _chargeCurrent; }
+            set { SetProperty(ref _chargeCurrent, value); }
+        }
+        private Int32 _chargeLowTemp;
+        public Int32 ChargeLowTemp
+        {
+            get { return _chargeLowTemp; }
+            set { SetProperty(ref _chargeLowTemp, value); }
+        }
+        private Int32 _chargeHighTemp;
+        public Int32 ChargeHighTemp
+        {
+            get { return _chargeHighTemp; }
+            set { SetProperty(ref _chargeHighTemp, value); }
+        }
+        private Int32 _dischargeLowTemp;
+        public Int32 DischargeLowTemp
+        {
+            get { return _dischargeLowTemp; }
+            set { SetProperty(ref _dischargeLowTemp, value); }
+        }
+        private Int32 _dischargeHighTemp;
+        public Int32 DischargeHighTemp
+        {
+            get { return _dischargeHighTemp; }
+            set { SetProperty(ref _dischargeHighTemp, value); }
+        }
         private Int32 _fullyChargedEndingTimeout;
         public Int32 FullyChargedEndingTimeout
         {

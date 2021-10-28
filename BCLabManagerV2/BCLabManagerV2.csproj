@@ -318,6 +318,10 @@
     <Compile Include="Migrations\20210823090126_ProductMD5.designer.cs">
       <DependentUpon>20210823090126_ProductMD5.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20211028015344_AddColumnToBatteryType.cs" />
+    <Compile Include="Migrations\20211028015344_AddColumnToBatteryType.designer.cs">
+      <DependentUpon>20211028015344_AddColumnToBatteryType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Services\Utilities.cs" />
     <Compile Include="TableMaker\Model\Service\TableMakerRecordServieClass.cs" />
     <Compile Include="TableMaker\Model\TableMakerRecord.cs" />
