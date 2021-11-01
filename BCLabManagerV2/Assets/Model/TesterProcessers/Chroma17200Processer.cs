@@ -166,7 +166,7 @@ namespace BCLabManager.Model
             try
             {
                 bool isCOCPoint = false;
-                var fullSteps = new List<StepV2>(recipe.RecipeTemplate.StepV2s.OrderBy(o => o.Index));
+                var fullSteps = new List<StepV2>(recipe.RecipeTemplate.GetNormalSteps(recipe.Program.Project).OrderBy(o => o.Index));
                 for (; lineIndex < 10; lineIndex++)     //第十行以后都是数据
                 {
                     sw.WriteLine(sr.ReadLine());

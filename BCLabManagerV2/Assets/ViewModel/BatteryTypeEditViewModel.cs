@@ -194,6 +194,76 @@ namespace BCLabManager.ViewModel
             }
         }
 
+        public int ChargeCurrent
+        {
+            get { return _batterytype.ChargeCurrent; }
+            set
+            {
+                if (value == _batterytype.ChargeCurrent)
+                    return;
+
+                _batterytype.ChargeCurrent = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        public int ChargeLowTemp
+        {
+            get { return _batterytype.ChargeLowTemp; }
+            set
+            {
+                if (value == _batterytype.ChargeLowTemp)
+                    return;
+
+                _batterytype.ChargeLowTemp = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        public int ChargeHighTemp
+        {
+            get { return _batterytype.ChargeHighTemp; }
+            set
+            {
+                if (value == _batterytype.ChargeHighTemp)
+                    return;
+
+                _batterytype.ChargeHighTemp = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        public int DischargeLowTemp
+        {
+            get { return _batterytype.DischargeLowTemp; }
+            set
+            {
+                if (value == _batterytype.DischargeLowTemp)
+                    return;
+
+                _batterytype.DischargeLowTemp = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        public int DischargeHighTemp
+        {
+            get { return _batterytype.DischargeHighTemp; }
+            set
+            {
+                if (value == _batterytype.DischargeHighTemp)
+                    return;
+
+                _batterytype.DischargeHighTemp = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
         #endregion // Customer Properties
 
         #region Presentation Properties

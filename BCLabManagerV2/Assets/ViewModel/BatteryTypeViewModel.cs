@@ -97,6 +97,31 @@ namespace BCLabManager.ViewModel
             get { return _batterytype.RatedCapacity; }
         }
 
+        public int ChargeCurrent
+        {
+            get { return _batterytype.ChargeCurrent; }
+        }
+
+        public int ChargeLowTemp
+        {
+            get { return _batterytype.ChargeLowTemp; }
+        }
+
+        public int ChargeHighTemp
+        {
+            get { return _batterytype.ChargeHighTemp; }
+        }
+
+        public int DischargeLowTemp
+        {
+            get { return _batterytype.DischargeLowTemp; }
+        }
+
+        public int DischargeHighTemp
+        {
+            get { return _batterytype.DischargeHighTemp; }
+        }
+
         #endregion // Customer Properties
     }
 }

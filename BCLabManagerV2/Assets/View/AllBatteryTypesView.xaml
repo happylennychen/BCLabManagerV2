@@ -98,14 +98,19 @@
                         <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Path=Name}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Manufacturer" IsReadOnly="True" Binding="{Binding Path=Manufacturer}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Capacity" IsReadOnly="True" Binding="{Binding Path=RatedCapacity}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Material" IsReadOnly="True" Binding="{Binding Path=Material}"></DataGridTextColumn>
-                        <DataGridTextColumn Header="TypicalCapacity" IsReadOnly="True" Binding="{Binding Path=TypicalCapacity}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="TypicalCapacity" IsReadOnly="True" Binding="{Binding Path=TypicalCapacity}" Visibility="Collapsed"></DataGridTextColumn>
                         <DataGridTextColumn Header="CutoffDischargeVoltage" IsReadOnly="True" Binding="{Binding Path=CutoffDischargeVoltage}"></DataGridTextColumn>
                         <DataGridTextColumn Header="FullyChargedEndCurrent" IsReadOnly="True" Binding="{Binding Path=FullyChargedEndCurrent}"></DataGridTextColumn>
                         <DataGridTextColumn Header="FullyChargedEndingTimeout" IsReadOnly="True" Binding="{Binding Path=FullyChargedEndingTimeout}"></DataGridTextColumn>
                         <DataGridTextColumn Header="LimitedChargeVoltage" IsReadOnly="True" Binding="{Binding Path=LimitedChargeVoltage}"></DataGridTextColumn>
                         <DataGridTextColumn Header="NominalVoltage" IsReadOnly="True" Binding="{Binding Path=NominalVoltage}"></DataGridTextColumn>
-                        <DataGridTextColumn Header="RatedCapacity" IsReadOnly="True" Binding="{Binding Path=RatedCapacity}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="ChargeCurrent" IsReadOnly="True" Binding="{Binding Path=ChargeCurrent}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="ChargeLowTemp" IsReadOnly="True" Binding="{Binding Path=ChargeLowTemp}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="ChargeHighTemp" IsReadOnly="True" Binding="{Binding Path=ChargeHighTemp}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="DischargeLowTemp" IsReadOnly="True" Binding="{Binding Path=DischargeLowTemp}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="DischargeHighTemp" IsReadOnly="True" Binding="{Binding Path=DischargeHighTemp}"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>

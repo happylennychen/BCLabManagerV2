@@ -1,7 +1,7 @@
 ﻿<Window x:Class="BCLabManager.View.BatteryTypeView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="{Binding Path=DisplayName}" Height="650" Width="400" WindowStartupLocation="CenterScreen">
+        Title="{Binding Path=DisplayName}" Height="900" Width="400" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid Margin="4">
             <Grid.ColumnDefinitions>
@@ -11,6 +11,16 @@
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="30" />
                 <RowDefinition Height="Auto" />
@@ -80,12 +90,12 @@
             <Label 
       Grid.Row="6" Grid.Column="0" 
       Content="Typical Capacity:" 
-      HorizontalAlignment="Right"
+      HorizontalAlignment="Right" Visibility="Collapsed"
       />
             <TextBox 
       Grid.Row="6" Grid.Column="2" 
       Text="{Binding Path=TypicalCapacity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-      Validation.ErrorTemplate="{x:Null}"
+      Validation.ErrorTemplate="{x:Null}" Visibility="Collapsed"
       />
             <Label 
       Grid.Row="8" Grid.Column="0" 
@@ -98,12 +108,12 @@
       Validation.ErrorTemplate="{x:Null}"
       />
             <Label 
-      Grid.Row="10" Grid.Column="0" 
-      Content="Rated Capacity:" 
+      Grid.Row="6" Grid.Column="0" 
+      Content="Capacity:" 
       HorizontalAlignment="Right"
       />
             <TextBox 
-      Grid.Row="10" Grid.Column="2" 
+      Grid.Row="6" Grid.Column="2" 
       Text="{Binding Path=RatedCapacity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
       Validation.ErrorTemplate="{x:Null}"
       />
@@ -138,19 +148,69 @@
       Validation.ErrorTemplate="{x:Null}"
       />
             <Label 
-      Grid.Row="18" Grid.Column="0" 
+      Grid.Row="10" Grid.Column="0" 
       Content="Fully Charged Ending Timeout:" 
       HorizontalAlignment="Right"
       />
             <TextBox 
-      Grid.Row="18" Grid.Column="2" 
+      Grid.Row="10" Grid.Column="2" 
       Text="{Binding Path=FullyChargedEndingTimeout, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <Label 
+      Grid.Row="20" Grid.Column="0" 
+      Content="Charge Current:" 
+      HorizontalAlignment="Right"
+      />
+            <TextBox 
+      Grid.Row="20" Grid.Column="2" 
+      Text="{Binding Path=ChargeCurrent, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <Label 
+      Grid.Row="22" Grid.Column="0" 
+      Content="Charge Low Temperature:" 
+      HorizontalAlignment="Right"
+      />
+            <TextBox 
+      Grid.Row="22" Grid.Column="2" 
+      Text="{Binding Path=ChargeLowTemp, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <Label 
+      Grid.Row="24" Grid.Column="0" 
+      Content="Charge High Temperature:" 
+      HorizontalAlignment="Right"
+      />
+            <TextBox 
+      Grid.Row="24" Grid.Column="2" 
+      Text="{Binding Path=ChargeHighTemp, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <Label 
+      Grid.Row="26" Grid.Column="0" 
+      Content="Discharge Low Temperature:" 
+      HorizontalAlignment="Right"
+      />
+            <TextBox 
+      Grid.Row="26" Grid.Column="2" 
+      Text="{Binding Path=DischargeLowTemp, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+      Validation.ErrorTemplate="{x:Null}"
+      />
+            <Label 
+      Grid.Row="28" Grid.Column="0" 
+      Content="Discharge High Temperature:" 
+      HorizontalAlignment="Right"
+      />
+            <TextBox 
+      Grid.Row="28" Grid.Column="2" 
+      Text="{Binding Path=DischargeHighTemp, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
       Validation.ErrorTemplate="{x:Null}"
       />
 
             <!-- SAVE BUTTON -->
             <Button 
-      Grid.Row="20" Grid.Column="2"
+      Grid.Row="30" Grid.Column="2"
       Command="{Binding Path=OKCommand}"
                 Click="Button_Click"
       Content="_OK"

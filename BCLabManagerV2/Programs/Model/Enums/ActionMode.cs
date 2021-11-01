@@ -7,10 +7,10 @@
         CP_DISCHARGE,
         REST,
         NA,
-        STANDARD_CHARGE,
-        CCR_DISCHARGE_EOD,
-        CCR_DISCHARGE,
-        CPR_DISCHARGE_EOD,
-        CPR_DISCHARGE,
+        EX_STANDARD_CHARGE,
+        EX_CCR_DISCHARGE_EOD_NEXT,
+        EX_CCR_DISCHARGE_EOD_LAST,
+        EX_CPR_DISCHARGE_EOD_NEXT,
+        EX_CPR_DISCHARGE_EOD_LAST,
     }
 }

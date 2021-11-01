@@ -4,7 +4,7 @@
         xmlns:v="clr-namespace:BCLabManager.View"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
-        Title="BCLM v0.2.8" Height="855" Width="1600">
+        Title="BCLM v0.2.9-pre" Height="855" Width="1600">
     <Window.Resources>
     </Window.Resources>
     <DockPanel LastChildFill="True">
