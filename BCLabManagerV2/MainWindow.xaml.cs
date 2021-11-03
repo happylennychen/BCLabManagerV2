@@ -571,11 +571,11 @@ namespace BCLabManager
 
         private void Performance_Click(object sender, RoutedEventArgs e)
         {
-            /*Dictionary<DateTime, int> dailyTP, monthlyTH;
+            Dictionary<DateTime, int> dailyTP, monthlyTH;
             Dictionary<YearWeek, int> weeklyTP;
             Dictionary<DateTime, double> dailyOR;
             Dictionary<string, Dictionary<string, TimeSpan>> projectTime;
-            using (var dbContext = new AppDbContext())
+            /*using (var dbContext = new AppDbContext())
             {
                 var trs = dbContext.TestRecords.ToList().Where(o => o.StartTime != DateTime.MinValue && (o.Status == TestStatus.Completed || o.Status != TestStatus.Invalid || o.Status == TestStatus.Executing));
                 dailyTP = GetDailyThroughputs(trs, TestStatus.Completed);
@@ -924,6 +924,41 @@ namespace BCLabManager
         {
             DateTime output = new DateTime(t.Year, t.Month, 1);
             return output;
+        }
+
+        private void Dashboard_Selected(object sender, RoutedEventArgs e)
+        {
+            UpdateWeeklyThroughput();
+            UpdateOccupancyRatio();
+            UpdateProgress();
+        }
+
+        private void UpdateProgress()
+        {
+        }
+
+        private void UpdateOccupancyRatio()
+        {
+            Dictionary<DateTime, double> dailyOR;
+            using (var dbContext = new AppDbContext())
+            {
+                var trs = dbContext.TestRecords.ToList().Where(o => o.StartTime != DateTime.MinValue && (o.Status == TestStatus.Completed || o.Status != TestStatus.Invalid || o.Status == TestStatus.Executing));
+                dailyOR = GetDailyOccupancyRatio(trs);
+            }
+
+            DashBoardViewInstance.ORbarChart.PlotBars(dailyOR.Values);
+        }
+
+        private void UpdateWeeklyThroughput()
+        {
+            Dictionary<YearWeek, int> weeklyTP;
+            using (var dbContext = new AppDbContext())
+            {
+                var trs = dbContext.TestRecords.ToList().Where(o => o.StartTime != DateTime.MinValue && (o.Status == TestStatus.Completed || o.Status != TestStatus.Invalid || o.Status == TestStatus.Executing));
+                weeklyTP = GetWeeklyThroughputs(trs, TestStatus.Completed);
+            }
+
+            DashBoardViewInstance.wTHbarChart.PlotBars(weeklyTP.Values);
         }
     }
 

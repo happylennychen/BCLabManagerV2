@@ -20,6 +20,8 @@ namespace BCLabManager.ViewModel
         //ObservableCollection<Channel> _channelService.Items;
         //ObservableCollection<ChamberClass> _chamberService.Items;
         //ObservableCollection<ProgramClass> _programService.Items;
+        private BatteryTypeServiceClass _batteryTypeService;
+        private ProjectServiceClass _projectService;
         private BatteryServiceClass _batteryService;
         private ChannelServiceClass _channelService;
         private ChamberServiceClass _chamberService;
@@ -30,6 +32,8 @@ namespace BCLabManager.ViewModel
 
         public DashBoardViewModel
             (
+            BatteryTypeServiceClass batteryTypeService,
+            ProjectServiceClass projectService,
             //ObservableCollection<ProgramClass> programs,
             //ObservableCollection<BatteryClass> batteries,
             //ObservableCollection<Channel> channels,
@@ -40,11 +44,17 @@ namespace BCLabManager.ViewModel
          ProgramServiceClass programService
             )
         {
+            _batteryTypeService = batteryTypeService;
+            _projectService = projectService;
             _batteryService = batteryService;
             _channelService = channelService;
             _chamberService = chamberService;
             _programService = programService;
             BookEvents();
+            var trs = _programService.Items.SelectMany(pro => pro.Recipes.SelectMany(rec => rec.TestRecords));
+            var tr = trs.Single(o => o.EndTime == trs.Max(j => j.EndTime));
+            BatteryType = tr.Recipe.Program.Project.BatteryType;
+            Project = tr.Recipe.Program.Project;
         }
 
         private void BookEvents()
@@ -212,6 +222,49 @@ namespace BCLabManager.ViewModel
 
 
         #region Public Interface
+        public List<BatteryType> BatteryTypes
+        {
+            get { return _batteryTypeService.Items.ToList(); }
+        }
+
+        private BatteryType _batteryType;
+        public BatteryType BatteryType
+        {
+            get { return _batteryType; }
+            set
+            {
+                SetProperty(ref _batteryType, value);
+                RaisePropertyChanged("Projects");
+            }
+        }
+        public List<Project> Projects
+        {
+            get { return _projectService.Items.Where(o => o.BatteryType == BatteryType).ToList(); }
+        }
+
+        private Project _project;
+        public Project Project
+        {
+            get { return _project; }
+            set
+            {
+                SetProperty(ref _project, value);
+                if (value == null)
+                    return;
+                RaisePropertyChanged("WaitingAmount");
+                RaisePropertyChanged("ExecutingAmount");
+                RaisePropertyChanged("CompletedAmount");
+                RaisePropertyChanged("InvalidAmount");
+                RaisePropertyChanged("AbandonedAmount");
+                RaisePropertyChanged("WaitingPercentage");
+                RaisePropertyChanged("ExecutingPercentage");
+                RaisePropertyChanged("CompletedPercentage");
+                RaisePropertyChanged("InvalidPercentage");
+                RaisePropertyChanged("AbandonedPercentage");
+                RaisePropertyChanged("WaitingTestRecords");
+                RaisePropertyChanged("CompletedTestRecords");
+            }
+        }
         #region Assets Usage
         public int BatteryAmount
         {
@@ -277,63 +330,49 @@ namespace BCLabManager.ViewModel
         }
         #endregion
         #region Test Summary
-        private int GetTestRecordAmountByStatus(TestStatus testStatus)
-        {
-            return
-            (
-                from pro in _programService.Items
-                from sub in pro.Recipes
-                from ftr in sub.TestRecords
-                where ftr.Status == testStatus
-                select ftr
-            ).Count();
-        }
         public Int32 WaitingAmount
         {
             get
             {
-                return GetTestRecordAmountByStatus(TestStatus.Waiting);
-            }
-        }
-        public Int32 ExecutingAmount
-        {
-            get
-            {
-                return GetTestRecordAmountByStatus(TestStatus.Executing);
+                if (Project == null)
+                    return 0;
+                return Project.Programs.SelectMany(pro => pro.Recipes.SelectMany(rec => rec.TestRecords)).Count(tr => tr.Status == TestStatus.Waiting);
             }
         }
         public Int32 CompletedAmount
         {
             get
             {
-                return GetTestRecordAmountByStatus(TestStatus.Completed);
+                if (Project == null)
+                    return 0;
+                return Project.Programs.SelectMany(pro => pro.Recipes.SelectMany(rec => rec.TestRecords)).Count(tr => tr.Status == TestStatus.Completed);
             }
         }
         public Int32 InvalidAmount
         {
             get
             {
-                return GetTestRecordAmountByStatus(TestStatus.Invalid);
+                if (Project == null)
+                    return 0;
+                return Project.Programs.SelectMany(pro => pro.Recipes.SelectMany(rec => rec.TestRecords)).Count(tr => tr.Status == TestStatus.Invalid);
             }
         }
         public Int32 AbandonedAmount
         {
             get
             {
-                return GetTestRecordAmountByStatus(TestStatus.Abandoned);
+                if (Project == null)
+                    return 0;
+                return Project.Programs.SelectMany(pro => pro.Recipes.SelectMany(rec => rec.TestRecords)).Count(tr => tr.Status == TestStatus.Abandoned);
             }
         }
         public Int32 TotalExeAmount
         {
             get
             {
-                return
-                (
-                    from pro in _programService.Items
-                    from sub in pro.Recipes
-                    from ftr in sub.TestRecords
-                    select ftr
-                ).Count();
+                if (Project == null)
+                    return 1;
+                return Project.Programs.SelectMany(pro => pro.Recipes.SelectMany(rec => rec.TestRecords)).Count();
             }
         }
         public double WaitingPercentage
@@ -344,16 +383,6 @@ namespace BCLabManager.ViewModel
                     return 0;
                 else
                     return (double)WaitingAmount / (double)TotalExeAmount;
-            }
-        }
-        public double ExecutingPercentage
-        {
-            get
-            {
-                if (TotalExeAmount == 0)
-                    return 0;
-                else
-                    return (double)ExecutingAmount / (double)TotalExeAmount;
             }
         }
         public double CompletedPercentage
@@ -388,41 +417,23 @@ namespace BCLabManager.ViewModel
         }
         #endregion
         #region Ongoing Tests
-        public ObservableCollection<TestRecordViewModel> ExecutingTestRecords
-        {
-            get
-            {
-                List<TestRecordViewModel> all = new List<TestRecordViewModel>();
-                foreach (var pro in _programService.Items)
-                {
-                    foreach (var sub in pro.Recipes)
-                    {
-                        foreach (var tr in sub.TestRecords)
-                        {
-                            if (tr.Status == TestStatus.Executing)
-                                all.Add(new TestRecordViewModel(tr));
-                        }
-                    }
-                }
-                return new ObservableCollection<TestRecordViewModel>(all);
-            }
-        }
         public ObservableCollection<TestRecordViewModel> WaitingTestRecords
         {
             get
             {
-                List<TestRecordViewModel> all = new List<TestRecordViewModel>();
-                foreach (var pro in _programService.Items)
-                {
-                    foreach (var sub in pro.Recipes)
-                    {
-                        foreach (var tr in sub.TestRecords)
-                        {
-                            if (tr.Status == TestStatus.Waiting)
-                                all.Add(new TestRecordViewModel(tr));
-                        }
-                    }
-                }
+                if (Project == null)
+                    return null;
+                var all = Project.Programs.SelectMany(pro => pro.Recipes.SelectMany(rec => rec.TestRecords.Where(tr=>tr.Status == TestStatus.Waiting))).Select(tr=>new TestRecordViewModel(tr)).ToList();
+                return new ObservableCollection<TestRecordViewModel>(all);
+            }
+        }
+        public ObservableCollection<TestRecordViewModel> CompletedTestRecords
+        {
+            get
+            {
+                if (Project == null)
+                    return null;
+                var all = Project.Programs.SelectMany(pro => pro.Recipes.SelectMany(rec => rec.TestRecords.Where(tr => tr.Status == TestStatus.Completed))).Select(tr => new TestRecordViewModel(tr));
                 return new ObservableCollection<TestRecordViewModel>(all);
             }
         }

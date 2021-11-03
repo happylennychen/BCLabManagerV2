@@ -6,6 +6,7 @@
              xmlns:src="clr-namespace:BCLabManager.View"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:d3="clr-namespace:InteractiveDataDisplay.WPF;assembly=InteractiveDataDisplay.WPF"
              mc:Ignorable="d" >
     <UserControl.Resources>
         <src:HeightMultiConverter x:Key="hmc"></src:HeightMultiConverter>
@@ -14,20 +15,20 @@
             <DockPanel LastChildFill="True" MinWidth="70">
                 <TextBlock DockPanel.Dock="Bottom" Margin="0,3" HorizontalAlignment="Center" FontWeight="Bold">Batteries</TextBlock>
                 <Border Width="30" BorderBrush="Black" BorderThickness="1">
-                <Grid>
-                    <Border x:Name="battotalgrid" Background="{StaticResource IdleBrush}" VerticalAlignment="Stretch">
-                        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=BatteryAmount}"></TextBlock>
-                    </Border>
-                    <Border Background="{StaticResource UsingBrush}" VerticalAlignment="Bottom">
-                        <Border.Height>
-                            <MultiBinding Converter="{StaticResource hmc}">
-                                <Binding Path="BatteryAmount"></Binding>
-                                <Binding Path="UsingBatteryAmount"></Binding>
-                                <Binding Path="ActualHeight" ElementName="battotalgrid"></Binding>
-                            </MultiBinding>
-                        </Border.Height>
-                        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=UsingBatteryAmount}" ></TextBlock>
-                    </Border>
+                    <Grid>
+                        <Border x:Name="battotalgrid" Background="{StaticResource IdleBrush}" VerticalAlignment="Stretch">
+                            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=BatteryAmount}"></TextBlock>
+                        </Border>
+                        <Border Background="{StaticResource UsingBrush}" VerticalAlignment="Bottom">
+                            <Border.Height>
+                                <MultiBinding Converter="{StaticResource hmc}">
+                                    <Binding Path="BatteryAmount"></Binding>
+                                    <Binding Path="UsingBatteryAmount"></Binding>
+                                    <Binding Path="ActualHeight" ElementName="battotalgrid"></Binding>
+                                </MultiBinding>
+                            </Border.Height>
+                            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=UsingBatteryAmount}" ></TextBlock>
+                        </Border>
                     </Grid>
                 </Border>
             </DockPanel>
@@ -86,47 +87,56 @@
             <Setter Property="Cursor" Value="14"></Setter>
             <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"></EventSetter>
         </Style>
-
-        <Style x:Key="DataGridItemStyle" TargetType="{x:Type DataGridRow}">
-            <!-- 
-      Stretch the content of each cell so that we can 
-      right-align text in the Total Sales column. 
-      -->
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            <Setter Property="Cursor" Value="14"></Setter>
-            <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"></EventSetter>
-        </Style>
     </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="4"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="4"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="40*"></ColumnDefinition>
+            <ColumnDefinition Width="24"></ColumnDefinition>
+            <ColumnDefinition Width="60*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Grid>
+        <GroupBox Header="Statistics" Margin="20">
+            <Grid x:Name="leftGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="4"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="4"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <d3:Chart Name="wTHplotter" Grid.Row="0" Title="Weekly Throughput">
+                    <d3:BarGraph Name="wTHbarChart" Color="Blue"/>
+                </d3:Chart>
+
+                <d3:Chart Name="ORplotter" Grid.Row="2" Title="Occupancy Ratio">
+                    <d3:BarGraph Name="ORbarChart" Color="Blue"/>
+                </d3:Chart>
+                <GroupBox Header="Product Curve" Grid.Row="4" IsEnabled="False" Visibility="Collapsed">
+                    <Label VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">Products curve</Label>
+                </GroupBox>
+            </Grid>
+        </GroupBox>
+        <Grid x:Name="rightGrid" Grid.Column="2" Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="4"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="4"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="4"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <GroupBox Header="Assets Usage" Grid.Column="0" Grid.Row="0">
-                <Grid Margin="0,50">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <ContentControl Grid.Column="0" Content="{Binding}" ContentTemplate="{StaticResource BatteryStackedColumn}"></ContentControl>
-                    <ContentControl Grid.Column="1" Content="{Binding}" ContentTemplate="{StaticResource ChamberStackedColumn}"></ContentControl>
-                    <ContentControl Grid.Column="2" Content="{Binding}" ContentTemplate="{StaticResource ChannelStackedColumn}"></ContentControl>
-                </Grid>
-            </GroupBox>
-            <GroupBox Header="Test Summary" Grid.Row="0" Grid.Column="2">
+            <DockPanel Grid.Row="0" Grid.Column="0" Name="batteryTypePanel">
+                <Label DockPanel.Dock="Left" VerticalAlignment="Center">Battery Type:</Label>
+                <ComboBox ItemsSource="{Binding Path=BatteryTypes}" SelectedItem="{Binding Path=BatteryType}" Height="30" Width="150" HorizontalAlignment="Left" Margin="15,0,0,0"></ComboBox>
+            </DockPanel>
+            <DockPanel Grid.Row="0" Grid.Column="2" Name="projectPanel">
+                <Label DockPanel.Dock="Left" VerticalAlignment="Center">Project:</Label>
+                <ComboBox ItemsSource="{Binding Path=Projects}" SelectedItem="{Binding Path=Project}" Height="30" Width="150" HorizontalAlignment="Left" Margin="15,0,0,0"></ComboBox>
+            </DockPanel>
+            <GroupBox Header="Test Summary" Grid.Row="2" Grid.Column="0">
                 <DockPanel LastChildFill="True">
                     <Grid Grid.Column="1" Margin="0,10" Width="140" Height="150" DockPanel.Dock="Right">
                         <Grid.RowDefinitions>
@@ -145,20 +155,17 @@
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Rectangle Grid.Row="0" Grid.Column="0" Fill="{StaticResource WaitingBrush}" Opacity="1" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
-                        <Rectangle Grid.Row="1" Grid.Column="0" Fill="{StaticResource ExecutingBrush}" Opacity="1" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
-                        <Rectangle Grid.Row="2" Grid.Column="0" Fill="{StaticResource CompletedBrush}" Opacity="1" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
-                        <Rectangle Grid.Row="3" Grid.Column="0" Fill="{StaticResource InvalidBrush}" Opacity="1" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
-                        <Rectangle Grid.Row="4" Grid.Column="0" Fill="{StaticResource AbandonedBrush}" Opacity="1" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                        <Rectangle Grid.Row="1" Grid.Column="0" Fill="{StaticResource CompletedBrush}" Opacity="1" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                        <Rectangle Grid.Row="2" Grid.Column="0" Fill="{StaticResource InvalidBrush}" Opacity="1" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
+                        <Rectangle Grid.Row="3" Grid.Column="0" Fill="{StaticResource AbandonedBrush}" Opacity="1" Stroke="#FF0000" Width="10" Height="10"></Rectangle>
                         <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold">Waiting</TextBlock>
-                        <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold">Executing</TextBlock>
-                        <TextBlock Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold">Completed</TextBlock>
-                        <TextBlock Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold">Invalid</TextBlock>
-                        <TextBlock Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold">Abandoned</TextBlock>
+                        <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold">Completed</TextBlock>
+                        <TextBlock Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold">Invalid</TextBlock>
+                        <TextBlock Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold">Abandoned</TextBlock>
                         <TextBlock Grid.Row="0" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Text="{Binding Path=WaitingAmount}"></TextBlock>
-                        <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Text="{Binding Path=ExecutingAmount}"></TextBlock>
-                        <TextBlock Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Text="{Binding Path=CompletedAmount}"></TextBlock>
-                        <TextBlock Grid.Row="3" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Text="{Binding Path=InvalidAmount}"></TextBlock>
-                        <TextBlock Grid.Row="4" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Text="{Binding Path=AbandonedAmount}"></TextBlock>
+                        <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Text="{Binding Path=CompletedAmount}"></TextBlock>
+                        <TextBlock Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Text="{Binding Path=InvalidAmount}"></TextBlock>
+                        <TextBlock Grid.Row="3" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Text="{Binding Path=AbandonedAmount}"></TextBlock>
                     </Grid>
 
                     <Border x:Name="ChartBorder" MaxHeight="150">
@@ -171,17 +178,11 @@
                       Opacity="1"
                   StartAngle="0"
                       Slice="{Binding Path=WaitingPercentage, Mode=OneWay}" />
-                            <xctk:Pie x:Name="ExecutingPie" Mode="Slice"
-                      Fill="{StaticResource ExecutingBrush}"
-                      Stroke="#FF000000"
-                      Opacity="1"
-                      StartAngle="{Binding Path=EndAngle, ElementName=WaitingPie, Mode=OneWay}"
-                      Slice="{Binding Path=ExecutingPercentage, Mode=OneWay}" />
                             <xctk:Pie x:Name="CompletedPie" Mode="Slice"
                       Fill="{StaticResource CompletedBrush}"
                       Stroke="#FF000000"
                       Opacity="1"
-                      StartAngle="{Binding Path=EndAngle, ElementName=ExecutingPie, Mode=OneWay}"
+                      StartAngle="{Binding Path=EndAngle, ElementName=WaitingPie, Mode=OneWay}"
                       Slice="{Binding Path=CompletedPercentage, Mode=OneWay}" />
                             <xctk:Pie x:Name="InvalidPie" Mode="Slice"
                       Fill="{StaticResource InvalidBrush}"
@@ -199,131 +200,89 @@
                     </Border>
                 </DockPanel>
             </GroupBox>
-        </Grid>
 
-        <GroupBox Header="Waiting and executing Tests" Grid.Row="0" Grid.Column="2">
-            <TabControl>
-                <TabItem Header="Waiting">
-                    <ListView
+            <d3:Chart Name="progressPlotter" Grid.Row="2" Grid.Column="2" Title="Progress" IsManipulationEnabled="False" IsVerticalNavigationEnabled="False">
+                <Grid>
+                    <d3:BarGraph Name="expectedProgressBar" Description="Expected" Color="Green"/>
+                    <d3:BarGraph Name="realProgressBar" Description="Real" Color="Blue"/>
+                </Grid>
+            </d3:Chart>
+            <GroupBox Header="Tests" Grid.Row="4" Grid.Column="0">
+                <TabControl>
+                    <TabItem Header="Waiting">
+                        <ListView
                       x:Name="WaitingTestList"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
       ItemsSource="{Binding Path=WaitingTestRecords}"
       >
 
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn 
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn 
             Header="Id" 
             DisplayMemberBinding="{Binding Path=Id}" 
             />
-                                <GridViewColumn 
+                                    <GridViewColumn 
             Header="Program" 
             DisplayMemberBinding="{Binding Path=ProgramStr}" 
             />
-                                <GridViewColumn 
+                                    <GridViewColumn 
             Header="Recipe" 
             DisplayMemberBinding="{Binding Path=RecipeStr}" 
             />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                    <!--<DataGrid GridLinesVisibility="None" x:Name="WaitingTestList" AutoGenerateColumns="False" 
-                              ItemContainerStyle="{StaticResource DataGridItemStyle}"
-                              ItemsSource="{Binding Path=WaitingTestRecords}" Background="White">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Program" IsReadOnly="True" Binding="{Binding Path=ProgramStr}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Recipe" IsReadOnly="True" Binding="{Binding Path=RecipeStr}"></DataGridTextColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>-->
-                </TabItem>
-                <TabItem Header="Executing">
-                    <ListView
-                      x:Name="ExecutingTestList"
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </TabItem>
+                    <TabItem Header="Completed">
+                        <ListView
+                      x:Name="CompletedTestList"
       AlternationCount="2" 
       ItemContainerStyle="{StaticResource ListViewItemStyle}"
-      ItemsSource="{Binding Path=ExecutingTestRecords}"
-                      SelectedItem="{Binding Path=SelectedExecutingTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+      ItemsSource="{Binding Path=CompletedTestRecords}"
+                      SelectedItem="{Binding Path=SelectedCompletedTestRecord, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
       >
 
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn 
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn 
             Header="Id" 
             DisplayMemberBinding="{Binding Path=Id}" 
             />
-                                <GridViewColumn 
-            Header="BatteryType" 
-            DisplayMemberBinding="{Binding Path=BatteryTypeStr}" 
-            />
-                                <GridViewColumn 
+                                    <GridViewColumn 
             Header="Battery" 
             DisplayMemberBinding="{Binding Path=BatteryStr}" 
             />
-                                <GridViewColumn 
+                                    <GridViewColumn 
             Header="Chamber" 
             DisplayMemberBinding="{Binding Path=ChamberStr}" 
             />
-                                <GridViewColumn 
+                                    <GridViewColumn 
             Header="Tester" 
             DisplayMemberBinding="{Binding Path=TesterStr}" 
             />
-                                <GridViewColumn 
+                                    <GridViewColumn 
             Header="Channel" 
             DisplayMemberBinding="{Binding Path=ChannelStr}" 
             />
-                                <GridViewColumn 
+                                    <GridViewColumn 
             Header="StartTime" 
             DisplayMemberBinding="{Binding Path=StartTime}" 
             />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                    <!--<DataGrid GridLinesVisibility="None" x:Name="ExecutingTestList" AutoGenerateColumns="False" 
-                              ItemContainerStyle="{StaticResource DataGridItemStyle}"
-                              ItemsSource="{Binding Path=ExecutingTestRecords}" Background="White">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="BatteryTypeStr" IsReadOnly="True" Binding="{Binding Path=BatteryTypeStr}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="BatteryStr" IsReadOnly="True" Binding="{Binding Path=BatteryStr}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="ChamberStr" IsReadOnly="True" Binding="{Binding Path=ChamberStr}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="TesterStr" IsReadOnly="True" Binding="{Binding Path=TesterStr}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="ChannelStr" IsReadOnly="True" Binding="{Binding Path=ChannelStr}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="StartTime" IsReadOnly="True" Binding="{Binding Path=StartTime}"></DataGridTextColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>-->
-                </TabItem>
-            </TabControl>
-        </GroupBox>
-        <GroupBox Header="Statistics" Grid.Row="2" Grid.Column="0">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition Width="5"></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="40*"></RowDefinition>
-                    <RowDefinition Height="5"></RowDefinition>
-                    <RowDefinition Height="20*"></RowDefinition>
-                    <RowDefinition Height="5"></RowDefinition>
-                    <RowDefinition Height="20*"></RowDefinition>
-                    <RowDefinition Height="5"></RowDefinition>
-                    <RowDefinition Height="20*"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="24" FontWeight="Bold">Completed Programs</Label>
-                <Label Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="90" FontWeight="Bold" Foreground="{StaticResource CompletedBrush}" Content="{Binding Path=CompletedProgramNumber}"></Label>
-                <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="20" FontWeight="Bold">Completed Recipes</Label>
-                <Label Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="{StaticResource CompletedBrush}" Content="{Binding Path=CompletedRecipeNumber}"></Label>
-                <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="20" FontWeight="Bold">Completed Test</Label>
-                <Label Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="{StaticResource CompletedBrush}" Content="{Binding Path=CompletedTestNumber}"></Label>
-                <Label Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="20" FontWeight="Bold">Collected Raw Data</Label>
-                <Label Grid.Row="6" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="{StaticResource CompletedBrush}" Content="{Binding Path=CollectedRawDataNumber}"></Label>
-            </Grid>
-        </GroupBox>
-        <GroupBox Header="RC Tables and Evaluation Results" Grid.Row="2" Grid.Column="2" IsEnabled="False">
-            <Label VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">RC Tables and their evaluation results will be put here</Label>
-        </GroupBox>
+                                    <GridViewColumn 
+            Header="Duration" 
+            DisplayMemberBinding="{Binding Path=Duration}" 
+            />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </TabItem>
+                </TabControl>
+            </GroupBox>
+            <GroupBox Header="RC Tables and Evaluation Results" Grid.Row="4" Grid.Column="2" IsEnabled="False">
+                <Label VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">RC Tables and their evaluation results will be put here</Label>
+            </GroupBox>
+        </Grid>
     </Grid>
 </UserControl>

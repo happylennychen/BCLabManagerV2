@@ -26,7 +26,7 @@
             <MenuItem Header="Performance" Click="Performance_Click"></MenuItem>
         </Menu>
         <TabControl x:Name="MainTab">
-            <TabItem Header="Dashboard">
+            <TabItem Header="Dashboard" Selector.Selected="Dashboard_Selected">
                 <v:DashBoardView x:Name="DashBoardViewInstance" DataContext="{Binding Path=dashBoardViewModel}"></v:DashBoardView>
             </TabItem>
             <TabItem Header="Assets">
