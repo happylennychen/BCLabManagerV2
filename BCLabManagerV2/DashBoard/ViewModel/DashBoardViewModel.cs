@@ -263,6 +263,7 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("AbandonedPercentage");
                 RaisePropertyChanged("WaitingTestRecords");
                 RaisePropertyChanged("CompletedTestRecords");
+                RaisePropertyChanged("Products");
             }
         }
         #region Assets Usage
@@ -435,6 +436,18 @@ namespace BCLabManager.ViewModel
                     return null;
                 var all = Project.Programs.SelectMany(pro => pro.Recipes.SelectMany(rec => rec.TestRecords.Where(tr => tr.Status == TestStatus.Completed))).Select(tr => new TestRecordViewModel(tr));
                 return new ObservableCollection<TestRecordViewModel>(all);
+            }
+        }
+        #endregion
+        #region Products
+        public ObservableCollection<TableMakerProductViewModel> Products
+        {
+            get
+            {
+                if (Project == null)
+                    return null;
+                var all = Project.TableMakerRecords.Where(tmr => tmr.IsValid).SelectMany(tmr => tmr.Products.Where(prd => prd.IsValid)).Select(o=>new TableMakerProductViewModel(o)).ToList();
+                return new ObservableCollection<TableMakerProductViewModel>(all);
             }
         }
         #endregion

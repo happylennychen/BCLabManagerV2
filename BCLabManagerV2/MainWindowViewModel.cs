@@ -305,7 +305,7 @@ namespace BCLabManager.ViewModel
                 JumpBehaviorService.Items = new ObservableCollection<JumpBehavior>(uow.JumpBehaviors.GetAll("Condition"));
                 StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
 
-                ProjectService.Items = new ObservableCollection<Project>(uow.Projects.GetAll());
+                ProjectService.Items = new ObservableCollection<Project>(uow.Projects.GetAll("EmulatorResults"));
                 ProjectSettingService.Items = new ObservableCollection<ProjectSetting>(uow.ProjectSettings.GetAll());
                 ProgramTypeService.Items = new ObservableCollection<ProgramType>(uow.ProgramTypes.GetAll());
                 TableMakerProductTypeService.Items = new ObservableCollection<TableMakerProductType>(uow.TableMakerProductTypes.GetAll());

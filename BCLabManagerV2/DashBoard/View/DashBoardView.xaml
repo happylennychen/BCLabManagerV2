@@ -280,8 +280,31 @@
                     </TabItem>
                 </TabControl>
             </GroupBox>
-            <GroupBox Header="RC Tables and Evaluation Results" Grid.Row="4" Grid.Column="2" IsEnabled="False">
-                <Label VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">RC Tables and their evaluation results will be put here</Label>
+            <GroupBox Header="RC Tables and Evaluation Results" Grid.Row="4" Grid.Column="2">
+                <ListView
+                      x:Name="ProductList"
+      AlternationCount="2" 
+      ItemContainerStyle="{StaticResource ListViewItemStyle}"
+      ItemsSource="{Binding Path=Products}"
+      >
+
+                    <ListView.View>
+                        <GridView>
+                            <!--<GridViewColumn 
+            Header="Id" 
+            DisplayMemberBinding="{Binding Path=Id}" 
+            />-->
+                            <GridViewColumn 
+            Header="Type" 
+            DisplayMemberBinding="{Binding Path=Type}" 
+            />
+                            <GridViewColumn 
+            Header="EV" 
+            DisplayMemberBinding="{Binding Path=IsEvaluated}" 
+            />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </GroupBox>
         </Grid>
     </Grid>
