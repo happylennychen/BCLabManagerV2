@@ -8,7 +8,7 @@
     <Window.Resources>
     </Window.Resources>
     <DockPanel LastChildFill="True">
-        <Menu DockPanel.Dock="Top">
+        <Menu DockPanel.Dock="Top" FontSize="14">
             <MenuItem Header="Events" Click="Event_Click"></MenuItem>
             <MenuItem Header="Configuration" Click="Config_Click"></MenuItem>
             <MenuItem Header="Utilities">
