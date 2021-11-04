@@ -22,6 +22,7 @@
                 <MenuItem Header="Temporary Method (Recipe Template Rename)" Click="TemporaryMethod_Click" Visibility="Collapsed"></MenuItem>
                 <MenuItem Header="Temporary Method (Broken Files MD5 check)" Click="TemporaryMethod1_Click" Visibility="Collapsed"></MenuItem>
                 <MenuItem Header="Temporary Method (One File MD5 check)" Click="TemporaryMethod2_Click" Visibility="Collapsed"></MenuItem>
+                <MenuItem Header="Project and Recipe Update" Click="TemporaryMethod3_Click" Visibility="Visible"></MenuItem>
             </MenuItem>
             <MenuItem Header="Performance" Click="Performance_Click"></MenuItem>
         </Menu>

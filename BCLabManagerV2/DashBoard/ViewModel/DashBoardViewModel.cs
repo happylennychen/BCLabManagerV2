@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
 using Prism.Mvvm;
+using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
@@ -26,6 +27,8 @@ namespace BCLabManager.ViewModel
         private ChannelServiceClass _channelService;
         private ChamberServiceClass _chamberService;
         private ProgramServiceClass _programService;
+        private RelayCommand _updateCommand;
+        private RelayCommand _timeCommand;
         #endregion // Fields
 
         #region Constructor
@@ -55,6 +58,15 @@ namespace BCLabManager.ViewModel
             var tr = trs.Single(o => o.EndTime == trs.Max(j => j.EndTime));
             BatteryType = tr.Recipe.Program.Project.BatteryType;
             Project = tr.Recipe.Program.Project;
+            UpdateButtoneName();
+        }
+
+        private void UpdateButtoneName()
+        {
+            if (Project.StartTimes.Count == Project.StopTimes.Count)
+                ButtonName = "Start";
+            else
+                ButtonName = "Stop";
         }
 
         private void BookEvents()
@@ -222,6 +234,58 @@ namespace BCLabManager.ViewModel
 
 
         #region Public Interface
+        public ICommand UpdateCommand
+        {
+            get
+            {
+                if (_updateCommand == null)
+                {
+                    _updateCommand = new RelayCommand(
+                        param => { this.UpdatePlanedDays(); },
+                        param => this.CanUpdate
+                        );
+                }
+                return _updateCommand;
+            }
+        }
+
+        private void UpdatePlanedDays()
+        {
+            //Project.PlanedDays = PlanedDays;
+            if (MessageBoxResult.OK == MessageBox.Show("Are you sure to update Project Planed Days?", "Confirmation", MessageBoxButton.OKCancel))
+                _projectService.DatabaseUpdate(Project);
+        }
+
+        public ICommand TimeCommand
+        {
+            get
+            {
+                if (_timeCommand == null)
+                {
+                    _timeCommand = new RelayCommand(
+                        param => { this.UpdateTime(); },
+                        param => this.CanTime
+                        );
+                }
+                return _timeCommand;
+            }
+        }
+
+        private void UpdateTime()
+        {
+            string action = ButtonName.ToLower();
+
+            if (MessageBoxResult.OK == MessageBox.Show($"Are you sure to {action} this project?", "Confirmation", MessageBoxButton.OKCancel))
+            {
+                if (Project.StartTimes.Count == Project.StopTimes.Count)
+                    Project.StartTimes.Add(Time);
+                else
+                    Project.StopTimes.Add(Time);
+                _projectService.DatabaseUpdate(Project);
+                UpdateButtoneName();
+            }
+        }
+
         public List<BatteryType> BatteryTypes
         {
             get { return _batteryTypeService.Items.ToList(); }
@@ -263,9 +327,11 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("AbandonedPercentage");
                 RaisePropertyChanged("WaitingTestRecords");
                 RaisePropertyChanged("CompletedTestRecords");
-                RaisePropertyChanged("Products");
+                RaisePropertyChanged("RealProgress");
+                RaisePropertyChanged("ExpectedProgress");
             }
         }
+
         #region Assets Usage
         public int BatteryAmount
         {
@@ -424,7 +490,7 @@ namespace BCLabManager.ViewModel
             {
                 if (Project == null)
                     return null;
-                var all = Project.Programs.SelectMany(pro => pro.Recipes.SelectMany(rec => rec.TestRecords.Where(tr=>tr.Status == TestStatus.Waiting))).Select(tr=>new TestRecordViewModel(tr)).ToList();
+                var all = Project.Programs.SelectMany(pro => pro.Recipes.SelectMany(rec => rec.TestRecords.Where(tr => tr.Status == TestStatus.Waiting))).Select(tr => new TestRecordViewModel(tr)).ToList();
                 return new ObservableCollection<TestRecordViewModel>(all);
             }
         }
@@ -446,7 +512,7 @@ namespace BCLabManager.ViewModel
             {
                 if (Project == null)
                     return null;
-                var all = Project.TableMakerRecords.Where(tmr => tmr.IsValid).SelectMany(tmr => tmr.Products.Where(prd => prd.IsValid)).Select(o=>new TableMakerProductViewModel(o)).ToList();
+                var all = Project.TableMakerRecords.Where(tmr => tmr.IsValid).SelectMany(tmr => tmr.Products.Where(prd => prd.IsValid)).Select(o => new TableMakerProductViewModel(o)).ToList();
                 return new ObservableCollection<TableMakerProductViewModel>(all);
             }
         }
@@ -520,6 +586,48 @@ namespace BCLabManager.ViewModel
         private bool IsTestCompleted(TestRecord tr)
         {
             return tr.Status == TestStatus.Completed;
+        }
+        #endregion
+        #region Progress
+        private string _buttonName;
+        public string ButtonName
+        {
+            get { return _buttonName; }
+            set { SetProperty(ref _buttonName, value); }
+        }
+        //private uint _planedDays;
+        public uint PlanedDays
+        {
+            get { return Project.PlanedDays; }
+            set { Project.PlanedDays = value; }
+        }
+        private DateTime _time;
+        public DateTime Time
+        {
+            get { return _time; }
+            set { SetProperty(ref _time, value); }
+        }
+
+        public bool CanUpdate { get { return true; } }
+        public bool CanTime { get { return true; } }
+        private void UpdateProgress()
+        {
+        }
+        public double ExpectedProgress
+        {
+            get 
+            { 
+                return 1; 
+            }
+        }
+        public double RealProgress
+        {
+            get
+            {
+                var total = Project.Programs.SelectMany(pro => pro.Recipes.Where(rec => !rec.IsAbandoned)).Count();
+                var completed = Project.Programs.SelectMany(pro => pro.Recipes.Where(rec => rec.IsCompleted)).Count();
+                return (double)completed / (double)total;
+            }
         }
         #endregion
         #endregion // Public Interface

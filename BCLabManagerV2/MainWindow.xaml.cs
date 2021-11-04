@@ -537,6 +537,29 @@ namespace BCLabManager
                 MessageBox.Show(MD5);
             }
         }
+        private void TemporaryMethod3_Click(object sender, RoutedEventArgs e)   //Update Project and Recipe
+        {
+            using (var context = new AppDbContext())
+            {
+                var projects = context.Projects.ToList();
+                foreach (var prj in projects)
+                {
+                    if (prj.StartTimes == null)
+                        prj.StartTimes = new List<DateTime>();
+                    if (prj.StopTimes == null)
+                        prj.StopTimes = new List<DateTime>();
+                }
+                var recipes = context.Recipes.Include(rec=>rec.Program).Include(rec=>rec.TestRecords).ToList();
+                foreach (var rec in recipes)
+                {
+                    //if (rec.Program.IsInvalid)
+                    //    rec.IsAbandoned = true;
+                    if (rec.TestRecords.All(o => o.Status == TestStatus.Abandoned))
+                        rec.IsAbandoned = true;
+                }
+                context.SaveChanges();
+            }
+        }
 
         private void UpdateFileName(TestRecord tr)
         {

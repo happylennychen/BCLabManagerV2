@@ -205,20 +205,19 @@
                     <DockPanel>
                         <DockPanel DockPanel.Dock="Bottom" LastChildFill="False" Margin="15" Height="30">
                             <Label VerticalAlignment="Center" DockPanel.Dock="Left">Planed Days</Label>
-                            <TextBox Width="40" Height="30" DockPanel.Dock="Left" VerticalContentAlignment="Center"></TextBox>
-                            <Button Width="60" Height="30" DockPanel.Dock="Left" Margin="5,0">Update</Button>
-                            <ToggleButton Width="60" Height="30" DockPanel.Dock="Right">Start</ToggleButton>
-                            <xctk:DateTimePicker Height="30" DockPanel.Dock="Right" Width="150" Margin="5,0"
-      x:Name="Time"
+                            <TextBox Width="40" Height="30" DockPanel.Dock="Left" VerticalContentAlignment="Center" Text="{Binding Path=PlanedDays}"></TextBox>
+                            <Button Width="60" Height="30" DockPanel.Dock="Left" Margin="5,0" Command="{Binding Path=UpdateCommand}">Update</Button>
+                            <ToggleButton Width="60" Height="30" DockPanel.Dock="Right" Command="{Binding Path=TimeCommand}" Content="{Binding Path=ButtonName}"></ToggleButton>
+                            <xctk:DateTimePicker x:Name="TimeControl" Height="30" DockPanel.Dock="Right" Width="150" Margin="5,0"
       ShowButtonSpinner="False" ShowDropDownButton="False" TextAlignment="Center"
       Text="{Binding Path=Time, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
       Validation.ErrorTemplate="{x:Null}"
       />
                         </DockPanel>
-                        <d3:Chart Name="progressPlotter" Title="Progress" IsManipulationEnabled="False" IsVerticalNavigationEnabled="False" DockPanel.Dock="Top">
+                        <d3:Chart Name="progressPlotter" Title="Progress" IsManipulationEnabled="False" IsVerticalNavigationEnabled="False" DockPanel.Dock="Top" PlotOriginX="0" PlotOriginY="0" PlotWidth="3.5">
                             <Grid>
-                                <d3:BarGraph Name="expectedProgressBar" Description="Expected" Color="Green"/>
-                                <d3:BarGraph Name="realProgressBar" Description="Real" Color="Blue"/>
+                                <d3:BarGraph Name="expectedProgressBar" Description="Expected" Color="Green" X="1" Y="{Binding Path=ExpectedProgress}" BarsWidth="0.5"/>
+                                <d3:BarGraph Name="realProgressBar" Description="Real" Color="Blue" X="2" Y="{Binding Path=RealProgress}" BarsWidth="0.5"/>
                             </Grid>
                         </d3:Chart>
                     </DockPanel>

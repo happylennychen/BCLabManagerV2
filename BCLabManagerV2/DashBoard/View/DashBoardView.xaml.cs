@@ -25,6 +25,7 @@ namespace BCLabManager.View
         public DashBoardView()
         {
             InitializeComponent();
+            TimeControl.Text = DateTime.Now.ToString();
         }
 
         private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
