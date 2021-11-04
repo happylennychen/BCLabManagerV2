@@ -201,13 +201,28 @@
                         </Border>
                     </DockPanel>
                 </GroupBox>
-
-                <d3:Chart Name="progressPlotter" Grid.Row="2" Grid.Column="2" Title="Progress" IsManipulationEnabled="False" IsVerticalNavigationEnabled="False" Margin="40,15,40,15">
-                    <Grid>
-                        <d3:BarGraph Name="expectedProgressBar" Description="Expected" Color="Green"/>
-                        <d3:BarGraph Name="realProgressBar" Description="Real" Color="Blue"/>
-                    </Grid>
-                </d3:Chart>
+                <Grid Grid.Row="2" Grid.Column="2">
+                    <DockPanel>
+                        <DockPanel DockPanel.Dock="Bottom" LastChildFill="False" Margin="15" Height="30">
+                            <Label VerticalAlignment="Center" DockPanel.Dock="Left">Planed Days</Label>
+                            <TextBox Width="40" Height="30" DockPanel.Dock="Left" VerticalContentAlignment="Center"></TextBox>
+                            <Button Width="60" Height="30" DockPanel.Dock="Left" Margin="5,0">Update</Button>
+                            <ToggleButton Width="60" Height="30" DockPanel.Dock="Right">Start</ToggleButton>
+                            <xctk:DateTimePicker Height="30" DockPanel.Dock="Right" Width="150" Margin="5,0"
+      x:Name="Time"
+      ShowButtonSpinner="False" ShowDropDownButton="False" TextAlignment="Center"
+      Text="{Binding Path=Time, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
+      Validation.ErrorTemplate="{x:Null}"
+      />
+                        </DockPanel>
+                        <d3:Chart Name="progressPlotter" Title="Progress" IsManipulationEnabled="False" IsVerticalNavigationEnabled="False" DockPanel.Dock="Top">
+                            <Grid>
+                                <d3:BarGraph Name="expectedProgressBar" Description="Expected" Color="Green"/>
+                                <d3:BarGraph Name="realProgressBar" Description="Real" Color="Blue"/>
+                            </Grid>
+                        </d3:Chart>
+                    </DockPanel>
+                </Grid>
                 <GroupBox Header="Tests" Grid.Row="4" Grid.Column="0">
                     <TabControl>
                         <TabItem Header="Waiting">
