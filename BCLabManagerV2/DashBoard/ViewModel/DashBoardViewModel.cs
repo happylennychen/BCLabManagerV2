@@ -253,7 +253,10 @@ namespace BCLabManager.ViewModel
         {
             //Project.PlanedDays = PlanedDays;
             if (MessageBoxResult.OK == MessageBox.Show("Are you sure to update Project Planed Days?", "Confirmation", MessageBoxButton.OKCancel))
+            {
                 _projectService.DatabaseUpdate(Project);
+                RaisePropertyChanged("ExpectedProgress");
+            }
         }
 
         public ICommand TimeCommand
@@ -288,7 +291,7 @@ namespace BCLabManager.ViewModel
 
         public List<BatteryType> BatteryTypes
         {
-            get { return _batteryTypeService.Items.ToList(); }
+            get { return _batteryTypeService.Items.Where(bt=>bt.Projects.Count!=0 && bt.Projects.All(prj=>prj.Programs.Any(pro=>!pro.IsInvalid))).ToList(); }
         }
 
         private BatteryType _batteryType;
@@ -299,11 +302,16 @@ namespace BCLabManager.ViewModel
             {
                 SetProperty(ref _batteryType, value);
                 RaisePropertyChanged("Projects");
+                if (Projects.Count != 0)
+                    Project = Projects[0];
             }
         }
         public List<Project> Projects
         {
-            get { return _projectService.Items.Where(o => o.BatteryType == BatteryType).ToList(); }
+            get
+            {
+                return _projectService.Items.Where(o => o.BatteryType == BatteryType).ToList();
+            }
         }
 
         private Project _project;
@@ -327,6 +335,7 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("AbandonedPercentage");
                 RaisePropertyChanged("WaitingTestRecords");
                 RaisePropertyChanged("CompletedTestRecords");
+                RaisePropertyChanged("Products");
                 RaisePropertyChanged("RealProgress");
                 RaisePropertyChanged("ExpectedProgress");
             }
@@ -598,8 +607,16 @@ namespace BCLabManager.ViewModel
         //private uint _planedDays;
         public uint PlanedDays
         {
-            get { return Project.PlanedDays; }
-            set { Project.PlanedDays = value; }
+            get 
+            {
+                if (Project == null)
+                    return 0;
+                return Project.PlanedDays; 
+            }
+            set
+            {
+                Project.PlanedDays = value;
+            }
         }
         private DateTime _time;
         public DateTime Time
@@ -610,21 +627,39 @@ namespace BCLabManager.ViewModel
 
         public bool CanUpdate { get { return true; } }
         public bool CanTime { get { return true; } }
-        private void UpdateProgress()
-        {
-        }
         public double ExpectedProgress
         {
-            get 
-            { 
-                return 1; 
+            get
+            {
+                if (Project == null)
+                    return 0;
+                if (PlanedDays == 0)
+                    return 0;
+
+                double elapsed = 0;
+                for (int i = 0; i < Project.StartTimes.Count; i++)
+                {
+                    if (Project.StopTimes.Count > i)
+                    {
+                        elapsed += (Project.StopTimes[i] - Project.StartTimes[i]).TotalDays;
+                    }
+                    else
+                    {
+                        elapsed += (DateTime.Now - Project.StartTimes[i]).TotalDays;
+                    }
+                }
+                return elapsed / (double)PlanedDays;
             }
         }
         public double RealProgress
         {
             get
             {
+                if (Project == null)
+                    return 0;
                 var total = Project.Programs.SelectMany(pro => pro.Recipes.Where(rec => !rec.IsAbandoned)).Count();
+                if (total == 0)
+                    return 0;
                 var completed = Project.Programs.SelectMany(pro => pro.Recipes.Where(rec => rec.IsCompleted)).Count();
                 return (double)completed / (double)total;
             }

@@ -103,11 +103,11 @@
                     <RowDefinition Height="4"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
-                <d3:Chart Name="wTHplotter" Grid.Row="0" Title="Weekly Throughput">
+                <d3:Chart Name="wTHplotter" Grid.Row="0" Title="Weekly Throughput" LegendVisibility="Collapsed">
                     <d3:BarGraph Name="wTHbarChart" Color="Blue"/>
                 </d3:Chart>
 
-                <d3:Chart Name="ORplotter" Grid.Row="2" Title="Occupancy Ratio">
+                <d3:Chart Name="ORplotter" Grid.Row="2" Title="Occupancy Ratio" LegendVisibility="Collapsed">
                     <d3:BarGraph Name="ORbarChart" Color="Blue"/>
                 </d3:Chart>
                 <GroupBox Header="Product Curve" Grid.Row="4" IsEnabled="False">
@@ -214,10 +214,10 @@
       Validation.ErrorTemplate="{x:Null}"
       />
                         </DockPanel>
-                        <d3:Chart Name="progressPlotter" Title="Progress" IsManipulationEnabled="False" IsVerticalNavigationEnabled="False" DockPanel.Dock="Top" PlotOriginX="0" PlotOriginY="0" PlotWidth="3.5">
+                        <d3:Chart Name="progressPlotter" Title="Progress" DockPanel.Dock="Top" PlotOriginX="0" PlotOriginY="-0.2" PlotWidth="6.5" PlotHeight="1.5" IsAutoFitEnabled="True">
                             <Grid>
-                                <d3:BarGraph Name="expectedProgressBar" Description="Expected" Color="Green" X="1" Y="{Binding Path=ExpectedProgress}" BarsWidth="0.5"/>
-                                <d3:BarGraph Name="realProgressBar" Description="Real" Color="Blue" X="2" Y="{Binding Path=RealProgress}" BarsWidth="0.5"/>
+                                <d3:BarGraph Name="expectedProgressBar" Description="Expected" Color="Green" X="2" Y="{Binding Path=ExpectedProgress}" BarsWidth="1"/>
+                                <d3:BarGraph Name="realProgressBar" Description="Real" Color="Blue" X="4" Y="{Binding Path=RealProgress}" BarsWidth="1"/>
                             </Grid>
                         </d3:Chart>
                     </DockPanel>
