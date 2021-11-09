@@ -459,7 +459,7 @@ namespace BCLabManager
             }
             return BrokenList;
         }
-
+        #region Discharge Voltage Raising
         private void DischargeVoltageRasingCheck_Click(object sender, RoutedEventArgs e)
         {
             //List<ChromaNode> nodes = new List<ChromaNode>();
@@ -522,7 +522,7 @@ namespace BCLabManager
         private void GeneralReport3(List<BatteryType> batteryTypes, Dictionary<TestRecord, List<List<ChromaNode>>> ErrorDetailLogs)
         {
             RunningLog.NewLog("Details");
-            foreach (var log in ErrorDetailLogs.Where(o=>o.Value.Any(p=>p.Count>5)))
+            foreach (var log in ErrorDetailLogs.Where(o => o.Value.Any(p => p.Count > 5)))
             {
                 var tr = log.Key;
                 if (IsDynamic(tr.Recipe.Program))
@@ -530,7 +530,7 @@ namespace BCLabManager
                 var nodesList = log.Value;
                 RunningLog.Write($"{tr.TestFilePath}\n");
                 int i = 1;
-                foreach (var nodes in nodesList.Where(o=>o.Count>5))
+                foreach (var nodes in nodesList.Where(o => o.Count > 5))
                 {
                     RunningLog.Write($"\tThe {i}st frame({nodes.Count}):\n");
                     foreach (var node in nodes)
@@ -1090,7 +1090,110 @@ namespace BCLabManager
             fs.Close();
             return ErrorCode.NORMAL;
         }
+        private uint GetDischargeVoltageRaisingNodes(string filePath, double th, out List<List<ChromaNode>> nodesList)
+        {
+            nodesList = new List<List<ChromaNode>>();
+            //List<ChromaNode> nodes;
+            SourceData sd = new SourceData();
 
+            FileStream fs = new FileStream(filePath, FileMode.Open);
+            StreamReader sr = new StreamReader(fs);
+            int lineIndex = 0;
+            for (; lineIndex < 10; lineIndex++)     //第十行以后都是数据
+            {
+                sr.ReadLine();
+            }
+            bool isInErrFrame = false;
+            double previousVoltage, voltage = 9999;
+            ChromaNode previousNode, node = null;
+            while (true)
+            {
+                lineIndex++;
+                var line = sr.ReadLine();
+                if (line == null)
+                    break;
+                previousNode = node;
+                previousVoltage = voltage;
+                node = DataPreprocesser.GetNodeFromeString(line);
+                if (node == null)
+                {
+                    sr.Close();
+                    fs.Close();
+                    break;
+                }
+                voltage = node.Voltage;
+                if (previousNode == null)
+                    continue;
+                if (node.Current >= 0 && !isInErrFrame)
+                    continue;
+                if (node.Current >= 0 && isInErrFrame)
+                {
+                    isInErrFrame = false;
+                    continue;
+                }
+                if (node.StepMode == ActionMode.REST)
+                    continue;
+                if ((voltage - previousVoltage > th) & !isInErrFrame) //刚刚遇到错误
+                {
+                    isInErrFrame = true;
+                    var nodes = new List<ChromaNode>();
+                    nodes.Add(previousNode);
+                    nodes.Add(node);
+                    nodesList.Add(nodes);
+                }
+                else if ((voltage - previousVoltage > th) & isInErrFrame)  //继续遇到错误
+                {
+                    var nodes = nodesList.Last();
+                    nodes.Add(node);
+                }
+                else if ((voltage - previousVoltage <= th) && isInErrFrame)    //离开错误
+                {
+                    isInErrFrame = false;
+                }
+                else
+                {
+                }
+            }
+            sr.Close();
+            fs.Close();
+            return ErrorCode.NORMAL;
+        }
+
+        private void DischargeVoltageRasingFileCheck_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.RestoreDirectory = true;
+            openFileDialog.Multiselect = true;
+            if (openFileDialog.ShowDialog() == true)
+            {
+                var n1FilePaths = openFileDialog.FileNames.Where(o => o.Contains("Debug-N1"));
+                var n2FilePaths = openFileDialog.FileNames.Where(o => o.Contains("Debug-N2"));
+                RunningLog.Write($"---------------------------Normal Files:-------------------------\n");
+                Report(n1FilePaths);
+                RunningLog.Write($"---------------------------Bad Temperature Files:-------------------------\n");
+                Report(n2FilePaths);
+            }
+        }
+
+        private void Report(IEnumerable<string> filePaths)
+        {
+            List<List<ChromaNode>> nodesList;
+            foreach (var filePath in filePaths)
+            {
+                GetDischargeVoltageRaisingNodes(filePath, 0.005, out nodesList);
+                var errorFrame = nodesList.Where(o => o.Count > 0).ToList();
+                RunningLog.Write($"There are {errorFrame.Count} error frames in {Path.GetFileName(filePath)}\n");
+                if (errorFrame.Count > 0)
+                {
+                    foreach (var frame in errorFrame)
+                    {
+                        RunningLog.Write($"{frame.Count},");
+                    }
+                    RunningLog.Write($"\n");
+                }
+            }
+        }
+        #endregion
         #region Temporary Method
         private void TemporaryMethod_Click(object sender, RoutedEventArgs e)
         {

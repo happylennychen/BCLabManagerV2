@@ -24,6 +24,7 @@
                 <MenuItem Header="Temporary Method (One File MD5 check)" Click="TemporaryMethod2_Click" Visibility="Collapsed"></MenuItem>
                 <MenuItem Header="Dicharge Voltage Rasing Problem Report" Click="DischargeVoltageRasingCheck_Click"></MenuItem>
                 <MenuItem Header="Update Project Id For TMP" Click="UpdateProjectIdForTMP_Click"></MenuItem>
+                <MenuItem Header="Dicharge Voltage Rasing File Check" Click="DischargeVoltageRasingFileCheck_Click"></MenuItem>
             </MenuItem>
         </Menu>
         <TabControl x:Name="MainTab">
