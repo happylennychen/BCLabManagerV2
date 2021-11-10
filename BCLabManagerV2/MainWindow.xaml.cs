@@ -3,28 +3,19 @@
 //#define StartWindow
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+//using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using BCLabManager.ViewModel;
 using BCLabManager.DataAccess;
 using BCLabManager.Model;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
-using System.Collections.ObjectModel;
 using BCLabManager.View;
 using Microsoft.Win32;
-using Npgsql;
 using Path = System.IO.Path;
 using System.Threading;
+using System.Linq;
 
 namespace BCLabManager
 {
@@ -227,7 +218,7 @@ namespace BCLabManager
                     MessageBox.Show($"MD5 Check Failed.\n{error.Message}");
                     return;
                 }
-                if (list!=null && list.Count > 0)
+                if (list != null && list.Count > 0)
                 {
                     var emptylist = list.Where(o => o[1] == null || o[1] == string.Empty).ToList();
                     var brokenlist = list.Where(o => o[1] != null && o[1] != string.Empty).ToList();
@@ -281,7 +272,7 @@ namespace BCLabManager
                     else
                         MessageBox.Show($"All {existNum.ToString()} files are existed.");
                 }
-                catch(Exception error)
+                catch (Exception error)
                 {
                     MessageBox.Show($"Local File Restore Failed.\n{error.Message}");
                 }
@@ -546,6 +537,29 @@ namespace BCLabManager
                 MessageBox.Show(MD5);
             }
         }
+        private void TemporaryMethod3_Click(object sender, RoutedEventArgs e)   //Update Project and Recipe
+        {
+            using (var context = new AppDbContext())
+            {
+                var projects = context.Projects.ToList();
+                foreach (var prj in projects)
+                {
+                    if (prj.StartTimes == null)
+                        prj.StartTimes = new List<DateTime>();
+                    if (prj.StopTimes == null)
+                        prj.StopTimes = new List<DateTime>();
+                }
+                var recipes = context.Recipes.Include(rec=>rec.Program).Include(rec=>rec.TestRecords).ToList();
+                foreach (var rec in recipes)
+                {
+                    //if (rec.Program.IsInvalid)
+                    //    rec.IsAbandoned = true;
+                    if (rec.TestRecords.All(o => o.Status == TestStatus.Abandoned))
+                        rec.IsAbandoned = true;
+                }
+                context.SaveChanges();
+            }
+        }
 
         private void UpdateFileName(TestRecord tr)
         {
@@ -576,5 +590,420 @@ namespace BCLabManager
             return tr.TestFilePath.Replace(recname, tr.RecipeStr);
         }
         #endregion
+
+
+        private void Performance_Click(object sender, RoutedEventArgs e)
+        {
+            Dictionary<DateTime, int> dailyTP, monthlyTH;
+            Dictionary<YearWeek, int> weeklyTP;
+            Dictionary<DateTime, double> dailyOR;
+            Dictionary<string, Dictionary<string, TimeSpan>> projectTime;
+            /*using (var dbContext = new AppDbContext())
+            {
+                var trs = dbContext.TestRecords.ToList().Where(o => o.StartTime != DateTime.MinValue && (o.Status == TestStatus.Completed || o.Status != TestStatus.Invalid || o.Status == TestStatus.Executing));
+                dailyTP = GetDailyThroughputs(trs, TestStatus.Completed);
+                weeklyTP = GetWeeklyThroughputs(trs, TestStatus.Completed);
+                monthlyTH = GetMonthlyThroughputs(trs, TestStatus.Completed);
+
+                dailyOR = GetDailyOccupancyRatio(trs);
+
+                var projects = dbContext.Projects
+                    .Include(prj => prj.Programs)
+                        .ThenInclude(prog => prog.Recipes)
+                            .ThenInclude(rec => rec.TestRecords).ToList();
+                foreach (var prj in projects)
+                {
+                    foreach (var prog in prj.Programs)
+                    {
+                        dbContext.Entry(prog).Reference(p => p.Type).Load();
+                    }
+                }
+                projectTime = GetProjectTime(projects);
+
+            }*/
+            //if (dailyTP != null)
+            //{
+            /*foreach (var key in dailyTP.Keys)
+            {
+                //Console.WriteLine($"{key.Year}/{key.Month}/{key.Day}, {dic[key]}");
+                RuningLog.Write($"{key.Year}/{key.Month}/{key.Day}, {dailyTP[key]}\n");
+            }
+            RuningLog.Write($"=============================================================\n");
+            if (monthlyTH != null)
+            {
+                foreach (var key in monthlyTH.Keys)
+                {
+                    //Console.WriteLine($"{key.Year}/{key.Month}/{key.Day}, {dic[key]}");
+                    RuningLog.Write($"{key.Year}/{key.Month}, {monthlyTH[key]}\n");
+                }
+            }
+            RuningLog.Write($"=============================================================\n");
+            if (weeklyTP != null)
+            {
+                foreach (var key in weeklyTP.Keys)
+                {
+                    //Console.WriteLine($"{key.Year}/{key.Month}/{key.Day}, {dic[key]}");
+                    RuningLog.Write($"{key.Year} W{key.Week}, {weeklyTP[key]}\n");
+                }
+            }
+            if (dailyOR != null)
+            {
+                foreach (var key in dailyOR.Keys)
+                {
+                    //Console.WriteLine($"{key.Year}/{key.Month}/{key.Day}, {dic[key]}");
+                    RuningLog.Write($"{key.Year}/{key.Month}/{key.Day}, {dailyOR[key]}\n");
+                }
+            }*/
+            /*if (projectTime != null)
+            {
+                foreach (var prj in projectTime.Keys)
+                {
+                    foreach (var type in projectTime[prj].Keys)
+                    {
+                        var t = projectTime[prj][type];
+                        RuningLog.Write($"{prj}, {type}, {t.TotalDays}\n");
+                    }
+                }
+            }*/
+            //}
+            List<BatteryType> bts;
+            List<Project> prjs;
+            List<Program> pros;
+            List<Recipe> recs;
+            List<TestRecord> trs;
+            List<LibFG> lib_fgs;
+            List<TableMakerRecord> tmrs;
+            List<TableMakerProduct> tmps;
+            List<EmulatorResult> ers;
+            using (var dbContext = new AppDbContext())
+            {
+                bts = dbContext.BatteryTypes.ToList();
+                prjs = dbContext.Projects.ToList();
+                pros = dbContext.Programs.ToList();
+                var pts = dbContext.ProgramTypes.ToList();
+                recs = dbContext.Recipes.ToList();
+                trs = dbContext.TestRecords.ToList().Where(tr => tr.Recipe != null && tr.TesterStr == "17200").ToList();
+                ers = dbContext.EmulatorResults.ToList().Where(er=>er.is_valid).ToList();
+                var rps = dbContext.ReleasePackages.ToList();
+                tmrs = dbContext.TableMakerRecords.ToList().Where(tmr=>tmr.IsValid).ToList();
+                tmps = dbContext.TableMakerProducts.ToList().Where(tmp=>tmp.IsValid).ToList();
+                lib_fgs = dbContext.lib_fgs.ToList().Where(lib=>lib.is_valid).ToList();  //不管是valid还是invalid，对它的评估都是valid
+            }
+
+            //var batteryTypes = trs.Select(tr => tr.Recipe.Program.Project.BatteryType).Distinct().ToList();
+            //var ers = trs.Select(tr => tr.EmulatorResults.SingleOrDefault(er=>er.is_valid)).Distinct().ToList();
+            /*foreach (var bt in bts.OrderBy(o => o.Id))
+            {
+                foreach (var prj in bt.Projects.OrderBy(o => o.Id))
+                {
+                    var erGroup = prj.EmulatorResults.GroupBy(er => er.lib_fg).Select(o => o.Key);
+                    if (erGroup == null || erGroup.Count() == 0)
+                        continue;
+                    RuningLog.Write($"\t{prj.Name}\n");
+                    foreach (var item in erGroup.OrderBy(o => o.Id))
+                    {
+                        var lib = item;
+                        List<EmulatorResult> ers = prj.EmulatorResults.Where(er => er.lib_fg == lib).ToList();
+                        var tmpGroup = ers.Where(er => er.table_maker_cfile != null && er.table_maker_hfile != null).GroupBy(er => new { er.table_maker_cfile, er.table_maker_hfile }).Select(o => o.Key).ToList();
+                        if (tmpGroup.Count == 0)
+                        {
+                            RuningLog.Write($"\t\tTable Maker Product is not in the record\n");
+                        }
+                        else
+                            foreach (var t in tmpGroup)
+                            {
+                                if (t.table_maker_cfile.TableMakerRecord != t.table_maker_hfile.TableMakerRecord)
+                                    MessageBox.Show("Not Possible");
+                                RuningLog.Write($"\t\t{t.table_maker_cfile.TableMakerRecord.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")}\n");
+                                RuningLog.Write($"\t\t{t.table_maker_cfile.FilePath}\n");
+                                RuningLog.Write($"\t\t{t.table_maker_hfile.FilePath}\n");
+                            }
+                        RuningLog.Write($"\t\t\t{lib.libfg_dll_path}\n");
+                        bool isEVpass = IsEVPass(prj, lib);
+                        if (isEVpass)
+                        {
+                            RuningLog.Write($"\t\t\tEV_PASS");
+                        }
+                        else
+                        {
+                            RuningLog.Write($"\t\t\tEV_NOT_PASS");
+                        }
+                        var part = prj.EmulatorResults.Count(er => er.lib_fg == lib && er.is_valid);
+                        var total = trs.Count(tr => tr.Recipe.Program.Project == prj && tr.Recipe.Program.Type.Name == "EV" && tr.Status == TestStatus.Completed);
+                        RuningLog.Write($"\t{part}/{total}\n");
+                        bool isReleased = IsReleased(prj, lib);
+                        if (isReleased)
+                        {
+                            RuningLog.Write($"\t\t\tRELEASED\n");
+                        }
+                        else
+                        {
+                            RuningLog.Write($"\t\t\tNOT_RELEASED\n");
+                        }
+                    }
+                }
+            }*/
+            foreach (var bt in bts.OrderBy(o => o.Id))
+            {
+                foreach (var prj in bt.Projects)
+                {
+                    foreach (var tmr in prj.TableMakerRecords.Where(tmr=>tmr.IsValid))
+                    {
+                        foreach (var tmp in tmr.Products.Where(tmp=>tmp.IsValid))
+                        {
+                            var prj_ers = prj.EmulatorResults.Where(er => er.table_maker_cfile == tmp && er.is_valid).ToList();
+                            if (prj_ers.Count == 0)
+                            {
+                                RuningLog.Write($"{bt.Name},{prj.Name},{tmr.Timestamp.ToString("yyyy/MM/dd")},{tmp.FilePath}\n");
+                                continue;
+                            }
+                            var libs = prj_ers.Select(o => o.lib_fg).Distinct().ToList();
+                            foreach (var lib in libs.Where(o=>o.is_valid))
+                            {
+                                var part = prj.EmulatorResults.Count(er => er.lib_fg == lib && er.is_valid);
+                                var total = trs.Count(tr => tr.Recipe.Program.Project == prj && tr.Recipe.Program.Type.Name == "EV" && tr.Status == TestStatus.Completed);
+                                bool isEVpass = IsEVPass(prj, lib);
+                                bool isReleased = IsReleased(prj, lib);
+                                RuningLog.Write($"{bt.Name},{prj.Name},{tmr.Timestamp.ToString("yyyy/MM/dd")},{tmp.FilePath},{lib.libfg_dll_path},{part}/{total},{isEVpass}, {isReleased}\n");
+                            }
+                        }
+                    }
+                }
+            }
+            var supportedBTs = tmrs.Select(tmr => tmr.Project.BatteryType).Distinct().ToList();
+            var products = tmrs.SelectMany(tmr => tmr.Products).ToList();
+            List<TableMakerProduct> EVP = new List<TableMakerProduct>();
+            foreach (var pd in products)
+            {
+                var pd_ers = ers.Where(er => er.table_maker_cfile == pd && er.lib_fg.is_valid).ToList(); 
+                var evtrs = trs.Where(tr => tr.Recipe.Program.Project == pd.Project && tr.Recipe.Program.Type.Name == "EV" && tr.Status == TestStatus.Completed).ToList();
+                if (pd_ers.Count == evtrs.Count)
+                    EVP.Add(pd);
+            }
+            RuningLog.Write($"{supportedBTs.Count}, {products.Count}, {EVP.Count}\n");
+        }
+
+        private bool IsReleased(Project pj, LibFG lib_fg)
+        {
+            return pj.ReleasePackages.Where(rp => rp.is_valid).Any(rp => rp.lib_fg == lib_fg);
+        }
+
+        private bool IsEVPass(Project pj, LibFG lib_fg)
+        {
+            var trs = pj.Programs.Where(o => o.Type.Name == "EV").SelectMany(pro => pro.Recipes.SelectMany(rec => rec.TestRecords)).Where(tr => tr.TesterStr == "17200" && tr.Status == TestStatus.Completed).ToList();
+            return trs.All(tr => tr.EmulatorResults.Where(er => er.is_valid).Any(er => er.lib_fg == lib_fg));
+        }
+
+        private Dictionary<string, Dictionary<string, TimeSpan>> GetProjectTime(List<Project> projects)
+        {
+            Dictionary<string, Dictionary<string, TimeSpan>> output = new Dictionary<string, Dictionary<string, TimeSpan>>();
+            foreach (var prj in projects)
+            {
+                string prjStr = prj.Name;
+                Dictionary<string, TimeSpan> programsTime = new Dictionary<string, TimeSpan>();
+                foreach (var prog in prj.Programs)
+                {
+                    var programType = prog.Type.Name;
+                    if (!programsTime.ContainsKey(programType))
+                    {
+                        TimeSpan ts = GetProgramTimeSpan(prog);
+                        programsTime.Add(programType, ts);
+                    }
+                    else
+                    {
+                        TimeSpan ts = GetProgramTimeSpan(prog);
+                        //ts += programsTime[programType];
+                        programsTime[programType] += ts;
+                    }
+                }
+                if (programsTime.Count != 0)
+                    output.Add(prjStr, programsTime);
+            }
+            return output;
+        }
+
+        private TimeSpan GetProgramTimeSpan(Program prog)
+        {
+            TimeSpan output = TimeSpan.Zero;
+            foreach (var rec in prog.Recipes)
+            {
+                output += GetRecipeTimeSpan(rec);
+            }
+            return output;
+        }
+
+        private TimeSpan GetRecipeTimeSpan(Recipe rec)
+        {
+            TimeSpan output = TimeSpan.Zero;
+            foreach (var tr in rec.TestRecords)
+            {
+                if (tr.StartTime != DateTime.MinValue && tr.EndTime != DateTime.MinValue)
+                    output += tr.EndTime - tr.StartTime;
+            }
+            return output;
+        }
+
+        private Dictionary<DateTime, double> GetDailyOccupancyRatio(IEnumerable<TestRecord> trs)
+        {
+            Dictionary<DateTime, double> output = new Dictionary<DateTime, double>();
+            var startTime = trs.Min(o => o.StartTime);
+            var endTime = trs.Max(o => o.EndTime);
+            for (DateTime t = startTime.Date; t < endTime.Date + TimeSpan.FromDays(1); t += TimeSpan.FromDays(1))
+            {
+                if (!output.ContainsKey(t))
+                    output.Add(t, GetOccupancyRatio(t, trs));
+            }
+            return output;
+        }
+
+        private double GetOccupancyRatio(DateTime t, IEnumerable<TestRecord> trs)
+        {
+            var endTime = new DateTime(t.Year, t.Month, t.Day, 23, 59, 59, 999);
+            var innerTRs = trs.Where(tr => (tr.StartTime > t && tr.EndTime < endTime));
+            var overTRs = trs.Where(tr => (tr.StartTime < t && tr.EndTime > endTime));
+            var leftTRs = trs.Where(tr => (tr.StartTime < t && tr.EndTime > t && tr.EndTime < endTime));
+            var rightTRs = trs.Where(tr => (tr.StartTime > t && tr.StartTime < endTime && tr.EndTime > endTime));
+            TimeSpan ts = TimeSpan.Zero;
+            foreach (var tr in overTRs)
+            {
+                ts += (endTime - t);
+            }
+            foreach (var tr in innerTRs)
+            {
+                ts += (tr.EndTime - tr.StartTime);
+            }
+            foreach (var tr in leftTRs)
+            {
+                ts += (tr.EndTime - t);
+            }
+            foreach (var tr in rightTRs)
+            {
+                ts += (endTime - tr.StartTime);
+            }
+            return (ts.TotalMilliseconds) / (4 * (endTime - t).TotalMilliseconds);
+        }
+
+        private Dictionary<DateTime, int> GetDailyThroughputs(IEnumerable<TestRecord> trs, TestStatus ts)
+        {
+            Dictionary<DateTime, int> output = new Dictionary<DateTime, int>();
+            var startTime = trs.Min(o => o.StartTime);
+            var endTime = trs.Max(o => o.EndTime);
+            var selectedTRs = trs.Where(o => o.Status == ts);
+            for (DateTime t = startTime.Date; t < endTime.Date + TimeSpan.FromDays(1); t += TimeSpan.FromDays(1))
+            {
+                var num = selectedTRs.Count(o => o.EndTime.Date == t.Date);
+                output.Add(t, num);
+            }
+            return output;
+        }
+
+        private Dictionary<YearWeek, int> GetWeeklyThroughputs(IEnumerable<TestRecord> trs, TestStatus ts)
+        {
+            Dictionary<YearWeek, int> output = new Dictionary<YearWeek, int>(new YearWeekComparer());
+            var dailyThroughpus = GetDailyThroughputs(trs, ts);
+            foreach (var t in dailyThroughpus.Keys)
+            {
+                var week = GetWeek(t);
+                //var weekStr = $"{ week[0]} W{week[1]}";
+                if (!output.Keys.Contains(week))
+                {
+                    output.Add(week, dailyThroughpus[t]);
+                }
+                else
+                {
+                    output[week] += dailyThroughpus[t];
+                }
+            }
+            return output;
+        }
+
+        private YearWeek GetWeek(DateTime t)
+        {
+            var year = t.Year;
+            var week = 1 + t.DayOfYear / 7;
+            return new YearWeek { Year = year, Week = week };
+        }
+
+        private Dictionary<DateTime, int> GetMonthlyThroughputs(IEnumerable<TestRecord> trs, TestStatus ts)
+        {
+            Dictionary<DateTime, int> output = new Dictionary<DateTime, int>();
+            var dailyThroughpus = GetDailyThroughputs(trs, ts);
+            foreach (var t in dailyThroughpus.Keys)
+            {
+                DateTime month = GetMonth(t);
+                if (!output.Keys.Contains(month))
+                {
+                    output.Add(month, dailyThroughpus[t]);
+                }
+                else
+                {
+                    output[month] += dailyThroughpus[t];
+                }
+            }
+            return output;
+        }
+
+        private DateTime GetMonth(DateTime t)
+        {
+            DateTime output = new DateTime(t.Year, t.Month, 1);
+            return output;
+        }
+
+        private void Dashboard_Selected(object sender, RoutedEventArgs e)
+        {
+            UpdateWeeklyThroughput();
+            UpdateOccupancyRatio();
+            UpdateProgress();
+        }
+
+        private void UpdateProgress()
+        {
+        }
+
+        private void UpdateOccupancyRatio()
+        {
+            Dictionary<DateTime, double> dailyOR;
+            using (var dbContext = new AppDbContext())
+            {
+                var trs = dbContext.TestRecords.ToList().Where(o => o.StartTime != DateTime.MinValue && (o.Status == TestStatus.Completed || o.Status != TestStatus.Invalid || o.Status == TestStatus.Executing));
+                dailyOR = GetDailyOccupancyRatio(trs);
+            }
+
+            DashBoardViewInstance.ORbarChart.PlotBars(dailyOR.Values);
+        }
+
+        private void UpdateWeeklyThroughput()
+        {
+            Dictionary<YearWeek, int> weeklyTP;
+            using (var dbContext = new AppDbContext())
+            {
+                var trs = dbContext.TestRecords.ToList().Where(o => o.StartTime != DateTime.MinValue && (o.Status == TestStatus.Completed || o.Status != TestStatus.Invalid || o.Status == TestStatus.Executing));
+                weeklyTP = GetWeeklyThroughputs(trs, TestStatus.Completed);
+            }
+
+            DashBoardViewInstance.wTHbarChart.PlotBars(weeklyTP.Values);
+        }
+    }
+
+    class YearWeek
+    {
+        public int Year { get; set; }
+        public int Week { get; set; }
+    }
+    class YearWeekComparer : EqualityComparer<YearWeek>
+    {
+
+        public override bool Equals(YearWeek x, YearWeek y)
+        {
+            if (x.Year == y.Year && x.Week == y.Week)
+                return true;
+            else
+                return false;
+        }
+
+        public override int GetHashCode(YearWeek obj)
+        {
+            return (obj.Year * obj.Week).GetHashCode();
+        }
     }
 }

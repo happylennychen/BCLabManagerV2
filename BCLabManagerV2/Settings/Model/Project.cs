@@ -71,6 +71,7 @@ namespace BCLabManager.Model
         }
         //public ObservableCollection<TableMakerProduct> TableMakerProducts { get; set; } = new ObservableCollection<TableMakerProduct>();
         public ObservableCollection<ProjectSetting> ProjectSettings { get; set; } = new ObservableCollection<ProjectSetting>();
+        public ObservableCollection<TableMakerRecord> TableMakerRecords { get; set; } = new ObservableCollection<TableMakerRecord>();
         public uint DefaultEOD
         {
             get 
@@ -86,7 +87,14 @@ namespace BCLabManager.Model
         }
         public ObservableCollection<EmulatorResult> EmulatorResults { get; set; } = new ObservableCollection<EmulatorResult>();
         public ObservableCollection<ReleasePackage> ReleasePackages { get; set; } = new ObservableCollection<ReleasePackage>();
-
+        private uint _planedDays;
+        public uint PlanedDays
+        {
+            get { return _planedDays; }
+            set { SetProperty(ref _planedDays, value); }
+        }
+        public List<DateTime> StartTimes { get; set; } = new List<DateTime>();
+        public List<DateTime> StopTimes { get; set; } = new List<DateTime>();
         public Project()           //Create用到
         {
         }

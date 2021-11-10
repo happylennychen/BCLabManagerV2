@@ -23,14 +23,6 @@
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
             <Setter Property="ToolTip" Value="{Binding Path=Description}"></Setter>
-            <!--<Style.Triggers>
-                <DataTrigger Binding="{Binding Path=IsAbandoned, UpdateSourceTrigger=PropertyChanged}" Value="True">
-                    <Setter Property="Background" Value="{StaticResource AbandonedBrush}"></Setter>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Path=Status, UpdateSourceTrigger=PropertyChanged}" Value="4">
-                    <Setter Property="Background" Value="{StaticResource AbandonedBrush}"></Setter>
-                </DataTrigger>
-            </Style.Triggers>-->
         </Style>
 
         <CollectionViewSource x:Key="programsCollectionViewSource" Source="{Binding Path=AllPrograms}">

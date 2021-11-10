@@ -8,7 +8,7 @@
     <Window.Resources>
     </Window.Resources>
     <DockPanel LastChildFill="True">
-        <Menu DockPanel.Dock="Top">
+        <Menu DockPanel.Dock="Top" FontSize="14">
             <MenuItem Header="Events" Click="Event_Click"></MenuItem>
             <MenuItem Header="Configuration" Click="Config_Click"></MenuItem>
             <MenuItem Header="Utilities">
@@ -22,10 +22,12 @@
                 <MenuItem Header="Temporary Method (Recipe Template Rename)" Click="TemporaryMethod_Click" Visibility="Collapsed"></MenuItem>
                 <MenuItem Header="Temporary Method (Broken Files MD5 check)" Click="TemporaryMethod1_Click" Visibility="Collapsed"></MenuItem>
                 <MenuItem Header="Temporary Method (One File MD5 check)" Click="TemporaryMethod2_Click" Visibility="Collapsed"></MenuItem>
+                <MenuItem Header="Project and Recipe Update" Click="TemporaryMethod3_Click" Visibility="Visible"></MenuItem>
             </MenuItem>
+            <MenuItem Header="Performance" Click="Performance_Click"></MenuItem>
         </Menu>
         <TabControl x:Name="MainTab">
-            <TabItem Header="Dashboard">
+            <TabItem Header="Dashboard" Selector.Selected="Dashboard_Selected">
                 <v:DashBoardView x:Name="DashBoardViewInstance" DataContext="{Binding Path=dashBoardViewModel}"></v:DashBoardView>
             </TabItem>
             <TabItem Header="Assets">

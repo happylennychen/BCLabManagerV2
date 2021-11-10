@@ -305,14 +305,14 @@ namespace BCLabManager.ViewModel
                 JumpBehaviorService.Items = new ObservableCollection<JumpBehavior>(uow.JumpBehaviors.GetAll("Condition"));
                 StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
 
-                ProjectService.Items = new ObservableCollection<Project>(uow.Projects.GetAll());
+                ProjectService.Items = new ObservableCollection<Project>(uow.Projects.GetAll("EmulatorResults"));
                 ProjectSettingService.Items = new ObservableCollection<ProjectSetting>(uow.ProjectSettings.GetAll());
                 ProgramTypeService.Items = new ObservableCollection<ProgramType>(uow.ProgramTypes.GetAll());
                 TableMakerProductTypeService.Items = new ObservableCollection<TableMakerProductType>(uow.TableMakerProductTypes.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepService.Items = new ObservableCollection<StepClass>(uow.Steps.GetAll());
                 //ProgramService.RecipeService.StepRuntimeService.StepTemplateService.Items = new ObservableCollection<StepTemplate>(uow.StepTemplates.GetAll());
                 TableMakerRecordService.Items = new ObservableCollection<TableMakerRecord>(uow.TableMakerRecords.GetAll("Products"));
-                FreeTestRecordService.Items = new ObservableCollection<TestRecord>(uow.TestRecords.GetAllFreeTestRecords());
+                //FreeTestRecordService.Items = new ObservableCollection<TestRecord>(uow.TestRecords.GetAllFreeTestRecords());
 
                 //ProgramService.RecipeTemplateService = RecipeTemplateService;
                 EventService.Items = new ObservableCollection<Event>(uow.Events.GetAll());
@@ -413,7 +413,7 @@ namespace BCLabManager.ViewModel
                 FreeTestRecordService
                 );    //ViewModel初始化
 
-            dashBoardViewModel = new DashBoardViewModel(BatteryService, ChannelService, ChamberService, ProgramService);
+            dashBoardViewModel = new DashBoardViewModel(BatteryTypeService, ProjectService, BatteryService, ChannelService, ChamberService, ProgramService);
             tableMakerViewModel = new TableMakerViewModel(ProjectService, TableMakerRecordService, ProgramService, TesterService);
         }
         #endregion // Constructor

@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using BCLabManager.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BCLabManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211104061946_AddStartStopTimesToProject")]
+    partial class AddStartStopTimesToProject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,28 +114,8 @@ namespace BCLabManager.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("ChargeCurrent")
-                        .HasColumnName("charge_current")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ChargeHighTemp")
-                        .HasColumnName("charge_high_temp")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ChargeLowTemp")
-                        .HasColumnName("charge_low_temp")
-                        .HasColumnType("integer");
-
                     b.Property<int>("CutoffDischargeVoltage")
                         .HasColumnName("cutoff_discharge_voltage")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("DischargeHighTemp")
-                        .HasColumnName("discharge_high_temp")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("DischargeLowTemp")
-                        .HasColumnName("discharge_low_temp")
                         .HasColumnType("integer");
 
                     b.Property<int>("FullyChargedEndCurrent")

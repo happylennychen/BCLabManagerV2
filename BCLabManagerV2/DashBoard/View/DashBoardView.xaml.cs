@@ -25,6 +25,7 @@ namespace BCLabManager.View
         public DashBoardView()
         {
             InitializeComponent();
+            TimeControl.Text = DateTime.Now.ToString();
         }
 
         private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -35,21 +36,8 @@ namespace BCLabManager.View
                 TestRecordViewModel tr = item.Content as TestRecordViewModel;
                 if (tr != null)
                 {
-                    Navigator.SetMainTabIndex(3);
-                    Navigator.SetSelectedTestRecord(tr.Id);
-                }
-            }
-        }
-
-        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            DataGridRow item = sender as DataGridRow;
-            if (item != null)
-            {
-                TestRecordViewModel tr = item.Item as TestRecordViewModel;
-                if (tr != null)
-                {
-                    Navigator.SetMainTabIndex(3);
+                    //Navigator.SetMainTabByIndex(4);
+                    Navigator.SetMainTabByHeader("Executor");
                     Navigator.SetSelectedTestRecord(tr.Id);
                 }
             }

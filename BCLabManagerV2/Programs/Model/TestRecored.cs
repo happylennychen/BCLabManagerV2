@@ -91,21 +91,31 @@ namespace BCLabManager.Model
         private string _recipeStr;
         public string RecipeStr
         {
-            get { return _recipeStr; }
+            get {
+                //return _recipeStr; 
+                return Recipe.ToString();
+            }
             set { SetProperty(ref _recipeStr, value); }
         }
         //public String ProgramStr { get; set; }
         private string _programStr;
         public string ProgramStr
         {
-            get { return _programStr; }
+            get 
+            {
+                return Recipe.Program.Name;
+                //return _programStr; 
+            }
             set { SetProperty(ref _programStr, value); }
         }
         //public String ProgramStr { get; set; }
         private string _projectStr;
         public string ProjectStr
         {
-            get { return _projectStr; }
+            get {
+                //return _projectStr; 
+                return Recipe.Program.Project.Name;
+            }
             set { SetProperty(ref _projectStr, value); }
         }
 
