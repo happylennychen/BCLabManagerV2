@@ -84,11 +84,23 @@ namespace BCLabManager.ViewModel
                 if (_applyCommand == null)
                 {
                     _applyCommand = new RelayCommand(
-                        param => { this.Apply(); }
+                        param => { this.Apply(); },
+                        param => this.CanApply
                         );
                 }
                 return _applyCommand;
             }
+        }
+
+        public bool CanApply 
+        { 
+            get 
+            {
+                if (Group != null && RecipeTemplates.Any(rt => rt.IsSelected))
+                    return true;
+                else
+                    return false;
+            } 
         }
         #endregion // Public Methods
 

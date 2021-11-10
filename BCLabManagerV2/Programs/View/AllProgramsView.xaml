@@ -245,8 +245,8 @@
             <DockPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button x:Name="DirectCommitBtn" Content="_Direct Commit" Command="{Binding Path=DirectCommitCommand}" Margin="0,5,15,0" Width="100"></Button>
-                    <Button x:Name="ExecuteBtn" Content="_Execute" Command="{Binding Path=ExecuteCommand}" Margin="0,5,5,0" Width="60"></Button>
-                    <Button x:Name="CommitBtn" Content="_Commit" Command="{Binding Path=CommitCommand}" Margin="0,5,5,0" Width="60"></Button>
+                    <Button x:Name="ExecuteBtn" Content="_Execute" Command="{Binding Path=ExecuteCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
+                    <Button x:Name="CommitBtn" Content="_Commit" Command="{Binding Path=CommitCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
                     <Button x:Name="InvalidateBtn" Content="_Invalidate" Command="{Binding Path=InvalidateCommand}" Margin="0,5,5,0" Width="60"></Button>
                     <Button x:Name="ViewDataBtn" Content="_View Data" Command="{Binding Path=ViewCommand}" Margin="0,5,5,0" Width="60"></Button>
                     <Button x:Name="AddBtn" Content="_Add" Command="{Binding Path=AddCommand}" Margin="0,5,5,0" Width="60"></Button>

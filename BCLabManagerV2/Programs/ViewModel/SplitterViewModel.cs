@@ -10,6 +10,7 @@ using System.Windows.Input;
 using Microsoft.Win32;
 using Prism.Mvvm;
 using System.IO;
+using System.Windows;
 
 namespace BCLabManager.ViewModel
 {
@@ -153,7 +154,15 @@ namespace BCLabManager.ViewModel
 
         private string CreateNewFile(string filepath, string newspliter, string oldspliter, int index)
         {
-            List<string> lines = File.ReadAllLines(filepath).ToList();
+            try
+            {
+                List<string> lines = File.ReadAllLines(filepath).ToList();
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return null;
+            }
             string targetline;
             int lineIndex;
             if (newspliter != string.Empty)

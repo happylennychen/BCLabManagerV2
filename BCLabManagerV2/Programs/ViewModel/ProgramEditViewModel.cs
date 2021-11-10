@@ -375,7 +375,16 @@ namespace BCLabManager.ViewModel
         /// </summary>
         bool CanCreate
         {
-            get { return IsNewProgram; }
+            get 
+            {
+                if(!AllRecipeTemplates.Any(rt=>rt.IsSelected))
+                    return false;
+                if (Temperatures.Length == 0)
+                    return false;
+                try { GetTemperatureList(Temperatures); }
+                catch (Exception e) { return false; }
+                return true; 
+            }
         }
 
         /// <summary>

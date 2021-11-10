@@ -422,10 +422,25 @@ namespace BCLabManager.ViewModel
                 {
                     _addCommand = new RelayCommand(
                         param => { this.AddTestRecord(); },
-                        param => this.CanView
+                        param => this.CanAdd
                         );
                 }
                 return _addCommand;
+            }
+        }
+        private bool CanAdd
+        {
+            get 
+            {
+                //return _selectedTestRecord != null && (_selectedTestRecord.Record.TestFilePath != string.Empty); 
+                if (_selectedRecipe == null)
+                    return false;
+                if (_selectedRecipe.IsAbandoned)
+                    return false;
+                if (_selectedRecipe.TestRecords.Any(tr => tr.Status == TestStatus.Completed || tr.Status == TestStatus.Waiting))
+                    return false;
+                else
+                    return true;
             }
         }
         #endregion // Public Interface
