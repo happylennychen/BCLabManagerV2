@@ -218,7 +218,7 @@ namespace BCLabManager.ViewModel
             projevm.Id = _selectedItem.Id;
             projevm.Name = _selectedItem.Name;
             projevm.Customer = _selectedItem.Customer;
-            projevm.BatteryType = _selectedItem.BatteryType;
+            projevm.BatteryType = projevm.AllBatteryTypes.SingleOrDefault(o=>o.Id == _selectedItem.BatteryType.Id);
             projevm.Description = _selectedItem.Description;
             projevm.CutoffDischargeVoltage = _selectedItem.CutoffDischargeVoltage;
             projevm.LimitedChargeVoltage = _selectedItem.LimitedChargeVoltage;
@@ -279,7 +279,7 @@ namespace BCLabManager.ViewModel
             projevm.DisplayName = "Project-Save As";
             projevm.Name = _selectedItem.Name;
             projevm.Customer = _selectedItem.Customer;
-            projevm.BatteryType = _selectedItem.BatteryType;
+            projevm.BatteryType = projevm.AllBatteryTypes.SingleOrDefault(o => o.Id == _selectedItem.BatteryType.Id);
             projevm.Description = _selectedItem.Description;
             projevm.CutoffDischargeVoltage = _selectedItem.CutoffDischargeVoltage;
             projevm.LimitedChargeVoltage = _selectedItem.LimitedChargeVoltage;

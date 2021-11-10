@@ -154,9 +154,10 @@ namespace BCLabManager.ViewModel
 
         private string CreateNewFile(string filepath, string newspliter, string oldspliter, int index)
         {
+            List<string> lines;
             try
             {
-                List<string> lines = File.ReadAllLines(filepath).ToList();
+                lines = File.ReadAllLines(filepath).ToList();
             }
             catch(Exception e)
             {
