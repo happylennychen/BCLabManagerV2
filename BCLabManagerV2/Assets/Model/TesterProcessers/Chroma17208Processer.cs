@@ -1,4 +1,4 @@
-﻿using BCLabManager.Model.Chroma17200;
+﻿using BCLabManager.Model.Chroma17208;
 using MathNet.Numerics;
 using Prism.Mvvm;
 using System;
@@ -14,20 +14,20 @@ using System.Windows;
 
 namespace BCLabManager.Model
 {
-    public class Chroma17200Processer : ITesterProcesser
+    public class Chroma17208Processer : ITesterProcesser
     {
         Dictionary<Column, double> StepTolerance = new Dictionary<Column, double>();
         Dictionary<Column, double> ContinuityTolerance = new Dictionary<Column, double>();
-        public Chroma17200Processer()
+        public Chroma17208Processer()
         {
             StepTolerance.Add(Column.CURRENT, 10);        //mA
             StepTolerance.Add(Column.VOLTAGE, 50);          //mV
             StepTolerance.Add(Column.TEMPERATURE, 3.5);
             StepTolerance.Add(Column.TIME, 3);          //S
         }
-
         public DateTime[] GetTimeFromRawData(ObservableCollection<string> fileList)
         {
+            return null;
             DateTime[] output = new DateTime[2];
             List<DateTime> StartTimes = new List<DateTime>();
             List<DateTime> EndTimes = new List<DateTime>();
@@ -72,25 +72,29 @@ namespace BCLabManager.Model
 
         public bool CheckChannelNumber(string filepath, string channelnumber)
         {
+            return true;
             return GetChannelName(filepath) == channelnumber;
         }
 
         public string GetChannelName(string filepath)
         {
             string output = "Ch";
-            FileStream fs = new FileStream(filepath, FileMode.Open);
-            StreamReader sw = new StreamReader(fs);
-            sw.ReadLine();
-            string channelNumberLine = sw.ReadLine();
-            string channelNumberStr = channelNumberLine.Substring(15, 1);
-            output += channelNumberStr;
-            sw.Close();
-            fs.Close();
             return output;
+            //string output = "Ch";
+            //FileStream fs = new FileStream(filepath, FileMode.Open);
+            //StreamReader sw = new StreamReader(fs);
+            //sw.ReadLine();
+            //string channelNumberLine = sw.ReadLine();
+            //string channelNumberStr = channelNumberLine.Substring(15, 1);
+            //output += channelNumberStr;
+            //sw.Close();
+            //fs.Close();
+            //return output;
         }
 
         public bool CheckFileFormat(string filepath)
         {
+            return true;
             if (Path.GetExtension(filepath) != ".csv")
                 return false;
             try
@@ -139,8 +143,8 @@ namespace BCLabManager.Model
             //bool IsFirstDischarge = false;
             //bool IsFirstDischargeChecked = false;
             int lineIndex = 0;
-            int startTime = 0;
-            int timeSpan = 0;
+            double startTime = 0;
+            double timeSpan = 0;
             //string dataLine0 = string.Empty;
             //string dataLine1 = string.Empty;
 
@@ -153,11 +157,14 @@ namespace BCLabManager.Model
             DataPreprocesser.Index = 0;
             DataPreprocesser.IsFirstDischarge = false;
             DataPreprocesser.IsFirstDischargeChecked = false;
+            DataPreprocesser.Nodes.Clear();
+            DataPreprocesser.StringList.Clear();
+            DataPreprocesser.DicList.Clear();
             try
             {
                 bool isCOCPoint = false;
                 var fullSteps = new List<StepV2>(recipe.RecipeTemplate.StepV2s.OrderBy(o => o.Index));
-                for (; lineIndex < 10; lineIndex++)     //第十行以后都是数据
+                for (; lineIndex < 1; lineIndex++)     //第一行以后都是数据
                 {
                     sw.WriteLine(sr.ReadLine());
                 }
@@ -189,8 +196,8 @@ namespace BCLabManager.Model
                 sw.WriteLine(DataPreprocesser.StringList[DataPreprocesser.Index]);
 
                 //startTime = Convert.ToInt32(row1[Column.TIME_MS]);
-                startTime = DataPreprocesser.Nodes[DataPreprocesser.Index].TimeInMS;
-                lineIndex = 11;
+                startTime = DataPreprocesser.Nodes[DataPreprocesser.Index].TimeInS;
+                lineIndex = 2;
                 while (true)
                 {
                     lineIndex++;
@@ -212,7 +219,7 @@ namespace BCLabManager.Model
                     {
                         DataPreprocesser.Index++;
                         //timeSpan = (Convert.ToInt32(row0[Column.TIME_MS]) - startTime) / 1000;
-                        timeSpan = (DataPreprocesser.Nodes[DataPreprocesser.Index - 1].TimeInMS - startTime) / 1000;
+                        timeSpan = (DataPreprocesser.Nodes[DataPreprocesser.Index - 1].TimeInS - startTime);
                         //result = StepCOCPointCheck(step1, row0, recipe.Temperature, timeSpan);
                         result = DataPreprocesser.StepCOCPointCheck(step1, recipe.Temperature, timeSpan);      //Index?
                         if (result != ErrorCode.NORMAL)
@@ -246,7 +253,7 @@ namespace BCLabManager.Model
                         }
                     }
                     //if (row1[Column.MODE] == "0")
-                    if (DataPreprocesser.Nodes[DataPreprocesser.Index].Mode == 0)
+                    if (DataPreprocesser.IsStepFirstLine)
                     {
                         isCOCPoint = true;
                     }
@@ -254,7 +261,7 @@ namespace BCLabManager.Model
                     {
                         #region COC Point Check
                         //timeSpan = (Convert.ToInt32(row0[Column.TIME_MS]) - startTime) / 1000;
-                        timeSpan = (DataPreprocesser.Nodes[DataPreprocesser.Index - 1].TimeInMS - startTime) / 1000;
+                        timeSpan = (DataPreprocesser.Nodes[DataPreprocesser.Index - 1].TimeInS - startTime);
                         //result = StepCOCPointCheck(step1, row0, recipe.Temperature, timeSpan);
                         result = DataPreprocesser.StepCOCPointCheck(step1, recipe.Temperature, timeSpan);      //Index?
                         if (result != ErrorCode.NORMAL)
@@ -304,7 +311,7 @@ namespace BCLabManager.Model
                             }
                         }
                         //startTime = Convert.ToInt32(row1[Column.TIME_MS]);
-                        startTime = DataPreprocesser.Nodes[DataPreprocesser.Index].TimeInMS;
+                        startTime = DataPreprocesser.Nodes[DataPreprocesser.Index].TimeInS;
                         #endregion
                     }
                     else
@@ -325,7 +332,7 @@ namespace BCLabManager.Model
                         #region Continuity Check
 
                         //if (row1[Column.MODE] != "0")
-                        if (DataPreprocesser.Nodes[DataPreprocesser.Index].Mode != 0)
+                        if (!DataPreprocesser.IsStepFirstLine)
                         {
                             //Dictionary<Column, bool> rowContinuityMatrix = GetContinuityMatrix(row0, row1);
                             //result = ContinuityCheck(rowContinuityMatrix);
@@ -385,7 +392,7 @@ namespace BCLabManager.Model
                 return false;
         }
 
-        private StepV2 GetNewTargetStep(StepV2 currentStep, List<StepV2> fullSteps, string status, double temperature, int timeSpan)
+        private StepV2 GetNewTargetStep(StepV2 currentStep, List<StepV2> fullSteps, string status, double temperature, double timeSpan)
         {
             StepV2 nextStep = null;
             CutOffBehavior cob = null;
@@ -439,7 +446,7 @@ namespace BCLabManager.Model
                         case Parameter.CURRENT: leftvalue = DataPreprocesser.Nodes[DataPreprocesser.Index].Current; break;
                         case Parameter.POWER: leftvalue = DataPreprocesser.Nodes[DataPreprocesser.Index].Current * DataPreprocesser.Nodes[DataPreprocesser.Index].Voltage; break;
                         case Parameter.TEMPERATURE: leftvalue = DataPreprocesser.Nodes[DataPreprocesser.Index].Temperature; break;
-                        case Parameter.TIME: leftvalue = DataPreprocesser.Nodes[DataPreprocesser.Index].TimeInMS / 1000; break;
+                        case Parameter.TIME: leftvalue = DataPreprocesser.Nodes[DataPreprocesser.Index].TimeInS / 1000; break;
                         case Parameter.VOLTAGE: leftvalue = DataPreprocesser.Nodes[DataPreprocesser.Index].Voltage; break;
                     }
                     switch (jpb.Condition.Mark)
@@ -940,18 +947,19 @@ namespace BCLabManager.Model
             return true;
         }
     }
-    namespace Chroma17200
+    namespace Chroma17208
     {
+
         enum ColumnIndex : int
         {
             ChSerial = 2,
             ChTime = 3,
             ChChgDsg = 6,
-            ChCurrent = 8,
-            ChVoltage = 9,
-            ChTemperature = 10,
-            ChAccMah = 11,
-            ChStatus = 13,
+            ChCurrent = 7,
+            ChVoltage = 8,
+            ChTemperature = 9,
+            ChAccMah = 10,
+            ChStatus = 12,
         }
         public static class DataPreprocesser
         {
@@ -990,6 +998,14 @@ namespace BCLabManager.Model
             }
             public static bool IsFirstDischarge { get; set; }
             public static bool IsFirstDischargeChecked { get; set; }
+            public static bool IsStepFirstLine
+            { get
+                {
+                    if (Index == 0)
+                        return true;
+                    return Nodes[Index].Step != Nodes[Index - 1].Step;
+                }
+            }
 
 
             private static ChromaNode GetNodeFromeString(string value)
@@ -1004,12 +1020,11 @@ namespace BCLabManager.Model
                     {
                         node.StepNo = Convert.ToInt32(strRow[(int)Column.STEPNO]);
                         node.Step = Convert.ToInt32(strRow[(int)Column.STEP]);
-                        node.TimeInMS = Convert.ToInt32(strRow[(int)Column.TIME_MS]);
+                        node.TimeInS = Convert.ToDouble(strRow[(int)Column.TIME_S]);
                         node.Time = DateTime.Parse(strRow[(int)Column.TIME]);
                         node.Cycle = Convert.ToByte(strRow[(int)Column.CYCLE]);
                         node.Loop = Convert.ToByte(strRow[(int)Column.LOOP]);
                         node.StepMode = GetActionMode(strRow[(int)Column.STEP_MODE]);
-                        node.Mode = Convert.ToByte(strRow[(int)Column.MODE]);
                         node.Current = Convert.ToDouble(strRow[(int)Column.CURRENT]);
                         node.Voltage = Convert.ToDouble(strRow[(int)Column.VOLTAGE]);
                         node.Temperature = Convert.ToDouble(strRow[(int)Column.TEMPERATURE]);
@@ -1030,10 +1045,10 @@ namespace BCLabManager.Model
             {
                 switch (v)
                 {
-                    case "CC_CV_Charge": return ActionMode.CC_CV_CHARGE;
-                    case "CC_Discharge": return ActionMode.CC_DISCHARGE;
-                    case "CP_Discharge": return ActionMode.CP_DISCHARGE;
-                    case "Rest": return ActionMode.REST;
+                    case "CC-CV Charge": return ActionMode.CC_CV_CHARGE;
+                    case "CC Discharge": return ActionMode.CC_DISCHARGE;
+                    case "CP Discharge": return ActionMode.CP_DISCHARGE;
+                    case "REST": return ActionMode.REST;
                     default: return ActionMode.NA;
                 }
             }
@@ -1065,7 +1080,7 @@ namespace BCLabManager.Model
 
             public static UInt32 StepStartPointCheck(StepV2 step, double temp, uint options)
             {
-                if (DataPreprocesser.Nodes[DataPreprocesser.Index].Mode != 0)
+                if (!DataPreprocesser.IsStepFirstLine)
                 {
                     return ErrorCode.DP_UNDEFINED;
                 }
@@ -1107,8 +1122,8 @@ namespace BCLabManager.Model
                     case ActionMode.CP_DISCHARGE:
 
                         //power = GetPowerFromRow(row1) * 1000;             //mW
-                        var timeSpan = (Nodes[Index].TimeInMS - Nodes[Index - 1].TimeInMS);
-                        if (timeSpan > 950)
+                        var timeSpan = (Nodes[Index].TimeInS - Nodes[Index - 1].TimeInS);
+                        if (timeSpan > 0.95)
                         {
                             power = Math.Abs(Nodes[Index].Current * Nodes[Index].Voltage) * 1000;   //mW
                         }
@@ -1192,7 +1207,7 @@ namespace BCLabManager.Model
                 return ErrorCode.NORMAL;
             }
 
-            public static UInt32 StepCOCPointCheck(StepV2 step, double temp, int timeSpan)
+            public static UInt32 StepCOCPointCheck(StepV2 step, double temp, double timeSpan)
             {
                 double voltage = 0;
                 double current = 0;
@@ -1327,7 +1342,7 @@ namespace BCLabManager.Model
                     return ErrorCode.DP_STEP_JUMP;
 
                 //diff = (Convert.ToDouble(row1[Column.TIME_MS]) - Convert.ToDouble(row0[Column.TIME_MS]));
-                diff = Nodes[Index].TimeInMS - Nodes[Index - 1].TimeInMS;
+                diff = Nodes[Index].TimeInS - Nodes[Index - 1].TimeInS;
                 if (diff < 0 || diff > 1000)
                     return ErrorCode.DP_TIME_JUMP;
 
@@ -1345,12 +1360,6 @@ namespace BCLabManager.Model
                 //if (Math.Abs(Convert.ToDouble(row1[Column.LOOP]) - Convert.ToDouble(row0[Column.LOOP])) > 1)
                 if (Math.Abs(Nodes[Index].Loop - Nodes[Index - 1].Loop) > 1)
                     return ErrorCode.DP_LOOP_JUMP;
-
-                //output.Add(Column.STEP_MODE, true);
-
-                //if (Math.Abs(Convert.ToDouble(row1[Column.MODE]) - Convert.ToDouble(row0[Column.MODE])) > 1)
-                if (Math.Abs(Nodes[Index].Mode - Nodes[Index - 1].Mode) > 1)
-                    return ErrorCode.DP_MODE_JUMP;
 
 
                 //output.Add(Column.CURRENT, true);       //目前不挑错
@@ -1448,167 +1457,6 @@ namespace BCLabManager.Model
             private static void RestoreCheckSumError()
             {
                 //throw new NotImplementedException();
-                RestoreTimeInMs();
-                RestoreTime();
-                RestorePhysicalColumns();
-                RestoreUnchangedColumns();
-                UpdateStringList();
-            }
-
-            private static void UpdateStringList()
-            {
-                StringList[Index] = $"{Nodes[Index].StepNo},{Nodes[Index].Step},{Nodes[Index].TimeInMS},{Nodes[Index].Time.ToString("yyyy-MM-dd HH:mm:ss")},{Nodes[Index].Cycle},{Nodes[Index].Loop},{ConvertActionModeToString(Nodes[Index].StepMode)},{Nodes[Index].Mode},{Nodes[Index].Current},{Nodes[Index].Voltage},{Nodes[Index].Temperature},{Nodes[Index].Capacity},{Nodes[Index].TotalCapacity},{Nodes[Index].Status}";
-            }
-
-            private static void RestorePhysicalColumns()
-            {
-                double[] xdata;
-                double[] ydata;
-                Tuple<double, double> p;
-                double b, a;
-
-                var nodes = Nodes.Select(o => o).Where(o => o != null).ToList();
-
-                int startTime = nodes.First().TimeInMS;
-                int endTime = nodes.Last().TimeInMS;
-                for (int i = nodes.Count() - 1; i >= 0; i--)
-                {
-                    if (nodes[i].StepMode != nodes[Index].StepMode)
-                    {
-                        if (i > Index)
-                            endTime = nodes[i - 1].TimeInMS;
-                        else if (i < Index)
-                        {
-                            startTime = nodes[i + 1].TimeInMS;
-                            break;
-                        }
-                    }
-                }
-                var nodesClip = nodes.Where(o => o.Status != StepEndString.EndByError && o.TimeInMS >= startTime && o.TimeInMS <= endTime);
-                xdata = nodesClip.Select(o => Convert.ToDouble(o.TimeInMS)).ToArray();
-                ydata = nodesClip.Select(o => o.Current).ToArray();
-                p = Fit.Line(xdata, ydata);
-                b = p.Item1; // == 10; intercept
-                a = p.Item2; // == 0.5; slope
-                double newCurrent = a * nodes[Index].TimeInMS + b;
-                nodes[Index].Current = Math.Round(newCurrent, 4);
-
-
-                ydata = nodesClip.Select(o => o.Voltage).ToArray();
-                p = Fit.Line(xdata, ydata);
-                b = p.Item1; // == 10; intercept
-                a = p.Item2; // == 0.5; slope
-                double newVoltage = a * nodes[Index].TimeInMS + b;
-                nodes[Index].Voltage = Math.Round(newVoltage, 4);
-
-                ydata = nodesClip.Select(o => o.Temperature).ToArray();
-                p = Fit.Line(xdata, ydata);
-                b = p.Item1; // == 10; intercept
-                a = p.Item2; // == 0.5; slope
-                double newTemperature = a * nodes[Index].TimeInMS + b;
-                nodes[Index].Temperature = Math.Round(newTemperature, 4);
-
-                ydata = nodesClip.Select(o => o.Capacity).ToArray();
-                p = Fit.Line(xdata, ydata);
-                b = p.Item1; // == 10; intercept
-                a = p.Item2; // == 0.5; slope
-                double newCapacity = a * nodes[Index].TimeInMS + b;
-                nodes[Index].Capacity = Math.Round(newCapacity, 4);
-
-                ydata = nodesClip.Select(o => o.TotalCapacity).ToArray();
-                p = Fit.Line(xdata, ydata);
-                b = p.Item1; // == 10; intercept
-                a = p.Item2; // == 0.5; slope
-                double newTotalCapacity = a * nodes[Index].TimeInMS + b;
-                nodes[Index].TotalCapacity = Math.Round(newTotalCapacity, 4);
-            }
-
-            private static void RestoreUnchangedColumns()
-            {
-                if (Nodes[Index - 1].StepNo == Nodes[Index + 1].StepNo)
-                {
-                    if (Nodes[Index - 1].StepNo != Nodes[Index].StepNo)
-                        Nodes[Index].StepNo = Nodes[Index - 1].StepNo;
-                }
-                else
-                {
-                    ;//未处理
-                }
-                if (Nodes[Index - 1].Step == Nodes[Index + 1].Step)
-                {
-                    if (Nodes[Index - 1].Step != Nodes[Index].Step)
-                        Nodes[Index].Step = Nodes[Index - 1].Step;
-                }
-                else
-                {
-                    ;//未处理
-                }
-                if (Nodes[Index - 1].Cycle == Nodes[Index + 1].Cycle)
-                {
-                    if (Nodes[Index - 1].Cycle != Nodes[Index].Cycle)
-                        Nodes[Index].Cycle = Nodes[Index - 1].Cycle;
-                }
-                else
-                {
-                    ;//未处理
-                }
-                if (Nodes[Index - 1].Loop == Nodes[Index + 1].Loop)
-                {
-                    if (Nodes[Index - 1].Loop != Nodes[Index].Loop)
-                        Nodes[Index].Loop = Nodes[Index - 1].Loop;
-                }
-                else
-                {
-                    ;//未处理
-                }
-                if (Nodes[Index - 1].StepMode == Nodes[Index + 1].StepMode)
-                {
-                    if (Nodes[Index - 1].StepMode != Nodes[Index].StepMode)
-                        Nodes[Index].StepMode = Nodes[Index - 1].StepMode;
-                }
-                else
-                {
-                    ;//未处理
-                }
-                if (Nodes[Index - 1].Mode == Nodes[Index + 1].Mode)
-                {
-                    if (Nodes[Index - 1].Mode != Nodes[Index].Mode)
-                        Nodes[Index].Mode = Nodes[Index - 1].Mode;
-                }
-                else
-                {
-                    ;//未处理
-                }
-                if (Nodes[Index - 1].Status == Nodes[Index + 1].Status)
-                {
-                    if (Nodes[Index - 1].Status != Nodes[Index].Status)
-                        Nodes[Index].Status = Nodes[Index - 1].Status;
-                }
-                else
-                {
-                    ;//未处理
-                }
-            }
-
-            private static void RestoreTimeInMs()
-            {
-                List<int> Diffs = new List<int>();
-                var nodes = Nodes.Select(o => o).Where(o => o != null).ToList();
-                for (int i = 1; i < nodes.Count; i++)
-                {
-                    //if (nodes[i - 1] == null)
-                    //    break;
-                    if (i == Index || i == Index + 1)
-                        continue;
-                    Diffs.Add(nodes[i].TimeInMS - nodes[i - 1].TimeInMS);
-                }
-                var diff = Diffs.GroupBy(o => o).Max(o => o.Key);
-                nodes[Index].TimeInMS = nodes[Index - 1].TimeInMS + diff;
-            }
-
-            private static void RestoreTime()
-            {
-                Nodes[Index].Time = Nodes[Index - 1].Time + TimeSpan.FromMilliseconds(Nodes[Index].TimeInMS - Nodes[Index - 1].TimeInMS);
             }
 
             private static string EventDescriptor(string filepath, Program program, Recipe recipe, TestRecord record, string info)
@@ -1632,29 +1480,28 @@ namespace BCLabManager.Model
         {
             STEPNO,     //配方的Index，1234234234
             STEP,       //真实的顺序，1234...n
-            TIME_MS,    //100，200，300
+            TIME_S,    //0.01，1，2，3
             TIME,       //2020-07-24 08:55:31
             CYCLE,      //外层循环？
             LOOP,       //内层循环？
             STEP_MODE,       //Rest, CC_CV_Charge, CC_Discharge
-            MODE,            //Step改变时为0，否则为1
             CURRENT,
             VOLTAGE,
             TEMPERATURE,
             CAPACITY,       //单个Step的电量
             TOTAL_CAPACITY,  //
-            STATUS              //StepFinishByCut_V,StepFinishByCut_T,StepFinishByCut_I
+            STATUS,              //StepFinishByCut_V,StepFinishByCut_T,StepFinishByCut_I
+            MR_NO              //主配方序号，无法去除
         }
         public class ChromaNode
         {
             public Int32 StepNo { get; set; }
             public Int32 Step { get; set; }
-            public int TimeInMS { get; set; }
+            public double TimeInS { get; set; }
             public DateTime Time { get; set; }
             public byte Cycle { get; set; }
             public byte Loop { get; set; }
             public ActionMode StepMode { get; set; }
-            public byte Mode { get; set; }
             public double Current { get; set; }
             public double Voltage { get; set; }
             public double Temperature { get; set; }
