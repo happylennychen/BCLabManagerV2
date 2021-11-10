@@ -1166,12 +1166,10 @@ namespace BCLabManager
             openFileDialog.Multiselect = true;
             if (openFileDialog.ShowDialog() == true)
             {
-                var n1FilePaths = openFileDialog.FileNames.Where(o => o.Contains("Debug-N1"));
-                var n2FilePaths = openFileDialog.FileNames.Where(o => o.Contains("Debug-N2"));
-                RunningLog.Write($"---------------------------Normal Files:-------------------------\n");
-                Report(n1FilePaths);
-                RunningLog.Write($"---------------------------Bad Temperature Files:-------------------------\n");
-                Report(n2FilePaths);
+                //var n1FilePaths = openFileDialog.FileNames.Where(o => o.Contains("Debug-N1"));
+                //var n2FilePaths = openFileDialog.FileNames.Where(o => o.Contains("Debug-N2"));
+                RunningLog.Write($"---------------------------Report-------------------------\n");
+                Report(openFileDialog.FileNames);
             }
         }
 
@@ -1180,8 +1178,8 @@ namespace BCLabManager
             List<List<ChromaNode>> nodesList;
             foreach (var filePath in filePaths)
             {
-                GetDischargeVoltageRaisingNodes(filePath, 0.005, out nodesList);
-                var errorFrame = nodesList.Where(o => o.Count > 0).ToList();
+                GetDischargeVoltageRaisingNodes(filePath, 0, out nodesList);
+                var errorFrame = nodesList.Where(o => o.Count > 5).ToList();
                 RunningLog.Write($"There are {errorFrame.Count} error frames in {Path.GetFileName(filePath)}\n");
                 if (errorFrame.Count > 0)
                 {
@@ -1190,6 +1188,7 @@ namespace BCLabManager
                         RunningLog.Write($"{frame.Count},");
                     }
                     RunningLog.Write($"\n");
+                    RunningLog.Write($"Total Length:{errorFrame.Sum(o => o.Count)}\n");
                 }
             }
         }
