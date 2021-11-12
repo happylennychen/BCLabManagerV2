@@ -85,6 +85,7 @@ namespace BCLabManager.Model
         public void DomainUpdate(Project item)
         {
             var edittarget = Items.SingleOrDefault(o => o.Id == item.Id);
+            edittarget.Name = item.Name;
             edittarget.BatteryType = item.BatteryType;
             edittarget.Customer = item.Customer;
             edittarget.CutoffDischargeVoltage = item.CutoffDischargeVoltage;
