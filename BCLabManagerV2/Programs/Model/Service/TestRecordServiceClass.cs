@@ -215,30 +215,33 @@ namespace BCLabManager.Model
 
         internal void Invalidate(TestRecord testRecord, string comment)
         {
-            testRecord.Comment += "\r\n" + comment;
-            testRecord.Status = TestStatus.Invalid;
-            try
+            var newName = Path.GetFileName(testRecord.TestFilePath) + "_INVALID";
+            if (FileTransferHelper.FileRename(testRecord.TestFilePath, newName))
             {
-                if (File.Exists(testRecord.TestFilePath))
-                    File.Move(testRecord.TestFilePath, testRecord.TestFilePath + "_INVALID");
+                testRecord.Comment += "\r\n" + comment;
+                testRecord.Status = TestStatus.Invalid;
+                testRecord.TestFilePath += "_INVALID";
+                DatabaseUpdate(testRecord);
             }
-            catch (Exception e)
+            else
             {
+                MessageBox.Show($"Invalidate {testRecord.TestFilePath} Failed!");
             }
-            testRecord.TestFilePath += "_INVALID";
-            DatabaseUpdate(testRecord);
         }
 
         internal void Abandon(TestRecord testRecord)
         {
-            testRecord.Status = TestStatus.Abandoned;
-            testRecord.TestFilePath += "_ABANDONED";
-            if (testRecord.TestFilePath != string.Empty)
+            var newName = Path.GetFileName(testRecord.TestFilePath) + "_ABANDONED";
+            if (FileTransferHelper.FileRename(testRecord.TestFilePath, newName))
             {
-                if (File.Exists(testRecord.TestFilePath))
-                    File.Move(testRecord.TestFilePath, testRecord.TestFilePath + "_ABANDONED");
+                testRecord.Status = TestStatus.Abandoned;
+                testRecord.TestFilePath += "_ABANDONED";
+                DatabaseUpdate(testRecord);
             }
-            DatabaseUpdate(testRecord);
+            else
+            {
+                MessageBox.Show($"Abandon {testRecord.TestFilePath} Failed!");
+            }
         }
 #if false
         #region free
