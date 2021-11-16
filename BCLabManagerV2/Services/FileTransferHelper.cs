@@ -146,10 +146,39 @@ namespace BCLabManager
             if (md5 != MD5)
                 return false;
             string newMD5;
-            if(!FileTransferHelper.FileCopyWithMD5Check(localPath, universalPath, out newMD5))
+            if (!FileTransferHelper.FileCopyWithMD5Check(localPath, universalPath, out newMD5))
                 return false;
             if (newMD5 != MD5)
                 return false;
+            return true;
+        }
+        public static bool FileRename(string remotePath, string newName)
+        {
+            var mappingPath = Remote2Mapping(remotePath);
+            var newMappingPath = Path.Combine(Path.GetDirectoryName(mappingPath), newName);
+            var localPath = Remote2Local(remotePath);
+            var newLocalPath = Path.Combine(Path.GetDirectoryName(localPath), newName);
+            try
+            {
+                if (File.Exists(mappingPath))
+                {
+                    File.Move(mappingPath, newMappingPath);
+                }
+                else
+                    return false;
+
+                if (File.Exists(localPath))
+                {
+                    File.Move(localPath, newLocalPath);
+                }
+                else
+                    return false;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return false;
+            }
             return true;
         }
 
