@@ -377,9 +377,19 @@ namespace BCLabManager.ViewModel
         {
             get 
             {
+                if (Project == null)
+                    return false;
+                if (ProgramType == null)
+                    return false;
                 if(!AllRecipeTemplates.Any(rt=>rt.IsSelected))
                     return false;
-                if (Temperatures.Length == 0)
+                if (Temperatures == null || Temperatures.Length == 0)
+                    return false;
+                if (Name == null || Name.Length == 0)
+                    return false;
+                if (Description == null || Description.Length == 0)
+                    return false;
+                if (Requester == null || Requester.Length == 0)
                     return false;
                 try { GetTemperatureList(Temperatures); }
                 catch (Exception e) { return false; }
