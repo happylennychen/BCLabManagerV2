@@ -15,7 +15,7 @@ namespace BCLabManager.DataAccess
 
         }
 
-        protected new void Update(Project prj)
+        public new void Update(Project prj)
         {
             var old_prj = _context.Projects.Single(o => o.Id == prj.Id);
             old_prj.Name = prj.Name;
