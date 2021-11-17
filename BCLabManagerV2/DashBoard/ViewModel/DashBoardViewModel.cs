@@ -291,7 +291,7 @@ namespace BCLabManager.ViewModel
 
         public List<BatteryType> BatteryTypes
         {
-            get { return _batteryTypeService.Items.Where(bt=>bt.Projects.Count!=0 && bt.Projects.All(prj=>prj.Programs.Any(pro=>!pro.IsInvalid))).ToList(); }
+            get { return _batteryTypeService.Items.Where(bt=>bt.Projects.Count!=0 && bt.Projects.Any(prj=>prj.Programs.Any(pro=>!pro.IsInvalid))).ToList(); }
         }
 
         private BatteryType _batteryType;
@@ -310,7 +310,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                return _projectService.Items.Where(o => o.BatteryType == BatteryType).ToList();
+                return _projectService.Items.Where(o => o.BatteryType == BatteryType && o.Programs.Any(pro=>!pro.IsInvalid)).ToList();
             }
         }
 
