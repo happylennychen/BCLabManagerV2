@@ -392,7 +392,10 @@ namespace BCLabManager.ViewModel
                 if (Requester == null || Requester.Length == 0)
                     return false;
                 try { GetTemperatureList(Temperatures); }
-                catch (Exception e) { return false; }
+                catch (Exception e) 
+                { 
+                    return false; 
+                }
                 return true; 
             }
         }

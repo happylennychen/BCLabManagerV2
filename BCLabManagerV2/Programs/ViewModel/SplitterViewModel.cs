@@ -92,6 +92,8 @@ namespace BCLabManager.ViewModel
             foreach (var fp in FileList)
             {
                 List<String> subfilepaths = Splite(fp, SplitterList.Select(o=>o.Str).ToList());
+                if (subfilepaths == null)
+                    return;
                 foreach (var sfp in subfilepaths)
                     UpdateTime(sfp);
             }
@@ -147,7 +149,10 @@ namespace BCLabManager.ViewModel
                 }
                 oldspliter = newspliter;
                 newspliter = spliter;
-                subfilepaths.Add(CreateNewFile(filepath, newspliter, oldspliter, index + 1));
+                var subfilepath = CreateNewFile(filepath, newspliter, oldspliter, index + 1);
+                if (subfilepath == null)
+                    return null;
+                subfilepaths.Add(subfilepath);
             }
             return subfilepaths;
         }
