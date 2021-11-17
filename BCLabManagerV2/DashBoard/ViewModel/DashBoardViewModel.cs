@@ -286,6 +286,7 @@ namespace BCLabManager.ViewModel
                     Project.StopTimes.Add(Time);
                 _projectService.DatabaseUpdate(Project);
                 UpdateButtoneName();
+                RaisePropertyChanged("ExpectedProgress");
             }
         }
 
@@ -338,6 +339,8 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("Products");
                 RaisePropertyChanged("RealProgress");
                 RaisePropertyChanged("ExpectedProgress");
+                RaisePropertyChanged("PlanedDays");
+                UpdateButtoneName();
             }
         }
 

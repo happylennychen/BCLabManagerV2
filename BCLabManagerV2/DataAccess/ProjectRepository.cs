@@ -18,6 +18,9 @@ namespace BCLabManager.DataAccess
         public new void Update(Project prj)
         {
             var old_prj = _context.Projects.Single(o => o.Id == prj.Id);
+            old_prj.PlanedDays = prj.PlanedDays;
+            old_prj.StartTimes = prj.StartTimes;
+            old_prj.StopTimes = prj.StopTimes;
             old_prj.Name = prj.Name;
             old_prj.AbsoluteMaxCapacity = prj.AbsoluteMaxCapacity;
             old_prj.Customer = prj.Customer;
