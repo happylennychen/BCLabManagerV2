@@ -57,8 +57,8 @@ namespace BCLabManager
         public static string ProductFolderName { get; } = "Table Maker Product";
         public static string EvResultFolderName { get; } = "Emulator Product";
         public static string RunningLogFolder { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Running Log\\");
-        //public static string DatabaseHost { get; set; } = "10.22.4.249";
-        public static string DatabaseHost { get; set; } = "localhost";
+        public static string DatabaseHost { get; set; } = "10.22.4.249";
+        //public static string DatabaseHost { get; set; } = "localhost";
         public static string DatabaseName { get; set; } = "BCLM";
         //public static string DatabaseName { get; set; } = "TMRecord";
         public static string DatabaseUser { get; set; } = "postgres";

@@ -271,28 +271,28 @@ namespace BCLabManager.ViewModel
                 MessageBox.Show("DB Data Seeding Completed!");
             }
 #endif
-            //#region update database
-            //using (var context = new AppDbContext())
-            //{
-            //    var projects = context.Projects.ToList();
-            //    foreach (var prj in projects)
-            //    {
-            //        if (prj.StartTimes == null)
-            //            prj.StartTimes = new List<DateTime>();
-            //        if (prj.StopTimes == null)
-            //            prj.StopTimes = new List<DateTime>();
-            //    }
-            //    var recipes = context.Recipes.Include(rec => rec.Program).Include(rec => rec.TestRecords).ToList();
-            //    foreach (var rec in recipes)
-            //    {
-            //        //if (rec.Program.IsInvalid)
-            //        //    rec.IsAbandoned = true;
-            //        if (rec.TestRecords.All(o => o.Status == TestStatus.Abandoned))
-            //            rec.IsAbandoned = true;
-            //    }
-            //    context.SaveChanges();
-            //}
-            //#endregion
+            #region update database
+            using (var context = new AppDbContext())
+            {
+                var projects = context.Projects.ToList();
+                foreach (var prj in projects)
+                {
+                    if (prj.StartTimes == null)
+                        prj.StartTimes = new List<DateTime>();
+                    if (prj.StopTimes == null)
+                        prj.StopTimes = new List<DateTime>();
+                }
+                var recipes = context.Recipes.Include(rec => rec.Program).Include(rec => rec.TestRecords).ToList();
+                foreach (var rec in recipes)
+                {
+                    //if (rec.Program.IsInvalid)
+                    //    rec.IsAbandoned = true;
+                    if (rec.TestRecords.All(o => o.Status == TestStatus.Abandoned))
+                        rec.IsAbandoned = true;
+                }
+                context.SaveChanges();
+            }
+            #endregion
         }
 
         void LoadFromDB()

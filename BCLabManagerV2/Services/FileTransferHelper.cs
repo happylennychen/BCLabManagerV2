@@ -171,8 +171,8 @@ namespace BCLabManager
                 {
                     File.Move(localPath, newLocalPath);
                 }
-                else
-                    return false;
+                //else
+                //    return false;
             }
             catch (Exception e)
             {
