@@ -27,7 +27,6 @@ namespace BCLabManager.Model
         }
         public DateTime[] GetTimeFromRawData(ObservableCollection<string> fileList)
         {
-            return null;
             DateTime[] output = new DateTime[2];
             List<DateTime> StartTimes = new List<DateTime>();
             List<DateTime> EndTimes = new List<DateTime>();
@@ -50,14 +49,22 @@ namespace BCLabManager.Model
             sw.ReadLine();
             sw.ReadLine();
             string startTimeLine = sw.ReadLine();
-            string startTimeStr = startTimeLine.Substring(17, 19);
-            output[0] = DateTime.Parse(startTimeStr);
+            string startTimeStr = GetTimeStrFromLine(startTimeLine);
+            if (!DateTime.TryParse(startTimeStr, out output[0]))
+                return null;
             string endTimeLine = sw.ReadLine();
-            string endTimeStr = endTimeLine.Substring(15, 19);
-            output[1] = DateTime.Parse(endTimeStr);
+            string endTimeStr = GetTimeStrFromLine(endTimeLine);
+            if (!DateTime.TryParse(endTimeStr, out output[1]))
+                return null;
             sw.Close();
             fs.Close();
             return output;
+        }
+
+        private string GetTimeStrFromLine(string startTimeLine)
+        {
+            var firstColonIndex = startTimeLine.IndexOf(':');
+            return startTimeLine.Substring(firstColonIndex + 1).Trim();
         }
 
         private DateTime GetEarliest(List<DateTime> startTimes)
@@ -72,29 +79,41 @@ namespace BCLabManager.Model
 
         public bool CheckChannelNumber(string filepath, string channelnumber)
         {
-            return true;
             return GetChannelName(filepath) == channelnumber;
         }
 
         public string GetChannelName(string filepath)
         {
             string output = "Ch";
+            FileStream fs = new FileStream(filepath, FileMode.Open);
+            StreamReader sw = new StreamReader(fs);
+            sw.ReadLine();
+            string channelNumberLine = sw.ReadLine();
+            uint uChannelNumber;
+            string channelNumberStr = string.Empty;
+            if (UInt32.TryParse(channelNumberLine.Split(':').Last().Trim(), out uChannelNumber))
+            {
+                switch (uChannelNumber)
+                {
+                    case 5:
+                        channelNumberStr = "1"; break;
+                    case 9:
+                        channelNumberStr = "2"; break;
+                    case 13:
+                        channelNumberStr = "3"; break;
+                    default: break;
+                }
+            }
+            else
+                return string.Empty;
+            output += channelNumberStr;
+            sw.Close();
+            fs.Close();
             return output;
-            //string output = "Ch";
-            //FileStream fs = new FileStream(filepath, FileMode.Open);
-            //StreamReader sw = new StreamReader(fs);
-            //sw.ReadLine();
-            //string channelNumberLine = sw.ReadLine();
-            //string channelNumberStr = channelNumberLine.Substring(15, 1);
-            //output += channelNumberStr;
-            //sw.Close();
-            //fs.Close();
-            //return output;
         }
 
         public bool CheckFileFormat(string filepath)
         {
-            return true;
             if (Path.GetExtension(filepath) != ".csv")
                 return false;
             try
@@ -105,7 +124,7 @@ namespace BCLabManager.Model
                 for (; i < 9; i++)
                     sw.ReadLine();
                 string columnLine = sw.ReadLine();
-                var columnList = "Step No.,Step,DWell Time(ms),TEST TIME,Cycle,Loop,Step Mode,Mode,Current(A),Voltage(V),Capacity(Ah),Total Capacity(Ah),Status".Split(',');
+                var columnList = "Step No,Step,Test Time(s),Date Time,Cycle,Loop,Step Mode,Current(A),Voltage(V),Aux T1,Capacity(Ah),Total Capacity(Ah),Status,MR No.".Split(',');
                 i = 0;
                 foreach (var column in columnLine.Split(','))
                 {
@@ -999,7 +1018,8 @@ namespace BCLabManager.Model
             public static bool IsFirstDischarge { get; set; }
             public static bool IsFirstDischargeChecked { get; set; }
             public static bool IsStepFirstLine
-            { get
+            {
+                get
                 {
                     if (Index == 0)
                         return true;
