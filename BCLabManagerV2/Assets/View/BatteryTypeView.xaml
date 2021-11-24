@@ -106,11 +106,7 @@
             <TextBox Style="{StaticResource textBoxInError}"
       Grid.Row="6" Grid.Column="2" 
       Text="{Binding Path=TypicalCapacity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-<<<<<<< HEAD
-      Validation.ErrorTemplate="{x:Null}" Visibility="Collapsed"
-=======
-      
->>>>>>> pr2
+                     Visibility="Collapsed"
       />
             <Label 
       Grid.Row="8" Grid.Column="0" 
@@ -127,13 +123,8 @@
       Content="Capacity:" 
       HorizontalAlignment="Right"
       />
-<<<<<<< HEAD
-            <TextBox 
+            <TextBox  Style="{StaticResource textBoxInError}"
       Grid.Row="6" Grid.Column="2" 
-=======
-            <TextBox Style="{StaticResource textBoxInError}"
-      Grid.Row="10" Grid.Column="2" 
->>>>>>> pr2
       Text="{Binding Path=RatedCapacity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
      
       />
@@ -172,13 +163,8 @@
       Content="Fully Charged Ending Timeout:" 
       HorizontalAlignment="Right"
       />
-<<<<<<< HEAD
-            <TextBox 
+            <TextBox  Style="{StaticResource textBoxInError}"
       Grid.Row="10" Grid.Column="2" 
-=======
-            <TextBox Style="{StaticResource textBoxInError}"
-      Grid.Row="18" Grid.Column="2" 
->>>>>>> pr2
       Text="{Binding Path=FullyChargedEndingTimeout, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
      
       />
