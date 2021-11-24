@@ -104,6 +104,9 @@ namespace BCLabManager.Model
                 case "ZKEEBC-X":
                     ITesterProcesser = new ZKEEBC_X_Processer();
                     break;
+                case "Chroma17208":
+                    ITesterProcesser = new Chroma17208Processer();
+                    break;
                 default:
                     ITesterProcesser = new PseudoProcesser();
                     break;
