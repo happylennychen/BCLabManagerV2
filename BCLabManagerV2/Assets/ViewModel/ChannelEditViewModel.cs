@@ -15,7 +15,7 @@ namespace BCLabManager.ViewModel
     /// Editable: true
     /// Updateable: no need
     /// </summary>
-    public class ChannelEditViewModel : BindableBaseWithName//, IDataErrorInfo
+    public class ChannelEditViewModel : BindableBaseWithName, IDataErrorInfo
     {
         #region Fields
 
@@ -203,6 +203,35 @@ namespace BCLabManager.ViewModel
         bool CanSaveAs
         {
             get { return IsNewChannel; }
+        }
+
+        public string Error
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {               
+                if (columnName == "Name")
+                {
+                    if (Name != null && Name.Length > 30)
+                    {
+                        return "长度超出范围";
+                    }
+
+                    if (Name == string.Empty)
+                    {
+                        return "不能为空";
+                    }
+                }
+
+                return string.Empty;
+            }
         }
 
         #endregion // Private Helpers

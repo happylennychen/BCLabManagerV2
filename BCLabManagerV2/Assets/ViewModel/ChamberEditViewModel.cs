@@ -15,7 +15,7 @@ namespace BCLabManager.ViewModel
     /// Editable: true
     /// Updateable: no need
     /// </summary>
-    public class ChamberEditViewModel : BindableBaseWithName//, IDataErrorInfo
+    public class ChamberEditViewModel : BindableBaseWithName, IDataErrorInfo
     {
         #region Fields
 
@@ -226,6 +226,51 @@ namespace BCLabManager.ViewModel
         bool CanSaveAs
         {
             get { return IsNewChamber; }
+        }
+
+        public string Error
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                if (columnName == "Name")
+                {
+                    if (Name != null && Name.Length > 30)
+                    {
+                        return "长度超出范围";
+                    }
+
+                    if (Name == string.Empty)
+                    {
+                        return "不能为空";
+                    }
+                }
+
+                if (columnName == "Manufacturer")
+                {
+                    if (Manufacturer != null && Manufacturer.Length > 30)
+                    {
+                        return "长度超出范围";
+                    }
+
+                    if (Manufacturer == string.Empty)
+                    {
+                        return "不能为空";
+                    }
+                }
+
+             
+
+
+                return string.Empty;
+            }
         }
 
         #endregion // Private Helpers

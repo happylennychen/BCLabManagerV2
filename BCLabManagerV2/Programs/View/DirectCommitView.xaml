@@ -3,6 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         Title="{Binding Path=DisplayName}" Height="830" Width="650" WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <Style x:Key="textBoxInError" TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid Margin="4">
             <Grid.ColumnDefinitions>
@@ -87,7 +99,7 @@
       >
             </ComboBox>
 
-            
+
             <Label 
       Grid.Row="4" Grid.Column="0" 
       Content="_Chamber:" 
@@ -261,11 +273,12 @@
       Grid.Row="32" Grid.Column="0" 
       Content="Start Index:" 
       HorizontalAlignment="Right"
+                Target="{Binding ElementName=StartIndexTxt}" 
       />
-            <TextBox 
+            <TextBox Style="{StaticResource textBoxInError}"
       Grid.Row="32" Grid.Column="2" 
       Text="{Binding Path=StartIndex, ValidatesOnDataErrors=True, UpdateSourceTrigger=LostFocus}" 
-      Validation.ErrorTemplate="{x:Null}"
+      
       />
             <Label 
       Grid.Row="34" Grid.Column="0" 
@@ -273,11 +286,11 @@
       HorizontalAlignment="Right"
       Target="{Binding ElementName=NewCycleTxt}" 
       />
-            <TextBox 
+            <TextBox Style="{StaticResource textBoxInError}"
       x:Name="NewCycleTxt"
       Grid.Row="34" Grid.Column="2" 
       Text="{Binding Path=NewCycle, ValidatesOnDataErrors=True, UpdateSourceTrigger=LostFocus}" 
-      Validation.ErrorTemplate="{x:Null}"
+      
       />
             <Label 
       Grid.Row="36" Grid.Column="0" 
@@ -293,10 +306,10 @@
       />
 
             <CheckBox x:Name="SkipDPCheckBox"
-      Grid.Row="38" Grid.Column="0" Grid.ColumnSpan="3" 
+      Grid.Row="38" Grid.Column="2" 
                 Content="Skip Data Preprocessing"
       HorizontalAlignment="Center"
-                IsChecked="{Binding Path=IsSkipDP}"
+                IsChecked="{Binding Path=IsSkipDP}" Height="31" Margin="99,0,238,0" VerticalAlignment="Top"
       />
 
             <CheckBox x:Name="SkipTCCheckBox"
@@ -329,6 +342,7 @@
       Margin="4,2" 
       MinWidth="60" 
       />
+
         </Grid>
     </Grid>
 </Window>

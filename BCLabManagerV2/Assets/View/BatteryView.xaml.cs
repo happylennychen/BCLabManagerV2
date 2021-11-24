@@ -27,5 +27,10 @@ namespace BCLabManager.View
         {
             this.Close();
         }
+
+        private void CycleTxt_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

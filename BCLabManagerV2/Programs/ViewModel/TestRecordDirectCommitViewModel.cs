@@ -10,13 +10,14 @@ using System.Windows.Input;
 using System.Windows;
 using Prism.Mvvm;
 using Microsoft.Win32;
+using System.ComponentModel;
 
 namespace BCLabManager.ViewModel
 {
     /// <summary>
     /// A UI-friendly wrapper for a Customer object.
     /// </summary>
-    public class TestRecordDirectCommitViewModel : BindableBaseWithName//, IDataErrorInfo
+    public class TestRecordDirectCommitViewModel : BindableBaseWithName //, IDataErrorInfo
     {
         #region Fields
         readonly TestRecord _record;
@@ -710,5 +711,7 @@ namespace BCLabManager.ViewModel
             SplitterViewInstance.DataContext = new SplitterViewModel();
             SplitterViewInstance.ShowDialog();
         }
+
+        
     }
 }

@@ -8,6 +8,7 @@ using BCLabManager.DataAccess;
 using System.Windows.Input;
 using BCLabManager.Properties;
 using Prism.Mvvm;
+using System.ComponentModel;
 
 namespace BCLabManager.ViewModel
 {
@@ -15,7 +16,7 @@ namespace BCLabManager.ViewModel
     /// Editable: true
     /// Updateable: no need
     /// </summary>
-    public class BatteryTypeEditViewModel : BindableBaseWithName//, IDataErrorInfo
+    public class BatteryTypeEditViewModel : BindableBaseWithName, IDataErrorInfo
     {
         #region Fields
 
@@ -335,5 +336,125 @@ namespace BCLabManager.ViewModel
         }
 
         #endregion // Private Helpers
+        public string Error
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                if (columnName == "Manufacturer")
+                {
+
+                    if (Manufacturer == string.Empty )
+
+                    {
+                        return "不能为空";
+                    }
+                        
+                    if (Manufacturer != null && Manufacturer.Length > 30)
+                    {
+                            return "长度不能大于30";   
+                    }
+                }
+                
+
+
+                if (columnName == "Name")
+                {
+
+                    if (Name == string.Empty)
+
+                    {
+                        return "不能为空";
+                    }
+                    if (Name != null && Name.Length > 30)
+                    {
+                        return "长度不能大于30";
+                    }
+                }
+
+                if (columnName == "Material")
+                {
+                    if (Material == string.Empty)
+
+                    {
+                        return "不能为空";
+                    }
+                    if (Material != null && Material.Length > 30)
+                    {
+                        return "长度不能大于30";
+                    }
+                }
+
+                if (columnName == "TypicalCapacity")
+                {
+
+                    if (TypicalCapacity != null && TypicalCapacity.ToString().Length > 10)
+                    {
+                        return "error";
+                    }
+                }
+
+                if (columnName == "LimitedChargeVoltage")
+                {
+
+                    if (LimitedChargeVoltage != null && LimitedChargeVoltage.ToString().Length > 10)
+                    {
+                        return "error";
+                    }
+                }
+
+                if (columnName == "RatedCapacity")
+                {
+
+                    if (RatedCapacity != null && RatedCapacity.ToString().Length > 10)
+                    {
+                        return "error";
+                    }
+                }
+
+                if (columnName == "NominalVoltage")
+                {
+
+                    if (NominalVoltage != null && NominalVoltage.ToString().Length > 10)
+                    {
+                        return "error";
+                    }
+                }
+
+                if (columnName == "CutoffDischargeVoltage")
+                {
+
+                    if (CutoffDischargeVoltage != null && CutoffDischargeVoltage.ToString().Length > 10)
+                    {
+                        return "error";
+                    }
+                }
+
+                if (columnName == "FullyChargedEndCurrent")
+                {
+
+                    if (FullyChargedEndCurrent != null && FullyChargedEndCurrent.ToString().Length > 10)
+                    {
+                        return "error";
+                    }
+                }
+
+
+
+                return string.Empty;
+
+
+
+            }
+        }
+
+       
     }
 }
