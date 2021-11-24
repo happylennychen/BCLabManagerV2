@@ -22,6 +22,12 @@ namespace BCLabManager.ViewModel
         {
             get
             {
+                if (_product == null)
+                    return string.Empty;
+                if (_product.Project == null)
+                    return string.Empty;
+                if (_product.Project.EmulatorResults == null)
+                    return string.Empty;
                 var ers = _product.Project.EmulatorResults.Where(er => er.is_valid).ToList();
                 List<EmulatorResult> pd_ers;
                 if (_product.Type.Description.Contains("C file"))
