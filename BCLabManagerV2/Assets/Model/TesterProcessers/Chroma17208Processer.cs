@@ -183,7 +183,7 @@ namespace BCLabManager.Model
             {
                 bool isCOCPoint = false;
                 var fullSteps = new List<StepV2>(recipe.RecipeTemplate.StepV2s.OrderBy(o => o.Index));
-                for (; lineIndex < 1; lineIndex++)     //第一行以后都是数据
+                for (; lineIndex < 10; lineIndex++)     //第十行以后都是数据
                 {
                     sw.WriteLine(sr.ReadLine());
                 }
