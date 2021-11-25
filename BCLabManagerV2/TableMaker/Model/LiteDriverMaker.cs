@@ -12,13 +12,14 @@ namespace BCLabManager
 {
     public static class LiteDriverMaker
     {
-        public static void GetLiteModel(UInt32 uEoDVoltage, List<SourceData> ocvSource, List<SourceData> rcSource, OCVModel ocvModel, RCModel rcModel, Project project, List<int> VoltagePoints, ref LiteModel liteModel)
+        public static bool GetLiteModel(UInt32 uEoDVoltage, List<SourceData> ocvSource, List<SourceData> rcSource, OCVModel ocvModel, RCModel rcModel, Project project, List<int> VoltagePoints, ref LiteModel liteModel)
         {
             List<float> fLstTblM_OCV;
             List<int> iLstTblM_SOC1;
             GetLstTblM_OCV(ocvSource, out fLstTblM_OCV, out iLstTblM_SOC1);
             List<float> flstTblOCVCof;
-            GetLstTblOCVCof(fLstTblM_OCV, iLstTblM_SOC1, out flstTblOCVCof);
+            if(!GetLstTblOCVCof(fLstTblM_OCV, iLstTblM_SOC1, out flstTblOCVCof))
+                return false;
             liteModel.flstTblOCVCof = flstTblOCVCof;
             liteModel.ilistCurr = rcModel.listfCurr.Select(o => (short)o).ToList();
             List<float> flstKeodCont;
@@ -30,6 +31,7 @@ namespace BCLabManager
             GetDCapCof(ilstTemp, liteModel.ilistCurr, flstKeodCont, flstAccAtEoD, project.AbsoluteMaxCapacity, out flstdbDCapCof, out flstdbKeodCof);
             liteModel.flstdbDCapCof = flstdbDCapCof;
             liteModel.flstdbKeodCof = flstdbKeodCof;
+            return true;
         }
         private static bool CreateRCPoints_TableMini(UInt32 uEoDVoltage, ref uint uErr, ref RCModel rcModel, List<SourceData> sdList, Project project, List<int> VoltagePoints, out List<float> flstKeodContent, out List<float> flstAccAtEoD)
         {
@@ -613,13 +615,15 @@ namespace BCLabManager
             }
         }
 
-        private static void GetLstTblOCVCof(List<float> fLstTblM_OCV, List<int> iLstTblM_SOC1, out List<float> flstTblOCVCof)
+        private static bool GetLstTblOCVCof(List<float> fLstTblM_OCV, List<int> iLstTblM_SOC1, out List<float> flstTblOCVCof)
         {
             flstTblOCVCof = new List<float>();
             CreatePolyDataFile(fLstTblM_OCV, iLstTblM_SOC1);
-            RunExcel();
+            if (!RunExcel())
+                return false;
             flstTblOCVCof = LoadFromFile();
             DeleteTmpFile();
+            return true;
         }
 
         private static void DeleteTmpFile()
@@ -657,7 +661,7 @@ namespace BCLabManager
             return flstTblOCVCof;
         }
 
-        private static void RunExcel()
+        private static bool RunExcel()
         {
             ProcessStartInfo psInfo = new ProcessStartInfo();
             psInfo.CreateNoWindow = false;
@@ -676,10 +680,12 @@ namespace BCLabManager
                     exeProcess.WaitForExit();
                 }
             }
-            catch
+            catch(Exception e)
             {
-                // Log error.
+                MessageBox.Show(e.Message);
+                return false;
             }
+            return true;
         }
 
         private static void CreatePolyDataFile(List<float> fLstTblM_OCV, List<int> iLstTblM_SOC1)

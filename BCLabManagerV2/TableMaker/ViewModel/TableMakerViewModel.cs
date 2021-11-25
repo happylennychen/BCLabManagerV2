@@ -402,7 +402,8 @@ namespace BCLabManager.ViewModel
                             MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, _voltagePoints, ref miniModel);
                             StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
                             AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
-                            LiteDriverMaker.GetLiteModel(EOD, ocvSource, rcSource, ocvModel, rcModel, stage1Project, _voltagePoints, ref liteModel);
+                            if(!LiteDriverMaker.GetLiteModel(EOD, ocvSource, rcSource, ocvModel, rcModel, stage1Project, _voltagePoints, ref liteModel))
+                                return;
                         }
                         else
                         {
@@ -417,7 +418,8 @@ namespace BCLabManager.ViewModel
                             MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, _voltagePoints, ref miniModel);
                             StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
                             AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
-                            LiteDriverMaker.GetLiteModel(EOD, ocvSource, rcSource, ocvModel, rcModel, stage2Project, _voltagePoints, ref liteModel);
+                            if(!LiteDriverMaker.GetLiteModel(EOD, ocvSource, rcSource, ocvModel, rcModel, stage2Project, _voltagePoints, ref liteModel))
+                                return;
                         }
 
                         products.Add(RCTableMaker.GenerateRCTable(stage, baseProject, _voltagePoints, time, rcModel));
