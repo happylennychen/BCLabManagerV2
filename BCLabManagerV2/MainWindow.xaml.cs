@@ -1,6 +1,6 @@
 ﻿#define Show
 //#define Requester
-//#define StartWindow
+#define StartWindow
 using System;
 using System.Collections.Generic;
 //using System.Linq;
