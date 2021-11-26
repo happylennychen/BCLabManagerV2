@@ -242,17 +242,19 @@ namespace BCLabManager.ViewModel
             //dialog.InitialDirectory = $@"{GlobalSettings.RootPath}{_record.BatteryTypeStr}\High Power\{GlobalSettings.TestDataFolderName}";
             if (dialog.ShowDialog() == true)
             {
-                TesterServiceClass _testerService = new TesterServiceClass();
+                //TesterServiceClass _testerService = new TesterServiceClass();
                 if (_record.AssignedChannel != null)
                 {
                     foreach (var file in dialog.FileNames)
                     {
-                        if (!_testerService.CheckFileFormat(_record.AssignedChannel.Tester.ITesterProcesser, file))
+                        //if (!_testerService.CheckFileFormat(_record.AssignedChannel.Tester.ITesterProcesser, file))
+                        if(!_record.AssignedChannel.Tester.ITesterProcesser.CheckFileFormat(file))
                         {
                             MessageBox.Show("Wrong File Format!");
                             return;
                         }
-                        if (!_testerService.CheckChannelNumber(_record.AssignedChannel.Tester.ITesterProcesser, file, _record.AssignedChannel.Name))
+                        //if (!_testerService.CheckChannelNumber(_record.AssignedChannel.Tester.ITesterProcesser, file, _record.AssignedChannel.Name))
+                        if(!_record.AssignedChannel.Tester.ITesterProcesser.CheckChannelNumber(file, _record.AssignedChannel.Name))
                         {
                             MessageBox.Show("Wrong channel!");
                             return;
@@ -260,7 +262,8 @@ namespace BCLabManager.ViewModel
                     }
 
                     FileList = new ObservableCollection<string>(dialog.FileNames.ToList());
-                    DateTime[] time = _testerService.GetTimeFromRawData(_record.AssignedChannel.Tester.ITesterProcesser, FileList);
+                    //DateTime[] time = _testerService.GetTimeFromRawData(_record.AssignedChannel.Tester.ITesterProcesser, FileList);
+                    DateTime[] time = _record.AssignedChannel.Tester.ITesterProcesser.GetTimeFromRawData(FileList);
                     if (time != null)
                         NewName = $@"{_record.ProgramStr}_{_record.RecipeStr}_{_record.TesterStr}_{_record.ChannelStr}_{_record.BatteryStr}_{time[0].ToString("yyyyMMddHHmmss")}";
                     else

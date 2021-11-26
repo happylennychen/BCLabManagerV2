@@ -939,6 +939,11 @@ namespace BCLabManager.Model
 
             return true;
         }
+
+        public bool CreateStdFile(string rawFilePath, out string stdFilePath)
+        {
+            throw new NotImplementedException();
+        }
     }
     namespace Chroma17200
     {

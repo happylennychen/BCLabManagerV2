@@ -663,24 +663,27 @@ namespace BCLabManager.ViewModel
 
         private void FileNameUpdate()
         {
-            TesterServiceClass _testerService = new TesterServiceClass();
+            //TesterServiceClass _testerService = new TesterServiceClass();
             if (Channel != null && Battery != null && FileList != null && FileList.Count > 0)
             {
                 foreach (var file in FileList)
                 {
-                    if (!_testerService.CheckFileFormat(Channel.Tester.ITesterProcesser, file))
+                    //if (!_testerService.CheckFileFormat(Channel.Tester.ITesterProcesser, file))
+                    if(!Channel.Tester.ITesterProcesser.CheckFileFormat(file))
                     {
                         MessageBox.Show("File Format Check Failed!");
                         return;
                     }
-                    if (!_testerService.CheckChannelNumber(Channel.Tester.ITesterProcesser, file, Channel.Name))
+                    //if (!_testerService.CheckChannelNumber(Channel.Tester.ITesterProcesser, file, Channel.Name))
+                    if (!Channel.Tester.ITesterProcesser.CheckChannelNumber(file, Channel.Name))
                     {
                         MessageBox.Show("Wrong channel!");
                         return;
                     }
                 }
 
-                DateTime[] time = _testerService.GetTimeFromRawData(Channel.Tester.ITesterProcesser, FileList);
+                //DateTime[] time = _testerService.GetTimeFromRawData(Channel.Tester.ITesterProcesser, FileList);
+                DateTime[] time = Channel.Tester.ITesterProcesser.GetTimeFromRawData(FileList);
                 if (time != null)
                     NewName = $@"{_programStr}_{_recipeStr}_{_tester.Name}_{_channel.Name}_{_battery.Name}_{time[0].ToString("yyyyMMddHHmmss")}";
                 else

@@ -430,7 +430,7 @@ namespace BCLabManager.ViewModel
         }
         private bool CanAdd
         {
-            get 
+            get
             {
                 //return _selectedTestRecord != null && (_selectedTestRecord.Record.TestFilePath != string.Empty); 
                 if (_selectedRecipe == null)
@@ -851,6 +851,7 @@ namespace BCLabManager.ViewModel
         private void DirectCommit()
         //相当于Edit，需要修改TestRecord的属性（vm和m层面都要修改），保存到数据库。还需要修改Assets的属性（vm和m层面都要修改），保存到数据库
         {
+            #region edit UI
             var model = new TestRecord();
             TestRecordDirectCommitViewModel evm = new TestRecordDirectCommitViewModel
                 (
@@ -892,12 +893,13 @@ namespace BCLabManager.ViewModel
             var TestRecordDirectCommitViewInstance = new DirectCommitView();
             TestRecordDirectCommitViewInstance.DataContext = evm;
             TestRecordDirectCommitViewInstance.ShowDialog();
+            #endregion
             if (evm.IsOK == true)
             {
                 try
                 {
-
-                    DateTime[] time = _testerService.GetTimeFromRawData(evm.Channel.Tester.ITesterProcesser, evm.FileList);
+                    #region Data preprocessing
+                    DateTime[] time = evm.Channel.Tester.ITesterProcesser.GetTimeFromRawData(evm.FileList);
                     var st = new DateTime();
                     var et = new DateTime();
                     if (time != null)
@@ -917,22 +919,29 @@ namespace BCLabManager.ViewModel
                     }
                     string filePath = string.Empty;
                     string MD5 = string.Empty;
-                    //for (int i = 0; i < 100; i++)
+                    string stdFilePath = string.Empty;
+                    string stdMD5 = string.Empty;
+
+                    if (!_programService.RecipeService.TestRecordService.DataPreProcess(SelectedTestRecord.Record, evm.FileList.ToList(),
+                    //evm.IsRename,
+                    evm.NewName/* + "-" + i.ToString()*/,
+                    evm.StartIndex,
+                    st,
+                    et,
+                    SelectedProgram.Project.BatteryType.Name,
+                    SelectedProgram.Project.Name,
+                    SelectedProgram._program,
+                    SelectedRecipe._recipe,
+                    evm.Tester.ITesterProcesser, evm.IsSkipDP, options, out MD5, out filePath, out stdMD5, out stdFilePath))
                     {
-                        filePath = _programService.RecipeService.TestRecordService.DataPreProcess(SelectedTestRecord.Record, evm.FileList.ToList(),
-                        //evm.IsRename,
-                        evm.NewName/* + "-" + i.ToString()*/,
-                        evm.StartIndex,
-                        st,
-                        et,
-                        SelectedProgram.Project.BatteryType.Name,
-                        SelectedProgram.Project.Name,
-                        SelectedProgram._program,
-                        SelectedRecipe._recipe,
-                        evm.Tester.ITesterProcesser, evm.IsSkipDP, options, out MD5);
+                        MessageBox.Show("Data preprocessing error!");
+                        return;
                     }
                     if (filePath == string.Empty)
                         return;
+
+                    #endregion
+                    #region Update UI and Database
                     SelectedTestRecord.Record.TestFilePath = filePath;
 
                     _programService.RecipeService.TestRecordService.Execute(
@@ -962,37 +971,13 @@ namespace BCLabManager.ViewModel
                     _channelService.Commit(evm.Channel, et, SelectedProgram.Name, SelectedRecipe.Name);
                     if (evm.Chamber != null)
                         _chamberService.Commit(evm.Chamber, et, SelectedProgram.Name, SelectedRecipe.Name);
-                    //Header header = new Header();
-                    //if (time != null)
-                    //{
-                    //    header.Type = SelectedProgram.Type.ToString();
-                    //    header.TestTime = time[0].ToString("yyyy-MM-dd");
-                    //    header.Equipment = evm.Channel.Tester.Manufacturer + " " + evm.Channel.Tester.Name;
-                    //    header.ManufactureFactory = SelectedProgram.Project.BatteryType.Manufacturer;
-                    //    header.BatteryModel = SelectedProgram.Project.BatteryType.Name;
-                    //    header.CycleCount = evm.NewCycle.ToString();
-                    //    header.Temperature = model.Temperature.ToString();
-                    //    header.Current = model.Current.ToString();
-                    //    header.MeasurementGain = model.MeasurementGain.ToString();
-                    //    header.MeasurementOffset = model.MeasurementOffset.ToString();
-                    //    header.TraceResistance = model.TraceResistance.ToString();
-                    //    header.CapacityDifference = model.CapacityDifference.ToString();
-                    //    header.AbsoluteMaxCapacity = SelectedProgram.Project.AbsoluteMaxCapacity.ToString();//.BatteryType.TypicalCapacity.ToString();
-                    //    header.LimitedChargeVoltage = SelectedProgram.Project.LimitedChargeVoltage.ToString();
-                    //    //header.CutoffDischargeVoltage = SelectedProgram.Project.CutoffDischargeVoltage.ToString();
-                    //    header.CutoffDischargeVoltage = SelectedProgram.Project.BatteryType.CutoffDischargeVoltage.ToString();
-                    //    header.Tester = model.Operator;
-                    //}
-                    //else
-                    //{
-                    //    header.Type = string.Empty;
-                    //}
                     SelectedTestRecord.NewCycle = evm.NewCycle;
                     _programService.RecipeService.TestRecordService.CommitV2(
                     SelectedTestRecord.Record, evm.Comment, filePath, st, et, MD5);
                     _programService.RecipeService.UpdateTime(SelectedRecipe._recipe);
                     _programService.UpdateTime(SelectedProgram._program);
                     _programService.RecipeService.RecipeTemplateService.UpdateEditable(SelectedRecipe._recipe.RecipeTemplate);
+                    #endregion
                 }
                 catch (Exception e)
                 {
@@ -1041,7 +1026,7 @@ namespace BCLabManager.ViewModel
         #endregion //Private Helper
 
 #if false
-#region Free Test Records
+        #region Free Test Records
 
 
 
@@ -1408,7 +1393,7 @@ namespace BCLabManager.ViewModel
         {
             get { return SelectedFreeTestRecord != null && SelectedFreeTestRecord.Status == TestStatus.Completed; }
         }
-#endregion
+        #endregion
 #endif
     }
 }

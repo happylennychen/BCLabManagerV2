@@ -58,23 +58,5 @@ namespace BCLabManager.Model
             edittarget.Manufacturer = item.Manufacturer;
             edittarget.Name = item.Name;
         }
-
-        internal DateTime[] GetTimeFromRawData(ITesterProcesser tester, ObservableCollection<string> fileList)
-        {
-            return tester.GetTimeFromRawData(fileList);
-        }
-
-        internal bool CheckChannelNumber(ITesterProcesser tester, string filepath, string channelnumber)
-        {
-            return tester.CheckChannelNumber(filepath, channelnumber);
-        }
-        internal bool CheckFileFormat(ITesterProcesser tester, string filepath)
-        {
-            return tester.CheckFileFormat(filepath);
-        }
-        internal bool DataPreprocessing(ITesterProcesser tester, string filepath, Program program, Recipe recipe, TestRecord record, int startIndex, uint options)
-        {
-            return tester.DataPreprocessing(filepath, program, recipe, record, startIndex, options);
-        }
     }
 }

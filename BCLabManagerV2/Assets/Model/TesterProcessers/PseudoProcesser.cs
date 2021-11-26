@@ -41,5 +41,11 @@ namespace BCLabManager.Model
         {
             return ErrorCode.UNDEFINED;
         }
+
+        public bool CreateStdFile(string rawFilePath, out string stdFilePath)
+        {
+            stdFilePath = string.Empty;
+            return true;
+        }
     }
 }

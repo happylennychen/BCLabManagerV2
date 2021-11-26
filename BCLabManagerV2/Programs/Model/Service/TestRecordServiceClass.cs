@@ -342,15 +342,62 @@ namespace BCLabManager.Model
         }
         #endregion
 #endif
-        internal string DataPreProcess(TestRecord record, List<string> rawDataFullPathList/*, bool isRename*/, string newName, int startIndex, DateTime st, DateTime et, string batteryType, string projectName, Program program, Recipe recipe, ITesterProcesser processer, bool isSkipDP, uint options, out string MD5)
+        internal bool DataPreProcess(TestRecord record, List<string> rawDataFullPathList/*, bool isRename*/, string newName, int startIndex, DateTime st, DateTime et, string batteryType, string projectName, Program program, Recipe recipe, ITesterProcesser processer, bool isSkipDP, uint options, out string MD5, out string TestFilePath, out string stdMD5, out string stdFilePath)
         {
             MD5 = string.Empty;
+            TestFilePath = string.Empty;
+            stdMD5 = string.Empty;
+            stdFilePath = string.Empty;
             string remoteProjectPath = $@"{GlobalSettings.UniversalPath}{batteryType}\{projectName}";
             string localPath = $@"{GlobalSettings.LocalFolder}{batteryType}\{projectName}";
             string localTestFileFullPath = string.Empty;
+            if (!CopyToLoacl(rawDataFullPathList, localPath, newName, out localTestFileFullPath))
+                return false;
+            #region data preprocessing
+            //#if !Test
+            TesterServiceClass ts = new TesterServiceClass();
+
+            if (!isSkipDP)
+            {
+                if (!processer.DataPreprocessing(localTestFileFullPath, program, recipe, record, startIndex, options))
+                {
+                    File.Delete(localTestFileFullPath);
+                    return false;
+                }
+            }
+            #endregion
+            string localStdFileFullPath = string.Empty;
+            if (!processer.CreateStdFile(localTestFileFullPath, out localStdFileFullPath))
+            {
+                File.Delete(localTestFileFullPath);
+                return false;
+            }
+            #region file upload
+            FileTransferHelper.FileUpload(localTestFileFullPath, out TestFilePath, out MD5);
+            if (MD5 == string.Empty)
+                return false;
+            if (TestFilePath == "")
+            {
+                MessageBox.Show("Test File Path Empty!");
+                return false;
+            }
+            FileTransferHelper.FileUpload(localStdFileFullPath, out stdFilePath, out stdMD5);
+            if (stdMD5 == string.Empty)
+                return false;
+            if (stdFilePath == "")
+            {
+                MessageBox.Show("Standard Format Test File Path Empty!");
+                return false;
+            }
+            #endregion
+            return true;
+        }
+
+        //Copy to local path, combine if needed
+        private bool CopyToLoacl(List<string> rawDataFullPathList, string localPath, string newName, out string localTestFileFullPath)
+        {
             if (rawDataFullPathList.Count > 1)
             {
-
                 var fileFullPath = $@"{localPath}\{GlobalSettings.TestDataFolderName}\{newName}";
                 localTestFileFullPath = FileTransferHelper.FileCombine(rawDataFullPathList, fileFullPath);
             }
@@ -365,34 +412,10 @@ namespace BCLabManager.Model
                 catch (Exception e)
                 {
                     MessageBox.Show(e.Message);
-                    return string.Empty;
+                    return false;
                 }
             }
-            //#if !Test
-            TesterServiceClass ts = new TesterServiceClass();
-
-            if (!isSkipDP)
-            {
-                if (!ts.DataPreprocessing(processer, localTestFileFullPath, program, recipe, record, startIndex, options))
-                {
-                    File.Delete(localTestFileFullPath);
-                    return string.Empty;
-                }
-            }
-            //#endif
-            //var TestFilePath = FileTransferHelper.Local2Universal(localPath);
-            //MD5 = FileTransferHelper.FileCopyWithMD5Check(localTestFileFullPath, TestFilePath);
-            //TestFilePath = FileTransferHelper.Mapping2Remote(TestFilePath);
-            string TestFilePath;
-            FileTransferHelper.FileUpload(localTestFileFullPath, out TestFilePath, out MD5);
-            if (MD5 == string.Empty)
-                return string.Empty;
-            if (TestFilePath == "")
-            {
-                MessageBox.Show("Test File Path Empty!");
-                return string.Empty;
-            }
-            return TestFilePath;
+            return true;
         }
 
         internal void CommitV2(TestRecord testRecord, string comment, string filePath, DateTime startTime, DateTime completeTime, string MD5)

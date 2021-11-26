@@ -177,11 +177,23 @@ namespace BCLabManager.Model
             get { return _testFilePath; }
             set { SetProperty(ref _testFilePath, value); }
         }
+        private string _stdFilePath;
+        public string StdFilePath
+        {
+            get { return _stdFilePath; }
+            set { SetProperty(ref _stdFilePath, value); }
+        }
         private string _MD5;
         public string MD5
         {
             get { return _MD5; }
             set { SetProperty(ref _MD5, value); }
+        }
+        private string _stdMD5;
+        public string StdMD5
+        {
+            get { return _stdMD5; }
+            set { SetProperty(ref _stdMD5, value); }
         }
         private string _operator;
         public string Operator
