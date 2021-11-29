@@ -367,7 +367,7 @@ namespace BCLabManager.Model
             }
             #endregion
             string localStdFileFullPath = string.Empty;
-            if (!processer.CreateStdFile(localTestFileFullPath, out localStdFileFullPath))
+            if (!CreateStdFile(processer, localTestFileFullPath, out localStdFileFullPath))
             {
                 File.Delete(localTestFileFullPath);
                 return false;
@@ -391,6 +391,46 @@ namespace BCLabManager.Model
             }
             #endregion
             return true;
+        }
+
+        private bool CreateStdFile(ITesterProcesser processer, string rawFilePath, out string stdFilePath)
+        {
+            stdFilePath = string.Empty;
+            FileStream rawFile = new FileStream(rawFilePath, FileMode.Open);
+            StreamReader sr = new StreamReader(rawFile);
+            stdFilePath = Path.Combine(Path.GetDirectoryName(rawFilePath), "STD_" + Path.GetFileName(rawFilePath));
+            FileStream stdFile = new FileStream(stdFilePath, FileMode.Create);
+            StreamWriter sw = new StreamWriter(stdFile);
+            try
+            {
+                string newLine;
+                uint index = 1;
+                while (true)
+                {
+                    newLine = sr.ReadLine();
+                    if (newLine == null)
+                        break;
+                    StandardRow stdRow = processer.ConvertToStdRow(index, newLine);
+                    if (stdRow == null)
+                        continue;
+                    sw.WriteLine(stdRow.ToString());
+                    index++;
+                }
+                sr.Close();
+                sw.Close();
+                rawFile.Close();
+                stdFile.Close();
+                return true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                sr.Close();
+                sw.Close();
+                rawFile.Close();
+                stdFile.Close();
+                return false;
+            }
         }
 
         //Copy to local path, combine if needed

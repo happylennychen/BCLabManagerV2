@@ -303,6 +303,8 @@
     <Compile Include="Assets\Model\ITesterProcesser.cs" />
     <Compile Include="Assets\Model\TesterProcessers\Chroma17208Processer.cs" />
     <Compile Include="Assets\Model\TesterProcessers\PseudoProcesser.cs" />
+    <Compile Include="Assets\Model\TesterProcessers\RowStatus.cs" />
+    <Compile Include="Assets\Model\TesterProcessers\StandardRow.cs" />
     <Compile Include="DashBoard\ViewModel\TableMakerProductViewModel.cs" />
     <Compile Include="DataAccess\ITableMakerRecordRepository.cs" />
     <Compile Include="DataAccess\JumpBehaviorRepository.cs" />
@@ -345,6 +347,10 @@
     <Compile Include="Migrations\20211104061946_AddStartStopTimesToProject.designer.cs">
       <DependentUpon>20211104061946_AddStartStopTimesToProject.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20211126091043_StdFile.cs" />
+    <Compile Include="Migrations\20211126091043_StdFile.designer.cs">
+      <DependentUpon>20211126091043_StdFile.cs</DependentUpon>
+    </Compile>
     <Compile Include="Services\Utilities.cs" />
     <Compile Include="TableMaker\Model\Service\TableMakerRecordServieClass.cs" />
     <Compile Include="TableMaker\Model\TableMakerRecord.cs" />
@@ -369,8 +375,6 @@
     <Compile Include="Assets\Model\Service\ChannelServiceClass.cs" />
     <Compile Include="Assets\Model\Service\BatteryServieClass.cs" />
     <Compile Include="Assets\Model\Service\BatteryTypeServiceClass.cs" />
-    <Compile Include="Assets\Model\Service\IModelService.cs" />
-    <Compile Include="Assets\Model\Service\ModelService.cs" />
     <Compile Include="Assets\Model\TesterProcessers\Chroma17200Processer.cs" />
     <Compile Include="Assets\Model\TesterProcessers\ProcessException.cs" />
     <Compile Include="Assets\Model\TesterProcessers\ZKEEBC_X_Processer.cs" />

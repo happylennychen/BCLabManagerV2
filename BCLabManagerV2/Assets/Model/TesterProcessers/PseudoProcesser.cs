@@ -42,10 +42,9 @@ namespace BCLabManager.Model
             return ErrorCode.UNDEFINED;
         }
 
-        public bool CreateStdFile(string rawFilePath, out string stdFilePath)
+        public StandardRow ConvertToStdRow(uint index, string rawRow)
         {
-            stdFilePath = string.Empty;
-            return true;
+            return null;
         }
     }
 }

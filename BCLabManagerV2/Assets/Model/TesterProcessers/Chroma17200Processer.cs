@@ -940,9 +940,36 @@ namespace BCLabManager.Model
             return true;
         }
 
-        public bool CreateStdFile(string rawFilePath, out string stdFilePath)
+
+        public StandardRow ConvertToStdRow(uint index, string rawRow)
         {
-            throw new NotImplementedException();
+            var node = DataPreprocesser.GetNodeFromeString(rawRow);
+            if (node == null)
+                return null;
+            StandardRow row = new StandardRow();
+            row.Index = index;
+            row.TimeInMS = (uint)node.TimeInMS;
+            row.Mode = node.StepMode;
+            row.Current = node.Current;
+            row.Voltage = node.Voltage;
+            row.Temperature = node.Temperature;
+            row.Capacity = node.Capacity;
+            row.TotalCapacity = node.TotalCapacity;
+            row.Status = ConvertStatus(node.Status);
+            return row;
+        }
+
+        private RowStatus ConvertStatus(string status)
+        {
+            switch(status)
+            {
+                case StepEndString.Running: return RowStatus.RUNNING;
+                case StepEndString.EndByCurrent:return RowStatus.CUT_OFF_BY_CURRENT;
+                case StepEndString.EndByTime:return RowStatus.CUT_OFF_BY_TIME;
+                case StepEndString.EndByVoltage: return RowStatus.CUT_OFF_BY_VOLTAGE;
+                case StepEndString.EndByError: return RowStatus.CUT_OFF_BY_ERROR;
+                default:return RowStatus.UNKNOWN;
+            }
         }
     }
     namespace Chroma17200
@@ -997,7 +1024,7 @@ namespace BCLabManager.Model
             public static bool IsFirstDischargeChecked { get; set; }
 
 
-            private static ChromaNode GetNodeFromeString(string value)
+            public static ChromaNode GetNodeFromeString(string value)
             {
                 if (value != null)
                 {
@@ -1024,7 +1051,7 @@ namespace BCLabManager.Model
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show($"Row Parsing Failed. Error Message is:\n{e.Message}");
+                        //MessageBox.Show($"Row Parsing Failed. Error Message is:\n{e.Message}");
                         return null;
                     }
                     return node;
@@ -1677,12 +1704,13 @@ namespace BCLabManager.Model
         }
         public static class StepEndString
         {
-            public static string EndByCurrent { get { return "StepFinishByCut_I"; } }
-            public static string EndByVoltage { get { return "StepFinishByCut_V"; } }
-            public static string EndByPower { get { return ""; } }
-            public static string EndByTemperature { get { return ""; } }
-            public static string EndByTime { get { return "StepFinishByCut_T"; } }
-            public static string EndByError { get { return "Warring_CheckSum"; } }
+            public const string EndByCurrent ="StepFinishByCut_I";
+            public const string EndByVoltage ="StepFinishByCut_V";
+            public const string EndByPower ="";
+            public const string EndByTemperature = "";
+            public const string EndByTime ="StepFinishByCut_T";
+            public const string EndByError ="Warring_CheckSum";
+            public const string Running ="StepRunning";
         }
     }
 }

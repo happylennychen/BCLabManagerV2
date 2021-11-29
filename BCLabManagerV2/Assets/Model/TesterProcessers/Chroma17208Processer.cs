@@ -970,6 +970,11 @@ namespace BCLabManager.Model
         {
             throw new NotImplementedException();
         }
+
+        public StandardRow ConvertToStdRow(uint index, string rawRow)
+        {
+            throw new NotImplementedException();
+        }
     }
     namespace Chroma17208
     {
