@@ -403,6 +403,7 @@ namespace BCLabManager.Model
             StreamWriter sw = new StreamWriter(stdFile);
             try
             {
+                sw.WriteLine("Index,Time(mS),Mode,Current(mA),Voltage(mV),Temperature(degC),Capacity(mAh),Total Capacity(mAh),Status");
                 string newLine;
                 uint index = 1;
                 while (true)
@@ -469,6 +470,22 @@ namespace BCLabManager.Model
             testRecord.Status = TestStatus.Completed;
             testRecord.TestFilePath = filePath;
             testRecord.MD5 = MD5;
+            SuperUpdate(testRecord);
+        }
+
+        internal void CommitV3(TestRecord testRecord, string comment, string rawfilePath, DateTime startTime, DateTime completeTime, string MD5, string stdFilePath, string stdMD5)
+        {
+            testRecord.Comment = comment;
+            testRecord.StartTime = startTime;
+            testRecord.EndTime = completeTime;
+            testRecord.AssignedBattery = null;
+            testRecord.AssignedChamber = null;
+            testRecord.AssignedChannel = null;
+            testRecord.Status = TestStatus.Completed;
+            testRecord.TestFilePath = rawfilePath;
+            testRecord.MD5 = MD5;
+            testRecord.StdFilePath = stdFilePath;
+            testRecord.StdMD5 = stdMD5;
             SuperUpdate(testRecord);
         }
     }

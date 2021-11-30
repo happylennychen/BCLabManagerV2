@@ -433,13 +433,13 @@ namespace BCLabManager.ViewModel
             get
             {
                 //return _selectedTestRecord != null && (_selectedTestRecord.Record.TestFilePath != string.Empty); 
-                if (_selectedRecipe == null)
-                    return false;
-                if (_selectedRecipe.IsAbandoned)
-                    return false;
-                if (_selectedRecipe.TestRecords.Any(tr => tr.Status == TestStatus.Completed || tr.Status == TestStatus.Waiting))
-                    return false;
-                else
+                //if (_selectedRecipe == null)
+                //    return false;
+                //if (_selectedRecipe.IsAbandoned)
+                //    return false;
+                //if (_selectedRecipe.TestRecords.Any(tr => tr.Status == TestStatus.Completed || tr.Status == TestStatus.Waiting))
+                //    return false;
+                //else
                     return true;
             }
         }
@@ -972,8 +972,10 @@ namespace BCLabManager.ViewModel
                     if (evm.Chamber != null)
                         _chamberService.Commit(evm.Chamber, et, SelectedProgram.Name, SelectedRecipe.Name);
                     SelectedTestRecord.NewCycle = evm.NewCycle;
-                    _programService.RecipeService.TestRecordService.CommitV2(
-                    SelectedTestRecord.Record, evm.Comment, filePath, st, et, MD5);
+                    //_programService.RecipeService.TestRecordService.CommitV2(
+                    //SelectedTestRecord.Record, evm.Comment, filePath, st, et, MD5);
+                    _programService.RecipeService.TestRecordService.CommitV3(
+                        SelectedTestRecord.Record, evm.Comment, filePath, st, et, MD5, stdFilePath, stdMD5);
                     _programService.RecipeService.UpdateTime(SelectedRecipe._recipe);
                     _programService.UpdateTime(SelectedProgram._program);
                     _programService.RecipeService.RecipeTemplateService.UpdateEditable(SelectedRecipe._recipe.RecipeTemplate);

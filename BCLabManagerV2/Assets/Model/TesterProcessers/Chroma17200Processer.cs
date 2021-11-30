@@ -950,25 +950,25 @@ namespace BCLabManager.Model
             row.Index = index;
             row.TimeInMS = (uint)node.TimeInMS;
             row.Mode = node.StepMode;
-            row.Current = node.Current;
-            row.Voltage = node.Voltage;
+            row.Current = node.Current * 1000;
+            row.Voltage = node.Voltage * 1000;
             row.Temperature = node.Temperature;
-            row.Capacity = node.Capacity;
-            row.TotalCapacity = node.TotalCapacity;
+            row.Capacity = node.Capacity * 1000;
+            row.TotalCapacity = node.TotalCapacity * 1000;
             row.Status = ConvertStatus(node.Status);
             return row;
         }
 
         private RowStatus ConvertStatus(string status)
         {
-            switch(status)
+            switch (status)
             {
                 case StepEndString.Running: return RowStatus.RUNNING;
-                case StepEndString.EndByCurrent:return RowStatus.CUT_OFF_BY_CURRENT;
-                case StepEndString.EndByTime:return RowStatus.CUT_OFF_BY_TIME;
+                case StepEndString.EndByCurrent: return RowStatus.CUT_OFF_BY_CURRENT;
+                case StepEndString.EndByTime: return RowStatus.CUT_OFF_BY_TIME;
                 case StepEndString.EndByVoltage: return RowStatus.CUT_OFF_BY_VOLTAGE;
                 case StepEndString.EndByError: return RowStatus.CUT_OFF_BY_ERROR;
-                default:return RowStatus.UNKNOWN;
+                default: return RowStatus.UNKNOWN;
             }
         }
     }
@@ -1704,13 +1704,13 @@ namespace BCLabManager.Model
         }
         public static class StepEndString
         {
-            public const string EndByCurrent ="StepFinishByCut_I";
-            public const string EndByVoltage ="StepFinishByCut_V";
-            public const string EndByPower ="";
+            public const string EndByCurrent = "StepFinishByCut_I";
+            public const string EndByVoltage = "StepFinishByCut_V";
+            public const string EndByPower = "";
             public const string EndByTemperature = "";
-            public const string EndByTime ="StepFinishByCut_T";
-            public const string EndByError ="Warring_CheckSum";
-            public const string Running ="StepRunning";
+            public const string EndByTime = "StepFinishByCut_T";
+            public const string EndByError = "Warring_CheckSum";
+            public const string Running = "StepRunning";
         }
     }
 }
