@@ -589,6 +589,41 @@ namespace BCLabManager
             var recname = tr.TestFilePath.Substring(a, b - a);
             return tr.TestFilePath.Replace(recname, tr.RecipeStr);
         }
+        private void STD_30Q_Click(object sender, RoutedEventArgs e)   //Update Project and Recipe
+        {
+            TestRecordServiceClass trService = new TestRecordServiceClass();
+            using (var context = new AppDbContext())
+            {
+                var trs = context.TestRecords
+                    .Include(tr => tr.Recipe.Program.Project).Where(tr=>tr.TesterStr == "17200")
+                    //.ThenInclude(rec => rec.Program)
+                    //.ThenInclude(pro => pro.Project)
+                    //.Include(tr=>tr.AssignedChannel)
+                    //.ThenInclude(ch=>ch.Tester)
+                    //.ThenInclude(tester=>tester.ITesterProcesser)
+                    .ToList();
+                trs = trs.Where(tr => tr.Status == TestStatus.Completed && tr.ProjectStr == "Bissel P2954 7s" && tr.StdFilePath == null).ToList();
+                foreach (var tr in trs)
+                {
+                    var processer = new Chroma17200Processer();
+                    var localTestFileFullPath = FileTransferHelper.Remote2Local(tr.TestFilePath);
+                    string localStdFileFullPath = string.Empty;
+                    if (!trService.CreateStdFile(processer, localTestFileFullPath, out localStdFileFullPath))
+                    {
+                        //File.Delete(localTestFileFullPath);
+                        continue;
+                    }
+                    var stdMD5 = string.Empty;
+                    var stdFilePath = string.Empty;
+                    FileTransferHelper.FileUpload(localStdFileFullPath, out stdFilePath, out stdMD5);
+                    if (stdMD5 == string.Empty)
+                        continue;
+                    tr.StdFilePath = stdFilePath;
+                    tr.StdMD5 = stdMD5;
+                }
+                context.SaveChanges();
+            }
+        }
         #endregion
 
 

@@ -23,6 +23,7 @@
                 <MenuItem Header="Temporary Method (Broken Files MD5 check)" Click="TemporaryMethod1_Click" Visibility="Collapsed"></MenuItem>
                 <MenuItem Header="Temporary Method (One File MD5 check)" Click="TemporaryMethod2_Click" Visibility="Collapsed"></MenuItem>
                 <MenuItem Header="Project and Recipe Update" Click="TemporaryMethod3_Click" Visibility="Collapsed"></MenuItem>
+                <MenuItem Header="Generate 30Q STD Files" Click="STD_30Q_Click" Visibility="Visible"></MenuItem>
             </MenuItem>
             <MenuItem Header="Performance" Click="Performance_Click" Visibility="Collapsed"></MenuItem>
         </Menu>

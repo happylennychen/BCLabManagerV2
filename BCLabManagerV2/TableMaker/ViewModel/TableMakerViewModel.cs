@@ -70,10 +70,19 @@ namespace BCLabManager.ViewModel
 
                 var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage2Project.Id && o.IsInvalid == false).ToList();
                 var records = GetCompletedRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
-                Stage2SourceList = records.Select(o => o.TestFilePath).ToList();
+                Stage2SourceList = records.Select(o => GetSourceFile(o)).ToList();
                 EOD = _stage2Project.DefaultEOD;
             }
         }
+
+        private string GetSourceFile(TestRecord o)
+        {
+            if (string.IsNullOrEmpty(o.StdFilePath))
+                return o.TestFilePath;
+            else
+                return o.StdFilePath;
+        }
+
         private Project _stage1Project;
         public Project Stage1Project
         {

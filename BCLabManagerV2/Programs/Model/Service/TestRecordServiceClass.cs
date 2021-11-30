@@ -393,16 +393,20 @@ namespace BCLabManager.Model
             return true;
         }
 
-        private bool CreateStdFile(ITesterProcesser processer, string rawFilePath, out string stdFilePath)
+        public bool CreateStdFile(ITesterProcesser processer, string rawFilePath, out string stdFilePath)
         {
             stdFilePath = string.Empty;
-            FileStream rawFile = new FileStream(rawFilePath, FileMode.Open);
-            StreamReader sr = new StreamReader(rawFile);
-            stdFilePath = Path.Combine(Path.GetDirectoryName(rawFilePath), "STD_" + Path.GetFileName(rawFilePath));
-            FileStream stdFile = new FileStream(stdFilePath, FileMode.Create);
-            StreamWriter sw = new StreamWriter(stdFile);
             try
             {
+                FileStream rawFile;
+                StreamReader sr;
+                FileStream stdFile;
+                StreamWriter sw;
+                rawFile = new FileStream(rawFilePath, FileMode.Open);
+                sr = new StreamReader(rawFile);
+                stdFilePath = Path.Combine(Path.GetDirectoryName(rawFilePath), "STD_" + Path.GetFileName(rawFilePath));
+                stdFile = new FileStream(stdFilePath, FileMode.Create);
+                sw = new StreamWriter(stdFile);
                 sw.WriteLine("Index,Time(mS),Mode,Current(mA),Voltage(mV),Temperature(degC),Capacity(mAh),Total Capacity(mAh),Status");
                 string newLine;
                 uint index = 1;
@@ -426,10 +430,6 @@ namespace BCLabManager.Model
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
-                sr.Close();
-                sw.Close();
-                rawFile.Close();
-                stdFile.Close();
                 return false;
             }
         }
