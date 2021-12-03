@@ -4,8 +4,8 @@ namespace BCLabManager.Model
 {
     public class RCModel
     {
-        public List<float> listfCurr { get; set; } = new List<float>();
-        public List<float> listfTemp { get; set; } = new List<float>();
+        public List<double> listfCurr { get; set; } = new List<double>();
+        public List<double> listfTemp { get; set; } = new List<double>();
         public List<List<int>> outYValue { get; set; } = new List<List<int>>();
         public double fCTABase { get; set; }
         public double fCTASlope { get; set; }

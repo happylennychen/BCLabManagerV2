@@ -17,7 +17,5 @@ namespace BCLabManager.Model
         //fix errors in filepath, check steps, check continuity, check boundaries, create standard format file
         bool DataPreprocessing(string filepath, Program program, Recipe recipe, TestRecord record, int startIndex, uint options);
         StandardRow ConvertToStdRow(uint index, string rawRow);
-        //string EventDescriptor(string filepath, Program program, Recipe recipe, TestRecord record, string info);
-        uint LoadRawToSource(string testFilePath, ref SourceData sd);
     }
 }

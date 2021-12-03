@@ -381,7 +381,7 @@
     <Compile Include="Services\FileTransferHelper.cs" />
     <Compile Include="Services\RuningLog.cs" />
     <Compile Include="TableMaker\Model\AndroidDriverMaker.cs" />
-    <Compile Include="TableMaker\Model\DataRow.cs" />
+    <Compile Include="TableMaker\Model\TableMakerSourceDataRow.cs" />
     <Compile Include="TableMaker\Model\LiteDriverMaker.cs" />
     <Compile Include="TableMaker\Model\MiniDriverMaker.cs" />
     <Compile Include="TableMaker\Model\LiteModel.cs" />

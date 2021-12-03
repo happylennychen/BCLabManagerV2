@@ -47,10 +47,10 @@ namespace BCLabManager
             output.listfCurr.Sort();
             output.listfCurr.Reverse();
 
-            List<float> fCTAKeod = new List<float>();        //save Keod value, = Max_Diff_Temp * 10 / Joules_value for each current_temperature
-            foreach (float ft in output.listfTemp)		//from low temperature to list
+            List<double> fCTAKeod = new List<double>();        //save Keod value, = Max_Diff_Temp * 10 / Joules_value for each current_temperature
+            foreach (double ft in output.listfTemp)		//from low temperature to list
             {
-                foreach (float fc in output.listfCurr)		//from low current to list
+                foreach (double fc in output.listfCurr)		//from low current to list
                 {
                     foreach (var sds in sdList)
                     {
@@ -60,8 +60,8 @@ namespace BCLabManager
                             {
                                 List<Int32> il16tmp = new List<Int32>();
                                 //Int32 iCountP = 0;
-                                float fCCount = 0;
-                                float fMaxDiff = 0, fCalTmp = 0;
+                                double fCCount = 0;
+                                double fMaxDiff = 0, fCalTmp = 0;
                                 if (sds.AdjustedExpData.Count < 1)
                                 {
                                     uErr = 1;
@@ -92,11 +92,11 @@ namespace BCLabManager
 
 
 
-            List<float> fAvgPerCurrent = new List<float>();     //save Keod'_favg for each temperature, skip Max_Keod_value and Min_Keod_value to calculate average
-            List<float> fCTACurrent = new List<float>();     //save Keod'_favg for each temperature, skip Max_Keod_value and Min_Keod_value to calculate average
+            List<double> fAvgPerCurrent = new List<double>();     //save Keod'_favg for each temperature, skip Max_Keod_value and Min_Keod_value to calculate average
+            List<double> fCTACurrent = new List<double>();     //save Keod'_favg for each temperature, skip Max_Keod_value and Min_Keod_value to calculate average
             if (true)
             {
-                float fCalTmp = 0, fCalMax = 0, fCalMin = 10000;
+                double fCalTmp = 0, fCalMax = 0, fCalMin = 10000;
                 int idxKeod = 0;
                 for (int jj = 0; jj < output.listfCurr.Count(); jj++)
                 {
@@ -131,7 +131,7 @@ namespace BCLabManager
                         fCalTmp -= fCalMin;
                         fCalTmp /= (output.listfTemp.Count() - 2);
                         fAvgPerCurrent.Add(fCalTmp);
-                        fCTACurrent.Add(Math.Abs((float)(output.listfCurr[jj] / 1000)));
+                        fCTACurrent.Add(Math.Abs((double)(output.listfCurr[jj] / 1000)));
                     }
                 }
                 if (fAvgPerCurrent.Count() != output.listfCurr.Count())
@@ -144,22 +144,22 @@ namespace BCLabManager
             double fSquare, fCTABase, fCTASlope;
             CalculateCTASlopeBase(fCTACurrent, fAvgPerCurrent, 0, fAvgPerCurrent.Count(), out fSquare, out fCTABase, out fCTASlope);
             fCTASlope *= 10000;
-            fCTASlope = (float)((int)(fCTASlope + 0.5));
-            fCTABase = (float)((int)(fCTABase * 10000 + 0.5));
+            fCTASlope = (double)((int)(fCTASlope + 0.5));
+            fCTABase = (double)((int)(fCTABase * 10000 + 0.5));
             output.fCTABase = fCTABase;
             output.fCTASlope = fCTASlope;
 
             return bReturn;
         }
 
-        private static bool CreateYPoints_CTAV0026(List<int> TableVoltagePoints, ref List<Int32> ypoints, ref float fRefMaxDiff, ref float fRefCCount, List<DataRow> inListRCData, ref UInt32 uErr, float fDesignCapacity, float fCapaciDiff)
+        private static bool CreateYPoints_CTAV0026(List<int> TableVoltagePoints, ref List<Int32> ypoints, ref double fRefMaxDiff, ref double fRefCCount, List<TableMakerSourceDataRow> inListRCData, ref UInt32 uErr, double fDesignCapacity, double fCapaciDiff)
         {
             bool bReturn = false;
             int i = 0, j = 0, iCountP = 0;
-            float fPreSoC = -99999, fPreVol = -99999, fAvgSoc = -99999, fPreTemp = -9999, fPreCCount = 0;//, fAccCount = 0; ;
+            double fPreSoC = -99999, fPreVol = -99999, fAvgSoc = -99999, fPreTemp = -9999, fPreCCount = 0;//, fAccCount = 0; ;
             //(A200902)Francis, use the low_cur header setting to calculate
-            List<float> flstTmp = new List<float>();
-            float fAccCap = 0.0f;
+            List<double> flstTmp = new List<double>();
+            double fAccCap = 0.0f;
 
             TableVoltagePoints.Sort();
             TableVoltagePoints.Reverse();
@@ -193,7 +193,7 @@ namespace BCLabManager
                                 fRefMaxDiff = (inListRCData[j].fTemperature - fPreTemp);
                             iCountP += 1;
                             /*fAccCount*/
-                            fRefCCount = (float)Math.Abs(inListRCData[j].fAccMah - fPreCCount);
+                            fRefCCount = (double)Math.Abs(inListRCData[j].fAccMah - fPreCCount);
                         }
                     }
                     //
@@ -252,7 +252,7 @@ namespace BCLabManager
                 }
                 else
                 {
-                    DataRow rdtmp = null;
+                    TableMakerSourceDataRow rdtmp = null;
                     for (int ij = inListRCData.Count - 1; ij >= 0; ij--)
                     {
                         if (Math.Abs(inListRCData[ij].fCurrent - 0) > 5)
@@ -323,7 +323,7 @@ namespace BCLabManager
             TableVoltagePoints.Sort();
             return bReturn;
         }
-        private static void CalculateCTASlopeBase(List<float> lstXVals, List<float> lstYVals, int inclusiveStart, int exclusiveEnd,
+        private static void CalculateCTASlopeBase(List<double> lstXVals, List<double> lstYVals, int inclusiveStart, int exclusiveEnd,
                                    out double rsquared, out double yintercept,
                                    out double slope)
         {
@@ -474,7 +474,7 @@ namespace BCLabManager
                                 var nearestTemp = temps.OrderBy(o => Math.Abs(o - temp)).First();  //再从中找到温度最接近的那一个
                                 var stage1Src = rcStage1Sources.SingleOrDefault(o => o.fTemperature == nearestTemp && o.fCurrent == curr);
                                 var blendSrc = stage1Src.ShallowCopy();
-                                blendSrc.fTemperature = (float)temp;    //修改电流
+                                blendSrc.fTemperature = (double)temp;    //修改电流
                                 output.Add(blendSrc);
                             }
                             else if (stage1Temperatures.Contains(temp))
@@ -483,7 +483,7 @@ namespace BCLabManager
                                 var nearestCurr = currs.OrderBy(o => Math.Abs(o - curr)).First();
                                 var stage1Rec = rcStage1Sources.SingleOrDefault(o => o.fCurrent == nearestCurr && o.fTemperature == temp);
                                 var blendSrc = stage1Rec.ShallowCopy();
-                                blendSrc.fCurrent = (float)curr;
+                                blendSrc.fCurrent = (double)curr;
                                 output.Add(blendSrc);
                             }
                         }
@@ -548,19 +548,19 @@ namespace BCLabManager
         }
         private static List<double> GetTemperaturesFromSources(List<SourceData> sources)
         {
-            return sources.Select(o => (double)o.fTemperature).Distinct().OrderBy(o => o).ToList();
+            return sources.Select(o => o.fTemperature).Distinct().OrderBy(o => o).ToList();
         }
 
         private static List<double> GetCurrentsFromSources(List<SourceData> sources)
         {
-            return sources.Select(o => (double)o.fCurrent).Distinct().OrderBy(o => o).ToList();
+            return sources.Select(o => o.fCurrent).Distinct().OrderBy(o => o).ToList();
         }
 
-        private static List<string> GetRCFileContent(List<List<Int32>> rcYval, List<int> TableVoltagePoints, List<float> listfTemp, List<float> listfCurr)
+        private static List<string> GetRCFileContent(List<List<Int32>> rcYval, List<int> TableVoltagePoints, List<double> listfTemp, List<double> listfCurr)
         {
             List<string> strRCContent = new List<string>();
             string strrctmp = "";
-            float fTmp;
+            double fTmp;
             bool bCRate = false;
 
             strRCContent.Clear();
@@ -591,7 +591,7 @@ namespace BCLabManager
             strrctmp = "";
             listfCurr.Sort();
             listfCurr.Reverse();
-            foreach (float fcur in listfCurr)
+            foreach (double fcur in listfCurr)
             {
                 //fTmp = ((fcur * (-1)) / fDesignCapacity) * iCRate;
                 fTmp = (fcur * (-1));
@@ -605,7 +605,7 @@ namespace BCLabManager
             if (bCRate) //need to change to 100C
             {
                 strrctmp = "";
-                foreach (float fcur2 in listfCurr)
+                foreach (double fcur2 in listfCurr)
                 {
                     //fTmp = ((fcur2 * (-1)) / fDesignCapacity) * iCRate;
                     fTmp = (fcur2 * (-1));
@@ -621,7 +621,7 @@ namespace BCLabManager
             strRCContent.Add(string.Format("//'v' axis: temperature (major axis of 2d lookup) in .1 degrees C"));
             listfTemp.Sort();       //no need, just for case
             strrctmp = "";
-            foreach (float ftemper in listfTemp)
+            foreach (double ftemper in listfTemp)
             {
                 if (ftemper >= 0)
                     strrctmp += string.Format("{0}, ", Convert.ToInt32(Math.Round(ftemper * 10, 0)));

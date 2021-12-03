@@ -6,23 +6,23 @@ namespace BCLabManager.Model
 {
     public class SourceData
     {
-        public float fTemperature { get; set; }
-        public float fCurrent { get; set; }
-        public float fMeasureGain { get; set; }
-        public float fMeasureOffset { get; set; }
-        public float fTraceResis { get; set; }
-        public float fCapacityDiff { get; set; }
-        public float fAbsMaxCap { get; set; }
-        public float fLimitChgVolt { get; set; }
-        public float fCutoffDsgVolt { get; set; }
-        public float fAccmAhrCap { get; set; } = -99999;
-        public float fMinExpVolt { get; set; } = 99999;
-        public float fMaxExpVolt { get; set; } = -99999;
+        public double fTemperature { get; set; }
+        public double fCurrent { get; set; }
+        public double fMeasureGain { get; set; }
+        public double fMeasureOffset { get; set; }
+        public double fTraceResis { get; set; }
+        public double fCapacityDiff { get; set; }
+        public double fAbsMaxCap { get; set; }
+        public double fLimitChgVolt { get; set; }
+        public double fCutoffDsgVolt { get; set; }
+        public double fAccmAhrCap { get; set; } = -99999;
+        public double fMinExpVolt { get; set; } = 99999;
+        public double fMaxExpVolt { get; set; } = -99999;
 
-        public List<DataRow> ReservedExpData { get; set; } = new List<DataRow>();
-        public List<DataRow> AdjustedExpData { get; set; } = new List<DataRow>();
+        public List<TableMakerSourceDataRow> ReservedExpData { get; set; } = new List<TableMakerSourceDataRow>();
+        public List<TableMakerSourceDataRow> AdjustedExpData { get; set; } = new List<TableMakerSourceDataRow>();
 
-        public SourceData(float current, float temperature)
+        public SourceData(double current, double temperature)
         {
             this.fAbsMaxCap = 3080;
             this.fAccmAhrCap = -9999;  //被更新

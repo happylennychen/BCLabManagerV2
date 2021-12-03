@@ -14,16 +14,16 @@ namespace BCLabManager
     {
         public static bool GetLiteModel(UInt32 uEoDVoltage, List<SourceData> ocvSource, List<SourceData> rcSource, OCVModel ocvModel, RCModel rcModel, Project project, List<int> VoltagePoints, ref LiteModel liteModel)
         {
-            List<float> fLstTblM_OCV;
+            List<double> fLstTblM_OCV;
             List<int> iLstTblM_SOC1;
             GetLstTblM_OCV(ocvSource, out fLstTblM_OCV, out iLstTblM_SOC1);
-            List<float> flstTblOCVCof;
+            List<double> flstTblOCVCof;
             if(!GetLstTblOCVCof(fLstTblM_OCV, iLstTblM_SOC1, out flstTblOCVCof))
                 return false;
             liteModel.flstTblOCVCof = flstTblOCVCof;
             liteModel.ilistCurr = rcModel.listfCurr.Select(o => (short)o).ToList();
-            List<float> flstKeodCont;
-            List<float> flstAccAtEoD;
+            List<double> flstKeodCont;
+            List<double> flstAccAtEoD;
             GetLstKeodCont(uEoDVoltage, ref rcModel, project, VoltagePoints, out flstKeodCont, out flstAccAtEoD);
             List<double[]> flstdbDCapCof;
             List<double[]> flstdbKeodCof;
@@ -33,12 +33,12 @@ namespace BCLabManager
             liteModel.flstdbKeodCof = flstdbKeodCof;
             return true;
         }
-        private static bool CreateRCPoints_TableMini(UInt32 uEoDVoltage, ref uint uErr, ref RCModel rcModel, List<SourceData> sdList, Project project, List<int> VoltagePoints, out List<float> flstKeodContent, out List<float> flstAccAtEoD)
+        private static bool CreateRCPoints_TableMini(UInt32 uEoDVoltage, ref uint uErr, ref RCModel rcModel, List<SourceData> sdList, Project project, List<int> VoltagePoints, out List<double> flstKeodContent, out List<double> flstAccAtEoD)
         {
             bool bReturn = true;	//cause below will use bReturn &= xxxx
             bool bDoMiniCal = false;
-            flstAccAtEoD = new List<float>();
-            flstKeodContent = new List<float>();
+            flstAccAtEoD = new List<double>();
+            flstKeodContent = new List<double>();
 
             foreach (List<Int32> il in rcModel.outYValue)
             {
@@ -49,13 +49,13 @@ namespace BCLabManager
             rcModel.listfCurr.Sort();
             rcModel.listfCurr.Reverse();
             //fYPointACCall.Clear();
-            List<float> fCTADiffMax = new List<float>();     //debug use, saving Max_Diff_Temp for each current_temperature
+            List<double> fCTADiffMax = new List<double>();     //debug use, saving Max_Diff_Temp for each current_temperature
             List<Int32> iCTACountP = new List<Int32>();      //debug use, saving count number of valid calculated RawDataNode for each current_temperature
-            List<float> fCTAJoules = new List<float>();      //saving Joules value, = Count_Number / 3600 for each current_temperature
-            List<float> fCTAKeod = new List<float>();        //save Keod value, = Max_Diff_Temp * 10 / Joules_value for each current_temperature
-            List<float> fAvgPerCurrent = new List<float>();     //save Keod'_favg for each temperature, skip Max_Keod_value and Min_Keod_value to calculate average
-            List<float> fCTACurrent = new List<float>();     //save Keod'_favg for each temperature, skip Max_Keod_value and Min_Keod_value to calculate average
-            List<float> fDCapCof = new List<float>();
+            List<double> fCTAJoules = new List<double>();      //saving Joules value, = Count_Number / 3600 for each current_temperature
+            List<double> fCTAKeod = new List<double>();        //save Keod value, = Max_Diff_Temp * 10 / Joules_value for each current_temperature
+            List<double> fAvgPerCurrent = new List<double>();     //save Keod'_favg for each temperature, skip Max_Keod_value and Min_Keod_value to calculate average
+            List<double> fCTACurrent = new List<double>();     //save Keod'_favg for each temperature, skip Max_Keod_value and Min_Keod_value to calculate average
+            List<double> fDCapCof = new List<double>();
             List<Int32> iLstRCM_SOC1 = new List<Int32>();
 
             fCTADiffMax.Clear();
@@ -75,9 +75,9 @@ namespace BCLabManager
             {
                 iLstRCM_SOC1.Add(((OCVTableMaker.iMaxPercent - OCVTableMaker.iMinPercent) / TableMakerService.iNumOfMiniPoints) * (TableMakerService.iNumOfMiniPoints - jj));
             }
-            foreach (float ft in rcModel.listfTemp)		//from low temperature to list
+            foreach (double ft in rcModel.listfTemp)		//from low temperature to list
             {
-                foreach (float fc in rcModel.listfCurr)		//from low current to list
+                foreach (double fc in rcModel.listfCurr)		//from low current to list
                 {
                     foreach (var sds in sdList)
                     {
@@ -86,10 +86,10 @@ namespace BCLabManager
                         {
                             List<Int32> il16tmp = new List<Int32>();
                             //Int32 iCountP = 0;
-                            float fCCount = 0;
-                            float fMaxDiff = 0, fCalTmp = 0;
-                            //float fDCapAtEoD = 0, 
-                            float fKeodAtEach = 0;
+                            double fCCount = 0;
+                            double fMaxDiff = 0, fCalTmp = 0;
+                            //double fDCapAtEoD = 0, 
+                            double fKeodAtEach = 0;
                             if (sds.AdjustedExpData.Count < 1)
                             {
                                 uErr = 1;
@@ -113,7 +113,7 @@ namespace BCLabManager
                                 rcModel.outYValue.Add(il16tmp); //if error, still add into RCYvalue
                                 fCTADiffMax.Add(fMaxDiff);
                                 //iCTACountP.Add(iCountP);
-                                //fCalTmp = ((float)(iCountP) / 3600) * Math.Abs(fc);
+                                //fCalTmp = ((double)(iCountP) / 3600) * Math.Abs(fc);
                                 fCalTmp = fCCount;
                                 fCTAJoules.Add(fCalTmp);
                                 fMaxDiff *= 10;
@@ -121,7 +121,7 @@ namespace BCLabManager
                                 fCTAKeod.Add(fMaxDiff);
                                 //ilstCNumOfRCLine.Add(sds.AdjustedExpData.Count);
                                 fKeodAtEach *= 10;
-                                fKeodAtEach /= ((float)sds.AdjustedExpData.Count / 3600.0f) * (Math.Abs(sds.fCurrent) / 1000);
+                                fKeodAtEach /= ((double)sds.AdjustedExpData.Count / 3600.0f) * (Math.Abs(sds.fCurrent) / 1000);
                                 flstKeodContent.Add(fKeodAtEach);
                                 //fDCapTmp.Add(fDCapAtEoD);
                                 //fKeodTmp.Add(fKeodAtEach);
@@ -137,7 +137,7 @@ namespace BCLabManager
             //calculate Keod'_favg for each temperature
             if (bReturn)
             {
-                float fCalTmp = 0, fCalMax = 0, fCalMin = 10000;
+                double fCalTmp = 0, fCalMax = 0, fCalMin = 10000;
                 int idxKeod = 0;
                 for (int jj = 0; jj < rcModel.listfCurr.Count(); jj++)
                 {
@@ -172,7 +172,7 @@ namespace BCLabManager
                         fCalTmp -= fCalMin;
                         fCalTmp /= (rcModel.listfTemp.Count() - 2);
                         fAvgPerCurrent.Add(fCalTmp);
-                        fCTACurrent.Add(Math.Abs((float)(rcModel.listfCurr[jj] / 1000)));
+                        fCTACurrent.Add(Math.Abs(rcModel.listfCurr[jj] / 1000));
                     }
                 }
                 if (fAvgPerCurrent.Count() != rcModel.listfCurr.Count())
@@ -189,8 +189,8 @@ namespace BCLabManager
             //    fSquare = 1;
             //    CalculateCTASlopeBase(fCTACurrent, fAvgPerCurrent, 0, fAvgPerCurrent.Count(), out fSquare, out fCTABase, out fCTASlope);
             //    fCTASlope *= 10000;
-            //    fCTASlope = (float)((int)(fCTASlope + 0.5));
-            //    fCTABase = (float)((int)(fCTABase * 10000 + 0.5));
+            //    fCTASlope = (double)((int)(fCTASlope + 0.5));
+            //    fCTABase = (double)((int)(fCTABase * 10000 + 0.5));
             //    GenerateTableMiniTempFile(ref uErr);
             //    GenerateTableLiteTempFile(ref uErr);
             //}
@@ -199,17 +199,17 @@ namespace BCLabManager
             return bReturn;
         }
 
-        private static bool CreateYPoints_CTAV26_TBLLite(UInt32 uEoDVoltage, List<int> TableVoltagePoints, ref List<Int32> ypoints, ref float fRefMaxDiff, ref float fRefCCount, List<DataRow> inListRCData, ref UInt32 uErr, float fDesignCapacity, int iMinVoltage, ref float _fKeodAtEach, ref List<float> flstDCapAtEoD, bool bDoMini = false)
+        private static bool CreateYPoints_CTAV26_TBLLite(UInt32 uEoDVoltage, List<int> TableVoltagePoints, ref List<Int32> ypoints, ref double fRefMaxDiff, ref double fRefCCount, List<TableMakerSourceDataRow> inListRCData, ref UInt32 uErr, double fDesignCapacity, int iMinVoltage, ref double _fKeodAtEach, ref List<double> flstDCapAtEoD, bool bDoMini = false)
         {
-            float fCapaciDiff = 0;
+            double fCapaciDiff = 0;
             bool bReturn = false;
             int i = 0, j = 0, iCountP = 0;
-            float fPreSoC = -99999, fPreVol = -99999, fAvgSoc = -99999, fPreTemp = -9999, fPreCCount = 0;//, fAccCount = 0; ;
+            double fPreSoC = -99999, fPreVol = -99999, fAvgSoc = -99999, fPreTemp = -9999, fPreCCount = 0;//, fAccCount = 0; ;
             String strDbg;
             //(A200902)Francis, use the low_cur header setting to calculate
-            float fFullCapacity = 0, fACCMiniStep = 0;// = OCVSample.fMiniTableSteps * 0.01F * (TableSourceData[0].myHeader.fFullCapacity - TableSourceData[0].myHeader.fCapacityDiff);
-            List<float> flstTmp = new List<float>();
-            float fAccCap = 0.0f, fDCapEoD = 0.0f, fKeodCal = 0.0f;
+            double fFullCapacity = 0, fACCMiniStep = 0;// = OCVSample.fMiniTableSteps * 0.01F * (TableSourceData[0].myHeader.fFullCapacity - TableSourceData[0].myHeader.fCapacityDiff);
+            List<double> flstTmp = new List<double>();
+            double fAccCap = 0.0f, fDCapEoD = 0.0f, fKeodCal = 0.0f;
 
             //if (bDoMini)
             {
@@ -249,7 +249,7 @@ namespace BCLabManager
                                 fRefMaxDiff = (inListRCData[j].fTemperature - fPreTemp);
                             iCountP += 1;
                             /*fAccCount*/
-                            fRefCCount = (float)Math.Abs(inListRCData[j].fAccMah - fPreCCount);
+                            fRefCCount = Math.Abs(inListRCData[j].fAccMah - fPreCCount);
                         }
                     }
                     //(A201208) for table_lite
@@ -261,8 +261,8 @@ namespace BCLabManager
                         }
                         else
                         {
-                            float fBase = Math.Abs(inListRCData[j - 1].fVoltage - inListRCData[j].fVoltage);
-                            float fTmp = Math.Abs(inListRCData[j - 1].fAccMah - inListRCData[j].fAccMah);
+                            double fBase = Math.Abs(inListRCData[j - 1].fVoltage - inListRCData[j].fVoltage);
+                            double fTmp = Math.Abs(inListRCData[j - 1].fAccMah - inListRCData[j].fAccMah);
                             fTmp *= Math.Abs(uEoDVoltage - inListRCData[j].fVoltage) / fBase;
                             fDCapEoD = inListRCData[j].fAccMah - fTmp;
                         }
@@ -328,7 +328,7 @@ namespace BCLabManager
                 }
                 else
                 {
-                    DataRow rdtmp = null;
+                    TableMakerSourceDataRow rdtmp = null;
                     for (int ij = inListRCData.Count - 1; ij >= 0; ij--)
                     {
                         if (Math.Abs(inListRCData[ij].fCurrent - 0) > 5)
@@ -443,15 +443,15 @@ namespace BCLabManager
             return bReturn;
         }
 
-        private static void GetLstKeodCont(UInt32 uEoDVoltage, ref RCModel rcModel, Project project, List<int> VoltagePoints, out List<float> flstKeodCont, out List<float> flstAccAtEoD)
+        private static void GetLstKeodCont(UInt32 uEoDVoltage, ref RCModel rcModel, Project project, List<int> VoltagePoints, out List<double> flstKeodCont, out List<double> flstAccAtEoD)
         {
             uint uErr = 0;
             CreateRCPoints_TableMini(uEoDVoltage, ref uErr, ref rcModel, rcModel.SourceList, project, VoltagePoints, out flstKeodCont, out flstAccAtEoD);
         }
 
-        private static void GetLstTblM_OCV(List<SourceData> ocvSource, out List<float> fLstTblM_OCV, out List<int> iLstTblM_SOC1)
+        private static void GetLstTblM_OCV(List<SourceData> ocvSource, out List<double> fLstTblM_OCV, out List<int> iLstTblM_SOC1)
         {
-            fLstTblM_OCV = new List<float>();
+            fLstTblM_OCV = new List<double>();
             iLstTblM_SOC1 = new List<int>();
             SourceData lowcurSample, higcurSample;
             if (Math.Abs(ocvSource[0].fCurrent) < Math.Abs(ocvSource[1].fCurrent))
@@ -465,15 +465,15 @@ namespace BCLabManager
                 higcurSample = ocvSource[0];
             }
 
-            float fTmpVolt1;
+            double fTmpVolt1;
             int indexLow = 0, indexHigh = 0;
             for (int fi = OCVTableMaker.iMaxPercent; fi >= OCVTableMaker.iMinPercent;
                 fi -= ((OCVTableMaker.iMaxPercent - OCVTableMaker.iMinPercent) / TableMakerService.iNumOfMiniPoints))
             {
-                float fSoCVoltLow = 0; float fSoCVoltHigh = 0;  //default value
+                double fSoCVoltLow = 0; double fSoCVoltHigh = 0;  //default value
                 #region find <10000, Volt>, <9900, Volt> from low current data
-                float fTmpSoC1 = 0; //fTmpSoC2 = 0; //default value
-                float fSoCbk = 0; float fVoltbk = 0;    //default value
+                double fTmpSoC1 = 0; //fTmpSoC2 = 0; //default value
+                double fSoCbk = 0; double fVoltbk = 0;    //default value
                 for (; indexLow < lowcurSample.AdjustedExpData.Count; indexLow++)
                 {
                     fTmpVolt1 = lowcurSample.AdjustedExpData[indexLow].fVoltage;
@@ -605,7 +605,7 @@ namespace BCLabManager
                 }
                 #endregion
 
-                float fRsocn = (fSoCVoltLow - fSoCVoltHigh) / (Math.Abs(higcurSample.fCurrent) - Math.Abs(lowcurSample.fCurrent));
+                double fRsocn = (fSoCVoltLow - fSoCVoltHigh) / (Math.Abs(higcurSample.fCurrent) - Math.Abs(lowcurSample.fCurrent));
                 fTmpVolt1 = fSoCVoltLow + Math.Abs(lowcurSample.fCurrent) * fRsocn;
                 if (fTmpVolt1 > lowcurSample.fLimitChgVolt) fTmpVolt1 = lowcurSample.fLimitChgVolt;
                 if (fTmpVolt1 < lowcurSample.fCutoffDsgVolt) fTmpVolt1 = lowcurSample.fCutoffDsgVolt;
@@ -615,9 +615,9 @@ namespace BCLabManager
             }
         }
 
-        private static bool GetLstTblOCVCof(List<float> fLstTblM_OCV, List<int> iLstTblM_SOC1, out List<float> flstTblOCVCof)
+        private static bool GetLstTblOCVCof(List<double> fLstTblM_OCV, List<int> iLstTblM_SOC1, out List<double> flstTblOCVCof)
         {
-            flstTblOCVCof = new List<float>();
+            flstTblOCVCof = new List<double>();
             CreatePolyDataFile(fLstTblM_OCV, iLstTblM_SOC1);
             if (!RunExcel())
                 return false;
@@ -634,9 +634,9 @@ namespace BCLabManager
                 File.Delete("Poly_data.txt");
         }
 
-        private static List<float> LoadFromFile()
+        private static List<double> LoadFromFile()
         {
-            List<float> flstTblOCVCof = new List<float>();
+            List<double> flstTblOCVCof = new List<double>();
 
             var strtmpfu = "poly_cof.txt";
             if (File.Exists(strtmpfu))
@@ -647,10 +647,10 @@ namespace BCLabManager
                 {
                     flstTblOCVCof.Clear();
                     string strcont;
-                    float fTmp;
+                    double fTmp;
                     while ((strcont = stmRead.ReadLine()) != null)
                     {
-                        if (float.TryParse(strcont, out fTmp))
+                        if (double.TryParse(strcont, out fTmp))
                         {
                             flstTblOCVCof.Add(fTmp);
                         }
@@ -688,7 +688,7 @@ namespace BCLabManager
             return true;
         }
 
-        private static void CreatePolyDataFile(List<float> fLstTblM_OCV, List<int> iLstTblM_SOC1)
+        private static void CreatePolyDataFile(List<double> fLstTblM_OCV, List<int> iLstTblM_SOC1)
         {
             try
             {
@@ -711,7 +711,7 @@ namespace BCLabManager
             }
         }
 
-        private static void GetDCapCof(List<short> ilstTemp, List<short> ilstCurr, List<float> flstKeodCont, List<float> flstAccAtEoD, float fullCapacity, out List<double[]> flstdbDCapCof, out List<double[]> flstdbKeodCof)
+        private static void GetDCapCof(List<short> ilstTemp, List<short> ilstCurr, List<double> flstKeodCont, List<double> flstAccAtEoD, double fullCapacity, out List<double[]> flstdbDCapCof, out List<double[]> flstdbKeodCof)
         {
             flstdbDCapCof = new List<double[]>();
             flstdbKeodCof = new List<double[]>();
@@ -864,15 +864,15 @@ namespace BCLabManager
             output.Add(string.Format("* extern variable declaration section"));
             output.Add(string.Format("***************************************************************************/"));
             output.Add(string.Format("extern int y_data[YNUM];"));
-            output.Add(string.Format("extern float ocv_cof[FNUM7D];"));
-            output.Add(string.Format("extern float keod_cof[YNUM][FNUM3D];"));
-            output.Add(string.Format("extern float dcap_cof[YNUM][FNUM3D];"));
+            output.Add(string.Format("extern double ocv_cof[FNUM7D];"));
+            output.Add(string.Format("extern double keod_cof[YNUM][FNUM3D];"));
+            output.Add(string.Format("extern double dcap_cof[YNUM][FNUM3D];"));
             output.Add(string.Format("\n"));
             output.Add(string.Format("#endif	//_TABLE_LITE_H_"));
             return output;
         }
 
-        private static List<string> GetCFileContent(string strCFileName, string strStandardH, List<string> strHHeaderComments, List<short> ilstCurr, List<double[]> flstdbDCapCof, List<double[]> flstdbKeodCof, List<float> flstTblOCVCof)
+        private static List<string> GetCFileContent(string strCFileName, string strStandardH, List<string> strHHeaderComments, List<short> ilstCurr, List<double[]> flstdbDCapCof, List<double[]> flstdbKeodCof, List<double> flstTblOCVCof)
         {
             int iLineCmtHCFile = 4;
             string strCTmp = string.Empty;
@@ -896,7 +896,7 @@ namespace BCLabManager
             output.Add(string.Format("/*****************************************************************************"));
             output.Add(string.Format("* OCV Coefficient "));
             output.Add(string.Format("****************************************************************************/"));
-            output.Add(string.Format("float ocv_cof[FNUM7D] = "));
+            output.Add(string.Format("double ocv_cof[FNUM7D] = "));
             output.Add(string.Format("{{"));
             strCTmp = "";
             for (i = 0; i < flstTblOCVCof.Count; i++)
@@ -950,7 +950,7 @@ namespace BCLabManager
             output.Add("/*****************************************************************************");
             output.Add("* RCAP Function Table Coefficient Data");
             output.Add("****************************************************************************/");
-            output.Add("float dcap_cof[YNUM][FNUM3D] = {");
+            output.Add("double dcap_cof[YNUM][FNUM3D] = {");
             for (int id = 0; id < flstdbDCapCof.Count; id++)
             {
                 strCTmp = ("\t{");
@@ -968,7 +968,7 @@ namespace BCLabManager
             output.Add("/*****************************************************************************");
             output.Add("* KEOD Function Table Coefficient Data");
             output.Add("****************************************************************************/");
-            output.Add("float keod_cof[YNUM][FNUM3D] = {");
+            output.Add("double keod_cof[YNUM][FNUM3D] = {");
             for (int id = 0; id < flstdbKeodCof.Count; id++)
             {
                 strCTmp = ("\t{");

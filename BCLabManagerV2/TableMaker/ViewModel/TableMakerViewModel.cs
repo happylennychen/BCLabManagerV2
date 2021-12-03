@@ -165,13 +165,13 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public List<TableMakerProduct> Products 
-        { 
-            get 
+        public List<TableMakerProduct> Products
+        {
+            get
             {
                 if (_selectedRecord == null)
                     return null;
-                return _selectedRecord.Products; 
+                return _selectedRecord.Products;
             }
         }
         public List<string> Sources
@@ -375,8 +375,9 @@ namespace BCLabManager.ViewModel
                         List<string> ocvSourceFiles = null;
                         if (ocvRecords != null && ocvRecords.Count != 0)
                         {
-                            if(!TableMakerService.GetSource(stage2Project, ocvRecords, testers, out ocvSource, out ocvSourceFiles))
-                                return;
+                            if (!TableMakerService.GetSourceV2(stage2Project, ocvRecords, testers, out ocvSource, out ocvSourceFiles))
+                                //if (!TableMakerService.GetSource(stage2Project, ocvRecords, testers, out ocvSource, out ocvSourceFiles))
+                                    return;
                             if (ocvSource == null)
                                 return;
                             OCVTableMaker.GetOCVModel(ocvSource, ref ocvModel);
@@ -397,12 +398,14 @@ namespace BCLabManager.ViewModel
                             List<SourceData> rcStage1Source;
                             List<string> stage1RcSourceFiles = null;
                             List<string> stage2RcSourceFiles = null;
-                            if(!TableMakerService.GetSource(stage1Project, rcStage2Records, testers, out rcStage2Source, out stage2RcSourceFiles))
-                                return;
+                            if (!TableMakerService.GetSourceV2(stage1Project, rcStage2Records, testers, out rcStage2Source, out stage2RcSourceFiles))
+                                //if (!TableMakerService.GetSource(stage1Project, rcStage2Records, testers, out rcStage2Source, out stage2RcSourceFiles))
+                                    return;
                             if (rcStage2Source == null)
                                 return;
-                            if (!TableMakerService.GetSource(stage1Project, rcStage1Records, testers, out rcStage1Source, out stage1RcSourceFiles))
-                                return;
+                            if (!TableMakerService.GetSourceV2(stage1Project, rcStage1Records, testers, out rcStage1Source, out stage1RcSourceFiles))
+                                //if (!TableMakerService.GetSource(stage1Project, rcStage1Records, testers, out rcStage1Source, out stage1RcSourceFiles))
+                                    return;
                             if (rcStage1Source == null)
                                 return;
                             rcSourceFiles = stage1RcSourceFiles.Concat(stage2RcSourceFiles).ToList();
@@ -411,7 +414,7 @@ namespace BCLabManager.ViewModel
                             MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, _voltagePoints, ref miniModel);
                             StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
                             AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
-                            if(!LiteDriverMaker.GetLiteModel(EOD, ocvSource, rcSource, ocvModel, rcModel, stage1Project, _voltagePoints, ref liteModel))
+                            if (!LiteDriverMaker.GetLiteModel(EOD, ocvSource, rcSource, ocvModel, rcModel, stage1Project, _voltagePoints, ref liteModel))
                                 return;
                         }
                         else
@@ -420,14 +423,16 @@ namespace BCLabManager.ViewModel
                             //rcSources = rcRecords.Select(o => o.TestFilePath).ToList();
 
                             List<SourceData> rcSource;
-                            TableMakerService.GetSource(stage2Project, rcRecords, testers, out rcSource, out rcSourceFiles);
+                            if (!TableMakerService.GetSourceV2(stage2Project, rcRecords, testers, out rcSource, out rcSourceFiles))
+                                //if (!TableMakerService.GetSource(stage2Project, rcRecords, testers, out rcSource, out rcSourceFiles))
+                                    return;
                             if (rcSource == null)
                                 return;
                             RCTableMaker.GetRCModel(rcSource, stage2Project.AbsoluteMaxCapacity, _voltagePoints, ref rcModel);
                             MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, _voltagePoints, ref miniModel);
                             StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
                             AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
-                            if(!LiteDriverMaker.GetLiteModel(EOD, ocvSource, rcSource, ocvModel, rcModel, stage2Project, _voltagePoints, ref liteModel))
+                            if (!LiteDriverMaker.GetLiteModel(EOD, ocvSource, rcSource, ocvModel, rcModel, stage2Project, _voltagePoints, ref liteModel))
                                 return;
                         }
 

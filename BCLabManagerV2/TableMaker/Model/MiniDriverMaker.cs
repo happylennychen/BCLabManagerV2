@@ -12,7 +12,7 @@ namespace BCLabManager
     public static class MiniDriverMaker
     {
         static public int iNumOfMiniPoints { get; set; } = 100;           //(A200831)francis, for table_mini
-        static public float fMiniTableSteps { get; set; } = 1;        //(A200831)francis, for table_mini
+        static public double fMiniTableSteps { get; set; } = 1;        //(A200831)francis, for table_mini
         #region Mini
         public static void GetMiniModel(List<SourceData> ocvSource, List<SourceData> rcSource, OCVModel ocvModel, RCModel rcModel, List<int> VoltagePoints, ref MiniModel miniModel)
         {
@@ -22,16 +22,16 @@ namespace BCLabManager
             output.fCTASlope = rcModel.fCTASlope;
             List<short> ilstOutIR;
             var num = (iNumOfMiniPoints + 1) * rcModel.listfTemp.Count;
-            List<float> flstRC_T;
+            List<double> flstRC_T;
 
-            List<List<float>> fLstRCM_Volt;
+            List<List<double>> fLstRCM_Volt;
             GetLstRCM_Volt(ocvSource, rcSource, rcModel, out fLstRCM_Volt);
             GetLstRC_T(fLstRCM_Volt, out flstRC_T);
-            List<float> flstOCV;
+            List<double> flstOCV;
             List<int> a;
             GetLstTblM_OCV(ocvSource, out flstOCV, out a);
             GetLstOutIR(num, iNumOfMiniPoints + 1, rcModel.listfCurr, flstOCV, flstRC_T, out ilstOutIR);
-            List<float> flstTotalAcc;
+            List<double> flstTotalAcc;
             GetLstTotalAcc(out flstTotalAcc, VoltagePoints, rcSource, rcModel);
             List<double> poly2EstFACC;
             List<double> poly2EstIR;
@@ -39,23 +39,23 @@ namespace BCLabManager
             output.poly2EstFACC = poly2EstFACC;
             output.poly2EstIR = poly2EstIR;
         }
-        private static bool GetLstTblM_OCV(List<SourceData> lstSample2, out List<float> fLstTblM_OCV)
+        private static bool GetLstTblM_OCV(List<SourceData> lstSample2, out List<double> fLstTblM_OCV)
         {
             Int32 iMinVoltage;
             Int32 iMaxVoltage;
             TableMakerService.GetVoltageBondary(lstSample2, out iMinVoltage, out iMaxVoltage);
-            fLstTblM_OCV = new List<float>();
+            fLstTblM_OCV = new List<double>();
             bool bReturn = false;
             int indexLow, indexHigh;
             SourceData lowcurSample, higcurSample;
-            float fTmpSoC1, fTmpSoC2, fTmpVolt1;
-            int fmulti = (int)(((float)(iMaxVoltage - iMinVoltage)) * 10F / TableMakerService.iSOCStepmV);
+            double fTmpSoC1, fTmpSoC2, fTmpVolt1;
+            int fmulti = (int)(((double)(iMaxVoltage - iMinVoltage)) * 10F / TableMakerService.iSOCStepmV);
             int ileft = (int)fmulti % 10;
             int ii, jj;
             //(200902)francis, for table_mini
-            float fFullCapacity = 0, fACCMiniStep = 0;// = fMiniTableSteps * 0.01F * (TableSourceData[0].fFullCapacity - TableSourceData[0].fCapacityDiff);
-            List<float> flstLoCurVoltPoints = new List<float>();
-            List<float> flstHiCurVoltPoints = new List<float>();
+            double fFullCapacity = 0, fACCMiniStep = 0;// = fMiniTableSteps * 0.01F * (TableSourceData[0].fFullCapacity - TableSourceData[0].fCapacityDiff);
+            List<double> flstLoCurVoltPoints = new List<double>();
+            List<double> flstHiCurVoltPoints = new List<double>();
 
             #region assign low/high current sample, and assign SoC points (as default or input)
             //lstSample2.Count definitely is 2
@@ -206,9 +206,9 @@ namespace BCLabManager
 
             return bReturn;
         }
-        private static void GetLstTblM_OCV(List<SourceData> ocvSource, out List<float> fLstTblM_OCV, out List<int> iLstTblM_SOC1)
+        private static void GetLstTblM_OCV(List<SourceData> ocvSource, out List<double> fLstTblM_OCV, out List<int> iLstTblM_SOC1)
         {
-            fLstTblM_OCV = new List<float>();
+            fLstTblM_OCV = new List<double>();
             iLstTblM_SOC1 = new List<int>();
             SourceData lowcurSample, higcurSample;
             if (Math.Abs(ocvSource[0].fCurrent) < Math.Abs(ocvSource[1].fCurrent))
@@ -222,15 +222,15 @@ namespace BCLabManager
                 higcurSample = ocvSource[0];
             }
 
-            float fTmpVolt1;
+            double fTmpVolt1;
             int indexLow = 0, indexHigh = 0;
             for (int fi = OCVTableMaker.iMaxPercent; fi >= OCVTableMaker.iMinPercent;
                 fi -= ((OCVTableMaker.iMaxPercent - OCVTableMaker.iMinPercent) / TableMakerService.iNumOfMiniPoints))
             {
-                float fSoCVoltLow = 0; float fSoCVoltHigh = 0;  //default value
+                double fSoCVoltLow = 0; double fSoCVoltHigh = 0;  //default value
                 #region find <10000, Volt>, <9900, Volt> from low current data
-                float fTmpSoC1 = 0; //fTmpSoC2 = 0; //default value
-                float fSoCbk = 0; float fVoltbk = 0;    //default value
+                double fTmpSoC1 = 0; //fTmpSoC2 = 0; //default value
+                double fSoCbk = 0; double fVoltbk = 0;    //default value
                 for (; indexLow < lowcurSample.AdjustedExpData.Count; indexLow++)
                 {
                     fTmpVolt1 = lowcurSample.AdjustedExpData[indexLow].fVoltage;
@@ -362,7 +362,7 @@ namespace BCLabManager
                 }
                 #endregion
 
-                float fRsocn = (fSoCVoltLow - fSoCVoltHigh) / (Math.Abs(higcurSample.fCurrent) - Math.Abs(lowcurSample.fCurrent));
+                double fRsocn = (fSoCVoltLow - fSoCVoltHigh) / (Math.Abs(higcurSample.fCurrent) - Math.Abs(lowcurSample.fCurrent));
                 fTmpVolt1 = fSoCVoltLow + Math.Abs(lowcurSample.fCurrent) * fRsocn;
                 if (fTmpVolt1 > lowcurSample.fLimitChgVolt) fTmpVolt1 = lowcurSample.fLimitChgVolt;
                 if (fTmpVolt1 < lowcurSample.fCutoffDsgVolt) fTmpVolt1 = lowcurSample.fCutoffDsgVolt;
@@ -372,19 +372,19 @@ namespace BCLabManager
             }
         }
 
-        private static void GetLstRCM_Volt(List<SourceData> ocvSource, List<SourceData> rcSource, RCModel rcModel, out List<List<float>> fLstRCM_Volt)
+        private static void GetLstRCM_Volt(List<SourceData> ocvSource, List<SourceData> rcSource, RCModel rcModel, out List<List<double>> fLstRCM_Volt)
         {
-            fLstRCM_Volt = new List<List<float>>();
+            fLstRCM_Volt = new List<List<double>>();
             Int32 iMinVoltage = rcModel.MinVoltage;
             //Int32 iMaxVoltage;
             //GetVoltageBondary(rcSource, out iMinVoltage, out iMaxVoltage);
             var listfTemp = rcModel.listfTemp;
             var fc = rcModel.listfCurr[0];
 
-            float fFullCapacity = rcSource[0].fAbsMaxCap - rcSource[0].fCapacityDiff;
-            float fACCMiniStep = fMiniTableSteps * 0.01F * (fFullCapacity);
+            double fFullCapacity = rcSource[0].fAbsMaxCap - rcSource[0].fCapacityDiff;
+            double fACCMiniStep = fMiniTableSteps * 0.01F * (fFullCapacity);
 
-            foreach (float ft in listfTemp)     //from low temperature to list
+            foreach (double ft in listfTemp)     //from low temperature to list
             {
                 foreach (var sds in rcSource)
                 {
@@ -393,8 +393,8 @@ namespace BCLabManager
                     {
                         int i = 0;
                         var inListRCData = sds.AdjustedExpData;
-                        float fPreVol = inListRCData[0].fVoltage;
-                        List<float> flstTmp = new List<float>();
+                        double fPreVol = inListRCData[0].fVoltage;
+                        List<double> flstTmp = new List<double>();
                         for (int j = 0; j < inListRCData.Count; j++)
                         {
                             if (i < iNumOfMiniPoints)
@@ -421,13 +421,13 @@ namespace BCLabManager
             }
         }
 
-        private static void GetLstRC_T(List<List<float>> fLstRCM_Volt, out List<float> flstRC_T)
+        private static void GetLstRC_T(List<List<double>> fLstRCM_Volt, out List<double> flstRC_T)
         {
-            flstRC_T = new List<float>();
+            flstRC_T = new List<double>();
 
             for (int j = 0; j < fLstRCM_Volt.Count; j++)
             {
-                List<float> flstTmp = fLstRCM_Volt[j];
+                List<double> flstTmp = fLstRCM_Volt[j];
                 for (int i = 0; i < iNumOfMiniPoints + 1; i++)
                 {
                     flstRC_T.Add(flstTmp[i]);
@@ -436,16 +436,16 @@ namespace BCLabManager
 
         }
 
-        private static void GetLstTotalAcc(out List<float> flstTotalAcc, List<int> TableVoltagePoints, List<SourceData> rcSource, RCModel rcModel)
+        private static void GetLstTotalAcc(out List<double> flstTotalAcc, List<int> TableVoltagePoints, List<SourceData> rcSource, RCModel rcModel)
         {
-            flstTotalAcc = new List<float>();
-            List<float> fYPointACCall = new List<float>();
+            flstTotalAcc = new List<double>();
+            List<double> fYPointACCall = new List<double>();
             var listfTemp = rcModel.listfTemp;
             var listfCurr = rcModel.listfCurr;
 
-            foreach (float ft in listfTemp)     //from low temperature to list
+            foreach (double ft in listfTemp)     //from low temperature to list
             {
-                foreach (float fc in listfCurr)     //from low current to list
+                foreach (double fc in listfCurr)     //from low current to list
                 {
                     foreach (var sds in rcSource)
                     {
@@ -453,15 +453,15 @@ namespace BCLabManager
                             (sds.fCurrent == fc))
                         {
                             int i = 0, j = 0, iCountP = 0;
-                            float fPreSoC = -99999, fPreVol = -99999, fAvgSoc = -99999, fPreTemp = -9999, fPreCCount = 0;//, fAccCount = 0; ;
+                            double fPreSoC = -99999, fPreVol = -99999, fAvgSoc = -99999, fPreTemp = -9999, fPreCCount = 0;//, fAccCount = 0; ;
                             List<int> ypoints = new List<int>();
-                            float fDesignCapacity = 3080;
-                            float fCapaciDiff = 0;
-                            float fRefMaxDiff = 0;
-                            float fRefCCount = 0;
+                            double fDesignCapacity = 3080;
+                            double fCapaciDiff = 0;
+                            double fRefMaxDiff = 0;
+                            double fRefCCount = 0;
                             //(A200902)Francis, use the low_cur header setting to calculate
-                            List<float> flstTmp = new List<float>();
-                            float fAccCap = 0.0f;
+                            List<double> flstTmp = new List<double>();
+                            double fAccCap = 0.0f;
 
                             //(M140718)Francis,
                             i = 0; j = 0;
@@ -489,7 +489,7 @@ namespace BCLabManager
                                                 fRefMaxDiff = (inListRCData[j].fTemperature - fPreTemp);
                                             iCountP += 1;
                                             /*fAccCount*/
-                                            fRefCCount = (float)Math.Abs(inListRCData[j].fAccMah - fPreCCount);
+                                            fRefCCount = (double)Math.Abs(inListRCData[j].fAccMah - fPreCCount);
                                         }
                                     }
                                     //
@@ -547,7 +547,7 @@ namespace BCLabManager
                                 }
                                 else
                                 {
-                                    DataRow rdtmp = null;
+                                    TableMakerSourceDataRow rdtmp = null;
                                     for (int ij = inListRCData.Count - 1; ij >= 0; ij--)
                                     {
                                         if (Math.Abs(inListRCData[ij].fCurrent - 0) > 5)
@@ -620,10 +620,10 @@ namespace BCLabManager
             }
         }
 
-        private static void GetLstOutIR(int num, int v, List<float> ilstCurr, List<float> flstOCV, List<float> flstRC_T, out List<short> ilstOutIR)
+        private static void GetLstOutIR(int num, int v, List<double> ilstCurr, List<double> flstOCV, List<double> flstRC_T, out List<short> ilstOutIR)
         {
             double dbTmp1 = 0, dbTmp2 = 0;
-            dbTmp1 = (float)(num) / (float)(v);
+            dbTmp1 = (double)(num) / (double)(v);
             dbTmp2 = Math.Round(dbTmp1, 0);
             dbTmp1 -= dbTmp2;
             double db16Curr = 1;
@@ -661,7 +661,7 @@ namespace BCLabManager
             }
         }
 
-        private static void GetPoly(List<float> listfTemp, List<short> ilstOutIR, List<float> flstTotalAcc, out List<double> poly2EstFACC, out List<double> poly2EstIR)
+        private static void GetPoly(List<double> listfTemp, List<short> ilstOutIR, List<double> flstTotalAcc, out List<double> poly2EstFACC, out List<double> poly2EstIR)
         {
             var ilstTemp = listfTemp.Select(o => (short)o * 10).ToList();
             int i = 0;
@@ -813,7 +813,7 @@ namespace BCLabManager
             FileContent.WriteLine(string.Format("one_latitude_data_t fgm_ocv_data[FGM_OCV_NUM] = "));
             FileContent.WriteLine(string.Format("{{"));
             string strCTmp = "";
-            List<float> ilstOCVSoC = TableMakerService.GetOCVSocPoints();
+            List<double> ilstOCVSoC = TableMakerService.GetOCVSocPoints();
             for (i = 0; i < ilstOCVVolt.Count; i++)
             {
                 strCTmp = string.Format("\t{{{0}, \t{1}", ilstOCVVolt[i], Math.Round(ilstOCVSoC[i], 0)) + "},";

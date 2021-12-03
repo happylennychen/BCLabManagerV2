@@ -37,9 +37,9 @@ namespace BCLabManager
             bool bReturn = false;
             UInt32 result = 0;
             SourceData lowcurSample, higcurSample;
-            float fSoCVoltLow, fSoCVoltHigh, fTmpVolt1;
-            float fRsocn = 1.0F;
-            int fmulti = (int)(((float)(iMaxVoltage - iMinVoltage)) * 10F / TableMakerService.iSOCStepmV);
+            double fSoCVoltLow, fSoCVoltHigh, fTmpVolt1;
+            double fRsocn = 1.0F;
+            int fmulti = (int)(((double)(iMaxVoltage - iMinVoltage)) * 10F / TableMakerService.iSOCStepmV);
             int ileft = (int)fmulti % 10;
 
             #region assign low/high current sample, and assign SoC points (as default or input)
@@ -74,7 +74,7 @@ namespace BCLabManager
 
             var lstfPoints = TableMakerService.GetOCVSocPoints();
             lstfPoints.Reverse();		//from high to low SoC
-            foreach (float fSoC1Point in lstfPoints)
+            foreach (double fSoC1Point in lstfPoints)
             {
                 fSoCVoltLow = 0; fSoCVoltHigh = 0;	//default value
                 result = GetSoCVolt(lowcurSample, fSoC1Point, out fSoCVoltLow);
@@ -102,14 +102,14 @@ namespace BCLabManager
 
             return bReturn;
         }
-        private static UInt32 GetSoCVolt(SourceData sourceData, float fSoC1Point, out float output)
+        private static UInt32 GetSoCVolt(SourceData sourceData, double fSoC1Point, out double output)
         {
             UInt32 result = 0;
             #region find <SoC, Volt> from low current data
             output = 0;
-            float fTmpSoC1 = 0; //fTmpSoC2 = 0; //default value
-            float fSoCbk = 0; float fVoltbk = 0;    //default value
-            float fTmpVolt1;
+            double fTmpSoC1 = 0; //fTmpSoC2 = 0; //default value
+            double fSoCbk = 0; double fVoltbk = 0;    //default value
+            double fTmpVolt1;
             int index = 0;
             for (; index < sourceData.AdjustedExpData.Count; index++)
             {
@@ -252,8 +252,8 @@ namespace BCLabManager
         public static List<string> GetOCVFileContent(List<Int32> inputData)
         {
             List<string> OCVContent = new List<string>();
-            float fStep = 0;
-            float fTemp = 0;
+            double fStep = 0;
+            double fTemp = 0;
             Int32 iTemp = 0;
             string strXt;
             string OCVXValuesTmp;
@@ -289,8 +289,8 @@ namespace BCLabManager
             OCVContent.Add(string.Format(""));
             OCVContent.Add(string.Format("//y (dependent) axis: 10000 * full capacity (at .02C or less) for above voltages "));
             OCVContent.Add(string.Format(""));
-            fStep = (float)(iMaxPercent - iMinPercent) /
-                    (float)(TableMakerService.iNumOfPoints - 1);
+            fStep = (double)(iMaxPercent - iMinPercent) /
+                    (double)(TableMakerService.iNumOfPoints - 1);
             //strXt = "";
             OCVXValuesTmp = "";
 
@@ -300,7 +300,7 @@ namespace BCLabManager
             {
                 //iTemp = Int32.Parse((fStep * i).ToString());
                 OCVXValuesTmp += string.Format("{0:D5}, ", iTemp);
-                fTemp += (float)(fStep);
+                fTemp += (double)(fStep);
                 iTemp = Convert.ToInt32(Math.Round(fTemp, 0));
             }
             //(A140917)Francis, bugid=15206, delete last comma ','
