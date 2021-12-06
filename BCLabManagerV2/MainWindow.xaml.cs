@@ -549,7 +549,7 @@ namespace BCLabManager
                     if (prj.StopTimes == null)
                         prj.StopTimes = new List<DateTime>();
                 }
-                var recipes = context.Recipes.Include(rec=>rec.Program).Include(rec=>rec.TestRecords).ToList();
+                var recipes = context.Recipes.Include(rec => rec.Program).Include(rec => rec.TestRecords).ToList();
                 foreach (var rec in recipes)
                 {
                     //if (rec.Program.IsInvalid)
@@ -718,11 +718,11 @@ namespace BCLabManager
                 var pts = dbContext.ProgramTypes.ToList();
                 recs = dbContext.Recipes.ToList();
                 trs = dbContext.TestRecords.ToList().Where(tr => tr.Recipe != null && tr.TesterStr == "17200").ToList();
-                ers = dbContext.EmulatorResults.ToList().Where(er=>er.is_valid).ToList();
+                ers = dbContext.EmulatorResults.ToList().Where(er => er.is_valid).ToList();
                 var rps = dbContext.ReleasePackages.ToList();
-                tmrs = dbContext.TableMakerRecords.ToList().Where(tmr=>tmr.IsValid).ToList();
-                tmps = dbContext.TableMakerProducts.ToList().Where(tmp=>tmp.IsValid).ToList();
-                lib_fgs = dbContext.lib_fgs.ToList().Where(lib=>lib.is_valid).ToList();  //不管是valid还是invalid，对它的评估都是valid
+                tmrs = dbContext.TableMakerRecords.ToList().Where(tmr => tmr.IsValid).ToList();
+                tmps = dbContext.TableMakerProducts.ToList().Where(tmp => tmp.IsValid).ToList();
+                lib_fgs = dbContext.lib_fgs.ToList().Where(lib => lib.is_valid).ToList();  //不管是valid还是invalid，对它的评估都是valid
             }
 
             //var batteryTypes = trs.Select(tr => tr.Recipe.Program.Project.BatteryType).Distinct().ToList();
@@ -782,9 +782,9 @@ namespace BCLabManager
             {
                 foreach (var prj in bt.Projects)
                 {
-                    foreach (var tmr in prj.TableMakerRecords.Where(tmr=>tmr.IsValid))
+                    foreach (var tmr in prj.TableMakerRecords.Where(tmr => tmr.IsValid))
                     {
-                        foreach (var tmp in tmr.Products.Where(tmp=>tmp.IsValid))
+                        foreach (var tmp in tmr.Products.Where(tmp => tmp.IsValid))
                         {
                             var prj_ers = prj.EmulatorResults.Where(er => er.table_maker_cfile == tmp && er.is_valid).ToList();
                             if (prj_ers.Count == 0)
@@ -793,7 +793,7 @@ namespace BCLabManager
                                 continue;
                             }
                             var libs = prj_ers.Select(o => o.lib_fg).Distinct().ToList();
-                            foreach (var lib in libs.Where(o=>o.is_valid))
+                            foreach (var lib in libs.Where(o => o.is_valid))
                             {
                                 var part = prj.EmulatorResults.Count(er => er.lib_fg == lib && er.is_valid);
                                 var total = trs.Count(tr => tr.Recipe.Program.Project == prj && tr.Recipe.Program.Type.Name == "EV" && tr.Status == TestStatus.Completed);
@@ -810,7 +810,7 @@ namespace BCLabManager
             List<TableMakerProduct> EVP = new List<TableMakerProduct>();
             foreach (var pd in products)
             {
-                var pd_ers = ers.Where(er => er.table_maker_cfile == pd && er.lib_fg.is_valid).ToList(); 
+                var pd_ers = ers.Where(er => er.table_maker_cfile == pd && er.lib_fg.is_valid).ToList();
                 var evtrs = trs.Where(tr => tr.Recipe.Program.Project == pd.Project && tr.Recipe.Program.Type.Name == "EV" && tr.Status == TestStatus.Completed).ToList();
                 if (pd_ers.Count == evtrs.Count)
                     EVP.Add(pd);
@@ -955,7 +955,7 @@ namespace BCLabManager
         private YearWeek GetWeek(DateTime t)
         {
             var year = t.Year;
-            var week = 1 + t.DayOfYear / 7;
+            var week = 1 + (t.DayOfYear - 1) / 7;
             return new YearWeek { Year = year, Week = week };
         }
 
@@ -1023,7 +1023,7 @@ namespace BCLabManager
             Dictionary<YearWeek, int> weeklyTP;
             using (var dbContext = new AppDbContext())
             {
-                var trs = dbContext.TestRecords.ToList().Where(o => o.StartTime != DateTime.MinValue && (o.Status == TestStatus.Completed || o.Status != TestStatus.Invalid || o.Status == TestStatus.Executing));
+                var trs = dbContext.TestRecords.ToList().Where(o => (o.NewCycle > 0) && (o.StartTime != DateTime.MinValue) && (o.Status == TestStatus.Completed || o.Status != TestStatus.Invalid || o.Status == TestStatus.Executing));
                 weeklyTP = GetWeeklyThroughputs(trs, TestStatus.Completed);
             }
 
