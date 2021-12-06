@@ -602,7 +602,7 @@ namespace BCLabManager
                     //.ThenInclude(ch=>ch.Tester)
                     //.ThenInclude(tester=>tester.ITesterProcesser)
                     .ToList();
-                trs = trs.Where(tr => tr.Status == TestStatus.Completed && tr.ProjectStr == "Bissel P2954 7s" && tr.StdFilePath == null).ToList();
+                trs = trs.Where(tr => tr.Status == TestStatus.Completed /*&& tr.ProjectStr == "Bissel P2954 7s"*/ && tr.StdFilePath == null).ToList();
                 foreach (var tr in trs)
                 {
                     var processer = new Chroma17200Processer();
@@ -988,11 +988,22 @@ namespace BCLabManager
         {
             UpdateWeeklyThroughput();
             UpdateOccupancyRatio();
-            UpdateProgress();
+            UpdateXAxis();
         }
 
-        private void UpdateProgress()
+        private void UpdateXAxis()
         {
+            using (var dbContext = new AppDbContext())
+            {
+                var trs = dbContext.TestRecords.ToList().Where(o => o.StartTime != DateTime.MinValue && (o.Status == TestStatus.Completed || o.Status != TestStatus.Invalid || o.Status == TestStatus.Executing));
+                var startPoint = trs.Min(tr => tr.StartTime);
+                var endPoint = trs.Max(tr => tr.EndTime);
+                TimeSpan t = endPoint - startPoint;
+                var midPoint = startPoint + TimeSpan.FromSeconds(t.TotalSeconds/2);
+                DashBoardViewInstance.StartPoint.Content = startPoint.ToString("yyyy-MM");
+                DashBoardViewInstance.EndPoint.Content = endPoint.ToString("yyyy-MM");
+                DashBoardViewInstance.MidPoint.Content = midPoint.ToString("yyyy-MM");
+            }
         }
 
         private void UpdateOccupancyRatio()

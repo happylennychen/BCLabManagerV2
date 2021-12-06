@@ -94,25 +94,38 @@
             <ColumnDefinition Width="0"></ColumnDefinition>
             <ColumnDefinition Width="60*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <GroupBox Header="Statistics" Margin="20" Padding="20">
+        <GroupBox Header="Statistics" Margin="20">
             <Grid x:Name="leftGrid">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="40"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="4"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="4"></RowDefinition>
+                    <RowDefinition Height="40"></RowDefinition>
                     <RowDefinition Height="4"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
-                <d3:Chart Name="wTHplotter" Grid.Row="0" Title="Weekly Throughput" LegendVisibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="30"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <d3:Chart Name="wTHplotter" Grid.Row="1" Grid.Column="1" Title="Weekly Throughput" LegendVisibility="Collapsed">
                     <d3:BarGraph Name="wTHbarChart" Color="Blue"/>
                 </d3:Chart>
 
-                <d3:Chart Name="ORplotter" Grid.Row="2" Title="Occupancy Ratio" LegendVisibility="Collapsed">
+                <d3:Chart Name="ORplotter" Grid.Row="3" Grid.Column="1" Title="Occupancy Ratio" LegendVisibility="Collapsed">
                     <d3:BarGraph Name="ORbarChart" Color="Blue"/>
                 </d3:Chart>
-                <GroupBox Header="Product Curve" Grid.Row="4" IsEnabled="False">
+                <GroupBox Header="Product Curve" Grid.Row="7" Grid.Column="1" IsEnabled="False">
                     <Label VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">Products curve</Label>
                 </GroupBox>
+                <DockPanel VerticalAlignment="Center" Grid.Row="5" Grid.Column="1"  Grid.ColumnSpan="2" Margin="0,0,10,0" LastChildFill="True">
+                    <Label DockPanel.Dock="Left" Name="StartPoint"></Label>
+                    <Label DockPanel.Dock="Right" Name="EndPoint"></Label>
+                    <Label HorizontalAlignment="Center" Name="MidPoint"></Label>
+                </DockPanel>
             </Grid>
         </GroupBox>
         <GroupBox Header="Project Status" Grid.Column="2" Margin="20" Padding="20">
