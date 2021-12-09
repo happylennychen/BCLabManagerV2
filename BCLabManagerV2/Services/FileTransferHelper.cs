@@ -154,15 +154,15 @@ namespace BCLabManager
         }
         public static bool FileRename(string remotePath, string newName)
         {
-            var mappingPath = Remote2Mapping(remotePath);
-            var newMappingPath = Path.Combine(Path.GetDirectoryName(mappingPath), newName);
+            var universalPath = Remote2Universal(remotePath);
+            var newUniversalPath = Path.Combine(Path.GetDirectoryName(universalPath), newName);
             var localPath = Remote2Local(remotePath);
             var newLocalPath = Path.Combine(Path.GetDirectoryName(localPath), newName);
             try
             {
-                if (File.Exists(mappingPath))
+                if (File.Exists(universalPath))
                 {
-                    File.Move(mappingPath, newMappingPath);
+                    File.Move(universalPath, newUniversalPath);
                 }
                 else
                     return false;

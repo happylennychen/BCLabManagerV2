@@ -93,16 +93,7 @@ namespace BCLabManager.Model
             string channelNumberStr = string.Empty;
             if (UInt32.TryParse(channelNumberLine.Split(':').Last().Trim(), out uChannelNumber))
             {
-                switch (uChannelNumber)
-                {
-                    case 5:
-                        channelNumberStr = "1"; break;
-                    case 9:
-                        channelNumberStr = "2"; break;
-                    case 13:
-                        channelNumberStr = "3"; break;
-                    default: break;
-                }
+                channelNumberStr = uChannelNumber.ToString();
             }
             else
                 return string.Empty;

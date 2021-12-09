@@ -432,14 +432,13 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                //return _selectedTestRecord != null && (_selectedTestRecord.Record.TestFilePath != string.Empty); 
-                //if (_selectedRecipe == null)
-                //    return false;
-                //if (_selectedRecipe.IsAbandoned)
-                //    return false;
-                //if (_selectedRecipe.TestRecords.Any(tr => tr.Status == TestStatus.Completed || tr.Status == TestStatus.Waiting))
-                //    return false;
-                //else
+                if (_selectedRecipe == null)
+                    return false;
+                if (_selectedRecipe.IsAbandoned)
+                    return false;
+                if (_selectedRecipe.TestRecords.Any(tr => tr.Status == TestStatus.Completed || tr.Status == TestStatus.Waiting))
+                    return false;
+                else
                     return true;
             }
         }
