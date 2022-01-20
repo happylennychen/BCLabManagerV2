@@ -864,9 +864,9 @@ namespace BCLabManager
             output.Add(string.Format("* extern variable declaration section"));
             output.Add(string.Format("***************************************************************************/"));
             output.Add(string.Format("extern int y_data[YNUM];"));
-            output.Add(string.Format("extern double ocv_cof[FNUM7D];"));
-            output.Add(string.Format("extern double keod_cof[YNUM][FNUM3D];"));
-            output.Add(string.Format("extern double dcap_cof[YNUM][FNUM3D];"));
+            output.Add(string.Format("extern float ocv_cof[FNUM7D];"));
+            output.Add(string.Format("extern float keod_cof[YNUM][FNUM3D];"));
+            output.Add(string.Format("extern float dcap_cof[YNUM][FNUM3D];"));
             output.Add(string.Format("\n"));
             output.Add(string.Format("#endif	//_TABLE_LITE_H_"));
             return output;
@@ -896,15 +896,15 @@ namespace BCLabManager
             output.Add(string.Format("/*****************************************************************************"));
             output.Add(string.Format("* OCV Coefficient "));
             output.Add(string.Format("****************************************************************************/"));
-            output.Add(string.Format("double ocv_cof[FNUM7D] = "));
+            output.Add(string.Format("float ocv_cof[FNUM7D] = "));
             output.Add(string.Format("{{"));
             strCTmp = "";
             for (i = 0; i < flstTblOCVCof.Count; i++)
             {
                 if (i < flstTblOCVCof.Count - 1)
-                    strCTmp += string.Format("\t{0},", flstTblOCVCof[i]);
+                    strCTmp += string.Format("\t{0},", (float)flstTblOCVCof[i]);
                 else
-                    strCTmp += string.Format("\t{0}", flstTblOCVCof[i]);
+                    strCTmp += string.Format("\t{0}", (float)flstTblOCVCof[i]);
             }
             output.Add(strCTmp);
             output.Add(string.Format("}};"));
@@ -950,7 +950,7 @@ namespace BCLabManager
             output.Add("/*****************************************************************************");
             output.Add("* RCAP Function Table Coefficient Data");
             output.Add("****************************************************************************/");
-            output.Add("double dcap_cof[YNUM][FNUM3D] = {");
+            output.Add("float dcap_cof[YNUM][FNUM3D] = {");
             for (int id = 0; id < flstdbDCapCof.Count; id++)
             {
                 strCTmp = ("\t{");
@@ -958,9 +958,9 @@ namespace BCLabManager
                 for (int idd = 0; idd < dbtmp.Length; idd++)
                 {
                     if (idd < dbtmp.Length - 1)
-                        strCTmp += (string.Format("{0:F10}, ", dbtmp[idd]));
+                        strCTmp += (string.Format("{0:F10}, ", (float)dbtmp[idd]));
                     else
-                        strCTmp += (string.Format("{0:F10}", dbtmp[idd]));
+                        strCTmp += (string.Format("{0:F10}", (float)dbtmp[idd]));
                 }
                 output.Add(strCTmp += "},");
             }
@@ -968,7 +968,7 @@ namespace BCLabManager
             output.Add("/*****************************************************************************");
             output.Add("* KEOD Function Table Coefficient Data");
             output.Add("****************************************************************************/");
-            output.Add("double keod_cof[YNUM][FNUM3D] = {");
+            output.Add("float keod_cof[YNUM][FNUM3D] = {");
             for (int id = 0; id < flstdbKeodCof.Count; id++)
             {
                 strCTmp = ("\t{");
@@ -976,9 +976,9 @@ namespace BCLabManager
                 for (int idd = 0; idd < dbtmp.Length; idd++)
                 {
                     if (idd < dbtmp.Length - 1)
-                        strCTmp += (string.Format("{0:F10}, ", dbtmp[idd]));
+                        strCTmp += (string.Format("{0:F10}, ", (float)dbtmp[idd]));
                     else
-                        strCTmp += (string.Format("{0:F10}", dbtmp[idd]));
+                        strCTmp += (string.Format("{0:F10}", (float)dbtmp[idd]));
                 }
                 output.Add(strCTmp + "},");
             }
