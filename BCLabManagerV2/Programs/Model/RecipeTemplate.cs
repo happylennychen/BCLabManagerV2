@@ -60,7 +60,7 @@ namespace BCLabManager.Model
                             action.Current = step.Action.Current * capacity / 100;
                             newStep.Action = action;
                             cob = new CutOffBehavior();
-                            cob.Condition = new Condition() { Parameter = Parameter.VOLTAGE, Mark = CompareMarkEnum.SmallerThan, Value = project.CutoffDischargeVoltage };
+                            cob.Condition = new Condition() { Parameter = Parameter.VOLTAGE, Mark = CompareMarkEnum.SmallerThan, Value = project.BatteryType.CutoffDischargeVoltage };
                             cob.JumpBehaviors.Add(new JumpBehavior() { JumpType = JumpType.INDEX, Index = StepV2s.Count });
                             newStep.CutOffBehaviors.Add(cob);
                             foreach (var ocob in step.CutOffBehaviors)
@@ -77,7 +77,7 @@ namespace BCLabManager.Model
                             action.Current = step.Action.Current * capacity / 100;
                             newStep.Action = action;
                             cob = new CutOffBehavior();
-                            cob.Condition = new Condition() { Parameter = Parameter.VOLTAGE, Mark = CompareMarkEnum.SmallerThan, Value = project.CutoffDischargeVoltage };
+                            cob.Condition = new Condition() { Parameter = Parameter.VOLTAGE, Mark = CompareMarkEnum.SmallerThan, Value = project.BatteryType.CutoffDischargeVoltage };
                             cob.JumpBehaviors.Add(new JumpBehavior() { JumpType = JumpType.NEXT });
                             newStep.CutOffBehaviors.Add(cob);
                             foreach (var ocob in step.CutOffBehaviors)
@@ -94,7 +94,7 @@ namespace BCLabManager.Model
                             action.Power = step.Action.Power * capacity;
                             newStep.Action = action;
                             cob = new CutOffBehavior();
-                            cob.Condition = new Condition() { Parameter = Parameter.VOLTAGE, Mark = CompareMarkEnum.SmallerThan, Value = project.CutoffDischargeVoltage };
+                            cob.Condition = new Condition() { Parameter = Parameter.VOLTAGE, Mark = CompareMarkEnum.SmallerThan, Value = project.BatteryType.CutoffDischargeVoltage };
                             cob.JumpBehaviors.Add(new JumpBehavior() { JumpType = JumpType.INDEX, Index = StepV2s.Count });
                             newStep.CutOffBehaviors.Add(cob);
                             foreach (var ocob in step.CutOffBehaviors)
@@ -111,7 +111,7 @@ namespace BCLabManager.Model
                             action.Power = step.Action.Power * capacity;
                             newStep.Action = action;
                             cob = new CutOffBehavior();
-                            cob.Condition = new Condition() { Parameter = Parameter.VOLTAGE, Mark = CompareMarkEnum.SmallerThan, Value = project.CutoffDischargeVoltage };
+                            cob.Condition = new Condition() { Parameter = Parameter.VOLTAGE, Mark = CompareMarkEnum.SmallerThan, Value = project.BatteryType.CutoffDischargeVoltage };
                             cob.JumpBehaviors.Add(new JumpBehavior() { JumpType = JumpType.NEXT });
                             newStep.CutOffBehaviors.Add(cob);
                             foreach (var ocob in step.CutOffBehaviors)
