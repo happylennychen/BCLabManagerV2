@@ -54,9 +54,8 @@ namespace BCLabManager
                 startupWindow.Close();
 #endif
                 MessageBox.Show($"{e.Message}\n" +
-                    $"{e.InnerException}\n" +
-                    $"\n" +
                     $"Please setup database in the configuration window correctly!");
+                Configuration();
             }
             catch (Exception e)
             {
