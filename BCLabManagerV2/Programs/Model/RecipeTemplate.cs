@@ -148,6 +148,31 @@ namespace BCLabManager.Model
             else
                 return StepV2s;
         }
+
+        internal bool ValidationCheck()
+        {
+            if (Name == string.Empty)
+                return false;
+            if (StepV2s.Count == 0)
+                return false;
+            foreach (var step in StepV2s)
+            {
+                if (step.Action.Mode == ActionMode.CC_CV_CHARGE ||
+                    step.Action.Mode == ActionMode.CC_DISCHARGE ||
+                    step.Action.Mode == ActionMode.CP_DISCHARGE ||
+                    step.Action.Mode == ActionMode.REST)
+                {
+                    if (step.CutOffBehaviors.Count == 0)
+                        return false;
+                    foreach (var cob in step.CutOffBehaviors)
+                    {
+                        if (cob.JumpBehaviors.Count == 0)
+                            return false;
+                    }
+                }
+            }
+            return true;
+        }
         //internal StepV2 GetStepByActionMode(ActionMode actionMode)
         //{
         //    return StepV2s.SingleOrDefault(o => o.Action.Mode == actionMode);

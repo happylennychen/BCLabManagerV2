@@ -173,7 +173,10 @@ namespace BCLabManager
                 if (!File.Exists(localPath)) //本地不存在
                 {
                     if (!FileTransferHelper.FileDownload(tr.StdFilePath, tr.StdMD5))  //下载不成功
+                    {
+                        MessageBox.Show($"{tr.StdFilePath} is not in local folder, and download failed.");
                         return false;
+                    }
                 }
                 UInt32 result = LoadStdToSource(localPath, ref sd);
                 if (result == ErrorCode.NORMAL)
@@ -187,24 +190,15 @@ namespace BCLabManager
 
         private static uint LoadStdToSource(string filePath, ref SourceData output)
         {
-            double fErrorRatio = 0.1F;       //90% * header.current
-            double fErrorStep = 4.0F;
-            char AcuTSeperater = ',';
             bool ret = false;
             UInt32 result = 0;
-            Stream stmCSV = null;
+            FileStream stmCSV = null;
             StreamReader stmContent = null;
-            string strTemp;
-            string[] strToken;
-            char[] chSeperate = new char[] { AcuTSeperater };
-            double fVoltn = -1F, fCurrn = -1F, fTempn = -1F, fAccmn = -1F, fVoltAdj;
-            bool bReachHighVolt = false, bStartExpData = false, bReachLowVolt = false, bStopExpData = true;
-            double ftmp;
-            UInt16 iHighVoltDiff = 100;
+            string line;
 
             try
             {
-                stmCSV = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                stmCSV = File.Open(filePath, FileMode.Open);
                 stmContent = new StreamReader(stmCSV);
             }
             catch (Exception e)
@@ -215,155 +209,44 @@ namespace BCLabManager
             //initialization
             result = 0;
             ret = true;
+            stmContent.ReadLine();  //略过第一行
 
-            while ((strTemp = stmContent.ReadLine()) != null)
+            while ((line = stmContent.ReadLine()) != null)
             {
-                #region skip other except log data line
-                strToken = strTemp.Split(chSeperate, StringSplitOptions.None);  //split column by ',' character
-                                                                                //if (strToken.Length < (int)O2TXTRecord.TxtAccMah)
-                if (!double.TryParse(strToken[8], out ftmp)) //Leon:如果不是数据，代表不是数据行，继续读下一行，否则可执行后面的操作
-                {
-                    //raw data start for next line
-                    continue;
-                }
-                #endregion
 
                 #region call format parsing, to get correct value for log line
 
-                //iNumSrlNow = 0;
-                ftmp = 1000F;      //Chroma is in A/V/Ahr format
-                                   //ParseChroFormat(strToken, out sVoltage, out sCurrent, out sTemp, out sAccM, out sDate, out iNumSrlNow);
-                                   //if (!ParseStd(strToken, out sVoltage, out sCurrent, out sTemp, out sAccM, out sDate, out iNumSrlNow))
-                                   //{
-                                   //    return 1;
-                                   //}
-                StandardRow stdRow = new StandardRow(strTemp);
+                StandardRow stdRow = new StandardRow(line);
                 if (stdRow.Index == 0)
                     continue;
-                uint iNumSrlNow = stdRow.TimeInMS/1000;
+                uint iNumSrlNow = stdRow.TimeInMS / 1000;
                 if (iNumSrlNow > (UInt32.MaxValue / 2 - 1))
                     iNumSrlNow = 1;
                 if (iNumSrlNow == 0)
                     continue;
-                fVoltn = stdRow.Voltage;
-                fCurrn = stdRow.Current;
-                fTempn = stdRow.Temperature;
-                fAccmn = stdRow.Capacity;
+
                 #endregion
 
+                if (stdRow.Voltage > output.fMaxExpVolt)
+                    output.fMaxExpVolt = stdRow.Voltage;//set maximum voltage value from raw data
+                if (stdRow.Voltage < output.fMinExpVolt)
+                    output.fMinExpVolt = stdRow.Voltage;
+                if (stdRow.Mode == ActionMode.CC_DISCHARGE)
                 {
-
-                    if (fVoltn > output.fMaxExpVolt) output.fMaxExpVolt = fVoltn;//set maximum voltage value from raw data
-                    if (fVoltn < output.fMinExpVolt) output.fMinExpVolt = fVoltn;
-
-
-                    //bReachHighVolt = true;  //(20201109)for leon miss
-                    #region check all log data about voltage/current, to get bReachHighVolt, bStartExpData, bStopExpData, and, bReachLowVolt value
-                    if (!bReachHighVolt)
-                    {       //initially, first time must go here, suppose not reach high voltage
-                        if ((Math.Abs(fVoltn - output.fLimitChgVolt) < iHighVoltDiff))    //maybe log will only be idle stage after charge_to_full, set higher hysteresis
-                        {   //check voltage is reached high voltage, no matter charge/discharge/or idle mode
-                            bReachHighVolt = true;
-                        }
-                        //(20201109)for leon miss
-                        else if ((fCurrn < 0) && ((Math.Abs(fCurrn - output.fCurrent)) < (Math.Abs(output.fCurrent) * 0.1)))
-                        {
-                            bReachHighVolt = true;
-                        }
-                    }
-                    //if reached high voltage, wait for get experiment data
-                    //first one log may be the started discharge log, so skip else
-                    /*else*/
-                    if ((bReachHighVolt) && (!bStartExpData))
-                    {
-                        if (fCurrn < 0)
-                        {
-                            //if (Math.Abs(fCurrn - header.fCurrent) < fErrorStep)
-                            if (Math.Abs(fCurrn - output.fCurrent) < Math.Abs(fErrorRatio * output.fCurrent))
-                            {   //current is familiar with header setting
-                                bStartExpData = true;
-                                bStopExpData = false;
-                            }
-                            else
-                            {
-                                //not experiment current value
-                            }
-                        }
-                        //else wait for discharging value
-                    }
-                    //else if((bReachHighVolt) && (fCurrn > 0))	//still in charging learning cycle
-                    else if ((bStartExpData) && (!bReachLowVolt))
-                    {
-                        //if (Math.Abs(fCurrn - header.fCurrent) < fErrorStep)
-                        if (Math.Abs(fCurrn - output.fCurrent) < Math.Abs(fErrorRatio * output.fCurrent))
-                        {
-                            if ((Math.Abs(fVoltn - output.fCutoffDsgVolt) < fErrorStep))  //stop discharging to idle
-                            {
-                                bReachLowVolt = true;
-                            }
-                        }
-                        else
-                        {
-                            if ((Math.Abs(fCurrn - 0) < 10) && (Math.Abs(fVoltn - output.fCutoffDsgVolt) < 500))
-                            {
-                                bReachLowVolt = true;
-                            }
-                        }
-                        //else voltage still in range of High_Low voltage
-                    }
-                    /*else*/
-                    if ((bReachLowVolt) && (!bStopExpData))
-                    {
-                        if ((Math.Abs(fCurrn - 0) < 10) || (fCurrn >= 0) ||
-                            ((Math.Abs(fVoltn - output.fCutoffDsgVolt) < fErrorStep) && (Math.Abs(fCurrn - output.fCurrent) < Math.Abs(fErrorRatio * output.fCurrent))))
-                        {
-                            bStopExpData = true;
-                            output.fAccmAhrCap = Math.Abs(fAccmn);
-                        }
-                    }
-                    #endregion
-
-                    if ((bStartExpData) && (!bStopExpData))     //experiment data starts but not stop
-                    {
-                        if (result != 0)
-                        {
-                            //(M141117)Francis, if parsing error occurred, just let it keeps going parsing, no to break while loop
-                            ret = false;
-                        }
-                        if (ret)
-                        {
-                            //RawDataNode nodeN = new RawDataNode(iNumSrlNow, sVoltage, sCurrent, sTemp, sAccM, sDate, ftmp);
-                            TableMakerSourceDataRow nodeN = new TableMakerSourceDataRow(iNumSrlNow, fVoltn, fCurrn, fTempn, fAccmn);  //(M170628)Francis, did multiple before
-                                                                                                                                      //TableRawData.Add(nodeN);
-                            output.ReservedExpData.Add(nodeN);
-                            fVoltAdj = (fVoltn - output.fMeasureOffset) / output.fMeasureGain
-                                - (output.fCurrent * output.fTraceResis * 0.001F);
-                            TableMakerSourceDataRow rdnAdjust = new TableMakerSourceDataRow(iNumSrlNow, fVoltAdj, fCurrn, fTempn, fAccmn);
-                            output.AdjustedExpData.Add(rdnAdjust);
-                        }
-                    }   //if ((bStartExpData) && (!bStopExpData))
-                    else if ((bStartExpData) && (bStopExpData))     //experiment data start and stop detect
-                    {
-                        if (ret)
-                        {
-                            //(A150806)Francis, if AccMah is jumping too much, skip last one record
-                            if (Math.Abs(fAccmn - output.fAbsMaxCap) < (output.fAbsMaxCap * 0.05))
-                            {
-                                //RawDataNode nodeN = new RawDataNode(iNumSrlNow, sVoltage, sCurrent, sTemp, sAccM, sDate, ftmp);
-                                TableMakerSourceDataRow nodeN = new TableMakerSourceDataRow(iNumSrlNow, fVoltn, fCurrn, fTempn, fAccmn);
-                                //TableRawData.Add(nodeN);
-                                output.ReservedExpData.Add(nodeN);
-                                fVoltAdj = (fVoltn - output.fMeasureOffset) / output.fMeasureGain
-                                    - (output.fCurrent * output.fTraceResis * 0.001F);
-                                TableMakerSourceDataRow rdnAdjust = new TableMakerSourceDataRow(iNumSrlNow, fVoltAdj, fCurrn, fTempn, fAccmn);
-                                output.AdjustedExpData.Add(rdnAdjust);
-                            }
-                        }
-                        break;      //after last one ignore it
-                    }
-                }   //if ((sVoltage.Length != 0) && (sCurrent.Length != 0) &&
-            }   //while ((strTemp = stmContent.ReadLine()) != null)
+                    //RawDataNode nodeN = new RawDataNode(iNumSrlNow, sVoltage, sCurrent, sTemp, sAccM, sDate, ftmp);
+                    TableMakerSourceDataRow nodeN = new TableMakerSourceDataRow(iNumSrlNow, stdRow.Voltage, stdRow.Current, stdRow.Temperature, stdRow.Capacity);  //(M170628)Francis, did multiple before
+                                                                                                                              //TableRawData.Add(nodeN);
+                    output.ReservedExpData.Add(nodeN);
+                    double fVoltAdj = (stdRow.Voltage - output.fMeasureOffset) / output.fMeasureGain
+                        - (output.fCurrent * output.fTraceResis * 0.001F);
+                    TableMakerSourceDataRow rdnAdjust = new TableMakerSourceDataRow(iNumSrlNow, fVoltAdj, stdRow.Current, stdRow.Temperature, stdRow.Capacity);
+                    output.AdjustedExpData.Add(rdnAdjust);
+                    if (stdRow.Status != RowStatus.RUNNING)
+                        output.fAccmAhrCap = Math.Abs(stdRow.Capacity);
+                }
+            }
             stmContent.Close();
+            stmCSV.Close();
 
             double fSoCA;
             double fUsedMaxCap = output.fAccmAhrCap;
@@ -371,15 +254,13 @@ namespace BCLabManager
 
 
             int iCount;
-            //foreach (RawDataNode rdnT in AdjustedExpData)	//(M141107)Francis
-            for (iCount = 1; iCount <= output.AdjustedExpData.Count; iCount++) //(M141107)Francis
+            for (iCount = 1; iCount <= output.AdjustedExpData.Count; iCount++)
             {
-                fSoCA = ((fUsedMaxCap - output.fCapacityDiff - output.AdjustedExpData[iCount - 1].fAccMah) *       //(M141107)Francis
+                fSoCA = ((fUsedMaxCap - output.fCapacityDiff - output.AdjustedExpData[iCount - 1].fAccMah) *
                                     (10000 / fUsedMaxCap));
 
                 output.AdjustedExpData[iCount - 1].fSoCAdj = fSoCA;
             }
-            //File.Delete(tempFilePath);
             return ErrorCode.NORMAL;
         }
 

@@ -87,6 +87,12 @@
     <Reference Include="InteractiveDataDisplay.WPF, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\InteractiveDataDisplay.WPF.1.0.0\lib\net452\InteractiveDataDisplay.WPF.dll</HintPath>
     </Reference>
+    <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
+    </Reference>
+    <Reference Include="LiveCharts.Wpf, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="MathNet.Numerics, Version=4.12.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MathNet.Numerics.4.12.0\lib\net461\MathNet.Numerics.dll</HintPath>
     </Reference>
@@ -314,6 +320,14 @@
     <Compile Include="DataAccess\ICutOffBehaviorRepository.cs" />
     <Compile Include="DataAccess\IEventRepository.cs" />
     <Compile Include="DataAccess\TableMakerProductRepository.cs" />
+    <Compile Include="DataAnalizer\ViewModel\TemperatureViewModel.cs" />
+    <Compile Include="DataAnalizer\ViewModel\DataAnalyzerViewModel.cs" />
+    <Compile Include="DataAnalizer\ViewModel\CurrentViewModel.cs" />
+    <Compile Include="DataAnalizer\ViewModel\TestViewModel.cs" />
+    <Compile Include="DataAnalizer\View\DataAnalyzerView.xaml.cs">
+      <DependentUpon>DataAnalyzerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConnectionException.cs" />
     <Compile Include="DatabaseAccessException.cs" />
     <Compile Include="Migrations\20201021020401_Event.cs" />
     <Compile Include="Migrations\20201021020401_Event.designer.cs">
@@ -350,6 +364,10 @@
     <Compile Include="Migrations\20211126091043_StdFile.cs" />
     <Compile Include="Migrations\20211126091043_StdFile.designer.cs">
       <DependentUpon>20211126091043_StdFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20220228092429_AddDischargeCapacityToTR.cs" />
+    <Compile Include="Migrations\20220228092429_AddDischargeCapacityToTR.designer.cs">
+      <DependentUpon>20220228092429_AddDischargeCapacityToTR.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\Utilities.cs" />
     <Compile Include="TableMaker\Model\Service\TableMakerRecordServieClass.cs" />
@@ -724,6 +742,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="DataAnalizer\View\DataAnalyzerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="TableMaker\View\TableMakerProductView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -950,6 +972,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Service\" />
+    <Folder Include="DataAnalizer\Model\" />
     <Folder Include="Products\ViewModel\" />
   </ItemGroup>
   <ItemGroup>

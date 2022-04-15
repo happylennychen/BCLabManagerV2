@@ -295,7 +295,15 @@ namespace BCLabManager.ViewModel
         /// </summary>
         public void OK()
         {
-            _program.Temperatures = GetTemperatureList(Temperatures);
+            List<int> tempList;
+            if (GetTemperatureList(Temperatures, out tempList))
+                _program.Temperatures = tempList;
+            else
+            {
+                MessageBox.Show($"Parsing Temperature failed.");
+                IsOK = false;
+                return;
+            }
             if (_program.Temperatures == null)
             {
                 IsOK = false;
@@ -331,18 +339,18 @@ namespace BCLabManager.ViewModel
             IsOK = true;
         }
 
-        private List<int> GetTemperatureList(string temperatures)
+        private bool GetTemperatureList(string temperatures, out List<int> tempList)
         {
-            List<int> output = null;
             try
             {
-                output = temperatures.Trim(',').Split(',').Select(o => Convert.ToInt32(o)).ToList();
+                tempList = temperatures.Trim(',').Split(',').Select(o => Convert.ToInt32(o)).ToList();
             }
             catch (Exception e)
             {
-                MessageBox.Show($"Loading Temperature failed. Error Message: \n{e.Message}");
+                tempList = null;
+                return false;
             }
-            return output;
+            return true;
         }
 
 
@@ -391,11 +399,9 @@ namespace BCLabManager.ViewModel
                     return false;
                 if (Requester == null || Requester.Length == 0)
                     return false;
-                try { GetTemperatureList(Temperatures); }
-                catch (Exception e) 
-                { 
-                    return false; 
-                }
+                List<int> tempList;
+                if (!GetTemperatureList(Temperatures, out tempList))
+                    return false;
                 return true; 
             }
         }

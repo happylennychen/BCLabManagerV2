@@ -13,7 +13,7 @@ namespace BCLabManager
         static public int iMinPercent = 0;
         static public int iMaxPercent = 10000;
         #region OCV
-        public static void GetOCVModel(List<SourceData> MaxSDList, ref OCVModel ocvModel)
+        public static bool GetOCVModel(List<SourceData> MaxSDList, ref OCVModel ocvModel)
         {
             OCVModel output = ocvModel;
 
@@ -27,9 +27,11 @@ namespace BCLabManager
             List<Int32> iOCVVolt;
             if (CreateNewOCVPoints(MaxSDList, iMinVoltage, iMaxVoltage, out iOCVVolt))
             {
-                ;
+                output.iOCVVolt = iOCVVolt; 
+                return true;
             }
-            output.iOCVVolt = iOCVVolt;
+            else
+                return false;
         }
         private static bool CreateNewOCVPoints(List<SourceData> lstSample2, int iMinVoltage, int iMaxVoltage, out List<int> iOCVVolt)
         {
@@ -178,7 +180,7 @@ namespace BCLabManager
         }
         public static TableMakerProduct GenerateOCVTable(Stage stage, Project project, string time, OCVModel ocvModel)
         {
-            var OutFolder = $@"{GlobalSettings.LocalFolder}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
+            var OutFolder = $@"{GlobalSettings.LocalPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
             if (!Directory.Exists(OutFolder))
             {
                 Directory.CreateDirectory(OutFolder);

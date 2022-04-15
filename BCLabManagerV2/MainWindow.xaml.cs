@@ -57,6 +57,15 @@ namespace BCLabManager
                     $"Please setup database in the configuration window correctly!");
                 Configuration();
             }
+            catch (ConnectionException e)
+            {
+#if StartWindow
+                startupWindow.Close();
+#endif
+                MessageBox.Show($"{e.Message}\n" +
+                    $"Please check the internet connection and setup database in the configuration window correctly!");
+                Configuration();
+            }
             catch (Exception e)
             {
 #if StartWindow
@@ -131,6 +140,7 @@ namespace BCLabManager
             conf.RemotePath = GlobalSettings.RemotePath;
             conf.EnableTest = GlobalSettings.EnableTest;
             conf.MappingPath = GlobalSettings.MappingPath;
+            conf.LocalPath = GlobalSettings.LocalPath;
             conf.DatabaseHost = GlobalSettings.DatabaseHost;
             conf.DatabaseName = GlobalSettings.DatabaseName;
             conf.DatabaseUser = GlobalSettings.DatabaseUser;
@@ -594,7 +604,7 @@ namespace BCLabManager
             using (var context = new AppDbContext())
             {
                 var trs = context.TestRecords
-                    .Include(tr => tr.Recipe.Program.Project).Where(tr=>tr.TesterStr == "17200")
+                    .Include(tr => tr.Recipe.Program.Project).Where(tr => tr.TesterStr == "17200")
                     //.ThenInclude(rec => rec.Program)
                     //.ThenInclude(pro => pro.Project)
                     //.Include(tr=>tr.AssignedChannel)
@@ -621,6 +631,97 @@ namespace BCLabManager
                     tr.StdMD5 = stdMD5;
                 }
                 context.SaveChanges();
+            }
+        }
+
+        private void Update_Discharge_Capacity_Click(object sender, RoutedEventArgs e)
+        {
+            TestRecordServiceClass trService = new TestRecordServiceClass();
+            using (var context = new AppDbContext())
+            {
+                var trs = context.TestRecords
+                    .Include(tr => tr.Recipe.Program.Project).Where(tr => tr.TesterStr == "17200" || tr.TesterStr == "17208")
+                    //.ThenInclude(rec => rec.Program)
+                    //.ThenInclude(pro => pro.Project)
+                    //.Include(tr=>tr.AssignedChannel)
+                    //.ThenInclude(ch=>ch.Tester)
+                    //.ThenInclude(tester=>tester.ITesterProcesser)
+                    .ToList();
+                trs = trs.Where(tr => tr.TestFilePath != null && tr.DischargeCapacity == 0).ToList();
+                List<string> ZeroCapacityFileList = new List<string>();
+                foreach (var tr in trs)
+                {
+                    ITesterProcesser processer = null;
+                    if (tr.TesterStr == "17200")
+                        processer = new Chroma17200Processer();
+                    else if (tr.TesterStr == "17208")
+                        processer = new Chroma17208Processer();
+                    var localTestFileFullPath = FileTransferHelper.Remote2Local(tr.TestFilePath);
+                    if (processer != null)
+                    {
+                        if (File.Exists(localTestFileFullPath))
+                        {
+                            var dc = processer.GetDischargeCapacityFromRawData(new System.Collections.ObjectModel.ObservableCollection<string>() { localTestFileFullPath });
+                            if (dc != 0)
+                                tr.DischargeCapacity = dc;
+                            else
+                            {
+                                ZeroCapacityFileList.Add(tr.TestFilePath);
+                            }
+                        }
+                    }
+                }
+                context.SaveChanges();
+                foreach (var file in ZeroCapacityFileList)
+                {
+                    RuningLog.Write($"\t{file}\n");
+                }
+            }
+        }
+
+
+        private void Check_File_Format_Click(object sender, RoutedEventArgs e)
+        {
+            TestRecordServiceClass trService = new TestRecordServiceClass();
+            using (var context = new AppDbContext())
+            {
+                var trs = context.TestRecords
+                    .Include(tr => tr.Recipe.Program.Project).Where(tr => tr.TesterStr == "17200")
+                    //.ThenInclude(rec => rec.Program)
+                    //.ThenInclude(pro => pro.Project)
+                    //.Include(tr=>tr.AssignedChannel)
+                    //.ThenInclude(ch=>ch.Tester)
+                    //.ThenInclude(tester=>tester.ITesterProcesser)
+                    .ToList();
+                trs = trs.Where(tr => tr.TestFilePath != null).ToList();
+                List<string> IllegalFileList = new List<string>();
+                foreach (var tr in trs)
+                {
+                    ITesterProcesser processer = new Chroma17200Processer();
+                    var localTestFileFullPath = FileTransferHelper.Remote2Local(tr.TestFilePath);
+                    if (File.Exists(localTestFileFullPath))
+                    {
+                        FileStream fs = new FileStream(localTestFileFullPath, FileMode.Open);
+                        StreamReader sr = new StreamReader(fs);
+                        for (int i = 0; i < 30; i++)
+                            sr.ReadLine();
+                        var line = sr.ReadLine();
+                        var strRow = line.Split(',');
+                        if (strRow.Length != 14)
+                            IllegalFileList.Add(tr.TestFilePath);
+                        sr.Close();
+                        fs.Close();
+                    }
+                }
+                if (IllegalFileList.Count > 0)
+                {
+                    RuningLog.Write("Illegal Files:\n");
+                    foreach (var file in IllegalFileList)
+                    {
+                        RuningLog.Write("\t" + file + "\n");
+                    }
+                }
+                MessageBox.Show($"Done. There are {IllegalFileList.Count} files are illegal, please check the running log file for details.");
             }
         }
         #endregion
@@ -998,7 +1099,7 @@ namespace BCLabManager
                 var startPoint = trs.Min(tr => tr.StartTime);
                 var endPoint = trs.Max(tr => tr.EndTime);
                 TimeSpan t = endPoint - startPoint;
-                var midPoint = startPoint + TimeSpan.FromSeconds(t.TotalSeconds/2);
+                var midPoint = startPoint + TimeSpan.FromSeconds(t.TotalSeconds / 2);
                 DashBoardViewInstance.StartPoint.Content = startPoint.ToString("yyyy-MM");
                 DashBoardViewInstance.EndPoint.Content = endPoint.ToString("yyyy-MM");
                 DashBoardViewInstance.MidPoint.Content = midPoint.ToString("yyyy-MM");
