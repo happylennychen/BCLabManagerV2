@@ -27,7 +27,7 @@ namespace BCLabManager
             //}
             //else
             //{
-                rootPath = GlobalSettings.LocalFolder;
+                rootPath = GlobalSettings.LocalPath;
             //}
             var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
             if (!Directory.Exists(OutFolder))

@@ -269,6 +269,7 @@
                         <DataGridTextColumn Header="Duration" IsReadOnly="True" Binding="{Binding Path=Duration}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Last Cycle" IsReadOnly="True" Binding="{Binding Path=LastCycle}"></DataGridTextColumn>
                         <DataGridTextColumn Header="New Cycle" IsReadOnly="True" Binding="{Binding Path=NewCycle}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Discharge Capacity" IsReadOnly="True" Binding="{Binding Path=DischargeCapacity}"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>

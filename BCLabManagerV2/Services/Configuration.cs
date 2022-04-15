@@ -12,6 +12,7 @@ namespace BCLabManager
         public string RemotePath { get; set; }
         public bool EnableTest { get; set; }
         public string MappingPath { get; set; }
+        public string LocalPath { get; set; }
         public string DatabaseHost { get; set; }
         public string DatabaseName { get; set; }
         public string DatabaseUser { get; set; }

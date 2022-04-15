@@ -865,7 +865,7 @@ namespace BCLabManager.ViewModel
                     $"{SelectedRecipe.Temperature}Deg-{SelectedRecipe.Name}"
                 );
             evm.Temperature = _selectedRecipe.Temperature;
-            if (_selectedProgram._program.Type.Name == "EV" && _selectedProgram.Name.Contains("Dynamic"))   //Issue 2321
+            /*if (_selectedProgram._program.Type.Name == "EV" && _selectedProgram.Name.Contains("Dynamic"))   //Issue 2321
             {
                 //if (_selectedProgram.Name.Contains("Dynamic"))
                 evm.Current = 0;
@@ -887,7 +887,8 @@ namespace BCLabManager.ViewModel
                         //return;
                     }
                 }
-            }
+            }*/
+            evm.Current = GetRecipeCurrent(_selectedRecipe._recipe);
             evm.DisplayName = "Test-Direct Commit";
             var TestRecordDirectCommitViewInstance = new DirectCommitView();
             TestRecordDirectCommitViewInstance.DataContext = evm;
@@ -970,11 +971,10 @@ namespace BCLabManager.ViewModel
                     _channelService.Commit(evm.Channel, et, SelectedProgram.Name, SelectedRecipe.Name);
                     if (evm.Chamber != null)
                         _chamberService.Commit(evm.Chamber, et, SelectedProgram.Name, SelectedRecipe.Name);
-                    SelectedTestRecord.NewCycle = evm.NewCycle;
                     //_programService.RecipeService.TestRecordService.CommitV2(
                     //SelectedTestRecord.Record, evm.Comment, filePath, st, et, MD5);
                     _programService.RecipeService.TestRecordService.CommitV3(
-                        SelectedTestRecord.Record, evm.Comment, filePath, st, et, MD5, stdFilePath, stdMD5);
+                        SelectedTestRecord.Record, evm.Comment, filePath, st, et, MD5, stdFilePath, stdMD5, evm.NewCycle, evm.DischargeCapacity);
                     _programService.RecipeService.UpdateTime(SelectedRecipe._recipe);
                     _programService.UpdateTime(SelectedProgram._program);
                     _programService.RecipeService.RecipeTemplateService.UpdateEditable(SelectedRecipe._recipe.RecipeTemplate);
@@ -987,6 +987,25 @@ namespace BCLabManager.ViewModel
                 }
             }
         }
+
+        private double GetRecipeCurrent(Recipe recipe)
+        {
+            int chargeIndex = -1;
+            var steps = recipe.RecipeTemplate.GetNormalSteps(recipe.Program.Project);
+            var chargeStep = steps.Where(s => s.Action.Mode == ActionMode.CC_CV_CHARGE);
+            if (chargeStep.Count() > 0)
+            {
+                chargeIndex = chargeStep.Last().Index;
+            }
+            var dischargeStep = steps.Where(s => s.Action.Mode == ActionMode.CC_DISCHARGE && s.Index > chargeIndex);
+            if (dischargeStep.Count() != 1)
+                return 0;
+            else
+            {
+                return dischargeStep.First().Action.Current;
+            }
+        }
+
         private void Invalidate()
         {
             TestRecordViewModel testRecord = SelectedTestRecord;

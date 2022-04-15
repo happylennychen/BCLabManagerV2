@@ -278,7 +278,7 @@ namespace BCLabManager.ViewModel
         /// </summary>
         bool CanCreate
         {
-            get { return IsNewRecipeTemplate; }
+            get { return _RecipeTemplate.ValidationCheck(); }
         }
 
         /// <summary>
@@ -286,7 +286,7 @@ namespace BCLabManager.ViewModel
         /// </summary>
         bool CanSaveAs
         {
-            get { return IsNewRecipeTemplate; }
+            get { return _RecipeTemplate.ValidationCheck(); }
         }
 
         bool CanPasteStep

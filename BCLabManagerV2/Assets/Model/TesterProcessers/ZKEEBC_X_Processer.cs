@@ -76,5 +76,10 @@ namespace BCLabManager.Model
         {
             return null;
         }
+
+        public double GetDischargeCapacityFromRawData(ObservableCollection<string> fileList)
+        {
+            return 0.0;
+        }
     }
 }

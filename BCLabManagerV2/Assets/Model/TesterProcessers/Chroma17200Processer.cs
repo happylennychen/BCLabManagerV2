@@ -153,6 +153,9 @@ namespace BCLabManager.Model
             DataPreprocesser.Index = 0;
             DataPreprocesser.IsFirstDischarge = false;
             DataPreprocesser.IsFirstDischargeChecked = false;
+            DataPreprocesser.Nodes.Clear();
+            DataPreprocesser.StringList.Clear();
+            DataPreprocesser.DicList.Clear();
             try
             {
                 bool isCOCPoint = false;
@@ -543,6 +546,59 @@ namespace BCLabManager.Model
                 default: return RowStatus.UNKNOWN;
             }
         }
+
+        public double GetDischargeCapacityFromRawData(ObservableCollection<string> fileList)
+        {
+            double output = 0;
+            List<double> buffer = new List<double>();
+            foreach (var file in fileList)
+            {
+                FileStream fs = new FileStream(file, FileMode.Open);
+                StreamReader sr = new StreamReader(fs);
+                var oldNode = DataPreprocesser.GetNodeFromeString(sr.ReadLine());
+                while (true)
+                {
+                    var line = sr.ReadLine();
+                    if (line == null)
+                    {
+                        if (oldNode != null)
+                        {
+                            if (oldNode.StepMode == ActionMode.CC_DISCHARGE || oldNode.StepMode == ActionMode.CP_DISCHARGE)
+                            {
+                                output += oldNode.Capacity;
+                            }
+                        }
+                        break;
+                    }
+                    var newNode = DataPreprocesser.GetNodeFromeString(line);
+                    if (newNode != null)
+                    {
+                        if (oldNode != null)
+                        {
+                            if (newNode.Mode == 0)
+                            {
+                                if (newNode.StepMode == ActionMode.CC_CV_CHARGE)
+                                {
+                                    if (output != 0)
+                                    {
+                                        buffer.Add(output);
+                                        output = 0;
+                                    }
+                                }
+                                if (oldNode.StepMode == ActionMode.CC_DISCHARGE || oldNode.StepMode == ActionMode.CP_DISCHARGE)
+                                    output += oldNode.Capacity;
+                            }
+                        }
+                        oldNode = newNode;
+                    }
+                }
+                sr.Close();
+                fs.Close();
+            }
+            if (output == 0 && buffer.Count > 0)    //充电在放电之后
+                output = buffer.Last();
+            return output * -1000;
+        }
     }
     namespace Chroma17200
     {
@@ -583,7 +639,7 @@ namespace BCLabManager.Model
             }
             public static bool IsFirstDischarge { get; set; }
             public static bool IsFirstDischargeChecked { get; set; }
-
+            private static byte voltageRaisingErrorCounter = 0;
 
             public static ChromaNode GetNodeFromeString(string value)
             {
@@ -957,7 +1013,15 @@ namespace BCLabManager.Model
                     if (step.Action.Mode == ActionMode.CC_DISCHARGE)
                     {
                         if ((Nodes[Index].Voltage - Nodes[Index - 1].Voltage) > 0.005)       //RC或OCV实验的放电过程中，电压回弹超过5mV，则报错
-                            return ErrorCode.DP_DISCHARGE_VOLTAGE_JUMP_IN_RC_OCV;
+                        {
+                            voltageRaisingErrorCounter++;
+                            if (voltageRaisingErrorCounter >= 6)
+                                return ErrorCode.DP_DISCHARGE_VOLTAGE_JUMP_IN_RC_OCV;
+                        }
+                        else
+                        {
+                            voltageRaisingErrorCounter = 0;
+                        }
                     }
                 }
 

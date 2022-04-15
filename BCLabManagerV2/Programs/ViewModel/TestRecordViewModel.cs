@@ -366,6 +366,23 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("Operator");
             }
         }
+
+        public double DischargeCapacity
+        {
+            get
+            {
+                return _record.DischargeCapacity;
+            }
+            set
+            {
+                if (value == _record.DischargeCapacity)
+                    return;
+
+                _record.DischargeCapacity = value;
+
+                RaisePropertyChanged("DischargeCapacity");
+            }
+        }
         #endregion // Presentation Properties
 
         #region Presentation logic

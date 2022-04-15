@@ -213,6 +213,12 @@ namespace BCLabManager.Model
             get { return _temperature; }
             set { SetProperty(ref _temperature, value); }
         }
+        private double _dischargeCapacity;
+        public double DischargeCapacity
+        {
+            get { return _dischargeCapacity; }
+            set { SetProperty(ref _dischargeCapacity, value); }
+        }
         public ObservableCollection<EmulatorResult> EmulatorResults { get; set; } = new ObservableCollection<EmulatorResult>();
 
         #region Store the assets in use

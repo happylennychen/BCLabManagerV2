@@ -45,7 +45,7 @@ namespace BCLabManager.ViewModel
         public string RemotePath
         {
             get { return _configuration.RemotePath; }
-            set { _configuration.RemotePath = value;}
+            set { _configuration.RemotePath = value; }
         }
         public bool EnableTest
         {
@@ -56,6 +56,11 @@ namespace BCLabManager.ViewModel
         {
             get { return _configuration.MappingPath; }
             set { _configuration.MappingPath = value; }
+        }
+        public string LocalPath
+        {
+            get { return _configuration.LocalPath; }
+            set { _configuration.LocalPath = value; }
         }
         public string DatabaseHost
         {
@@ -94,27 +99,84 @@ namespace BCLabManager.ViewModel
 
         private void OK()
         {
-            Thread t = new Thread(() =>
+            Configuration _confBuffer;
+            _confBuffer = SaveConfigToBuffer();
+            UpdateConfig(_configuration);
+
+            if (InputCheck())
             {
-                GlobalSettings.RemotePath = _configuration.RemotePath;
-                GlobalSettings.EnableTest = _configuration.EnableTest;
-                GlobalSettings.MappingPath = _configuration.MappingPath;
-                GlobalSettings.DatabaseHost = _configuration.DatabaseHost;
-                GlobalSettings.DatabaseName = _configuration.DatabaseName;
-                GlobalSettings.DatabaseUser = _configuration.DatabaseUser;
-                GlobalSettings.DatabasePassword = _configuration.DatabasePassword;
                 string jsonString = JsonSerializer.Serialize(_configuration);
                 File.WriteAllText(GlobalSettings.ConfigurationFilePath, jsonString);
                 //_mainWindowViewModel = new MainWindowViewModel();
                 //MessageBox.Show("Please restart BCLM!");
-                System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
-            });
-            t.Start();
-            Application.Current.Shutdown();
+                Thread t = new Thread(() =>
+                {
+                    System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                });
+                t.Start();
+                Application.Current.Shutdown();
+            }
+            else
+            {
+                MessageBox.Show("Configuration Error. Please reset.");
+                UpdateConfig(_confBuffer);
+            }
         }
+
+        private void UpdateConfig(Configuration config)
+        {
+            GlobalSettings.RemotePath = config.RemotePath;
+            GlobalSettings.EnableTest = config.EnableTest;
+            GlobalSettings.MappingPath = config.MappingPath;
+            GlobalSettings.LocalPath = config.LocalPath;
+            GlobalSettings.DatabaseHost = config.DatabaseHost;
+            GlobalSettings.DatabaseName = config.DatabaseName;
+            GlobalSettings.DatabaseUser = config.DatabaseUser;
+            GlobalSettings.DatabasePassword = config.DatabasePassword;
+        }
+
+        private Configuration SaveConfigToBuffer()
+        {
+            Configuration output = new Configuration();
+            output.RemotePath = GlobalSettings.RemotePath;
+            output.EnableTest = GlobalSettings.EnableTest;
+            output.MappingPath = GlobalSettings.MappingPath;
+            output.LocalPath = GlobalSettings.LocalPath;
+            output.DatabaseHost = GlobalSettings.DatabaseHost;
+            output.DatabaseName = GlobalSettings.DatabaseName;
+            output.DatabaseUser = GlobalSettings.DatabaseUser;
+            output.DatabasePassword = GlobalSettings.DatabasePassword;
+            return output;
+        }
+
+        private bool InputCheck()
+        {
+            if (_configuration.EnableTest)
+            {
+                if (!Directory.Exists(_configuration.MappingPath))
+                    return false;
+            }
+            if (!IsDatabaseAccessable())
+                return false;
+            return true;
+        }
+
+        private bool IsDatabaseAccessable()
+        {
+            try
+            {
+                using (var uow = new UnitOfWork(new AppDbContext()))
+                {
+                    var a = uow.BatteryTypes.GetAll();
+                }
+            }
+            catch { return false; }
+            return true;
+        }
+
         private void Cancel()
         {
-            
+
         }
         #endregion // Public Interface
     }

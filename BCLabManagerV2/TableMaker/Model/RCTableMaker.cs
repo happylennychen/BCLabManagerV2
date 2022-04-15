@@ -367,7 +367,7 @@ namespace BCLabManager
 
         public static TableMakerProduct GenerateRCTable(Stage stage, Project project, List<int> VoltagePoints, string time, RCModel rcModel)
         {
-            var OutFolder = $@"{GlobalSettings.LocalFolder}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
+            var OutFolder = $@"{GlobalSettings.LocalPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
             if (!Directory.Exists(OutFolder))
             {
                 Directory.CreateDirectory(OutFolder);

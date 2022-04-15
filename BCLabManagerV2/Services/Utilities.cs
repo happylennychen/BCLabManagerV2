@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BCLabManager.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,6 +33,29 @@ namespace BCLabManager
                     $"{e.Message}");
             }
             return output;
+        }
+        public static List<StandardRow> LoadSTDFile(string fullpath)
+        {
+            List<StandardRow> output = new List<StandardRow>();
+            try
+            {
+                FileStream file = new FileStream(fullpath, FileMode.Open);
+                StreamReader sr = new StreamReader(file);
+                string line;
+                sr.ReadLine();  //第一行是列名
+                while ((line = sr.ReadLine()) != null)
+                {
+                    StandardRow stdRow = new StandardRow(line);
+                    output.Add(stdRow);
+                }
+                sr.Close();
+                file.Close();
+                return output;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

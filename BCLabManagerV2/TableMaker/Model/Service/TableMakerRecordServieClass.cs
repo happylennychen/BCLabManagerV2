@@ -25,7 +25,7 @@ namespace BCLabManager.Model
         //public void FileOperation(TableMakerRecord item)
         //{
         //    string root = $@"{GlobalSettings.RemotePath}{item.Project.BatteryType.Name}\{item.Project.Name}";
-        //    string temproot = $@"{GlobalSettings.LocalFolder}{item.Project.BatteryType.Name}\{item.Project.Name}";
+        //    string temproot = $@"{GlobalSettings.LocalPath}{item.Project.BatteryType.Name}\{item.Project.Name}";
         //    string temptestfilepath = string.Empty;
         //    temptestfilepath = CopyToFolder(item.FilePath, temproot);
         //    item.FilePath = $@"{root}\{GlobalSettings.ProductFolderName}\{Path.GetFileName(temptestfilepath)}";
@@ -49,7 +49,7 @@ namespace BCLabManager.Model
         //private string CopyToFolder(string filepath, string root)
         //{
         //    var newPath = Path.Combine($@"{root}\{GlobalSettings.ProductFolderName}", Path.GetFileName(filepath));
-        //    //var tempPath = Path.Combine($@"{GlobalSettings.LocalFolder}{GlobalSettings.ProductFolderName}", Path.GetFileName(filepath));
+        //    //var tempPath = Path.Combine($@"{GlobalSettings.LocalPath}{GlobalSettings.ProductFolderName}", Path.GetFileName(filepath));
         //    //File.Copy(filepath, tempPath, true);
         //    File.Copy(filepath, newPath, true);
         //    return newPath;

@@ -14,7 +14,19 @@ namespace BCLabManager
 
         //public static string RootPath { get; set; } = @"D:\Issues\Open\BC_Lab\Data V3\";
         //public static string TempraryFolder { get; } = @"D:\Issues\Open\BC_Lab\Data test\";//AppDomain.CurrentDomain.BaseDirectory
-        public static string LocalFolder { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Local Data\\");// No need for the sub folder
+        //public static string LocalFolder { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Local Data\\");// No need for the sub folder
+        private static string _localPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Local Data\\");
+        public static string LocalPath
+        {
+            get { return _localPath; }
+            set
+            {
+                if (value.EndsWith(@"\"))
+                    _localPath = value;
+                else
+                    _localPath = $@"{value}\";
+            }
+        }
         private static string _remotePath = @"\\10.3.4.16\bclab\data\";
         public static string RemotePath 
         { 
@@ -57,7 +69,7 @@ namespace BCLabManager
         public static string ProductFolderName { get; } = "Table Maker Product";
         public static string EvResultFolderName { get; } = "Emulator Product";
         public static string RunningLogFolder { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Running Log\\");
-        public static string DatabaseHost { get; set; } = "10.22.4.249";
+        public static string DatabaseHost { get; set; } = "10.22.4.38";
         //public static string DatabaseHost { get; set; } = "localhost";
         public static string DatabaseName { get; set; } = "BCLM";
         //public static string DatabaseName { get; set; } = "TMRecord";

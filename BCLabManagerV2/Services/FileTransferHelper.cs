@@ -193,7 +193,7 @@ namespace BCLabManager
         {
             int index = FindNthCharInString(path, '\\', level);
             var substring = path.Substring(0, index + 1);
-            return path.Replace(substring, GlobalSettings.LocalFolder);
+            return path.Replace(substring, GlobalSettings.LocalPath);
         }
         private static int FindNthCharInString(string str, char v, int count)   //找到str中第count个v对应的index
         {
@@ -208,7 +208,7 @@ namespace BCLabManager
             int level = GetLevel(path);
             int index = FindNthCharInString(path, '\\', level);
             var substring = path.Substring(0, index + 1);
-            return path.Replace(substring, GlobalSettings.LocalFolder);
+            return path.Replace(substring, GlobalSettings.LocalPath);
         }
 
         public static string GetRemotePath(string path)
@@ -222,9 +222,9 @@ namespace BCLabManager
         public static int GetLevel(string path)
         {
             int level = -1;
-            if (path.Contains(GlobalSettings.LocalFolder))
+            if (path.Contains(GlobalSettings.LocalPath))
             {
-                level = GetRelativeLevel(path, GlobalSettings.LocalFolder);
+                level = GetRelativeLevel(path, GlobalSettings.LocalPath);
             }
             else if (path.Contains(GlobalSettings.UniversalPath))
             {
@@ -254,15 +254,15 @@ namespace BCLabManager
         #region relocate
         public static string Local2Remote(string path)
         {
-            if (path.Contains(GlobalSettings.LocalFolder))
-                return path.Replace(GlobalSettings.LocalFolder, GlobalSettings.RemotePath);
+            if (path.Contains(GlobalSettings.LocalPath))
+                return path.Replace(GlobalSettings.LocalPath, GlobalSettings.RemotePath);
             else return path;
         }
 
         public static string Remote2Local(string path)  //数据库里都是remote path，从数据库获得的文件名，要转成local，必须调用此函数
         {
             if (path.Contains(GlobalSettings.RemotePath))
-                return path.Replace(GlobalSettings.RemotePath, GlobalSettings.LocalFolder);
+                return path.Replace(GlobalSettings.RemotePath, GlobalSettings.LocalPath);
             else return path;
         }
         public static string Mapping2Remote(string path)
@@ -289,8 +289,8 @@ namespace BCLabManager
         }
         public static string Local2Universal(string path)
         {
-            if (path.Contains(GlobalSettings.LocalFolder))
-                return path.Replace(GlobalSettings.LocalFolder, GlobalSettings.UniversalPath);
+            if (path.Contains(GlobalSettings.LocalPath))
+                return path.Replace(GlobalSettings.LocalPath, GlobalSettings.UniversalPath);
             else return path;
         }
         public static string Universal2Local(string path)
@@ -299,12 +299,12 @@ namespace BCLabManager
             if (GlobalSettings.EnableTest)
             {
                 if (path.Contains(GlobalSettings.MappingPath))
-                    output = path.Replace(GlobalSettings.MappingPath, GlobalSettings.LocalFolder);
+                    output = path.Replace(GlobalSettings.MappingPath, GlobalSettings.LocalPath);
             }
             else
             {
                 if (path.Contains(GlobalSettings.RemotePath))
-                    output = path.Replace(GlobalSettings.RemotePath, GlobalSettings.LocalFolder);
+                    output = path.Replace(GlobalSettings.RemotePath, GlobalSettings.LocalPath);
             }
             return output;
         }
