@@ -354,15 +354,15 @@ namespace BCLabManager.ViewModel
             if (tmcvm.IsOK)
             {
                 //Thread t = new Thread(() =>
+                var timestamp = DateTime.Now;
+                string time = timestamp.ToString("yyyyMMddHHmmss");
+                var OutFolder = $@"{GlobalSettings.UniversalPath}{baseProject.BatteryType.Name}\{baseProject.Name}\{GlobalSettings.ProductFolderName}\{time}";
                 try
                 {
                     if (MessageBox.Show("It will take a while to get the work done, Continue?", "Generate Tables and Drivers.", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                     {
                         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                         stopwatch.Start();
-                        var timestamp = DateTime.Now;
-                        string time = timestamp.ToString("yyyyMMddHHmmss");
-                        var OutFolder = $@"{GlobalSettings.UniversalPath}{baseProject.BatteryType.Name}\{baseProject.Name}\{GlobalSettings.ProductFolderName}\{time}";
                         if (!Directory.Exists(OutFolder))
                         {
                             Directory.CreateDirectory(OutFolder);
@@ -376,10 +376,22 @@ namespace BCLabManager.ViewModel
                         if (ocvRecords != null && ocvRecords.Count != 0)
                         {
                             if (!TableMakerService.GetSourceV2(stage2Project, ocvRecords, testers, out ocvSource, out ocvSourceFiles))
-                                //if (!TableMakerService.GetSource(stage2Project, ocvRecords, testers, out ocvSource, out ocvSourceFiles))
-                                    return;
-                            if (ocvSource == null)
+                            {
+                                Directory.Delete(OutFolder, true);
                                 return;
+                            }
+                            if (ocvSource == null)
+                            {
+                                MessageBox.Show("Get OCV source failed.");
+                                Directory.Delete(OutFolder, true);
+                                return;
+                            }
+                            if (ocvSource.Count != 2)
+                            {
+                                MessageBox.Show("OCV source number is not 2.");
+                                Directory.Delete(OutFolder, true);
+                                return;
+                            }
                             OCVTableMaker.GetOCVModel(ocvSource, ref ocvModel);
                             products.Add(OCVTableMaker.GenerateOCVTable(stage, baseProject, time, ocvModel));
                         }
@@ -402,12 +414,20 @@ namespace BCLabManager.ViewModel
                                 //if (!TableMakerService.GetSource(stage1Project, rcStage2Records, testers, out rcStage2Source, out stage2RcSourceFiles))
                                     return;
                             if (rcStage2Source == null)
+                            {
+                                MessageBox.Show("Get Stage 2 source failed.");
+                                Directory.Delete(OutFolder, true);
                                 return;
+                            }
                             if (!TableMakerService.GetSourceV2(stage1Project, rcStage1Records, testers, out rcStage1Source, out stage1RcSourceFiles))
                                 //if (!TableMakerService.GetSource(stage1Project, rcStage1Records, testers, out rcStage1Source, out stage1RcSourceFiles))
                                     return;
                             if (rcStage1Source == null)
+                            {
+                                MessageBox.Show("Get Stage 1 source failed.");
+                                Directory.Delete(OutFolder, true);
                                 return;
+                            }
                             rcSourceFiles = stage1RcSourceFiles.Concat(stage2RcSourceFiles).ToList();
                             List<SourceData> rcSource = RCTableMaker.GetNewSources(rcStage2Source, rcStage1Source);
                             RCTableMaker.GetRCModel(rcSource, stage1Project.AbsoluteMaxCapacity, _voltagePoints, ref rcModel); //做出中间table
@@ -415,7 +435,11 @@ namespace BCLabManager.ViewModel
                             StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
                             AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
                             if (!LiteDriverMaker.GetLiteModel(EOD, ocvSource, rcSource, ocvModel, rcModel, stage1Project, _voltagePoints, ref liteModel))
+                            {
+                                MessageBox.Show("Get lite model failed.");
+                                Directory.Delete(OutFolder, true);
                                 return;
+                            }
                         }
                         else
                         {
@@ -424,16 +448,27 @@ namespace BCLabManager.ViewModel
 
                             List<SourceData> rcSource;
                             if (!TableMakerService.GetSourceV2(stage2Project, rcRecords, testers, out rcSource, out rcSourceFiles))
+                            {
                                 //if (!TableMakerService.GetSource(stage2Project, rcRecords, testers, out rcSource, out rcSourceFiles))
-                                    return;
-                            if (rcSource == null)
+                                Directory.Delete(OutFolder, true);
                                 return;
+                            }
+                            if (rcSource == null)
+                            {
+                                MessageBox.Show("Get RC source failed.");
+                                Directory.Delete(OutFolder, true);
+                                return;
+                            }
                             RCTableMaker.GetRCModel(rcSource, stage2Project.AbsoluteMaxCapacity, _voltagePoints, ref rcModel);
                             MiniDriverMaker.GetMiniModel(ocvSource, rcSource, ocvModel, rcModel, _voltagePoints, ref miniModel);
                             StandardDriverMaker.GetStandardModel(ocvModel, rcModel, ref standardModel);
                             AndroidDriverMaker.GetAndroidModel(ocvModel, rcModel, ref androidModel);
                             if (!LiteDriverMaker.GetLiteModel(EOD, ocvSource, rcSource, ocvModel, rcModel, stage2Project, _voltagePoints, ref liteModel))
+                            {
+                                MessageBox.Show("Get lite model failed.");
+                                Directory.Delete(OutFolder, true);
                                 return;
+                            }
                         }
 
                         products.Add(RCTableMaker.GenerateRCTable(stage, baseProject, _voltagePoints, time, rcModel));
@@ -467,6 +502,7 @@ namespace BCLabManager.ViewModel
                 catch (Exception e)
                 {
                     MessageBox.Show(e.Message);
+                    Directory.Delete(OutFolder, true);
                 }
                 //);
                 //t.Start();
@@ -514,7 +550,16 @@ namespace BCLabManager.ViewModel
         {
             if (MessageBoxResult.OK == MessageBox.Show("Are you sure to remove this record?", "Deleting Record", MessageBoxButton.OKCancel))
             {
-                _selectedRecord.IsValid = false;
+                _selectedRecord.IsValid = false; 
+                using (var uow = new UnitOfWork(new AppDbContext()))
+                {
+                    foreach (var tmp in _selectedRecord.Products)
+                    {
+                        tmp.IsValid = false;
+                        uow.TableMakerProducts.Update(tmp);
+                        uow.Commit();
+                    }
+                }
                 _tableMakerRecordService.SuperUpdate(_selectedRecord);
             }
         }

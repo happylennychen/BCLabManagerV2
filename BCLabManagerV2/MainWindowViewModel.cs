@@ -15,6 +15,8 @@ using System.IO;
 using System.Windows;
 using System.Diagnostics;
 using System.Text.Json;
+using System.Net;
+using System.Net.NetworkInformation;
 
 namespace BCLabManager.ViewModel
 {
@@ -58,6 +60,7 @@ namespace BCLabManager.ViewModel
             {
                 InitializeRuningLogFolder();
                 LoadConfigration();
+                CheckConfiguration();
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
                 InitializeDatabase();
@@ -94,6 +97,58 @@ namespace BCLabManager.ViewModel
             //}
         }
 
+        private void CheckConfiguration()
+        {
+            //var fileServerHostIp = Dns.GetHostAddresses(GlobalSettings.RemotePath)[0];
+            if (!GlobalSettings.EnableTest)
+            {
+                string host = GetHostFromString(GlobalSettings.RemotePath);
+                if (host != string.Empty)
+                    if (!PingHost(host))
+                        throw new ConnectionException($"Cannot connect to 10.3.4.16");
+            }
+            if (!PingHost(GlobalSettings.DatabaseHost))
+                throw new ConnectionException($"Cannot connect to {GlobalSettings.DatabaseHost}");
+        }
+
+        private string GetHostFromString(string str)
+        {
+            if (str.StartsWith("\\\\"))
+            {
+                var output = str.Substring(2);
+                output = output.Remove(output.IndexOf("\\"));
+                return output;
+            }
+            else
+                return string.Empty;
+        }
+
+        public static bool PingHost(string nameOrAddress)
+        {
+            bool pingable = false;
+            Ping pinger = null;
+
+            try
+            {
+                pinger = new Ping();
+                PingReply reply = pinger.Send(nameOrAddress);
+                pingable = reply.Status == IPStatus.Success;
+            }
+            catch (PingException)
+            {
+                // Discard PingExceptions and return false;
+            }
+            finally
+            {
+                if (pinger != null)
+                {
+                    pinger.Dispose();
+                }
+            }
+
+            return pingable;
+        }
+
         private void LoadConfigration()
         {
             if (!File.Exists(GlobalSettings.ConfigurationFilePath))
@@ -102,6 +157,7 @@ namespace BCLabManager.ViewModel
                 conf.RemotePath = GlobalSettings.RemotePath;
                 conf.EnableTest = GlobalSettings.EnableTest;
                 conf.MappingPath = GlobalSettings.MappingPath;
+                conf.LocalPath = GlobalSettings.LocalPath;
                 conf.DatabaseHost = GlobalSettings.DatabaseHost;
                 conf.DatabaseName = GlobalSettings.DatabaseName;
                 conf.DatabaseUser = GlobalSettings.DatabaseUser;
@@ -116,6 +172,7 @@ namespace BCLabManager.ViewModel
                 GlobalSettings.RemotePath = conf.RemotePath;
                 GlobalSettings.EnableTest = conf.EnableTest;
                 GlobalSettings.MappingPath = conf.MappingPath;
+                GlobalSettings.LocalPath = conf.LocalPath;
                 GlobalSettings.DatabaseHost = conf.DatabaseHost;
                 GlobalSettings.DatabaseName = conf.DatabaseName;
                 GlobalSettings.DatabaseUser = conf.DatabaseUser;
@@ -196,8 +253,8 @@ namespace BCLabManager.ViewModel
 
         private void InitializeLocalFolder()
         {
-            if (!Directory.Exists(GlobalSettings.LocalFolder))
-                Directory.CreateDirectory(GlobalSettings.LocalFolder);
+            if (!Directory.Exists(GlobalSettings.LocalPath))
+                Directory.CreateDirectory(GlobalSettings.LocalPath);
         }
 
         private void InitializeRemoteFolder()
@@ -233,7 +290,7 @@ namespace BCLabManager.ViewModel
             if (!Directory.Exists(tempFilePath))
                 Directory.CreateDirectory(tempFilePath);
 
-            tempFilePath = $@"{GlobalSettings.LocalFolder}{GlobalSettings.TempDataFolderName}";
+            tempFilePath = $@"{GlobalSettings.LocalPath}{GlobalSettings.TempDataFolderName}";
             if (!Directory.Exists(tempFilePath))
                 Directory.CreateDirectory(tempFilePath);
         }
@@ -437,6 +494,7 @@ namespace BCLabManager.ViewModel
 
             dashBoardViewModel = new DashBoardViewModel(BatteryTypeService, ProjectService, BatteryService, ChannelService, ChamberService, ProgramService);
             tableMakerViewModel = new TableMakerViewModel(ProjectService, TableMakerRecordService, ProgramService, TesterService);
+            dataAnalyzerViewModel = new DataAnalyzerViewModel(BatteryTypeService, ProjectService, ProgramService);
         }
         #endregion // Constructor
 
@@ -459,6 +517,7 @@ namespace BCLabManager.ViewModel
 
         public DashBoardViewModel dashBoardViewModel { get; set; }
         public TableMakerViewModel tableMakerViewModel { get; set; }
+        public DataAnalyzerViewModel dataAnalyzerViewModel { get; set; }
         #endregion // Presentation Properties
 
     }

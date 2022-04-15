@@ -522,6 +522,24 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("NewName");
             }
         }
+
+        private double _dischargeCapacity = 0;
+        public double DischargeCapacity
+        {
+            get
+            {
+                return _dischargeCapacity;
+            }
+            set
+            {
+                if (value == _dischargeCapacity)
+                    return;
+
+                _dischargeCapacity = value;
+
+                RaisePropertyChanged("DischargeCapacity");
+            }
+        }
         private int _startIndex = 0;
         public int StartIndex
         {
@@ -606,7 +624,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                if (Channel != null && Battery != null && FileList != null && FileList.Count > 0 && NewName!=null && NewName!=string.Empty && NewName.Contains(Channel.Name) && NewName.Contains(Tester.Name))
+                if (Channel != null && Battery != null && FileList != null && FileList.Count > 0 && NewName != null && NewName != string.Empty && NewName.Contains(Channel.Name) && NewName.Contains(Tester.Name))
                     return true;
                 else
                     return false;
@@ -657,42 +675,57 @@ namespace BCLabManager.ViewModel
             if (dialog.ShowDialog() == true)
             {
                 FileList = new ObservableCollection<string>(dialog.FileNames.ToList());
+                if (!IsFileLegal())
+                    return;
                 FileNameUpdate();
+                DischargeCapacityUpdate();
             }
         }
 
-        private void FileNameUpdate()
+        private bool IsFileLegal()
         {
-            //TesterServiceClass _testerService = new TesterServiceClass();
             if (Channel != null && Battery != null && FileList != null && FileList.Count > 0)
             {
                 foreach (var file in FileList)
                 {
                     //if (!_testerService.CheckFileFormat(Channel.Tester.ITesterProcesser, file))
-                    if(!Channel.Tester.ITesterProcesser.CheckFileFormat(file))
+                    if (!Channel.Tester.ITesterProcesser.CheckFileFormat(file))
                     {
                         MessageBox.Show("File Format Check Failed!");
-                        return;
+                        return false;
                     }
                     //if (!_testerService.CheckChannelNumber(Channel.Tester.ITesterProcesser, file, Channel.Name))
                     if (!Channel.Tester.ITesterProcesser.CheckChannelNumber(file, Channel.Name))
                     {
                         MessageBox.Show("Wrong channel!");
-                        return;
+                        return false;
                     }
                 }
+                return true;
+            }
+            else
+            {
+                MessageBox.Show("Please select channel and battery first!");
+                return false;
+            }
+        }
 
-                //DateTime[] time = _testerService.GetTimeFromRawData(Channel.Tester.ITesterProcesser, FileList);
+        private void FileNameUpdate()
+        {
+            if (Channel != null && Battery != null && FileList != null && FileList.Count > 0)
+            {
                 DateTime[] time = Channel.Tester.ITesterProcesser.GetTimeFromRawData(FileList);
                 if (time != null)
                     NewName = $@"{_programStr}_{_recipeStr}_{_tester.Name}_{_channel.Name}_{_battery.Name}_{time[0].ToString("yyyyMMddHHmmss")}";
                 else
                     NewName = $@"{_programStr}_{_recipeStr}_{_tester.Name}_{_channel.Name}_{_battery.Name}";
             }
-            else
-            {
+        }
 
-            }
+        private void DischargeCapacityUpdate()
+        {
+            double dischargeCapacity = Channel.Tester.ITesterProcesser.GetDischargeCapacityFromRawData(FileList);
+            DischargeCapacity = dischargeCapacity;
         }
 
         public ICommand SplitterCommand
@@ -715,6 +748,6 @@ namespace BCLabManager.ViewModel
             SplitterViewInstance.ShowDialog();
         }
 
-        
+
     }
 }

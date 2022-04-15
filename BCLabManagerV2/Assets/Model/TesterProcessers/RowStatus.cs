@@ -16,6 +16,7 @@ namespace BCLabManager.Model
         CUT_OFF_BY_CAPACITY,
         CUT_OFF_BY_TIME,
         CUT_OFF_BY_ERROR,
+        STOP,
         UNKNOWN
     }
 }

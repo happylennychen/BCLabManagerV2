@@ -682,7 +682,7 @@ namespace BCLabManager
             }
             catch(Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show($"Cannot run excel file while making lite model, please check if the excel related file exist or not.");
                 return false;
             }
             return true;
@@ -768,7 +768,7 @@ namespace BCLabManager
             //}
             //else
             //{
-            rootPath = GlobalSettings.LocalFolder;
+            rootPath = GlobalSettings.LocalPath;
             //}
             var OutFolder = $@"{rootPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}\{time}";
             if (!Directory.Exists(OutFolder))
@@ -878,7 +878,7 @@ namespace BCLabManager
             string strCTmp = string.Empty;
             int i = 0;
             List<string> output = new List<string>();
-            var ilstCellTempData = TableMakerService.GenerateSampleCellTempData();
+            //var ilstCellTempData = TableMakerService.GenerateSampleCellTempData();
             foreach (string shc in strHHeaderComments)
             {
                 if (i == iLineCmtHCFile)
@@ -908,30 +908,32 @@ namespace BCLabManager
             }
             output.Add(strCTmp);
             output.Add(string.Format("}};"));
-            output.Add(string.Format("/*****************************************************************************"));
-            output.Add(string.Format("* Cell temperature table"));
-            output.Add(string.Format("* x_dat:	cell mini-voltage"));
-            output.Add(string.Format("* y_dat:	temperature in 0.1degC format"));
-            output.Add(string.Format("****************************************************************************/"));
-            output.Add(string.Format("one_latitude_data_t fgl_cell_temp_data[FGL_TEMPERATURE_NUM] = "));
-            output.Add(string.Format("{{"));
-            strCTmp = string.Empty;
-            for (i = 0; i < ilstCellTempData.Count; i++)
-            {
-                var tmp = string.Format("\t{{{0}, \t{1}", ilstCellTempData[i], ilstCellTempData[++i]) + "},";
-                if ((i > 2) && (i % 10 == 9))
-                {
-                    strCTmp += tmp;
-                    output.Add(strCTmp);
-                    strCTmp = string.Empty;
-                }
-                else
-                {
-                    strCTmp += tmp;
-                }
-            }
-            output.Add(strCTmp);
-            output.Add("};");
+
+            //output.Add(string.Format("/*****************************************************************************"));
+            //output.Add(string.Format("* Cell temperature table"));
+            //output.Add(string.Format("* x_dat:	cell mini-voltage"));
+            //output.Add(string.Format("* y_dat:	temperature in 0.1degC format"));
+            //output.Add(string.Format("****************************************************************************/"));
+            //output.Add(string.Format("one_latitude_data_t fgl_cell_temp_data[FGL_TEMPERATURE_NUM] = "));
+            //output.Add(string.Format("{{"));
+            //strCTmp = string.Empty;
+            //for (i = 0; i < ilstCellTempData.Count; i++)
+            //{
+            //    var tmp = string.Format("\t{{{0}, \t{1}", ilstCellTempData[i], ilstCellTempData[++i]) + "},";
+            //    if ((i > 2) && (i % 10 == 9))
+            //    {
+            //        strCTmp += tmp;
+            //        output.Add(strCTmp);
+            //        strCTmp = string.Empty;
+            //    }
+            //    else
+            //    {
+            //        strCTmp += tmp;
+            //    }
+            //}
+            //output.Add(strCTmp);
+            //output.Add("};");
+
             output.Add("\n");
             output.Add("/*****************************************************************************");
             output.Add("* RCAP and KEOD Function Table Y-Axis Data");

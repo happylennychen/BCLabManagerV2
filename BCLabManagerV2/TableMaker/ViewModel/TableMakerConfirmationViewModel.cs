@@ -110,7 +110,7 @@ namespace BCLabManager.ViewModel
                 //    stopwatch.Start();
                 //    TableMakerService.Build(ref _tableMakerModel, 800, "Some description", _tableMakerRecordService);
                 //    var project = _tableMakerModel.Project;
-                //    var folder = $@"{GlobalSettings.LocalFolder}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
+                //    var folder = $@"{GlobalSettings.LocalPath}{project.BatteryType.Name}\{project.Name}\{GlobalSettings.ProductFolderName}";
                 //    string time = Math.Round(stopwatch.Elapsed.TotalSeconds, 0).ToString() + "S";
                 //    MessageBox.Show($"Completed. It took {time} to get the job done.");
                 //    Process.Start(folder);

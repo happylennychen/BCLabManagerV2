@@ -72,6 +72,7 @@ namespace BCLabManager.Model
             edittarget.StartTime = item.StartTime;
             edittarget.Status = item.Status;
             edittarget.TesterStr = item.TesterStr;
+            edittarget.DischargeCapacity = item.DischargeCapacity;
         }
         public void Execute(TestRecord testRecord, string batteryTypeStr, string projectName, Battery battery, Chamber chamber, string testerStr, Channel channel, double current, double temperature, DateTime startTime, double measurementGain, double measurementOffset, double traceResistance, double capacityDifference, string @operator, string programName, string recipeName)
         {
@@ -110,7 +111,7 @@ namespace BCLabManager.Model
         //    testRecord.AssignedChannel = null;
         //    testRecord.Status = TestStatus.Completed;
         //    string remoteRoot = $@"{GlobalSettings.RemotePath}{batteryType}\{projectName}";
-        //    string localRoot = $@"{GlobalSettings.LocalFolder}{batteryType}\{projectName}";
+        //    string localRoot = $@"{GlobalSettings.LocalPath}{batteryType}\{projectName}";
         //    string temptestfilepath = string.Empty;
         //    if (rawDataList.Count > 1)
         //    {
@@ -159,7 +160,7 @@ namespace BCLabManager.Model
         //private string CopyToFolder(string filepath, string root)
         //{
         //    var newPath = Path.Combine($@"{root}\{GlobalSettings.TestDataFolderName}", Path.GetFileName(filepath));
-        //    var tempPath = Path.Combine($@"{GlobalSettings.LocalFolder}\{GlobalSettings.TestDataFolderName}", Path.GetFileName(filepath));
+        //    var tempPath = Path.Combine($@"{GlobalSettings.LocalPath}\{GlobalSettings.TestDataFolderName}", Path.GetFileName(filepath));
         //    File.Copy(filepath, tempPath, true);
         //    File.Copy(filepath, newPath, true);
         //    //rawDataName[0] = newPath;
@@ -215,33 +216,46 @@ namespace BCLabManager.Model
 
         internal void Invalidate(TestRecord testRecord, string comment)
         {
-            var newName = Path.GetFileName(testRecord.TestFilePath) + "_INVALID";
-            if (FileTransferHelper.FileRename(testRecord.TestFilePath, newName))
-            {
-                testRecord.Comment += "\r\n" + comment;
-                testRecord.Status = TestStatus.Invalid;
-                testRecord.TestFilePath += "_INVALID";
-                DatabaseUpdate(testRecord);
-            }
-            else
+            var newTestFileName = Path.GetFileName(testRecord.TestFilePath) + "_INVALID";
+            if (!FileTransferHelper.FileRename(testRecord.TestFilePath, newTestFileName))
             {
                 MessageBox.Show($"Invalidate {testRecord.TestFilePath} Failed!");
+                return;
             }
+            var newStdFileName = Path.GetFileName(testRecord.StdFilePath) + "_INVALID";
+            if (!FileTransferHelper.FileRename(testRecord.StdFilePath, newStdFileName))
+            {
+                MessageBox.Show($"Invalidate {testRecord.StdFilePath} Failed!");
+                return;
+            }
+            testRecord.Comment += "\r\n" + comment;
+            testRecord.Status = TestStatus.Invalid;
+            testRecord.TestFilePath += "_INVALID";
+            testRecord.StdFilePath += "_INVALID";
+            DatabaseUpdate(testRecord);
         }
 
         internal void Abandon(TestRecord testRecord)
         {
-            var newName = Path.GetFileName(testRecord.TestFilePath) + "_ABANDONED";
-            if (FileTransferHelper.FileRename(testRecord.TestFilePath, newName))
+            if (testRecord.TestFilePath != string.Empty && testRecord.StdFilePath != string.Empty)
             {
-                testRecord.Status = TestStatus.Abandoned;
+                var newTestFileName = Path.GetFileName(testRecord.TestFilePath) + "_ABANDONED";
+                if (!FileTransferHelper.FileRename(testRecord.TestFilePath, newTestFileName))
+                {
+                    MessageBox.Show($"Abandon {testRecord.TestFilePath} Failed!");
+                    return;
+                }
+                var newStdFileName = Path.GetFileName(testRecord.StdFilePath) + "_ABANDONED";
+                if (!FileTransferHelper.FileRename(testRecord.StdFilePath, newStdFileName))
+                {
+                    MessageBox.Show($"Abandon {testRecord.StdFilePath} Failed!");
+                    return;
+                }
                 testRecord.TestFilePath += "_ABANDONED";
-                DatabaseUpdate(testRecord);
+                testRecord.StdFilePath += "_ABANDONED";
             }
-            else
-            {
-                MessageBox.Show($"Abandon {testRecord.TestFilePath} Failed!");
-            }
+            testRecord.Status = TestStatus.Abandoned;
+            DatabaseUpdate(testRecord);
         }
 #if false
         #region free
@@ -276,7 +290,7 @@ namespace BCLabManager.Model
             testRecord.AssignedChannel = null;
             testRecord.Status = TestStatus.Completed;
             string root = $@"{GlobalSettings.RemotePath}{GlobalSettings.TempDataFolderName}";
-            string temproot = $@"{GlobalSettings.LocalFolder}{GlobalSettings.TempDataFolderName}";
+            string temproot = $@"{GlobalSettings.LocalPath}{GlobalSettings.TempDataFolderName}";
             string temptestfilepath = string.Empty;
             if (rawDataList.Count > 1)
             {
@@ -318,11 +332,11 @@ namespace BCLabManager.Model
             testRecord.ProgramStr = programName;
             testRecord.RecipeStr = recipeName;
             string root = $@"{GlobalSettings.RemotePath}{batteryType}\{projectName}";
-            string temproot = $@"{GlobalSettings.LocalFolder}{batteryType}\{projectName}";
+            string temproot = $@"{GlobalSettings.LocalPath}{batteryType}\{projectName}";
             string temptestfilepath = string.Empty;
             if (isRename)
             {
-                var oldPath = Path.Combine($@"{GlobalSettings.LocalFolder}{GlobalSettings.TempDataFolderName}", Path.GetFileName(testRecord.TestFilePath));
+                var oldPath = Path.Combine($@"{GlobalSettings.LocalPath}{GlobalSettings.TempDataFolderName}", Path.GetFileName(testRecord.TestFilePath));
                 temptestfilepath = RenameRawDataAndCopyToFolder(oldPath, $@"{temproot}\{GlobalSettings.TestDataFolderName}", Path.GetFileNameWithoutExtension(newName));
                 testRecord.TestFilePath = $@"{root}\{GlobalSettings.TestDataFolderName}\{Path.GetFileName(temptestfilepath)}";
                 FileCopyWithRetry(temptestfilepath, testRecord.TestFilePath);
@@ -349,7 +363,7 @@ namespace BCLabManager.Model
             stdMD5 = string.Empty;
             stdFilePath = string.Empty;
             string remoteProjectPath = $@"{GlobalSettings.UniversalPath}{batteryType}\{projectName}";
-            string localPath = $@"{GlobalSettings.LocalFolder}{batteryType}\{projectName}";
+            string localPath = $@"{GlobalSettings.LocalPath}{batteryType}\{projectName}";
             string localTestFileFullPath = string.Empty;
             if (!CopyToLoacl(rawDataFullPathList, localPath, newName, out localTestFileFullPath))
                 return false;
@@ -473,7 +487,7 @@ namespace BCLabManager.Model
             SuperUpdate(testRecord);
         }
 
-        internal void CommitV3(TestRecord testRecord, string comment, string rawfilePath, DateTime startTime, DateTime completeTime, string MD5, string stdFilePath, string stdMD5)
+        internal void CommitV3(TestRecord testRecord, string comment, string rawfilePath, DateTime startTime, DateTime completeTime, string MD5, string stdFilePath, string stdMD5, double newCycle, double dischargeCapacity)
         {
             testRecord.Comment = comment;
             testRecord.StartTime = startTime;
@@ -486,6 +500,8 @@ namespace BCLabManager.Model
             testRecord.MD5 = MD5;
             testRecord.StdFilePath = stdFilePath;
             testRecord.StdMD5 = stdMD5;
+            testRecord.NewCycle = newCycle;
+            testRecord.DischargeCapacity = dischargeCapacity;
             SuperUpdate(testRecord);
         }
     }
