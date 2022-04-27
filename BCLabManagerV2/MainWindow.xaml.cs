@@ -993,6 +993,11 @@ namespace BCLabManager
 
         private double GetOccupancyRatio(DateTime t, IEnumerable<TestRecord> trs)
         {
+            int channelNumber;
+            if (t > DateTime.Parse("2021-12-8"))
+                channelNumber = 12;
+            else
+                channelNumber = 4;
             var endTime = new DateTime(t.Year, t.Month, t.Day, 23, 59, 59, 999);
             var innerTRs = trs.Where(tr => (tr.StartTime > t && tr.EndTime < endTime));
             var overTRs = trs.Where(tr => (tr.StartTime < t && tr.EndTime > endTime));
@@ -1015,7 +1020,7 @@ namespace BCLabManager
             {
                 ts += (endTime - tr.StartTime);
             }
-            return (ts.TotalMilliseconds) / (4 * (endTime - t).TotalMilliseconds);
+            return (ts.TotalMilliseconds) / (channelNumber * (endTime - t).TotalMilliseconds);
         }
 
         private Dictionary<DateTime, int> GetDailyThroughputs(IEnumerable<TestRecord> trs, TestStatus ts)
@@ -1086,8 +1091,10 @@ namespace BCLabManager
 
         private void Dashboard_Selected(object sender, RoutedEventArgs e)
         {
-            UpdateWeeklyThroughput();
-            UpdateOccupancyRatio();
+            //UpdateWeeklyThroughput();
+            UpdateTestDataPerMonth();
+            UpdateOccupancyRatioFor30Days();
+            UpdateProductPerMonth();
             UpdateXAxis();
         }
 
@@ -1106,7 +1113,7 @@ namespace BCLabManager
             }
         }
 
-        private void UpdateOccupancyRatio()
+        private void UpdateOccupancyRatioFor30Days()
         {
             Dictionary<DateTime, double> dailyOR;
             using (var dbContext = new AppDbContext())
@@ -1114,8 +1121,10 @@ namespace BCLabManager
                 var trs = dbContext.TestRecords.ToList().Where(o => o.StartTime != DateTime.MinValue && (o.Status == TestStatus.Completed || o.Status != TestStatus.Invalid || o.Status == TestStatus.Executing));
                 dailyOR = GetDailyOccupancyRatio(trs);
             }
-
-            DashBoardViewInstance.ORbarChart.PlotBars(dailyOR.Values);
+            var now = DateTime.Now;
+            var view = dailyOR.Where(o => (now - o.Key).Days <= 30).Select(o => o.Value);
+            //var view = dailyOR.Select(o => o.Value);
+            DashBoardViewInstance.ORbarChart.PlotBars(view);
         }
 
         private void UpdateWeeklyThroughput()
@@ -1128,6 +1137,77 @@ namespace BCLabManager
             }
 
             DashBoardViewInstance.wTHbarChart.PlotBars(weeklyTP.Values);
+        }
+
+        private void UpdateTestDataPerMonth()
+        {
+            Dictionary<string, int> monthlyDelivery = new Dictionary<string, int>();
+            using (var dbContext = new AppDbContext())
+            {
+                var trs = dbContext.TestRecords.ToList().Where(o => (o.NewCycle > 0) && (o.StartTime != DateTime.MinValue) && (o.Status == TestStatus.Completed)).OrderBy(tr => tr.EndTime);
+                var startpoint = trs.First().EndTime;
+                var endpoint = trs.Last().EndTime;
+                bool monthLoopStarted = false;
+                int startMonth, endMonth;
+                for (int year = startpoint.Year; year <= endpoint.Year; year++)
+                {
+                    if (monthLoopStarted)
+                        startMonth = 1;
+                    else
+                        startMonth = startpoint.Month;
+
+                    if (year == endpoint.Year)
+                        endMonth = endpoint.Month;
+                    else
+                        endMonth = 12;
+                    for (int month = startMonth; month <= endMonth; month++)
+                    {
+                        monthLoopStarted = true;
+
+                        var keyMonth = $"{year}/{month}";
+                        var count = trs.Count(tr => tr.EndTime.Year == year && tr.EndTime.Month == month);
+                        monthlyDelivery.Add(keyMonth, count);
+                    }
+                }
+            }
+
+            DashBoardViewInstance.wTHbarChart.PlotBars(monthlyDelivery.Values);
+        }
+
+        private void UpdateProductPerMonth()
+        {
+            Dictionary<string, int> monthlyDelivery = new Dictionary<string, int>();
+            //using (var dbContext = new AppDbContext())
+            {
+                var trs = mainWindowViewModel.TableMakerRecordService.Items.ToList().Where(o => o.IsValid = true).OrderBy(o => o.Timestamp);
+                var startpoint = trs.First().Timestamp;
+                var endpoint = trs.Last().Timestamp;
+                bool monthLoopStarted = false;
+                int startMonth, endMonth;
+                int accCount = 0;
+                for (int year = startpoint.Year; year <= endpoint.Year; year++)
+                {
+                    if (monthLoopStarted)
+                        startMonth = 1;
+                    else
+                        startMonth = startpoint.Month;
+
+                    if (year == endpoint.Year)
+                        endMonth = endpoint.Month;
+                    else
+                        endMonth = 12;
+                    for (int month = startMonth; month <= endMonth; month++)
+                    {
+                        monthLoopStarted = true;
+
+                        var keyMonth = $"{year}/{month}";
+                        var count = trs.Where(tr => tr.Timestamp.Year == year && tr.Timestamp.Month == month).SelectMany(tr=>tr.Products).Count();
+                        accCount += count;
+                        monthlyDelivery.Add(keyMonth, accCount);
+                    }
+                }
+            }
+            DashBoardViewInstance.productChart.PlotBars(monthlyDelivery.Values);
         }
     }
 

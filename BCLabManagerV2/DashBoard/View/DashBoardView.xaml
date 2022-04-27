@@ -97,7 +97,7 @@
         <GroupBox Header="Statistics" Margin="20">
             <Grid x:Name="leftGrid">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="40"></RowDefinition>
+                    <RowDefinition Height="15"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="4"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
@@ -111,16 +111,16 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="30"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <d3:Chart Name="wTHplotter" Grid.Row="1" Grid.Column="1" Title="Weekly Throughput" LegendVisibility="Collapsed">
+                <d3:Chart Grid.Row="1" Grid.Column="1" Title="Test Data Per Month" LegendVisibility="Collapsed">
                     <d3:BarGraph Name="wTHbarChart" Color="Blue"/>
                 </d3:Chart>
 
-                <d3:Chart Name="ORplotter" Grid.Row="3" Grid.Column="1" Title="Occupancy Ratio" LegendVisibility="Collapsed">
+                <d3:Chart Name="ORplotter" Grid.Row="3" Grid.Column="1" Title="Channel Occupancy Ratio For 30 Days" LegendVisibility="Collapsed" PlotOriginY="0" PlotHeight="1" PlotOriginX="0" PlotWidth="32" IsAutoFitEnabled="False">
                     <d3:BarGraph Name="ORbarChart" Color="Blue"/>
                 </d3:Chart>
-                <GroupBox Header="Product Curve" Grid.Row="7" Grid.Column="1" IsEnabled="False">
-                    <Label VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25">Products curve</Label>
-                </GroupBox>
+                <d3:Chart Grid.Row="7" Grid.Column="1" Title="Accumulated Product Per Month" LegendVisibility="Collapsed">
+                    <d3:BarGraph Name="productChart" Color="Blue"/>
+                </d3:Chart>
                 <DockPanel VerticalAlignment="Center" Grid.Row="5" Grid.Column="1"  Grid.ColumnSpan="2" Margin="0,0,10,0" LastChildFill="True">
                     <Label DockPanel.Dock="Left" Name="StartPoint"></Label>
                     <Label DockPanel.Dock="Right" Name="EndPoint"></Label>
