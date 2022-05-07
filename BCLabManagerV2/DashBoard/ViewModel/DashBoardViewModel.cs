@@ -62,12 +62,19 @@ namespace BCLabManager.ViewModel
             Project = tr.Recipe.Program.Project;
             UpdateButtoneName();
 
-            Formatter = x => new DateTime((long)x).ToString("yyyy MMM");
-            Step = TimeSpan.FromDays(30).Ticks;
+            MonthFormatter = x => new DateTime((long)x).ToString("yyyy MMM");
+            MonthStep = TimeSpan.FromDays(30).Ticks;
+
+            DayFormatter = x => new DateTime((long)x).ToString("MMM dd");
+            DayStep = TimeSpan.FromDays(1).Ticks;
         }
-        public ChartValues<DateTimePoint> Values { get; set; }
-        public Func<double, string> Formatter { get; set; }
-        public double Step { get; set; }
+        public ChartValues<DateTimePoint> TestDataValues { get; set; }
+        public ChartValues<DateTimePoint> ORValues { get; set; }
+        public ChartValues<DateTimePoint> ProductValues { get; set; }
+        public Func<double, string> MonthFormatter { get; set; }
+        public double MonthStep { get; set; }
+        public Func<double, string> DayFormatter { get; set; }
+        public double DayStep { get; set; }
 
         private void UpdateButtoneName()
         {

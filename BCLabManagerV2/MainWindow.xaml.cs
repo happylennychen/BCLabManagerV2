@@ -1097,23 +1097,23 @@ namespace BCLabManager
             UpdateTestDataPerMonth();
             UpdateOccupancyRatioFor30Days();
             UpdateProductPerMonth();
-            UpdateXAxis();
+            //UpdateXAxis();
         }
 
-        private void UpdateXAxis()
-        {
-            using (var dbContext = new AppDbContext())
-            {
-                var trs = dbContext.TestRecords.ToList().Where(o => o.StartTime != DateTime.MinValue && (o.Status == TestStatus.Completed || o.Status != TestStatus.Invalid || o.Status == TestStatus.Executing));
-                var startPoint = trs.Min(tr => tr.StartTime);
-                var endPoint = trs.Max(tr => tr.EndTime);
-                TimeSpan t = endPoint - startPoint;
-                var midPoint = startPoint + TimeSpan.FromSeconds(t.TotalSeconds / 2);
-                DashBoardViewInstance.StartPoint.Content = startPoint.ToString("yyyy-MM");
-                DashBoardViewInstance.EndPoint.Content = endPoint.ToString("yyyy-MM");
-                DashBoardViewInstance.MidPoint.Content = midPoint.ToString("yyyy-MM");
-            }
-        }
+        //private void UpdateXAxis()
+        //{
+        //    using (var dbContext = new AppDbContext())
+        //    {
+        //        var trs = dbContext.TestRecords.ToList().Where(o => o.StartTime != DateTime.MinValue && (o.Status == TestStatus.Completed || o.Status != TestStatus.Invalid || o.Status == TestStatus.Executing));
+        //        var startPoint = trs.Min(tr => tr.StartTime);
+        //        var endPoint = trs.Max(tr => tr.EndTime);
+        //        TimeSpan t = endPoint - startPoint;
+        //        var midPoint = startPoint + TimeSpan.FromSeconds(t.TotalSeconds / 2);
+        //        DashBoardViewInstance.StartPoint.Content = startPoint.ToString("yyyy-MM");
+        //        DashBoardViewInstance.EndPoint.Content = endPoint.ToString("yyyy-MM");
+        //        DashBoardViewInstance.MidPoint.Content = midPoint.ToString("yyyy-MM");
+        //    }
+        //}
 
         private void UpdateOccupancyRatioFor30Days()
         {
@@ -1124,9 +1124,16 @@ namespace BCLabManager
                 dailyOR = GetDailyOccupancyRatio(trs);
             }
             var now = DateTime.Now;
-            var view = dailyOR.Where(o => (now - o.Key).Days <= 30).Select(o => o.Value);
+            //var view = dailyOR.Where(o => (now - o.Key).Days <= 30).Select(o => o.Value);
             //var view = dailyOR.Select(o => o.Value);
-            DashBoardViewInstance.ORbarChart.PlotBars(view);
+            var view = dailyOR.Where(o => (now - o.Key).Days <= 30);
+            List<DateTimePoint> points = new List<DateTimePoint>();
+            foreach (var item in view)
+            {
+                points.Add(new DateTimePoint(item.Key, item.Value));
+            }
+            //DashBoardViewInstance.ORbarChart.PlotBars(view);
+            mainWindowViewModel.dashBoardViewModel.ORValues = points.AsChartValues();
         }
 
         private void UpdateTestDataPerMonth()
@@ -1165,12 +1172,13 @@ namespace BCLabManager
             }
 
             //DashBoardViewInstance.wTHbarChart.PlotBars(monthlyDelivery.Values); Values = DataProvider.Points.AsChartValues();
-            mainWindowViewModel.dashBoardViewModel.Values = points.AsChartValues();
+            mainWindowViewModel.dashBoardViewModel.TestDataValues = points.AsChartValues();
         }
 
         private void UpdateProductPerMonth()
         {
-            Dictionary<string, int> monthlyDelivery = new Dictionary<string, int>();
+            //Dictionary<string, int> monthlyDelivery = new Dictionary<string, int>();
+            List<DateTimePoint> points = new List<DateTimePoint>();
             //using (var dbContext = new AppDbContext())
             {
                 var trs = mainWindowViewModel.TableMakerRecordService.Items.ToList().Where(o => o.IsValid = true).OrderBy(o => o.Timestamp);
@@ -1194,14 +1202,17 @@ namespace BCLabManager
                     {
                         monthLoopStarted = true;
 
-                        var keyMonth = $"{year}/{month}";
+                        //var keyMonth = $"{year}/{month}";
                         var count = trs.Where(tr => tr.Timestamp.Year == year && tr.Timestamp.Month == month).SelectMany(tr=>tr.Products).Count();
                         accCount += count;
-                        monthlyDelivery.Add(keyMonth, accCount);
+                        //monthlyDelivery.Add(keyMonth, accCount);
+                        DateTime t = new DateTime(year, month, 1);
+                        points.Add(new DateTimePoint(t, accCount));
                     }
                 }
             }
-            DashBoardViewInstance.productChart.PlotBars(monthlyDelivery.Values);
+            //DashBoardViewInstance.productChart.PlotBars(monthlyDelivery.Values);
+            mainWindowViewModel.dashBoardViewModel.ProductValues = points.AsChartValues();
         }
     }
 
