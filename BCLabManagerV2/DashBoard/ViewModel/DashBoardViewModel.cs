@@ -10,6 +10,8 @@ using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
 using Prism.Mvvm;
 using System.Windows;
+using LiveCharts;
+using LiveCharts.Defaults;
 
 namespace BCLabManager.ViewModel
 {
@@ -59,7 +61,13 @@ namespace BCLabManager.ViewModel
             BatteryType = tr.Recipe.Program.Project.BatteryType;
             Project = tr.Recipe.Program.Project;
             UpdateButtoneName();
+
+            Formatter = x => new DateTime((long)x).ToString("yyyy MMM");
+            Step = TimeSpan.FromDays(30).Ticks;
         }
+        public ChartValues<DateTimePoint> Values { get; set; }
+        public Func<double, string> Formatter { get; set; }
+        public double Step { get; set; }
 
         private void UpdateButtoneName()
         {

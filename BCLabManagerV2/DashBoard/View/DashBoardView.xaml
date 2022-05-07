@@ -7,6 +7,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:d3="clr-namespace:InteractiveDataDisplay.WPF;assembly=InteractiveDataDisplay.WPF"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              mc:Ignorable="d"  FontSize="12">
     <UserControl.Resources>
         <src:HeightMultiConverter x:Key="hmc"></src:HeightMultiConverter>
@@ -111,9 +112,21 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="30"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <d3:Chart Grid.Row="1" Grid.Column="1" Title="Test Data Per Month" LegendVisibility="Collapsed">
+                <!--<d3:Chart Grid.Row="1" Grid.Column="1" Title="Test Data Per Month" LegendVisibility="Collapsed">
                     <d3:BarGraph Name="wTHbarChart" Color="Blue"/>
-                </d3:Chart>
+                </d3:Chart>-->
+                <lvc:CartesianChart Grid.Row="1" Grid.Column="1" DisableAnimations="True">
+                    <lvc:CartesianChart.Series>
+                        <lvc:LineSeries Values="{Binding Values}" PointGeometry="{x:Null}" Fill="Transparent" LineSmoothness="0"></lvc:LineSeries>
+                    </lvc:CartesianChart.Series>
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis LabelFormatter="{Binding Formatter}" LabelsRotation="-90">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="{Binding Step}"/>
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
+                </lvc:CartesianChart>
 
                 <d3:Chart Name="ORplotter" Grid.Row="3" Grid.Column="1" Title="Channel Occupancy Ratio For 30 Days" LegendVisibility="Collapsed" PlotOriginY="0" PlotHeight="1" PlotOriginX="0" PlotWidth="32" IsAutoFitEnabled="False">
                     <d3:BarGraph Name="ORbarChart" Color="Blue"/>

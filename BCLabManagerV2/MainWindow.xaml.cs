@@ -16,6 +16,8 @@ using Microsoft.Win32;
 using Path = System.IO.Path;
 using System.Threading;
 using System.Linq;
+using LiveCharts.Defaults;
+using LiveCharts.Helpers;
 
 namespace BCLabManager
 {
@@ -1127,21 +1129,10 @@ namespace BCLabManager
             DashBoardViewInstance.ORbarChart.PlotBars(view);
         }
 
-        private void UpdateWeeklyThroughput()
-        {
-            Dictionary<YearWeek, int> weeklyTP;
-            using (var dbContext = new AppDbContext())
-            {
-                var trs = dbContext.TestRecords.ToList().Where(o => (o.NewCycle > 0) && (o.StartTime != DateTime.MinValue) && (o.Status == TestStatus.Completed || o.Status != TestStatus.Invalid || o.Status == TestStatus.Executing));
-                weeklyTP = GetWeeklyThroughputs(trs, TestStatus.Completed);
-            }
-
-            DashBoardViewInstance.wTHbarChart.PlotBars(weeklyTP.Values);
-        }
-
         private void UpdateTestDataPerMonth()
         {
-            Dictionary<string, int> monthlyDelivery = new Dictionary<string, int>();
+            //Dictionary<string, int> monthlyDelivery = new Dictionary<string, int>();
+            List<DateTimePoint> points = new List<DateTimePoint>();
             using (var dbContext = new AppDbContext())
             {
                 var trs = dbContext.TestRecords.ToList().Where(o => (o.NewCycle > 0) && (o.StartTime != DateTime.MinValue) && (o.Status == TestStatus.Completed)).OrderBy(tr => tr.EndTime);
@@ -1164,14 +1155,17 @@ namespace BCLabManager
                     {
                         monthLoopStarted = true;
 
-                        var keyMonth = $"{year}/{month}";
+                        //var keyMonth = $"{year}/{month}";
                         var count = trs.Count(tr => tr.EndTime.Year == year && tr.EndTime.Month == month);
-                        monthlyDelivery.Add(keyMonth, count);
+                        //monthlyDelivery.Add(keyMonth, count);
+                        DateTime t = new DateTime(year, month, 1);
+                        points.Add(new DateTimePoint(t, count));
                     }
                 }
             }
 
-            DashBoardViewInstance.wTHbarChart.PlotBars(monthlyDelivery.Values);
+            //DashBoardViewInstance.wTHbarChart.PlotBars(monthlyDelivery.Values); Values = DataProvider.Points.AsChartValues();
+            mainWindowViewModel.dashBoardViewModel.Values = points.AsChartValues();
         }
 
         private void UpdateProductPerMonth()
