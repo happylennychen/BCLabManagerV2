@@ -128,6 +128,9 @@
                             </lvc:Axis.Separator>
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis MinValue="0"></lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
 
                 <!--<d3:Chart Name="ORplotter" Grid.Row="3" Grid.Column="1" Title="Channel Occupancy Ratio For 30 Days" LegendVisibility="Collapsed" PlotOriginY="0" PlotHeight="1" PlotOriginX="0" PlotWidth="32" IsAutoFitEnabled="False">
@@ -164,6 +167,9 @@
                             </lvc:Axis.Separator>
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis MinValue="0"></lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
                 <!--<DockPanel VerticalAlignment="Center" Grid.Row="5" Grid.Column="1"  Grid.ColumnSpan="2" Margin="0,0,10,0" LastChildFill="True">
                     <Label DockPanel.Dock="Left" Name="StartPoint"></Label>
