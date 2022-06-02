@@ -26,6 +26,9 @@
                 <MenuItem Header="Generate STD Files" Click="STD_30Q_Click" Visibility="Visible"></MenuItem>
                 <MenuItem Header="Update Discharge Capacity" Click="Update_Discharge_Capacity_Click" Visibility="Visible"></MenuItem>
                 <MenuItem Header="Check file format" Click="Check_File_Format_Click" Visibility="Visible"></MenuItem>
+                <MenuItem Header="Check File Name" Click="FileNameCheck_Click" Visibility="Visible"></MenuItem>
+                <MenuItem Header="Check Lastcycle" Click="Checklastcycle_Click" Visibility="Visible"></MenuItem>
+                <MenuItem Header="Export data" Click="ExportData_Click" Visibility="Visible"></MenuItem>
             </MenuItem>
             <MenuItem Header="Performance" Click="Performance_Click" Visibility="Collapsed"></MenuItem>
         </Menu>

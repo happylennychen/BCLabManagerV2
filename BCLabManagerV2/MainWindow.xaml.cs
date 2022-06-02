@@ -458,6 +458,182 @@ namespace BCLabManager
             }
             return BrokenList;
         }
+        private void FileNameCheck_Click(object sender, RoutedEventArgs e)
+        {
+            bool isTestLegal = true;
+            using (var context = new AppDbContext())
+            {
+                var test = context.TestRecords.Include(tr => tr.Recipe.Program.Project).Where(tr => tr.BatteryTypeStr != "" && tr.TesterStr != "EBC-X" && tr.Status != TestStatus.Waiting && tr.Status != TestStatus.Executing).ToList();
+                foreach (var item in test)
+                {
+                    if (item.TestFilePath == null || item.StdFilePath == null)
+                    {
+                        isTestLegal = false;
+                    }
+                    else if (item.MD5 == null || item.StdMD5 == null)
+                    {
+                        isTestLegal = false;
+                    }
+                    if (!isTestLegal)
+                        break;
+                }
+                if (isTestLegal == true)
+                {
+                    var resulta = MessageBox.Show("提示：" +
+                    "\n" + "不支持EBC-X设备的实验数据，是否继续", "Warning", MessageBoxButton.OKCancel);
+                    if (resulta == MessageBoxResult.Cancel)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    var resultb = MessageBox.Show("无法进行，可能由以下情况导致：" +
+                    "\n" + "1、已提交数据的实验记录中testfilepath和stdfilepath为空" +
+                    "\n" + "2、已提交数据的实验记录中testfilepath或stdfilepath对应MD5为空" +
+                    "\n" + "\n" + "备注：不支持EBC-X设备的实验数据。点击确定返回。", "Warning", MessageBoxButton.OKCancel);
+                    if (resultb == MessageBoxResult.Cancel || resultb == MessageBoxResult.OK)
+                    {
+                        return;
+                    }
+                }
+                int i = 0;
+                Dictionary<string, string> missingTestFilePath = new Dictionary<string, string>();
+                Dictionary<string, string> tempRecords = new Dictionary<string, string>();
+                List<string> normalPaths = new List<string>();
+                RuningLog.Write("\r" + "----start----");
+                var bts = context.BatteryTypes.ToList();
+                var pro = context.Projects.ToList();
+                foreach (var bt in bts)
+                {
+                    foreach (var bp in bt.Projects)
+                    {
+                        var trs = context.TestRecords.Include(tr => tr.Recipe.Program.Project).Where(tr => tr.BatteryTypeStr == bt.Name && tr.ProjectStr == bp.Name && tr.TesterStr != "EBC-X" && tr.Status != TestStatus.Waiting && tr.Status != TestStatus.Executing).ToList();
+                        foreach (var tr in trs)
+                        {
+                            tempRecords.Add(tr.TestFilePath, tr.MD5);
+                            tempRecords.Add(tr.StdFilePath, tr.StdMD5);
+
+                            foreach (var trd in tempRecords)
+                            {
+                                if (!File.Exists(trd.Key))
+                                {
+                                    RuningLog.Write("\r" + "未找到文件：" + trd.Key + "\r");
+                                    missingTestFilePath.Add(trd.Value, trd.Key);
+                                }
+                                else
+                                {
+                                    normalPaths.Add(trd.Key);
+                                }
+                            }
+                            tempRecords.Clear();
+                        }
+                        var md5 = "";
+                        DirectoryInfo Folder = new DirectoryInfo($@"{GlobalSettings.RemotePath}{bt}\{bp.Name}\{GlobalSettings.TestDataFolderName}");
+                        if (missingTestFilePath.Count > 0)
+                        {
+                            foreach (var item in Folder.GetFiles("*", SearchOption.AllDirectories))
+                            {
+                                if (!normalPaths.Contains(item.FullName))
+                                {
+                                    md5 = FileTransferHelper.GetMD5(item.FullName);
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                                if (missingTestFilePath.TryGetValue(md5, out string testPath))
+                                {
+                                    FileTransferHelper.FileRename(item.FullName, Path.GetFileName(testPath));
+                                    string str = "File Name: " + item.FullName + "\n" + "Modified File Name:" + testPath;
+                                    RuningLog.Write("\r" + DateTime.Now.ToString() + "\n" + str + "\n");
+                                    i++;
+                                    md5 = "";
+                                    continue;
+                                }
+                                else
+                                {
+                                    RuningLog.Write("\r" + "非实验数据文件：" + item.FullName + "\r");
+                                }
+                            }
+                        }
+                        normalPaths.Clear();
+                    }
+                }
+                RuningLog.Write("----end----");
+                RuningLog.Write("\r" + "修改了" + i + "条数据," + "\r");
+                MessageBox.Show("Completed,");
+                context.SaveChanges();
+            }
+        }
+        private void ExportData_Click(object sender, RoutedEventArgs e)
+        {
+            using (var context = new AppDbContext())
+            {
+                var trs = context.TestRecords.Include(tr => tr.Recipe.Program.Project).Where(tr => tr.TestFilePath != "" && tr.BatteryTypeStr != "").ToList();
+                var bts = context.BatteryTypes.ToList();
+                FileStream fs = new FileStream(@"C:\Users\noah.liu\Desktop\各种文档\test data information.csv", FileMode.OpenOrCreate);
+                StreamWriter ws = new StreamWriter(fs);
+                ws.Write("TestFilePath,BatteryTypeId,BatteryType,LastCycle");
+                foreach (var tr in trs)
+                {
+                    foreach (var bt in bts)
+                    {
+                        if (tr.BatteryTypeStr == bt.Name)
+                        {
+                            var data = tr.TestFilePath + "," + bt.Id + "," + tr.BatteryTypeStr + "_" + tr.BatteryStr + "," + tr.LastCycle;
+                            ws.Write("\r" + data);
+                        }
+                    }
+                }
+            }
+        }
+        private void Checklastcycle_Click(object sender, RoutedEventArgs e)
+        {
+            using (var context = new AppDbContext())
+            {
+                List<string> batteryTypes = new List<string>();
+                List<string> batteries = new List<string>();
+                List<string> md5List = new List<string>();
+                batteryTypes.Add("M26-2-INR18650");
+                batteryTypes.Add("M26-INR18650");
+                batteryTypes.Add("HG2-INR18650");
+                batteryTypes.Add("25R-2-INR18650");
+                batteryTypes.Add("IFR18650");
+                batteryTypes.Add("30Q-INR18650");
+
+                foreach (var bt in batteryTypes)
+                {
+
+                    var batteryTypeRecords = context.TestRecords.Include(btr => btr.Recipe.Program.Project).Where(btr => btr.BatteryTypeStr == bt).ToList();
+                    var bts = context.BatteryTypes.ToList();//.Where(batt => batt.Name == bt).ToList(); //.Where(batt => batt.BatteryType.Name == bt).ToList();
+                    var btrs = context.Batteries.ToList().Where(batt => batt.BatteryType.Name == bt).ToList();
+                    foreach (var btr in btrs)
+                    {
+                        if (!batteries.Contains(btr.Name))
+                        {
+                            batteries.Add(btr.Name);
+
+                            //var batteryRecords = context.TestRecords.Include(brd => brd.Recipe.Program.Project).Where(brd => brd.BatteryTypeStr == bt && brd.BatteryStr == btr.BatteryStr && brd.NewCycle != 0).OrderBy(tr => tr.StartTime).ToList();
+                            var batteryRecords = batteryTypeRecords.Where(brd => brd.BatteryStr == btr.Name).OrderBy(brd => brd.NewCycle).OrderByDescending(brd => brd.TesterStr).OrderBy(brd => brd.StartTime).ToList();
+
+                            for (int i = 0; i < batteryRecords.Count; i++)
+                            {
+                                if (i > 0)
+                                {
+                                    batteryRecords[i].LastCycle = batteryRecords[i - 1].LastCycle + batteryRecords[i - 1].NewCycle;
+                                }
+                                md5List.Add(batteryRecords[i].MD5);
+                            }
+                        }
+                    }
+                    batteries.Clear();
+                    md5List.Clear();
+                }
+                MessageBox.Show("Complete");
+                context.SaveChanges();
+            }
+        }
 
         #region Temporary Method
         private void TemporaryMethod_Click(object sender, RoutedEventArgs e)

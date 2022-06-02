@@ -33,6 +33,7 @@
                     <Button Content="_Edit" Command="{Binding Path=EditCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
                     <Button Content="_Save As" Command="{Binding Path=SaveAsCommand}" Margin="0,5,5,0" Width="60"></Button>
                     <Button Content="_Delete" Command="{Binding Path=DeleteCommand}" Margin="0,5,5,0" Width="60" Visibility="Collapsed"></Button>
+                    <Button Content="_Rename" Command="{Binding Path=RenameCommand}" Margin="0,5,5,0" Width="60"></Button>
                 </StackPanel>
                 <!--<ListView Grid.Row="1"
                       x:Name="BatteryTypelist"
