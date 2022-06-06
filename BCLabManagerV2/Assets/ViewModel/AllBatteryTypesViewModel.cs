@@ -10,6 +10,7 @@ using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
 using Prism.Mvvm;
+using System.IO;
 
 namespace BCLabManager.ViewModel
 {
@@ -25,6 +26,7 @@ namespace BCLabManager.ViewModel
         RelayCommand _editCommand;
         RelayCommand _saveAsCommand;
         RelayCommand _deleteCommand;
+        RelayCommand _renameCommand;
         private BatteryTypeServiceClass _batteryTypeService;
         private BatteryServiceClass _batteryService;
 
@@ -170,6 +172,30 @@ namespace BCLabManager.ViewModel
                 return _deleteCommand;
             }
         }
+        public ICommand RenameCommand
+        {
+            get
+            {
+                if (_renameCommand == null)
+                {
+                    _renameCommand = new RelayCommand(
+                        param => { this.Rename(); },
+                        param => this.CanRename
+                        );
+                }
+                return _renameCommand;
+            }
+        }
+        public void Update(string sources, string oldBatteryTypeName, string newBatteryTypeName, out string source)
+        {
+            source = null;
+            if (sources.Contains($@"\{oldBatteryTypeName}\"))
+            {
+                source = sources.Replace($@"\{oldBatteryTypeName}\", $@"\{newBatteryTypeName}\");
+            }
+
+
+        }
 
         #endregion // Public Interface
 
@@ -248,6 +274,80 @@ namespace BCLabManager.ViewModel
             }
         }
         private bool CanDelete
+        {
+            get { return _selectedItem != null; }
+        }
+        private void Rename()
+        {
+            BatteryType btc = new BatteryType();
+            BatteryTypeEditViewModel btevm = new BatteryTypeEditViewModel(btc);
+            btevm.Id = _selectedItem.Id;
+            btevm.Name = _selectedItem.Name;
+            btevm.DisplayName = "Battery Type-Rename";
+            var BatteryTypeViewInstance = new BatteryTypeView();
+            BatteryTypeViewInstance.DataContext = btevm;
+            BatteryTypeViewInstance.ShowDialog();
+            if (!btevm.IsOK)
+            {
+                return;
+            }
+            using (var context = new AppDbContext())
+            {
+                var tmrs = context.TableMakerRecords.ToList();
+                var tmps = context.TableMakerProducts.ToList();
+                var bt = context.BatteryTypes.Include(tr => tr.Projects).Where(tr => tr.Id == btevm.Id).ToList();
+                var trs = context.TestRecords.Include(tr => tr.Recipe.Program.Project).Where(tr => tr.BatteryTypeStr == bt[0].Name && tr.ProgramStr != null && tr.ProjectStr != null).ToList();
+                var oldName = bt[0].Name;
+                bt[0].Name = btevm.Name;
+                var newName = bt[0].Name;
+                var newPath = trs[0].TestFilePath.Replace($@"\{oldName}\", $@"\{newName}\");
+                Directory.Move(trs[0].TestFilePath.Remove(trs[0].TestFilePath.LastIndexOf(trs[0].ProjectStr)), newPath.Remove(newPath.LastIndexOf(trs[0].ProjectStr)));
+                foreach (var tr in trs)
+                {
+                    if (tr.TestFilePath.Contains($@"\{oldName}\"))
+                    {
+                        tr.TestFilePath = tr.TestFilePath.Replace($@"\{oldName}\", $@"\{newName}\");
+                        tr.BatteryTypeStr = tr.BatteryTypeStr.Replace($@"\{oldName}\", $@"\{newName}\");
+                    }
+                    if (tr.StdFilePath != null)
+                    {
+                        tr.StdFilePath = tr.StdFilePath.Replace($@"\{oldName}\", $@"\{newName}\");
+                    }
+                }
+                foreach (var tmr in tmrs)
+                {
+                    for (int n = 0; n < tmr.OCVSources.Count; n++)
+                    {
+                        Update(tmr.OCVSources[n], oldName, newName, out string source);
+                        if (source != null)
+                        {
+                            tmr.OCVSources[n] = source;
+                        }
+                    }
+                    for (int n = 0; n < tmr.RCSources.Count; n++)
+                    {
+                        Update(tmr.RCSources[n], oldName, newName, out string source);
+                        if (source != null)
+                        {
+                            tmr.RCSources[n] = source;
+                        }
+                    }
+                }
+                foreach (var tmp in tmps)
+                {
+                    if (tmp.FilePath.Contains($@"\{oldName}\"))
+                    {
+                        tmp.FilePath = tmp.FilePath.Replace($@"\{oldName}\", $@"\{newName}\");
+                        var remotepath = tmp.FilePath;
+                        tmp.FilePath = remotepath.Replace($@"_{oldName}_", $@"_{newName}_");
+                        FileTransferHelper.FileRename(remotepath, Path.GetFileName(tmp.FilePath));
+                    }
+                }
+                context.SaveChanges();
+                MessageBox.Show("complete");
+            }
+        }
+        private bool CanRename
         {
             get { return _selectedItem != null; }
         }

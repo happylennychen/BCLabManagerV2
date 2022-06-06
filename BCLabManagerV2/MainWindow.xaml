@@ -4,7 +4,7 @@
         xmlns:v="clr-namespace:BCLabManager.View"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
-        Title="BCLM v0.3.4" Height="855" Width="1600">
+        Title="BCLM v0.3.4.5" Height="855" Width="1600">
     <Window.Resources>
     </Window.Resources>
     <DockPanel LastChildFill="True">
@@ -26,6 +26,9 @@
                 <MenuItem Header="Generate STD Files" Click="STD_30Q_Click" Visibility="Visible"></MenuItem>
                 <MenuItem Header="Update Discharge Capacity" Click="Update_Discharge_Capacity_Click" Visibility="Visible"></MenuItem>
                 <MenuItem Header="Check file format" Click="Check_File_Format_Click" Visibility="Visible"></MenuItem>
+                <MenuItem Header="Check File Name" Click="FileNameCheck_Click" Visibility="Visible"></MenuItem>
+                <MenuItem Header="Check Lastcycle" Click="Checklastcycle_Click" Visibility="Visible"></MenuItem>
+                <MenuItem Header="Export data" Click="ExportData_Click" Visibility="Visible"></MenuItem>
             </MenuItem>
             <MenuItem Header="Performance" Click="Performance_Click" Visibility="Collapsed"></MenuItem>
         </Menu>
