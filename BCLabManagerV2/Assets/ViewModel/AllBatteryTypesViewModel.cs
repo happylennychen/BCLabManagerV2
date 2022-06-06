@@ -286,11 +286,11 @@ namespace BCLabManager.ViewModel
             btevm.DisplayName = "Battery Type-Rename";
             var BatteryTypeViewInstance = new BatteryTypeView();
             BatteryTypeViewInstance.DataContext = btevm;
-            Nullable<bool> DialogResult = BatteryTypeViewInstance.ShowDialog();
-            //if (DialogResult==false)
-            //{
-            //    return;
-            //}
+            BatteryTypeViewInstance.ShowDialog();
+            if (!btevm.IsOK)
+            {
+                return;
+            }
             using (var context = new AppDbContext())
             {
                 var tmrs = context.TableMakerRecords.ToList();

@@ -461,6 +461,7 @@ namespace BCLabManager
         private void FileNameCheck_Click(object sender, RoutedEventArgs e)
         {
             bool isTestLegal = true;
+            var id = "";
             using (var context = new AppDbContext())
             {
                 var test = context.TestRecords.Include(tr => tr.Recipe.Program.Project).Where(tr => tr.BatteryTypeStr != "" && tr.TesterStr != "EBC-X" && tr.Status != TestStatus.Waiting && tr.Status != TestStatus.Executing).ToList();
@@ -469,10 +470,12 @@ namespace BCLabManager
                     if (item.TestFilePath == null || item.StdFilePath == null)
                     {
                         isTestLegal = false;
+                        id = item.Id.ToString();
                     }
                     else if (item.MD5 == null || item.StdMD5 == null)
                     {
                         isTestLegal = false;
+                        id = item.Id.ToString();
                     }
                     if (!isTestLegal)
                         break;
@@ -488,10 +491,13 @@ namespace BCLabManager
                 }
                 else
                 {
-                    var resultb = MessageBox.Show("无法进行，可能由以下情况导致：" +
-                    "\n" + "1、已提交数据的实验记录中testfilepath和stdfilepath为空" +
-                    "\n" + "2、已提交数据的实验记录中testfilepath或stdfilepath对应MD5为空" +
-                    "\n" + "\n" + "备注：不支持EBC-X设备的实验数据。点击确定返回。", "Warning", MessageBoxButton.OKCancel);
+                    var resultb = MessageBox.Show("无法进行，数据库中id为"+ id +"的实验记录可能缺失以下数据：" + "\n" +
+                    "\n" + "1、testfilepath" +
+                    "\n" + "2、MD5" +
+                    "\n" + "3、stdfilepath" +
+                    "\n" + "4、stdMD5" +
+                    "\n" + "\n" + "备注：不支持EBC-X设备的实验数据。"+ 
+                    "\n" +"\n" +"点击确定返回。", "Warning", MessageBoxButton.OKCancel);
                     if (resultb == MessageBoxResult.Cancel || resultb == MessageBoxResult.OK)
                     {
                         return;
@@ -513,7 +519,6 @@ namespace BCLabManager
                         {
                             tempRecords.Add(tr.TestFilePath, tr.MD5);
                             tempRecords.Add(tr.StdFilePath, tr.StdMD5);
-
                             foreach (var trd in tempRecords)
                             {
                                 if (!File.Exists(trd.Key))
@@ -601,27 +606,24 @@ namespace BCLabManager
                 batteryTypes.Add("25R-2-INR18650");
                 batteryTypes.Add("IFR18650");
                 batteryTypes.Add("30Q-INR18650");
-
                 foreach (var bt in batteryTypes)
                 {
 
                     var batteryTypeRecords = context.TestRecords.Include(btr => btr.Recipe.Program.Project).Where(btr => btr.BatteryTypeStr == bt).ToList();
-                    var bts = context.BatteryTypes.ToList();//.Where(batt => batt.Name == bt).ToList(); //.Where(batt => batt.BatteryType.Name == bt).ToList();
+                    var bts = context.BatteryTypes.ToList();
                     var btrs = context.Batteries.ToList().Where(batt => batt.BatteryType.Name == bt).ToList();
                     foreach (var btr in btrs)
                     {
                         if (!batteries.Contains(btr.Name))
                         {
-                            batteries.Add(btr.Name);
-
-                            //var batteryRecords = context.TestRecords.Include(brd => brd.Recipe.Program.Project).Where(brd => brd.BatteryTypeStr == bt && brd.BatteryStr == btr.BatteryStr && brd.NewCycle != 0).OrderBy(tr => tr.StartTime).ToList();
+                            batteries.Add(btr.Name);                          
                             var batteryRecords = batteryTypeRecords.Where(brd => brd.BatteryStr == btr.Name).OrderBy(brd => brd.NewCycle).OrderByDescending(brd => brd.TesterStr).OrderBy(brd => brd.StartTime).ToList();
-
                             for (int i = 0; i < batteryRecords.Count; i++)
                             {
                                 if (i > 0)
                                 {
                                     batteryRecords[i].LastCycle = batteryRecords[i - 1].LastCycle + batteryRecords[i - 1].NewCycle;
+                                    btr.CycleCount = batteryRecords[i].LastCycle + batteryRecords[i].NewCycle;
                                 }
                                 md5List.Add(batteryRecords[i].MD5);
                             }
