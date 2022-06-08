@@ -71,6 +71,7 @@ namespace BCLabManager.ViewModel
         public ChartValues<DateTimePoint> TestDataValues { get; set; }
         public ChartValues<DateTimePoint> ORValues { get; set; }
         public ChartValues<DateTimePoint> ProductValues { get; set; }
+        public ChartValues<DateTimePoint> EventValues { get; set; }
         public ChartValues<double> ProjectDays { get; set; }
         public string[] ProjectNames { get; set; }
         public Func<double, string> MonthFormatter { get; set; }

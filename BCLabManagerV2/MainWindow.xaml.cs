@@ -732,7 +732,7 @@ namespace BCLabManager
             {
                 var prjs = context.Projects
                     .Include(prj => prj.Programs)
-                    .ThenInclude(pro=>pro.Type)
+                    .ThenInclude(pro => pro.Type)
                     .Include(prj => prj.Programs)
                     .ThenInclude(pro => pro.Recipes)
                     .ThenInclude(rec => rec.TestRecords)
@@ -741,7 +741,7 @@ namespace BCLabManager
                 {
                     if (prj.Programs.Count > 0)
                     {
-                        var trs = prj.Programs.Where(pro=>pro.Type.Name=="MISC" || pro.Type.Name == "OCV" || pro.Type.Name == "RC" || pro.Type.Name == "EV" || pro.Type.Name == "MISC")
+                        var trs = prj.Programs.Where(pro => pro.Type.Name == "MISC" || pro.Type.Name == "OCV" || pro.Type.Name == "RC" || pro.Type.Name == "EV" || pro.Type.Name == "MISC")
                             .SelectMany(pro => pro.Recipes).SelectMany(rec => rec.TestRecords).Where(tr => tr.StartTime != null && tr.StartTime != DateTime.MinValue);
                         if (trs.Count() != 0)
                             prj.CreateDay = trs.Min(tr => tr.StartTime);
@@ -1146,6 +1146,7 @@ namespace BCLabManager
             UpdateOccupancyRatioFor30Days();
             UpdateProductPerMonth();
             UpdateProjectDeliveryTime();
+            UpdateEventPerMonth();
             //UpdateXAxis();
         }
 
@@ -1263,12 +1264,51 @@ namespace BCLabManager
             //DashBoardViewInstance.productChart.PlotBars(monthlyDelivery.Values);
             mainWindowViewModel.dashBoardViewModel.ProductValues = points.AsChartValues();
         }
+        private void UpdateEventPerMonth()
+        {
+            List<DateTimePoint> points = new List<DateTimePoint>();
+            using (var dbContext = new AppDbContext())
+            {
+                //var trs = mainWindowViewModel.TableMakerRecordService.Items.ToList().Where(o => o.IsValid = true).OrderBy(o => o.Timestamp);
+                var events = dbContext.Events.ToList();
+                var startpoint = events.First().Timestamp;
+                var endpoint = events.Last().Timestamp;
+                bool monthLoopStarted = false;
+                int startMonth, endMonth;
+                //int accCount = 0;
+                for (int year = startpoint.Year; year <= endpoint.Year; year++)
+                {
+                    if (monthLoopStarted)
+                        startMonth = 1;
+                    else
+                        startMonth = startpoint.Month;
+
+                    if (year == endpoint.Year)
+                        endMonth = endpoint.Month;
+                    else
+                        endMonth = 12;
+                    for (int month = startMonth; month <= endMonth; month++)
+                    {
+                        monthLoopStarted = true;
+
+                        //var keyMonth = $"{year}/{month}";
+                        var count = events.Where(tr => tr.Timestamp.Year == year && tr.Timestamp.Month == month).Count();
+                        //accCount += count;
+                        DateTime t = new DateTime(year, month, 1);
+                        points.Add(new DateTimePoint(t, count));
+                    }
+                }
+            }
+            //DashBoardViewInstance.productChart.PlotBars(monthlyDelivery.Values);
+            mainWindowViewModel.dashBoardViewModel.EventValues = points.AsChartValues();
+        }
 
         private void UpdateProjectDeliveryTime()
         {
-            var projects = mainWindowViewModel.ProjectService.Items.ToList().Where(prj => prj.Stage2CompleteDay != null).ToList();
-            mainWindowViewModel.dashBoardViewModel.ProjectDays = new LiveCharts.ChartValues<double> { 15.0, 25.0, 32.0, 11.0, 10.0 };
-            mainWindowViewModel.dashBoardViewModel.ProjectNames = new[] { "a", "b", "c", "d", "e" };
+            var completedProjects = mainWindowViewModel.TableMakerRecordService.Items.ToList().Where(tmr => tmr.IsValid = true && tmr.Stage == Stage.N2).Select(tmr => tmr.Project).Distinct();
+            var projects = mainWindowViewModel.ProjectService.Items.ToList().Where(prj => completedProjects.Contains(prj)).ToList();
+            mainWindowViewModel.dashBoardViewModel.ProjectDays = new LiveCharts.ChartValues<double>(projects.Select(prj => (double)(prj.Stage2CompleteDay - prj.CreateDay).Value.Days));
+            mainWindowViewModel.dashBoardViewModel.ProjectNames = projects.Select(prj => prj.Name).ToArray();
         }
     }
 
