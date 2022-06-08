@@ -369,6 +369,14 @@
     <Compile Include="Migrations\20220228092429_AddDischargeCapacityToTR.designer.cs">
       <DependentUpon>20220228092429_AddDischargeCapacityToTR.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20220607035840_ProjectProgress.cs" />
+    <Compile Include="Migrations\20220607035840_ProjectProgress.designer.cs">
+      <DependentUpon>20220607035840_ProjectProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20220607075052_StageOfTableMakerRecord.cs" />
+    <Compile Include="Migrations\20220607075052_StageOfTableMakerRecord.designer.cs">
+      <DependentUpon>20220607075052_StageOfTableMakerRecord.cs</DependentUpon>
+    </Compile>
     <Compile Include="Services\Utilities.cs" />
     <Compile Include="TableMaker\Model\Service\TableMakerRecordServieClass.cs" />
     <Compile Include="TableMaker\Model\TableMakerRecord.cs" />

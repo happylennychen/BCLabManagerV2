@@ -14,6 +14,7 @@ namespace BCLabManager.Model
             get { return _tablemakerversion; }
             set { SetProperty(ref _tablemakerversion, value); }
         }
+        public Stage Stage { get; set; }
         private Project _project;
         public Project Project
         {

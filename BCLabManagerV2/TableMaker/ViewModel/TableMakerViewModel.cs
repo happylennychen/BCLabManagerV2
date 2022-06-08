@@ -412,7 +412,7 @@ namespace BCLabManager.ViewModel
                             List<string> stage2RcSourceFiles = null;
                             if (!TableMakerService.GetSourceV2(stage1Project, rcStage2Records, testers, out rcStage2Source, out stage2RcSourceFiles))
                                 //if (!TableMakerService.GetSource(stage1Project, rcStage2Records, testers, out rcStage2Source, out stage2RcSourceFiles))
-                                    return;
+                                return;
                             if (rcStage2Source == null)
                             {
                                 MessageBox.Show("Get Stage 2 source failed.");
@@ -421,7 +421,7 @@ namespace BCLabManager.ViewModel
                             }
                             if (!TableMakerService.GetSourceV2(stage1Project, rcStage1Records, testers, out rcStage1Source, out stage1RcSourceFiles))
                                 //if (!TableMakerService.GetSource(stage1Project, rcStage1Records, testers, out rcStage1Source, out stage1RcSourceFiles))
-                                    return;
+                                return;
                             if (rcStage1Source == null)
                             {
                                 MessageBox.Show("Get Stage 1 source failed.");
@@ -479,6 +479,7 @@ namespace BCLabManager.ViewModel
 
                         var tmrs = _tableMakerRecordService;
                         TableMakerRecord tmr = new TableMakerRecord();
+                        tmr.Stage = stage;
                         tmr.EOD = EOD;
                         tmr.TableMakerVersion = TableMakerService.Version;
                         tmr.Description = Description;
@@ -492,6 +493,29 @@ namespace BCLabManager.ViewModel
                         tmr.Products = products;
                         tmrs.SuperAdd(tmr);
                         RaisePropertyChanged("TableMakerRecords");
+
+                        using (var context = new AppDbContext())
+                        {
+                            var otherTMRs = context.TableMakerRecords.ToList().Where(o => o.Project == tmr.Project && o.Stage == stage && o != tmr);
+                            foreach (var t in otherTMRs)
+                            {
+                                t.IsValid = false;
+                                foreach (var p in t.Products)
+                                {
+                                    p.IsValid = false;
+                                }
+                            }
+                            var project = context.Projects.SingleOrDefault(prj => prj.Id == tmr.Project.Id);
+                            if (stage == Stage.N1 && project.Stage1CompleteDay == null)
+                            {
+                                project.Stage1CompleteDay = DateTime.Now;
+                            }
+                            else if(stage == Stage.N2 && project.Stage2CompleteDay == null)
+                            {
+                                project.Stage2CompleteDay = DateTime.Now;
+                            }
+                            context.SaveChanges();
+                        }
 
                         var folder = $@"{GlobalSettings.UniversalPath}{baseProject.BatteryType.Name}\{baseProject.Name}\{GlobalSettings.ProductFolderName}\{time}";
                         string timespan = Math.Round(stopwatch.Elapsed.TotalSeconds, 0).ToString() + "S";
@@ -550,7 +574,7 @@ namespace BCLabManager.ViewModel
         {
             if (MessageBoxResult.OK == MessageBox.Show("Are you sure to remove this record?", "Deleting Record", MessageBoxButton.OKCancel))
             {
-                _selectedRecord.IsValid = false; 
+                _selectedRecord.IsValid = false;
                 using (var uow = new UnitOfWork(new AppDbContext()))
                 {
                     foreach (var tmp in _selectedRecord.Products)

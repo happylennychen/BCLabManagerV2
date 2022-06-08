@@ -88,13 +88,17 @@ namespace BCLabManager.Model
         public ObservableCollection<EmulatorResult> EmulatorResults { get; set; } = new ObservableCollection<EmulatorResult>();
         public ObservableCollection<ReleasePackage> ReleasePackages { get; set; } = new ObservableCollection<ReleasePackage>();
         private uint _planedDays;
-        public uint PlanedDays
+        public uint PlanedDays  //计划完成实验的时间
         {
             get { return _planedDays; }
             set { SetProperty(ref _planedDays, value); }
         }
-        public List<DateTime> StartTimes { get; set; } = new List<DateTime>();
-        public List<DateTime> StopTimes { get; set; } = new List<DateTime>();
+        public List<DateTime> StartTimes { get; set; } = new List<DateTime>();  //项目启动时间
+        public List<DateTime> StopTimes { get; set; } = new List<DateTime>();   //项目停止时间，与启动时间一起可以计算出实际花费的时间
+        public DateTime? CreateDay { get; set; } = new DateTime();
+        public DateTime? Stage1CompleteDay { get; set; } = new DateTime();
+        public DateTime? Stage2CompleteDay { get; set; } = new DateTime();
+        public DateTime? ReleaseDay { get; set; } = new DateTime();
         public Project()           //Create用到
         {
         }

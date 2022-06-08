@@ -8,7 +8,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:d3="clr-namespace:InteractiveDataDisplay.WPF;assembly=InteractiveDataDisplay.WPF"
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
-             mc:Ignorable="d"  FontSize="12">
+             mc:Ignorable="d"  FontSize="12" Height="900" Width="1600">
     <UserControl.Resources>
         <src:HeightMultiConverter x:Key="hmc"></src:HeightMultiConverter>
         <src:PercentageConverter x:Key="percentc"></src:PercentageConverter>
@@ -107,6 +107,9 @@
                     <RowDefinition Height="45"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="4"></RowDefinition>
+                    <RowDefinition Height="45"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="4"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="30"></ColumnDefinition>
@@ -171,6 +174,19 @@
                         <lvc:Axis MinValue="0"></lvc:Axis>
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
+                <Label Grid.Row="9" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom">Full Fuel Gauge Model Delivery Time</Label>
+                <lvc:CartesianChart Grid.Row="10" Grid.Column="1" DisableAnimations="True">
+                    <lvc:CartesianChart.Series>
+                        <lvc:LineSeries Values="{Binding ProjectDays}" LineSmoothness="0"></lvc:LineSeries>
+                    </lvc:CartesianChart.Series>
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Labels="{Binding ProjectNames}">
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis MinValue="0"></lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
+                </lvc:CartesianChart>
                 <!--<DockPanel VerticalAlignment="Center" Grid.Row="5" Grid.Column="1"  Grid.ColumnSpan="2" Margin="0,0,10,0" LastChildFill="True">
                     <Label DockPanel.Dock="Left" Name="StartPoint"></Label>
                     <Label DockPanel.Dock="Right" Name="EndPoint"></Label>
@@ -185,7 +201,9 @@
                     <RowDefinition Height="4"></RowDefinition>
                     <RowDefinition Height="40*"></RowDefinition>
                     <RowDefinition Height="44"></RowDefinition>
-                    <RowDefinition Height="60*"></RowDefinition>
+                    <RowDefinition Height="50*"></RowDefinition>
+                    <RowDefinition Height="4"></RowDefinition>
+                    <RowDefinition Height="8*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"></ColumnDefinition>
@@ -285,7 +303,7 @@
                         </d3:Chart>
                     </DockPanel>
                 </Grid>
-                <GroupBox Header="Tests" Grid.Row="4" Grid.Column="0">
+                <GroupBox Header="Tests" Grid.Row="4" Grid.Column="0" Visibility="Collapsed">
                     <TabControl>
                         <TabItem Header="Waiting">
                             <ListView
@@ -358,7 +376,7 @@
                         </TabItem>
                     </TabControl>
                 </GroupBox>
-                <GroupBox Header="RC Tables and Evaluation Results" Grid.Row="4" Grid.Column="2">
+                <GroupBox Header="RC Tables and Evaluation Results" Grid.Row="4" Grid.Column="2" Visibility="Collapsed">
                     <ListView
                       x:Name="ProductList"
       AlternationCount="2" 

@@ -76,6 +76,19 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("Name");
             }
         }
+        public DateTime? CreateDay
+        {
+            get { return _project.CreateDay; }
+            set
+            {
+                if (value == _project.CreateDay)
+                    return;
+
+                _project.CreateDay = value;
+
+                RaisePropertyChanged("CreateDay");
+            }
+        }
         public string Customer
         {
             get { return _project.Customer; }

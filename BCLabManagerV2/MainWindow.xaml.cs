@@ -726,6 +726,54 @@ namespace BCLabManager
                 MessageBox.Show($"Done. There are {IllegalFileList.Count} files are illegal, please check the running log file for details.");
             }
         }
+        private void Update_Project_Create_Day_Click(object sender, RoutedEventArgs e)
+        {
+            using (var context = new AppDbContext())
+            {
+                var prjs = context.Projects
+                    .Include(prj => prj.Programs)
+                    .ThenInclude(pro=>pro.Type)
+                    .Include(prj => prj.Programs)
+                    .ThenInclude(pro => pro.Recipes)
+                    .ThenInclude(rec => rec.TestRecords)
+                    .ToList();
+                foreach (var prj in prjs)
+                {
+                    if (prj.Programs.Count > 0)
+                    {
+                        var trs = prj.Programs.Where(pro=>pro.Type.Name=="MISC" || pro.Type.Name == "OCV" || pro.Type.Name == "RC" || pro.Type.Name == "EV" || pro.Type.Name == "MISC")
+                            .SelectMany(pro => pro.Recipes).SelectMany(rec => rec.TestRecords).Where(tr => tr.StartTime != null && tr.StartTime != DateTime.MinValue);
+                        if (trs.Count() != 0)
+                            prj.CreateDay = trs.Min(tr => tr.StartTime);
+                    }
+                }
+                context.SaveChanges();
+            }
+        }
+        private void Update_Project_Stage2_Complete_Day_Click(object sender, RoutedEventArgs e)
+        {
+            using (var context = new AppDbContext())
+            {
+                var prjs = context.Projects
+                    .Include(prj => prj.Programs)
+                    .ThenInclude(pro => pro.Type)
+                    .Include(prj => prj.Programs)
+                    .ThenInclude(pro => pro.Recipes)
+                    .ThenInclude(rec => rec.TestRecords)
+                    .ToList();
+                foreach (var prj in prjs)
+                {
+                    if (prj.Programs.Count > 0)
+                    {
+                        var trs = prj.Programs.Where(pro => pro.Type.Name == "MISC" || pro.Type.Name == "OCV" || pro.Type.Name == "RC" || pro.Type.Name == "EV" || pro.Type.Name == "MISC")
+                            .SelectMany(pro => pro.Recipes).SelectMany(rec => rec.TestRecords).Where(tr => tr.StartTime != null && tr.StartTime != DateTime.MinValue);
+                        if (trs.Count() != 0)
+                            prj.Stage2CompleteDay = trs.Max(tr => tr.EndTime);
+                    }
+                }
+                context.SaveChanges();
+            }
+        }
         #endregion
 
 
@@ -1097,6 +1145,7 @@ namespace BCLabManager
             UpdateTestDataPerMonth();
             UpdateOccupancyRatioFor30Days();
             UpdateProductPerMonth();
+            UpdateProjectDeliveryTime();
             //UpdateXAxis();
         }
 
@@ -1203,7 +1252,7 @@ namespace BCLabManager
                         monthLoopStarted = true;
 
                         //var keyMonth = $"{year}/{month}";
-                        var count = trs.Where(tr => tr.Timestamp.Year == year && tr.Timestamp.Month == month).SelectMany(tr=>tr.Products).Count();
+                        var count = trs.Where(tr => tr.Timestamp.Year == year && tr.Timestamp.Month == month).SelectMany(tr => tr.Products).Count();
                         accCount += count;
                         //monthlyDelivery.Add(keyMonth, accCount);
                         DateTime t = new DateTime(year, month, 1);
@@ -1213,6 +1262,13 @@ namespace BCLabManager
             }
             //DashBoardViewInstance.productChart.PlotBars(monthlyDelivery.Values);
             mainWindowViewModel.dashBoardViewModel.ProductValues = points.AsChartValues();
+        }
+
+        private void UpdateProjectDeliveryTime()
+        {
+            var projects = mainWindowViewModel.ProjectService.Items.ToList().Where(prj => prj.Stage2CompleteDay != null).ToList();
+            mainWindowViewModel.dashBoardViewModel.ProjectDays = new LiveCharts.ChartValues<double> { 15.0, 25.0, 32.0, 11.0, 10.0 };
+            mainWindowViewModel.dashBoardViewModel.ProjectNames = new[] { "a", "b", "c", "d", "e" };
         }
     }
 
