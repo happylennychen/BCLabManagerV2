@@ -1401,7 +1401,7 @@ namespace BCLabManager
             List<DateTimePoint> points = new List<DateTimePoint>();
             //using (var dbContext = new AppDbContext())
             {
-                var trs = mainWindowViewModel.TableMakerRecordService.Items.ToList().Where(o => o.IsValid = true).OrderBy(o => o.Timestamp);
+                var trs = mainWindowViewModel.TableMakerRecordService.Items.ToList().Where(o => o.IsValid == true).OrderBy(o => o.Timestamp);
                 var startpoint = trs.First().Timestamp;
                 var endpoint = trs.Last().Timestamp;
                 bool monthLoopStarted = false;
@@ -1475,7 +1475,7 @@ namespace BCLabManager
 
         private void UpdateProjectDeliveryTime()
         {
-            var completedProjects = mainWindowViewModel.TableMakerRecordService.Items.ToList().Where(tmr => tmr.IsValid = true && tmr.Stage == Stage.N2).Select(tmr => tmr.Project).Distinct();
+            var completedProjects = mainWindowViewModel.TableMakerRecordService.Items.ToList().Where(tmr => tmr.IsValid == true && tmr.Stage == Stage.N2).Select(tmr => tmr.Project).Distinct();
             var projects = mainWindowViewModel.ProjectService.Items.ToList().Where(prj => completedProjects.Contains(prj)).ToList();
             mainWindowViewModel.dashBoardViewModel.ProjectDays = new LiveCharts.ChartValues<double>(projects.Select(prj => (double)(prj.Stage2CompleteDay - prj.CreateDay).Value.Days));
             mainWindowViewModel.dashBoardViewModel.ProjectNames = projects.Select(prj => prj.Name).ToArray();

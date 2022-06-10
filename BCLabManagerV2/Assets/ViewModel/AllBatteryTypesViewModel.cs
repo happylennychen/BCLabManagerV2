@@ -307,7 +307,7 @@ namespace BCLabManager.ViewModel
                     if (tr.TestFilePath.Contains($@"\{oldName}\"))
                     {
                         tr.TestFilePath = tr.TestFilePath.Replace($@"\{oldName}\", $@"\{newName}\");
-                        tr.BatteryTypeStr = tr.BatteryTypeStr.Replace($@"\{oldName}\", $@"\{newName}\");
+                        tr.BatteryTypeStr = tr.BatteryTypeStr.Replace($@"{oldName}", $@"{newName}");
                     }
                     if (tr.StdFilePath != null)
                     {

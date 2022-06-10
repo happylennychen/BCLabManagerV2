@@ -490,13 +490,21 @@ namespace BCLabManager.ViewModel
                         tmr.TableMakerVersion = Version;
                         tmr.VoltagePoints = _voltagePoints;
                         tmr.Timestamp = timestamp;
+                        for (int i = 0; i < products.Count; i++)
+                        {
+                            products[i].Project = baseProject;
+                        }
                         tmr.Products = products;
                         tmrs.SuperAdd(tmr);
                         RaisePropertyChanged("TableMakerRecords");
 
                         using (var context = new AppDbContext())
                         {
-                            var otherTMRs = context.TableMakerRecords.ToList().Where(o => o.Project == tmr.Project && o.Stage == stage && o != tmr);
+                            var otherTMRs = context.TableMakerRecords
+                                .Include(o=>o.Project)
+                                .Include(o=>o.Products)
+                                .ToList()
+                                .Where(o => o.Project.Id == tmr.Project.Id && o.Stage == stage && o.Id != tmr.Id);
                             foreach (var t in otherTMRs)
                             {
                                 t.IsValid = false;
@@ -577,14 +585,26 @@ namespace BCLabManager.ViewModel
                 _selectedRecord.IsValid = false;
                 using (var uow = new UnitOfWork(new AppDbContext()))
                 {
-                    foreach (var tmp in _selectedRecord.Products)
+                    for (int i = 0; i < _selectedRecord.Products.Count; i++)
                     {
+                        var tmp = _selectedRecord.Products[i];
                         tmp.IsValid = false;
                         uow.TableMakerProducts.Update(tmp);
                         uow.Commit();
                     }
                 }
                 _tableMakerRecordService.SuperUpdate(_selectedRecord);
+                //using (var context = new AppDbContext())
+                //{
+                //    var selectedRecord = context.TableMakerRecords.Include(o => o.Products).SingleOrDefault(o => o.Id == _selectedRecord.Id);
+                //    selectedRecord.IsValid = false;
+                //    for (int i = 0; i < selectedRecord.Products.Count; i++)
+                //    {
+                //        var tmp = selectedRecord.Products[i];
+                //        tmp.IsValid = false;
+                //    }
+                //    context.SaveChanges();
+                //}
             }
         }
         #endregion // Private Helpers

@@ -141,6 +141,7 @@
                         >
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=Id}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Stage" IsReadOnly="True" Binding="{Binding Path=Stage}"></DataGridTextColumn>
                                 <DataGridTextColumn Header="Is Valid" IsReadOnly="True" Binding="{Binding Path=IsValid}"></DataGridTextColumn>
                                 <DataGridTextColumn Header="Project" IsReadOnly="True" Binding="{Binding Path=Project}"></DataGridTextColumn>
                                 <DataGridTextColumn Header="TM Version" IsReadOnly="True" Binding="{Binding Path=TableMakerVersion}"></DataGridTextColumn>
