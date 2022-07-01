@@ -576,14 +576,18 @@ namespace BCLabManager
         {
             using (var context = new AppDbContext())
             {
-                var trs = context.TestRecords.Include(tr => tr.Recipe.Program.Project.BatteryType).Where(tr => tr.TestFilePath != "" && tr.BatteryTypeStr != "").OrderBy(tr => tr.BatteryTypeStr).ToList();
-                FileStream fs = new FileStream(@"File For Colin.csv", FileMode.OpenOrCreate);
-                StreamWriter sw = new StreamWriter(fs);
-                sw.WriteLine("TestFilePath,BatteryTypeID,BatteryType,LastCycle");
-                foreach (var tr in trs)
+                var trs = context.TestRecords.Include(tr => tr.Recipe.Program.Project.BatteryType).Where(tr => tr.StdFilePath != "" && tr.StdFilePath != null && tr.BatteryTypeStr != "").OrderBy(tr => tr.BatteryTypeStr).ToList();
+                using (FileStream fs = new FileStream(@"File For Colin.csv", FileMode.OpenOrCreate))
                 {
-                    var data = $"{tr.TestFilePath},{tr.Recipe.Program.Project.BatteryType.Id},{tr.BatteryTypeStr},{tr.LastCycle}";
-                    sw.WriteLine(data);
+                    using (StreamWriter sw = new StreamWriter(fs))
+                    {
+                        sw.WriteLine("TestFilePath,BatteryTypeID,BatteryType,LastCycle");
+                        foreach (var tr in trs)
+                        {
+                            var data = $"{tr.StdFilePath},{tr.Recipe.Program.Project.BatteryType.Id},{tr.BatteryTypeStr},{tr.LastCycle}";
+                            sw.WriteLine(data);
+                        }
+                    }
                 }
             }
         }
