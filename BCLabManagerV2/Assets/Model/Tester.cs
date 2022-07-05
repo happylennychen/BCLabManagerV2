@@ -107,6 +107,9 @@ namespace BCLabManager.Model
                 case "Chroma17208":
                     ITesterProcesser = new Chroma17208Processer();
                     break;
+                case "Chroma17208Auto":
+                    ITesterProcesser = new Chroma17208AutoProcesser();
+                    break;
                 case "Chroma17216":
                     ITesterProcesser = new Chroma17208Processer();
                     break;

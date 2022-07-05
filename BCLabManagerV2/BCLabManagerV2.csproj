@@ -307,6 +307,7 @@
     <Compile Include="Assets\Model\AssetUsageRecord.cs" />
     <Compile Include="Assets\Model\IAsset.cs" />
     <Compile Include="Assets\Model\ITesterProcesser.cs" />
+    <Compile Include="Assets\Model\TesterProcessers\Chroma17208AutoProcesser.cs" />
     <Compile Include="Assets\Model\TesterProcessers\Chroma17208Processer.cs" />
     <Compile Include="Assets\Model\TesterProcessers\PseudoProcesser.cs" />
     <Compile Include="Assets\Model\TesterProcessers\RowStatus.cs" />
