@@ -28,7 +28,7 @@ namespace BCLabManager.Model
         public DateTime[] GetTimeFromRawData(ObservableCollection<string> fileList) //只有一个文件，时间放在文件名中 Chroma17208M-Ch1-20220630160748-20220630180629.csv
         {
             DateTime[] output = new DateTime[2];
-            var strSections = fileList[0].Split('-');
+            var strSections = fileList[0].Split('-', '.');
             if (DateTime.TryParseExact(strSections[2], "yyyyMMddHHmmss", null, System.Globalization.DateTimeStyles.None, out output[0]))
                 if (DateTime.TryParseExact(strSections[3], "yyyyMMddHHmmss", null, System.Globalization.DateTimeStyles.None, out output[1]))
                     return output;
@@ -56,11 +56,8 @@ namespace BCLabManager.Model
                 FileStream fs = new FileStream(filepath, FileMode.Open);
                 StreamReader sw = new StreamReader(fs);
                 int i = 0;
-                for (; i < 9; i++)
-                    sw.ReadLine();
                 string columnLine = sw.ReadLine();
                 var columnList = "Index,Time(mS),Mode,Current(mA),Voltage(mV),Temperature(degC),Capacity(mAh),Total Capacity(mAh),Status".Split(',');
-                i = 0;
                 foreach (var column in columnLine.Split(','))
                 {
                     if (column != columnList[i++])
@@ -116,10 +113,11 @@ namespace BCLabManager.Model
             {
                 bool isCOCPoint = false;
                 var fullSteps = new List<StepV2>(recipe.RecipeTemplate.GetNormalSteps(recipe.Program.Project).OrderBy(o => o.Index));
-                for (; lineIndex < 10; lineIndex++)     //第十行以后都是数据
-                {
-                    sw.WriteLine(sr.ReadLine());
-                }
+                //for (; lineIndex < 10; lineIndex++)     //第十行以后都是数据
+                //{
+                //    sw.WriteLine(sr.ReadLine());
+                //}
+                sw.WriteLine(sr.ReadLine());        //第一行是header
                 DataPreprocesser.Length = 20;
                 for (int i = 0; i < DataPreprocesser.Length; i++)
                 {
@@ -550,7 +548,7 @@ namespace BCLabManager.Model
                     {
                         if (oldNode != null)
                         {
-                            if (newNode.Status != oldNode.Status)
+                            if (newNode.Mode != oldNode.Mode)
                             {
                                 if (newNode.Mode == ActionMode.CC_CV_CHARGE)
                                 {
@@ -620,7 +618,7 @@ namespace BCLabManager.Model
                 {
                     if (Index == 0)
                         return true;
-                    return Nodes[Index].Status != Nodes[Index - 1].Status;
+                    return Nodes[Index].Status != Nodes[Index - 1].Status && Nodes[Index - 1].Status != Nodes[Index - 2].Status;
                 }
             }
             private static byte voltageRaisingErrorCounter = 0;
@@ -664,7 +662,7 @@ namespace BCLabManager.Model
                 {
                     Dictionary<Column, string> output = new Dictionary<Column, string>();
                     var strRow = dataLine.Split(',');
-                    for (int i = 0; i < 14; i++)
+                    for (int i = 0; i < 9; i++)
                         output.Add((Column)i, strRow[i]);
                     return output;
                 }
@@ -805,6 +803,7 @@ namespace BCLabManager.Model
             {
                 double voltage = 0;
                 double current = 0;
+                int targetTimeInMS = 0;
                 //double temperature = 0;
                 switch (step.Action.Mode)
                 {
@@ -825,7 +824,8 @@ namespace BCLabManager.Model
                         {
                             if (step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME) == null)
                                 return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
-                            if (Math.Abs(timeSpan - step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME).Condition.Value) > StepTolerance.Time)
+                            targetTimeInMS = step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME).Condition.Value * 1000;
+                            if (Math.Abs(timeSpan - targetTimeInMS) > StepTolerance.Time)
                                 return ErrorCode.DP_TIME_OUT_OF_RANGE;
                         }
                         else
@@ -846,7 +846,8 @@ namespace BCLabManager.Model
                         {
                             if (step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME) == null)
                                 return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
-                            if (Math.Abs(timeSpan - step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME).Condition.Value) > StepTolerance.Time)
+                            targetTimeInMS = step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME).Condition.Value * 1000;
+                            if (Math.Abs(timeSpan - targetTimeInMS) > StepTolerance.Time)
                                 return ErrorCode.DP_TIME_OUT_OF_RANGE;
                         }
                         else
@@ -867,7 +868,8 @@ namespace BCLabManager.Model
                         {
                             if (step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME) == null)
                                 return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
-                            if (Math.Abs(timeSpan - step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME).Condition.Value) > StepTolerance.Time)
+                            targetTimeInMS = step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME).Condition.Value * 1000;
+                            if (Math.Abs(timeSpan - targetTimeInMS) > StepTolerance.Time)
                                 return ErrorCode.DP_TIME_OUT_OF_RANGE;
                         }
                         else
@@ -880,7 +882,8 @@ namespace BCLabManager.Model
                         {
                             if (step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME) == null)
                                 return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
-                            if (Math.Abs(timeSpan - step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME).Condition.Value) > StepTolerance.Time)
+                            targetTimeInMS = step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME).Condition.Value * 1000;
+                            if (Math.Abs(timeSpan - targetTimeInMS) > StepTolerance.Time)
                                 return ErrorCode.DP_TIME_OUT_OF_RANGE;
                         }
                         else
@@ -937,7 +940,7 @@ namespace BCLabManager.Model
 
                 //diff = (Convert.ToDouble(row1[Column.TIME_MS]) - Convert.ToDouble(row0[Column.TIME_MS]));
                 diff = Nodes[Index].TimeInMS - Nodes[Index - 1].TimeInMS;
-                if (diff < 0 || diff > 1000)
+                if (diff < 0 || diff > 1250)    //给smart tester大一点裕度
                     return ErrorCode.DP_TIME_JUMP;
 
 
@@ -1054,7 +1057,7 @@ namespace BCLabManager.Model
             public static double Temperature { get { return 3.5; } }    //deg
             public static double Voltage { get { return 5; } } //mV
             public static double Power { get { return 100; } }
-            public static double Time { get { return 3; } }     //S
+            public static double Time { get { return 3000; } }     //mS
         }
     }
 }

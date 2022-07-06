@@ -381,29 +381,54 @@ namespace BCLabManager.Model
             }
             #endregion
             string localStdFileFullPath = string.Empty;
-            if (!CreateStdFile(processer, localTestFileFullPath, out localStdFileFullPath))
+            if (processer is Chroma17208AutoProcesser)
             {
-                File.Delete(localTestFileFullPath);
-                return false;
+                stdFilePath = Path.Combine(Path.GetDirectoryName(localTestFileFullPath), "STD_" + Path.GetFileName(localTestFileFullPath));
+                try
+                {
+                    File.Move(localTestFileFullPath, stdFilePath);
+                }
+                catch(Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                    File.Delete(localTestFileFullPath);
+                    return false;
+                }
+                FileTransferHelper.FileUpload(stdFilePath, out stdFilePath, out stdMD5);
+                if (stdMD5 == string.Empty)
+                    return false;
+                if (stdFilePath == "")
+                {
+                    MessageBox.Show("Standard Format Test File Path Empty!");
+                    return false;
+                }
             }
-            #region file upload
-            FileTransferHelper.FileUpload(localTestFileFullPath, out TestFilePath, out MD5);
-            if (MD5 == string.Empty)
-                return false;
-            if (TestFilePath == "")
+            else
             {
-                MessageBox.Show("Test File Path Empty!");
-                return false;
+                if (!CreateStdFile(processer, localTestFileFullPath, out localStdFileFullPath))
+                {
+                    File.Delete(localTestFileFullPath);
+                    return false;
+                }
+                #region file upload
+                FileTransferHelper.FileUpload(localTestFileFullPath, out TestFilePath, out MD5);
+                if (MD5 == string.Empty)
+                    return false;
+                if (TestFilePath == "")
+                {
+                    MessageBox.Show("Test File Path Empty!");
+                    return false;
+                }
+                FileTransferHelper.FileUpload(localStdFileFullPath, out stdFilePath, out stdMD5);
+                if (stdMD5 == string.Empty)
+                    return false;
+                if (stdFilePath == "")
+                {
+                    MessageBox.Show("Standard Format Test File Path Empty!");
+                    return false;
+                }
+                #endregion
             }
-            FileTransferHelper.FileUpload(localStdFileFullPath, out stdFilePath, out stdMD5);
-            if (stdMD5 == string.Empty)
-                return false;
-            if (stdFilePath == "")
-            {
-                MessageBox.Show("Standard Format Test File Path Empty!");
-                return false;
-            }
-            #endregion
             return true;
         }
 

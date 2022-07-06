@@ -575,7 +575,7 @@ namespace BCLabManager.Model
                     {
                         if (oldNode != null)
                         {
-                            if (newNode.Mode == 0)
+                            if (newNode.Mode == 0)  //Step的第一笔资料，Mode==0
                             {
                                 if (newNode.StepMode == ActionMode.CC_CV_CHARGE)
                                 {

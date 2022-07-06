@@ -41,7 +41,7 @@ namespace BCLabManager.ViewModel
         {
             get
             {
-                return _record.TestFilePath;
+                return _record.StdFilePath;
             }
         }
 

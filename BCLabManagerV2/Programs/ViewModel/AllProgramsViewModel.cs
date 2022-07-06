@@ -937,7 +937,7 @@ namespace BCLabManager.ViewModel
                         MessageBox.Show("Data preprocessing error!");
                         return;
                     }
-                    if (filePath == string.Empty)
+                    if (filePath == string.Empty && !(evm.Tester.ITesterProcesser is Chroma17208AutoProcesser))
                         return;
 
                     #endregion
@@ -1037,7 +1037,7 @@ namespace BCLabManager.ViewModel
         }
         private bool CanView
         {
-            get { return _selectedTestRecord != null && (_selectedTestRecord.Record.TestFilePath != string.Empty); }
+            get { return _selectedTestRecord != null && (_selectedTestRecord.Record.StdFilePath != string.Empty); }
         }
         private void AddTestRecord()
         {
