@@ -28,7 +28,7 @@ namespace BCLabManager.Model
         public DateTime[] GetTimeFromRawData(ObservableCollection<string> fileList) //只有一个文件，时间放在文件名中 Chroma17208M-Ch1-20220630160748-20220630180629.csv
         {
             DateTime[] output = new DateTime[2];
-            var strSections = fileList[0].Split('-', '.');
+            var strSections = Path.GetFileName(fileList[0]).Split('-', '.');
             if (DateTime.TryParseExact(strSections[2], "yyyyMMddHHmmss", null, System.Globalization.DateTimeStyles.None, out output[0]))
                 if (DateTime.TryParseExact(strSections[3], "yyyyMMddHHmmss", null, System.Globalization.DateTimeStyles.None, out output[1]))
                     return output;
@@ -390,7 +390,7 @@ namespace BCLabManager.Model
                         var volt = cob.Condition.Value;
                         //Console.WriteLine($"volt = {volt}");
                         //Console.WriteLine($"row.Voltage = {row.Voltage}");
-                        if (Math.Abs(row.Voltage * 1000 - volt) < 15)
+                        if (Math.Abs(row.Voltage - volt) < 15)
                         {
                             //Console.WriteLine($"Meet voltage condition.");
                             break;
@@ -570,7 +570,7 @@ namespace BCLabManager.Model
             }
             if (output == 0 && buffer.Count > 0)    //充电在放电之后
                 output = buffer.Last();
-            return output * -1000;
+            return output * -1;
         }
     }
     namespace Chroma17208Auto
@@ -684,18 +684,18 @@ namespace BCLabManager.Model
                 {
                     case ActionMode.CC_CV_CHARGE:
                         //voltage = Convert.ToDouble(row1[Column.VOLTAGE]) * 1000;
-                        voltage = Nodes[Index].Voltage * 1000;
+                        voltage = Nodes[Index].Voltage;
                         if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance.Voltage)
                         {
                             //current = GetCurrentFromRow(row1) * -1;
-                            current = Nodes[Index].Current * 1000;
+                            current = Nodes[Index].Current;
                             if (Math.Abs(current - step.Action.Current) > StepTolerance.Current)
                                 return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
                         }
                         break;
                     case ActionMode.CC_DISCHARGE:
 
-                        current = Nodes[Index].Current * -1000;
+                        current = Nodes[Index].Current * -1;
                         if (Math.Abs(current - step.Action.Current) > StepTolerance.Current)
                             return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
 
@@ -717,11 +717,11 @@ namespace BCLabManager.Model
                         var timeSpan = (Nodes[Index].TimeInMS - Nodes[Index - 1].TimeInMS);
                         if (timeSpan > 0.95)
                         {
-                            power = Math.Abs(Nodes[Index].Current * Nodes[Index].Voltage) * 1000;   //mW
+                            power = Math.Abs(Nodes[Index].Current * Nodes[Index].Voltage / 1000);   //mW
                         }
                         else
                         {
-                            power = Math.Abs(Nodes[Index + 1].Current * Nodes[Index + 1].Voltage) * 1000;   //mW
+                            power = Math.Abs(Nodes[Index + 1].Current * Nodes[Index + 1].Voltage / 1000);   //mW
                         }
                         if (Math.Abs(power - step.Action.Power) > StepTolerance.Power)
                             return ErrorCode.DP_POWER_OUT_OF_RANGE;
@@ -780,14 +780,14 @@ namespace BCLabManager.Model
                     case ActionMode.CC_CV_CHARGE:
                         break;
                     case ActionMode.CC_DISCHARGE:
-                        current = Nodes[Index].Current * -1000;
+                        current = Nodes[Index].Current * -1;
                         if (Math.Abs(current - step.Action.Current) > StepTolerance.Current)
                             //throw new ProcessException("Current Out Of Range");
                             return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
                         break;
                     case ActionMode.CP_DISCHARGE:
                         //var power = GetPowerFromRow(row1) * 1000;             //mW
-                        var power = Math.Abs(Nodes[Index].Current * Nodes[Index].Voltage) * 1000;       //mW
+                        var power = Math.Abs(Nodes[Index].Current * Nodes[Index].Voltage) / 1000;       //mW
                         if (Math.Abs(power - step.Action.Power) > StepTolerance.Power)
                             return ErrorCode.DP_POWER_OUT_OF_RANGE;
                         break;
@@ -813,10 +813,10 @@ namespace BCLabManager.Model
                         {
                             if (!step.CutOffBehaviors.Any(o => o.Condition.Parameter == Parameter.CURRENT))
                                 return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
-                            current = Nodes[Index - 1].Current * 1000;
+                            current = Nodes[Index - 1].Current;
                             if (Math.Abs(current - step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.CURRENT).Condition.Value) > StepTolerance.Current)
                                 return ErrorCode.DP_CURRENT_OUT_OF_RANGE;
-                            voltage = Nodes[Index - 1].Voltage * 1000;
+                            voltage = Nodes[Index - 1].Voltage;
                             if (Math.Abs(voltage - step.Action.Voltage) > StepTolerance.Voltage)
                                 return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
                         }
@@ -838,7 +838,7 @@ namespace BCLabManager.Model
                         {
                             if (step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.VOLTAGE) == null)
                                 return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
-                            voltage = Nodes[Index - 1].Voltage * 1000;
+                            voltage = Nodes[Index - 1].Voltage;
                             if (Math.Abs(voltage - step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.VOLTAGE).Condition.Value) > StepTolerance.Voltage)
                                 return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
                         }
@@ -860,7 +860,7 @@ namespace BCLabManager.Model
                         {
                             if (step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.VOLTAGE) == null)
                                 return ErrorCode.DP_ABNORMAL_STEP_CUTOFF;
-                            voltage = Nodes[Index - 1].Voltage * 1000;
+                            voltage = Nodes[Index - 1].Voltage;
                             if (Math.Abs(voltage - step.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.VOLTAGE).Condition.Value) > StepTolerance.Voltage)
                                 return ErrorCode.DP_VOLTAGE_OUT_OF_RANGE;
                         }
@@ -949,7 +949,7 @@ namespace BCLabManager.Model
                 {
                     if (step.Action.Mode == ActionMode.CC_DISCHARGE)
                     {
-                        if ((Nodes[Index].Voltage - Nodes[Index - 1].Voltage) > 0.005)       //RC或OCV实验的放电过程中，电压回弹超过5mV，则报错
+                        if ((Nodes[Index].Voltage - Nodes[Index - 1].Voltage) > 5)       //RC或OCV实验的放电过程中，电压回弹超过5mV，则报错
                         {
                             voltageRaisingErrorCounter++;
                             if (voltageRaisingErrorCounter >= 6)

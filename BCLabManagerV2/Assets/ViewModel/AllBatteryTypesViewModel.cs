@@ -301,7 +301,9 @@ namespace BCLabManager.ViewModel
                 bt[0].Name = btevm.Name;
                 var newName = bt[0].Name;
                 var newPath = trs[0].TestFilePath.Replace($@"\{oldName}\", $@"\{newName}\");
-                Directory.Move(trs[0].TestFilePath.Remove(trs[0].TestFilePath.LastIndexOf(trs[0].ProjectStr)), newPath.Remove(newPath.LastIndexOf(trs[0].ProjectStr)));
+                var oldPath = trs[0].TestFilePath.Remove(trs[0].TestFilePath.LastIndexOf(trs[0].ProjectStr));
+                //Directory.Move(trs[0].TestFilePath.Remove(trs[0].TestFilePath.LastIndexOf(trs[0].ProjectStr)), newPath.Remove(newPath.LastIndexOf(trs[0].ProjectStr)));
+                Directory.Move(oldPath, newPath.Remove(newPath.LastIndexOf(trs[0].ProjectStr)));
                 foreach (var tr in trs)
                 {
                     if (tr.TestFilePath.Contains($@"\{oldName}\"))
@@ -335,12 +337,24 @@ namespace BCLabManager.ViewModel
                 }
                 foreach (var tmp in tmps)
                 {
-                    if (tmp.FilePath.Contains($@"\{oldName}\"))
+                    if (tmp.FilePath.Contains($@"\{oldName}\") && tmp.IsValid == true)
                     {
                         tmp.FilePath = tmp.FilePath.Replace($@"\{oldName}\", $@"\{newName}\");
                         var remotepath = tmp.FilePath;
                         tmp.FilePath = remotepath.Replace($@"_{oldName}_", $@"_{newName}_");
                         FileTransferHelper.FileRename(remotepath, Path.GetFileName(tmp.FilePath));
+
+                        var str = File.ReadAllText(tmp.FilePath);
+                        if (str.Contains(oldName))
+                        {
+                            str = str.Replace(oldName, newName);
+                            File.WriteAllText(tmp.FilePath, str);
+                            RuningLog.Write("\r" + tmp.FilePath + "\n");
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
                 }
                 context.SaveChanges();
