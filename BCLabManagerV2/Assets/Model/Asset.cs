@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using Newtonsoft.Json;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,9 +8,11 @@ using System.Text;
 
 namespace BCLabManager.Model
 {
+    [JsonObject(MemberSerialization.OptOut)]
     public class Asset : BindableBase, IAsset
     {
         private int assetUseCount = 0;
+        [JsonIgnore]
         public int AssetUseCount
         {
             get { return assetUseCount; }
@@ -36,6 +39,7 @@ namespace BCLabManager.Model
         //    }
         //}
 
+        [JsonIgnore]
         public ObservableCollection<AssetUsageRecord> Records { get; set; }
 
         public Asset()

@@ -5,44 +5,53 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BCLabManager.DataAccess;
+using Newtonsoft.Json;
 using Prism.Mvvm;
 
 namespace BCLabManager.Model
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class StepV2 : BindableBase
     {
+        [JsonProperty]
         public int Id { get; set; }
         private int _index;
+        [JsonProperty]
         public int Index
         {
             get { return _index; }
             set { SetProperty(ref _index, value); }
         }
         private int _rest;
+
         public int Rest
         {
             get { return _rest; }
             set { SetProperty(ref _rest, value); }
         }
         private int _preRest;
+
         public int Prerest
         {
             get { return _preRest; }
             set { SetProperty(ref _preRest, value); }
         }
         private string _loop1Label;
+
         public string Loop1Label
         {
             get { return _loop1Label; }
             set { SetProperty(ref _loop1Label, value); }
         }
         private string _loop2Label;
+
         public string Loop2Label
         {
             get { return _loop2Label; }
             set { SetProperty(ref _loop2Label, value); }
         }
         private TesterAction _action = new TesterAction();
+        [JsonProperty]
         public TesterAction Action
         {
             get { return _action; }
@@ -55,6 +64,7 @@ namespace BCLabManager.Model
             set { SetProperty(ref _cutOffConditions, value); }
         }
         private ObservableCollection<CutOffBehavior> _cutOffBehaviors = new ObservableCollection<CutOffBehavior>();
+        [JsonProperty]
         public ObservableCollection<CutOffBehavior> CutOffBehaviors
         {
             get { return _cutOffBehaviors; }

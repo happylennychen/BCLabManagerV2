@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Windows;
 using Prism.Mvvm;
+using Newtonsoft.Json;
 
 namespace BCLabManager.ViewModel
 {
@@ -35,6 +36,7 @@ namespace BCLabManager.ViewModel
         RelayCommand _startCommand;
         RelayCommand _endCommand;
         RelayCommand _addCommand;
+        RelayCommand _exportCommand;
 
         //ObservableCollection<BatteryTypeClass> _batteryTypes;
         //ObservableCollection<Tester> _testers;
@@ -249,6 +251,34 @@ namespace BCLabManager.ViewModel
                 }
                 return _createCommand;
             }
+        }
+
+        public ICommand ExportCommand
+        {
+            get
+            {
+                if (_exportCommand == null)
+                {
+                    _exportCommand = new RelayCommand(
+                        param => { this.ExportTest(); }
+                        );
+                }
+                return _exportCommand;
+            }
+        }
+
+        private void ExportTest()
+        {
+            var test = new
+            {
+                Steps = _selectedRecipe._recipe.RecipeTemplate.GetNormalSteps(_selectedRecipe._recipe.Program.Project).ToList(),
+                Chamber = _chamberService.Items.SingleOrDefault(c => c.Name == "PUL-80"),
+                Channel = _channelService.Items.SingleOrDefault(c => c.Name == "Ch1" && c.Tester.Name == "17208Auto"),
+                DischargeTemperature = SelectedTestRecord.Record.Recipe.Temperature
+            }; 
+            string json = JsonConvert.SerializeObject(test,Formatting.Indented);
+            string fileName = $@"{GlobalSettings.RunningLogFolder}{_selectedRecipe._recipe.ToString()}_{DateTime.Now.ToString("yyyyMMddHHmmss")}.testplan";
+            File.WriteAllText(fileName, json);
         }
 
         public ObservableCollection<StepV2ViewModel> Steps

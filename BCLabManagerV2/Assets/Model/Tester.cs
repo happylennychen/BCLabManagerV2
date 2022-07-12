@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using Newtonsoft.Json;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace BCLabManager.Model
 {
+    [JsonObject(MemberSerialization.OptOut)]
     public class Tester : BindableBase
     {
         public int Id { get; set; }
@@ -27,6 +29,7 @@ namespace BCLabManager.Model
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
+        [JsonIgnore]
         [NotMapped]
         public ITesterProcesser ITesterProcesser{get;set;}
         public Tester()

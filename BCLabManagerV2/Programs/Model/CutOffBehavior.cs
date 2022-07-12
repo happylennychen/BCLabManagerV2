@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using Newtonsoft.Json;
 using Prism.Mvvm;
 
 namespace BCLabManager.Model
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class CutOffBehavior:BindableBase
     {
+        [JsonProperty]
         public int Id { get; set; }
         private Condition _condition = new Condition();
+        [JsonProperty]
         public Condition Condition
         {
             get { return _condition; }
@@ -40,6 +44,7 @@ namespace BCLabManager.Model
         }
         #endregion
         private ObservableCollection<JumpBehavior> _jumpBehaviors = new ObservableCollection<JumpBehavior>();
+        [JsonProperty]
         public ObservableCollection<JumpBehavior> JumpBehaviors
         {
             get { return _jumpBehaviors; }
