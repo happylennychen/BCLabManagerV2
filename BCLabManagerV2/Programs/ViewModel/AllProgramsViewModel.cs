@@ -260,10 +260,21 @@ namespace BCLabManager.ViewModel
                 if (_exportCommand == null)
                 {
                     _exportCommand = new RelayCommand(
-                        param => { this.ExportTest(); }
+                        param => { this.ExportTest(); },
+                        param => this.CanExport
                         );
                 }
                 return _exportCommand;
+            }
+        }
+        private bool CanExport
+        {
+            get
+            {
+                if (_selectedTestRecord == null)
+                    return false;
+                else
+                    return true;
             }
         }
 
