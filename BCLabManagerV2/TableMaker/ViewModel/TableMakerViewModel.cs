@@ -68,7 +68,7 @@ namespace BCLabManager.ViewModel
                 RaisePropertyChanged("VoltagePoints");
 
 
-                var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage2Project.Id && o.IsInvalid == false).ToList();
+                var programs = _programService.Items.Select(o => o).Where(o => o.Project.BatteryType.Id == _stage2Project.BatteryType.Id && o.IsInvalid == false).ToList();
                 var records = GetCompletedRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV" || o.Type.Name == "RC").ToList());
                 Stage2SourceList = records.Select(o => GetSourceFile(o)).ToList();
                 EOD = _stage2Project.DefaultEOD;
@@ -271,8 +271,8 @@ namespace BCLabManager.ViewModel
                 if (VoltagePoints.Count() == 0)
                     return false;
 
-                var ocvPrograms = _programService.Items.Select(o => o).Where(o => o.Project.Id == Stage2Project.Id && o.IsInvalid == false && (o.Type.Name == "OCV")).ToList();
-                var rcPrograms = _programService.Items.Select(o => o).Where(o => o.Project.Id == Stage2Project.Id && o.IsInvalid == false && (o.Type.Name == "RC")).ToList();
+                var ocvPrograms = _programService.Items.Select(o => o).Where(o => o.Project.BatteryType.Id == Stage2Project.BatteryType.Id && o.IsInvalid == false && (o.Type.Name == "OCV")).ToList();
+                var rcPrograms = _programService.Items.Select(o => o).Where(o => o.Project.BatteryType.Id == Stage2Project.BatteryType.Id && o.IsInvalid == false && (o.Type.Name == "RC")).ToList();
 
                 if (ocvPrograms.Count >= 1)
                 {
@@ -367,7 +367,7 @@ namespace BCLabManager.ViewModel
                         {
                             Directory.CreateDirectory(OutFolder);
                         }
-                        var programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == stage2Project.Id && o.IsInvalid == false).ToList();
+                        var programs = _programService.Items.Select(o => o).Where(o => o.Project.BatteryType.Id == stage2Project.BatteryType.Id && o.IsInvalid == false).ToList();
                         var ocvRecords = GetCompletedRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "OCV").ToList());
                         List<TableMakerProduct> products = new List<TableMakerProduct>();
 
@@ -401,7 +401,7 @@ namespace BCLabManager.ViewModel
                             var rcStage2Records = GetCompletedRecordsFromPrograms(programs.Select(o => o).Where(o => o.Type.Name == "RC").ToList());
 
                             var rcStage1Files = Stage1SourceList.Where(o => o.IsCheck == true).Select(o => o.FilePath).ToList();
-                            var rcStage1programs = _programService.Items.Select(o => o).Where(o => o.Project.Id == _stage1Project.Id && o.IsInvalid == false && o.Type.Name == "RC").ToList();
+                            var rcStage1programs = _programService.Items.Select(o => o).Where(o => o.Project.BatteryType.Id == _stage1Project.BatteryType.Id && o.IsInvalid == false && o.Type.Name == "RC").ToList();
                             var rcStage1Records = GetCompletedRecordsFromPrograms(rcStage1programs);
                             rcStage1Records = rcStage1Records.Where(o => rcStage1Files.Contains(o.TestFilePath)).ToList();
                             //rcSources = rcStage2Records.Select(o => o.TestFilePath).ToList().Concat(rcStage1Files).ToList();

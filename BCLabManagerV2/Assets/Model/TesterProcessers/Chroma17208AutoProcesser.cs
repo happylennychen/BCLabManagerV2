@@ -261,7 +261,7 @@ namespace BCLabManager.Model
                             }
                         }
                         //startTime = Convert.ToInt32(row1[Column.TIME_MS]);
-                        startTime = DataPreprocesser.Nodes[DataPreprocesser.Index].TimeInMS;
+                        startTime = DataPreprocesser.Nodes[DataPreprocesser.Index-1].TimeInMS;
                         #endregion
                     }
                     else

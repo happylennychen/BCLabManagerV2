@@ -1317,7 +1317,7 @@ namespace BCLabManager
         {
             //UpdateWeeklyThroughput();
             UpdateTestDataPerMonth();
-            UpdateOccupancyRatioFor30Days();
+            UpdateOccupancyRatioFor60Days();
             UpdateProductPerMonth();
             UpdateProjectDeliveryTime();
             UpdateEventPerMonth();
@@ -1339,7 +1339,7 @@ namespace BCLabManager
         //    }
         //}
 
-        private void UpdateOccupancyRatioFor30Days()
+        private void UpdateOccupancyRatioFor60Days()
         {
             Dictionary<DateTime, double> dailyOR;
             using (var dbContext = new AppDbContext())
@@ -1348,13 +1348,22 @@ namespace BCLabManager
                 dailyOR = GetDailyOccupancyRatio(trs);
             }
             var now = DateTime.Now;
+            var startPoint = now - TimeSpan.FromDays(120);
             //var view = dailyOR.Where(o => (now - o.Key).Days <= 30).Select(o => o.Value);
             //var view = dailyOR.Select(o => o.Value);
-            var view = dailyOR.Where(o => (now - o.Key).Days <= 30);
+            var view = dailyOR.Where(o => o.Key > startPoint);
             List<DateTimePoint> points = new List<DateTimePoint>();
-            foreach (var item in view)
+            //foreach (var item in view)
+            //{
+            //    points.Add(new DateTimePoint(item.Key, item.Value));
+            //}
+            for (var x = startPoint.Date; x<now;x+=TimeSpan.FromDays(1))
             {
-                points.Add(new DateTimePoint(item.Key, item.Value));
+                var item = view.SingleOrDefault(v => v.Key == x);
+                if (item.Key == DateTime.MinValue)
+                    points.Add(new DateTimePoint(x, 0));
+                else
+                    points.Add(new DateTimePoint(item.Key, item.Value));
             }
             //DashBoardViewInstance.ORbarChart.PlotBars(view);
             mainWindowViewModel.dashBoardViewModel.ORValues = points.AsChartValues();

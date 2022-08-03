@@ -14,6 +14,7 @@ namespace BCLabManager
     {
         public static bool GetLiteModel(UInt32 uEoDVoltage, List<SourceData> ocvSource, List<SourceData> rcSource, OCVModel ocvModel, RCModel rcModel, Project project, List<int> VoltagePoints, ref LiteModel liteModel)
         {
+            liteModel.uEoDVoltage = uEoDVoltage;
             List<double> fLstTblM_OCV;
             List<int> iLstTblM_SOC1;
             GetLstTblM_OCV(ocvSource, out fLstTblM_OCV, out iLstTblM_SOC1);
@@ -779,10 +780,71 @@ namespace BCLabManager
             List<string> strHHeaderComments, strCHeaderComments;
             UInt32 uErr = 0;
             int type_id = TableMakerService.GetFileTypeID("LiteH", stage);
-            TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), type_id.ToString(), out strHHeaderComments);
+            InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), liteModel.uEoDVoltage.ToString(), type_id.ToString(), out strHHeaderComments);
             type_id = TableMakerService.GetFileTypeID("LiteC", stage);
-            TableMakerService.InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), type_id.ToString(), out strCHeaderComments);
+            InitializeHeaderInfor(ref uErr, project.BatteryType.Manufacturer, project.BatteryType.Name, project.AbsoluteMaxCapacity.ToString(), project.LimitedChargeVoltage.ToString(), project.CutoffDischargeVoltage.ToString(), liteModel.uEoDVoltage.ToString(), type_id.ToString(), out strCHeaderComments);
             return GenerateCHFiles(stage, OutFolder, strFilePaths[0], strFilePaths[1], strHHeaderComments, strCHeaderComments, liteModel);
+        }
+        public static bool InitializeHeaderInfor(ref UInt32 uErr, string manufacturer, string betteryType, string absMaxCap, string limitChgVolt, string cutOffDsgVolt, string EOD, string typeID, out List<string> strHHeaderComments)
+        {
+            bool bReturn = false;
+            strHHeaderComments = new List<string>();
+
+            if (true)
+            {
+                string strAndroidManufacture = manufacturer;
+                string strAndroidBatteryModel = betteryType;
+                string fAndroidFullCap = absMaxCap;
+                string fAndroidLimitChgVoltage = limitChgVolt;
+                string fAndroidCutoffDsgVoltage = cutOffDsgVolt;
+                //string strAndroidEquip = "";
+                //string strAndroidTester = "";
+                //string strAndroidBatteryID = "";
+
+
+                #region add comment header string content for C and H file
+                strHHeaderComments.Add(string.Format("/*****************************************************************************"));
+                strHHeaderComments.Add(string.Format("* Copyright(c) O2Micro, 2021. All rights reserved."));
+                strHHeaderComments.Add(string.Format("*"));
+                strHHeaderComments.Add(string.Format("* O2Micro battery gauge driver"));
+                strHHeaderComments.Add(string.Format("* File: "));  //4
+                strHHeaderComments.Add(string.Format("*"));
+                strHHeaderComments.Add(string.Format("* $Source: /data/code/CVS"));
+                strHHeaderComments.Add(string.Format("* $Revision: 4.00.01 $"));
+                strHHeaderComments.Add(string.Format("*"));
+                strHHeaderComments.Add(string.Format("* This program is free software and can be redistributed with or without modification"));
+                strHHeaderComments.Add(string.Format("* it under the terms of the GNU General Public License version 2 as"));
+                strHHeaderComments.Add(string.Format("* published by the Free Software Foundation."));
+                strHHeaderComments.Add(string.Format("*"));
+                strHHeaderComments.Add(string.Format("* This Source Code Reference Design for O2MICRO Battery Gauge access (\\u201cReference Design\\u201d) "));
+                strHHeaderComments.Add(string.Format("* is sole for the use of PRODUCT INTEGRATION REFERENCE ONLY, and contains confidential "));
+                strHHeaderComments.Add(string.Format("* and privileged information of O2Micro International Limited. O2Micro shall have no "));
+                strHHeaderComments.Add(string.Format("* liability to any PARTY FOR THE RELIABILITY, SERVICEABILITY FOR THE RESULT OF PRODUCT "));
+                strHHeaderComments.Add(string.Format("* INTEGRATION, or results from: (i) any modification or attempted modification of the "));
+                strHHeaderComments.Add(string.Format("* Reference Design by any party, or (ii) the combination, operation or use of the "));
+                strHHeaderComments.Add(string.Format("* Reference Design with non-O2Micro Reference Design."));
+                strHHeaderComments.Add(string.Format("*"));
+                strHHeaderComments.Add(string.Format("* Battery Manufacture: {0}", strAndroidManufacture));
+                strHHeaderComments.Add(string.Format("* Battery Model: {0}", strAndroidBatteryModel));
+                strHHeaderComments.Add(string.Format("* Absolute Max Capacity(mAhr): {0}", fAndroidFullCap));
+                strHHeaderComments.Add(string.Format("* Limited Charge Voltage(mV): {0}", fAndroidLimitChgVoltage));
+                strHHeaderComments.Add(string.Format("* Cutoff Discharge Voltage(mV): {0}", fAndroidCutoffDsgVoltage));
+                strHHeaderComments.Add(string.Format("* EOD(mV): {0}", EOD));
+                //strHHeaderComments.Add(string.Format("* Equipment: {0}", strAndroidEquip)); //26
+                //strHHeaderComments.Add(string.Format("* Tester: {0}", strAndroidTester));   //27
+                //strHHeaderComments.Add(string.Format("* Battery ID: {0}", strAndroidBatteryID));    //28
+                //(A141024)Francis, add Version/Date/Comment 3 string into header comment of txt file
+                //strHHeaderComments.Add(string.Format("* Version = "));
+                //strHHeaderComments.Add(string.Format("* Date = "));
+                //strHHeaderComments.Add(string.Format("* Comment = "));
+                strHHeaderComments.Add(string.Format("* type_id = {0}", typeID));
+                //(E141024)
+                strHHeaderComments.Add(string.Format("*****************************************************************************/"));
+                strHHeaderComments.Add(string.Format(""));
+                #endregion
+            }
+
+            return bReturn;
         }
         private static List<TableMakerProduct> GenerateCHFiles(Stage stage, string OutFolder, string strCFileStandardName, string strHFileStandardName, List<string> strHHeaderComments, List<string> strCHeaderComments, LiteModel liteModel)
         {
