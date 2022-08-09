@@ -1348,7 +1348,7 @@ namespace BCLabManager
                 dailyOR = GetDailyOccupancyRatio(trs);
             }
             var now = DateTime.Now;
-            var startPoint = now - TimeSpan.FromDays(120);
+            var startPoint = now - TimeSpan.FromDays(365);
             //var view = dailyOR.Where(o => (now - o.Key).Days <= 30).Select(o => o.Value);
             //var view = dailyOR.Select(o => o.Value);
             var view = dailyOR.Where(o => o.Key > startPoint);

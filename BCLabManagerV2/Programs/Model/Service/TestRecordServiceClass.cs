@@ -216,11 +216,15 @@ namespace BCLabManager.Model
 
         internal void Invalidate(TestRecord testRecord, string comment)
         {
-            var newTestFileName = Path.GetFileName(testRecord.TestFilePath) + "_INVALID";
-            if (!FileTransferHelper.FileRename(testRecord.TestFilePath, newTestFileName))
+            if (testRecord.TestFilePath != "")  //考虑某些测试不产生原始Test File，直接产生STD File
             {
-                MessageBox.Show($"Invalidate {testRecord.TestFilePath} Failed!");
-                return;
+                var newTestFileName = Path.GetFileName(testRecord.TestFilePath) + "_INVALID";
+                if (!FileTransferHelper.FileRename(testRecord.TestFilePath, newTestFileName))
+                {
+                    MessageBox.Show($"Invalidate {testRecord.TestFilePath} Failed!");
+                    return;
+                }
+                testRecord.TestFilePath += "_INVALID";
             }
             var newStdFileName = Path.GetFileName(testRecord.StdFilePath) + "_INVALID";
             if (!FileTransferHelper.FileRename(testRecord.StdFilePath, newStdFileName))
@@ -228,10 +232,9 @@ namespace BCLabManager.Model
                 MessageBox.Show($"Invalidate {testRecord.StdFilePath} Failed!");
                 return;
             }
+            testRecord.StdFilePath += "_INVALID";
             testRecord.Comment += "\r\n" + comment;
             testRecord.Status = TestStatus.Invalid;
-            testRecord.TestFilePath += "_INVALID";
-            testRecord.StdFilePath += "_INVALID";
             DatabaseUpdate(testRecord);
         }
 

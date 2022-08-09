@@ -66,7 +66,7 @@ namespace BCLabManager.ViewModel
             MonthStep = TimeSpan.FromDays(30).Ticks;
 
             DayFormatter = x => new DateTime((long)x).ToString("MMM dd");
-            DayStep = TimeSpan.FromDays(1).Ticks;
+            DayStep = TimeSpan.FromDays(30).Ticks;
         }
         public ChartValues<DateTimePoint> TestDataValues { get; set; }
         public ChartValues<DateTimePoint> ORValues { get; set; }
