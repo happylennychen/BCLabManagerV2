@@ -261,7 +261,7 @@ namespace BCLabManager.Model
                             }
                         }
                         //startTime = Convert.ToInt32(row1[Column.TIME_MS]);
-                        startTime = DataPreprocesser.Nodes[DataPreprocesser.Index-1].TimeInMS;
+                        startTime = DataPreprocesser.Nodes[DataPreprocesser.Index - 1].TimeInMS;
                         #endregion
                     }
                     else
@@ -349,56 +349,67 @@ namespace BCLabManager.Model
             switch (currentStep.Action.Mode)
             {
                 case ActionMode.REST:// "StepFinishByCut_V":
-                    cob = currentStep.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME);
+                    if (row.Status == RowStatus.CUT_OFF_BY_TIME)
+                        cob = currentStep.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME);
                     break;
                 case ActionMode.CC_CV_CHARGE://"StepFinishByCut_I":
-                    cob = currentStep.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME);
-                    if (cob != null)
+                    if (row.Status == RowStatus.CUT_OFF_BY_TIME)
                     {
-                        var time = cob.Condition.Value;
-                        Console.WriteLine($"time = {time}");
-                        Console.WriteLine($"timeSpan = {timeSpan}");
-                        if (Math.Abs(timeSpan / 1000 - time) < 1)
+                        cob = currentStep.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME);
+                        if (cob != null)
                         {
-                            //Console.WriteLine($"Meet time condition.");
-                            break;
+                            var time = cob.Condition.Value;
+                            Console.WriteLine($"time = {time}");
+                            Console.WriteLine($"timeSpan = {timeSpan}");
+                            if (Math.Abs(timeSpan / 1000 - time) < 1)
+                            {
+                                //Console.WriteLine($"Meet time condition.");
+                                break;
+                            }
+                            else
+                                cob = null;
                         }
-                        else
-                            cob = null;
                     }
-                    cob = currentStep.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.CURRENT);
+                    else if (row.Status == RowStatus.CUT_OFF_BY_CURRENT)
+                        cob = currentStep.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.CURRENT);
                     break;
                 case ActionMode.CC_DISCHARGE://"StepFinishByCut_T":
                 case ActionMode.CP_DISCHARGE:
-                    cob = currentStep.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME);
-                    if (cob != null)
+                    if (row.Status == RowStatus.CUT_OFF_BY_TIME)
                     {
-                        var time = cob.Condition.Value;
-                        //Console.WriteLine($"time = {time}");
-                        //Console.WriteLine($"timeSpan = {timeSpan}");
-                        if (Math.Abs(timeSpan / 1000 - time) < 1)
+                        cob = currentStep.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.TIME);
+                        if (cob != null)
                         {
-                            //Console.WriteLine($"Meet time condition.");
-                            break;
+                            var time = cob.Condition.Value;
+                            //Console.WriteLine($"time = {time}");
+                            //Console.WriteLine($"timeSpan = {timeSpan}");
+                            if (Math.Abs(timeSpan / 1000 - time) < 1)
+                            {
+                                //Console.WriteLine($"Meet time condition.");
+                                break;
+                            }
+                            else
+                                cob = null;
                         }
-                        else
-                            cob = null;
                     }
-                    cob = currentStep.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.VOLTAGE);
-                    if (cob != null)
+                    else if (row.Status == RowStatus.CUT_OFF_BY_VOLTAGE)
                     {
-                        var volt = cob.Condition.Value;
-                        //Console.WriteLine($"volt = {volt}");
-                        //Console.WriteLine($"row.Voltage = {row.Voltage}");
-                        if (Math.Abs(row.Voltage - volt) < 15)
+                        cob = currentStep.CutOffBehaviors.SingleOrDefault(o => o.Condition.Parameter == Parameter.VOLTAGE);
+                        if (cob != null)
                         {
-                            //Console.WriteLine($"Meet voltage condition.");
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Doesn't meet voltage condition.");
-                            cob = null;
+                            var volt = cob.Condition.Value;
+                            //Console.WriteLine($"volt = {volt}");
+                            //Console.WriteLine($"row.Voltage = {row.Voltage}");
+                            if (Math.Abs(row.Voltage - volt) < 15)
+                            {
+                                //Console.WriteLine($"Meet voltage condition.");
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Doesn't meet voltage condition.");
+                                cob = null;
+                            }
                         }
                     }
                     break;
