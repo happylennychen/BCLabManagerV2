@@ -240,7 +240,7 @@ namespace BCLabManager.Model
 
         internal void Abandon(TestRecord testRecord)
         {
-            if (testRecord.TestFilePath != string.Empty && testRecord.StdFilePath != string.Empty)
+            if (testRecord.TestFilePath != string.Empty)
             {
                 var newTestFileName = Path.GetFileName(testRecord.TestFilePath) + "_ABANDONED";
                 if (!FileTransferHelper.FileRename(testRecord.TestFilePath, newTestFileName))
@@ -248,15 +248,15 @@ namespace BCLabManager.Model
                     MessageBox.Show($"Abandon {testRecord.TestFilePath} Failed!");
                     return;
                 }
-                var newStdFileName = Path.GetFileName(testRecord.StdFilePath) + "_ABANDONED";
-                if (!FileTransferHelper.FileRename(testRecord.StdFilePath, newStdFileName))
-                {
-                    MessageBox.Show($"Abandon {testRecord.StdFilePath} Failed!");
-                    return;
-                }
                 testRecord.TestFilePath += "_ABANDONED";
-                testRecord.StdFilePath += "_ABANDONED";
             }
+            var newStdFileName = Path.GetFileName(testRecord.StdFilePath) + "_ABANDONED";
+            if (!FileTransferHelper.FileRename(testRecord.StdFilePath, newStdFileName))
+            {
+                MessageBox.Show($"Abandon {testRecord.StdFilePath} Failed!");
+                return;
+            }
+            testRecord.StdFilePath += "_ABANDONED";
             testRecord.Status = TestStatus.Abandoned;
             DatabaseUpdate(testRecord);
         }
@@ -391,7 +391,7 @@ namespace BCLabManager.Model
                 {
                     File.Move(localTestFileFullPath, stdFilePath);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MessageBox.Show(e.Message);
                     File.Delete(localTestFileFullPath);

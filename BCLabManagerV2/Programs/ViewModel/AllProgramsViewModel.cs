@@ -12,6 +12,7 @@ using System.IO;
 using System.Windows;
 using Prism.Mvvm;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace BCLabManager.ViewModel
 {
@@ -36,7 +37,8 @@ namespace BCLabManager.ViewModel
         RelayCommand _startCommand;
         RelayCommand _endCommand;
         RelayCommand _addCommand;
-        RelayCommand _exportCommand;
+        RelayCommand _exportProgramCommand;
+        RelayCommand _exportProjectCommand;
 
         //ObservableCollection<BatteryTypeClass> _batteryTypes;
         //ObservableCollection<Tester> _testers;
@@ -253,43 +255,129 @@ namespace BCLabManager.ViewModel
             }
         }
 
-        public ICommand ExportCommand
+        public ICommand ExportProgramCommand
         {
             get
             {
-                if (_exportCommand == null)
+                if (_exportProgramCommand == null)
                 {
-                    _exportCommand = new RelayCommand(
-                        param => { this.ExportTest(); },
+                    _exportProgramCommand = new RelayCommand(
+                        param => { this.ExportProgramTest(); },
                         param => this.CanExport
                         );
                 }
-                return _exportCommand;
+                return _exportProgramCommand;
+            }
+        }
+
+        public ICommand ExportProjectCommand
+        {
+            get
+            {
+                if (_exportProjectCommand == null)
+                {
+                    _exportProjectCommand = new RelayCommand(
+                        param => { this.ExportProjectTest(); },
+                        param => this.CanExport
+                        );
+                }
+                return _exportProjectCommand;
             }
         }
         private bool CanExport
         {
             get
             {
-                if (_selectedTestRecord == null)
+                if (_selectedProgram == null)
                     return false;
                 else
                     return true;
             }
         }
 
-        private void ExportTest()
+        private void ExportProgramTest()
         {
-            var test = new
+            if (MessageBox.Show("Export test plan for this program.", "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
-                Steps = _selectedRecipe._recipe.RecipeTemplate.GetNormalSteps(_selectedRecipe._recipe.Program.Project).ToList(),
-                Chamber = _chamberService.Items.SingleOrDefault(c => c.Name == "PUL-80"),
-                Channel = _channelService.Items.SingleOrDefault(c => c.Name == "Ch1" && c.Tester.Name == "17208Auto"),
-                DischargeTemperature = SelectedTestRecord.Record.Recipe.Temperature
-            }; 
-            string json = JsonConvert.SerializeObject(test,Formatting.Indented);
-            string fileName = $@"{GlobalSettings.RunningLogFolder}{_selectedRecipe._recipe.ToString()}_{DateTime.Now.ToString("yyyyMMddHHmmss")}.testplan";
-            File.WriteAllText(fileName, json);
+                var validRecipes = _selectedProgram.Recipes.Select(r => r._recipe).Where(rec => rec.IsAbandoned == false && rec.IsCompleted == false).ToList();
+                var project = _selectedProgram.Project;
+                if (validRecipes.Count == 0)
+                    return;
+                var batteryType = project.BatteryType;
+                var btPath = Path.Combine(GlobalSettings.TestPlanFolder, batteryType.Name);
+                if (!Directory.Exists(btPath))
+                    Directory.CreateDirectory(btPath);
+                var prjPath = Path.Combine(btPath, project.Name);
+                if (!Directory.Exists(prjPath))
+                    Directory.CreateDirectory(prjPath);
+                var proPath = Path.Combine(prjPath, _selectedProgram.Name);
+                if (!Directory.Exists(proPath))
+                    Directory.CreateDirectory(proPath);
+                int i = 1;
+                foreach (var rec in validRecipes)
+                {
+                    var test = new
+                    {
+                        Steps = rec.RecipeTemplate.GetNormalSteps(project).ToList(),
+                        //Chamber = _chamberService.Items.SingleOrDefault(c => c.Name == "PUL-80"),
+                        //Channel = _channelService.Items.SingleOrDefault(c => c.Name == "Ch1" && c.Tester.Name == "17208Auto"),
+                        DischargeTemperature = rec.Temperature
+                    };
+                    string json = JsonConvert.SerializeObject(test, Formatting.Indented);
+                    string filePath = Path.Combine(proPath, $@"{rec.ToString()}.testplan");
+                    while (File.Exists(filePath))
+                    {
+                        filePath = Path.Combine(proPath, $@"{rec.ToString()}_{i++}.testplan");
+                    }
+                    File.WriteAllText(filePath, json);
+                }
+
+                Process.Start(proPath);
+            }
+        }
+
+        private void ExportProjectTest()
+        {
+            if (MessageBox.Show("Export test plan for this project.", "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                var project = _selectedProgram.Project;
+                var validRecipes = project.Programs.SelectMany(pro=>pro.Recipes).Where(rec => rec.IsAbandoned == false && rec.IsCompleted == false).ToList();
+                if (validRecipes.Count == 0)
+                    return;
+                var batteryType = project.BatteryType;
+                var btPath = Path.Combine(GlobalSettings.TestPlanFolder, batteryType.Name);
+                if (!Directory.Exists(btPath))
+                    Directory.CreateDirectory(btPath);
+                var prjPath = Path.Combine(btPath, project.Name);
+                if (!Directory.Exists(prjPath))
+                    Directory.CreateDirectory(prjPath);
+                foreach (var pro in project.Programs)
+                {
+                    var proPath = Path.Combine(prjPath, pro.Name);
+                    if (!Directory.Exists(proPath))
+                        Directory.CreateDirectory(proPath);
+                    foreach (var rec in validRecipes.Where(rec=>rec.Program == pro))
+                    {
+                        int i = 1;
+                        var test = new
+                        {
+                            Steps = rec.RecipeTemplate.GetNormalSteps(project).ToList(),
+                            //Chamber = _chamberService.Items.SingleOrDefault(c => c.Name == "PUL-80"),
+                            //Channel = _channelService.Items.SingleOrDefault(c => c.Name == "Ch1" && c.Tester.Name == "17208Auto"),
+                            DischargeTemperature = rec.Temperature
+                        };
+                        string json = JsonConvert.SerializeObject(test, Formatting.Indented);
+                        string filePath = Path.Combine(proPath, $@"{rec.ToString()}.testplan");
+                        while (File.Exists(filePath))
+                        {
+                            filePath = Path.Combine(proPath, $@"{rec.ToString()}_{i++}.testplan");
+                        }
+                        File.WriteAllText(filePath, json);
+                    }
+                }
+
+                Process.Start(prjPath);
+            }
         }
 
         public ObservableCollection<StepV2ViewModel> Steps

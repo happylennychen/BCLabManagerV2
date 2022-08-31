@@ -19,9 +19,10 @@ namespace BCLabManager
     /// </summary>
     public partial class StartupWindow : Window
     {
-        public StartupWindow()
+        public StartupWindow(string versionString)
         {
             InitializeComponent();
+            VersionCode.Content = versionString;
         }
     }
 }

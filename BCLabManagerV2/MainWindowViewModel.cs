@@ -59,6 +59,7 @@ namespace BCLabManager.ViewModel
             //try
             {
                 InitializeRuningLogFolder();
+                InitializeTestPlanFolder();
                 LoadConfigration();
                 CheckConfiguration();
                 Stopwatch sw = new Stopwatch();
@@ -299,6 +300,12 @@ namespace BCLabManager.ViewModel
         {
             if (!Directory.Exists(GlobalSettings.RunningLogFolder))
                 Directory.CreateDirectory(GlobalSettings.RunningLogFolder);
+        }
+
+        private void InitializeTestPlanFolder()
+        {
+            if (!Directory.Exists(GlobalSettings.TestPlanFolder))
+                Directory.CreateDirectory(GlobalSettings.TestPlanFolder);
         }
 
         private void CreateProcesserForTesters()

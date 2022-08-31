@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:v="clr-namespace:BCLabManager.View"
         WindowStartupLocation="CenterScreen"
-        WindowState="Maximized"
-        Title="BCLM v0.3.5" Height="855" Width="1600">
+        WindowState="Maximized" Height="855" Width="1600">
     <Window.Resources>
     </Window.Resources>
     <DockPanel LastChildFill="True">

@@ -8,7 +8,7 @@
         mc:Ignorable="d">
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <Image Source="/Startup.jpg"></Image>
-        <Label Foreground="White" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0">v0.3.6
+        <Label Foreground="White" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0" Name="VersionCode">
         </Label>
     </Grid>
 </Window>

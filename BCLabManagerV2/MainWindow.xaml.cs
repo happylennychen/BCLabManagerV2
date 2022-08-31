@@ -28,16 +28,18 @@ namespace BCLabManager
     {
         private MainWindowViewModel _mainWindowViewModel;
         public MainWindowViewModel mainWindowViewModel { get { return _mainWindowViewModel; } set { _mainWindowViewModel = value; } }
+        public string VersionCode { get; set; } = "v0.3.6";
         public MainWindow()
         {
 #if StartWindow
-            var startupWindow = new StartupWindow();
+            var startupWindow = new StartupWindow(VersionCode);
             startupWindow.Show();
 #endif
             try
             {
 #if Show
                 InitializeComponent();
+                Title = "BCLM " + VersionCode;
 #if !Requester
 #endif
                 InitializeNavigator();
@@ -1348,7 +1350,7 @@ namespace BCLabManager
                 dailyOR = GetDailyOccupancyRatio(trs);
             }
             var now = DateTime.Now;
-            var startPoint = now - TimeSpan.FromDays(365);
+            var startPoint = now - TimeSpan.FromDays(60);
             //var view = dailyOR.Where(o => (now - o.Key).Days <= 30).Select(o => o.Value);
             //var view = dailyOR.Select(o => o.Value);
             var view = dailyOR.Where(o => o.Key > startPoint);
